@@ -1,7 +1,6 @@
 *.opensdf
 *.sdf
 *.tlog
-resources/deploy/armada.pack
 *.pack
 bin/
 intermediate/
