@@ -4,5 +4,6 @@
 resources/deploy/armada.pack
 *.pack
 bin/
+intermediate/
 Debug/
 Release/
