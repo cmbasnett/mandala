@@ -1,0 +1,22 @@
+﻿Build started 23/08/2013 11:36:28 AM.
+     1>Project "C:\Users\Developer\Desktop\lpng163\projects\vstudio\pngvalid\pngvalid.vcxproj" on node 3 (Build target(s)).
+     1>ClCompile:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"..\..\..\..\zlib-1.2.5" /I..\..\..\scripts /Zi /nologo /W4 /WX /Od /Oi /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D PNG_USE_DLL /D _UNICODE /D UNICODE /GF /Gm- /EHsc /RTC1 /MDd /GS /Gy- /fp:precise /fp:except- /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /FR"Debug\\" /Gd /TC /wd4996 /wd4127 /analyze- /errorReport:prompt ..\..\..\contrib\libtests\pngvalid.c
+         pngvalid.c
+       Link:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Developer\Desktop\lpng163\projects\vstudio\Debug\pngvalid.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\Users\Developer\Desktop\lpng163\projects\vstudio\Debug\ libpng16.lib zlib.lib /MANIFEST /ManifestFile:"Debug\pngvalid.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Developer\Desktop\lpng163\projects\vstudio\Debug\pngvalid.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Developer\Desktop\lpng163\projects\vstudio\Debug\pngvalid.lib" /MACHINE:X86 Debug\pngvalid.obj
+         pngvalid.vcxproj -> C:\Users\Developer\Desktop\lpng163\projects\vstudio\Debug\pngvalid.exe
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\Developer\Desktop\lpng163\projects\vstudio\Debug\pngvalid.exe;#1" /manifest Debug\pngvalid.exe.intermediate.manifest
+       BscMake:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\bscmake.exe /nologo /o"C:\Users\Developer\Desktop\lpng163\projects\vstudio\Debug\pngvalid.bsc" Debug\pngvalid.sbr
+       CustomBuildStep:
+         "C:\Users\Developer\Desktop\lpng163\projects\vstudio\Debug\pngvalid.exe" --touch "Debug\pngvalid.out"
+         :VCEnd
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\Microsoft.CppCommon.targets(183,5): error MSB3073: The command ""C:\Users\Developer\Desktop\lpng163\projects\vstudio\Debug\pngvalid.exe" --touch "Debug\pngvalid.out"
+C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\Microsoft.CppCommon.targets(183,5): error MSB3073: :VCEnd" exited with code -1073741515.
+     1>Done Building Project "C:\Users\Developer\Desktop\lpng163\projects\vstudio\pngvalid\pngvalid.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:00.98

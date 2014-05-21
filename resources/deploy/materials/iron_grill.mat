@@ -1,0 +1,7 @@
+{
+	"gpu_program":"model.gpu",
+	"diffuse":
+	{
+		"texture":"iron_grill.png"
+	}
+}

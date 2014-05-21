@@ -1,0 +1,21 @@
+{
+	"gpu_program":"model.gpu",
+	"diffuse":
+	{
+		"texture":"space_frigate_6_color.png",
+		"color":[1.0, 1.0, 1.0, 1.0]
+	},
+	"normal":
+	{
+		"texture":"space_frigate_6_normal.png"
+	},
+	"specular":
+	{
+		"texture":"space_frigate_6_specular.png",
+		"intensity":100
+	},
+	"emissive":
+	{
+		"texture":"space_frigate_6_illumination.png"
+	}
+}

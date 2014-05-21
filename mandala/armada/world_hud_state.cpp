@@ -1,0 +1,49 @@
+//std
+#include <sstream>
+
+//armada
+#include "../app.h"
+#include "../texture.h"
+#include "../sprite_set.h"
+#include "world_hud_state.h"
+
+namespace mandala
+{
+	namespace armada
+	{
+		world_hud_state_t::world_hud_state_t()
+		{
+			link_flags = state_t::link_flag_all;
+
+			crosshair_image = std::make_shared<gui::image_t>();
+			crosshair_image->is_autosized_to_texture = true;
+			crosshair_image->sprite = sprite_t(hash_t("crosshairs.json"), hash_t("crosshair9.png"));
+
+			layout->adopt(crosshair_image);
+
+			layout->clean();
+		}
+
+		world_hud_state_t::~world_hud_state_t()
+		{
+		}
+
+		void world_hud_state_t::on_input_event(const input_event_t& input_event, bool& is_consumed)
+		{
+			if (input_event.device_type == input_event_t::device_type_t::touch &&
+				input_event.touch.type == input_event_t::touch_t::type_t::scroll)
+			{
+				if (input_event.touch.position_delta.y > 0)
+				{
+					++crosshair_index;
+				}
+				else
+				{
+					--crosshair_index;
+				}
+			}
+
+			//crosshair_image->sprite = crosshair_textures[crosshair_index % crosshair_textures.size()];
+		}
+	};
+};

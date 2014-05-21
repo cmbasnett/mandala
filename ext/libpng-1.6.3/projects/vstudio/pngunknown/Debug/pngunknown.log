@@ -1,0 +1,19 @@
+﻿Build started 23/08/2013 11:36:28 AM.
+     1>Project "C:\Users\Developer\Desktop\lpng163\projects\vstudio\pngunknown\pngunknown.vcxproj" on node 5 (Build target(s)).
+     1>Link:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Developer\Desktop\lpng163\projects\vstudio\Debug\pngunknown.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\Users\Developer\Desktop\lpng163\projects\vstudio\Debug\ libpng16.lib /MANIFEST /ManifestFile:"Debug\pngunknown.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Developer\Desktop\lpng163\projects\vstudio\Debug\pngunknown.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Developer\Desktop\lpng163\projects\vstudio\Debug\pngunknown.lib" /MACHINE:X86 Debug\pngunknown.obj
+         pngunknown.vcxproj -> C:\Users\Developer\Desktop\lpng163\projects\vstudio\Debug\pngunknown.exe
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\Developer\Desktop\lpng163\projects\vstudio\Debug\pngunknown.exe;#1" /manifest Debug\pngunknown.exe.intermediate.manifest
+       BscMake:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\bscmake.exe /nologo /o"C:\Users\Developer\Desktop\lpng163\projects\vstudio\Debug\pngunknown.bsc" Debug\pngunknown.sbr
+       CustomBuildStep:
+         "C:\Users\Developer\Desktop\lpng163\projects\vstudio\Debug\pngunknown.exe" --strict --default --touch "Debug\pngunknown.out" ../../../pngtest.png
+         :VCEnd
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\Microsoft.CppCommon.targets(183,5): error MSB3073: The command ""C:\Users\Developer\Desktop\lpng163\projects\vstudio\Debug\pngunknown.exe" --strict --default --touch "Debug\pngunknown.out" ../../../pngtest.png
+C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\Microsoft.CppCommon.targets(183,5): error MSB3073: :VCEnd" exited with code -1073741515.
+     1>Done Building Project "C:\Users\Developer\Desktop\lpng163\projects\vstudio\pngunknown\pngunknown.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:00.70

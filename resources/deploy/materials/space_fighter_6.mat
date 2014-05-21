@@ -1,0 +1,21 @@
+{
+	"gpu_program":"model.gpu",
+	"diffuse":
+	{
+		"texture":"dark_fighter_6_color.png",
+		"color":[1.0, 1.0, 1.0, 1.0]
+	},
+	"normal":
+	{
+		"texture":"dark_fighter_6_bump.png"
+	},
+	"specular":
+	{
+		"texture":"dark_fighter_6_specular.png",
+		"intensity":100
+	},
+	"emissive":
+	{
+		"texture":"dark_fighter_6_illumination.png"
+	}
+}

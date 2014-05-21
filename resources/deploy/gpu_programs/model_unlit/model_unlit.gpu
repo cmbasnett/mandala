@@ -1,0 +1,7 @@
+{
+	"shaders":
+	[
+		"model_unlit.vert",
+		"model_unlit.frag"
+	]
+}

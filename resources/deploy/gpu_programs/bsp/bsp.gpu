@@ -1,0 +1,7 @@
+{
+	"shaders":
+	[
+		"bsp.vert",
+		"bsp.frag"
+	]
+}

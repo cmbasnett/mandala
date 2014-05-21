@@ -1,0 +1,20 @@
+{
+	"gpu_program":"model.gpu",
+	"diffuse":
+	{
+		"texture":"space_station_4_color.png",
+		"color":[1.0, 1.0, 1.0, 1.0]
+	},
+	"normal":
+	{
+		"texture":"space_station_4_normal.png"
+	},
+	"specular":
+	{
+		"texture":"space_station_4_specular.png"
+	},
+	"emissive":
+	{
+		"texture":"space_station_4_illumination.png"
+	}
+}

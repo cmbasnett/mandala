@@ -1,0 +1,8 @@
+{
+	"gpu_program":"model_unlit.gpu",
+	"is_two_sided":true,
+	"diffuse":
+	{
+		"texture":"skybox_nebula_planet.png"
+	}
+}

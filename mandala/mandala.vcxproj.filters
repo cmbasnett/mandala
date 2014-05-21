@@ -1,0 +1,436 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="arcball_camera.h">
+      <Filter>mandala\cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="collision.h">
+      <Filter>mandala\math</Filter>
+    </ClInclude>
+    <ClInclude Include="line.h">
+      <Filter>mandala\math</Filter>
+    </ClInclude>
+    <ClInclude Include="plane.h">
+      <Filter>mandala\math</Filter>
+    </ClInclude>
+    <ClInclude Include="frustum.h">
+      <Filter>mandala\math</Filter>
+    </ClInclude>
+    <ClInclude Include="bitmap_font.h">
+      <Filter>mandala\resources\bitmap_font</Filter>
+    </ClInclude>
+    <ClInclude Include="quake_camera.h">
+      <Filter>mandala\cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="image.h">
+      <Filter>mandala\resources\image</Filter>
+    </ClInclude>
+    <ClInclude Include="md5b.h">
+      <Filter>mandala\resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="model.h">
+      <Filter>mandala\resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="skeleton.h">
+      <Filter>mandala\resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="model_instance.h">
+      <Filter>mandala\resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="is_equal.h">
+      <Filter>mandala\type_traits</Filter>
+    </ClInclude>
+    <ClInclude Include="is_greater_than.h">
+      <Filter>mandala\type_traits</Filter>
+    </ClInclude>
+    <ClInclude Include="is_greater_than_or_equal.h">
+      <Filter>mandala\type_traits</Filter>
+    </ClInclude>
+    <ClInclude Include="is_less_than.h">
+      <Filter>mandala\type_traits</Filter>
+    </ClInclude>
+    <ClInclude Include="is_less_than_or_equal.h">
+      <Filter>mandala\type_traits</Filter>
+    </ClInclude>
+    <ClInclude Include="pow.h">
+      <Filter>mandala\type_traits</Filter>
+    </ClInclude>
+    <ClInclude Include="factorial.h">
+      <Filter>mandala\type_traits</Filter>
+    </ClInclude>
+    <ClInclude Include="triangle.h">
+      <Filter>mandala\math</Filter>
+    </ClInclude>
+    <ClInclude Include="material.h">
+      <Filter>mandala\resources\material</Filter>
+    </ClInclude>
+    <ClInclude Include="animation.h">
+      <Filter>mandala\resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="state.h">
+      <Filter>mandala\states</Filter>
+    </ClInclude>
+    <ClInclude Include="app.h">
+      <Filter>mandala\app</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu_program.h">
+      <Filter>mandala\resources\gpu_program</Filter>
+    </ClInclude>
+    <ClInclude Include="texture.h">
+      <Filter>mandala\resources\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>mandala\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="fnv.h">
+      <Filter>mandala\core</Filter>
+    </ClInclude>
+    <ClInclude Include="hash.h">
+      <Filter>mandala\core</Filter>
+    </ClInclude>
+    <ClInclude Include="types.h">
+      <Filter>mandala\core</Filter>
+    </ClInclude>
+    <ClInclude Include="macros.h">
+      <Filter>mandala\core</Filter>
+    </ClInclude>
+    <ClInclude Include="state_mgr.h">
+      <Filter>mandala\app</Filter>
+    </ClInclude>
+    <ClInclude Include="input_event.h">
+      <Filter>mandala\app</Filter>
+    </ClInclude>
+    <ClInclude Include="pack.h">
+      <Filter>mandala\app</Filter>
+    </ClInclude>
+    <ClInclude Include="pack_mgr.h">
+      <Filter>mandala\app</Filter>
+    </ClInclude>
+    <ClInclude Include="aabb.h">
+      <Filter>mandala\math</Filter>
+    </ClInclude>
+    <ClInclude Include="platform_win32.h">
+      <Filter>mandala\platform\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="platform.h">
+      <Filter>mandala\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="mandala.h">
+      <Filter>mandala</Filter>
+    </ClInclude>
+    <ClInclude Include="string_table.h">
+      <Filter>mandala\resources\string</Filter>
+    </ClInclude>
+    <ClInclude Include="game.h">
+      <Filter>mandala\app</Filter>
+    </ClInclude>
+    <ClInclude Include="is_negative.h">
+      <Filter>mandala\type_traits</Filter>
+    </ClInclude>
+    <ClInclude Include="sprite_set.h">
+      <Filter>mandala\resources\sprite_set</Filter>
+    </ClInclude>
+    <ClInclude Include="resource_mgr.h">
+      <Filter>mandala\app</Filter>
+    </ClInclude>
+    <ClInclude Include="is_pow2.h">
+      <Filter>mandala\type_traits</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\label.h">
+      <Filter>mandala\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\node.h">
+      <Filter>mandala\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\padding.h">
+      <Filter>mandala\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="armada\armada.h">
+      <Filter>armada</Filter>
+    </ClInclude>
+    <ClInclude Include="armada\skybox.h">
+      <Filter>armada\states\world</Filter>
+    </ClInclude>
+    <ClInclude Include="armada\world.h">
+      <Filter>armada\states\world</Filter>
+    </ClInclude>
+    <ClInclude Include="armada\world_state.h">
+      <Filter>armada\states\world</Filter>
+    </ClInclude>
+    <ClInclude Include="armada\pause_state.h">
+      <Filter>armada\states\pause</Filter>
+    </ClInclude>
+    <ClInclude Include="bsp.h">
+      <Filter>mandala\resources\bsp</Filter>
+    </ClInclude>
+    <ClInclude Include="armada\bsp_state.h">
+      <Filter>armada\states\bsp</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\gui_image.h">
+      <Filter>mandala\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="circle.h">
+      <Filter>mandala\math</Filter>
+    </ClInclude>
+    <ClInclude Include="armada\world_hud_state.h">
+      <Filter>armada\states\world</Filter>
+    </ClInclude>
+    <ClInclude Include="gui_state.h">
+      <Filter>mandala\states</Filter>
+    </ClInclude>
+    <ClInclude Include="layout.h">
+      <Filter>mandala\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="shader.h">
+      <Filter>mandala\resources\gpu_program</Filter>
+    </ClInclude>
+    <ClInclude Include="boost.h">
+      <Filter>mandala\core</Filter>
+    </ClInclude>
+    <ClInclude Include="rectangle.h">
+      <Filter>mandala\math</Filter>
+    </ClInclude>
+    <ClInclude Include="sprite.h">
+      <Filter>mandala\resources\sprite_set</Filter>
+    </ClInclude>
+    <ClInclude Include="game_properties.h">
+      <Filter>mandala\app</Filter>
+    </ClInclude>
+    <ClInclude Include="color.h">
+      <Filter>mandala\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>mandala\cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="armada\test_state.h">
+      <Filter>armada\states\test</Filter>
+    </ClInclude>
+    <ClInclude Include="sphere.h">
+      <Filter>mandala\math</Filter>
+    </ClInclude>
+    <ClInclude Include="glm.h">
+      <Filter>mandala\math</Filter>
+    </ClInclude>
+    <ClInclude Include="sound.h">
+      <Filter>mandala\resources\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="audio_mgr.h">
+      <Filter>mandala\app</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="arcball_camera.cpp">
+      <Filter>mandala\cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="bitmap_font.cpp">
+      <Filter>mandala\resources\bitmap_font</Filter>
+    </ClCompile>
+    <ClCompile Include="quake_camera.cpp">
+      <Filter>mandala\cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="image.cpp">
+      <Filter>mandala\resources\image</Filter>
+    </ClCompile>
+    <ClCompile Include="model.cpp">
+      <Filter>mandala\resources\model</Filter>
+    </ClCompile>
+    <ClCompile Include="skeleton.cpp">
+      <Filter>mandala\resources\model</Filter>
+    </ClCompile>
+    <ClCompile Include="model_instance.cpp">
+      <Filter>mandala\resources\model</Filter>
+    </ClCompile>
+    <ClCompile Include="animation.cpp">
+      <Filter>mandala\resources\model</Filter>
+    </ClCompile>
+    <ClCompile Include="app.cpp">
+      <Filter>mandala\app</Filter>
+    </ClCompile>
+    <ClCompile Include="material.cpp">
+      <Filter>mandala\resources\material</Filter>
+    </ClCompile>
+    <ClCompile Include="gpu_program.cpp">
+      <Filter>mandala\resources\gpu_program</Filter>
+    </ClCompile>
+    <ClCompile Include="texture.cpp">
+      <Filter>mandala\resources\texture</Filter>
+    </ClCompile>
+    <ClCompile Include="resource.cpp">
+      <Filter>mandala\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="state_mgr.cpp">
+      <Filter>mandala\app</Filter>
+    </ClCompile>
+    <ClCompile Include="pack.cpp">
+      <Filter>mandala\app</Filter>
+    </ClCompile>
+    <ClCompile Include="pack_mgr.cpp">
+      <Filter>mandala\app</Filter>
+    </ClCompile>
+    <ClCompile Include="collision.cpp">
+      <Filter>mandala\math</Filter>
+    </ClCompile>
+    <ClCompile Include="platform_win32.cpp">
+      <Filter>mandala\platform\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="sprite_set.cpp">
+      <Filter>mandala\resources\sprite_set</Filter>
+    </ClCompile>
+    <ClCompile Include="resource_mgr.cpp">
+      <Filter>mandala\app</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\label.cpp">
+      <Filter>mandala\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\node.cpp">
+      <Filter>mandala\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="armada\armada.cpp">
+      <Filter>armada</Filter>
+    </ClCompile>
+    <ClCompile Include="armada\skybox.cpp">
+      <Filter>armada\states\world</Filter>
+    </ClCompile>
+    <ClCompile Include="armada\world.cpp">
+      <Filter>armada\states\world</Filter>
+    </ClCompile>
+    <ClCompile Include="armada\world_state.cpp">
+      <Filter>armada\states\world</Filter>
+    </ClCompile>
+    <ClCompile Include="armada\pause_state.cpp">
+      <Filter>armada\states\pause</Filter>
+    </ClCompile>
+    <ClCompile Include="bsp.cpp">
+      <Filter>mandala\resources\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="armada\bsp_state.cpp">
+      <Filter>armada\states\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\gui_image.cpp">
+      <Filter>mandala\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="armada\world_hud_state.cpp">
+      <Filter>armada\states\world</Filter>
+    </ClCompile>
+    <ClCompile Include="gui_state.cpp">
+      <Filter>mandala\states</Filter>
+    </ClCompile>
+    <ClCompile Include="shader.cpp">
+      <Filter>mandala\resources\gpu_program</Filter>
+    </ClCompile>
+    <ClCompile Include="sprite.cpp">
+      <Filter>mandala\resources\sprite_set</Filter>
+    </ClCompile>
+    <ClCompile Include="game.cpp">
+      <Filter>mandala\app</Filter>
+    </ClCompile>
+    <ClCompile Include="game_properties.cpp">
+      <Filter>mandala\app</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>mandala\cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="frustum.cpp">
+      <Filter>mandala\math</Filter>
+    </ClCompile>
+    <ClCompile Include="armada\test_state.cpp">
+      <Filter>armada\states\test</Filter>
+    </ClCompile>
+    <ClCompile Include="string_table.cpp">
+      <Filter>mandala\resources\string</Filter>
+    </ClCompile>
+    <ClCompile Include="sound.cpp">
+      <Filter>mandala\resources\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="audio_mgr.cpp">
+      <Filter>mandala\app</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="mandala">
+      <UniqueIdentifier>{d862f469-26dd-4e85-9d32-326ef8a93954}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\cameras">
+      <UniqueIdentifier>{b532d2e6-b0a2-4d46-ae45-576a997d8c63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\math">
+      <UniqueIdentifier>{5355c3c6-a3d2-4bd4-97ae-5bd8c26804ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\app">
+      <UniqueIdentifier>{58d05419-ee09-429e-9c91-18f40eaf1cd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\resources">
+      <UniqueIdentifier>{3c5d273c-ad79-45c7-af1d-4f870782d1d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\type_traits">
+      <UniqueIdentifier>{2448499b-87ed-4a70-8303-448d2fcbddf7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\states">
+      <UniqueIdentifier>{4742fbc2-00d4-4394-8cc8-cb1a163b3c2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="armada">
+      <UniqueIdentifier>{57404d64-8c87-49e7-9db4-3347836890c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="armada\states">
+      <UniqueIdentifier>{743efed0-4482-400c-917d-176e72d1c534}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="armada\states\pause">
+      <UniqueIdentifier>{e1cc996e-2ef0-443f-a221-6a8d037fc9e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="armada\states\world">
+      <UniqueIdentifier>{abc5bff3-5c90-4fc9-ad4d-979d30270fe3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\gui">
+      <UniqueIdentifier>{1c2b7179-f16d-40ce-817d-65c4a687ce79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\platform">
+      <UniqueIdentifier>{bbb4097b-d933-4dc3-be89-d4c3a95ce7c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\platform\win32">
+      <UniqueIdentifier>{8a4553c1-a88c-41f1-b640-3184f6bb24cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\core">
+      <UniqueIdentifier>{84748bc8-3ec3-4656-a43a-9c82f8da8903}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\resources\bsp">
+      <UniqueIdentifier>{21b0a62c-6884-4714-98f6-ec1cf8d86fa1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="armada\states\bsp">
+      <UniqueIdentifier>{146e2849-934f-4a54-ab59-4dc6123072e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\resources\bitmap_font">
+      <UniqueIdentifier>{e14915e5-fb06-4ae2-8bf0-816a9ef249ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\resources\gpu_program">
+      <UniqueIdentifier>{ba2ac560-bbf7-4205-bdd7-4af4c14b5c5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\resources\image">
+      <UniqueIdentifier>{e76e9958-510f-46f6-8954-a1b22f68cb47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\resources\material">
+      <UniqueIdentifier>{e4317334-489d-48d3-b17b-f70e2bf56cf7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\resources\model">
+      <UniqueIdentifier>{9dfe90f3-bfcd-40ee-beb9-2e6a6a151eaa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\resources\sprite_set">
+      <UniqueIdentifier>{1ce79b84-b9e4-4689-a458-ac57e0a0a69d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\resources\string">
+      <UniqueIdentifier>{82b320d0-3d33-4ebc-869b-14e181841135}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\resources\texture">
+      <UniqueIdentifier>{239dcc50-2a4a-4231-9bc3-8d2c133d0ec8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\utils">
+      <UniqueIdentifier>{b2c38d69-a87d-4af8-9258-e676aafc8240}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="armada\states\test">
+      <UniqueIdentifier>{d24f4658-49e7-4841-b07c-833fb4f59807}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\resources\sound">
+      <UniqueIdentifier>{449a7afe-0d1d-4749-bd7c-b414a5c16e37}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

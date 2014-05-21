@@ -1,0 +1,50 @@
+﻿Build started 06/03/2014 11:51:26 AM.
+     1>Project "C:\Users\Developer\Desktop\mandala3d\ext\libpng-1.6.3\projects\vstudio\pngstest\pngstest.vcxproj" on node 4 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"..\..\..\..\zlib-1.2.5" /I..\..\..\scripts /Zi /nologo /W4 /WX /Ox /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /GF /Gm- /EHsc /MT /GS /Gy- /fp:precise /fp:except- /Zc:wchar_t /Zc:forScope /Fo"Release Library\\" /Fd"Release Library\vc120.pdb" /FR"Release Library\\" /Gd /TC /wd4996 /wd4127 /analyze- /errorReport:prompt ..\..\..\contrib\libtests\pngstest.c
+         pngstest.c
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Developer\Desktop\mandala3d\ext\libpng-1.6.3\projects\vstudio\Release Library\pngstest.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Users\Developer\Desktop\mandala3d\ext\libpng-1.6.3\projects\vstudio\Release Library\\" libpng16.lib zlib.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Developer\Desktop\mandala3d\ext\libpng-1.6.3\projects\vstudio\Release Library\pngstest.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Developer\Desktop\mandala3d\ext\libpng-1.6.3\projects\vstudio\Release Library\pngstest.lib" /MACHINE:X86 /SAFESEH "Release Library\pngstest.obj"
+         Generating code
+         Finished generating code
+         pngstest.vcxproj -> C:\Users\Developer\Desktop\mandala3d\ext\libpng-1.6.3\projects\vstudio\Release Library\pngstest.exe
+       BscMake:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\bscmake.exe /nologo /o"C:\Users\Developer\Desktop\mandala3d\ext\libpng-1.6.3\projects\vstudio\Release Library\pngstest.bsc" "Release Library\pngstest.sbr"
+       CustomBuildStep:
+         "C:\Users\Developer\Desktop\mandala3d\ext\libpng-1.6.3\projects\vstudio\Release Library\pngstest.exe" --strict --log --touch "Release Library\pngstest.out" ../../../contrib/pngsuite/basn0g01.png ../../../contrib/pngsuite/basn0g02.png ../../../contrib/pngsuite/basn0g04.png ../../../contrib/pngsuite/basn0g08.png ../../../contrib/pngsuite/basn0g16.png ../../../contrib/pngsuite/basn2c08.png ../../../contrib/pngsuite/basn2c16.png ../../../contrib/pngsuite/basn3p01.png ../../../contrib/pngsuite/basn3p02.png ../../../contrib/pngsuite/basn3p04.png ../../../contrib/pngsuite/basn3p08.png ../../../contrib/pngsuite/basn4a08.png ../../../contrib/pngsuite/basn4a16.png ../../../contrib/pngsuite/basn6a08.png ../../../contrib/pngsuite/basn6a16.png ../../../contrib/pngsuite/ftbbn0g01.png ../../../contrib/pngsuite/ftbbn0g02.png ../../../contrib/pngsuite/ftbbn0g04.png ../../../contrib/pngsuite/ftbbn2c16.png ../../../contrib/pngsuite/ftbbn3p08.png ../../../contrib/pngsuite/ftbgn2c16.png ../../../contrib/pngsuite/ftbgn3p08.png ../../../contrib/pngsuite/ftbrn2c08.png ../../../contrib/pngsuite/ftbwn0g16.png ../../../contrib/pngsuite/ftbwn3p08.png ../../../contrib/pngsuite/ftbyn3p08.png ../../../contrib/pngsuite/ftp0n0g08.png ../../../contrib/pngsuite/ftp0n2c08.png ../../../contrib/pngsuite/ftp0n3p08.png ../../../contrib/pngsuite/ftp1n3p08.png
+         :VCEnd
+         PASS: --strict ../../../contrib/pngsuite/basn0g01.png
+         PASS: --strict ../../../contrib/pngsuite/basn0g02.png
+         PASS: --strict ../../../contrib/pngsuite/basn0g04.png
+         PASS: --strict ../../../contrib/pngsuite/basn0g08.png
+         PASS: --strict ../../../contrib/pngsuite/basn0g16.png
+         PASS: --strict ../../../contrib/pngsuite/basn2c08.png
+         PASS: --strict ../../../contrib/pngsuite/basn2c16.png
+         PASS: --strict ../../../contrib/pngsuite/basn3p01.png
+         PASS: --strict ../../../contrib/pngsuite/basn3p02.png
+         PASS: --strict ../../../contrib/pngsuite/basn3p04.png
+         PASS: --strict ../../../contrib/pngsuite/basn3p08.png
+         PASS: --strict ../../../contrib/pngsuite/basn4a08.png
+         PASS: --strict ../../../contrib/pngsuite/basn4a16.png
+         PASS: --strict ../../../contrib/pngsuite/basn6a08.png
+         PASS: --strict ../../../contrib/pngsuite/basn6a16.png
+         PASS: --strict ../../../contrib/pngsuite/ftbbn0g01.png
+         PASS: --strict ../../../contrib/pngsuite/ftbbn0g02.png
+         PASS: --strict ../../../contrib/pngsuite/ftbbn0g04.png
+         PASS: --strict ../../../contrib/pngsuite/ftbbn2c16.png
+         PASS: --strict ../../../contrib/pngsuite/ftbbn3p08.png
+         PASS: --strict ../../../contrib/pngsuite/ftbgn2c16.png
+         PASS: --strict ../../../contrib/pngsuite/ftbgn3p08.png
+         PASS: --strict ../../../contrib/pngsuite/ftbrn2c08.png
+         PASS: --strict ../../../contrib/pngsuite/ftbwn0g16.png
+         PASS: --strict ../../../contrib/pngsuite/ftbwn3p08.png
+         PASS: --strict ../../../contrib/pngsuite/ftbyn3p08.png
+         PASS: --strict ../../../contrib/pngsuite/ftp0n0g08.png
+         PASS: --strict ../../../contrib/pngsuite/ftp0n2c08.png
+         PASS: --strict ../../../contrib/pngsuite/ftp0n3p08.png
+         PASS: --strict ../../../contrib/pngsuite/ftp1n3p08.png
+     1>Done Building Project "C:\Users\Developer\Desktop\mandala3d\ext\libpng-1.6.3\projects\vstudio\pngstest\pngstest.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:07.64

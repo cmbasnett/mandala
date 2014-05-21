@@ -1,0 +1,15 @@
+{
+	"gpu_program":"model.gpu",
+	"diffuse":
+	{
+		"texture":"guard1_body.png"
+	},
+	"normal":
+	{
+		"texture":"guard1_body_local.png"
+	},
+	"specular":
+	{
+		"texture":"guard1_body_s.png"
+	}
+}
