@@ -168,7 +168,6 @@ xcopy /y "$(SolutionDir)ext\glew-1.10.0\bin\Release\Win32\*.dll" "$(TargetDir)"<
     <ClInclude Include="audio_mgr.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="color.h" />
-    <ClInclude Include="game_properties.h" />
     <ClInclude Include="arcball_camera.h" />
     <ClInclude Include="armada\armada.h" />
     <ClInclude Include="armada\bsp_state.h" />
@@ -246,7 +245,6 @@ xcopy /y "$(SolutionDir)ext\glew-1.10.0\bin\Release\Win32\*.dll" "$(TargetDir)"<
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="frustum.cpp" />
     <ClCompile Include="game.cpp" />
-    <ClCompile Include="game_properties.cpp" />
     <ClCompile Include="arcball_camera.cpp" />
     <ClCompile Include="armada\armada.cpp" />
     <ClCompile Include="armada\bsp_state.cpp" />

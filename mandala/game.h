@@ -4,9 +4,6 @@
 #include <string>
 #include <memory>
 
-//mandala
-#include "game_properties.h"
-
 namespace mandala
 {
 	struct game_t
@@ -23,6 +20,5 @@ namespace mandala
 		virtual void app_render_end();
 
 		std::string name;
-		game_properties_t properties;
 	};
 };

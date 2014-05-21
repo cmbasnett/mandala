@@ -193,9 +193,6 @@
     <ClInclude Include="sprite.h">
       <Filter>mandala\resources\sprite_set</Filter>
     </ClInclude>
-    <ClInclude Include="game_properties.h">
-      <Filter>mandala\app</Filter>
-    </ClInclude>
     <ClInclude Include="color.h">
       <Filter>mandala\utils</Filter>
     </ClInclude>
@@ -323,9 +320,6 @@
       <Filter>mandala\resources\sprite_set</Filter>
     </ClCompile>
     <ClCompile Include="game.cpp">
-      <Filter>mandala\app</Filter>
-    </ClCompile>
-    <ClCompile Include="game_properties.cpp">
       <Filter>mandala\app</Filter>
     </ClCompile>
     <ClCompile Include="camera.cpp">

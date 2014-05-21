@@ -3,7 +3,6 @@
 //mandala
 #include "../app.h"
 #include "../sprite_set.h"
-#include "../game_properties.h"
 #include "../platform.h"
 
 //armada
@@ -30,6 +29,11 @@ namespace mandala
 		void armada_t::app_run_start()
 		{
 			game_t::app_run_start();
+
+            platform.set_window_title(name);
+            platform.set_window_size(vec2_i32_t(1024, 768));
+
+            app.resources.mount(".\\resources\\armada.pack");
 
 			app.states.push(std::make_shared<bsp_state_t>());
 		}
