@@ -52,7 +52,7 @@ namespace mandala
 		}
 
 		auto strings = source.c_str();
-		GLint lengths[1] = { source.length() };
+        GLint lengths[1] = { static_cast<GLint>(source.length()) };
 
 		//set shader source
 		glShaderSource(handle, 1, &strings, &lengths[0]);

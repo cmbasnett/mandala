@@ -54,7 +54,7 @@ namespace mandala
 
 		for (size_t gamepad_index = 0; gamepad_index < input.gamepad_states.size(); ++gamepad_index)
 		{
-			if (!glfwJoystickPresent(gamepad_index))
+            if (!glfwJoystickPresent(static_cast<int>(gamepad_index)))
 			{
 				break;
 			}
@@ -62,7 +62,7 @@ namespace mandala
 			auto& gamepad_state = input.gamepad_states[gamepad_index];
 
 			int axis_count = 0;
-			auto axes = glfwGetJoystickAxes(gamepad_index, &axis_count);
+			auto axes = glfwGetJoystickAxes(static_cast<int>(gamepad_index), &axis_count);
 
 			for (auto axis_index = 0; axis_index < axis_count; ++axis_index)
 			{
@@ -82,7 +82,7 @@ namespace mandala
 			}
 
 			int button_count = 0;
-			auto buttons = glfwGetJoystickButtons(gamepad_index, &button_count);
+			auto buttons = glfwGetJoystickButtons(static_cast<int>(gamepad_index), &button_count);
 
 			for (auto button_index = 0; button_index < button_count; ++button_index)
 			{

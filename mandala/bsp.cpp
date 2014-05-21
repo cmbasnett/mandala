@@ -412,7 +412,7 @@ namespace mandala
 				vertex.diffuse_texcoord.y = -(glm::dot(vertex.position, texture_info.t.axis) + texture_info.t.offset) / bsp_texture.height;
 
 				vertices.push_back(vertex);
-				indices.push_back(indices.size());
+                indices.push_back(static_cast<uint32_t>(indices.size()));
 			}
 		}
 
@@ -608,10 +608,10 @@ namespace mandala
 
 			for (size_t i = 0; i < leaf_pvs.size(); ++i)
 			{
-				if (!leaf_pvs[i])
-				{
-					continue;
-				}
+				//if (!leaf_pvs[i])
+				//{
+				//	continue;
+				//}
 
 				auto& leaf = leafs[i];
 

@@ -1,3 +1,6 @@
+//std
+#include <iostream>
+
 //mandala
 #include "../input_event.h"
 #include "../app.h"

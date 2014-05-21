@@ -106,7 +106,7 @@ namespace mandala
 			std::string page_texture_name;
 			std::getline(istream, page_texture_name, '\0');
 
-			page_texture_names_length -= page_texture_name.length() + 1;
+            page_texture_names_length -= static_cast<uint32_t>(page_texture_name.length() + 1);
 
 			auto page_texture = app.resources.get<texture_t>(hash_t(page_texture_name));
 
@@ -232,7 +232,7 @@ namespace mandala
 		{
 			for (size_t j = 0; j < BITMAP_FONT_INDICES_PER_CHARACTER; ++j)
 			{
-				indices[(i * BITMAP_FONT_INDICES_PER_CHARACTER) + j] = (i * BITMAP_FONT_VERTICES_PER_CHARACTER) + character_index_offsets[j];
+				indices[(i * BITMAP_FONT_INDICES_PER_CHARACTER) + j] = static_cast<uint16_t>(i) * BITMAP_FONT_VERTICES_PER_CHARACTER + character_index_offsets[j];
 			}
 		}
 

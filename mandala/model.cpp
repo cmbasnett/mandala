@@ -159,7 +159,7 @@ namespace mandala
 			auto mesh = std::make_shared<mesh_t>();
 
 			//index count
-			mesh->index_count = mesh_info.indices.size();
+            mesh->index_count = mesh_info.indices.size();
 
 			//material
 			mesh->material = app.resources.get<material_t>(hash_t(mesh_info.shader + ".mat"));	//TODO: don't resort to string concat
@@ -328,7 +328,7 @@ namespace mandala
 				//bone matrices
 				if (BONE_MATRICES_LOCATION != -1)
 				{
-					glUniformMatrix4fv(BONE_MATRICES_LOCATION, bone_matrices.size(), GL_FALSE, (float*)(bone_matrices.data()));
+					glUniformMatrix4fv(BONE_MATRICES_LOCATION, static_cast<GLsizei>(bone_matrices.size()), GL_FALSE, (float*)(bone_matrices.data()));
 				}
 
 				//light position
@@ -508,7 +508,7 @@ namespace mandala
 			}
 		}
 
-		glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_SHORT, 0);
+		glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(index_count), GL_UNSIGNED_SHORT, 0);
 
 		//disable vertex attributes
 		if (POSITION_LOCATION >= 0)

@@ -37,7 +37,7 @@ namespace mandala
 				vec4_t bone_weights_1;
 			};
 
-			int32_t index_count = 0;
+			size_t index_count = 0;
 			uint32_t vertex_buffer = 0;
 			uint32_t index_buffer = 0;
 			std::shared_ptr<material_t> material;

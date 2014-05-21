@@ -44,18 +44,18 @@ namespace mandala
 			debug_label->justification = gui::label_t::justification_t::center;
 			debug_label->padding = gui::padding_t(16);
 
-			crosshair_sprite_refs.push_back({ hash_t("crono.json"), hash_t("chrono_01.png") });
-			crosshair_sprite_refs.push_back({ hash_t("crono.json"), hash_t("chrono_02.gif") });
-			crosshair_sprite_refs.push_back({ hash_t("crono.json"), hash_t("chrono_03.gif") });
-			crosshair_sprite_refs.push_back({ hash_t("crono.json"), hash_t("chrono_04.gif") });
+			crosshair_sprite_refs.emplace_back(hash_t("crono.json"), hash_t("chrono_01.png"));
+            crosshair_sprite_refs.emplace_back(hash_t("crono.json"), hash_t("chrono_02.gif"));
+            crosshair_sprite_refs.emplace_back(hash_t("crono.json"), hash_t("chrono_03.gif"));
+            crosshair_sprite_refs.emplace_back(hash_t("crono.json"), hash_t("chrono_04.gif"));
 
 			crosshair_image = std::make_shared<gui::image_t>();
 			crosshair_image->is_autosized_to_texture = true;
 			crosshair_image->sprite = crosshair_sprite_refs[crosshair_sprite_index];
 			crosshair_image->anchor_flags = gui::node_t::anchor_flag_all;
 
-			layout->adopt(debug_label);
-			layout->adopt(crosshair_image);
+            layout->adopt(debug_label);
+            layout->adopt(crosshair_image);
 
 			layout->clean();
 		}

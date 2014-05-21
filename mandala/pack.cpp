@@ -7,6 +7,7 @@
 
 //boost
 #include <boost\iostreams\stream.hpp>
+#include <boost\filesystem.hpp>
 
 #define PACK_MAGIC			("PACK")
 #define PACK_MAGIC_LENGTH	(4)
@@ -20,8 +21,7 @@ namespace mandala
 		auto istream = std::ifstream(path, std::ios_base::binary | std::ios_base::in);
 
 		//magic
-		char magic[PACK_MAGIC_LENGTH + 1];
-		memset(magic, '\0', PACK_MAGIC_LENGTH + 1);
+        char magic[PACK_MAGIC_LENGTH + 1] = { '\0' };
 		istream.read(magic, PACK_MAGIC_LENGTH);
 
 		if (strcmp(PACK_MAGIC, magic) != 0)
@@ -30,7 +30,7 @@ namespace mandala
 		}
 
 		//version
-		int32_t version = 0;
+		uint32_t version = 0;
 		istream.read((char*)&version, sizeof(version));
 
 		if(version != PACK_VERSION)

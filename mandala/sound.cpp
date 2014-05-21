@@ -96,7 +96,7 @@ namespace mandala
 			}
 		}
 
-		alBufferData(buffer, format, data.data(), data.size(), sample_rate);
+		alBufferData(buffer, format, data.data(), static_cast<ALsizei>(data.size()), sample_rate);
 
 		if (alGetError() != AL_NO_ERROR)
 		{

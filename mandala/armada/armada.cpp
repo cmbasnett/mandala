@@ -33,7 +33,7 @@ namespace mandala
             platform.set_window_title(name);
             platform.set_window_size(vec2_i32_t(1024, 768));
 
-            app.resources.mount(".\\resources\\armada.pack");
+            app.resources.mount("resources\\armada.pack");
 
 			app.states.push(std::make_shared<bsp_state_t>());
 		}
