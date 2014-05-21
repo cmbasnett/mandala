@@ -1,0 +1,13 @@
+{
+	"name":"Armada",
+	"resources":{
+		"packs":
+		[
+			"armada.pack"
+		]
+	},
+	"window":{
+	"size":[1024,768],
+	"position":[0,0]
+	}
+}

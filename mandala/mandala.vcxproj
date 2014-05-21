@@ -88,7 +88,7 @@
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y "$(SolutionDir)ext\glfw-3.0.4.bin.WIN32\lib-msvc110\*.dll" "$(TargetDir)"
+      <Command>xcopy /y "$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\lib-msvc110\*.dll" "$(TargetDir)"
 xcopy /y "$(SolutionDir)ext\glew-1.10.0\bin\Release\Win32\*.dll" "$(TargetDir)"</Command>
     </PostBuildEvent>
     <CustomBuildStep>

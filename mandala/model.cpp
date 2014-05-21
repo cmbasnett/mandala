@@ -20,18 +20,18 @@ namespace mandala
 	model_t::model_t(std::istream& istream)
 	{
 		//magic
-		char magic[MD5B_MAGIC_LENGTH + 1];
-		memset(magic, '\0', MD5B_MAGIC_LENGTH + 1);
-		istream.read(magic, MD5B_MAGIC_LENGTH);
+        char magic[md5b::magic_length + 1];
+        memset(magic, '\0', md5b::magic_length + 1);
+        istream.read(magic, md5b::magic_length);
 
-		if(strcmp(MD5B_MAGIC, magic) != 0)
+		if(strcmp(md5b::magic, magic) != 0)
 		{
 			throw std::exception();
 		}
 
-		istream.read(magic, MD5B_MAGIC_LENGTH);
+        istream.read(magic, md5b::magic_length);
 
-		if(strcmp(MD5B_MODEL_MAGIC, magic) != 0)
+		if(strcmp(md5b::model_magic, magic) != 0)
 		{
 			throw std::exception();
 		}
@@ -40,7 +40,7 @@ namespace mandala
 		int32_t version = 0;
 		istream.read((char*)&version, sizeof(version));
 
-		if(version != MD5B_MODEL_VERSION)
+		if(version != md5b::model_version)
 		{
 			throw std::exception();
 		}

@@ -2,18 +2,18 @@
 
 #include "types.h"
 
-#define MD5B_MAGIC_LENGTH				(4)
-#define MD5B_MAGIC						("MD5B")
-#define MD5B_ANIMATION_MAGIC			("ANIM")
-#define MD5B_ANIMATION_VERSION			(1)
-#define MD5B_BONE_NULL_INDEX			(255)
-#define MD5B_MODEL_MAGIC				("MESH")
-#define MD5B_MODEL_VERSION				(1)
-
 namespace mandala
 {
 	namespace md5b
 	{
+        static const auto magic_length = 4;
+        static const auto magic = "MD5B";
+        static const auto animation_magic = "ANIM";
+        static const auto animation_version = 1;
+        static const auto bone_null_index = 255;
+        static const auto model_magic = "MESH";
+        static const auto model_version = 1;
+
 		inline void compute_quaternion_w(quat_t& quaternion)
 		{
 			auto t = 1.0f - ((quaternion.x * quaternion.x) + (quaternion.y * quaternion.y) + (quaternion.z * quaternion.z));

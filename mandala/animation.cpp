@@ -1,26 +1,28 @@
-//mandala
-#include "animation.h"
-
 //std
 #include <fstream>
+
+//boost
+#include <boost/iostreams/read.hpp>
+
+//mandala
+#include "animation.h"
 
 namespace mandala
 {
 	animation_t::animation_t(std::istream& istream)
 	{
 		//magic
-		char magic[MD5B_MAGIC_LENGTH + 1];
-		memset(magic, '\0', MD5B_MAGIC_LENGTH + 1);
-		istream.read(magic, MD5B_MAGIC_LENGTH);
+        char magic[md5b::magic_length + 1] = { '\0' };
+        istream.read(magic, md5b::magic_length);
 
-		if(strcmp(MD5B_MAGIC, magic) != 0)
+		if(strcmp(md5b::magic, magic) != 0)
 		{
 			throw std::exception();
 		}
 
-		istream.read(magic, MD5B_MAGIC_LENGTH);
+        istream.read(magic, md5b::magic_length);
 
-		if(strcmp(MD5B_ANIMATION_MAGIC, magic) != 0)
+		if(strcmp(md5b::animation_magic, magic) != 0)
 		{
 			throw std::exception();
 		}
@@ -29,7 +31,7 @@ namespace mandala
 		int32_t version = 0;
 		istream.read((char*)&version, sizeof(version));
 
-		if(version != MD5B_ANIMATION_VERSION)
+		if(version != md5b::animation_version)
 		{
 			throw std::exception();
 		}
@@ -143,7 +145,7 @@ namespace mandala
 
 				md5b::compute_quaternion_w(skeleton_bone.orientation);
 
-				if(skeleton_bone.parent_index != MD5B_BONE_NULL_INDEX)
+				if(skeleton_bone.parent_index != md5b::bone_null_index)
 				{
 					auto& parent_skeleton_bone = skeleton.bones[skeleton_bone.parent_index];
 					auto rotated_position = parent_skeleton_bone.orientation * skeleton_bone.position;
