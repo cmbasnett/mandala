@@ -11,3 +11,6 @@ mandala/Debug/mandala.tlog/link.read.1.tlog
 mandala/Debug/mandala.tlog/link.write.1.tlog
 resources/deploy/armada.pack
 *.pack
+*.tlog
+*.opensdf
+*.sdf
