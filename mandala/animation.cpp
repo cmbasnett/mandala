@@ -22,21 +22,18 @@ namespace mandala
 
 		//version
 		int32_t version = 0;
-		istream.read((char*)&version, sizeof(version));
+        istream.read(reinterpret_cast<char*>(&version), sizeof(version));
 
 		if(version != md5b::animation_version)
 		{
 			throw std::exception();
-		}
+        }
 
-		//name
-		std::getline(istream, name, '\0');
-
-		//frames per second
-		istream.read((char*)&frames_per_second, sizeof(frames_per_second));
+        //frames per second
+        istream.read(reinterpret_cast<char*>(&frames_per_second), sizeof(frames_per_second));
 
 		//bone count
-		istream.read((char*)&bone_count, sizeof(bone_count));
+        istream.read(reinterpret_cast<char*>(&bone_count), sizeof(bone_count));
 
 		//bones
 		std::vector<bone_t> bones;
@@ -47,18 +44,27 @@ namespace mandala
 			std::string bone_name;
 			std::getline(istream, bone_name, '\0');
 			bone.hash = hash_t(bone_name);
-			istream.read((char*)&bone.parent_index, sizeof(bone.parent_index));
-			istream.read((char*)&bone.flags, sizeof(bone.flags));
-			istream.read((char*)&bone.data_start_index, sizeof(bone.data_start_index));
+            istream.read(reinterpret_cast<char*>(&bone.parent_index), sizeof(bone.parent_index));
+            istream.read(reinterpret_cast<char*>(&bone.flags), sizeof(bone.flags));
+            istream.read(reinterpret_cast<char*>(&bone.data_start_index), sizeof(bone.data_start_index));
 		}
 
 		//frame count
-		istream.read((char*)&frame_count, sizeof(frame_count));
+        istream.read(reinterpret_cast<char*>(&frame_count), sizeof(frame_count));
 
 		//frame bounds
 		std::vector<aabb3_t> frame_bounds;
 		frame_bounds.resize(frame_count);
-		istream.read((char*)frame_bounds.data(), sizeof(frame_bounds[0]) * frame_count);
+
+        for (auto& frame_bound : frame_bounds)
+        {
+            istream.read(reinterpret_cast<char*>(&frame_bound.min.x), sizeof(frame_bound.min.x));
+            istream.read(reinterpret_cast<char*>(&frame_bound.min.y), sizeof(frame_bound.min.y));
+            istream.read(reinterpret_cast<char*>(&frame_bound.min.z), sizeof(frame_bound.min.z));
+            istream.read(reinterpret_cast<char*>(&frame_bound.max.x), sizeof(frame_bound.max.x));
+            istream.read(reinterpret_cast<char*>(&frame_bound.max.y), sizeof(frame_bound.max.y));
+            istream.read(reinterpret_cast<char*>(&frame_bound.max.z), sizeof(frame_bound.max.z));
+        }
 
 		//base bone frames
 		std::vector<bone_frame_t> base_bone_frames;
@@ -66,22 +72,24 @@ namespace mandala
 
 		for(auto& base_bone_frame : base_bone_frames)
 		{
-			istream.read((char*)&base_bone_frame.position, sizeof(base_bone_frame.position));
-			istream.read((char*)&base_bone_frame.orientation.x, sizeof(base_bone_frame.orientation.x));
-			istream.read((char*)&base_bone_frame.orientation.y, sizeof(base_bone_frame.orientation.y));
-			istream.read((char*)&base_bone_frame.orientation.z, sizeof(base_bone_frame.orientation.z));
+            istream.read(reinterpret_cast<char*>(&base_bone_frame.position.x), sizeof(base_bone_frame.position.x));
+            istream.read(reinterpret_cast<char*>(&base_bone_frame.position.y), sizeof(base_bone_frame.position.y));
+            istream.read(reinterpret_cast<char*>(&base_bone_frame.position.z), sizeof(base_bone_frame.position.z));
+            istream.read(reinterpret_cast<char*>(&base_bone_frame.orientation.x), sizeof(base_bone_frame.orientation.x));
+            istream.read(reinterpret_cast<char*>(&base_bone_frame.orientation.y), sizeof(base_bone_frame.orientation.y));
+            istream.read(reinterpret_cast<char*>(&base_bone_frame.orientation.z), sizeof(base_bone_frame.orientation.z));
 
 			md5b::compute_quaternion_w(base_bone_frame.orientation);
 		}
 
 		//frame data count
 		uint32_t frame_data_count;
-		istream.read((char*)&frame_data_count, sizeof(frame_data_count));
+        istream.read(reinterpret_cast<char*>(&frame_data_count), sizeof(frame_data_count));
 
 		//frame data
 		std::vector<float32_t> frame_data;
 		frame_data.resize(frame_data_count * frame_count);
-		istream.read((char*)frame_data.data(), sizeof(frame_data[0]) * frame_data.size());
+        istream.read(reinterpret_cast<char*>(frame_data.data()), sizeof(frame_data[0]) * frame_data.size());
 
 		//build frame skeletons
 		frame_skeletons.resize(frame_count);

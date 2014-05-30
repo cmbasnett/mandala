@@ -23,7 +23,7 @@ namespace mandala
 	model_t::model_t(std::istream& istream)
 	{
 		//magic
-        char magic[md5b::magic_length + 1];
+        char magic[md5b::magic_length + 1]; 
         memset(magic, '\0', md5b::magic_length + 1);
         istream.read(magic, md5b::magic_length);
 
@@ -34,7 +34,7 @@ namespace mandala
 
 		//version
 		int32_t version = 0;
-		istream.read((char*)&version, sizeof(version));
+        istream.read(reinterpret_cast<char*>(&version), sizeof(version));
 
 		if(version != md5b::model_version)
 		{
@@ -43,7 +43,7 @@ namespace mandala
 
 		//bone count
 		uint32_t bone_count;
-		istream.read((char*)&bone_count, sizeof(bone_count));
+        istream.read(reinterpret_cast<char*>(&bone_count), sizeof(bone_count));
 
 		//bones
 		std::vector<bone_info_t> bone_infos;
@@ -58,20 +58,20 @@ namespace mandala
 
 			bone_indices.insert(std::make_pair(hash_t(bone_info.name), i));
 
-			istream.read((char*)&bone_info.parent_index, sizeof(bone_info.parent_index));
-            istream.read((char*)&bone_info.position.x, sizeof(bone_info.position.x));
-            istream.read((char*)&bone_info.position.y, sizeof(bone_info.position.y));
-            istream.read((char*)&bone_info.position.z, sizeof(bone_info.position.z));
-			istream.read((char*)&bone_info.orientation.x, sizeof(bone_info.orientation.x));
-			istream.read((char*)&bone_info.orientation.y, sizeof(bone_info.orientation.y));
-			istream.read((char*)&bone_info.orientation.z, sizeof(bone_info.orientation.z));
+            istream.read(reinterpret_cast<char*>(&bone_info.parent_index), sizeof(bone_info.parent_index));
+            istream.read(reinterpret_cast<char*>(&bone_info.position.x), sizeof(bone_info.position.x));
+            istream.read(reinterpret_cast<char*>(&bone_info.position.y), sizeof(bone_info.position.y));
+            istream.read(reinterpret_cast<char*>(&bone_info.position.z), sizeof(bone_info.position.z));
+            istream.read(reinterpret_cast<char*>(&bone_info.orientation.x), sizeof(bone_info.orientation.x));
+            istream.read(reinterpret_cast<char*>(&bone_info.orientation.y), sizeof(bone_info.orientation.y));
+            istream.read(reinterpret_cast<char*>(&bone_info.orientation.z), sizeof(bone_info.orientation.z));
 
 			md5b::compute_quaternion_w(bone_info.orientation);
 		}
 
 		//mesh count
 		uint8_t mesh_count = 0;
-		istream.read((char*)&mesh_count, sizeof(mesh_count));
+        istream.read(reinterpret_cast<char*>(&mesh_count), sizeof(mesh_count));
 
 		std::vector<mesh_info_t> mesh_infos;
 		mesh_infos.resize(mesh_count);
@@ -83,39 +83,39 @@ namespace mandala
 
 			//vertex count
 			uint32_t vertex_count;
-			istream.read((char*)&vertex_count, sizeof(vertex_count)); 
+            istream.read(reinterpret_cast<char*>(&vertex_count), sizeof(vertex_count));
 
 			//vertices
 			mesh.vertices.resize(vertex_count);
 
-			for(auto& vertex : mesh.vertices) 
+			for(auto& vertex : mesh.vertices)
 			{
-                istream.read((char*)&vertex.texcoord.x, sizeof(vertex.texcoord.x));
-                istream.read((char*)&vertex.texcoord.y, sizeof(vertex.texcoord.y));
-				istream.read((char*)&vertex.weight_index_start, sizeof(vertex.weight_index_start));
-				istream.read((char*)&vertex.weight_count, sizeof(vertex.weight_count));
+                istream.read(reinterpret_cast<char*>(&vertex.texcoord.x), sizeof(vertex.texcoord.x));
+                istream.read(reinterpret_cast<char*>(&vertex.texcoord.y), sizeof(vertex.texcoord.y));
+                istream.read(reinterpret_cast<char*>(&vertex.weight_index_start), sizeof(vertex.weight_index_start));
+                istream.read(reinterpret_cast<char*>(&vertex.weight_count), sizeof(vertex.weight_count));
 			}
 
 			//index count
-			uint32_t index_count;
-			istream.read((char*)&index_count, sizeof(index_count));
+			uint32_t index_count; 
+            istream.read(reinterpret_cast<char*>(&index_count), sizeof(index_count));
 
 			//indices
 			mesh.indices.resize(index_count);
-			istream.read((char*)&mesh.indices[0], sizeof(mesh.indices[0]) * mesh.indices.size());
+            istream.read(reinterpret_cast<char*>(&mesh.indices[0]), sizeof(mesh.indices[0]) * mesh.indices.size());
 
 			//weight count
 			uint32_t weight_count;
-			istream.read((char*)&weight_count, sizeof(weight_count));
+            istream.read(reinterpret_cast<char*>(&weight_count), sizeof(weight_count));
 
 			//weights
 			mesh.weights.resize(weight_count);
 
 			for(auto& weight : mesh.weights)
 			{
-				istream.read((char*)&weight.bone_index, sizeof(weight.bone_index));
-				istream.read((char*)&weight.bias, sizeof(weight.bias));
-				istream.read((char*)&weight.position, sizeof(weight.position));
+                istream.read(reinterpret_cast<char*>(&weight.bone_index), sizeof(weight.bone_index));
+                istream.read(reinterpret_cast<char*>(&weight.bias), sizeof(weight.bias));
+                istream.read(reinterpret_cast<char*>(&weight.position), sizeof(weight.position));
 			}
 		}
 
@@ -232,7 +232,7 @@ namespace mandala
 
 			glGenBuffers(1, &mesh->index_buffer);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->index_buffer);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t)* mesh->index_count, mesh_info.indices.data(), GL_STATIC_DRAW);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * mesh->index_count, mesh_info.indices.data(), GL_STATIC_DRAW);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 			meshes.push_back(mesh);

@@ -161,11 +161,17 @@ namespace md5b
 
         //bone count
         auto bone_count = static_cast<unsigned int>(model.bones.size());
-        ostream.write((char*)&bone_count, sizeof(bone_count));
+        ostream.write(reinterpret_cast<const char*>(&bone_count), sizeof(bone_count));
 
         //bones
-        for (const auto& bone : model.bones)
+        for (auto bone : model.bones)
         {
+            bone.position.y *= -1;
+            std::swap(bone.position.y, bone.position.z);
+
+            bone.orientation.y *= -1;
+            std::swap(bone.orientation.y, bone.orientation.z);
+
             ostream.write(bone.name.c_str(), bone.name.size() + 1);
             ostream.write(reinterpret_cast<const char*>(&bone.parent_index), sizeof(bone.parent_index));
             ostream.write(reinterpret_cast<const char*>(&bone.position.x), sizeof(bone.position.x));
@@ -188,11 +194,13 @@ namespace md5b
             //vertex count
             auto vertex_count = static_cast<unsigned int>(mesh.vertices.size());
 
-            ostream.write((char*)&vertex_count, sizeof(vertex_count));
+            ostream.write(reinterpret_cast<const char*>(&vertex_count), sizeof(vertex_count));
 
             //vertices
-            for (const auto& vertex : mesh.vertices)
+            for (auto vertex : mesh.vertices)
             {
+                vertex.texcoord.y *= -1;
+
                 ostream.write(reinterpret_cast<const char*>(&vertex.texcoord.x), sizeof(vertex.texcoord.x));
                 ostream.write(reinterpret_cast<const char*>(&vertex.texcoord.y), sizeof(vertex.texcoord.y));
                 ostream.write(reinterpret_cast<const char*>(&vertex.weight_index_start), sizeof(vertex.weight_index_start));
@@ -201,23 +209,26 @@ namespace md5b
 
             //index count
             auto index_count = static_cast<unsigned int>(mesh.indices.size());
-            ostream.write((char*)&index_count, sizeof(index_count));
+            ostream.write(reinterpret_cast<const char*>(&index_count), sizeof(index_count));
 
             //indices
             for (size_t i = 0; i < mesh.indices.size(); i += 3)
             {
+                ostream.write(reinterpret_cast<const char*>(&mesh.indices[i + 2]), sizeof(mesh.indices[2]));
+                ostream.write(reinterpret_cast<const char*>(&mesh.indices[i + 1]), sizeof(mesh.indices[1]));
                 ostream.write(reinterpret_cast<const char*>(&mesh.indices[i + 0]), sizeof(mesh.indices[0]));
-                ostream.write(reinterpret_cast<const char*>(&mesh.indices[i + 1]), sizeof(mesh.indices[0]));
-                ostream.write(reinterpret_cast<const char*>(&mesh.indices[i + 2]), sizeof(mesh.indices[0]));
             }
 
             //weight count
             auto weight_count = static_cast<unsigned int>(mesh.weights.size());
-            ostream.write((char*)&weight_count, sizeof(weight_count));
+            ostream.write(reinterpret_cast<const char*>(&weight_count), sizeof(weight_count));
 
             //weights
-            for (const auto& weight : mesh.weights)
+            for (auto weight : mesh.weights)
             {
+                weight.position.y *= -1;
+                std::swap(weight.position.y, weight.position.z);
+
                 ostream.write(reinterpret_cast<const char*>(&weight.bone_index), sizeof(weight.bone_index));
                 ostream.write(reinterpret_cast<const char*>(&weight.bias), sizeof(weight.bias));
                 ostream.write(reinterpret_cast<const char*>(&weight.position.x), sizeof(weight.position.x));

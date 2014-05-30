@@ -21,7 +21,7 @@ using namespace md5b;
 
 int main(int argc, char* argv[])
 {
-    if (argc < 3)
+    if (argc < 2)
     {
         std::cerr << "too few arguments" << std::endl;
         
@@ -41,7 +41,19 @@ int main(int argc, char* argv[])
     }
 
     //output path
-    boost::filesystem::path output_path(argv[2]);
+    boost::filesystem::path output_path;
+
+    if (argc >= 3)
+    {
+        output_path = argv[2];
+    }
+    else
+    {
+        output_path = input_path.parent_path();
+        output_path += "\\";
+    }
+
+    std::cout << output_path << std::endl;
 
     if (!boost::filesystem::is_directory(output_path))
     {
@@ -74,8 +86,6 @@ int main(int argc, char* argv[])
 
             return 1;
         }
-
-        std::cout << "successfully exported md5m" << std::endl;
     }
     else if (boost::iequals(extension, ".md5anim"))
     {
@@ -94,8 +104,6 @@ int main(int argc, char* argv[])
 
             return 1;
         }
-
-        std::cout << "successfully exported md5a" << std::endl;
     }
     else
     {
@@ -104,7 +112,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    std::ofstream ofstream(output_path.string());
+    std::ofstream ofstream(output_path.string(), std::ios::binary);
 
     if (!ofstream.is_open())
     {
@@ -114,6 +122,8 @@ int main(int argc, char* argv[])
     }
 
     ofstream << oss.str();
+
+    std::cout << "successfully exported to " << output_path << std::endl;
 
     return 0;
 }

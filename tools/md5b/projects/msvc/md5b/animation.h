@@ -49,7 +49,7 @@ namespace md5b
         std::vector<frame_t> frames;
         std::vector<bone_t> bones;
         unsigned char frames_per_second = 0;
-        int frame_data_component_count = 0;
+        unsigned int frame_data_component_count = 0;
     };
 
     std::ostream& operator<<(std::ostream&, const animation_t&);

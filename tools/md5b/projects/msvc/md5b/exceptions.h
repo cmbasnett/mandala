@@ -13,9 +13,4 @@ namespace md5b
         size_t expected;
         size_t actual;
     };
-
-    struct bad_format : std::exception
-    {
-        virtual const char* what() const override;
-    };
 };

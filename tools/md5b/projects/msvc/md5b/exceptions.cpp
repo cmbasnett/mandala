@@ -18,9 +18,4 @@ namespace md5b
         oss << "bad version (expected " << expected << ", actual " << actual << ")";
         return oss.str().c_str();
     }
-
-    const char* bad_format::what() const
-    {
-        return "bad format";
-    }
 };

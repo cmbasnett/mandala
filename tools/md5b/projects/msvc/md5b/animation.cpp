@@ -55,7 +55,7 @@ namespace md5b
             }
             else if (boost::iequals(tokens[0], "numanimatedcomponents"))
             {
-                frame_data_component_count = boost::lexical_cast<int>(tokens[1]);
+                frame_data_component_count = boost::lexical_cast<unsigned int>(tokens[1]);
             }
             else if (boost::iequals(tokens[0], "hierarchy"))
             {
@@ -183,6 +183,9 @@ namespace md5b
         }
 
         //frame data component count
+        ostream.write(reinterpret_cast<const char*>(&animation.frame_data_component_count), sizeof(animation.frame_data_component_count));
+
+        //frame data
         for (auto& frame : animation.frames)
         {
             ostream.write(reinterpret_cast<const char*>(frame.data.data()), frame.data.size() * sizeof(float));
