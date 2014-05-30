@@ -9,8 +9,6 @@
 #include <glm\glm.hpp>
 #include <glm\ext.hpp>
 
-#define COLLISION_EPSILON	(1e-4f)
-
 namespace mandala
 {
 	vec3_t intersect(const plane3_t& p0, const plane3_t& p1, const plane3_t& p2)
@@ -58,15 +56,15 @@ namespace mandala
 
 	intersect_type_t intersects(const aabb3_t& aabb, const frustum_t& frustum)
 	{
-		int32_t total_in = 0;
+		size_t total_in = 0;
 		auto corners = aabb.get_corners();
 
 		for (const auto& plane : frustum.planes)
 		{
-			int32_t in = aabb3_t::corner_count;
+            size_t in = aabb3_t::corner_count;
 			bool point_in = false;
 
-			for (int32_t corner_index = 0; corner_index < aabb3_t::corner_count; corner_index++)
+            for (size_t corner_index = 0; corner_index < aabb3_t::corner_count; corner_index++)
 			{
 				const auto& corner = corners[corner_index];
 
@@ -146,7 +144,7 @@ namespace mandala
 			std::swap(tzmin, tzmax);
 		}
 
-		if ((tmin > tzmax) || (tzmin > tmax))
+		if (tmin > tzmax || tzmin > tmax)
 		{
 			return intersect_type_t::disjoint;
 		}
@@ -216,7 +214,7 @@ namespace mandala
 		auto d = glm::dot(plane.normal, u);
 		auto n = -glm::dot(plane.normal, w);
 
-		if (glm::abs(d) < COLLISION_EPSILON)
+		if (glm::abs(d) < glm::epsilon<float32_t>())
 		{
 			return n == 0 ? intersect_type_t::parallel : intersect_type_t::disjoint;
 		}

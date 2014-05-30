@@ -16,7 +16,7 @@ namespace mandala
 	{
 		struct label_t : node_t
 		{
-			typedef std::wstring string_type_t;
+			typedef std::wstring string_type;
 
 			enum class justification_t : uint8_t
 			{
@@ -38,7 +38,7 @@ namespace mandala
 				vec4_t color2 = vec4_t(1);
 			};
 
-			string_type_t string;
+            string_type string;
 			std::shared_ptr<bitmap_font_t> bitmap_font;
 			justification_t justification = justification_t::left;
 			vertical_alignment_t vertical_alignment = vertical_alignment_t::top;
@@ -55,27 +55,27 @@ namespace mandala
 			{
 				struct line_t
 				{
-					typedef int32_t width_type_t;
+					typedef int32_t width_type;
 
 					line_t() :
 						width(0)
 					{
 					}
 
-					line_t(const string_type_t& string, width_type_t width) :
+                    line_t(const string_type& string, width_type width) :
 						string(string),
 						width(width)
 					{
 					}
 
-					line_t(string_type_t&& string, width_type_t width) :
+                    line_t(string_type&& string, width_type width) :
 						string(std::move(string)),
 						width(width)
 					{
 					}
 
-					string_type_t string;
-					width_type_t width = 0;
+					string_type string;
+					width_type width = 0;
 				};
 
 				std::vector<line_t> lines;

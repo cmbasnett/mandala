@@ -7,8 +7,8 @@ namespace mandala
 {
 	struct input_event_t
 	{
-		typedef size_t id_type_t;
-		typedef uint8_t device_index_type_t;
+		typedef size_t id_type;
+		typedef uint8_t device_index_type;
 
 		enum mods_t : int8_t
 		{
@@ -29,8 +29,8 @@ namespace mandala
 
 		struct touch_t
 		{
-			typedef size_t touch_id_type_t;
-			typedef vec2_f64_t position_type_t;
+			typedef size_t touch_id_type;
+			typedef vec2_f64_t position_type;
 
 			enum class button_t : int8_t
 			{
@@ -55,12 +55,12 @@ namespace mandala
 				move
 			};
 
-			touch_id_type_t id = 0;
+			touch_id_type id = 0;
 			type_t type = type_t::none;
 			button_t button = button_t::none;
 			std::underlying_type<mods_t>::type mods = 0;
-			position_type_t position;
-			position_type_t position_delta;
+			position_type position;
+			position_type position_delta;
 		};
 
 		struct keyboard_t
@@ -207,8 +207,8 @@ namespace mandala
 
 		struct gamepad_t
 		{
-			typedef uint8_t index_type_t;
-			typedef float32_t axis_value_type_t;
+			typedef uint8_t index_type;
+			typedef float32_t axis_value_type;
 
 			enum class type_t : int8_t
 			{
@@ -218,16 +218,16 @@ namespace mandala
 				axis_move
 			};
 
-			index_type_t button_index = 0;
-			index_type_t axis_index = 0;
-			axis_value_type_t axis_value = 0;
-			axis_value_type_t axis_value_delta = 0;
+            index_type button_index = 0;
+            index_type axis_index = 0;
+            axis_value_type axis_value = 0;
+            axis_value_type axis_value_delta = 0;
 			type_t type = type_t::none;
 		};
 
-		id_type_t id = 0;
+		id_type id = 0;
 		device_type_t device_type = device_type_t::none;
-		device_index_type_t device_index = 0;
+		device_index_type device_index = 0;
 		touch_t touch;
 		keyboard_t keyboard;
 		gamepad_t gamepad;

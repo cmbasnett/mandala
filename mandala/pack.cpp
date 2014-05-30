@@ -40,7 +40,7 @@ namespace mandala
 
 		//file count
 		uint32_t file_count = 0;
-		istream.read((char*)&file_count, sizeof(file_count));
+		istream.read((char*)&file_count, sizeof(file_count)); 
 
 		for(uint32_t i = 0; i < file_count; ++i)
 		{

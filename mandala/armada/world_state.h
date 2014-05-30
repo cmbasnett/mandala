@@ -8,10 +8,11 @@
 #include "../state.h"
 #include "../model_instance.h"
 #include "../gui/node.h"
+#include "../quake_camera.h"
 
 //armada
-#include "world.h"
 #include "world_hud_state.h"
+#include "skybox.h"
 
 namespace mandala
 {
@@ -31,9 +32,11 @@ namespace mandala
 			virtual void on_stop_input() override;
 			virtual void on_start_input() override;
 			
-			std::shared_ptr<world_t> world;
 			std::shared_ptr<gui::node_t> root_node;
 			std::shared_ptr<world_hud_state_t> hud_state;
+            quake_camera_t camera;
+            skybox_t skybox;
+            std::vector<std::shared_ptr<model_instance_t>> model_instances;
 		};
 	};
 };

@@ -23,7 +23,7 @@ namespace mandala
 		
 		void skybox_t::render(const camera_t& camera)
 		{
-			model_instance->world_matrix = glm::translate(camera.location);
+			model_instance->world_matrix = glm::translate(camera.position);
 
 			model_instance->render(camera, vec3_t(0));
 

@@ -86,9 +86,9 @@ namespace mandala
 
 	shader_t::~shader_t()
 	{
-		GLenum error;
+        glDeleteShader(handle);
 
-		glDeleteShader(handle);
+        GLenum error;
 
 		if ((error = glGetError()) != GL_NO_ERROR)
 		{

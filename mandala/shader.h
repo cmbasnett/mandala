@@ -16,7 +16,7 @@ namespace mandala
 		shader_t(std::istream& istream);
 		virtual ~shader_t();
 
-		int32_t handle = 0;
+		uint32_t handle = 0;
 		type_t type = type_t::vertex;
 
 	private:

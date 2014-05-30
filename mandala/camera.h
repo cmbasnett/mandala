@@ -23,7 +23,7 @@ namespace mandala
 		float32_t aspect = 0.0f;
 		float32_t fov = 45.0f;
 		vec3_t target;
-		vec3_t location;
+		vec3_t position;
 		frustum_t frustum;
 		projection_type_t projection_type = projection_type_t::perspective;
 

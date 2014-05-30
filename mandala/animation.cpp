@@ -15,13 +15,6 @@ namespace mandala
         char magic[md5b::magic_length + 1] = { '\0' };
         istream.read(magic, md5b::magic_length);
 
-		if(strcmp(md5b::magic, magic) != 0)
-		{
-			throw std::exception();
-		}
-
-        istream.read(magic, md5b::magic_length);
-
 		if(strcmp(md5b::animation_magic, magic) != 0)
 		{
 			throw std::exception();

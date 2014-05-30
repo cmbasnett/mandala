@@ -36,13 +36,13 @@ namespace mandala
 		
 		if(animation != nullptr)
 		{
-			float32_t frame_count = static_cast<float32_t>(animation->frame_count);
-			float32_t seconds_per_frame = 1.0f / animation->frames_per_second;
-			size_t frame_0_index = static_cast<size_t>(glm::floor(glm::mod(t / seconds_per_frame, frame_count)));
-			size_t frame_1_index = (frame_0_index + 1) % animation->frame_count;
-			float32_t interpolate_t = glm::mod(t, seconds_per_frame) / seconds_per_frame;
-			skeleton_t& frame_skeleton_0 = animation->frame_skeletons[frame_0_index];
-			skeleton_t& frame_skeleton_1 = animation->frame_skeletons[frame_1_index];
+			auto frame_count = static_cast<float32_t>(animation->frame_count);
+            auto seconds_per_frame = 1.0f / animation->frames_per_second;
+            auto frame_0_index = static_cast<size_t>(glm::floor(glm::mod(t / seconds_per_frame, frame_count)));
+            auto frame_1_index = (frame_0_index + 1) % animation->frame_count;
+            auto interpolate_t = glm::mod(t, seconds_per_frame) / seconds_per_frame;
+            auto& frame_skeleton_0 = animation->frame_skeletons[frame_0_index];
+            auto& frame_skeleton_1 = animation->frame_skeletons[frame_1_index];
 
 			skeleton_t::interpolate(skeleton, frame_skeleton_0, frame_skeleton_1, interpolate_t);
 		}
@@ -71,7 +71,7 @@ namespace mandala
 
 		auto view_projection_matrix = camera.projection * camera.view;
 
-		model->render(camera.location, world_matrix, view_projection_matrix, bone_matrices, light_position);
+		model->render(camera.position, world_matrix, view_projection_matrix, bone_matrices, light_position);
 	}
 	
 	const skeleton_t::bone_t& model_instance_t::get_bone(const hash_t& bone_name_hash) const

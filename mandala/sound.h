@@ -20,7 +20,7 @@ namespace mandala
 		int32_t byte_rate = 0;
 		int16_t block_align = 0;
 		int16_t bits_per_sample = 0;
-		uint32_t buffer = 0;
+		uint32_t buffer_id = 0;
 		duration_type_t duration;
 	};
 };

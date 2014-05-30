@@ -18,9 +18,9 @@ namespace mandala
 	{
 		struct node_t
 		{
-			typedef uint8_t anchor_flags_type_t;
+			typedef uint8_t anchor_flags_type;
 
-			enum : anchor_flags_type_t
+            enum : anchor_flags_type
             {
                 anchor_flag_none = 0,
                 anchor_flag_bottom = (1 << 0),
@@ -64,7 +64,7 @@ namespace mandala
 			std::shared_ptr<node_t> parent;
 			std::vector<std::shared_ptr<node_t>> children;
 			dock_mode_t dock_mode = dock_mode_t::none;
-			anchor_flags_type_t anchor_flags = (anchor_flag_top | anchor_flag_left);
+            anchor_flags_type anchor_flags = (anchor_flag_top | anchor_flag_left);
 			vec2_t anchor_offset;
 			padding_t padding;
 			padding_t margin;

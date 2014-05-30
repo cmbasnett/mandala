@@ -13,47 +13,46 @@ namespace mandala
 		template<typename T>
 		struct line2_t<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
 		{
-			typedef line2_t<T> type_t;
-			typedef glm::detail::tvec2<T> value_type_t;
-			typedef float32_t real_value_type_t;
-			typedef line2_t<real_value_type_t> real_type_t;
+			typedef line2_t<T> type;
+			typedef glm::detail::tvec2<T> value_type;
+            typedef line2_t<float32_t> real_type;
 
-			value_type_t start;
-			value_type_t end;
+            value_type start;
+            value_type end;
 
-			real_type_t::value_type_t direction() const
+			real_type::value_type direction() const
 			{
-				return glm::normalize((real_type_t::value_type_t)end - (real_type_t::value_type_t)start);
+				return glm::normalize((real_type::value_type)end - (real_type::value_type)start);
 			}
 
-			real_value_type_t length() const
+			float32_t length() const
 			{
-				return glm::length((real_type_t::value_type_t)end - (real_type_t::value_type_t)start);
+				return glm::length((real_type::value_type)end - (real_type::value_type)start);
 			}
 
-			type_t operator-(const value_type_t& t) const
+			type operator-(const value_type& t) const
 			{
-				type_t sum;
+                type sum;
 				sum.start = start - t;
 				sum.end = end - t;
 				return sum;
 			}
 
-			type_t& operator-=(const value_type_t& t)
+			type& operator-=(const value_type& t)
 			{
 				*this = *this - t;
 				return *this;
 			}
 
-			type_t operator+(const value_type_t& t) const
+			type operator+(const value_type& t) const
 			{
-				type_t> sum;
+                type sum;
 				sum.start = start + t;
 				sum.end = end + t;
 				return sum;
 			}
 
-			type_t& operator+=(const value_type_t& t)
+			type& operator+=(const value_type& t)
 			{
 				*this = *this + t;
 				return *this;
@@ -65,40 +64,39 @@ namespace mandala
 
 		template<typename T>
 		struct line3_t<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
-		{
-			typedef line3_t<T> type_t;
-			typedef glm::detail::tvec3<T> value_type_t;
-			typedef float32_t real_value_type_t;
-			typedef line3_t<real_value_type_t> real_type_t;
+        {
+            typedef line3_t<T> type;
+            typedef glm::detail::tvec3<T> value_type;
+            typedef line3_t<float32_t> real_type;
 
-			value_type_t start;
-			value_type_t end;
+			value_type start;
+			value_type end;
 
-			real_type_t::value_type_t direction() const
+			real_type::value_type direction() const
 			{
-				return glm::normalize((real_type_t::value_type_t)end - (real_type_t::value_type_t)start);
+				return glm::normalize((real_type::value_type)end - (real_type::value_type)start);
 			}
 
-			real_value_type_t length() const
+			float32_t length() const
 			{
-				return glm::length((real_type_t::value_type_t)end - (real_type_t::value_type_t)start);
+				return glm::length((real_type::value_type)end - (real_type::value_type)start);
 			}
 
-			type_t operator-(const value_type_t& t) const
+            type operator-(const value_type& t) const
 			{
-				type_t sum;
+                type sum;
 				sum.start = start - t;
 				sum.end = end - t;
 				return sum;
 			}
 
-			type_t& operator-=(const value_type_t& t)
+            type& operator-=(const value_type& t)
 			{
 				*this = *this - t;
 				return *this;
 			}
 
-			type_t operator+(const value_type_t& t) const
+            type operator+(const value_type& t) const
 			{
 				type_t sum;
 				sum.start = start + t;
@@ -106,7 +104,7 @@ namespace mandala
 				return sum;
 			}
 
-			type_t& operator+=(const value_type_t& t)
+            type& operator+=(const value_type& t)
 			{
 				*this = *this + t;
 				return *this;

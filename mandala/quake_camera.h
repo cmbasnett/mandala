@@ -21,6 +21,7 @@ namespace mandala
 		float32_t smoothing_strength;
 		vec3_t local_velocity_target;
 		vec3_t local_velocity;
+        vec3_t velocity;
 		float32_t pitch_speed;
 		float32_t yaw_speed;
 		float32_t speed_max;

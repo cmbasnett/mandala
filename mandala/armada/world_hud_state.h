@@ -7,6 +7,7 @@
 namespace mandala
 {
 	struct input_event_t;
+    struct model_instance_t;
 
 	namespace armada
 	{
@@ -19,7 +20,7 @@ namespace mandala
 
 			std::shared_ptr<gui::image_t> crosshair_image;
 			std::vector<sprite_t> crosshair_sprites;
-			size_t crosshair_index = 0;
+            size_t crosshair_index = 0;
 		};
 	};
 };

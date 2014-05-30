@@ -70,17 +70,17 @@ namespace mandala
 					break;
 				}
 
-				render_info_t::line_t::width_type_t line_width = 0;
+				render_info_t::line_t::width_type line_width = 0;
 				auto string_begin = string_itr;
 				auto string_end = string_itr;
 				auto was_line_added = false;
 
 				decltype(string_itr) string_space_itr = string.end();
 
-				auto add_line = [&](string_type_t&& string)
+				auto add_line = [&](string_type&& string)
 				{
 					auto width = bitmap_font->get_string_width(string);
-					render_info.lines.emplace_back(std::forward<string_type_t>(string), width);
+					render_info.lines.emplace_back(std::forward<string_type>(string), width);
 					was_line_added = true;
 				};
 

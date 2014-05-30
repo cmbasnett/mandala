@@ -151,9 +151,6 @@
     <ClInclude Include="armada\skybox.h">
       <Filter>armada\states\world</Filter>
     </ClInclude>
-    <ClInclude Include="armada\world.h">
-      <Filter>armada\states\world</Filter>
-    </ClInclude>
     <ClInclude Include="armada\world_state.h">
       <Filter>armada\states\world</Filter>
     </ClInclude>
@@ -213,6 +210,15 @@
     </ClInclude>
     <ClInclude Include="audio_mgr.h">
       <Filter>mandala\app</Filter>
+    </ClInclude>
+    <ClInclude Include="audio_source.h">
+      <Filter>mandala\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="audio_device.h">
+      <Filter>mandala\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="audio_context.h">
+      <Filter>mandala\audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -289,9 +295,6 @@
     <ClCompile Include="armada\skybox.cpp">
       <Filter>armada\states\world</Filter>
     </ClCompile>
-    <ClCompile Include="armada\world.cpp">
-      <Filter>armada\states\world</Filter>
-    </ClCompile>
     <ClCompile Include="armada\world_state.cpp">
       <Filter>armada\states\world</Filter>
     </ClCompile>
@@ -339,6 +342,15 @@
     </ClCompile>
     <ClCompile Include="audio_mgr.cpp">
       <Filter>mandala\app</Filter>
+    </ClCompile>
+    <ClCompile Include="audio_source.cpp">
+      <Filter>mandala\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="audio_device.cpp">
+      <Filter>mandala\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="audio_context.cpp">
+      <Filter>mandala\audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -425,6 +437,9 @@
     </Filter>
     <Filter Include="mandala\resources\sound">
       <UniqueIdentifier>{449a7afe-0d1d-4749-bd7c-b414a5c16e37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\audio">
+      <UniqueIdentifier>{57b39ba2-1844-4414-a8f6-45581375ee49}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

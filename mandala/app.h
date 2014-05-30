@@ -18,16 +18,16 @@ namespace mandala
 	{
         struct performance_t
 		{
-			typedef float32_t fps_type_t;
+			typedef float32_t fps_type;
 
 			struct frame_t
 			{
-				typedef std::chrono::milliseconds duration_type_t;
+				typedef std::chrono::milliseconds duration_type;
 
-				duration_type_t duration;
-				duration_type_t render_duration;
-				duration_type_t tick_duration;
-				duration_type_t input_duration;
+                duration_type duration;
+                duration_type render_duration;
+                duration_type tick_duration;
+                duration_type input_duration;
 				size_t consumed_input_event_count;
 				size_t unconsumed_input_event_count;
 			};

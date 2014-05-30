@@ -6,9 +6,6 @@
 //mandala
 #include "platform_win32.h"
 
-#include "AL\al.h"
-#include "AL\alc.h"
-
 namespace mandala
 {
     platform_win32_t platform;

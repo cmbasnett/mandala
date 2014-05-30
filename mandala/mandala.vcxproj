@@ -66,7 +66,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <CustomBuildBeforeTargets>Run</CustomBuildBeforeTargets>
+    <CustomBuildBeforeTargets>
+    </CustomBuildBeforeTargets>
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)\bin\$(Configuration)_$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)\intermediate\$(Configuration)_$(PlatformTarget)\</IntDir>
@@ -75,6 +76,8 @@
     <OutDir>$(SolutionDir)\bin\$(Configuration)_$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)\intermediate\$(Configuration)_$(PlatformTarget)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
+    <CustomBuildBeforeTargets>
+    </CustomBuildBeforeTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)\bin\$(Configuration)_$(PlatformTarget)\</OutDir>
@@ -91,7 +94,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)ext\glm-0.9.4.4;$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)ext\glew-1.10.0\include;$(SolutionDir)ext\zlib-1.2.8\include;$(SolutionDir)ext\libpng-1.6.3;$(SolutionDir)ext\openal-soft-1.15.1-bin\include;$(SolutionDir)ext\curl-7.35.0\include;C:\boost_1_55_0;$(SolutionDir)ext\lua-5.2.3\src;$(SolutionDir)ext\openal-soft-1.15.1-bin\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ext\glm-0.9.4.4;$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)ext\glew-1.10.0\include;$(SolutionDir)ext\zlib-1.2.8\include;$(SolutionDir)ext\libpng-1.6.3;$(SolutionDir)ext\openal-soft-1.15.1-bin\include;C:\boost_1_55_0</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PreprocessorDefinitions>_WIN32_WINNT=0x0501;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -108,15 +111,21 @@
       <Command>xcopy "$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\lib-msvc110\*.dll" "$(OutDir)" /y
 xcopy "$(SolutionDir)ext\glew-1.10.0\bin\Release\Win32\*.dll" "$(OutDir)" /y
 xcopy "$(SolutionDir)ext\openal-soft-1.15.1-bin\lib\Win32\*.dll" "$(OutDir)" /y
+"$(SolutionDir)tools\pack\bin\pack.exe" "$(SolutionDir)resources\deploy\\" "$(OutDir)resources\armada.pack"
 
 echo $(PlatformTarget)</Command>
     </PostBuildEvent>
     <CustomBuildStep>
-      <Command>"$(SolutionDir)tools\pack\bin\pack.exe" "$(SolutionDir)resources\deploy\\" "$(OutDir)resources\armada.pack"</Command>
+      <Command>
+      </Command>
     </CustomBuildStep>
     <CustomBuildStep>
-      <Message>Packing Resources</Message>
+      <Message>
+      </Message>
     </CustomBuildStep>
+    <PreBuildEvent>
+      <Command>"$(SolutionDir)tools\pack\bin\pack.exe" "$(SolutionDir)resources\deploy\\" "$(OutDir)resources\armada.pack"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -152,7 +161,7 @@ echo $(PlatformTarget)</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)ext\glm-0.9.4.4;$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)ext\glew-1.10.0\include;$(SolutionDir)ext\zlib-1.2.8\include;$(SolutionDir)ext\libpng-1.6.3;$(SolutionDir)ext\openal-soft-1.15.1-bin\include;C:\boost_1_55_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ext\glm-0.9.4.4;$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)ext\glew-1.10.0\include;$(SolutionDir)ext\zlib-1.2.8\include;$(SolutionDir)ext\libpng-1.6.3;$(SolutionDir)ext\openal-soft-1.15.1-bin\include;C:\boost_1_55_0</AdditionalIncludeDirectories>
       <UndefinePreprocessorDefinitions>APIENTRY;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
       <PreprocessorDefinitions>_WIN32_WINNT=0x0501;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -173,6 +182,13 @@ xcopy "$(SolutionDir)ext\openal-soft-1.15.1-bin\lib\Win32\*.dll" "$(OutDir)" /y
 
 echo $(PlatformTarget)</Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>"$(SolutionDir)tools\pack\bin\pack.exe" "$(SolutionDir)resources\deploy\\" "$(OutDir)resources\armada.pack"</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>
+      </Message>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -206,7 +222,10 @@ echo $(PlatformTarget)</Command>
   <ItemGroup>
     <ClInclude Include="animation.h" />
     <ClInclude Include="armada\test_state.h" />
+    <ClInclude Include="audio_context.h" />
+    <ClInclude Include="audio_device.h" />
     <ClInclude Include="audio_mgr.h" />
+    <ClInclude Include="audio_source.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="arcball_camera.h" />
@@ -214,7 +233,6 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="armada\bsp_state.h" />
     <ClInclude Include="armada\pause_state.h" />
     <ClInclude Include="armada\skybox.h" />
-    <ClInclude Include="armada\world.h" />
     <ClInclude Include="armada\world_hud_state.h" />
     <ClInclude Include="armada\world_state.h" />
     <ClInclude Include="bitmap_font.h" />
@@ -282,7 +300,10 @@ echo $(PlatformTarget)</Command>
   <ItemGroup>
     <ClCompile Include="animation.cpp" />
     <ClCompile Include="armada\test_state.cpp" />
+    <ClCompile Include="audio_context.cpp" />
+    <ClCompile Include="audio_device.cpp" />
     <ClCompile Include="audio_mgr.cpp" />
+    <ClCompile Include="audio_source.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="frustum.cpp" />
     <ClCompile Include="game.cpp" />
@@ -291,7 +312,6 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="armada\bsp_state.cpp" />
     <ClCompile Include="armada\pause_state.cpp" />
     <ClCompile Include="armada\skybox.cpp" />
-    <ClCompile Include="armada\world.cpp" />
     <ClCompile Include="armada\world_hud_state.cpp" />
     <ClCompile Include="armada\world_state.cpp" />
     <ClCompile Include="bitmap_font.cpp" />

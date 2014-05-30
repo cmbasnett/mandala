@@ -18,19 +18,19 @@ namespace mandala
 		template<typename T>
 		struct aabb2_t<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
 		{
-			typedef aabb2_t<T> type_t;
-			typedef glm::detail::tvec2<T> value_type_t;
+			typedef aabb2_t<T> type;
+			typedef glm::detail::tvec2<T> value_type;
 
 			static const size_t corner_count = 4;
 
-			value_type_t min;
-			value_type_t max;
+			value_type min;
+			value_type max;
 
 			aabb2_t()
 			{
 			}
 
-			aabb2_t(const value_type_t& min, const value_type_t& max) :
+            aabb2_t(const value_type& min, const value_type& max) :
 				min(min),
 				max(max)
 			{
@@ -46,17 +46,17 @@ namespace mandala
 				return max.y - min.y;
 			}
 
-			inline value_type_t size() const
+            inline value_type size() const
 			{
 				return max - min;
 			}
 
-			inline value_type_t center() const
+            inline value_type center() const
 			{
 				return min + ((max - min) / static_cast<T>(2));
 			}
 
-			std::array<value_type_t, corner_count> get_corners() const
+            std::array<value_type, corner_count> get_corners() const
 			{
 				return { min,
 						 value_type_t(min.x, max.y),
@@ -64,43 +64,43 @@ namespace mandala
 						 max };
 			}
 
-			type_t operator-(const value_type_t& t) const
+			type operator-(const value_type& t) const
 			{
-				type_t sum;
+                type sum;
 				sum.min = min - t;
 				sum.max = max - t;
 				return sum;
 			}
 
-			type_t& operator-=(const value_type_t& t)
+            type& operator-=(const value_type& t)
 			{
 				*this = *this - t;
 				return *this;
 			}
 
-			type_t operator+(const value_type_t& t) const
+            type operator+(const value_type& t) const
 			{
-				type_t sum;
+                type sum;
 				sum.min = min + t;
 				sum.max = max + t;
 				return sum;
 			}
 
-			type_t& operator+=(const value_type_t& t)
+            type& operator+=(const value_type& t)
 			{
 				*this = *this + t;
 				return *this;
 			}
 
-			static type_t join(const type_t& lhs, const type_t& rhs)
+            static type join(const type& lhs, const type& rhs)
 			{
-				type_t result;
+                type result;
 				result.min = glm::min(lhs.min, rhs.min);
 				result.max = glm::max(lhs.max, rhs.max);
 				return result;
 			}
 
-			type_t& join(const type_t& rhs)
+            type& join(const type& rhs)
 			{
 				*this = join(*this, rhs);
 				return *this;
@@ -113,37 +113,37 @@ namespace mandala
 		template<typename T>
 		struct aabb3_t<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
 		{
-			typedef aabb3_t<T> type_t;
-			typedef glm::detail::tvec3<T> value_type_t;
-			typedef plane3_t<float32_t> plane_type_t;
+			typedef aabb3_t<T> type;
+			typedef glm::detail::tvec3<T> value_type;
+			typedef plane3_t<float32_t> plane_type;
 
 			static const size_t corner_count = 8;
 			static const size_t plane_count = 6;
 
-			value_type_t min;
-			value_type_t max;
+			value_type min;
+			value_type max;
 
 			aabb3_t()
 			{
 			}
 
-			aabb3_t(const value_type_t& min, const value_type_t& max) :
+            aabb3_t(const value_type& min, const value_type& max) :
 				min(min),
 				max(max)
 			{
 			}
 
-			value_type_t size() const
+            value_type size() const
 			{
 				return max - min;
 			}
 
-			value_type_t center() const
+            value_type center() const
 			{
 				return min + ((max - min) / 2);
 			}
 
-			std::array<plane_type_t, plane_count> get_planes() const
+			std::array<plane_type, plane_count> get_planes() const
 			{
 				return { { min, VEC3_RIGHT },
 						 { max, VEC3_LEFT },
@@ -153,55 +153,55 @@ namespace mandala
 						 { max, VEC3_FORWARD } };
 			}
 
-			std::array<value_type_t, corner_count> get_corners() const
+			std::array<value_type, corner_count> get_corners() const
 			{
 				return{ min,
-						value_type_t(min.x, min.y, max.z),
-						value_type_t(min.x, max.y, min.z),
-						value_type_t(min.x, max.y, max.z),
-						value_type_t(max.x, min.y, min.z),
-						value_type_t(max.x, min.y, max.z),
-						value_type_t(max.x, max.y, min.z),
+						value_type(min.x, min.y, max.z),
+						value_type(min.x, max.y, min.z),
+						value_type(min.x, max.y, max.z),
+						value_type(max.x, min.y, min.z),
+						value_type(max.x, min.y, max.z),
+						value_type(max.x, max.y, min.z),
 						max };
 			}
 
-			type_t operator-(const value_type_t& t) const
+			type operator-(const value_type& t) const
 			{
-				type_t sum;
+				type sum;
 				sum.min = min - t;
 				sum.max = max - t;
 				return sum;
 			}
 
-			type_t& operator-=(const value_type_t& t)
+			type& operator-=(const value_type& t)
 			{
 				*this = *this - t;
 				return *this;
 			}
 
-			type_t operator+(const value_type_t& t) const
+			type operator+(const value_type& t) const
 			{
-				type_t sum;
+                type sum;
 				sum.min = min + t;
 				sum.max = max + t;
 				return sum;
 			}
 
-			type_t& operator+=(const value_type_t& t)
+			type& operator+=(const value_type& t)
 			{
 				*this = *this + t;
 				return *this;
 			}
 
-			static type_t join(const type_t& lhs, const type_t& rhs)
+			static type join(const type& lhs, const type& rhs)
 			{
-				type_t result;
+				type result;
 				result.min = glm::min(lhs.min, rhs.min);
 				result.max = glm::max(lhs.max, rhs.max);
 				return result;
 			}
 
-			type_t& join(const type_t& rhs)
+			type& join(const type& rhs)
 			{
 				*this = join(*this, rhs);
 				return *this;

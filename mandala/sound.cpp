@@ -64,7 +64,7 @@ namespace mandala
 
 		istream.read((char*)data.data(), subchunk2_size);
 
-		alGenBuffers(1, &buffer);
+		alGenBuffers(1, &buffer_id);
 
 		if (alGetError() != AL_NO_ERROR)
 		{
@@ -96,7 +96,7 @@ namespace mandala
 			}
 		}
 
-		alBufferData(buffer, format, data.data(), static_cast<ALsizei>(data.size()), sample_rate);
+        alBufferData(buffer_id, format, data.data(), static_cast<ALsizei>(data.size()), sample_rate);
 
 		if (alGetError() != AL_NO_ERROR)
 		{
@@ -110,6 +110,6 @@ namespace mandala
 
 	sound_t::~sound_t()
 	{
-		alDeleteBuffers(1, &buffer);
+        alDeleteBuffers(1, &buffer_id);
 	}
 };

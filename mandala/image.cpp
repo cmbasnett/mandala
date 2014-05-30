@@ -57,34 +57,22 @@ namespace mandala
 		switch (png_color_type)
 		{
 			case 0:
-			{
 				color_type = color_type_t::g;
 				break;
-			}
 			case 2:
-			{
 				color_type = color_type_t::rgb;
 				break;
-			}
 			case 3:
-			{
 				color_type = color_type_t::palette;
 				break;
-			}
 			case 4:
-			{
 				color_type = color_type_t::ga;
 				break;
-			}
 			case 6:
-			{
 				color_type = color_type_t::rgba;
 				break;
-			}
 			default:
-			{
 				throw std::exception();
-			}
 		}
 
 		auto row_bytes = png_get_rowbytes(png_ptr, info_ptr);
@@ -92,7 +80,7 @@ namespace mandala
 
 		data.reserve(data_length);
 
-		png_bytepp row_pointers = png_get_rows(png_ptr, info_ptr);
+		auto row_pointers = png_get_rows(png_ptr, info_ptr);
 
 		for (uint32_t i = 0; i < height; ++i)
 		{

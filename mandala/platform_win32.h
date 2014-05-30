@@ -68,8 +68,8 @@ namespace mandala
 			};
 
 			std::deque<input_event_t> events;
-			input_event_t::id_type_t event_id = 0;
-			input_event_t::touch_t::touch_id_type_t touch_id = 0;
+			input_event_t::id_type event_id = 0;
+			input_event_t::touch_t::touch_id_type touch_id = 0;
 			std::array<gamepad_state_t, 4> gamepad_states;
 		};
 

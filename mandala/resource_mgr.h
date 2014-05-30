@@ -17,7 +17,7 @@ namespace mandala
 
 	struct resource_mgr_t : public pack_mgr_t
 	{
-		typedef std::map<hash_t, std::shared_ptr<resource_t>> resource_map_t;
+		typedef std::map<hash_t, std::shared_ptr<resource_t>> resource_map_type;
 
 		template<typename T>
 		std::shared_ptr<T> get(const hash_t& hash)
@@ -31,7 +31,7 @@ namespace mandala
 			if (type_resources_itr == type_resources.end())
 			{
 				//no resources of this type allocated
-				type_resources.insert(std::make_pair(type_index, resource_map_t()));
+                type_resources.insert(std::make_pair(type_index, resource_map_type()));
 			}
 
 			auto& resources = type_resources[type_index];
@@ -71,7 +71,7 @@ namespace mandala
 			if (type_resources_itr == type_resources.end())
 			{
 				//no resources of this type allocated
-				type_resources.insert(std::make_pair(type_index, resource_map_t()));
+                type_resources.insert(std::make_pair(type_index, resource_map_type()));
 			}
 
 			auto& resources = type_resources[type_index];
@@ -98,7 +98,7 @@ namespace mandala
 		void purge();
 
 	private:
-		std::map<std::type_index, resource_map_t> type_resources;
+        std::map<std::type_index, resource_map_type> type_resources;
 		std::recursive_mutex mutex;
 	};
 };

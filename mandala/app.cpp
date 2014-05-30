@@ -9,11 +9,11 @@
 
 namespace mandala
 {
-	app_t app;
-	
-	app_t::app_t()
-	{
-	}
+    app_t app;
+
+    app_t::app_t()
+    {
+    }
 
 	void app_t::run(std::shared_ptr<game_t> game_)
 	{

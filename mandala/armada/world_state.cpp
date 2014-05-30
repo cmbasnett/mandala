@@ -8,6 +8,9 @@
 #include "../state_mgr.h"
 #include "../app.h"
 #include "../platform.h"
+#include "../model.h"
+#include "../model_instance.h"
+#include "../animation.h"
 
 //armada
 #include "world_state.h"
@@ -18,23 +21,40 @@ namespace mandala
 {
 	namespace armada
 	{
-		world_state_t::world_state_t() :
-            world(nullptr)
-		{
-			world = std::make_shared<world_t>();
+		world_state_t::world_state_t()
+        {
+            auto model = app.resources.get<model_t>(hash_t("boblampclean.md5m"));
+            auto model_instance = std::make_shared<model_instance_t>(model);
+            model_instance->animation = app.resources.get<animation_t>(hash_t("boblampclean.md5a"));
+            model_instances.push_back(model_instance);
+
 			hud_state = std::make_shared<world_hud_state_t>();
+
+            camera.speed_max = 512;
 		}
 
 		void world_state_t::tick(float32_t dt)
-		{
-			world->tick(dt);
+        {
+            camera.tick(dt);
+
+            for (auto& model_instance : model_instances)
+            {
+                model_instance->tick(dt);
+            }
 
 			state_t::tick(dt);
 		}
 
 		void world_state_t::render()
-		{
-			world->render();
+        {
+            skybox.render(camera);
+
+            auto light_position = vec3_t(0, 20, 100);
+
+            for (auto& model_instance : model_instances)
+            {
+                model_instance->render(camera, light_position);
+            }
 
 			state_t::render();
 		}
@@ -83,7 +103,10 @@ namespace mandala
 				input_event.is_consumed = true;
 			}
 
-			world->camera.on_input_event(input_event);
+            if (!input_event.is_consumed)
+            {
+                camera.on_input_event(input_event);
+            }
 		}
 	};
 };

@@ -20,9 +20,9 @@ namespace mandala
 
 		aspect = viewport.z / viewport.w;
 
-		vec3_t forward = glm::normalize(target - location);
-		vec3_t left = glm::normalize(glm::cross(vec3_t(0, 1, 0), forward));
-		vec3_t up = glm::normalize(glm::cross(forward, left));
+		auto forward = glm::normalize(target - position);
+        auto left = glm::normalize(glm::cross(vec3_t(0, 1, 0), forward));
+        auto up = glm::normalize(glm::cross(forward, left));
 
 		switch (projection_type)
 		{
@@ -38,7 +38,7 @@ namespace mandala
 			}
 		}
 
-		view = glm::lookAt(location, target, up);
+		view = glm::lookAt(position, target, up);
 
 		frustum = view * projection;
 	}

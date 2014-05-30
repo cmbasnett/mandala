@@ -12,6 +12,7 @@
 #include "../gui/gui_image.h"
 #include "../gui/label.h"
 #include "../sound.h"
+#include "../audio_source.h"
 
 //armada
 #include "bsp_state.h"
@@ -58,6 +59,8 @@ namespace mandala
             layout->adopt(crosshair_image);
 
 			layout->clean();
+
+            alDistanceModel(AL_EXPONENT_DISTANCE);
 		}
 
 		bsp_state_t::~bsp_state_t()
@@ -68,7 +71,12 @@ namespace mandala
 		{
 			camera.tick(dt);
 
-			render_info.leaf_index = bsp->get_leaf_index_from_position(camera.location);
+            app.audio.doppler.factor = 0.0f;
+
+            app.audio.listener.position = camera.position;
+            app.audio.listener.velocity = camera.velocity;
+
+            render_info.leaf_index = bsp->get_leaf_index_from_position(camera.position);
 
 			std::wostringstream oss;
 			oss << L"leaf index: " << render_info.leaf_index;
@@ -141,8 +149,13 @@ namespace mandala
 					camera.pitch_target += pitch_target_delta;
 					camera.yaw_target += yaw_target_delta;
 
-					auto sound = app.resources.get<sound_t>(hash_t("garand_shoot.wav"));
-					app.audio.play(sound);
+                    auto sound = app.resources.get<sound_t>(hash_t("garand_shoot.wav"));
+                    auto source = app.audio.create_source();
+                    source->position(camera.position);
+                    source->max_distance(500.0f);
+                    source->reference_distance(10.0f);
+                    source->queue_sound(sound);
+                    source->play();
 				}
 				else if(input_event.touch.type == input_event_t::touch_t::type_t::scroll)
 				{

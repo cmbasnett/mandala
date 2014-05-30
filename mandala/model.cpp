@@ -1,6 +1,9 @@
 //std
 #include <fstream>
 
+//boost
+#include <boost\filesystem\path.hpp>
+
 //glm
 #include <glm\gtc\matrix_inverse.hpp>
 #include <glm\gtx\norm.hpp>
@@ -24,14 +27,7 @@ namespace mandala
         memset(magic, '\0', md5b::magic_length + 1);
         istream.read(magic, md5b::magic_length);
 
-		if(strcmp(md5b::magic, magic) != 0)
-		{
-			throw std::exception();
-		}
-
-        istream.read(magic, md5b::magic_length);
-
-		if(strcmp(md5b::model_magic, magic) != 0)
+		if(strcmp(md5b::model_magic, magic) != 0) 
 		{
 			throw std::exception();
 		}
@@ -46,18 +42,10 @@ namespace mandala
 		}
 
 		//bone count
-		uint8_t bone_count;
+		uint32_t bone_count;
 		istream.read((char*)&bone_count, sizeof(bone_count));
 
 		//bones
-		struct bone_info_t
-		{
-			std::string name;
-			uint8_t parent_index;
-			vec3_t position;
-			quat_t orientation;
-		};
-
 		std::vector<bone_info_t> bone_infos;
 
 		bone_infos.resize(bone_count);
@@ -71,7 +59,9 @@ namespace mandala
 			bone_indices.insert(std::make_pair(hash_t(bone_info.name), i));
 
 			istream.read((char*)&bone_info.parent_index, sizeof(bone_info.parent_index));
-			istream.read((char*)&bone_info.position, sizeof(bone_info.position));
+            istream.read((char*)&bone_info.position.x, sizeof(bone_info.position.x));
+            istream.read((char*)&bone_info.position.y, sizeof(bone_info.position.y));
+            istream.read((char*)&bone_info.position.z, sizeof(bone_info.position.z));
 			istream.read((char*)&bone_info.orientation.x, sizeof(bone_info.orientation.x));
 			istream.read((char*)&bone_info.orientation.y, sizeof(bone_info.orientation.y));
 			istream.read((char*)&bone_info.orientation.z, sizeof(bone_info.orientation.z));
@@ -83,53 +73,31 @@ namespace mandala
 		uint8_t mesh_count = 0;
 		istream.read((char*)&mesh_count, sizeof(mesh_count));
 
-		//meshes
-		struct mesh_info_t
-		{
-			struct vertex_t
-			{
-				vec2_t texcoord;
-				uint16_t weight_index_start;
-				uint8_t weight_count;
-			};
-
-			struct weight_t
-			{
-				uint8_t bone_index;
-				float32_t bias;
-				vec3_t position;
-			};
-
-			std::string shader;
-			std::vector<vertex_t> vertices;
-			std::vector<uint16_t> indices;
-			std::vector<weight_t> weights;
-		};
-
 		std::vector<mesh_info_t> mesh_infos;
 		mesh_infos.resize(mesh_count);
 
-		for(mesh_info_t& mesh : mesh_infos)
+		for(auto& mesh : mesh_infos)
 		{
 			//shader
 			std::getline(istream, mesh.shader, '\0');
 
 			//vertex count
-			uint16_t vertex_count;
-			istream.read((char*)&vertex_count, sizeof(vertex_count));
+			uint32_t vertex_count;
+			istream.read((char*)&vertex_count, sizeof(vertex_count)); 
 
 			//vertices
 			mesh.vertices.resize(vertex_count);
 
-			for(mesh_info_t::vertex_t& vertex : mesh.vertices)
+			for(auto& vertex : mesh.vertices) 
 			{
-				istream.read((char*)&vertex.texcoord, sizeof(vertex.texcoord));
+                istream.read((char*)&vertex.texcoord.x, sizeof(vertex.texcoord.x));
+                istream.read((char*)&vertex.texcoord.y, sizeof(vertex.texcoord.y));
 				istream.read((char*)&vertex.weight_index_start, sizeof(vertex.weight_index_start));
 				istream.read((char*)&vertex.weight_count, sizeof(vertex.weight_count));
 			}
 
 			//index count
-			uint16_t index_count;
+			uint32_t index_count;
 			istream.read((char*)&index_count, sizeof(index_count));
 
 			//indices
@@ -137,13 +105,13 @@ namespace mandala
 			istream.read((char*)&mesh.indices[0], sizeof(mesh.indices[0]) * mesh.indices.size());
 
 			//weight count
-			uint16_t weight_count;
+			uint32_t weight_count;
 			istream.read((char*)&weight_count, sizeof(weight_count));
 
 			//weights
 			mesh.weights.resize(weight_count);
 
-			for(mesh_info_t::weight_t& weight : mesh.weights)
+			for(auto& weight : mesh.weights)
 			{
 				istream.read((char*)&weight.bone_index, sizeof(weight.bone_index));
 				istream.read((char*)&weight.bias, sizeof(weight.bias));
@@ -154,15 +122,19 @@ namespace mandala
 		//meshes
 		meshes.reserve(mesh_infos.size());
 
-		for(mesh_info_t& mesh_info : mesh_infos)
+		for(auto& mesh_info : mesh_infos)
 		{
 			auto mesh = std::make_shared<mesh_t>();
 
 			//index count
             mesh->index_count = mesh_info.indices.size();
 
+            boost::filesystem::path shader_path(mesh_info.shader);
+
+            auto material_name = shader_path.filename().replace_extension(".mat");
+
 			//material
-			mesh->material = app.resources.get<material_t>(hash_t(mesh_info.shader + ".mat"));	//TODO: don't resort to string concat
+            mesh->material = app.resources.get<material_t>(hash_t(material_name.string()));	//TODO: don't resort to string concat
 
 			//vertices
 			std::vector<mesh_t::vertex_t> vertices;

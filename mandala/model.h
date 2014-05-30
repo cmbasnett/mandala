@@ -8,9 +8,6 @@
 #include <vector>
 #include <map>
 
-//boost
-#include <boost\filesystem\path.hpp>
-
 namespace mandala
 {
 	struct material_t;
@@ -60,6 +57,36 @@ namespace mandala
 		void render(const vec3_t& camera_position, const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices, const vec3_t& light_position) const;
 
 	private:
+        struct mesh_info_t
+        {
+            struct vertex_t
+            {
+                vec2_t texcoord;
+                uint16_t weight_index_start = 0;
+                uint8_t weight_count = 0;
+            };
+
+            struct weight_t
+            {
+                uint8_t bone_index = 0;
+                float32_t bias = 0;
+                vec3_t position;
+            };
+
+            std::string shader;
+            std::vector<vertex_t> vertices;
+            std::vector<uint16_t> indices;
+            std::vector<weight_t> weights;
+        };
+
+        struct bone_info_t
+        {
+            std::string name;
+            uint8_t parent_index = 0;
+            vec3_t position;
+            quat_t orientation;
+        };
+
 		model_t(const model_t&);
 		model_t& operator=(const model_t&);
 	};

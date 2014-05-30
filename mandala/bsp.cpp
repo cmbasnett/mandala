@@ -532,7 +532,14 @@ namespace mandala
 	}
 
 	void bsp_t::render(const camera_t& camera) const
-	{
+    {
+        auto leaf_index = get_leaf_index_from_position(camera.position);
+
+        if (leaf_index <= 0)
+        {
+            return;
+        }
+
 		auto gpu_program = app.resources.get<gpu_program_t>(hash_t("bsp.gpu"));
 		auto program = gpu_program->program;
 
@@ -554,18 +561,18 @@ namespace mandala
 
 		glUseProgram(program);
 
-		static const GLint position_location = glGetAttribLocation(program, "position"); glCheckError();
-		static const GLint diffuse_texcoord_location = glGetAttribLocation(program, "diffuse_texcoord"); glCheckError();
-		static const GLint lightmap_texcoord_location = glGetAttribLocation(program, "lightmap_texcoord"); glCheckError();
-		static const GLint world_location = glGetUniformLocation(program, "world"); glCheckError();
-		static const GLint view_projection_location = glGetUniformLocation(program, "view_projection"); glCheckError();
-		static const GLint diffuse_texture_location = glGetUniformLocation(program, "diffuse_texture"); glCheckError();
-		static const GLint lightmap_texture_location = glGetUniformLocation(program, "lightmap_texture"); glCheckError();
-		static const GLint lightmap_gamma_location = glGetUniformLocation(program, "lightmap_gamma"); glCheckError();
-		static const GLuint vertex_size = sizeof(vertex_t);
-		static const GLvoid* position_offset = reinterpret_cast<void*>(offsetof(vertex_t, position));
-		static const GLvoid* diffuse_texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_t, diffuse_texcoord));
-		static const GLvoid* lightmap_texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_t, lightmap_texcoord));
+		static const auto position_location = glGetAttribLocation(program, "position"); glCheckError();
+        static const auto diffuse_texcoord_location = glGetAttribLocation(program, "diffuse_texcoord"); glCheckError();
+        static const auto lightmap_texcoord_location = glGetAttribLocation(program, "lightmap_texcoord"); glCheckError();
+        static const auto world_location = glGetUniformLocation(program, "world"); glCheckError();
+        static const auto view_projection_location = glGetUniformLocation(program, "view_projection"); glCheckError();
+        static const auto diffuse_texture_location = glGetUniformLocation(program, "diffuse_texture"); glCheckError();
+        static const auto lightmap_texture_location = glGetUniformLocation(program, "lightmap_texture"); glCheckError();
+        static const auto lightmap_gamma_location = glGetUniformLocation(program, "lightmap_gamma"); glCheckError();
+		static const auto vertex_size = sizeof(vertex_t);
+        static const auto position_offset = reinterpret_cast<void*>(offsetof(vertex_t, position));
+        static const auto diffuse_texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_t, diffuse_texcoord));
+        static const auto lightmap_texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_t, lightmap_texcoord));
 
 		//bind buffers
 		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer); glCheckError();
@@ -598,61 +605,56 @@ namespace mandala
 		//lightmap_gamma
 		glUniform1f(lightmap_gamma_location, 1.0f); glCheckError();
 
-		auto leaf_index = get_leaf_index_from_position(camera.location);
-
 		std::shared_ptr<texture_t> previous_diffuse_texture;
 
-		if (leaf_index > 0)
+		auto& leaf_pvs = leaf_pvs_map.at(leaf_index);
+
+		for (size_t i = 0; i < leaf_pvs.size(); ++i)
 		{
-			auto& leaf_pvs = leaf_pvs_map.at(leaf_index);
+			//if (!leaf_pvs[i])
+			//{
+			//	continue;
+			//}
 
-			for (size_t i = 0; i < leaf_pvs.size(); ++i)
+			auto& leaf = leafs[i];
+
+			for (auto j = 0; j < leaf.mark_surface_count; ++j)
 			{
-				//if (!leaf_pvs[i])
-				//{
-				//	continue;
-				//}
+				auto face_index = mark_surfaces[leaf.mark_surface_start_index + j];
+				auto& face = faces[face_index];
+				auto& diffuse_texture = textures[texture_infos[face.texture_info_index].texture_index];
+				auto& lightmap_texture = face_lightmap_textures[face_index];
 
-				auto& leaf = leafs[i];
-
-				for (auto j = 0; j < leaf.mark_surface_count; ++j)
+				//diffuse_texture
+				if (diffuse_texture != previous_diffuse_texture)
 				{
-					auto face_index = mark_surfaces[leaf.mark_surface_start_index + j];
-					auto& face = faces[face_index];
-					auto& diffuse_texture = textures[texture_infos[face.texture_info_index].texture_index];
-					auto& lightmap_texture = face_lightmap_textures[face_index];
+					glActiveTexture(GL_TEXTURE0); glCheckError();
 
-					//diffuse_texture
-					if (diffuse_texture != previous_diffuse_texture)
+					if (diffuse_texture)
 					{
-						glActiveTexture(GL_TEXTURE0); glCheckError();
-
-						if (diffuse_texture)
-						{
-							glBindTexture(GL_TEXTURE_2D, diffuse_texture->handle); glCheckError();
-						}
-						else
-						{
-							glBindTexture(GL_TEXTURE_2D, 0); glCheckError();
-						}
-
-						previous_diffuse_texture = diffuse_texture;
-					}
-
-					//lightmap_texture
-					glActiveTexture(GL_TEXTURE1); glCheckError();
-
-					if (lightmap_texture)
-					{
-						glBindTexture(GL_TEXTURE_2D, lightmap_texture->handle); glCheckError();
+						glBindTexture(GL_TEXTURE_2D, diffuse_texture->handle); glCheckError();
 					}
 					else
 					{
 						glBindTexture(GL_TEXTURE_2D, 0); glCheckError();
 					}
 
-					glDrawElements(GL_TRIANGLE_FAN, face.surface_edge_count, GL_UNSIGNED_INT, (GLvoid*)(face_start_indices[face_index] * sizeof(uint32_t))); glCheckError();
+					previous_diffuse_texture = diffuse_texture;
 				}
+
+				//lightmap_texture
+				glActiveTexture(GL_TEXTURE1); glCheckError();
+
+				if (lightmap_texture)
+				{
+					glBindTexture(GL_TEXTURE_2D, lightmap_texture->handle); glCheckError();
+				}
+				else
+				{
+					glBindTexture(GL_TEXTURE_2D, 0); glCheckError();
+				}
+
+				glDrawElements(GL_TRIANGLE_FAN, face.surface_edge_count, GL_UNSIGNED_INT, (GLvoid*)(face_start_indices[face_index] * sizeof(uint32_t))); glCheckError();
 			}
 		}
 
