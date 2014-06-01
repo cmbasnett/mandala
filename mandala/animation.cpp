@@ -5,7 +5,7 @@
 #include <boost/iostreams/read.hpp>
 
 //mandala
-#include "animation.h"
+#include "animation.hpp"
 
 namespace mandala
 {

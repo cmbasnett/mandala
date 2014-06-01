@@ -4,7 +4,7 @@
 #include <iostream>
 
 //mandala
-#include "platform_win32.h"
+#include "platform_win32.hpp"
 
 namespace mandala
 {

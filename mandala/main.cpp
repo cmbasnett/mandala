@@ -1,8 +1,8 @@
 //mandala
-#include "app.h"
+#include "app.hpp"
 
 //armada
-#include "armada/armada.h"
+#include "armada/armada.hpp"
 
 using namespace mandala;
 

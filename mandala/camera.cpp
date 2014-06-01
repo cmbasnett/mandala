@@ -2,8 +2,8 @@
 #include "glm\ext.hpp"
 
 //mandala
-#include "mandala.h"
-#include "camera.h"
+#include "mandala.hpp"
+#include "camera.hpp"
 
 namespace mandala
 {

@@ -1,6 +1,6 @@
-#include "state_mgr.h"
-#include "state.h"
-#include "app.h"
+#include "state_mgr.hpp"
+#include "state.hpp"
+#include "app.hpp"
 
 namespace mandala
 {

@@ -1,5 +1,5 @@
 //mandala
-#include "resource_mgr.h"
+#include "resource_mgr.hpp"
 
 namespace mandala
 {

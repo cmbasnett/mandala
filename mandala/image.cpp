@@ -2,7 +2,7 @@
 #include <png.h>
 
 //mandala
-#include "image.h"
+#include "image.hpp"
 
 namespace mandala
 {

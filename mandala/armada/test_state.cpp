@@ -2,11 +2,11 @@
 #include <iostream>
 
 //mandala
-#include "../input_event.h"
-#include "../app.h"
+#include "../input_event.hpp"
+#include "../app.hpp"
 
 //armada
-#include "test_state.h"
+#include "test_state.hpp"
 
 namespace mandala
 {

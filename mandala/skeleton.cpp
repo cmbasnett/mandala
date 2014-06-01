@@ -1,5 +1,5 @@
 //mandala
-#include "skeleton.h"
+#include "skeleton.hpp"
 
 //glm
 #include <glm\gtx\transform.hpp>

@@ -5,11 +5,11 @@
 #include <glm\ext.hpp>
 
 //mandala
-#include "bitmap_font.h"
-#include "app.h"
-#include "hash.h"
-#include "texture.h"
-#include "gpu_program.h"
+#include "bitmap_font.hpp"
+#include "app.hpp"
+#include "hash.hpp"
+#include "texture.hpp"
+#include "gpu_program.hpp"
 
 #define BMF_MAGIC			("BMF")
 #define BMF_MAGIC_LENGTH	(3)

@@ -3,13 +3,13 @@
 #include <glm\ext.hpp>
 
 //mandala
-#include "../app.h"
-#include "../camera.h"
-#include "../model.h"
-#include "../model_instance.h"
+#include "../app.hpp"
+#include "../camera.hpp"
+#include "../model.hpp"
+#include "../model_instance.hpp"
 
 //armada
-#include "skybox.h"
+#include "skybox.hpp"
 
 namespace mandala
 {

@@ -1,9 +1,9 @@
 #pragma once
 
 //mandala
-#include "../app.h"
-#include "label.h"
-#include "../bitmap_font.h"
+#include "../app.hpp"
+#include "label.hpp"
+#include "../bitmap_font.hpp"
 
 //std
 #include <sstream>

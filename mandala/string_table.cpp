@@ -1,5 +1,5 @@
 //mandala
-#include "string_table.h"
+#include "string_table.hpp"
 
 namespace mandala
 {

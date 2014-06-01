@@ -2,7 +2,7 @@
 #include <exception>
 
 //mandala
-#include "audio_device.h"
+#include "audio_device.hpp"
 
 //al
 #include <AL\al.h>

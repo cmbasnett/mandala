@@ -5,17 +5,17 @@
 #include <glm\ext.hpp>
 
 //mandala
-#include "../state_mgr.h"
-#include "../app.h"
-#include "../platform.h"
-#include "../model.h"
-#include "../model_instance.h"
-#include "../animation.h"
+#include "../state_mgr.hpp"
+#include "../app.hpp"
+#include "../platform.hpp"
+#include "../model.hpp"
+#include "../model_instance.hpp"
+#include "../animation.hpp"
 
 //armada
-#include "world_state.h"
-#include "pause_state.h"
-#include "world_hud_state.h"
+#include "world_state.hpp"
+#include "pause_state.hpp"
+#include "world_hud_state.hpp"
 
 namespace mandala
 {

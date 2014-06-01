@@ -2,8 +2,8 @@
 #include <AL\al.h>
 
 //mandala
-#include "audio_device.h"
-#include "audio_context.h"
+#include "audio_device.hpp"
+#include "audio_context.hpp"
 
 namespace mandala
 {

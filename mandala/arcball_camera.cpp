@@ -3,7 +3,7 @@
 #include <glm\ext.hpp>
 
 //mandala
-#include "arcball_camera.h"
+#include "arcball_camera.hpp"
 
 #define ARCBALL_CAMERA_SMOOTHING_CONSTANT			(60.0f)
 #define ARCBALL_CAMERA_DEFAULT_SMOOTHING_STRENGTH	(0.25f)

@@ -2,9 +2,9 @@
 #include "png.h"
 
 //mandala
-#include "texture.h"
-#include "image.h"
-#include "app.h"
+#include "texture.hpp"
+#include "image.hpp"
+#include "app.hpp"
 
 namespace mandala
 {

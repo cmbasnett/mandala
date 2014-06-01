@@ -2,10 +2,10 @@
 #include <sstream>
 
 //armada
-#include "../app.h"
-#include "../texture.h"
-#include "../sprite_set.h"
-#include "world_hud_state.h"
+#include "../app.hpp"
+#include "../texture.hpp"
+#include "../sprite_set.hpp"
+#include "world_hud_state.hpp"
 
 namespace mandala
 {

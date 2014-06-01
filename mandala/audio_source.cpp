@@ -5,8 +5,8 @@
 #include <glm\gtc\type_ptr.hpp>
 
 //mandala
-#include "audio_source.h"
-#include "sound.h"
+#include "audio_source.hpp"
+#include "sound.hpp"
 
 namespace mandala
 {

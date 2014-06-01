@@ -1,7 +1,7 @@
 //mandala
-#include "quake_camera.h"
-#include "input_event.h"
-#include "glm.h"
+#include "quake_camera.hpp"
+#include "input_event.hpp"
+#include "glm.hpp"
 
 //glm
 #include <glm\gtx\norm.hpp>

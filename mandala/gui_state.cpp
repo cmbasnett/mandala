@@ -2,8 +2,8 @@
 #include "glm\ext.hpp"
 
 //mandala
-#include "gui_state.h"
-#include "platform.h"
+#include "gui_state.hpp"
+#include "platform.hpp"
 
 namespace mandala
 {

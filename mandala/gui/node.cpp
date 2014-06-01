@@ -8,9 +8,9 @@
 #include <glm\ext.hpp>
 
 //mandala
-#include "../collision.h"
-#include "../input_event.h"
-#include "node.h"
+#include "../collision.hpp"
+#include "../input_event.hpp"
+#include "node.hpp"
 
 namespace mandala
 {

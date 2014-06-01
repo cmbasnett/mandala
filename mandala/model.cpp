@@ -11,12 +11,12 @@
 #include <glm\gtc\type_ptr.hpp>	
 
 //mandala
-#include "model.h"
-#include "app.h"
-#include "md5b.h"
-#include "material.h"
-#include "texture.h"
-#include "gpu_program.h"
+#include "model.hpp"
+#include "app.hpp"
+#include "md5b.hpp"
+#include "material.hpp"
+#include "texture.hpp"
+#include "gpu_program.hpp"
 
 namespace mandala
 {

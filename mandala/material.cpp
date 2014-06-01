@@ -8,11 +8,11 @@
 #include <glm\ext.hpp>
 
 //mandala
-#include "app.h"
-#include "texture.h"
-#include "material.h"
-#include "gpu_program.h"
-#include "boost.h"
+#include "app.hpp"
+#include "texture.hpp"
+#include "material.hpp"
+#include "gpu_program.hpp"
+#include "boost.hpp"
 
 namespace mandala
 {

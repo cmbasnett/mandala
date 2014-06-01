@@ -1,8 +1,8 @@
 #pragma once
 
 //mandala
-#include "frustum.h"
-#include "collision.h"
+#include "frustum.hpp"
+#include "collision.hpp"
 
 namespace mandala
 {

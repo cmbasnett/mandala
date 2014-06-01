@@ -2,10 +2,10 @@
 #include "glm\ext.hpp"
 
 //mandala
-#include "../texture.h"
-#include "../sprite_set.h"
-#include "../sprite.h"
-#include "gui_image.h"
+#include "../texture.hpp"
+#include "../sprite_set.hpp"
+#include "../sprite.hpp"
+#include "gui_image.hpp"
 
 namespace mandala
 {

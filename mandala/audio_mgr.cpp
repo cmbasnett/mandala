@@ -9,11 +9,11 @@
 #include <glm\ext.hpp>
 
 //mandala
-#include "audio_source.h"
-#include "audio_device.h"
-#include "audio_context.h"
-#include "audio_mgr.h"
-#include "sound.h"
+#include "audio_source.hpp"
+#include "audio_device.hpp"
+#include "audio_context.hpp"
+#include "audio_mgr.hpp"
+#include "sound.hpp"
 
 namespace mandala
 {

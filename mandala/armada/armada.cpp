@@ -1,15 +1,15 @@
 #pragma once
 
 //mandala
-#include "../app.h"
-#include "../sprite_set.h"
-#include "../platform.h"
+#include "../app.hpp"
+#include "../sprite_set.hpp"
+#include "../platform.hpp"
 
 //armada
-#include "armada.h"
-#include "world_state.h"
-#include "pause_state.h"
-#include "bsp_state.h"
+#include "armada.hpp"
+#include "world_state.hpp"
+#include "pause_state.hpp"
+#include "bsp_state.hpp"
 
 namespace mandala
 {

@@ -2,10 +2,10 @@
 #include <chrono>
 
 //mandala
-#include "app.h"
-#include "platform.h"
-#include "mandala.h"
-#include "game.h"
+#include "app.hpp"
+#include "platform.hpp"
+#include "mandala.hpp"
+#include "game.hpp"
 
 namespace mandala
 {

@@ -3,20 +3,20 @@
 #include <random>
 
 //mandala
-#include "../app.h"
-#include "../platform.h"
-#include "../bsp.h"
-#include "../bitmap_font.h"
-#include "../model.h"
-#include "../model_instance.h"
-#include "../gui/gui_image.h"
-#include "../gui/label.h"
-#include "../sound.h"
-#include "../audio_source.h"
+#include "../app.hpp"
+#include "../platform.hpp"
+#include "../bsp.hpp"
+#include "../bitmap_font.hpp"
+#include "../model.hpp"
+#include "../model_instance.hpp"
+#include "../gui/gui_image.hpp"
+#include "../gui/label.hpp"
+#include "../sound.hpp"
+#include "../audio_source.hpp"
 
 //armada
-#include "bsp_state.h"
-#include "pause_state.h"
+#include "bsp_state.hpp"
+#include "pause_state.hpp"
 
 namespace mandala
 {

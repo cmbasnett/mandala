@@ -2,11 +2,11 @@
 #include "glm\ext.hpp"
 
 //mandala
-#include "bsp.h"
-#include "camera.h"
-#include "app.h"
-#include "gpu_program.h"
-#include "image.h"
+#include "bsp.hpp"
+#include "camera.hpp"
+#include "app.hpp"
+#include "gpu_program.hpp"
+#include "image.hpp"
 
 namespace mandala
 {

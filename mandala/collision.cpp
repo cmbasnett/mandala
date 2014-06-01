@@ -1,6 +1,6 @@
 //mandala
-#include "collision.h"
-#include "frustum.h"
+#include "collision.hpp"
+#include "frustum.hpp"
 
 //std
 #include <utility>

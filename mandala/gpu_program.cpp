@@ -2,9 +2,9 @@
 #include <boost\property_tree\json_parser.hpp>
 
 //mandala
-#include "gpu_program.h"
-#include "app.h"
-#include "shader.h"
+#include "gpu_program.hpp"
+#include "app.hpp"
+#include "shader.hpp"
 
 namespace mandala
 {

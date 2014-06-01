@@ -7,8 +7,8 @@
 #include <boost\property_tree\json_parser.hpp>
 
 //mandala
-#include "mandala.h"
-#include "shader.h"
+#include "mandala.hpp"
+#include "shader.hpp"
 
 namespace mandala
 {

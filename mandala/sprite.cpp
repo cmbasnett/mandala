@@ -1,8 +1,8 @@
 //mandala
-#include "app.h"
-#include "sprite.h"
-#include "sprite_set.h"
-#include "texture.h"
+#include "app.hpp"
+#include "sprite.hpp"
+#include "sprite_set.hpp"
+#include "texture.hpp"
 
 namespace mandala
 {

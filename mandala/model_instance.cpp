@@ -1,8 +1,8 @@
 //mandala
-#include "model_instance.h"
-#include "model.h"
-#include "animation.h"
-#include "collision.h"
+#include "model_instance.hpp"
+#include "model.hpp"
+#include "animation.hpp"
+#include "collision.hpp"
 
 //glm
 #include <glm\glm.hpp>

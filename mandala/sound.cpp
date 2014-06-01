@@ -3,7 +3,7 @@
 #include <iostream>
 
 //mandala
-#include "sound.h"
+#include "sound.hpp"
 
 namespace mandala
 {

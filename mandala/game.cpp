@@ -2,9 +2,9 @@
 #include <fstream>
 
 //mandala
-#include "game.h"
-#include "app.h"
-#include "platform.h"
+#include "game.hpp"
+#include "app.hpp"
+#include "platform.hpp"
 
 namespace mandala
 {

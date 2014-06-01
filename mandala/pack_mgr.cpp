@@ -1,6 +1,6 @@
 //mandala
-#include "pack_mgr.h"
-#include "pack.h"
+#include "pack_mgr.hpp"
+#include "pack.hpp"
 
 //std
 #include <strstream>
