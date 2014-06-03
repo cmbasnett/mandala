@@ -430,7 +430,7 @@ namespace mandala
 
 				//texture
 				glActiveTexture(GL_TEXTURE0);
-				glBindTexture(GL_TEXTURE_2D, diffuse.texture != nullptr ? diffuse.texture->handle : 0);
+				glBindTexture(GL_TEXTURE_2D, diffuse.texture != nullptr ? diffuse.texture->id : 0);
 				glUniform1i(DIFFUSE_MAP_LOCATION, 0);
 
 				//color
@@ -443,7 +443,7 @@ namespace mandala
 
 				//texture
 				glActiveTexture(GL_TEXTURE1);
-				glBindTexture(GL_TEXTURE_2D, normal.texture != nullptr ? normal.texture->handle : 0);
+				glBindTexture(GL_TEXTURE_2D, normal.texture != nullptr ? normal.texture->id : 0);
 				glUniform1i(NORMAL_MAP_LOCATION, 1);
 			}
 
@@ -453,7 +453,7 @@ namespace mandala
 				
 				//texture
 				glActiveTexture(GL_TEXTURE2);
-				glBindTexture(GL_TEXTURE_2D, specular.texture != nullptr ? specular.texture->handle : 0);
+				glBindTexture(GL_TEXTURE_2D, specular.texture != nullptr ? specular.texture->id : 0);
 				glUniform1i(SPECULAR_MAP_LOCATION, 2);
 
 				//color
@@ -469,7 +469,7 @@ namespace mandala
 
 				//texture
 				glActiveTexture(GL_TEXTURE3);
-				glBindTexture(GL_TEXTURE_2D, emissive.texture != nullptr ? emissive.texture->handle : 0);
+				glBindTexture(GL_TEXTURE_2D, emissive.texture != nullptr ? emissive.texture->id : 0);
 				glUniform1i(EMISSIVE_MAP_LOCATION, 3);
 
 				//color

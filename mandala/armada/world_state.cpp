@@ -11,6 +11,9 @@
 #include "../model.hpp"
 #include "../model_instance.hpp"
 #include "../animation.hpp"
+#include "../color_types.hpp"
+#include "../texture.hpp"
+#include "../material.hpp"
 
 //armada
 #include "world_state.hpp"
@@ -31,6 +34,12 @@ namespace mandala
 			hud_state = std::make_shared<world_hud_state_t>();
 
             camera.speed_max = 512;
+
+            auto window_size = platform.get_window_size();
+
+            frame_buffer_color0_texture = std::make_shared<texture_t>(color_type_t::rgb, window_size.x, window_size.y);
+            frame_buffer = std::make_shared<frame_buffer_t>();
+            frame_buffer->attach(frame_buffer_t::mode_t::read_draw, frame_buffer_t::attachment_type_t::color0, frame_buffer_color0_texture);
 		}
 
 		void world_state_t::tick(float32_t dt)
@@ -47,6 +56,8 @@ namespace mandala
 
 		void world_state_t::render()
         {
+            frame_buffer->bind(frame_buffer_t::mode_t::read_draw);
+
             skybox.render(camera);
 
             auto light_position = vec3_t(0, 20, 100);
@@ -56,7 +67,21 @@ namespace mandala
                 model_instance->render(camera, light_position);
             }
 
-			state_t::render();
+            state_t::render();
+
+            frame_buffer->unbind(frame_buffer_t::mode_t::read_draw);
+
+            skybox.render(camera);
+
+            for (auto& model_instance : model_instances)
+            {
+                model_instance->model->meshes[0]->material->diffuse.texture = frame_buffer_color0_texture;
+            }
+
+            for (auto& model_instance : model_instances)
+            {
+                model_instance->render(camera, light_position);
+            }
 		}
 
 		void world_state_t::on_enter()

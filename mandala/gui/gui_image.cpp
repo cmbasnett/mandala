@@ -19,31 +19,31 @@ namespace mandala
 			}
 
 			//push GL states
-			auto is_blend_enabled = glIsEnabled(GL_BLEND);
+            auto is_blend_enabled = glIsEnabled(GL_BLEND); glCheckError();
 			GLint blend_src_rgb;
 			GLint blend_dst_alpha;
-			auto is_line_stipple_enabled = glIsEnabled(GL_LINE_STIPPLE);
+            auto is_line_stipple_enabled = glIsEnabled(GL_LINE_STIPPLE); glCheckError();
 			GLint line_stipple_factor;
 			GLint line_stipple_pattern;
 
-			glGetIntegerv(GL_BLEND_SRC_RGB, &blend_src_rgb);
-			glGetIntegerv(GL_BLEND_SRC_ALPHA, &blend_dst_alpha);
-			glGetIntegerv(GL_LINE_STIPPLE_REPEAT, &line_stipple_factor);
-			glGetIntegerv(GL_LINE_STIPPLE_PATTERN, &line_stipple_pattern);
+            glGetIntegerv(GL_BLEND_SRC_RGB, &blend_src_rgb); glCheckError();
+            glGetIntegerv(GL_BLEND_SRC_ALPHA, &blend_dst_alpha); glCheckError();
+            glGetIntegerv(GL_LINE_STIPPLE_REPEAT, &line_stipple_factor); glCheckError();
+            glGetIntegerv(GL_LINE_STIPPLE_PATTERN, &line_stipple_pattern); glCheckError();
 
-			glUseProgram(0);
+            glUseProgram(0); glCheckError();
 
-			glMatrixMode(GL_PROJECTION);
-			glLoadMatrixf(glm::value_ptr(view_projection_matrix));
+            glMatrixMode(GL_PROJECTION); glCheckError();
+            glLoadMatrixf(glm::value_ptr(view_projection_matrix)); glCheckError();
 
 			if (sprite.sprite_set->texture->has_alpha)
 			{
-				glEnable(GL_BLEND);
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                glEnable(GL_BLEND); glCheckError();
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); glCheckError();
 			}
 			else
 			{
-				glDisable(GL_BLEND);
+                glDisable(GL_BLEND); glCheckError();
 			}
 
 			//auto min = bounds.min + (vec2_t)sprite.region.rectangle.min();
@@ -62,13 +62,13 @@ namespace mandala
 			//glVertex2f(max.x, min.y);
 			//glEnd();
 
-			glEnable(GL_TEXTURE_2D);
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, sprite.sprite_set->texture->handle);
+            glEnable(GL_TEXTURE_2D); glCheckError();
+            glActiveTexture(GL_TEXTURE0); glCheckError();
+            glBindTexture(GL_TEXTURE_2D, sprite.sprite_set->texture->id); glCheckError();
 
-			glDisable(GL_LINE_STIPPLE);
+            glDisable(GL_LINE_STIPPLE); glCheckError();
 
-			glMatrixMode(GL_MODELVIEW);
+            glMatrixMode(GL_MODELVIEW); glCheckError();
 			glPushMatrix(); glCheckError();
 
 			auto center = bounds.min + ((vec2_t)sprite.region.rectangle.size() / 2.0f);

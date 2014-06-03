@@ -329,7 +329,7 @@ namespace mandala
 			auto page_texture = page_textures[page];
 
 			glActiveTexture(GL_TEXTURE0 + page);
-			glBindTexture(GL_TEXTURE_2D, page_texture->handle);
+            glBindTexture(GL_TEXTURE_2D, page_texture->id);
 		}
 
 		//color top

@@ -9,6 +9,8 @@
 #include "../model_instance.hpp"
 #include "../gui/node.hpp"
 #include "../quake_camera.hpp"
+#include "../render_buffer.hpp"
+#include "../frame_buffer.hpp"
 
 //armada
 #include "world_hud_state.hpp"
@@ -37,6 +39,8 @@ namespace mandala
             quake_camera_t camera;
             skybox_t skybox;
             std::vector<std::shared_ptr<model_instance_t>> model_instances;
+            std::shared_ptr<frame_buffer_t> frame_buffer;
+            std::shared_ptr<texture_t> frame_buffer_color0_texture;
 		};
 	};
 };

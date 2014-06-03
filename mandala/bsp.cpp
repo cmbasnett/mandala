@@ -504,7 +504,7 @@ namespace mandala
 				image->width = (uint32_t)texture_width;
 				image->height = (uint32_t)texture_height;
 				image->bit_depth = 8;
-				image->color_type = image_t::color_type_t::rgb;
+				image->color_type = color_type_t::rgb;
 
 				auto lighting_data_length = (3 * (int32_t)texture_width * (int32_t)texture_height);
 				auto lighting_data_begin = lighting_data.begin() + face.lightmap_offset;
@@ -632,7 +632,7 @@ namespace mandala
 
 					if (diffuse_texture)
 					{
-						glBindTexture(GL_TEXTURE_2D, diffuse_texture->handle); glCheckError();
+                        glBindTexture(GL_TEXTURE_2D, diffuse_texture->id); glCheckError();
 					}
 					else
 					{
@@ -647,7 +647,7 @@ namespace mandala
 
 				if (lightmap_texture)
 				{
-					glBindTexture(GL_TEXTURE_2D, lightmap_texture->handle); glCheckError();
+                    glBindTexture(GL_TEXTURE_2D, lightmap_texture->id); glCheckError();
 				}
 				else
 				{

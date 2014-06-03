@@ -4,6 +4,9 @@
 #include "../state.hpp"
 #include "../quake_camera.hpp"
 #include "../gui_state.hpp"
+#include "../frame_buffer.hpp"
+
+//armada
 #include "skybox.hpp"
 
 namespace mandala
@@ -36,6 +39,8 @@ namespace mandala
 			std::vector<sprite_ref_t> crosshair_sprite_refs;
 			int32_t crosshair_sprite_index = 0;
 			std::shared_ptr<pause_state_t> pause_state;
+            std::shared_ptr<texture_t> frame_buffer_color_texture;
+            frame_buffer_t frame_buffer;
 
 			bsp_state_t();
 			virtual ~bsp_state_t();

@@ -1,5 +1,5 @@
 //png
-#include "png.h"
+#include <png.h>
 
 //mandala
 #include "texture.hpp"
@@ -8,75 +8,77 @@
 
 namespace mandala
 {
-	texture_t::texture_t(std::shared_ptr<image_t> image)
-	{
-		height = image->height;
-		width = image->width;
-		hash = image->hash;
+    texture_t::texture_t(color_type_t color_type, uint32_t width, uint32_t height) :
+        width(width),
+        height(height)
+    {
+        glGenTextures(1, &id); glCheckError();
+        glBindTexture(GL_TEXTURE_2D, id); glCheckError();
 
-		switch (image->color_type)
-		{
-			case image_t::color_type_t::g:
-			{
-				format = GL_LUMINANCE;
-				internal_format = 1;
-				has_alpha = false;
-			}
-				break;
-			case image_t::color_type_t::rgb:
-			{
-				format = GL_RGB;
-				internal_format = 3;
-				has_alpha = false;
-			}
-				break;
-			case image_t::color_type_t::rgba:
-			{
-				format = GL_RGBA;
-				internal_format = 4;
-				has_alpha = true;
-			}
-				break;
-			case image_t::color_type_t::ga:
-			{
-				format = GL_LUMINANCE_ALPHA;
-				internal_format = 2;
-				has_alpha = true;
-			}
-				break;
-			default:
-			{
-				throw std::exception();
-			}
-				break;
-		}
+        get_formats(color_type, internal_format, format);
 
-		glGenTextures(1, &handle);
-		glBindTexture(GL_TEXTURE_2D, handle);
+        glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, format, GL_UNSIGNED_BYTE, nullptr); glCheckError();
+    }
 
-		GLint unpack_alignment;
+    texture_t::texture_t(std::shared_ptr<image_t> image)
+    {
+        hash = image->hash;
+        height = image->height;
+        width = image->width;
 
-		glGetIntegerv(GL_UNPACK_ALIGNMENT, &unpack_alignment);
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        get_formats(image->color_type, internal_format, format);
 
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 2);
-		//glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+        glGenTextures(1, &id); glCheckError();
+        glBindTexture(GL_TEXTURE_2D, id); glCheckError();
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        GLint unpack_alignment;
 
-		glTexImage2D(GL_TEXTURE_2D, 0, internal_format, image->width, image->height, 0, format, GL_UNSIGNED_BYTE, image->data.data());
+        glGetIntegerv(GL_UNPACK_ALIGNMENT, &unpack_alignment); glCheckError();
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1); glCheckError();
 
-		glPixelStorei(GL_UNPACK_ALIGNMENT, unpack_alignment);
-	}
+        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 2);
+        //glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 
-	texture_t::texture_t(std::istream& istream) :
-		texture_t(std::make_unique<image_t>(istream))
-	{
-	}
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); glCheckError();
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); glCheckError();
 
-	texture_t::~texture_t()
-	{
-		glDeleteTextures(1, &handle);
-	}
+        glTexImage2D(GL_TEXTURE_2D, 0, internal_format, image->width, image->height, 0, format, GL_UNSIGNED_BYTE, image->data.data()); glCheckError();
+
+        glPixelStorei(GL_UNPACK_ALIGNMENT, unpack_alignment); glCheckError();
+    }
+
+    texture_t::texture_t(std::istream& istream) :
+        texture_t(std::make_unique<image_t>(istream))
+    {
+    }
+
+    texture_t::~texture_t()
+    {
+        glDeleteTextures(1, &id);
+    }
+
+    void texture_t::get_formats(color_type_t color_type, int32_t& internal_format, int32_t& format)
+    {
+        switch (color_type)
+        {
+        case color_type_t::g:
+            format = GL_LUMINANCE;
+            internal_format = 1;
+            break;
+        case color_type_t::rgb:
+            format = GL_RGB;
+            internal_format = GL_RGB;
+            break;
+        case color_type_t::rgba:
+            format = GL_RGBA;
+            internal_format = GL_RGBA;
+            break;
+        case color_type_t::ga:
+            format = GL_LUMINANCE_ALPHA;
+            internal_format = 2;
+            break;
+        default:
+            throw std::exception();
+        }
+    }
 };

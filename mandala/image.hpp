@@ -7,20 +7,12 @@
 //mandala
 #include "mandala.hpp"
 #include "resource.hpp"
+#include "color_types.hpp"
 
 namespace mandala
 {
 	struct image_t : resource_t
 	{
-		enum color_type_t : int32_t
-		{
-			g,
-			ga,
-			rgb,
-			rgba,
-			palette
-		};
-
 		uint32_t width = 0;
 		uint32_t height = 0;
 		int32_t bit_depth = 0;

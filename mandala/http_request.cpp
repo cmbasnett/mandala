@@ -49,23 +49,27 @@ namespace mandala
 
         std::istream response_stream(&response);
 
+        //http version
         std::string http_version;
         response_stream >> http_version;
-
-        unsigned int status_code;
-        response_stream >> status_code;
-
-        std::string status_message;
-        std::getline(response_stream, status_message);
 
         if (!response_stream || http_version.substr(0, 5) != "HTTP/")
         {
             std::cout << "Invalid response\n";
         }
-        
-        if (status_code != 200){
+
+        //status code
+        uint32_t status_code;
+        response_stream >> status_code;
+
+        if (status_code != 200)
+        {
             std::cout << "Response returned with status code " << status_code << "\n";
         }
+
+        //status message
+        std::string status_message;
+        std::getline(response_stream, status_message);
 
         // Read the response headers, which are terminated by a blank line.
         boost::asio::read_until(socket, response, "\r\n\r\n");

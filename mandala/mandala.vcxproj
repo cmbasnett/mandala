@@ -240,6 +240,8 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="bsp.hpp" />
     <ClInclude Include="circle.hpp" />
     <ClInclude Include="collision.hpp" />
+    <ClInclude Include="color_types.hpp" />
+    <ClInclude Include="frame_buffer.hpp" />
     <ClInclude Include="glm.hpp" />
     <ClInclude Include="gui\gui_image.hpp" />
     <ClInclude Include="gui\label.hpp" />
@@ -247,6 +249,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="gui\padding.hpp" />
     <ClInclude Include="gui_state.hpp" />
     <ClInclude Include="http_request.hpp" />
+    <ClInclude Include="render_buffer.hpp" />
     <ClInclude Include="sound.hpp" />
     <ClInclude Include="sphere.hpp" />
     <ClInclude Include="is_pow2.hpp" />
@@ -305,6 +308,7 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="audio_mgr.cpp" />
     <ClCompile Include="audio_source.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="frame_buffer.cpp" />
     <ClCompile Include="frustum.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="arcball_camera.cpp" />
@@ -323,6 +327,7 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="gui\node.cpp" />
     <ClCompile Include="gui_state.cpp" />
     <ClCompile Include="http_request.cpp" />
+    <ClCompile Include="render_buffer.cpp" />
     <ClCompile Include="resource_mgr.cpp" />
     <ClCompile Include="gpu_program.cpp" />
     <ClCompile Include="material.cpp" />
