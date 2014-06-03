@@ -37,9 +37,11 @@ namespace mandala
 
             auto window_size = platform.get_window_size();
 
-            frame_buffer_color0_texture = std::make_shared<texture_t>(color_type_t::rgb, window_size.x, window_size.y);
+            render_buffer = std::make_shared<render_buffer_t>(render_buffer_t::type_t::depth, window_size.x, window_size.y);
+            frame_buffer_color0_texture = std::make_shared<texture_t>(color_type_t::rgba, window_size.x, window_size.y);
             frame_buffer = std::make_shared<frame_buffer_t>();
             frame_buffer->attach(frame_buffer_t::mode_t::read_draw, frame_buffer_t::attachment_type_t::color0, frame_buffer_color0_texture);
+            frame_buffer->attach(frame_buffer_t::mode_t::read_draw, frame_buffer_t::attachment_type_t::depth, render_buffer);
 		}
 
 		void world_state_t::tick(float32_t dt)
@@ -54,13 +56,16 @@ namespace mandala
 			state_t::tick(dt);
 		}
 
-		void world_state_t::render()
+        void world_state_t::render()
         {
             frame_buffer->bind(frame_buffer_t::mode_t::read_draw);
 
+            glClearColor(1, 1, 1, 1);
+            glClear(GL_COLOR_BUFFER_BIT);
+
             skybox.render(camera);
 
-            auto light_position = vec3_t(0, 20, 100);
+            vec3_t light_position(0, 20, 100);
 
             for (auto& model_instance : model_instances)
             {
@@ -71,17 +76,38 @@ namespace mandala
 
             frame_buffer->unbind(frame_buffer_t::mode_t::read_draw);
 
-            skybox.render(camera);
+            auto window_size = platform.get_window_size();
 
-            for (auto& model_instance : model_instances)
-            {
-                model_instance->model->meshes[0]->material->diffuse.texture = frame_buffer_color0_texture;
-            }
+            auto projection_matrix = glm::ortho(0.0f, static_cast<float32_t>(window_size.x), 0.0f, static_cast<float32_t>(window_size.y));
 
-            for (auto& model_instance : model_instances)
-            {
-                model_instance->render(camera, light_position);
-            }
+            glMatrixMode(GL_PROJECTION);
+            glLoadMatrixf(glm::value_ptr(projection_matrix));
+
+            glMatrixMode(GL_MODELVIEW);
+            glLoadIdentity();
+
+            glDisable(GL_CULL_FACE);
+
+            glEnable(GL_TEXTURE_2D);
+            glBindTexture(GL_TEXTURE_2D, frame_buffer_color0_texture->id);
+            glBegin(GL_TRIANGLE_FAN);
+
+            glColor3f(1, 1, 0);
+            glTexCoord2f(0, 0);
+            glVertex2f(0, 0);
+
+            glColor3f(1, 0, 0);
+            glTexCoord2f(1, 0);
+            glVertex2f(static_cast<float32_t>(window_size.x), 0);
+
+            glColor3f(1, 0, 1);
+            glTexCoord2f(1, 1);
+            glVertex2f(static_cast<float32_t>(window_size.x), static_cast<float32_t>(window_size.y));
+
+            glColor3f(0, 1, 0);
+            glTexCoord2f(0, 1);
+            glVertex2f(0, static_cast<float32_t>(window_size.y));
+            glEnd();
 		}
 
 		void world_state_t::on_enter()

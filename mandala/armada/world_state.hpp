@@ -40,6 +40,7 @@ namespace mandala
             skybox_t skybox;
             std::vector<std::shared_ptr<model_instance_t>> model_instances;
             std::shared_ptr<frame_buffer_t> frame_buffer;
+            std::shared_ptr<render_buffer_t> render_buffer;
             std::shared_ptr<texture_t> frame_buffer_color0_texture;
 		};
 	};

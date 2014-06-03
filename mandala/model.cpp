@@ -263,56 +263,59 @@ namespace mandala
 
 		std::shared_ptr<gpu_program_t> gpu_program;
 
+        GLint program_id;
+        glGetIntegerv(GL_CURRENT_PROGRAM, &program_id);
+
 		for(auto& mesh : meshes)
 		{
 			if(mesh->material->gpu_program != gpu_program)
 			{
 				gpu_program = mesh->material->gpu_program;
 
-				const GLint WORLD_MATRIX_LOCATION = glGetUniformLocation(gpu_program->program, "world_matrix");
-				const GLint NORMAL_MATRIX_LOCATION = glGetUniformLocation(gpu_program->program, "normal_matrix");
-				const GLint VIEW_PROJECTION_MATRIX_LOCATION = glGetUniformLocation(gpu_program->program, "view_projection_matrix");
-				const GLint BONE_MATRICES_LOCATION = glGetUniformLocation(gpu_program->program, "bone_matrices");
-				const GLint LIGHT_POSITION_LOCATION = glGetUniformLocation(gpu_program->program, "light_position");
-				const GLint CAMERA_POSITION_LOCATION = glGetUniformLocation(gpu_program->program, "camera_position");
+				const GLint world_matrix_location = glGetUniformLocation(gpu_program->program, "world_matrix");
+				const GLint normal_matrix_location = glGetUniformLocation(gpu_program->program, "normal_matrix");
+				const GLint view_projection_matrix_location = glGetUniformLocation(gpu_program->program, "view_projection_matrix");
+				const GLint bone_matrices_location = glGetUniformLocation(gpu_program->program, "bone_matrices");
+				const GLint light_position_location = glGetUniformLocation(gpu_program->program, "light_position");
+				const GLint camera_position_location = glGetUniformLocation(gpu_program->program, "camera_position");
 
 				glUseProgram(gpu_program->program);
 
 				//world matrix
-				if (WORLD_MATRIX_LOCATION != -1)
+				if (world_matrix_location != -1)
 				{
-					glUniformMatrix4fv(WORLD_MATRIX_LOCATION, 1, GL_FALSE, glm::value_ptr(world_matrix));
+					glUniformMatrix4fv(world_matrix_location, 1, GL_FALSE, glm::value_ptr(world_matrix));
 				}
 
 				//view projection matrix
-				if (VIEW_PROJECTION_MATRIX_LOCATION != -1)
+				if (view_projection_matrix_location != -1)
 				{
-					glUniformMatrix4fv(VIEW_PROJECTION_MATRIX_LOCATION, 1, GL_FALSE, glm::value_ptr(view_projection_matrix));
+					glUniformMatrix4fv(view_projection_matrix_location, 1, GL_FALSE, glm::value_ptr(view_projection_matrix));
 				}
 		
 				//normal matrix
-				if (NORMAL_MATRIX_LOCATION != -1)
+				if (normal_matrix_location != -1)
 				{
 					auto normal_matrix = glm::inverseTranspose(glm::mat3(world_matrix));
-					glUniformMatrix3fv(NORMAL_MATRIX_LOCATION, 1, false, glm::value_ptr(normal_matrix));
+					glUniformMatrix3fv(normal_matrix_location, 1, false, glm::value_ptr(normal_matrix));
 				}
 
 				//bone matrices
-				if (BONE_MATRICES_LOCATION != -1)
+				if (bone_matrices_location != -1)
 				{
-					glUniformMatrix4fv(BONE_MATRICES_LOCATION, static_cast<GLsizei>(bone_matrices.size()), GL_FALSE, (float*)(bone_matrices.data()));
+					glUniformMatrix4fv(bone_matrices_location, static_cast<GLsizei>(bone_matrices.size()), GL_FALSE, (float*)(bone_matrices.data()));
 				}
 
 				//light position
-				if (LIGHT_POSITION_LOCATION != -1)
+				if (light_position_location != -1)
 				{
-					glUniform3fv(LIGHT_POSITION_LOCATION, 1, glm::value_ptr(light_position));
+					glUniform3fv(light_position_location, 1, glm::value_ptr(light_position));
 				}
 
 				//camera position
-				if (CAMERA_POSITION_LOCATION != -1)
+				if (camera_position_location != -1)
 				{
-					glUniform3fv(CAMERA_POSITION_LOCATION, 1, glm::value_ptr(camera_position));
+					glUniform3fv(camera_position_location, 1, glm::value_ptr(camera_position));
 				}
 
 				//cull face
@@ -328,6 +331,8 @@ namespace mandala
 
 			mesh->render(world_matrix, view_projection_matrix, bone_matrices);
 		}
+
+        glUseProgram(0);
 	}
 
 	void model_t::mesh_t::render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices) const
