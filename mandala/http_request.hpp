@@ -6,6 +6,9 @@ namespace mandala
     {
         http_request_t(const std::string& host, const std::string& path);
 
-        std::string url;
+        std::string host;
+        std::string path;
+
+        void send();
     };
 };

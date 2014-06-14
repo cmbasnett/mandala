@@ -9,7 +9,6 @@
 #include "../model_instance.hpp"
 #include "../gui/node.hpp"
 #include "../quake_camera.hpp"
-#include "../render_buffer.hpp"
 #include "../frame_buffer.hpp"
 
 //armada
@@ -18,10 +17,24 @@
 
 namespace mandala
 {
+    struct gpu_program_t;
+
 	namespace armada
 	{
 		struct world_state_t : state_t
 		{
+            struct vertex_t
+            {
+                vertex_t(vec3_t position, vec2_t texcoord) :
+                    position(position),
+                    texcoord(texcoord)
+                {
+                }
+
+                vec3_t position;
+                vec2_t texcoord;
+            };
+
 			world_state_t();
 
 			virtual void tick(float32_t dt) override;
@@ -40,8 +53,10 @@ namespace mandala
             skybox_t skybox;
             std::vector<std::shared_ptr<model_instance_t>> model_instances;
             std::shared_ptr<frame_buffer_t> frame_buffer;
-            std::shared_ptr<render_buffer_t> render_buffer;
-            std::shared_ptr<texture_t> frame_buffer_color0_texture;
+            std::shared_ptr<gpu_program_t> blur_h_gpu_program;
+            std::shared_ptr<gpu_program_t> blur_v_gpu_program;
+            uint32_t vertex_buffer = 0;
+            uint32_t index_buffer = 0;
 		};
 	};
 };

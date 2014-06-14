@@ -17,7 +17,10 @@ namespace mandala
 
         get_formats(color_type, internal_format, format);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, format, GL_UNSIGNED_BYTE, nullptr); glCheckError();
+        glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, format, GL_UNSIGNED_BYTE, NULL); glCheckError();
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     texture_t::texture_t(std::shared_ptr<image_t> image)
@@ -32,19 +35,14 @@ namespace mandala
         glBindTexture(GL_TEXTURE_2D, id); glCheckError();
 
         GLint unpack_alignment;
-
         glGetIntegerv(GL_UNPACK_ALIGNMENT, &unpack_alignment); glCheckError();
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1); glCheckError();
 
-        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 2);
-        //glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
-
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); glCheckError();
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); glCheckError();
-
         glTexImage2D(GL_TEXTURE_2D, 0, internal_format, image->width, image->height, 0, format, GL_UNSIGNED_BYTE, image->data.data()); glCheckError();
-
         glPixelStorei(GL_UNPACK_ALIGNMENT, unpack_alignment); glCheckError();
+        glBindTexture(GL_TEXTURE_2D, 0); glCheckError();
     }
 
     texture_t::texture_t(std::istream& istream) :

@@ -1,5 +1,6 @@
 //std
 #include <iostream>
+#include <thread>
 
 //boost
 #include <boost\asio.hpp>
@@ -9,7 +10,13 @@
 
 namespace mandala
 {
-    http_request_t::http_request_t(const std::string& host, const std::string& path)
+    http_request_t::http_request_t(const std::string& host, const std::string& path) :
+        host(host),
+        path(path)
+    {
+    }
+
+    void http_request_t::send()
     {
         using namespace boost::asio;
 
@@ -40,10 +47,11 @@ namespace mandala
         request_stream << "GET " << path << " HTTP/1.0\r\n";
         request_stream << "Host: " << host << "\r\n";
         request_stream << "Accept: */*\r\n";
-        request_stream << "Connection: close\r\n\r\n";
+        request_stream << "Connection: close\r\n";
+        request_stream << "\r\n";
 
         boost::asio::write(socket, request);
-        
+
         boost::asio::streambuf response;
         boost::asio::read_until(socket, response, "\r\n");
 

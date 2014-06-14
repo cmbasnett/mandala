@@ -13,6 +13,7 @@
 #include "../gui/label.hpp"
 #include "../sound.hpp"
 #include "../audio_source.hpp"
+#include "../frame_buffer.hpp"
 
 //armada
 #include "bsp_state.hpp"
@@ -36,6 +37,8 @@ namespace mandala
             camera.far = 8192;
 
             bsp = app.resources.get<bsp_t>(hash_t("dod_flash.bsp"));
+
+            frame_buffer = std::make_shared<frame_buffer_t>(1024, 768);
 
             debug_label = std::make_shared<gui::label_t>();
             debug_label->bitmap_font = app.resources.get<bitmap_font_t>(hash_t("terminal_8.fnt"));
@@ -69,10 +72,10 @@ namespace mandala
         {
             camera.tick(dt);
 
-            app.audio.doppler.factor = 0.0f;
+            //app.audio.doppler.factor = 0.0f;
 
-            app.audio.listener.position = camera.position;
-            app.audio.listener.velocity = camera.velocity;
+            //app.audio.listener.position = camera.position;
+            //app.audio.listener.velocity = camera.velocity;
 
             render_info.leaf_index = bsp->get_leaf_index_from_position(camera.position);
 
@@ -148,12 +151,12 @@ namespace mandala
                     camera.yaw_target += yaw_target_delta;
 
                     auto sound = app.resources.get<sound_t>(hash_t("garand_shoot.wav"));
-                    auto source = app.audio.create_source();
-                    source->position(camera.position);
-                    source->max_distance(500.0f);
-                    source->reference_distance(10.0f);
-                    source->queue_sound(sound);
-                    source->play();
+                    //auto source = app.audio.create_source();
+                    //source->position(camera.position);
+                    //source->max_distance(500.0f);
+                    //source->reference_distance(10.0f);
+                    //source->queue_sound(sound);
+                    //source->play();
                 }
                 else if (input_event.touch.type == input_event_t::touch_t::type_t::scroll)
                 {

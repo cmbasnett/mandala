@@ -72,8 +72,6 @@ namespace mandala
 			vec4_t color = vec4_t(1.0f);
 			aabb2_t bounds;
 			bool is_dirty = true;
-			//vec2_t scale = vec2_t(1.0f);
-			//auto_size_mode_t auto_size_mode = auto_size_mode_t::none;
 			float32_t rotation = 0.0f;
 			bool is_hidden = false;
 

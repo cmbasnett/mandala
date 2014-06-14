@@ -541,7 +541,7 @@ namespace mandala
         }
 
 		auto gpu_program = app.resources.get<gpu_program_t>(hash_t("bsp.gpu"));
-		auto program = gpu_program->program;
+		auto program_id = gpu_program->id;
 
 		//cull face
 		auto is_cull_face_enabled = glIsEnabled(GL_CULL_FACE);
@@ -559,16 +559,16 @@ namespace mandala
 		//TODO: push/pop blend func thing
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		glUseProgram(program);
+        glUseProgram(program_id);
 
-		static const auto position_location = glGetAttribLocation(program, "position"); glCheckError();
-        static const auto diffuse_texcoord_location = glGetAttribLocation(program, "diffuse_texcoord"); glCheckError();
-        static const auto lightmap_texcoord_location = glGetAttribLocation(program, "lightmap_texcoord"); glCheckError();
-        static const auto world_location = glGetUniformLocation(program, "world"); glCheckError();
-        static const auto view_projection_location = glGetUniformLocation(program, "view_projection"); glCheckError();
-        static const auto diffuse_texture_location = glGetUniformLocation(program, "diffuse_texture"); glCheckError();
-        static const auto lightmap_texture_location = glGetUniformLocation(program, "lightmap_texture"); glCheckError();
-        static const auto lightmap_gamma_location = glGetUniformLocation(program, "lightmap_gamma"); glCheckError();
+        static const auto position_location = glGetAttribLocation(program_id, "position"); glCheckError();
+        static const auto diffuse_texcoord_location = glGetAttribLocation(program_id, "diffuse_texcoord"); glCheckError();
+        static const auto lightmap_texcoord_location = glGetAttribLocation(program_id, "lightmap_texcoord"); glCheckError();
+        static const auto world_location = glGetUniformLocation(program_id, "world"); glCheckError();
+        static const auto view_projection_location = glGetUniformLocation(program_id, "view_projection"); glCheckError();
+        static const auto diffuse_texture_location = glGetUniformLocation(program_id, "diffuse_texture"); glCheckError();
+        static const auto lightmap_texture_location = glGetUniformLocation(program_id, "lightmap_texture"); glCheckError();
+        static const auto lightmap_gamma_location = glGetUniformLocation(program_id, "lightmap_gamma"); glCheckError();
 		static const auto vertex_size = sizeof(vertex_t);
         static const auto position_offset = reinterpret_cast<void*>(offsetof(vertex_t, position));
         static const auto diffuse_texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_t, diffuse_texcoord));

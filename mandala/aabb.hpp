@@ -140,7 +140,7 @@ namespace mandala
 
             value_type center() const
 			{
-				return min + ((max - min) / 2);
+				return min + ((max - min) / T(2));
 			}
 
 			std::array<plane_type, plane_count> get_planes() const

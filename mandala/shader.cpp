@@ -65,25 +65,25 @@ namespace mandala
 		//compile shader
 		glCompileShader(handle);
 
-		GLsizei compile_status;
+        GLsizei compile_status;
 		glGetShaderiv(handle, GL_COMPILE_STATUS, &compile_status);
 
 		if (compile_status == GL_FALSE)
 		{
 #ifdef _DEBUG
 			GLsizei shader_info_log_length = 0;
-			GLchar shader_info_log[1024] = { '\0' };
+            GLchar shader_info_log[1024] = { '\0' };
 
 			glGetShaderInfoLog(handle, 1024, &shader_info_log_length, &shader_info_log[0]);
-
+            
 			std::cerr << shader_info_log << std::endl;
 #endif
 			glDeleteShader(handle);
-
+            
 			throw std::exception();
 		}
 	}
-
+    
 	shader_t::~shader_t()
 	{
         glDeleteShader(handle);

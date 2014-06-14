@@ -19,12 +19,12 @@ namespace mandala
 			}
 
 			//push GL states
-            auto is_blend_enabled = glIsEnabled(GL_BLEND); glCheckError();
 			GLint blend_src_rgb;
-			GLint blend_dst_alpha;
-            auto is_line_stipple_enabled = glIsEnabled(GL_LINE_STIPPLE); glCheckError();
+            GLint blend_dst_alpha;
 			GLint line_stipple_factor;
-			GLint line_stipple_pattern;
+            GLint line_stipple_pattern;
+            bool is_blend_enabled = glIsEnabled(GL_BLEND) != 0; glCheckError();
+            bool is_line_stipple_enabled = glIsEnabled(GL_LINE_STIPPLE) != 0; glCheckError();
 
             glGetIntegerv(GL_BLEND_SRC_RGB, &blend_src_rgb); glCheckError();
             glGetIntegerv(GL_BLEND_SRC_ALPHA, &blend_dst_alpha); glCheckError();
@@ -36,31 +36,8 @@ namespace mandala
             glMatrixMode(GL_PROJECTION); glCheckError();
             glLoadMatrixf(glm::value_ptr(view_projection_matrix)); glCheckError();
 
-			if (sprite.sprite_set->texture->has_alpha)
-			{
-                glEnable(GL_BLEND); glCheckError();
-                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); glCheckError();
-			}
-			else
-			{
-                glDisable(GL_BLEND); glCheckError();
-			}
-
-			//auto min = bounds.min + (vec2_t)sprite.region.rectangle.min();
-			//auto max = min + (vec2_t)sprite.region.rectangle.size();
-
-			//aabb2_t aabb(min, max);
-
-			//glLineStipple(1, 0xAAAA);
-			//glEnable(GL_LINE_STIPPLE);
-
-			//glBegin(GL_LINE_LOOP);
-			//glColor3f(1, 1, 0);
-			//glVertex2f(min.x, min.y);
-			//glVertex2f(min.x, max.y);
-			//glVertex2f(max.x, max.y);
-			//glVertex2f(max.x, min.y);
-			//glEnd();
+            glEnable(GL_BLEND); glCheckError();
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); glCheckError();
 
             glEnable(GL_TEXTURE_2D); glCheckError();
             glActiveTexture(GL_TEXTURE0); glCheckError();
@@ -71,10 +48,10 @@ namespace mandala
             glMatrixMode(GL_MODELVIEW); glCheckError();
 			glPushMatrix(); glCheckError();
 
-			auto center = bounds.min + ((vec2_t)sprite.region.rectangle.size() / 2.0f);
-			auto size = (vec2_t)sprite.region.rectangle.size();
-			auto min = -size / 2.0f;
-			auto max = size / 2.0f;
+			const auto center = bounds.min + ((vec2_t)sprite.region.rectangle.size() / 2.0f);
+            const auto size = (vec2_t)sprite.region.rectangle.size();
+            const auto min = -size / 2.0f;
+            const auto max = size / 2.0f;
 
 			glTranslatef(center.x, center.y, 0.0f); glCheckError();
 			glRotatef(rotation, 0, 0, 1); glCheckError();
@@ -85,15 +62,15 @@ namespace mandala
 
 			//TODO: different texture coordinates based on uv parameters
 			if (sprite.region.is_rotated)
-			{
-				glTexCoord2f(sprite.region.uv.min.x, sprite.region.uv.max.y);
-				glVertex2f(min.x, min.y);
-				glTexCoord2f(sprite.region.uv.min.x, sprite.region.uv.min.y);
-				glVertex2f(max.x, min.y);
-				glTexCoord2f(sprite.region.uv.max.x, sprite.region.uv.min.y);
-				glVertex2f(max.x, max.y);
-				glTexCoord2f(sprite.region.uv.max.x, sprite.region.uv.max.y);
-				glVertex2f(min.x, max.y);
+            {
+                glTexCoord2f(sprite.region.uv.min.x, sprite.region.uv.max.y);
+                glVertex2f(min.x, min.y);
+                glTexCoord2f(sprite.region.uv.min.x, sprite.region.uv.min.y);
+                glVertex2f(max.x, min.y);
+                glTexCoord2f(sprite.region.uv.max.x, sprite.region.uv.min.y);
+                glVertex2f(max.x, max.y);
+                glTexCoord2f(sprite.region.uv.max.x, sprite.region.uv.max.y);
+                glVertex2f(min.x, max.y);
 			}
 			else
 			{

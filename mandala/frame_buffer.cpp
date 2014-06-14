@@ -4,55 +4,36 @@
 //mandala
 #include "frame_buffer.hpp"
 #include "texture.hpp"
-#include "render_buffer.hpp"
 
 namespace mandala
 {
-    frame_buffer_t::frame_buffer_t()
+    frame_buffer_t::frame_buffer_t(uint32_t width, uint32_t height)
     {
-        glGenFramebuffers(1, &id); glCheckError();
+        glGenFramebuffers(1, &id);
+        glBindFramebuffer(GL_FRAMEBUFFER, id);
+
+        color_texture = std::make_shared<texture_t>(color_type_t::rgb, width, height);
+
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture->id, 0);
+        glGenRenderbuffers(1, &depth_stencil_render_buffer);
+        glBindRenderbuffer(GL_RENDERBUFFER, depth_stencil_render_buffer);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depth_stencil_render_buffer);
     }
 
     frame_buffer_t::~frame_buffer_t()
     {
+        glDeleteRenderbuffers(1, &depth_stencil_render_buffer); glCheckError();
         glDeleteFramebuffers(1, &id); glCheckError();
     }
 
-    void frame_buffer_t::bind(mode_t mode) const
+    void frame_buffer_t::bind() const
     {
-        glBindFramebuffer(static_cast<GLenum>(mode), id); glCheckError();
-        
-        auto frame_buffer_status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-
-        if (frame_buffer_status != GL_FRAMEBUFFER_COMPLETE)
-        {
-            throw std::exception();
-        }
+        glBindFramebuffer(GL_FRAMEBUFFER, id); glCheckError();
     }
 
-    void frame_buffer_t::unbind(mode_t mode) const
+    void frame_buffer_t::unbind() const
     {
-        glBindFramebuffer(static_cast<GLenum>(mode), 0); glCheckError();
-    }
-
-    void frame_buffer_t::attach(mode_t mode, attachment_type_t attachment_type, std::shared_ptr<texture_t> texture)
-    {
-        glBindFramebuffer(static_cast<GLenum>(mode), id); glCheckError();
-        glFramebufferTexture2D(static_cast<GLenum>(mode), static_cast<GLenum>(attachment_type), GL_TEXTURE_2D, texture->id, 0); glCheckError();
-        glBindFramebuffer(static_cast<GLenum>(mode), 0); glCheckError();
-    }
-
-    void frame_buffer_t::attach(mode_t mode, attachment_type_t attachment_type, std::shared_ptr<render_buffer_t> render_buffer)
-    {
-        glBindFramebuffer(static_cast<GLenum>(mode), id); glCheckError();
-        glFramebufferRenderbuffer(static_cast<GLenum>(mode), static_cast<GLenum>(attachment_type), GL_RENDERBUFFER, render_buffer->id); glCheckError();
-        glBindFramebuffer(static_cast<GLenum>(mode), 0); glCheckError();
-    }
-
-    void frame_buffer_t::detach(mode_t mode, attachment_type_t attachment_type)
-    {
-        glBindFramebuffer(static_cast<GLenum>(mode), id); glCheckError();
-        glFramebufferTexture(static_cast<GLenum>(mode), static_cast<GLenum>(attachment_type), 0, 0); glCheckError();
-        glBindFramebuffer(static_cast<GLenum>(mode), 0); glCheckError();
+        glBindFramebuffer(GL_FRAMEBUFFER, 0); glCheckError();
     }
 };

@@ -19,10 +19,12 @@ namespace mandala
 	{
 		typedef std::map<hash_t, std::shared_ptr<resource_t>> resource_map_type;
 
+        std::recursive_mutex mutex;
+
 		template<typename T>
 		std::shared_ptr<T> get(const hash_t& hash)
 		{
-			std::type_index type_index = typeid(T);
+			static const std::type_index type_index = typeid(T);
 
 			auto lock_guard = std::unique_lock<std::recursive_mutex>(mutex);
 
@@ -64,7 +66,7 @@ namespace mandala
 		{
 			auto lock_guard = std::unique_lock<std::recursive_mutex>(mutex);
 
-			std::type_index type_index = typeid(T);
+			static const std::type_index type_index = typeid(T);
 
 			auto type_resources_itr = type_resources.find(type_index);
 
@@ -97,8 +99,7 @@ namespace mandala
 		void prune();
 		void purge();
 
-	private:
+    private:
         std::map<std::type_index, resource_map_type> type_resources;
-		std::recursive_mutex mutex;
 	};
 };

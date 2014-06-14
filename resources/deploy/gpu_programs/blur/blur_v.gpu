@@ -1,0 +1,7 @@
+{
+	"shaders":
+	[
+		"blur_v.vert",
+		"blur_v.frag"
+	]
+}

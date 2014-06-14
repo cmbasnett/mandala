@@ -21,50 +21,46 @@ namespace mandala
 		GLenum error;
 
 		//create program
-		program = glCreateProgram();
+        id = glCreateProgram(); glCheckError();
 
-		if ((error = glGetError()) != GL_NO_ERROR)
-		{
-			throw std::exception();
-		}
+        std::vector<std::shared_ptr<shader_t>> shaders;
 
 		for (auto& shader_ptree : shaders_ptree)
 		{
-			auto& resource_name = shader_ptree.second.data();
-
-			auto shader = app.resources.get<shader_t>(hash_t(resource_name));
+            auto shader = app.resources.get<shader_t>(hash_t(shader_ptree.second.data()));
 
 			//attach shader
-			glAttachShader(program, shader->handle);
+			glAttachShader(id, shader->handle);
 
 			if ((error = glGetError()) != GL_NO_ERROR)
 			{
-				glDeleteProgram(program);
+                glDeleteProgram(id);
 
 				throw std::exception();
 			}
 
-			shaders.push_back(shader);
+            shaders.push_back(shader);
 		}
 
 		//link program
-		glLinkProgram(program);
+		glLinkProgram(id);
+
+        //link status
 		GLint link_status;
-		glGetProgramiv(program, GL_LINK_STATUS, &link_status);
+        glGetProgramiv(id, GL_LINK_STATUS, &link_status);
 
 		if (link_status == GL_FALSE)
 		{
-#ifdef _DEBUG
 			GLsizei program_info_log_length = 0;
 			GLchar program_info_log[1024] = { 0 };
-			glGetProgramInfoLog(program, 1024, &program_info_log_length, &program_info_log[0]);
+            glGetProgramInfoLog(id, 1024, &program_info_log_length, &program_info_log[0]);
 
 			if (program_info_log_length > 0)
 			{
 				std::cout << program_info_log << std::endl;
 			}
-#endif
-			glDeleteProgram(program);
+
+            glDeleteProgram(id);
 
 			throw std::exception();
 		}
@@ -72,11 +68,11 @@ namespace mandala
 		for (auto& shader : shaders)
 		{
 			//detach vertex shader
-			glDetachShader(program, shader->handle);
+            glDetachShader(id, shader->handle);
 
 			if ((error = glGetError()) != GL_NO_ERROR)
 			{
-				glDeleteProgram(program);
+                glDeleteProgram(id);
 
 				throw std::exception();
 			}
@@ -85,6 +81,6 @@ namespace mandala
 
 	gpu_program_t::~gpu_program_t()
 	{
-		glDeleteProgram(program);
+        glDeleteProgram(id);
 	}
 };

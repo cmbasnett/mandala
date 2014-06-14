@@ -65,7 +65,7 @@ namespace mandala
 
 		states.tick(dt);
 
-		audio.tick(dt);
+		//audio.tick(dt);
 
 		game->app_tick_end();
 

@@ -268,23 +268,23 @@ namespace mandala
 	void bitmap_font_t::render_string(const std::wstring& string, const vec4_t& color_top, const vec4_t& color_bottom, mat4_t world, const mat4_t& view_projection) const
 	{
 		auto gpu_program = app.resources.get<gpu_program_t>(hash_t("bitmap_font.gpu"));
-		auto program = gpu_program->program;
+		auto gpu_program_id = gpu_program->id;
 
-		static const GLint position_location = glGetAttribLocation(program, "position");
-		static const GLint texcoord_location = glGetAttribLocation(program, "texcoord");
-		static const GLint world_location = glGetUniformLocation(program, "world");
-		static const GLint view_projection_location = glGetUniformLocation(program, "view_projection");
-		static const GLint line_height_location = glGetUniformLocation(program, "line_height");
-		static const GLint base_location = glGetUniformLocation(program, "base");
-		static const GLint diffuse_map_location = glGetUniformLocation(program, "diffuse_map");
-		static const GLint color_top_location = glGetUniformLocation(program, "color_top");
-		static const GLint color_bottom_location = glGetUniformLocation(program, "color_bottom");
+        static const auto position_location = glGetAttribLocation(gpu_program_id, "position");
+        static const auto texcoord_location = glGetAttribLocation(gpu_program_id, "texcoord");
+        static const auto world_location = glGetUniformLocation(gpu_program_id, "world");
+        static const auto view_projection_location = glGetUniformLocation(gpu_program_id, "view_projection");
+        static const auto line_height_location = glGetUniformLocation(gpu_program_id, "line_height");
+        static const auto base_location = glGetUniformLocation(gpu_program_id, "base");
+        static const auto diffuse_map_location = glGetUniformLocation(gpu_program_id, "diffuse_map");
+        static const auto color_top_location = glGetUniformLocation(gpu_program_id, "color_top");
+        static const auto color_bottom_location = glGetUniformLocation(gpu_program_id, "color_bottom");
 		static const GLuint vertex_size = sizeof(bitmap_font_t::vertex_t);
-		static const GLvoid* position_offset = reinterpret_cast<void*>(offsetof(bitmap_font_t::vertex_t, position));
-		static const GLvoid* texcoord_offset = reinterpret_cast<void*>(offsetof(bitmap_font_t::vertex_t, texcoord));
+		static const auto* position_offset = reinterpret_cast<void*>(offsetof(bitmap_font_t::vertex_t, position));
+        static const auto* texcoord_offset = reinterpret_cast<void*>(offsetof(bitmap_font_t::vertex_t, texcoord));
 
 		//program
-		glUseProgram(program);
+        glUseProgram(gpu_program_id);
 
 		//blend
 		glEnable(GL_BLEND);

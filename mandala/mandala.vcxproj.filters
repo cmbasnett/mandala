@@ -175,9 +175,6 @@
     <ClInclude Include="sprite_set.hpp">
       <Filter>mandala\resources\sprite_set</Filter>
     </ClInclude>
-    <ClInclude Include="string_table.hpp">
-      <Filter>mandala\resources\string</Filter>
-    </ClInclude>
     <ClInclude Include="texture.hpp">
       <Filter>mandala\resources\texture</Filter>
     </ClInclude>
@@ -226,11 +223,17 @@
     <ClInclude Include="frame_buffer.hpp">
       <Filter>mandala\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="render_buffer.hpp">
-      <Filter>mandala\graphics</Filter>
-    </ClInclude>
     <ClInclude Include="color_types.hpp">
       <Filter>mandala\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="locale_string.h">
+      <Filter>mandala\resources\locale_string</Filter>
+    </ClInclude>
+    <ClInclude Include="string_mgr.h">
+      <Filter>mandala\app</Filter>
+    </ClInclude>
+    <ClInclude Include="string_archive.h">
+      <Filter>mandala</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -346,9 +349,6 @@
     <ClCompile Include="armada\test_state.cpp">
       <Filter>armada\states\test</Filter>
     </ClCompile>
-    <ClCompile Include="string_table.cpp">
-      <Filter>mandala\resources\string</Filter>
-    </ClCompile>
     <ClCompile Include="sound.cpp">
       <Filter>mandala\resources\sound</Filter>
     </ClCompile>
@@ -370,8 +370,11 @@
     <ClCompile Include="frame_buffer.cpp">
       <Filter>mandala\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="render_buffer.cpp">
-      <Filter>mandala\graphics</Filter>
+    <ClCompile Include="string_mgr.cpp">
+      <Filter>mandala\app</Filter>
+    </ClCompile>
+    <ClCompile Include="string_archive.cpp">
+      <Filter>mandala</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -444,9 +447,6 @@
     <Filter Include="mandala\resources\sprite_set">
       <UniqueIdentifier>{1ce79b84-b9e4-4689-a458-ac57e0a0a69d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="mandala\resources\string">
-      <UniqueIdentifier>{82b320d0-3d33-4ebc-869b-14e181841135}</UniqueIdentifier>
-    </Filter>
     <Filter Include="mandala\resources\texture">
       <UniqueIdentifier>{239dcc50-2a4a-4231-9bc3-8d2c133d0ec8}</UniqueIdentifier>
     </Filter>
@@ -467,6 +467,9 @@
     </Filter>
     <Filter Include="mandala\graphics">
       <UniqueIdentifier>{fcc9abfa-e288-478a-974f-74d68eb048f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\resources\locale_string">
+      <UniqueIdentifier>{82b320d0-3d33-4ebc-869b-14e181841135}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

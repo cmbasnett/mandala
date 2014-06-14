@@ -48,7 +48,7 @@ namespace mandala
 
 		if (files_itr == files.end())
 		{
-			throw std::exception();
+            throw std::out_of_range("");
 		}
 
 		const auto& file = files_itr->second;

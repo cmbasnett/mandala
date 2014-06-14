@@ -5,6 +5,7 @@
 #include "state_mgr.hpp"
 #include "resource_mgr.hpp"
 #include "audio_mgr.hpp"
+#include "string_mgr.h"
 
 //std
 #include <chrono>
@@ -46,7 +47,8 @@ namespace mandala
 		state_mgr_t states;
 		resource_mgr_t resources;
 		performance_t performance;
-		audio_mgr_t audio;
+        string_mgr_t strings;
+		//audio_mgr_t audio;
 
 		app_t();
 

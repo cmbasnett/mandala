@@ -12,8 +12,7 @@ namespace mandala
 		gpu_program_t(std::istream& istream);
 		virtual ~gpu_program_t();
 
-		uint32_t program = 0;
-		std::vector<std::shared_ptr<shader_t>> shaders;
+		uint32_t id = 0;
 
 	private:
 		gpu_program_t(gpu_program_t&) = delete;
