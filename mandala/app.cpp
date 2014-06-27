@@ -17,6 +17,7 @@ namespace mandala
 
 	void app_t::run(std::shared_ptr<game_t> game_)
 	{
+		begin:
 		using namespace std::chrono;
 
 		game = game_;
@@ -41,10 +42,17 @@ namespace mandala
 		game->app_run_end();
 
 		states.purge();
-
 		resources.purge();
+		strings.purge();
 
 		platform.app_run_end();
+
+		if (is_resetting)
+		{
+			is_resetting = false;
+
+			goto begin;
+		}
 	}
 
 	void app_t::exit()

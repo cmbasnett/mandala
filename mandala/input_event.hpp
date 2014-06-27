@@ -9,8 +9,9 @@ namespace mandala
 	{
 		typedef size_t id_type;
 		typedef uint8_t device_index_type;
+		typedef uint8_t mods_type;
 
-		enum mods_t : int8_t
+		enum mods_t : mods_type
 		{
 			mod_shift = (1 << 0),
 			mod_ctrl = (1 << 1),
@@ -58,7 +59,7 @@ namespace mandala
 			touch_id_type id = 0;
 			type_t type = type_t::none;
 			button_t button = button_t::none;
-			std::underlying_type<mods_t>::type mods = 0;
+			mods_type mods = 0;
 			position_type position;
 			position_type position_delta;
 		};
@@ -201,7 +202,7 @@ namespace mandala
 
 			type_t type = type_t::none;
 			key_t key = key_t::none;
-			std::underlying_type<mods_t>::type mods = 0;
+			mods_type mods = 0;
 			wchar_t character = L'\0';
 		};
 

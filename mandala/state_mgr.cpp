@@ -13,13 +13,13 @@ namespace mandala
 		//process stack actions
 		while (operation_queue.size() > 0)
 		{
-			const auto& stack_action = operation_queue.front();
+			const auto& operation = operation_queue.front();
 
-			switch (stack_action.type)
+			switch (operation.type)
 			{
 			case operation_t::type_t::pop:
 				{
-					auto states_itr = std::find(states.begin(), states.end(), stack_action.state);
+					auto states_itr = std::find(states.begin(), states.end(), operation.state);
 
 					if (states_itr == states.end())
 					{
@@ -52,7 +52,7 @@ namespace mandala
 				break;
 			case operation_t::type_t::push:
 				{
-					auto push_state_itr = std::find(states.begin(), states.end(), stack_action.state);
+					auto push_state_itr = std::find(states.begin(), states.end(), operation.state);
 
 					if(push_state_itr != states.end())
 					{
@@ -67,7 +67,7 @@ namespace mandala
 						//call on_passive on previous top state
 						(*states_itr)->on_passive();
 
-						if((stack_action.state->link_flags & state_t::link_flag_input) == 0)
+						if ((operation.state->link_flags & state_t::link_flag_input) == 0)
 						{
 							//pushed state is now blocking input to lower states
 							//cascade on_stop_input to top states that were accepting input
@@ -84,14 +84,14 @@ namespace mandala
 					}
 
 					//add state to stack
-					states.push_back(stack_action.state);
+					states.push_back(operation.state);
 
 					//call on_enter, on_active etc. on pushed state
-					stack_action.state->on_enter();
-					stack_action.state->on_active();
-					stack_action.state->on_start_tick();
-					stack_action.state->on_start_render();
-					stack_action.state->on_start_input();
+					operation.state->on_enter();
+					operation.state->on_active();
+					operation.state->on_start_tick();
+					operation.state->on_start_render();
+					operation.state->on_start_input();
 				}
 				break;
 			}

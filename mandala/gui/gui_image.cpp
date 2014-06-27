@@ -6,6 +6,7 @@
 #include "../sprite_set.hpp"
 #include "../sprite.hpp"
 #include "gui_image.hpp"
+#include "../graphics_mgr.hpp"
 
 namespace mandala
 {
@@ -31,7 +32,7 @@ namespace mandala
             glGetIntegerv(GL_LINE_STIPPLE_REPEAT, &line_stipple_factor); glCheckError();
             glGetIntegerv(GL_LINE_STIPPLE_PATTERN, &line_stipple_pattern); glCheckError();
 
-            glUseProgram(0); glCheckError();
+			//TODO: use a real GPU pogram
 
             glMatrixMode(GL_PROJECTION); glCheckError();
             glLoadMatrixf(glm::value_ptr(view_projection_matrix)); glCheckError();
@@ -39,17 +40,15 @@ namespace mandala
             glEnable(GL_BLEND); glCheckError();
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); glCheckError();
 
-            glEnable(GL_TEXTURE_2D); glCheckError();
-            glActiveTexture(GL_TEXTURE0); glCheckError();
-            glBindTexture(GL_TEXTURE_2D, sprite.sprite_set->texture->id); glCheckError();
+			gpu.bind_texture(sprite.sprite_set->texture, 0);
 
             glDisable(GL_LINE_STIPPLE); glCheckError();
 
             glMatrixMode(GL_MODELVIEW); glCheckError();
 			glPushMatrix(); glCheckError();
 
-			const auto center = bounds.min + ((vec2_t)sprite.region.rectangle.size() / 2.0f);
-            const auto size = (vec2_t)sprite.region.rectangle.size();
+			const auto center = bounds.center();
+			const auto size = static_cast<vec2_t>(sprite.region.rectangle.size());
             const auto min = -size / 2.0f;
             const auto max = size / 2.0f;
 
@@ -88,8 +87,7 @@ namespace mandala
 
 			glPopMatrix();
 
-			glBindTexture(GL_TEXTURE_2D, 0);
-			glDisable(GL_TEXTURE_2D);
+			gpu.unbind_texture(0);
 
 			//blend
 			if (is_blend_enabled)

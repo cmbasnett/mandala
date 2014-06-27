@@ -243,13 +243,13 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="color_types.hpp" />
     <ClInclude Include="frame_buffer.hpp" />
     <ClInclude Include="glm.hpp" />
+    <ClInclude Include="graphics_mgr.hpp" />
     <ClInclude Include="gui\gui_image.hpp" />
     <ClInclude Include="gui\label.hpp" />
     <ClInclude Include="gui\node.hpp" />
     <ClInclude Include="gui\padding.hpp" />
     <ClInclude Include="gui_state.hpp" />
     <ClInclude Include="http_request.hpp" />
-    <ClInclude Include="locale_string.h" />
     <ClInclude Include="sound.hpp" />
     <ClInclude Include="sphere.hpp" />
     <ClInclude Include="is_pow2.hpp" />
@@ -295,8 +295,8 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="quake_camera.hpp" />
     <ClInclude Include="resource.hpp" />
     <ClInclude Include="skeleton.hpp" />
-    <ClInclude Include="string_archive.h" />
-    <ClInclude Include="string_mgr.h" />
+    <ClInclude Include="string_archive.hpp" />
+    <ClInclude Include="string_mgr.hpp" />
     <ClInclude Include="texture.hpp" />
     <ClInclude Include="triangle.hpp" />
     <ClInclude Include="types.hpp" />
@@ -323,6 +323,7 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="bsp.cpp" />
     <ClCompile Include="app.cpp" />
     <ClCompile Include="collision.cpp" />
+    <ClCompile Include="graphics_mgr.cpp" />
     <ClCompile Include="gui\gui_image.cpp" />
     <ClCompile Include="gui\label.cpp" />
     <ClCompile Include="gui\node.cpp" />

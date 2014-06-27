@@ -226,14 +226,14 @@
     <ClInclude Include="color_types.hpp">
       <Filter>mandala\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="locale_string.h">
-      <Filter>mandala\resources\locale_string</Filter>
-    </ClInclude>
-    <ClInclude Include="string_mgr.h">
-      <Filter>mandala\app</Filter>
-    </ClInclude>
-    <ClInclude Include="string_archive.h">
+    <ClInclude Include="string_archive.hpp">
       <Filter>mandala</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics_mgr.hpp">
+      <Filter>mandala\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="string_mgr.hpp">
+      <Filter>mandala\app</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -376,6 +376,9 @@
     <ClCompile Include="string_archive.cpp">
       <Filter>mandala</Filter>
     </ClCompile>
+    <ClCompile Include="graphics_mgr.cpp">
+      <Filter>mandala\graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="mandala">
@@ -467,9 +470,6 @@
     </Filter>
     <Filter Include="mandala\graphics">
       <UniqueIdentifier>{fcc9abfa-e288-478a-974f-74d68eb048f5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="mandala\resources\locale_string">
-      <UniqueIdentifier>{82b320d0-3d33-4ebc-869b-14e181841135}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

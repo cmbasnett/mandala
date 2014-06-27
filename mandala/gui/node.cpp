@@ -35,7 +35,7 @@ namespace mandala
 
 		void node_t::adopt(std::shared_ptr<node_t> node)
 		{
-			if (node == nullptr || node.get() == this || node->has_parent() || !can_have_children())
+			if (node == nullptr || node.get() == this || node->has_parent())
             {
                 throw std::exception();
             }
@@ -44,6 +44,7 @@ namespace mandala
 
 			if (children_itr != children.end())
 			{
+				//node already exists in children
 				throw std::exception();
 			}
 
@@ -161,9 +162,9 @@ namespace mandala
                         break;
                     }
 
-					child->size = child->bounds.size();
-
 					child->clean();
+
+					child->size = child->bounds.size();
                 }
             }
 

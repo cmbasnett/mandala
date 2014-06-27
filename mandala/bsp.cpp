@@ -7,6 +7,7 @@
 #include "app.hpp"
 #include "gpu_program.hpp"
 #include "image.hpp"
+#include "graphics_mgr.hpp"
 
 namespace mandala
 {
@@ -559,7 +560,7 @@ namespace mandala
 		//TODO: push/pop blend func thing
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        glUseProgram(program_id);
+		gpu.push_gpu_program(gpu_program);
 
         static const auto position_location = glGetAttribLocation(program_id, "position"); glCheckError();
         static const auto diffuse_texcoord_location = glGetAttribLocation(program_id, "diffuse_texcoord"); glCheckError();
@@ -628,30 +629,26 @@ namespace mandala
 				//diffuse_texture
 				if (diffuse_texture != previous_diffuse_texture)
 				{
-					glActiveTexture(GL_TEXTURE0); glCheckError();
-
 					if (diffuse_texture)
 					{
-                        glBindTexture(GL_TEXTURE_2D, diffuse_texture->id); glCheckError();
+						gpu.bind_texture(diffuse_texture, 0);
 					}
 					else
 					{
-						glBindTexture(GL_TEXTURE_2D, 0); glCheckError();
+						gpu.unbind_texture(0);
 					}
 
 					previous_diffuse_texture = diffuse_texture;
 				}
 
 				//lightmap_texture
-				glActiveTexture(GL_TEXTURE1); glCheckError();
-
 				if (lightmap_texture)
 				{
-                    glBindTexture(GL_TEXTURE_2D, lightmap_texture->id); glCheckError();
+					gpu.bind_texture(lightmap_texture, 1);
 				}
 				else
 				{
-					glBindTexture(GL_TEXTURE_2D, 0); glCheckError();
+					gpu.unbind_texture(1);
 				}
 
 				glDrawElements(GL_TRIANGLE_FAN, face.surface_edge_count, GL_UNSIGNED_INT, (GLvoid*)(face_start_indices[face_index] * sizeof(uint32_t))); glCheckError();
@@ -665,7 +662,7 @@ namespace mandala
 		glBindBuffer(GL_ARRAY_BUFFER, 0); glCheckError();
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); glCheckError();
 
-		glUseProgram(0); glCheckError();
+		gpu.pop_gpu_program();
 
 		//cull face
 		if (is_cull_face_enabled)

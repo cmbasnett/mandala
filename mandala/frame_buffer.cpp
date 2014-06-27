@@ -15,6 +15,7 @@ namespace mandala
         color_texture = std::make_shared<texture_t>(color_type_t::rgb, width, height);
 
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture->id, 0);
+
         glGenRenderbuffers(1, &depth_stencil_render_buffer);
         glBindRenderbuffer(GL_RENDERBUFFER, depth_stencil_render_buffer);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
@@ -25,15 +26,5 @@ namespace mandala
     {
         glDeleteRenderbuffers(1, &depth_stencil_render_buffer); glCheckError();
         glDeleteFramebuffers(1, &id); glCheckError();
-    }
-
-    void frame_buffer_t::bind() const
-    {
-        glBindFramebuffer(GL_FRAMEBUFFER, id); glCheckError();
-    }
-
-    void frame_buffer_t::unbind() const
-    {
-        glBindFramebuffer(GL_FRAMEBUFFER, 0); glCheckError();
     }
 };

@@ -28,7 +28,7 @@ namespace mandala
 
 	void quake_camera_t::tick(float32_t dt)
 	{
-		const float32_t smoothing_value = glm::min(dt * (QUAKE_CAMERA_SMOOTHING_CONSTANT * smoothing_strength), 1.0f);
+		const auto smoothing_value = glm::min(dt * (QUAKE_CAMERA_SMOOTHING_CONSTANT * smoothing_strength), 1.0f);
 
 		pitch_target += pitch_speed * dt;
 		yaw_target += yaw_speed * dt;

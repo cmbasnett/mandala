@@ -4,6 +4,7 @@
 //mandala
 #include "mandala.hpp"
 #include "camera.hpp"
+#include "platform.hpp"
 
 namespace mandala
 {
@@ -15,10 +16,9 @@ namespace mandala
 	{
 		vec4_t viewport;
 		
-		//TODO: get rid of GL call here
-		glGetFloatv(GL_VIEWPORT, glm::value_ptr(viewport));
-
-		aspect = viewport.z / viewport.w;
+		//TODO: have current viewport set in some sort of graphics manager
+		auto window_size = static_cast<vec2_t>(platform.get_window_size());
+		aspect = window_size.x / window_size.y;
 
 		auto forward = glm::normalize(target - position);
         auto left = glm::normalize(glm::cross(vec3_t(0, 1, 0), forward));

@@ -5,7 +5,7 @@
 #include "state_mgr.hpp"
 #include "resource_mgr.hpp"
 #include "audio_mgr.hpp"
-#include "string_mgr.h"
+#include "string_mgr.hpp"
 
 //std
 #include <chrono>

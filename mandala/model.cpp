@@ -17,6 +17,7 @@
 #include "material.hpp"
 #include "texture.hpp"
 #include "gpu_program.hpp"
+#include "graphics_mgr.hpp"
 
 namespace mandala
 {
@@ -279,7 +280,7 @@ namespace mandala
                 const auto light_position_location = glGetUniformLocation(gpu_program->id, "light_position");
                 const auto camera_position_location = glGetUniformLocation(gpu_program->id, "camera_position");
 
-				glUseProgram(gpu_program->id);
+				gpu.push_gpu_program(gpu_program);
 
 				//world matrix
 				if (world_matrix_location != -1)
@@ -332,7 +333,7 @@ namespace mandala
 			mesh->render(world_matrix, view_projection_matrix, bone_matrices);
 		}
 
-        glUseProgram(0);
+		gpu.pop_gpu_program();
 	}
 
 	void model_t::mesh_t::render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices) const
@@ -434,8 +435,8 @@ namespace mandala
 				auto& diffuse = material->diffuse;
 
 				//texture
-				glActiveTexture(GL_TEXTURE0);
-				glBindTexture(GL_TEXTURE_2D, diffuse.texture != nullptr ? diffuse.texture->id : 0);
+				gpu.bind_texture(diffuse.texture, 0);
+
 				glUniform1i(diffuse_map_location, 0);
 
 				//color
@@ -447,8 +448,8 @@ namespace mandala
 				auto& normal = material->normal;
 
 				//texture
-				glActiveTexture(GL_TEXTURE1);
-				glBindTexture(GL_TEXTURE_2D, normal.texture != nullptr ? normal.texture->id : 0);
+				gpu.bind_texture(normal.texture, 1);
+
 				glUniform1i(normal_map_location, 1);
 			}
 
@@ -457,8 +458,8 @@ namespace mandala
 				auto& specular = material->specular;
 				
 				//texture
-				glActiveTexture(GL_TEXTURE2);
-				glBindTexture(GL_TEXTURE_2D, specular.texture != nullptr ? specular.texture->id : 0);
+				gpu.bind_texture(specular.texture, 2);
+
 				glUniform1i(specular_map_location, 2);
 
 				//color
@@ -473,8 +474,8 @@ namespace mandala
 				auto& emissive = material->emissive;
 
 				//texture
-				glActiveTexture(GL_TEXTURE3);
-				glBindTexture(GL_TEXTURE_2D, emissive.texture != nullptr ? emissive.texture->id : 0);
+				gpu.bind_texture(emissive.texture, 3);
+
 				glUniform1i(emissive_map_location, 3);
 
 				//color
@@ -524,14 +525,10 @@ namespace mandala
 		}
 		
 		//unbind textures
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, 0);
+		gpu.unbind_texture(3);
+		gpu.unbind_texture(2);
+		gpu.unbind_texture(1);
+		gpu.unbind_texture(0);
 
 		//unbind buffers
 		glBindBuffer(GL_ARRAY_BUFFER, 0);

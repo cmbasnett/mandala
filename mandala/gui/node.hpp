@@ -84,7 +84,6 @@ namespace mandala
 
             inline bool has_children() const { return children.size() > 0; }
 			inline bool has_parent() const { return parent.get() != nullptr; }
-			inline bool can_have_children() const { return true; }
 
 			void orphan();
 			void adopt(std::shared_ptr<node_t> child);

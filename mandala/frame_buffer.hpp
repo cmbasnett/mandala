@@ -7,9 +7,6 @@
 //mandala
 #include "types.hpp"
 
-//gl
-#include <GL\glew.h>
-
 namespace mandala
 {
     struct texture_t;
@@ -19,12 +16,9 @@ namespace mandala
         frame_buffer_t(uint32_t width, uint32_t height);
         ~frame_buffer_t();
 
-        void bind() const;
-        void unbind() const;
-
-        GLuint id;
-        std::shared_ptr<texture_t> color_texture;
-        GLuint depth_stencil_render_buffer;
+        uint32_t id;
+		std::shared_ptr<texture_t> color_texture;
+		uint32_t depth_stencil_render_buffer;
 
     private:
         frame_buffer_t(const frame_buffer_t&) = delete;

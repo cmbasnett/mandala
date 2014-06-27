@@ -53,7 +53,7 @@ namespace mandala
 
             inline value_type center() const
 			{
-				return min + ((max - min) / static_cast<T>(2));
+				return min + (size() / static_cast<T>(2));
 			}
 
             std::array<value_type, corner_count> get_corners() const

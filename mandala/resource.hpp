@@ -6,6 +6,8 @@
 //mandala
 #include "hash.hpp"
 
+#include <type_traits>
+
 namespace mandala
 {
 	using namespace std::chrono;

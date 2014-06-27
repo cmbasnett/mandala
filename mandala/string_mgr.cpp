@@ -4,9 +4,9 @@
 #include <codecvt>
 
 //mandala
-#include "string_mgr.h"
+#include "string_mgr.hpp"
 #include "app.hpp"
-#include "string_archive.h"
+#include "string_archive.hpp"
 
 namespace mandala
 {
@@ -17,7 +17,7 @@ namespace mandala
 
     void string_mgr_t::mount(const std::string& file)
     {
-        auto lock_guard = std::unique_lock<std::recursive_mutex>(app.resources.mutex);
+        auto resources_lock = std::unique_lock<std::recursive_mutex>(app.resources.mutex);
 
         auto stream_hash = hash_t(file);
 
@@ -25,23 +25,23 @@ namespace mandala
 
         stream = app.resources.extract(stream_hash);
 
-        auto string_archive = string_archive_t(*stream);
+        auto archive = string_archive_t(*stream);
 
         streams.push_back(stream);
 
-        for (auto& _string : string_archive.strings)
+		for (auto& archive_string : archive.strings)
         {
              string_t string;
-             string.hash = std::move(_string.hash);
+			 string.hash = std::move(archive_string.hash);
              string.stream_index = streams.size() - 1;
-             string.offset = _string.offset;
-             string.length = _string.length;
+			 string.offset = archive_string.offset;
+			 string.length = archive_string.length;
 
              strings.insert(std::make_pair(string.hash, string));
         }
     }
 
-    void string_mgr_t::unmount_all()
+    void string_mgr_t::purge()
     {
         streams.clear();
         strings.clear();

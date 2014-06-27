@@ -23,13 +23,6 @@ namespace mandala
 			link_flags = state_t::link_flag_render;
 
 			bitmap_fonts.push_back(app.resources.get<bitmap_font_t>(hash_t("04b_19_32_s.fnt")));
-			bitmap_fonts.push_back(app.resources.get<bitmap_font_t>(hash_t("mickey_16.fnt")));
-			bitmap_fonts.push_back(app.resources.get<bitmap_font_t>(hash_t("mickey_32.fnt")));
-			bitmap_fonts.push_back(app.resources.get<bitmap_font_t>(hash_t("mickey_64.fnt")));
-			bitmap_fonts.push_back(app.resources.get<bitmap_font_t>(hash_t("monaco_32_s.fnt")));
-			bitmap_fonts.push_back(app.resources.get<bitmap_font_t>(hash_t("terminal_8.fnt")));
-			bitmap_fonts.push_back(app.resources.get<bitmap_font_t>(hash_t("terminal_16.fnt")));
-			bitmap_fonts.push_back(app.resources.get<bitmap_font_t>(hash_t("trebuchet_ms_16.fnt")));
 
 			paused_label = std::make_shared<gui::label_t>();
 			paused_label->bitmap_font = bitmap_fonts[bitmap_font_index];
