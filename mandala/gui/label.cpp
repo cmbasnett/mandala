@@ -2,8 +2,8 @@
 
 //mandala
 #include "../app.hpp"
-#include "label.hpp"
 #include "../bitmap_font.hpp"
+#include "label.hpp"
 
 //std
 #include <sstream>
@@ -57,7 +57,7 @@ namespace mandala
 						{
 							width += bitmap_font->characters.at(*string_reverse_itr++).advance_x;
 
-							if (width >= ellipse_count)
+							if (width >= (ellipse_count * ellipse_width))
 							{
 								break;
 							}
