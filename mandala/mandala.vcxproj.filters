@@ -238,6 +238,15 @@
     <ClInclude Include="gpu_mgr.hpp">
       <Filter>mandala\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="vertex_buffer.hpp">
+      <Filter>mandala\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="index_buffer.hpp">
+      <Filter>mandala\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="index_type.h">
+      <Filter>mandala\core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

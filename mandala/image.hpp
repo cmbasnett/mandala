@@ -16,7 +16,7 @@ namespace mandala
 		uint32_t width = 0;
 		uint32_t height = 0;
 		int32_t bit_depth = 0;
-		color_type_t color_type = color_type_t::g;
+        color_type_e color_type = color_type_e::g;
 		std::vector<uint8_t> data;
 
 		image_t();

@@ -12,7 +12,7 @@ namespace mandala
         glGenFramebuffers(1, &id);
         glBindFramebuffer(GL_FRAMEBUFFER, id);
 
-        color_texture = std::make_shared<texture_t>(color_type_t::rgb, width, height);
+        color_texture = std::make_shared<texture_t>(color_type_e::rgb, width, height);
 
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture->id, 0);
 

@@ -251,6 +251,8 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="gui_node.hpp" />
     <ClInclude Include="gui_state.hpp" />
     <ClInclude Include="http_request.hpp" />
+    <ClInclude Include="index_buffer.hpp" />
+    <ClInclude Include="index_type.h" />
     <ClInclude Include="padding.hpp" />
     <ClInclude Include="sound.hpp" />
     <ClInclude Include="sphere.hpp" />
@@ -301,6 +303,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="texture.hpp" />
     <ClInclude Include="triangle.hpp" />
     <ClInclude Include="types.hpp" />
+    <ClInclude Include="vertex_buffer.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="animation.cpp" />

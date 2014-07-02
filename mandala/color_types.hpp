@@ -2,7 +2,7 @@
 
 namespace mandala
 {
-    enum class color_type_t
+    enum class color_type_e
     {
         g,
         ga,

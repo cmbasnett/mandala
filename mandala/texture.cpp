@@ -8,7 +8,7 @@
 
 namespace mandala
 {
-    texture_t::texture_t(color_type_t color_type, uint32_t width, uint32_t height) :
+    texture_t::texture_t(color_type_e color_type, uint32_t width, uint32_t height) :
         width(width),
         height(height)
     {
@@ -55,23 +55,23 @@ namespace mandala
         glDeleteTextures(1, &id);
     }
 
-    void texture_t::get_formats(color_type_t color_type, int32_t& internal_format, int32_t& format)
+    void texture_t::get_formats(color_type_e color_type, int32_t& internal_format, int32_t& format)
     {
         switch (color_type)
         {
-        case color_type_t::g:
+        case color_type_e::g:
             format = GL_LUMINANCE;
             internal_format = 1;
             break;
-        case color_type_t::rgb:
+        case color_type_e::rgb:
             format = GL_RGB;
             internal_format = GL_RGB;
             break;
-        case color_type_t::rgba:
+        case color_type_e::rgba:
             format = GL_RGBA;
             internal_format = GL_RGBA;
             break;
-        case color_type_t::ga:
+        case color_type_e::ga:
             format = GL_LUMINANCE_ALPHA;
             internal_format = 2;
             break;

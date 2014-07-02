@@ -57,19 +57,19 @@ namespace mandala
 		switch (png_color_type)
 		{
 			case 0:
-				color_type = color_type_t::g;
+				color_type = color_type_e::g;
 				break;
 			case 2:
-				color_type = color_type_t::rgb;
+				color_type = color_type_e::rgb;
 				break;
 			case 3:
-				color_type = color_type_t::palette;
+				color_type = color_type_e::palette;
 				break;
 			case 4:
-				color_type = color_type_t::ga;
+				color_type = color_type_e::ga;
 				break;
 			case 6:
-				color_type = color_type_t::rgba;
+				color_type = color_type_e::rgba;
 				break;
 			default:
 				throw std::exception();
