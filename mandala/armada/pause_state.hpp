@@ -2,7 +2,7 @@
 
 //mandala
 #include "../gui_state.hpp"
-#include "../gui/label.hpp"
+#include "../gui_label.hpp"
 
 namespace mandala
 {
@@ -10,7 +10,7 @@ namespace mandala
 	{
 		struct pause_state_t : gui_state_t
 		{
-			std::shared_ptr<gui::label_t> paused_label;
+			std::shared_ptr<gui_label_t> paused_label;
 			std::vector<std::shared_ptr<bitmap_font_t>> bitmap_fonts;
 			size_t bitmap_font_index = 0;
 

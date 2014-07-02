@@ -17,7 +17,7 @@
 #include "material.hpp"
 #include "texture.hpp"
 #include "gpu_program.hpp"
-#include "graphics_mgr.hpp"
+#include "gpu_mgr.hpp"
 
 namespace mandala
 {
@@ -280,7 +280,7 @@ namespace mandala
                 const auto light_position_location = glGetUniformLocation(gpu_program->id, "light_position");
                 const auto camera_position_location = glGetUniformLocation(gpu_program->id, "camera_position");
 
-				gpu.push_gpu_program(gpu_program);
+				gpu.programs.push(gpu_program);
 
 				//world matrix
 				if (world_matrix_location != -1)
@@ -333,7 +333,7 @@ namespace mandala
 			mesh->render(world_matrix, view_projection_matrix, bone_matrices);
 		}
 
-		gpu.pop_gpu_program();
+		gpu.programs.pop();
 	}
 
 	void model_t::mesh_t::render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices) const
@@ -435,7 +435,7 @@ namespace mandala
 				auto& diffuse = material->diffuse;
 
 				//texture
-				gpu.bind_texture(diffuse.texture, 0);
+                gpu.textures.bind(0, diffuse.texture);
 
 				glUniform1i(diffuse_map_location, 0);
 
@@ -448,7 +448,7 @@ namespace mandala
 				auto& normal = material->normal;
 
 				//texture
-				gpu.bind_texture(normal.texture, 1);
+                gpu.textures.bind(1, normal.texture);
 
 				glUniform1i(normal_map_location, 1);
 			}
@@ -458,7 +458,7 @@ namespace mandala
 				auto& specular = material->specular;
 				
 				//texture
-				gpu.bind_texture(specular.texture, 2);
+                gpu.textures.bind(2, specular.texture);
 
 				glUniform1i(specular_map_location, 2);
 
@@ -474,7 +474,7 @@ namespace mandala
 				auto& emissive = material->emissive;
 
 				//texture
-				gpu.bind_texture(emissive.texture, 3);
+                gpu.textures.bind(3, emissive.texture);
 
 				glUniform1i(emissive_map_location, 3);
 
@@ -525,10 +525,10 @@ namespace mandala
 		}
 		
 		//unbind textures
-		gpu.unbind_texture(3);
-		gpu.unbind_texture(2);
-		gpu.unbind_texture(1);
-		gpu.unbind_texture(0);
+		gpu.textures.unbind(3);
+        gpu.textures.unbind(2);
+        gpu.textures.unbind(1);
+        gpu.textures.unbind(0);
 
 		//unbind buffers
 		glBindBuffer(GL_ARRAY_BUFFER, 0);

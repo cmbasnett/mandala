@@ -15,10 +15,10 @@ namespace mandala
 		{
 			link_flags = state_t::link_flag_all;
 
-			crosshair_image = std::make_shared<gui::image_t>();
+			crosshair_image = std::make_shared<gui_image_t>();
 			crosshair_image->is_autosized_to_texture = true;
 			crosshair_image->sprite = sprite_t(hash_t("crosshairs.json"), hash_t("crosshair9.png"));
-			crosshair_image->anchor_flags = gui::node_t::anchor_flag_bottom | gui::node_t::anchor_flag_left;
+			crosshair_image->anchor_flags = gui_node_t::anchor_flag_bottom | gui_node_t::anchor_flag_left;
 			crosshair_image->clean();	//TODO: this shouldn't be necessary!!
 
 			layout->adopt(crosshair_image);

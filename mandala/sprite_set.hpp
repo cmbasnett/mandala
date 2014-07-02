@@ -18,17 +18,17 @@ namespace mandala
 	{
 		struct region_t
 		{
-			typedef rectangle_i16_t rectangle_type_t;
-			typedef vec2_i16_t size_type_t;
-			typedef aabb2_t uv_type_t;
+			typedef rectangle_i16_t rectangle_type;
+            typedef vec2_i16_t size_type;
+            typedef aabb2_t uv_type;
 
 			hash_t hash;
-			rectangle_type_t frame_rectangle;
-			rectangle_type_t rectangle;
-			size_type_t source_size;
+            rectangle_type frame_rectangle;
+            rectangle_type rectangle;
+            size_type source_size;
 			bool is_rotated = false;
 			bool is_trimmed = false;
-			uv_type_t uv;
+            uv_type uv;
 		};
 
 		std::shared_ptr<texture_t> texture;

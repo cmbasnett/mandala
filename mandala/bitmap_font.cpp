@@ -10,7 +10,7 @@
 #include "hash.hpp"
 #include "texture.hpp"
 #include "gpu_program.hpp"
-#include "graphics_mgr.hpp"
+#include "gpu_mgr.hpp"
 
 #define BMF_MAGIC			("BMF")
 #define BMF_MAGIC_LENGTH	(3)
@@ -285,7 +285,7 @@ namespace mandala
 		static const auto* texcoord_offset = reinterpret_cast<void*>(offsetof(bitmap_font_t::vertex_t, texcoord));
 
 		//program
-		gpu.push_gpu_program(gpu_program);
+		gpu.programs.push(gpu_program);
 
 		//blend
 		glEnable(GL_BLEND);
@@ -327,7 +327,7 @@ namespace mandala
 
 		for (auto page_index : page_indices)
 		{
-			gpu.bind_texture(page_textures[page_index], page_index);
+            gpu.textures.bind(page_index, page_textures[page_index]);
 		}
 
 		//color top
@@ -377,7 +377,7 @@ namespace mandala
 
 		for (auto page_index : page_indices)
 		{
-			gpu.unbind_texture(page_index);
+			gpu.textures.unbind(page_index);
 		}
 
 		//unbind buffers
@@ -388,7 +388,7 @@ namespace mandala
 
 		glDisable(GL_BLEND);
 
-		gpu.pop_gpu_program();
+		gpu.programs.pop();
 	}
 
 	void bitmap_font_t::get_string_pages(std::vector<uint8_t>& pages, const std::wstring& string) const

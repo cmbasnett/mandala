@@ -18,8 +18,6 @@ namespace mandala
 
 		auto& shaders_ptree = ptree_.get_child("shaders");
 
-		GLenum error;
-
 		//create program
         id = glCreateProgram(); glCheckError();
 
@@ -30,37 +28,35 @@ namespace mandala
             auto shader = app.resources.get<shader_t>(hash_t(shader_ptree.second.data()));
 
 			//attach shader
-			glAttachShader(id, shader->handle);
-
-			if ((error = glGetError()) != GL_NO_ERROR)
-			{
-                glDeleteProgram(id);
-
-				throw std::exception();
-			}
+            glAttachShader(id, shader->handle); glCheckError();
 
             shaders.push_back(shader);
 		}
 
 		//link program
-		glLinkProgram(id);
+        glLinkProgram(id); glCheckError();
 
         //link status
 		GLint link_status;
-        glGetProgramiv(id, GL_LINK_STATUS, &link_status);
+        glGetProgramiv(id, GL_LINK_STATUS, &link_status); glCheckError();
 
 		if (link_status == GL_FALSE)
-		{
-			GLsizei program_info_log_length = 0;
-			GLchar program_info_log[1024] = { 0 };
-            glGetProgramInfoLog(id, 1024, &program_info_log_length, &program_info_log[0]);
+        {
+            GLint program_info_log_length = 0;
+
+            glGetProgramiv(id, GL_INFO_LOG_LENGTH, &program_info_log_length); glCheckError();
 
 			if (program_info_log_length > 0)
-			{
+            {
+                std::string program_info_log;
+                program_info_log.resize(program_info_log_length);
+
+                glGetProgramInfoLog(id, program_info_log_length, nullptr, &program_info_log[0]); glCheckError();
+
 				std::cout << program_info_log << std::endl;
 			}
 
-            glDeleteProgram(id);
+            glDeleteProgram(id); glCheckError();
 
 			throw std::exception();
 		}
@@ -68,19 +64,12 @@ namespace mandala
 		for (auto& shader : shaders)
 		{
 			//detach vertex shader
-            glDetachShader(id, shader->handle);
-
-			if ((error = glGetError()) != GL_NO_ERROR)
-			{
-                glDeleteProgram(id);
-
-				throw std::exception();
-			}
+            glDetachShader(id, shader->handle); glCheckError();
 		}
 	}
 
 	gpu_program_t::~gpu_program_t()
 	{
-        glDeleteProgram(id);
+        glDeleteProgram(id); glCheckError();
 	}
 };

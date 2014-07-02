@@ -7,8 +7,8 @@
 //mandala
 #include "../app.hpp"
 #include "../platform.hpp"
-#include "../gui/label.hpp"
-#include "../gui/gui_image.hpp"
+#include "../gui_label.hpp"
+#include "../gui_image.hpp"
 #include "../bitmap_font.hpp"
 
 //armada
@@ -24,13 +24,13 @@ namespace mandala
 
 			bitmap_fonts.push_back(app.resources.get<bitmap_font_t>(hash_t("04b_19_32_s.fnt")));
 
-			paused_label = std::make_shared<gui::label_t>();
+			paused_label = std::make_shared<gui_label_t>();
 			paused_label->bitmap_font = bitmap_fonts[bitmap_font_index];
 			paused_label->string = L"PAUSED";
-			paused_label->vertical_alignment = gui::label_t::vertical_alignment_t::middle;
-			paused_label->justification = gui::label_t::justification_t::center;
+			paused_label->vertical_alignment = gui_label_t::vertical_alignment_t::middle;
+			paused_label->justification = gui_label_t::justification_t::center;
 			paused_label->size = vec2_t(200, 100);
-			paused_label->anchor_flags = gui::node_t::anchor_flag_horizontal | gui::node_t::anchor_flag_vertical;
+			paused_label->anchor_flags = gui_node_t::anchor_flag_horizontal | gui_node_t::anchor_flag_vertical;
 			paused_label->should_use_gradient = true;
 			paused_label->gradient.color1 = vec4_t(1, 0, 1, 1);
 			paused_label->gradient.color2 = vec4_t(0, 1, 0, 1);
@@ -101,13 +101,13 @@ namespace mandala
 			if (input_event.device_type == input_event_t::device_type_t::touch &&
 				input_event.touch.type == input_event_t::touch_t::type_t::button_press)
 			{
-				gui::node_t::trace_args_t trace_args;
+				gui_node_t::trace_args_t trace_args;
 				trace_args.circle.origin = input_event.touch.position;
 				trace_args.circle.radius = 8.0f;
 
-				gui::node_t::trace_result_t trace_result;
+				gui_node_t::trace_result_t trace_result;
 
-				auto did_hit = gui::node_t::trace(layout, trace_args, trace_result);
+				auto did_hit = gui_node_t::trace(layout, trace_args, trace_result);
 
 				std::cout << trace_result.nodes_hit.size() << std::endl;
 

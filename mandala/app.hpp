@@ -33,7 +33,7 @@ namespace mandala
 				size_t unconsumed_input_event_count;
 			};
 
-			static const size_t frames_max = 256;
+			static const auto frames_max = 256;
 
 			std::deque<frame_t> frames;
 

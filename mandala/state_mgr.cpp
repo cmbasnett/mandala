@@ -173,7 +173,7 @@ namespace mandala
 	}
 
 	//push a state onto the stack
-	void state_mgr_t::push(std::shared_ptr<state_t> state)
+	void state_mgr_t::push(const std::shared_ptr<state_t>& state)
 	{
 		if (state == nullptr)
 		{
@@ -188,7 +188,7 @@ namespace mandala
 	}
 
 	//pop a specific state off of the stack
-	void state_mgr_t::pop(std::shared_ptr<state_t> state)
+	void state_mgr_t::pop(const std::shared_ptr<state_t>& state)
 	{
 		if (state == nullptr)
 		{

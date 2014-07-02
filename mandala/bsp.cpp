@@ -7,7 +7,7 @@
 #include "app.hpp"
 #include "gpu_program.hpp"
 #include "image.hpp"
-#include "graphics_mgr.hpp"
+#include "gpu_mgr.hpp"
 
 namespace mandala
 {
@@ -560,7 +560,7 @@ namespace mandala
 		//TODO: push/pop blend func thing
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		gpu.push_gpu_program(gpu_program);
+		gpu.programs.push(gpu_program);
 
         static const auto position_location = glGetAttribLocation(program_id, "position"); glCheckError();
         static const auto diffuse_texcoord_location = glGetAttribLocation(program_id, "diffuse_texcoord"); glCheckError();
@@ -606,8 +606,6 @@ namespace mandala
 		//lightmap_gamma
 		glUniform1f(lightmap_gamma_location, 1.0f); glCheckError();
 
-		std::shared_ptr<texture_t> previous_diffuse_texture;
-
 		auto& leaf_pvs = leaf_pvs_map.at(leaf_index);
 
 		for (size_t i = 0; i < leaf_pvs.size(); ++i)
@@ -626,30 +624,8 @@ namespace mandala
 				auto& diffuse_texture = textures[texture_infos[face.texture_info_index].texture_index];
 				auto& lightmap_texture = face_lightmap_textures[face_index];
 
-				//diffuse_texture
-				if (diffuse_texture != previous_diffuse_texture)
-				{
-					if (diffuse_texture)
-					{
-						gpu.bind_texture(diffuse_texture, 0);
-					}
-					else
-					{
-						gpu.unbind_texture(0);
-					}
-
-					previous_diffuse_texture = diffuse_texture;
-				}
-
-				//lightmap_texture
-				if (lightmap_texture)
-				{
-					gpu.bind_texture(lightmap_texture, 1);
-				}
-				else
-				{
-					gpu.unbind_texture(1);
-				}
+                gpu.textures.bind(0, diffuse_texture);
+                gpu.textures.bind(1, lightmap_texture);
 
 				glDrawElements(GL_TRIANGLE_FAN, face.surface_edge_count, GL_UNSIGNED_INT, (GLvoid*)(face_start_indices[face_index] * sizeof(uint32_t))); glCheckError();
 			}
@@ -662,7 +638,7 @@ namespace mandala
 		glBindBuffer(GL_ARRAY_BUFFER, 0); glCheckError();
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); glCheckError();
 
-		gpu.pop_gpu_program();
+		gpu.programs.pop();
 
 		//cull face
 		if (is_cull_face_enabled)

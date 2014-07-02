@@ -34,8 +34,8 @@ namespace mandala
 		void render();
 		void on_input_event(input_event_t& input_event);
 
-		void push(std::shared_ptr<state_t> state);
-		void pop(std::shared_ptr<state_t> state);
+		void push(const std::shared_ptr<state_t>& state);
+		void pop(const std::shared_ptr<state_t>& state);
 		void purge();
 		
 	private:

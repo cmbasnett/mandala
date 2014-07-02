@@ -7,7 +7,7 @@
 #include "../mandala.hpp"
 #include "../state.hpp"
 #include "../model_instance.hpp"
-#include "../gui/node.hpp"
+#include "../gui_node.hpp"
 #include "../quake_camera.hpp"
 #include "../frame_buffer.hpp"
 
@@ -47,7 +47,7 @@ namespace mandala
 			virtual void on_stop_input() override;
 			virtual void on_start_input() override;
 			
-			std::shared_ptr<gui::node_t> root_node;
+			std::shared_ptr<gui_node_t> root_node;
 			std::shared_ptr<world_hud_state_t> hud_state;
             quake_camera_t camera;
             skybox_t skybox;

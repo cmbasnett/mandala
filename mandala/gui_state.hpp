@@ -2,7 +2,7 @@
 
 //mandala
 #include "state.hpp"
-#include "layout.hpp"
+#include "gui_layout.hpp"
 
 namespace mandala
 {
@@ -15,6 +15,6 @@ namespace mandala
 
 		virtual void render() override;
 
-		std::shared_ptr<gui::layout_t> layout;
+		std::shared_ptr<gui_layout_t> layout;
 	};
 };

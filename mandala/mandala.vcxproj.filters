@@ -85,21 +85,6 @@
     <ClInclude Include="types.hpp">
       <Filter>mandala\core</Filter>
     </ClInclude>
-    <ClInclude Include="gui\gui_image.hpp">
-      <Filter>mandala\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="gui\label.hpp">
-      <Filter>mandala\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="layout.hpp">
-      <Filter>mandala\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="gui\node.hpp">
-      <Filter>mandala\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="gui\padding.hpp">
-      <Filter>mandala\gui</Filter>
-    </ClInclude>
     <ClInclude Include="circle.hpp">
       <Filter>mandala\math</Filter>
     </ClInclude>
@@ -229,11 +214,29 @@
     <ClInclude Include="string_archive.hpp">
       <Filter>mandala</Filter>
     </ClInclude>
-    <ClInclude Include="graphics_mgr.hpp">
-      <Filter>mandala\graphics</Filter>
-    </ClInclude>
     <ClInclude Include="string_mgr.hpp">
       <Filter>mandala\app</Filter>
+    </ClInclude>
+    <ClInclude Include="gui_canvas.hpp">
+      <Filter>mandala\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui_image.hpp">
+      <Filter>mandala\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui_label.hpp">
+      <Filter>mandala\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui_layout.hpp">
+      <Filter>mandala\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui_node.hpp">
+      <Filter>mandala\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="padding.hpp">
+      <Filter>mandala\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu_mgr.hpp">
+      <Filter>mandala\graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -298,12 +301,6 @@
     <ClCompile Include="resource_mgr.cpp">
       <Filter>mandala\app</Filter>
     </ClCompile>
-    <ClCompile Include="gui\label.cpp">
-      <Filter>mandala\gui</Filter>
-    </ClCompile>
-    <ClCompile Include="gui\node.cpp">
-      <Filter>mandala\gui</Filter>
-    </ClCompile>
     <ClCompile Include="armada\armada.cpp">
       <Filter>armada</Filter>
     </ClCompile>
@@ -321,9 +318,6 @@
     </ClCompile>
     <ClCompile Include="armada\bsp_state.cpp">
       <Filter>armada\states\bsp</Filter>
-    </ClCompile>
-    <ClCompile Include="gui\gui_image.cpp">
-      <Filter>mandala\gui</Filter>
     </ClCompile>
     <ClCompile Include="armada\world_hud_state.cpp">
       <Filter>armada\states\world</Filter>
@@ -376,7 +370,16 @@
     <ClCompile Include="string_archive.cpp">
       <Filter>mandala</Filter>
     </ClCompile>
-    <ClCompile Include="graphics_mgr.cpp">
+    <ClCompile Include="gui_image.cpp">
+      <Filter>mandala\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui_label.cpp">
+      <Filter>mandala\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui_node.cpp">
+      <Filter>mandala\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gpu_mgr.cpp">
       <Filter>mandala\graphics</Filter>
     </ClCompile>
   </ItemGroup>

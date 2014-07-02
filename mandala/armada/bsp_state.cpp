@@ -9,8 +9,8 @@
 #include "../bitmap_font.hpp"
 #include "../model.hpp"
 #include "../model_instance.hpp"
-#include "../gui/gui_image.hpp"
-#include "../gui/label.hpp"
+#include "../gui_image.hpp"
+#include "../gui_label.hpp"
 #include "../sound.hpp"
 #include "../audio_source.hpp"
 #include "../frame_buffer.hpp"
@@ -40,23 +40,23 @@ namespace mandala
 
             frame_buffer = std::make_shared<frame_buffer_t>(1024, 768);
 
-            debug_label = std::make_shared<gui::label_t>();
+            debug_label = std::make_shared<gui_label_t>();
             debug_label->bitmap_font = app.resources.get<bitmap_font_t>(hash_t("terminal_8.fnt"));
             debug_label->color = vec4_t(1, 0, 0, 1);
-            debug_label->dock_mode = gui::node_t::dock_mode_t::fill;
-            debug_label->vertical_alignment = gui::label_t::vertical_alignment_t::bottom;
-            debug_label->justification = gui::label_t::justification_t::center;
-            debug_label->padding = gui::padding_t(16);
+            debug_label->dock_mode = gui_node_t::dock_mode_t::fill;
+            debug_label->vertical_alignment = gui_label_t::vertical_alignment_t::bottom;
+            debug_label->justification = gui_label_t::justification_t::center;
+            debug_label->padding = padding_t(16);
 
             crosshair_sprite_refs.emplace_back(hash_t("crono.json"), hash_t("chrono_01.png"));
             crosshair_sprite_refs.emplace_back(hash_t("crono.json"), hash_t("chrono_02.gif"));
             crosshair_sprite_refs.emplace_back(hash_t("crono.json"), hash_t("chrono_03.gif"));
             crosshair_sprite_refs.emplace_back(hash_t("crono.json"), hash_t("chrono_04.gif"));
 
-            crosshair_image = std::make_shared<gui::image_t>();
+            crosshair_image = std::make_shared<gui_image_t>();
             crosshair_image->is_autosized_to_texture = true;
             crosshair_image->sprite = crosshair_sprite_refs[crosshair_sprite_index];
-            crosshair_image->anchor_flags = gui::node_t::anchor_flag_all;
+            crosshair_image->anchor_flags = gui_node_t::anchor_flag_all;
 
             layout->adopt(debug_label);
             layout->adopt(crosshair_image);

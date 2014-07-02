@@ -55,14 +55,14 @@ namespace mandala
         {
             skybox.render(camera);
 
-            //vec3_t light_position(0, 0, 100);
+            vec3_t light_position(0, 0, 100);
 
-            //for (auto& model_instance : model_instances)
-            //{
-            //    model_instance->render(camera, light_position);
-            //}
+            for (auto& model_instance : model_instances)
+            {
+                model_instance->render(camera, light_position);
+            }
 
-            //state_t::render();
+            state_t::render();
 		}
 
 		void world_state_t::on_enter()

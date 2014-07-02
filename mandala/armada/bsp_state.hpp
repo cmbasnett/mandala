@@ -10,14 +10,10 @@
 
 namespace mandala
 {
-	namespace gui
-	{
-		struct label_t;
-		struct image_t;
-	};
-
 	struct bsp_t;
     struct frame_buffer_t;
+    struct gui_label_t;
+    struct gui_image_t;
 
 	namespace armada
 	{
@@ -32,8 +28,8 @@ namespace mandala
 
 			std::shared_ptr<bsp_t> bsp;
 			quake_camera_t camera;
-			std::shared_ptr<gui::label_t> debug_label;
-			std::shared_ptr<gui::image_t> crosshair_image;
+			std::shared_ptr<gui_label_t> debug_label;
+			std::shared_ptr<gui_image_t> crosshair_image;
 			skybox_t skybox;
 			render_info_t render_info;
 			std::vector<sprite_ref_t> crosshair_sprite_refs;

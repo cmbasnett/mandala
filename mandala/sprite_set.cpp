@@ -49,10 +49,10 @@ namespace mandala
 			//frame_recangle
 			auto frame_rectangle_ptree = region_ptree.second.get_child("frame");
 
-			region.frame_rectangle.x = frame_rectangle_ptree.get<region_t::rectangle_type_t::scalar_type>("x");
-			region.frame_rectangle.y = frame_rectangle_ptree.get<region_t::rectangle_type_t::scalar_type>("y");
-			region.frame_rectangle.width = frame_rectangle_ptree.get<region_t::rectangle_type_t::scalar_type>("w");
-			region.frame_rectangle.height = frame_rectangle_ptree.get<region_t::rectangle_type_t::scalar_type>("h");
+			region.frame_rectangle.x = frame_rectangle_ptree.get<region_t::rectangle_type::scalar_type>("x");
+			region.frame_rectangle.y = frame_rectangle_ptree.get<region_t::rectangle_type::scalar_type>("y");
+			region.frame_rectangle.width = frame_rectangle_ptree.get<region_t::rectangle_type::scalar_type>("w");
+			region.frame_rectangle.height = frame_rectangle_ptree.get<region_t::rectangle_type::scalar_type>("h");
 
 			//is_rotated
 			region.is_rotated = region_ptree.second.get<bool>("rotated");
@@ -63,16 +63,16 @@ namespace mandala
 			//source_size
 			auto source_size_ptree = region_ptree.second.get_child("sourceSize");
 
-			region.source_size.x = source_size_ptree.get<region_t::size_type_t::value_type>("w");
-			region.source_size.y = source_size_ptree.get<region_t::size_type_t::value_type>("h");
+			region.source_size.x = source_size_ptree.get<region_t::size_type::value_type>("w");
+			region.source_size.y = source_size_ptree.get<region_t::size_type::value_type>("h");
 
 			//rectangle
 			auto rectangle_ptree = region_ptree.second.get_child("spriteSourceSize");
 
-			region.rectangle.x = rectangle_ptree.get<region_t::rectangle_type_t::scalar_type>("x");
-			region.rectangle.y = region.source_size.y - rectangle_ptree.get<region_t::rectangle_type_t::scalar_type>("y") - region.frame_rectangle.height;
-			region.rectangle.width = rectangle_ptree.get<region_t::rectangle_type_t::scalar_type>("w");
-			region.rectangle.height = rectangle_ptree.get<region_t::rectangle_type_t::scalar_type>("h");
+			region.rectangle.x = rectangle_ptree.get<region_t::rectangle_type::scalar_type>("x");
+			region.rectangle.y = region.source_size.y - rectangle_ptree.get<region_t::rectangle_type::scalar_type>("y") - region.frame_rectangle.height;
+			region.rectangle.width = rectangle_ptree.get<region_t::rectangle_type::scalar_type>("w");
+			region.rectangle.height = rectangle_ptree.get<region_t::rectangle_type::scalar_type>("h");
 
 			if (region.is_rotated)
 			{
