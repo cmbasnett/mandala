@@ -3,6 +3,8 @@
 //mandala
 #include "mandala.hpp"
 #include "resource.hpp"
+#include "vertex_buffer.hpp"
+#include "index_buffer.hpp"
 
 //std
 #include <vector>
@@ -40,10 +42,12 @@ namespace mandala
 		{
 			vec2_t position;
 			vec2_t texcoord;
-		};
+        };
+
+        typedef vertex_buffer_t<vertex_t> vertex_buffer_type;
+        typedef index_buffer_t<uint16_t> index_buffer_type;
 		
 		bitmap_font_t(std::istream& ifstream);
-		virtual ~bitmap_font_t();
 
 		void render_string(const std::wstring& string, const vec4_t& color_top, const vec4_t& color_bottom, mat4_t world, const mat4_t& view_projection) const;
 		int16_t get_kerning_amount(wchar_t lhs, wchar_t rhs) const;
@@ -79,9 +83,9 @@ namespace mandala
 		std::vector<uint32_t> character_ids;
 		std::map<uint32_t, size_t> character_indices;
 		std::map<uint32_t, character_t> characters;
-		std::vector<kerning_pair_t> kerning_pairs;
-		uint32_t vertex_buffer = 0;
-		uint32_t index_buffer = 0;
+        std::vector<kerning_pair_t> kerning_pairs;
+        std::shared_ptr<vertex_buffer_type> vertex_buffer;
+        std::shared_ptr<index_buffer_type> index_buffer;
 		std::vector<std::shared_ptr<texture_t>> page_textures;
 
 	private:

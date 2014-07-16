@@ -218,10 +218,8 @@ namespace mandala
 			j += 4;
 		}
 
-		glGenBuffers(1, &vertex_buffer);
-		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertices.size(), static_cast<GLvoid*>(vertices.data()), GL_STATIC_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vertex_buffer = std::make_shared<vertex_buffer_type>();
+        vertex_buffer->data(vertices, gpu_mgr_t::buffer_usage_e::static_draw);
 
 		//index buffer
 		std::vector<uint16_t> indices;
@@ -237,16 +235,8 @@ namespace mandala
 			}
 		}
 
-		glGenBuffers(1, &index_buffer);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * indices.size(), static_cast<GLvoid*>(indices.data()), GL_STATIC_DRAW);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	}
-
-	bitmap_font_t::~bitmap_font_t()
-	{
-		glDeleteBuffers(1, &vertex_buffer);
-		glDeleteBuffers(1, &index_buffer);
+        index_buffer = std::make_shared<index_buffer_type>();
+        index_buffer->data(indices, gpu_mgr_t::buffer_usage_e::static_draw);
 	}
 
 	int16_t bitmap_font_t::get_kerning_amount(const wchar_t lhs, const wchar_t rhs) const
@@ -299,10 +289,10 @@ namespace mandala
 		glDepthMask(GL_FALSE);
 
 		//vertex buffer
-		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+        gpu.buffers.push(gpu_mgr_t::buffer_target_e::array, vertex_buffer);
 
 		//index buffer
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
+        gpu.buffers.push(gpu_mgr_t::buffer_target_e::element_array, index_buffer);
 
 		//position
 		glEnableVertexAttribArray(position_location);
@@ -381,8 +371,8 @@ namespace mandala
 		}
 
 		//unbind buffers
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        gpu.buffers.pop(gpu_mgr_t::buffer_target_e::element_array);
+        gpu.buffers.pop(gpu_mgr_t::buffer_target_e::array);
 
 		glDepthMask(depth_mask);
 
