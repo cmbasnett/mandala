@@ -2,7 +2,6 @@
 #include "glm\ext.hpp"
 
 //mandala
-#include "mandala.hpp"
 #include "camera.hpp"
 #include "platform.hpp"
 

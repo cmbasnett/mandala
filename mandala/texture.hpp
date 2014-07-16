@@ -4,7 +4,6 @@
 #include <memory>
 
 //mandala
-#include "mandala.hpp"
 #include "resource.hpp"
 #include "color_types.hpp"
 

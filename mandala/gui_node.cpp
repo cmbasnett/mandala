@@ -205,12 +205,12 @@ namespace mandala
 			return;
 		}
 
-		glBegin(GL_LINE_LOOP);
-		glVertex2f(bounds.min.x, bounds.min.y);
-		glVertex2f(bounds.min.x, bounds.max.y);
-		glVertex2f(bounds.max.x, bounds.max.y);
-		glVertex2f(bounds.max.x, bounds.min.y);
-		glEnd();
+		//glBegin(GL_LINE_LOOP);
+		//glVertex2f(bounds.min.x, bounds.min.y);
+		//glVertex2f(bounds.min.x, bounds.max.y);
+		//glVertex2f(bounds.max.x, bounds.max.y);
+		//glVertex2f(bounds.max.x, bounds.min.y);
+		//glEnd();
 
         for (auto& child : children)
         {

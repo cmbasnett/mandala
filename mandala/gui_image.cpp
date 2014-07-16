@@ -2,6 +2,7 @@
 #include "glm\ext.hpp"
 
 //mandala
+#include "mandala.hpp"
 #include "app.hpp"
 #include "gpu_program.hpp"
 #include "texture.hpp"

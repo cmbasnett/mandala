@@ -1,4 +1,5 @@
 //mandala
+#include "mandala.hpp"
 #include "gpu_mgr.hpp"
 #include "gpu_program.hpp"
 #include "frame_buffer.hpp"

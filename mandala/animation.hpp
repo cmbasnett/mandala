@@ -1,7 +1,6 @@
 #pragma once
 
 //mandala
-#include "mandala.hpp"
 #include "md5b.hpp"
 #include "aabb.hpp"
 #include "resource.hpp"

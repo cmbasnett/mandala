@@ -1,7 +1,6 @@
 #pragma once
 
 //mandala
-#include "mandala.hpp"
 #include "state_mgr.hpp"
 #include "resource_mgr.hpp"
 #include "audio_mgr.hpp"

@@ -1,7 +1,6 @@
 #pragma once
 
 //mandala
-#include "mandala.hpp"
 #include "resource.hpp"
 #include "vertex_buffer.hpp"
 #include "index_buffer.hpp"

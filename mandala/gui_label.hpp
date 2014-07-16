@@ -5,7 +5,6 @@
 #include <memory>
 
 //mandala
-#include "mandala.hpp"
 #include "gui_node.hpp"
 
 namespace mandala

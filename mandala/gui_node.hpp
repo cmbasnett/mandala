@@ -5,7 +5,6 @@
 #include <memory>
 
 //mandala
-#include "mandala.hpp"
 #include "aabb.hpp"
 #include "circle.hpp"
 #include "padding.hpp"

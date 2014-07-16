@@ -1,7 +1,7 @@
 #pragma once
 
 //mandala
-#include "mandala.hpp"
+#include "types.hpp"
 
 //std
 #include <memory>

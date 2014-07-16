@@ -4,7 +4,6 @@
 //mandala
 #include "app.hpp"
 #include "platform.hpp"
-#include "mandala.hpp"
 #include "game.hpp"
 
 namespace mandala

@@ -13,6 +13,20 @@ namespace mandala
 {
     struct platform_win32_t : platform_t
     {
+        struct input_mgr_t
+        {
+            struct gamepad_state_t
+            {
+                std::array<float32_t, 16> axes;
+                std::array<int32_t, 16> buttons;
+            };
+
+            std::deque<input_event_t> events;
+            input_event_t::id_type event_id = 0;
+            input_event_t::touch_t::touch_id_type touch_id = 0;
+            std::array<gamepad_state_t, 4> gamepad_states;
+        };
+
         platform_win32_t();
         virtual ~platform_win32_t();
 
@@ -58,30 +72,7 @@ namespace mandala
 		virtual vec2_i32_t get_window_position() const override;
 		virtual void set_window_position(const vec2_i32_t& window_position) const override;
 
-	private:
-		struct input_mgr_t
-		{
-			struct gamepad_state_t
-			{
-				std::array<float32_t, 16> axes;
-				std::array<int32_t, 16> buttons;
-			};
-
-			std::deque<input_event_t> events;
-			input_event_t::id_type event_id = 0;
-			input_event_t::touch_t::touch_id_type touch_id = 0;
-			std::array<gamepad_state_t, 4> gamepad_states;
-		};
-
-        static void on_error(int error_code, const char* message);
-		static void on_keyboard_key(GLFWwindow* window, int key, int scancode, int action, int mods);
-		static void on_keyboard_character(GLFWwindow* window, unsigned int character);
-        static void on_mouse_button(GLFWwindow* window, int button, int action, int mods);
-        static void on_mouse_move(GLFWwindow* window, double x, double y);
-        static void on_mouse_scroll(GLFWwindow* window, double x, double y);
-		static void on_window_resize(GLFWwindow* window, int width, int height);
-
-		GLFWwindow* window;
+        void* window_ptr = nullptr;
 		vec4_t viewport;
 		input_mgr_t input;
 

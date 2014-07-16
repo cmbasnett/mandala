@@ -1,7 +1,5 @@
 #pragma once
 
-#include "mandala.hpp"
-
 namespace mandala
 {
     struct input_event_t;
@@ -53,7 +51,6 @@ namespace mandala
 		virtual void set_window_position(const vec2_i32_t& window_position) const = 0;
 #endif
 
-	protected:
 #if defined(_WIN32) || defined(WIN32)
 		vec2_f64_t cursor_position;
 #endif

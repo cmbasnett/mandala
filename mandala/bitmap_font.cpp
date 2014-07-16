@@ -5,6 +5,7 @@
 #include <glm\ext.hpp>
 
 //mandala
+#include "mandala.hpp"
 #include "bitmap_font.hpp"
 #include "app.hpp"
 #include "hash.hpp"

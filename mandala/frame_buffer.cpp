@@ -2,6 +2,7 @@
 #include <GL\glew.h>
 
 //mandala
+#include "mandala.hpp"
 #include "frame_buffer.hpp"
 #include "texture.hpp"
 

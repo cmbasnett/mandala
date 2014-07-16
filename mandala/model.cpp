@@ -11,6 +11,7 @@
 #include <glm\gtc\type_ptr.hpp>	
 
 //mandala
+#include "mandala.hpp"
 #include "model.hpp"
 #include "app.hpp"
 #include "md5b.hpp"

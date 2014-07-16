@@ -1,7 +1,6 @@
 #pragma once
 
 //mandala
-#include "mandala.hpp"
 #include "input_event.hpp"
 
 //std

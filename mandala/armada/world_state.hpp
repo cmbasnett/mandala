@@ -4,7 +4,6 @@
 #include <memory>
 
 //mandala
-#include "../mandala.hpp"
 #include "../state.hpp"
 #include "../model_instance.hpp"
 #include "../gui_node.hpp"
