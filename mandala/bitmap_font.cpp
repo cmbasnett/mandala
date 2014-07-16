@@ -31,7 +31,7 @@ namespace mandala
 
 		//version
 		uint8_t version = 0;
-		istream.read((char*)&version, sizeof(version));
+		istream.read(reinterpret_cast<char*>(&version), sizeof(version));
 
 		if (version != BMF_VERSION)
 		{
@@ -40,7 +40,7 @@ namespace mandala
 
 		//info
 		istream.seekg(5, std::ios_base::cur);
-		istream.read((char*)&size, sizeof(size));
+        istream.read(reinterpret_cast<char*>(&size), sizeof(size));
 
 		enum : uint8_t
 		{
@@ -56,7 +56,7 @@ namespace mandala
 
 		uint8_t flags;
 
-		istream.read((char*)&flags, sizeof(flags));
+        istream.read(reinterpret_cast<char*>(&flags), sizeof(flags));
 
 		is_smooth = (flags & flag_smooth) == flag_smooth;
 		is_unicode = (flags & flag_unicode) == flag_unicode;
@@ -64,16 +64,16 @@ namespace mandala
 		is_bold = (flags & flag_bold) == flag_bold;
 		is_fixed_height = (flags & flag_fixed_height) == flag_fixed_height;
 
-		istream.read((char*)&char_set, sizeof(char_set));
-		istream.read((char*)&stretch_height, sizeof(stretch_height));
-		istream.read((char*)&antialiasing, sizeof(antialiasing));
-		istream.read((char*)&padding_top, sizeof(padding_top));
-		istream.read((char*)&padding_right, sizeof(padding_right));
-		istream.read((char*)&padding_bottom, sizeof(padding_bottom));
-		istream.read((char*)&padding_left, sizeof(padding_left));
-		istream.read((char*)&spacing_horizontal, sizeof(spacing_horizontal));
-		istream.read((char*)&spacing_vertical, sizeof(spacing_vertical));
-		istream.read((char*)&outline, sizeof(outline));
+        istream.read(reinterpret_cast<char*>(&char_set), sizeof(char_set));
+		istream.read(reinterpret_cast<char*>(&stretch_height), sizeof(stretch_height));
+		istream.read(reinterpret_cast<char*>(&antialiasing), sizeof(antialiasing));
+		istream.read(reinterpret_cast<char*>(&padding_top), sizeof(padding_top));
+		istream.read(reinterpret_cast<char*>(&padding_right), sizeof(padding_right));
+		istream.read(reinterpret_cast<char*>(&padding_bottom), sizeof(padding_bottom));
+		istream.read(reinterpret_cast<char*>(&padding_left), sizeof(padding_left));
+		istream.read(reinterpret_cast<char*>(&spacing_horizontal), sizeof(spacing_horizontal));
+		istream.read(reinterpret_cast<char*>(&spacing_vertical), sizeof(spacing_vertical));
+		istream.read(reinterpret_cast<char*>(&outline), sizeof(outline));
 
 		//name
 		std::string name;
@@ -81,21 +81,21 @@ namespace mandala
 
 		//common
 		istream.seekg(5, std::ios_base::cur);
-		istream.read((char*)&line_height, sizeof(line_height));
-		istream.read((char*)&base, sizeof(base));
-		istream.read((char*)&width, sizeof(width));
-		istream.read((char*)&height, sizeof(height));
-		istream.read((char*)&page_count, sizeof(page_count));
-		istream.read((char*)&flags_1, sizeof(flags_1));
-		istream.read((char*)&alpha_channel, sizeof(alpha_channel));
-		istream.read((char*)&red_channel, sizeof(red_channel));
-		istream.read((char*)&green_channel, sizeof(green_channel));
-		istream.read((char*)&blue_channel, sizeof(blue_channel));
+		istream.read(reinterpret_cast<char*>(&line_height), sizeof(line_height));
+        istream.read(reinterpret_cast<char*>(&base), sizeof(base));
+        istream.read(reinterpret_cast<char*>(&width), sizeof(width));
+        istream.read(reinterpret_cast<char*>(&height), sizeof(height));
+        istream.read(reinterpret_cast<char*>(&page_count), sizeof(page_count));
+        istream.read(reinterpret_cast<char*>(&flags_1), sizeof(flags_1));
+        istream.read(reinterpret_cast<char*>(&alpha_channel), sizeof(alpha_channel));
+        istream.read(reinterpret_cast<char*>(&red_channel), sizeof(red_channel));
+        istream.read(reinterpret_cast<char*>(&green_channel), sizeof(green_channel));
+        istream.read(reinterpret_cast<char*>(&blue_channel), sizeof(blue_channel));
 		istream.seekg(1, std::ios_base::cur);
 
 		//textures
 		uint32_t page_texture_names_length;
-		istream.read((char*)&page_texture_names_length, sizeof(page_texture_names_length));
+        istream.read(reinterpret_cast<char*>(&page_texture_names_length), sizeof(page_texture_names_length));
 
 		while (page_texture_names_length > 0)
 		{
@@ -151,16 +151,16 @@ namespace mandala
 		if (istream.good())
 		{
 			uint32_t kerning_pairs_length;
-			istream.read((char*)&kerning_pairs_length, sizeof(kerning_pairs_length));
+			istream.read(reinterpret_cast<char*>(&kerning_pairs_length), sizeof(kerning_pairs_length));
 
 			auto kerning_pair_count = kerning_pairs_length / sizeof(kerning_pair_t);
 			kerning_pairs.resize(kerning_pair_count);
 
 			for (auto& kerning_pair : kerning_pairs)
 			{
-				istream.read((char*)&kerning_pair.first, sizeof(kerning_pair.first));
-				istream.read((char*)&kerning_pair.second, sizeof(kerning_pair.second));
-				istream.read((char*)&kerning_pair.amount, sizeof(kerning_pair.amount));
+                istream.read(reinterpret_cast<char*>(&kerning_pair.first), sizeof(kerning_pair.first));
+                istream.read(reinterpret_cast<char*>(&kerning_pair.second), sizeof(kerning_pair.second));
+                istream.read(reinterpret_cast<char*>(&kerning_pair.amount), sizeof(kerning_pair.amount));
 			}
 		}
 

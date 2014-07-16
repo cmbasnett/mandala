@@ -49,7 +49,6 @@ namespace mandala
         static const auto vertices_per_character = 4;
         static const auto indices_per_character = 6;
         static const auto indices_max = characters_max * indices_per_character;
-        static const auto vertices_max = characters_max * vertices_per_character;
 
         typedef vertex_t vertex_type;
         typedef index_type<indices_max>::type index_type;
