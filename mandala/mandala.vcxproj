@@ -254,6 +254,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="http_request.hpp" />
     <ClInclude Include="index_buffer.hpp" />
     <ClInclude Include="index_type.h" />
+    <ClInclude Include="index_type.hpp" />
     <ClInclude Include="padding.hpp" />
     <ClInclude Include="range.hpp" />
     <ClInclude Include="sound.hpp" />

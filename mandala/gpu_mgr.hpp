@@ -9,7 +9,7 @@
 
 //mandala
 #include "rectangle.hpp"
-#include "index_type.h"
+#include "index_type.hpp"
 
 namespace mandala
 {

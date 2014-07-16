@@ -16,11 +16,6 @@
 #define BMF_MAGIC_LENGTH	(3)
 #define BMF_VERSION			(3)
 
-#define BITMAP_FONT_VERTICES_PER_CHARACTER	(4)
-#define BITMAP_FONT_INDICES_PER_CHARACTER	(6)
-#define BITMAP_FONT_CHARACTER_INDEX_STRIDE	(sizeof(uint16_t) * BITMAP_FONT_INDICES_PER_CHARACTER)
-#define BITMAP_FONT_PAGE_COUNT_MAX			(32)
-
 namespace mandala
 {
 	bitmap_font_t::bitmap_font_t(std::istream& istream)
@@ -170,7 +165,7 @@ namespace mandala
 		}
 
 		//vertex buffer
-		auto vertex_count = characters.size() * BITMAP_FONT_VERTICES_PER_CHARACTER;
+		auto vertex_count = characters.size() * vertices_per_character;
 
 		std::vector<vertex_t> vertices;
 		vertices.resize(vertex_count);
@@ -222,16 +217,16 @@ namespace mandala
         vertex_buffer->data(vertices, gpu_mgr_t::buffer_usage_e::static_draw);
 
 		//index buffer
-		std::vector<uint16_t> indices;
-		indices.resize(characters.size() * BITMAP_FONT_INDICES_PER_CHARACTER);
+		std::vector<index_type> indices;
+		indices.resize(characters.size() * indices_per_character);
 
-		const uint16_t character_index_offsets[BITMAP_FONT_INDICES_PER_CHARACTER] = { 0, 1, 2, 0, 2, 3 };
+        const index_type character_index_offsets[indices_per_character] = { 0, 1, 2, 0, 2, 3 };
 
 		for (size_t i = 0; i < characters.size(); ++i)
 		{
-			for (size_t j = 0; j < BITMAP_FONT_INDICES_PER_CHARACTER; ++j)
+			for (size_t j = 0; j < indices_per_character; ++j)
 			{
-				indices[(i * BITMAP_FONT_INDICES_PER_CHARACTER) + j] = static_cast<uint16_t>(i) * BITMAP_FONT_VERTICES_PER_CHARACTER + character_index_offsets[j];
+                indices[(i * indices_per_character) + j] = static_cast<index_type>(i) * vertices_per_character + character_index_offsets[j];
 			}
 		}
 
@@ -345,12 +340,11 @@ namespace mandala
 
 			auto x = static_cast<float32_t>(character.advance_x);
 
-			auto character_index = character_indices.at(character.id);
+            auto character_index = character_indices.at(character.id);
 
-			glDrawElements(GL_TRIANGLES,
-				BITMAP_FONT_INDICES_PER_CHARACTER,
-				GL_UNSIGNED_SHORT,
-				reinterpret_cast<GLvoid*>(character_index * BITMAP_FONT_CHARACTER_INDEX_STRIDE));
+            static const auto character_index_stride = sizeof(index_type) * indices_per_character;
+
+			glDrawElements(GL_TRIANGLES, indices_per_character, GL_UNSIGNED_INT, reinterpret_cast<GLvoid*>(character_index * character_index_stride));
 
 			auto next = (c + 1);
 

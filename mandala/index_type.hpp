@@ -17,7 +17,4 @@ namespace mandala
             std::conditional_t < N <= 18446744073709551615ULL, uint64_t,
             std::uintmax_t >> >> ;
     };
-
-    template <std::uintmax_t N>
-    using index_type_t = typename index_type<N>::type;
 };

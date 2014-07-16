@@ -256,6 +256,9 @@
     <ClInclude Include="gpu_buffer.hpp">
       <Filter>mandala\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="index_type.hpp">
+      <Filter>mandala\type_traits</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

@@ -5,6 +5,7 @@
 #include "resource.hpp"
 #include "vertex_buffer.hpp"
 #include "index_buffer.hpp"
+#include "index_type.hpp"
 
 //std
 #include <vector>
@@ -44,9 +45,17 @@ namespace mandala
 			vec2_t texcoord;
         };
 
-        typedef vertex_buffer_t<vertex_t> vertex_buffer_type;
-        typedef index_buffer_t<uint16_t> index_buffer_type;
-		
+        static const auto characters_max = 0xFFFF;
+        static const auto vertices_per_character = 4;
+        static const auto indices_per_character = 6;
+        static const auto indices_max = characters_max * indices_per_character;
+        static const auto vertices_max = characters_max * vertices_per_character;
+
+        typedef vertex_t vertex_type;
+        typedef index_type<indices_max>::type index_type;
+        typedef vertex_buffer_t<vertex_type> vertex_buffer_type;
+        typedef index_buffer_t<index_type> index_buffer_type;
+
 		bitmap_font_t(std::istream& ifstream);
 
 		void render_string(const std::wstring& string, const vec4_t& color_top, const vec4_t& color_bottom, mat4_t world, const mat4_t& view_projection) const;
