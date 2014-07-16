@@ -10,7 +10,7 @@ namespace mandala
 {
 	struct sound_t : resource_t
 	{
-		typedef std::chrono::milliseconds duration_type_t;
+		typedef std::chrono::milliseconds duration_type;
 
 		sound_t(std::istream& istream);
 		virtual ~sound_t();
@@ -21,6 +21,6 @@ namespace mandala
 		int16_t block_align = 0;
 		int16_t bits_per_sample = 0;
 		uint32_t buffer_id = 0;
-		duration_type_t duration;
+        duration_type duration;
 	};
 };

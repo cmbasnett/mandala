@@ -21,8 +21,8 @@ namespace mandala
 			throw std::exception();
 		}
 
-		istream.read((char*)&chunk_size, sizeof(chunk_size));
-		istream.read((char*)&chunk_format, sizeof(char)* 4);
+		istream.read(reinterpret_cast<char*>(&chunk_size), sizeof(chunk_size));
+		istream.read(reinterpret_cast<char*>(&chunk_format), sizeof(char)* 4);
 
 		if (strcmp(chunk_format, "WAVE") != 0)
 		{
@@ -40,13 +40,13 @@ namespace mandala
 			throw std::exception();
 		}
 
-		istream.read((char*)&subchunk1_size, sizeof(subchunk1_size));
-		istream.read((char*)&audio_format, sizeof(audio_format));
-		istream.read((char*)&channel_count, sizeof(channel_count));
-		istream.read((char*)&sample_rate, sizeof(sample_rate));
-		istream.read((char*)&byte_rate, sizeof(byte_rate));
-		istream.read((char*)&block_align, sizeof(block_align));
-		istream.read((char*)&bits_per_sample, sizeof(bits_per_sample));
+		istream.read(reinterpret_cast<char*>(&subchunk1_size), sizeof(subchunk1_size));
+		istream.read(reinterpret_cast<char*>(&audio_format), sizeof(audio_format));
+		istream.read(reinterpret_cast<char*>(&channel_count), sizeof(channel_count));
+		istream.read(reinterpret_cast<char*>(&sample_rate), sizeof(sample_rate));
+		istream.read(reinterpret_cast<char*>(&byte_rate), sizeof(byte_rate));
+		istream.read(reinterpret_cast<char*>(&block_align), sizeof(block_align));
+		istream.read(reinterpret_cast<char*>(&bits_per_sample), sizeof(bits_per_sample));
 
 		char subchunk2_id[5] = { '\0' };
 		int32_t subchunk2_size = 0;
@@ -58,11 +58,11 @@ namespace mandala
 			throw std::exception();
 		}
 
-		istream.read((char*)&subchunk2_size, sizeof(subchunk2_size));
+		istream.read(reinterpret_cast<char*>(&subchunk2_size), sizeof(subchunk2_size));
 
 		std::vector<uint8_t> data(subchunk2_size);
 
-		istream.read((char*)data.data(), subchunk2_size);
+		istream.read(reinterpret_cast<char*>(data.data()), subchunk2_size);
 
 		alGenBuffers(1, &buffer_id);
 
@@ -103,9 +103,7 @@ namespace mandala
 			throw std::exception();
 		}
 
-		duration = duration_type_t(static_cast<int64_t>((static_cast<float32_t>(data.size()) / byte_rate * duration_type_t::period::den)));
-
-		std::cout << duration.count() << std::endl;
+        duration = duration_type(static_cast<int64_t>((static_cast<float32_t>(data.size()) / byte_rate * duration_type::period::den)));
 	}
 
 	sound_t::~sound_t()
