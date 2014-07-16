@@ -226,15 +226,11 @@ namespace mandala
 				}
 			}
 
-			glGenBuffers(1, &mesh->vertex_buffer);
-			glBindBuffer(GL_ARRAY_BUFFER, mesh->vertex_buffer);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(mesh_t::vertex_t) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
+            mesh->vertex_buffer = std::make_shared<mesh_t::vertex_buffer_type>();
+            mesh->vertex_buffer->data(vertices, gpu_mgr_t::buffer_usage_e::static_draw);
 
-			glGenBuffers(1, &mesh->index_buffer);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->index_buffer);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * mesh->index_count, mesh_info.indices.data(), GL_STATIC_DRAW);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+            mesh->index_buffer = std::make_shared<mesh_t::index_buffer_type>();
+            mesh->index_buffer->data(mesh_info.indices, gpu_mgr_t::buffer_usage_e::static_draw);
 
 			meshes.push_back(mesh);
 		}
@@ -338,7 +334,7 @@ namespace mandala
 
 	void model_t::mesh_t::render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices) const
 	{
-		static const auto vertex_size = sizeof(mesh_t::vertex_t);
+        static const auto vertex_size = sizeof(mesh_t::vertex_type);
         static const auto position_offset = reinterpret_cast<GLvoid*>(offsetof(mesh_t::vertex_t, position));
         static const auto normal_offset = reinterpret_cast<GLvoid*>(offsetof(mesh_t::vertex_t, normal));
         static const auto tangent_offset = reinterpret_cast<GLvoid*>(offsetof(mesh_t::vertex_t, tangent));
@@ -359,74 +355,55 @@ namespace mandala
         const auto bone_indices_1_location = glGetAttribLocation(program, "bone_indices_1");
         const auto bone_weights_0_location = glGetAttribLocation(program, "bone_weights_0");
         const auto bone_weights_1_location = glGetAttribLocation(program, "bone_weights_1");
-        const auto diffuse_map_location = glGetUniformLocation(program, "diffuse.texture");
+        const auto diffuse_texture_location = glGetUniformLocation(program, "diffuse.texture");
         const auto diffuse_color_location = glGetUniformLocation(program, "diffuse.color");
-        const auto normal_map_location = glGetUniformLocation(program, "normal.texture");
-        const auto specular_map_location = glGetUniformLocation(program, "specular.texture");
+        const auto normal_texture_location = glGetUniformLocation(program, "normal.texture");
+        const auto specular_texture_location = glGetUniformLocation(program, "specular.texture");
         const auto specular_color_location = glGetUniformLocation(program, "specular.color");
         const auto specular_intensity_location = glGetUniformLocation(program, "specular.intensity");
-        const auto emissive_map_location = glGetUniformLocation(program, "emissive.texture");
+        const auto emissive_texture_location = glGetUniformLocation(program, "emissive.texture");
         const auto emissive_color_location = glGetUniformLocation(program, "emissive.color");
         const auto emissive_intensity_location = glGetUniformLocation(program, "emissive.intensity");
 
+        static const auto diffuse_texture_index = 0;
+        static const auto normal_texture_index = 1;
+        static const auto specular_texture_index = 2;
+        static const auto emissive_texture_index = 3;
+
 		//bind buffers
-		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
+        gpu.buffers.push(gpu_mgr_t::buffer_target_e::array, vertex_buffer);
+        gpu.buffers.push(gpu_mgr_t::buffer_target_e::element_array, index_buffer);
 
-		//position
-		if (position_location != -1)
-		{
-			glEnableVertexAttribArray(position_location);
-			glVertexAttribPointer(position_location, 3, GL_FLOAT, false, vertex_size, position_offset);
-		}
+        glEnableVertexAttribArray(position_location); glCheckError();
+        glVertexAttribPointer(position_location, 3, GL_FLOAT, GL_FALSE, vertex_size, position_offset); glCheckError();
 
-		//normal
-		if (normal_location != -1)
-		{
-			glEnableVertexAttribArray(normal_location);
-			glVertexAttribPointer(normal_location, 3, GL_FLOAT, false, vertex_size, normal_offset);
-		}
+        if (normal_location != -1)
+        {
+            glEnableVertexAttribArray(normal_location); glCheckError();
+            glVertexAttribPointer(normal_location, 3, GL_FLOAT, GL_FALSE, vertex_size, normal_offset); glCheckError();
+        }
 
-		//tangent
-		if (tangent_location != -1)
-		{
-			glEnableVertexAttribArray(tangent_location);
-			glVertexAttribPointer(tangent_location, 3, GL_FLOAT, false, vertex_size, tangent_offset);
-		}
+        if (tangent_location != -1)
+        {
+            glEnableVertexAttribArray(tangent_location); glCheckError();
+            glVertexAttribPointer(tangent_location, 3, GL_FLOAT, GL_FALSE, vertex_size, tangent_offset); glCheckError();
+        }
 
-		//texcoord
-		if (texcoord_location != -1)
-		{
-			glEnableVertexAttribArray(texcoord_location);
-			glVertexAttribPointer(texcoord_location, 2, GL_FLOAT, false, vertex_size, texcoord_offset);
-		}
+        glEnableVertexAttribArray(texcoord_location); glCheckError();
+        glVertexAttribPointer(texcoord_location, 2, GL_FLOAT, GL_FALSE, vertex_size, texcoord_offset); glCheckError();
 
-		//bone indices
-		if (bone_indices_0_location != -1)
-		{
-			glEnableVertexAttribArray(bone_indices_0_location);
-			glVertexAttribIPointer(bone_indices_0_location, 4, GL_INT, vertex_size, bone_indices_0_offset);
-		}
+        glEnableVertexAttribArray(bone_indices_0_location); glCheckError();
+        glVertexAttribIPointer(bone_indices_0_location, 4, GL_INT, vertex_size, bone_indices_0_offset); glCheckError();
 
-		if (bone_indices_1_location != -1)
-		{
-			glEnableVertexAttribArray(bone_indices_1_location);
-			glVertexAttribIPointer(bone_indices_1_location, 4, GL_INT, vertex_size, bone_indices_1_offset);
-		}
+        glEnableVertexAttribArray(bone_indices_1_location); glCheckError();
+        glVertexAttribIPointer(bone_indices_1_location, 4, GL_INT, vertex_size, bone_indices_1_offset); glCheckError();
 
-		//bone weights
-		if (bone_weights_0_location != -1)
-		{
-			glEnableVertexAttribArray(bone_weights_0_location);
-			glVertexAttribPointer(bone_weights_0_location, 4, GL_FLOAT, false, vertex_size, bone_weights_0_offset);
-		}
+        glEnableVertexAttribArray(bone_weights_0_location); glCheckError();
+        glVertexAttribPointer(bone_weights_0_location, 4, GL_FLOAT, GL_FALSE, vertex_size, bone_weights_0_offset); glCheckError();
 
-		if (bone_weights_1_location != -1)
-		{
-			glEnableVertexAttribArray(bone_weights_1_location);
-			glVertexAttribPointer(bone_weights_1_location, 4, GL_FLOAT, false, vertex_size, bone_weights_1_offset);
-		}
-		
+        glEnableVertexAttribArray(bone_weights_1_location); glCheckError();
+        glVertexAttribPointer(bone_weights_1_location, 4, GL_FLOAT, GL_FALSE, vertex_size, bone_weights_1_offset); glCheckError();
+
 		//material
 		if(material.get() != nullptr)
 		{
@@ -435,12 +412,12 @@ namespace mandala
 				auto& diffuse = material->diffuse;
 
 				//texture
-                gpu.textures.bind(0, diffuse.texture);
+                gpu.textures.bind(diffuse_texture_index, diffuse.texture);
 
-				glUniform1i(diffuse_map_location, 0);
+                glUniform1i(diffuse_texture_location, diffuse_texture_index); glCheckError();
 
 				//color
-				glUniform4fv(diffuse_color_location, 1, glm::value_ptr(diffuse.color));
+                glUniform4fv(diffuse_color_location, 1, glm::value_ptr(diffuse.color)); glCheckError();
 			}
 
 			//normal
@@ -448,9 +425,9 @@ namespace mandala
 				auto& normal = material->normal;
 
 				//texture
-                gpu.textures.bind(1, normal.texture);
+                gpu.textures.bind(normal_texture_index, normal.texture);
 
-				glUniform1i(normal_map_location, 1);
+                glUniform1i(normal_texture_location, normal_texture_index); glCheckError();
 			}
 
 			//specular
@@ -458,15 +435,15 @@ namespace mandala
 				auto& specular = material->specular;
 				
 				//texture
-                gpu.textures.bind(2, specular.texture);
+                gpu.textures.bind(specular_texture_index, specular.texture);
 
-				glUniform1i(specular_map_location, 2);
+                glUniform1i(specular_texture_location, specular_texture_index); glCheckError();
 
 				//color
-				glUniform4fv(specular_color_location, 1, glm::value_ptr(specular.color));
+                glUniform4fv(specular_color_location, 1, glm::value_ptr(specular.color)); glCheckError();
 
 				//intensity
-				glUniform1f(specular_intensity_location, specular.intensity);
+                glUniform1f(specular_intensity_location, specular.intensity); glCheckError();
 			}
 
 			//emissive
@@ -474,64 +451,46 @@ namespace mandala
 				auto& emissive = material->emissive;
 
 				//texture
-                gpu.textures.bind(3, emissive.texture);
+                gpu.textures.bind(emissive_texture_index, emissive.texture);
 
-				glUniform1i(emissive_map_location, 3);
+                glUniform1i(emissive_texture_location, emissive_texture_index); glCheckError();
 
 				//color
-				glUniform4fv(emissive_color_location, 1, glm::value_ptr(emissive.color));
+                glUniform4fv(emissive_color_location, 1, glm::value_ptr(emissive.color)); glCheckError();
 
 				//intensity
-				glUniform1f(emissive_intensity_location, emissive.intensity);
+                glUniform1f(emissive_intensity_location, emissive.intensity); glCheckError();
 			}
 		}
 
-		glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_SHORT, 0);
+        glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_SHORT, 0); glCheckError();
 
-		//disable vertex attributes
-		if (position_location >= 0)
-		{
-			glDisableVertexAttribArray(position_location);
-		}
+        glDisableVertexAttribArray(position_location); glCheckError();
 
-		if (normal_location >= 0)
-		{
-			glDisableVertexAttribArray(normal_location);
-		}
+        if (normal_location != -1)
+        {
+            glDisableVertexAttribArray(normal_location); glCheckError();
+        }
 
-		if (texcoord_location >= 0)
-		{
-			glDisableVertexAttribArray(texcoord_location);
-		}
+        if (tangent_location != -1)
+        {
+            glDisableVertexAttribArray(tangent_location); glCheckError();
+        }
 
-		if (bone_indices_0_location >= 0)
-		{
-			glDisableVertexAttribArray(bone_indices_0_location);
-		}
+        glDisableVertexAttribArray(texcoord_location); glCheckError();
+        glDisableVertexAttribArray(bone_indices_0_location); glCheckError();
+        glDisableVertexAttribArray(bone_indices_1_location); glCheckError();
+        glDisableVertexAttribArray(bone_weights_0_location); glCheckError();
+        glDisableVertexAttribArray(bone_weights_1_location); glCheckError();
 
-		if (bone_indices_1_location >= 0)
-		{
-			glDisableVertexAttribArray(bone_indices_1_location);
-		}
-
-		if (bone_weights_0_location >= 0)
-		{
-			glDisableVertexAttribArray(bone_weights_0_location);
-		}
-
-		if (bone_weights_1_location >= 0)
-		{
-			glDisableVertexAttribArray(bone_weights_1_location);
-		}
-		
 		//unbind textures
-		gpu.textures.unbind(3);
-        gpu.textures.unbind(2);
-        gpu.textures.unbind(1);
-        gpu.textures.unbind(0);
+        gpu.textures.unbind(emissive_texture_index);
+        gpu.textures.unbind(specular_texture_index);
+        gpu.textures.unbind(normal_texture_index);
+        gpu.textures.unbind(diffuse_texture_index);
 
 		//unbind buffers
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        gpu.buffers.pop(gpu_mgr_t::buffer_target_e::array);
+        gpu.buffers.pop(gpu_mgr_t::buffer_target_e::element_array);
 	}
 };

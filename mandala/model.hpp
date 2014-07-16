@@ -3,6 +3,8 @@
 //mandala
 #include "mandala.hpp"
 #include "resource.hpp"
+#include "vertex_buffer.hpp"
+#include "index_buffer.hpp"
 
 //std
 #include <vector>
@@ -33,10 +35,16 @@ namespace mandala
 				vec4_t bone_weights_0;
 				vec4_t bone_weights_1;
 			};
+            
+            typedef uint16_t index_type;
+            typedef vertex_t vertex_type;
+
+            typedef vertex_buffer_t<vertex_t> vertex_buffer_type;
+            typedef index_buffer_t<index_type> index_buffer_type;
 
 			size_t index_count = 0;
-			uint32_t vertex_buffer = 0;
-			uint32_t index_buffer = 0;
+            std::shared_ptr<vertex_buffer_type> vertex_buffer;
+            std::shared_ptr<index_buffer_type> index_buffer;
 			std::shared_ptr<material_t> material;
 
 			mesh_t() { }
