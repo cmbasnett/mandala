@@ -66,8 +66,8 @@ namespace mandala
 				if (axes[axis_index] != gamepad_state.axes[axis_index])
 				{
 					input_event_t input_event;
-					input_event.device_type = input_event_t::device_type_t::gamepad;
-					input_event.gamepad.type = input_event_t::gamepad_t::type_t::axis_move;
+					input_event.device_type = input_event_t::device_type_e::gamepad;
+					input_event.gamepad.type = input_event_t::gamepad_t::type_e::axis_move;
 					input_event.gamepad.axis_index = axis_index;
 					input_event.gamepad.axis_value = axes[axis_index];
 					input_event.gamepad.axis_value_delta = axes[axis_index] - gamepad_state.axes[axis_index];
@@ -86,8 +86,8 @@ namespace mandala
 				if (buttons[button_index] != gamepad_state.buttons[button_index])
 				{
 					input_event_t input_event;
-					input_event.device_type = input_event_t::device_type_t::gamepad;
-					input_event.gamepad.type = buttons[button_index] == 0 ? input_event_t::gamepad_t::type_t::button_release : input_event_t::gamepad_t::type_t::button_press;
+					input_event.device_type = input_event_t::device_type_e::gamepad;
+					input_event.gamepad.type = buttons[button_index] == 0 ? input_event_t::gamepad_t::type_e::button_release : input_event_t::gamepad_t::type_e::button_press;
 					input_event.gamepad.button_index = button_index;
 
 					platform.input.events.push_back(input_event);
@@ -121,8 +121,8 @@ namespace mandala
 	void platform_win32_t::on_keyboard_key(GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
 		input_event_t input_event;
-		input_event.device_type = input_event_t::device_type_t::keyboard;
-		input_event.keyboard.key = static_cast<input_event_t::keyboard_t::key_t>(key);
+		input_event.device_type = input_event_t::device_type_e::keyboard;
+		input_event.keyboard.key = static_cast<input_event_t::keyboard_t::key_e>(key);
 
 		if ((key & GLFW_MOD_SHIFT) != 0)
 		{
@@ -147,13 +147,13 @@ namespace mandala
 		switch (action)
 		{
 		case GLFW_RELEASE:
-			input_event.keyboard.type = input_event_t::keyboard_t::type_t::key_release;
+			input_event.keyboard.type = input_event_t::keyboard_t::type_e::key_release;
 			break;
 		case GLFW_PRESS:
-			input_event.keyboard.type = input_event_t::keyboard_t::type_t::key_press;
+			input_event.keyboard.type = input_event_t::keyboard_t::type_e::key_press;
 			break;
 		case GLFW_REPEAT:
-			input_event.keyboard.type = input_event_t::keyboard_t::type_t::key_repeat;
+			input_event.keyboard.type = input_event_t::keyboard_t::type_e::key_repeat;
 			break;
 		}
 
@@ -163,8 +163,8 @@ namespace mandala
 	void platform_win32_t::on_keyboard_character(GLFWwindow* window, unsigned int character)
 	{
 		input_event_t input_event;
-		input_event.device_type = input_event_t::device_type_t::keyboard;
-		input_event.keyboard.type = input_event_t::keyboard_t::type_t::character;
+		input_event.device_type = input_event_t::device_type_e::keyboard;
+		input_event.keyboard.type = input_event_t::keyboard_t::type_e::character;
 		input_event.keyboard.character = character;
 
 		platform.input.events.push_back(input_event);
@@ -173,13 +173,13 @@ namespace mandala
 	void platform_win32_t::on_mouse_button(GLFWwindow* window, int button, int action, int mods)
 	{
 		input_event_t input_event;
-		input_event.device_type = input_event_t::device_type_t::touch;
-		input_event.touch.button = static_cast<input_event_t::touch_t::button_t>(button);
+		input_event.device_type = input_event_t::device_type_e::touch;
+		input_event.touch.button = static_cast<input_event_t::touch_t::button_e>(button);
 		input_event.touch.mods = mods;
 
 		bool is_press = action == GLFW_PRESS;
 
-		input_event.touch.type = is_press ? input_event_t::touch_t::type_t::button_press : input_event_t::touch_t::type_t::button_release;
+		input_event.touch.type = is_press ? input_event_t::touch_t::type_e::button_press : input_event_t::touch_t::type_e::button_release;
 		
 		if (is_press)
 		{
@@ -194,8 +194,8 @@ namespace mandala
 	void platform_win32_t::on_mouse_move(GLFWwindow* window, double x, double y)
 	{
 		input_event_t input_event;
-		input_event.device_type = input_event_t::device_type_t::touch;
-		input_event.touch.type = input_event_t::touch_t::type_t::move;
+		input_event.device_type = input_event_t::device_type_e::touch;
+		input_event.touch.type = input_event_t::touch_t::type_e::move;
 		input_event.touch.position.x = x;
 		input_event.touch.position.y = y;
 		input_event.touch.position_delta.x = x - platform.cursor_position.x;
@@ -216,8 +216,8 @@ namespace mandala
 	void platform_win32_t::on_mouse_scroll(GLFWwindow* window, double x, double y)
 	{
 		input_event_t input_event;
-		input_event.device_type = input_event_t::device_type_t::touch;
-		input_event.touch.type = input_event_t::touch_t::type_t::scroll;
+		input_event.device_type = input_event_t::device_type_e::touch;
+		input_event.touch.type = input_event_t::touch_t::type_e::scroll;
 		input_event.touch.position = platform.get_cursor_position();
 		input_event.touch.position_delta.x = x;
 		input_event.touch.position_delta.y = y;

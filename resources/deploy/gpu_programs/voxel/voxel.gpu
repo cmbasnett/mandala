@@ -1,7 +1,0 @@
-{
-	"shaders":
-	[
-		"voxel.vert",
-		"voxel.frag"
-	]
-}

@@ -17,7 +17,7 @@ namespace mandala
 
 			switch (operation.type)
 			{
-			case operation_t::type_t::pop:
+            case operation_t::type_e::pop:
 				{
 					auto states_itr = std::find(states.begin(), states.end(), operation.state);
 
@@ -50,7 +50,7 @@ namespace mandala
 					states.erase(states_itr, states_itr + 1);
 				}
 				break;
-			case operation_t::type_t::push:
+            case operation_t::type_e::push:
 				{
 					auto push_state_itr = std::find(states.begin(), states.end(), operation.state);
 
@@ -181,7 +181,7 @@ namespace mandala
 		}
 
 		operation_t operation;
-		operation.type = operation_t::type_t::push;
+        operation.type = operation_t::type_e::push;
 		operation.state = state;
 
 		operation_queue.push_back(operation);
@@ -196,7 +196,7 @@ namespace mandala
 		}
 
 		operation_t operation;
-		operation.type = operation_t::type_t::pop;
+        operation.type = operation_t::type_e::pop;
 		operation.state = state;
 
 		operation_queue.push_back(operation);

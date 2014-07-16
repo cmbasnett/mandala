@@ -100,9 +100,9 @@ namespace mandala
 			//TODO: devise some way for states to register
 			//input event handlers and iterate through them.
 
-			if (input_event.device_type == input_event_t::device_type_t::keyboard &&
-				input_event.keyboard.key == input_event_t::keyboard_t::key_t::escape &&
-				input_event.keyboard.type == input_event_t::keyboard_t::type_t::key_press)
+			if (input_event.device_type == input_event_t::device_type_e::keyboard &&
+				input_event.keyboard.key == input_event_t::keyboard_t::key_e::escape &&
+				input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press)
 			{
 				app.states.push(std::make_shared<pause_state_t>());
 

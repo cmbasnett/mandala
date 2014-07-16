@@ -43,9 +43,9 @@ namespace mandala
             debug_label = std::make_shared<gui_label_t>();
             debug_label->bitmap_font = app.resources.get<bitmap_font_t>(hash_t("terminal_8.fnt"));
             debug_label->color = vec4_t(1, 0, 0, 1);
-            debug_label->dock_mode = gui_node_t::dock_mode_t::fill;
-            debug_label->vertical_alignment = gui_label_t::vertical_alignment_t::bottom;
-            debug_label->justification = gui_label_t::justification_t::center;
+            debug_label->dock_mode = gui_node_t::dock_mode_e::fill;
+            debug_label->vertical_alignment = gui_label_t::vertical_alignment_e::bottom;
+            debug_label->justification = gui_label_t::justification_e::center;
             debug_label->padding = padding_t(16);
 
             crosshair_sprite_refs.emplace_back(hash_t("crono.json"), hash_t("chrono_01.png"));
@@ -99,9 +99,9 @@ namespace mandala
 
         void bsp_state_t::on_input_event(input_event_t& input_event)
         {
-            if (input_event.device_type == input_event_t::device_type_t::keyboard &&
-                input_event.keyboard.key == input_event_t::keyboard_t::key_t::escape &&
-                input_event.keyboard.type == input_event_t::keyboard_t::type_t::key_press)
+            if (input_event.device_type == input_event_t::device_type_e::keyboard &&
+                input_event.keyboard.key == input_event_t::keyboard_t::key_e::escape &&
+                input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press)
             {
                 app.states.push(pause_state);
 
@@ -110,8 +110,8 @@ namespace mandala
                 return;
             }
 
-            if (input_event.device_type == input_event_t::device_type_t::gamepad &&
-                input_event.gamepad.type == input_event_t::gamepad_t::type_t::button_release &&
+            if (input_event.device_type == input_event_t::device_type_e::gamepad &&
+                input_event.gamepad.type == input_event_t::gamepad_t::type_e::button_release &&
                 input_event.gamepad.button_index == 0)
             {
                 app.states.push(pause_state);
@@ -123,23 +123,23 @@ namespace mandala
 
             camera.on_input_event(input_event);
 
-            if (input_event.device_type == input_event_t::device_type_t::touch)
+            if (input_event.device_type == input_event_t::device_type_e::touch)
             {
-                if (input_event.touch.button == input_event_t::touch_t::button_t::right)
+                if (input_event.touch.button == input_event_t::touch_t::button_e::right)
                 {
-                    if (input_event.touch.type == input_event_t::touch_t::type_t::button_press)
+                    if (input_event.touch.type == input_event_t::touch_t::type_e::button_press)
                     {
                         camera.fov = 10;
                         camera.sensitivity = 0.01f;
                     }
-                    else if (input_event.touch.type == input_event_t::touch_t::type_t::button_release)
+                    else if (input_event.touch.type == input_event_t::touch_t::type_e::button_release)
                     {
                         camera.fov = 70;
                         camera.sensitivity = 0.1f;
                     }
                 }
-                else if (input_event.touch.button == input_event_t::touch_t::button_t::left &&
-                    input_event.touch.type == input_event_t::touch_t::type_t::button_press)
+                else if (input_event.touch.button == input_event_t::touch_t::button_e::left &&
+                    input_event.touch.type == input_event_t::touch_t::type_e::button_press)
                 {
                     std::uniform_real_distribution<float32_t> pitch_target_delta_distribution(1.0f, 2.0f);
                     std::uniform_real_distribution<float32_t> yaw_target_delta_distribution(-0.5f, 0.5f);
@@ -158,7 +158,7 @@ namespace mandala
                     //source->queue_sound(sound);
                     //source->play();
                 }
-                else if (input_event.touch.type == input_event_t::touch_t::type_t::scroll)
+                else if (input_event.touch.type == input_event_t::touch_t::type_e::scroll)
                 {
                     if (input_event.touch.position_delta.y > 0)
                     {

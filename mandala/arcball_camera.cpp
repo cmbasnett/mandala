@@ -46,15 +46,15 @@ namespace mandala
 	{
 		switch (input_event.device_type)
 		{
-		case input_event_t::device_type_t::touch:
+		case input_event_t::device_type_e::touch:
 			{
 				switch (input_event.touch.type)
 				{
-				case input_event_t::touch_t::type_t::button_press:
+				case input_event_t::touch_t::type_e::button_press:
 					{
 						switch (input_event.touch.button)
 						{
-						case input_event_t::touch_t::button_t::middle:
+						case input_event_t::touch_t::button_e::middle:
 							{
 								is_panning = true;
 
@@ -66,11 +66,11 @@ namespace mandala
 						}
 					}
 					break;
-				case input_event_t::touch_t::type_t::button_release:
+				case input_event_t::touch_t::type_e::button_release:
 					{
 						switch (input_event.touch.button)
 						{
-						case input_event_t::touch_t::button_t::middle:
+						case input_event_t::touch_t::button_e::middle:
 							{
 								is_panning = false;
 
@@ -82,7 +82,7 @@ namespace mandala
 						}
 					}
 					break;
-				case input_event_t::touch_t::type_t::move:
+				case input_event_t::touch_t::type_e::move:
 					{
 						if(is_panning)
 						{
@@ -103,7 +103,7 @@ namespace mandala
 						}
 					}
 					break;
-				case input_event_t::touch_t::type_t::scroll:
+				case input_event_t::touch_t::type_e::scroll:
 					{
 						distance_target += static_cast<float32_t>(input_event.touch.position.y) * 10.0f;
 
@@ -115,15 +115,15 @@ namespace mandala
 				}
 			}
 			break;
-        case input_event_t::device_type_t::keyboard:
+        case input_event_t::device_type_e::keyboard:
         {
-            if (input_event.keyboard.type == input_event_t::keyboard_t::type_t::key_press)
+            if (input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press)
             {
-				if (input_event.keyboard.key == input_event_t::keyboard_t::key_t::q)
+				if (input_event.keyboard.key == input_event_t::keyboard_t::key_e::q)
                 {
 					yaw_target += 90;
                 }
-				if (input_event.keyboard.key == input_event_t::keyboard_t::key_t::e)
+				if (input_event.keyboard.key == input_event_t::keyboard_t::key_e::e)
                 {
 					yaw_target -= 90;
                 }

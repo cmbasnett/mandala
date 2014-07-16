@@ -9,6 +9,8 @@
 #include "image.hpp"
 #include "gpu_mgr.hpp"
 
+#define BSP_VERSION (30)
+
 namespace mandala
 {
 	bsp_t::bsp_t(std::istream& istream)
@@ -21,9 +23,9 @@ namespace mandala
 		//version
 		int32_t version;
 
-		istream.read((char*)&version, sizeof(version));
+		istream.read(reinterpret_cast<char*>(&version), sizeof(version));
 
-		if (version != BSP_VERSION)
+        if (version != BSP_VERSION)
 		{
 			throw std::exception();
 		}
@@ -31,16 +33,16 @@ namespace mandala
 		//chunk_infos
 		std::vector<chunk_info_t> chunk_infos;
 
-		chunk_infos.resize((size_t)chunk_type_t::count);
+		chunk_infos.resize((size_t)chunk_type_e::count);
 
 		for (auto& chunk_info : chunk_infos)
 		{
-			istream.read((char*)&chunk_info.offset, sizeof(chunk_info.offset));
-			istream.read((char*)&chunk_info.length, sizeof(chunk_info.length));
+			istream.read(reinterpret_cast<char*>(&chunk_info.offset), sizeof(chunk_info.offset));
+			istream.read(reinterpret_cast<char*>(&chunk_info.length), sizeof(chunk_info.length));
 		}
 
 		//planes
-		const auto& plane_chunk_info = chunk_infos[(size_t)chunk_type_t::planes];
+		const auto& plane_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::planes)];
 		istream.seekg(plane_chunk_info.offset, std::ios_base::beg);
 
 		auto plane_count = plane_chunk_info.length / sizeof(plane_t);
@@ -48,17 +50,17 @@ namespace mandala
 
 		for (auto& plane : planes)
 		{
-			istream.read((char*)&plane.plane.normal.x, sizeof(plane.plane.normal.x));
-			istream.read((char*)&plane.plane.normal.z, sizeof(plane.plane.normal.z));
-			istream.read((char*)&plane.plane.normal.y, sizeof(plane.plane.normal.y));
-			istream.read((char*)&plane.plane.distance, sizeof(plane.plane.distance));
-			istream.read((char*)&plane.type, sizeof(plane.type));
+			istream.read(reinterpret_cast<char*>(&plane.plane.normal.x), sizeof(plane.plane.normal.x));
+			istream.read(reinterpret_cast<char*>(&plane.plane.normal.z), sizeof(plane.plane.normal.z));
+			istream.read(reinterpret_cast<char*>(&plane.plane.normal.y), sizeof(plane.plane.normal.y));
+			istream.read(reinterpret_cast<char*>(&plane.plane.distance), sizeof(plane.plane.distance));
+			istream.read(reinterpret_cast<char*>(&plane.type), sizeof(plane.type));
 
 			plane.plane.normal.z = -plane.plane.normal.z;
 		}
 
 		//vertex_positions
-		const auto& vertices_chunk_info = chunk_infos[(size_t)chunk_type_t::vertices];
+		const auto& vertices_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::vertices)];
 		istream.seekg(vertices_chunk_info.offset, std::ios_base::beg);
 
 		auto vertex_position_count = vertices_chunk_info.length / sizeof(vec3_t);
@@ -66,15 +68,15 @@ namespace mandala
 
 		for (auto& vertex_position : vertex_positions)
 		{
-			istream.read((char*)&vertex_position.x, sizeof(vertex_position.x));
-			istream.read((char*)&vertex_position.z, sizeof(vertex_position.z));
-			istream.read((char*)&vertex_position.y, sizeof(vertex_position.y));
+			istream.read(reinterpret_cast<char*>(&vertex_position.x), sizeof(vertex_position.x));
+			istream.read(reinterpret_cast<char*>(&vertex_position.z), sizeof(vertex_position.z));
+			istream.read(reinterpret_cast<char*>(&vertex_position.y), sizeof(vertex_position.y));
 
 			vertex_position.z = -vertex_position.z;
 		}
 
 		//edges
-		const auto& edges_chunk_info = chunk_infos[(size_t)chunk_type_t::edges];
+		const auto& edges_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::edges)];
 		istream.seekg(edges_chunk_info.offset, std::ios_base::beg);
 
 		auto edge_count = edges_chunk_info.length / sizeof(edge_t);
@@ -82,12 +84,12 @@ namespace mandala
 
 		for (auto& edge : edges)
 		{
-			istream.read((char*)&edge.vertex_indices[0], sizeof(edge.vertex_indices[0]));
-			istream.read((char*)&edge.vertex_indices[1], sizeof(edge.vertex_indices[1]));
+			istream.read(reinterpret_cast<char*>(&edge.vertex_indices[0]), sizeof(edge.vertex_indices[0]));
+			istream.read(reinterpret_cast<char*>(&edge.vertex_indices[1]), sizeof(edge.vertex_indices[1]));
 		}
 
 		//surface_edges
-		const auto& surface_edges_chunk_info = chunk_infos[(size_t)chunk_type_t::surface_edges];
+		const auto& surface_edges_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::surface_edges)];
 		istream.seekg(surface_edges_chunk_info.offset, std::ios_base::beg);
 
 		auto surface_edge_count = surface_edges_chunk_info.length / sizeof(int32_t);
@@ -95,11 +97,11 @@ namespace mandala
 
 		for (auto& surface_edge : surface_edges)
 		{
-			istream.read((char*)&surface_edge, sizeof(surface_edge));
+			istream.read(reinterpret_cast<char*>(&surface_edge), sizeof(surface_edge));
 		}
 
 		//faces
-		const auto& faces_chunk_info = chunk_infos[(size_t)chunk_type_t::faces];
+        const auto& faces_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::faces)];
 		istream.seekg(faces_chunk_info.offset, std::ios_base::beg);
 
 		auto face_count = faces_chunk_info.length / sizeof(face_t);
@@ -107,20 +109,20 @@ namespace mandala
 
 		for (auto& face : faces)
 		{
-			istream.read((char*)&face.plane_index, sizeof(face.plane_index));
-			istream.read((char*)&face.plane_side, sizeof(face.plane_side));
-			istream.read((char*)&face.surface_edge_start_index, sizeof(face.surface_edge_start_index));
-			istream.read((char*)&face.surface_edge_count, sizeof(face.surface_edge_count));
-			istream.read((char*)&face.texture_info_index, sizeof(face.texture_info_index));
-			istream.read((char*)&face.lighting_styles[0], sizeof(face.lighting_styles[0]));
-			istream.read((char*)&face.lighting_styles[1], sizeof(face.lighting_styles[1]));
-			istream.read((char*)&face.lighting_styles[2], sizeof(face.lighting_styles[2]));
-			istream.read((char*)&face.lighting_styles[3], sizeof(face.lighting_styles[3]));
-			istream.read((char*)&face.lightmap_offset, sizeof(face.lightmap_offset));
+			istream.read(reinterpret_cast<char*>(&face.plane_index), sizeof(face.plane_index));
+			istream.read(reinterpret_cast<char*>(&face.plane_side), sizeof(face.plane_side));
+			istream.read(reinterpret_cast<char*>(&face.surface_edge_start_index), sizeof(face.surface_edge_start_index));
+            istream.read(reinterpret_cast<char*>(&face.surface_edge_count), sizeof(face.surface_edge_count));
+            istream.read(reinterpret_cast<char*>(&face.texture_info_index), sizeof(face.texture_info_index));
+            istream.read(reinterpret_cast<char*>(&face.lighting_styles[0]), sizeof(face.lighting_styles[0]));
+            istream.read(reinterpret_cast<char*>(&face.lighting_styles[1]), sizeof(face.lighting_styles[1]));
+            istream.read(reinterpret_cast<char*>(&face.lighting_styles[2]), sizeof(face.lighting_styles[2]));
+            istream.read(reinterpret_cast<char*>(&face.lighting_styles[3]), sizeof(face.lighting_styles[3]));
+            istream.read(reinterpret_cast<char*>(&face.lightmap_offset), sizeof(face.lightmap_offset));
 		}
 
 		//nodes
-		const auto& nodes_chunk_info = chunk_infos[(size_t)chunk_type_t::nodes];
+		const auto& nodes_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::nodes)];
 		istream.seekg(nodes_chunk_info.offset, std::ios_base::beg);
 
 		auto node_count = nodes_chunk_info.length / sizeof(node_t);
@@ -128,24 +130,24 @@ namespace mandala
 
 		for (auto& node : nodes)
 		{
-			istream.read((char*)&node.plane_index, sizeof(node.plane_index));
-			istream.read((char*)&node.children[0], sizeof(node.children[0]));
-			istream.read((char*)&node.children[1], sizeof(node.children[1]));
-			istream.read((char*)&node.aabb.min.x, sizeof(node.aabb.min.x));
-			istream.read((char*)&node.aabb.min.z, sizeof(node.aabb.min.z));
-			istream.read((char*)&node.aabb.min.y, sizeof(node.aabb.min.y));
-			istream.read((char*)&node.aabb.max.x, sizeof(node.aabb.max.x));
-			istream.read((char*)&node.aabb.max.z, sizeof(node.aabb.max.z));
-			istream.read((char*)&node.aabb.max.y, sizeof(node.aabb.max.y));
-			istream.read((char*)&node.face_start_index, sizeof(node.face_start_index));
-			istream.read((char*)&node.face_count, sizeof(node.face_count));
+			istream.read(reinterpret_cast<char*>(&node.plane_index), sizeof(node.plane_index));
+			istream.read(reinterpret_cast<char*>(&node.children[0]), sizeof(node.children[0]));
+			istream.read(reinterpret_cast<char*>(&node.children[1]), sizeof(node.children[1]));
+			istream.read(reinterpret_cast<char*>(&node.aabb.min.x), sizeof(node.aabb.min.x));
+			istream.read(reinterpret_cast<char*>(&node.aabb.min.z), sizeof(node.aabb.min.z));
+			istream.read(reinterpret_cast<char*>(&node.aabb.min.y), sizeof(node.aabb.min.y));
+			istream.read(reinterpret_cast<char*>(&node.aabb.max.x), sizeof(node.aabb.max.x));
+			istream.read(reinterpret_cast<char*>(&node.aabb.max.z), sizeof(node.aabb.max.z));
+			istream.read(reinterpret_cast<char*>(&node.aabb.max.y), sizeof(node.aabb.max.y));
+			istream.read(reinterpret_cast<char*>(&node.face_start_index), sizeof(node.face_start_index));
+			istream.read(reinterpret_cast<char*>(&node.face_count), sizeof(node.face_count));
 
 			node.aabb.min.z = -node.aabb.min.z;
 			node.aabb.max.z = -node.aabb.max.z;
 		}
 
 		//leaves
-		const auto& leaves_chunk_info = chunk_infos[(size_t)chunk_type_t::leaves];
+		const auto& leaves_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::leaves)];
 		istream.seekg(leaves_chunk_info.offset, std::ios_base::beg);
 
 		auto leaf_count = leaves_chunk_info.length / sizeof(leaf_t);
@@ -153,27 +155,27 @@ namespace mandala
 
 		for (auto& leaf : leafs)
 		{
-			istream.read((char*)&leaf.content_type, sizeof(leaf.content_type));
-			istream.read((char*)&leaf.visibility_offset, sizeof(leaf.visibility_offset));
-			istream.read((char*)&leaf.aabb.min.x, sizeof(leaf.aabb.min.x));
-			istream.read((char*)&leaf.aabb.min.z, sizeof(leaf.aabb.min.z));
-			istream.read((char*)&leaf.aabb.min.y, sizeof(leaf.aabb.min.y));
-			istream.read((char*)&leaf.aabb.max.x, sizeof(leaf.aabb.max.x));
-			istream.read((char*)&leaf.aabb.max.z, sizeof(leaf.aabb.max.z));
-			istream.read((char*)&leaf.aabb.max.y, sizeof(leaf.aabb.max.y));
-			istream.read((char*)&leaf.mark_surface_start_index, sizeof(leaf.mark_surface_start_index));
-			istream.read((char*)&leaf.mark_surface_count, sizeof(leaf.mark_surface_count));
-			istream.read((char*)&leaf.ambient_sound_levels[0], sizeof(leaf.ambient_sound_levels[0]));
-			istream.read((char*)&leaf.ambient_sound_levels[1], sizeof(leaf.ambient_sound_levels[1]));
-			istream.read((char*)&leaf.ambient_sound_levels[2], sizeof(leaf.ambient_sound_levels[2]));
-			istream.read((char*)&leaf.ambient_sound_levels[3], sizeof(leaf.ambient_sound_levels[3]));
+			istream.read(reinterpret_cast<char*>(&leaf.content_type), sizeof(leaf.content_type));
+			istream.read(reinterpret_cast<char*>(&leaf.visibility_offset), sizeof(leaf.visibility_offset));
+			istream.read(reinterpret_cast<char*>(&leaf.aabb.min.x), sizeof(leaf.aabb.min.x));
+			istream.read(reinterpret_cast<char*>(&leaf.aabb.min.z), sizeof(leaf.aabb.min.z));
+			istream.read(reinterpret_cast<char*>(&leaf.aabb.min.y), sizeof(leaf.aabb.min.y));
+			istream.read(reinterpret_cast<char*>(&leaf.aabb.max.x), sizeof(leaf.aabb.max.x));
+			istream.read(reinterpret_cast<char*>(&leaf.aabb.max.z), sizeof(leaf.aabb.max.z));
+			istream.read(reinterpret_cast<char*>(&leaf.aabb.max.y), sizeof(leaf.aabb.max.y));
+			istream.read(reinterpret_cast<char*>(&leaf.mark_surface_start_index), sizeof(leaf.mark_surface_start_index));
+			istream.read(reinterpret_cast<char*>(&leaf.mark_surface_count), sizeof(leaf.mark_surface_count));
+			istream.read(reinterpret_cast<char*>(&leaf.ambient_sound_levels[0]), sizeof(leaf.ambient_sound_levels[0]));
+			istream.read(reinterpret_cast<char*>(&leaf.ambient_sound_levels[1]), sizeof(leaf.ambient_sound_levels[1]));
+			istream.read(reinterpret_cast<char*>(&leaf.ambient_sound_levels[2]), sizeof(leaf.ambient_sound_levels[2]));
+			istream.read(reinterpret_cast<char*>(&leaf.ambient_sound_levels[3]), sizeof(leaf.ambient_sound_levels[3]));
 
 			leaf.aabb.min.z = -leaf.aabb.min.z;
 			leaf.aabb.max.z = -leaf.aabb.max.z;
 		}
 
 		//mark_surfaces
-		const auto& mark_surfaces_chunk_info = chunk_infos[(size_t)chunk_type_t::mark_surfaces];
+		const auto& mark_surfaces_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::mark_surfaces)];
 		istream.seekg(mark_surfaces_chunk_info.offset, std::ios_base::beg);
 
 		auto mark_surface_count = mark_surfaces_chunk_info.length / sizeof(uint16_t);
@@ -181,11 +183,11 @@ namespace mandala
 
 		for (auto& mark_surface : mark_surfaces)
 		{
-			istream.read((char*)&mark_surface, sizeof(mark_surface));
+			istream.read(reinterpret_cast<char*>(&mark_surface), sizeof(mark_surface));
 		}
 
 		//clip_nodes
-		const auto& clip_nodes_chunk_info = chunk_infos[(size_t)chunk_type_t::clip_nodes];
+		const auto& clip_nodes_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::clip_nodes)];
 		istream.seekg(clip_nodes_chunk_info.offset, std::ios_base::beg);
 
 		auto clip_node_count = clip_nodes_chunk_info.length / sizeof(clip_node_t);
@@ -193,13 +195,13 @@ namespace mandala
 
 		for (auto& clip_node : clip_nodes)
 		{
-			istream.read((char*)&clip_node.plane_index, sizeof(clip_node.plane_index));
-			istream.read((char*)&clip_node.children[0], sizeof(clip_node.children[0]));
-			istream.read((char*)&clip_node.children[1], sizeof(clip_node.children[1]));
+			istream.read(reinterpret_cast<char*>(&clip_node.plane_index), sizeof(clip_node.plane_index));
+			istream.read(reinterpret_cast<char*>(&clip_node.children[0]), sizeof(clip_node.children[0]));
+			istream.read(reinterpret_cast<char*>(&clip_node.children[1]), sizeof(clip_node.children[1]));
 		}
 
 		//models
-		const auto& models_chunk_info = chunk_infos[(size_t)chunk_type_t::models];
+		const auto& models_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::models)];
 		istream.seekg(models_chunk_info.offset, std::ios_base::beg);
 
 		auto model_count = models_chunk_info.length / sizeof(model_t);
@@ -207,22 +209,22 @@ namespace mandala
 
 		for (auto& model : models)
 		{
-			istream.read((char*)&model.aabb.min.x, sizeof(model.aabb.min.x));
-			istream.read((char*)&model.aabb.min.z, sizeof(model.aabb.min.z));
-			istream.read((char*)&model.aabb.min.y, sizeof(model.aabb.min.y));
-			istream.read((char*)&model.aabb.max.x, sizeof(model.aabb.max.x));
-			istream.read((char*)&model.aabb.max.z, sizeof(model.aabb.max.z));
-			istream.read((char*)&model.aabb.max.y, sizeof(model.aabb.max.y));
-			istream.read((char*)&model.origin.x, sizeof(model.origin.x));
-			istream.read((char*)&model.origin.z, sizeof(model.origin.z));
-			istream.read((char*)&model.origin.y, sizeof(model.origin.y));
-			istream.read((char*)&model.head_nodes[0], sizeof(model.head_nodes[0]));
-			istream.read((char*)&model.head_nodes[1], sizeof(model.head_nodes[1]));
-			istream.read((char*)&model.head_nodes[2], sizeof(model.head_nodes[2]));
-			istream.read((char*)&model.head_nodes[3], sizeof(model.head_nodes[3]));
-			istream.read((char*)&model.vis_leafs, sizeof(model.vis_leafs));
-			istream.read((char*)&model.face_start_index, sizeof(model.face_start_index));
-			istream.read((char*)&model.face_count, sizeof(model.face_count));
+			istream.read(reinterpret_cast<char*>(&model.aabb.min.x), sizeof(model.aabb.min.x));
+			istream.read(reinterpret_cast<char*>(&model.aabb.min.z), sizeof(model.aabb.min.z));
+			istream.read(reinterpret_cast<char*>(&model.aabb.min.y), sizeof(model.aabb.min.y));
+			istream.read(reinterpret_cast<char*>(&model.aabb.max.x), sizeof(model.aabb.max.x));
+			istream.read(reinterpret_cast<char*>(&model.aabb.max.z), sizeof(model.aabb.max.z));
+			istream.read(reinterpret_cast<char*>(&model.aabb.max.y), sizeof(model.aabb.max.y));
+			istream.read(reinterpret_cast<char*>(&model.origin.x), sizeof(model.origin.x));
+			istream.read(reinterpret_cast<char*>(&model.origin.z), sizeof(model.origin.z));
+			istream.read(reinterpret_cast<char*>(&model.origin.y), sizeof(model.origin.y));
+			istream.read(reinterpret_cast<char*>(&model.head_nodes[0]), sizeof(model.head_nodes[0]));
+			istream.read(reinterpret_cast<char*>(&model.head_nodes[1]), sizeof(model.head_nodes[1]));
+			istream.read(reinterpret_cast<char*>(&model.head_nodes[2]), sizeof(model.head_nodes[2]));
+			istream.read(reinterpret_cast<char*>(&model.head_nodes[3]), sizeof(model.head_nodes[3]));
+			istream.read(reinterpret_cast<char*>(&model.vis_leafs), sizeof(model.vis_leafs));
+			istream.read(reinterpret_cast<char*>(&model.face_start_index), sizeof(model.face_start_index));
+			istream.read(reinterpret_cast<char*>(&model.face_count), sizeof(model.face_count));
 
 			model.aabb.min.z = -model.aabb.min.z;
 			model.aabb.max.z = -model.aabb.max.z;
@@ -234,7 +236,7 @@ namespace mandala
 		{
 			if (node_index < 0)
 			{
-				if (node_index == -1 || leafs[~node_index].content_type == content_type_t::solid)
+				if (node_index == -1 || leafs[~node_index].content_type == content_type_e::solid)
 				{
 					return;
 				}
@@ -250,12 +252,12 @@ namespace mandala
 
 		count_vis_leaves(0);
 
-		const auto& visibility_chunk_info = chunk_infos[(size_t)chunk_type_t::visibliity];
+		const auto& visibility_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::visibliity)];
 		istream.seekg(visibility_chunk_info.offset, std::ios_base::beg);
 
 		std::vector<uint8_t> visibility_data;
 		visibility_data.resize(visibility_chunk_info.length, '\0');
-		istream.read((char*)visibility_data.data(), visibility_data.size());
+		istream.read(reinterpret_cast<char*>(visibility_data.data()), visibility_data.size());
 
 		for (size_t i = 0; i < vis_leaf_count; ++i)
 		{
@@ -299,19 +301,19 @@ namespace mandala
 		}
 
 		//textures
-		const auto& textures_chunk_info = chunk_infos[(size_t)chunk_type_t::textures];
+		const auto& textures_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::textures)];
 		istream.seekg(textures_chunk_info.offset, std::ios_base::beg);
 
 		uint32_t texture_count;
 
-		istream.read((char*)&texture_count, sizeof(texture_count));
+		istream.read(reinterpret_cast<char*>(&texture_count), sizeof(texture_count));
 
 		std::vector<uint32_t> texture_offsets;
 		texture_offsets.resize(texture_count);
 
 		for (auto& texture_offset : texture_offsets)
 		{
-			istream.read((char*)&texture_offset, sizeof(texture_offset));
+			istream.read(reinterpret_cast<char*>(&texture_offset), sizeof(texture_offset));
 		}
 
 		std::vector<bsp_texture_t> bsp_textures;
@@ -321,15 +323,15 @@ namespace mandala
 			istream.seekg(textures_chunk_info.offset + texture_offsets[i], std::ios_base::beg);
 
 			char texture_name_bytes[16] = { '\0' };
-			istream.read((char*)texture_name_bytes, sizeof(texture_name_bytes));
+			istream.read(reinterpret_cast<char*>(texture_name_bytes), sizeof(texture_name_bytes));
 
 			std::string texture_name = texture_name_bytes;
 
 			bsp_texture_t bsp_texture;
 
-			istream.read((char*)&bsp_texture.width, sizeof(bsp_texture.width));
-			istream.read((char*)&bsp_texture.height, sizeof(bsp_texture.height));
-			istream.read((char*)bsp_texture.mipmap_offsets, sizeof(bsp_texture.mipmap_offsets));
+			istream.read(reinterpret_cast<char*>(&bsp_texture.width), sizeof(bsp_texture.width));
+			istream.read(reinterpret_cast<char*>(&bsp_texture.height), sizeof(bsp_texture.height));
+			istream.read(reinterpret_cast<char*>(bsp_texture.mipmap_offsets), sizeof(bsp_texture.mipmap_offsets));
 
 			bsp_textures.push_back(bsp_texture);
 
@@ -350,7 +352,7 @@ namespace mandala
 		}
 
 		//texture_info
-		const auto& texture_info_chunk_info = chunk_infos[(size_t)chunk_type_t::texture_info];
+		const auto& texture_info_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::texture_info)];
 		istream.seekg(texture_info_chunk_info.offset, std::ios_base::beg);
 
 		auto texture_info_count = texture_info_chunk_info.length / sizeof(texture_info_t);
@@ -359,16 +361,16 @@ namespace mandala
 
 		for (auto& texture_info : texture_infos)
 		{
-			istream.read((char*)&texture_info.s.axis.x, sizeof(texture_info.s.axis.x));
-			istream.read((char*)&texture_info.s.axis.z, sizeof(texture_info.s.axis.z));
-			istream.read((char*)&texture_info.s.axis.y, sizeof(texture_info.s.axis.y));
-			istream.read((char*)&texture_info.s.offset, sizeof(texture_info.s.offset));
-			istream.read((char*)&texture_info.t.axis.x, sizeof(texture_info.t.axis.x));
-			istream.read((char*)&texture_info.t.axis.z, sizeof(texture_info.t.axis.z));
-			istream.read((char*)&texture_info.t.axis.y, sizeof(texture_info.t.axis.y));
-			istream.read((char*)&texture_info.t.offset, sizeof(texture_info.t.offset));
-			istream.read((char*)&texture_info.texture_index, sizeof(texture_info.texture_index));
-			istream.read((char*)&texture_info.flags, sizeof(texture_info.flags));
+			istream.read(reinterpret_cast<char*>(&texture_info.s.axis.x), sizeof(texture_info.s.axis.x));
+			istream.read(reinterpret_cast<char*>(&texture_info.s.axis.z), sizeof(texture_info.s.axis.z));
+			istream.read(reinterpret_cast<char*>(&texture_info.s.axis.y), sizeof(texture_info.s.axis.y));
+			istream.read(reinterpret_cast<char*>(&texture_info.s.offset), sizeof(texture_info.s.offset));
+			istream.read(reinterpret_cast<char*>(&texture_info.t.axis.x), sizeof(texture_info.t.axis.x));
+			istream.read(reinterpret_cast<char*>(&texture_info.t.axis.z), sizeof(texture_info.t.axis.z));
+			istream.read(reinterpret_cast<char*>(&texture_info.t.axis.y), sizeof(texture_info.t.axis.y));
+			istream.read(reinterpret_cast<char*>(&texture_info.t.offset), sizeof(texture_info.t.offset));
+			istream.read(reinterpret_cast<char*>(&texture_info.texture_index), sizeof(texture_info.texture_index));
+			istream.read(reinterpret_cast<char*>(&texture_info.flags), sizeof(texture_info.flags));
 
 			texture_info.s.axis.z = -texture_info.s.axis.z;
 			texture_info.t.axis.z = -texture_info.t.axis.z;
@@ -418,13 +420,13 @@ namespace mandala
 		}
 
 		//lighting
-		const auto& lighting_chunk_info = chunk_infos[(size_t)chunk_type_t::lighting];
+		const auto& lighting_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::lighting)];
 		istream.seekg(lighting_chunk_info.offset, std::ios_base::beg);
 
 		std::vector<uint8_t> lighting_data;
 		lighting_data.resize(lighting_chunk_info.length);
 
-		istream.read((char*)lighting_data.data(), lighting_data.size());
+		istream.read(reinterpret_cast<char*>(lighting_data.data()), lighting_data.size());
 
 		face_lightmap_textures.resize(faces.size());
 
@@ -595,7 +597,7 @@ namespace mandala
 		glUniformMatrix4fv(world_location, 1, GL_FALSE, glm::value_ptr(mat4_t())); glCheckError();
 
 		//view_projection
-		glUniformMatrix4fv(view_projection_location, 1, GL_FALSE, glm::value_ptr(camera.projection * camera.view)); glCheckError();
+		glUniformMatrix4fv(view_projection_location, 1, GL_FALSE, glm::value_ptr(camera.projection_matrix * camera.view_matrix)); glCheckError();
 
 		//diffuse_texture
 		glUniform1i(diffuse_texture_location, 0); glCheckError();
@@ -627,7 +629,7 @@ namespace mandala
                 gpu.textures.bind(0, diffuse_texture);
                 gpu.textures.bind(1, lightmap_texture);
 
-				glDrawElements(GL_TRIANGLE_FAN, face.surface_edge_count, GL_UNSIGNED_INT, (GLvoid*)(face_start_indices[face_index] * sizeof(uint32_t))); glCheckError();
+				glDrawElements(GL_TRIANGLE_FAN, face.surface_edge_count, GL_UNSIGNED_INT, reinterpret_cast<GLvoid*>((face_start_indices[face_index] * sizeof(uint32_t)))); glCheckError();
 			}
 		}
 
@@ -720,7 +722,7 @@ namespace mandala
 
 	//			const auto& node = leafs[leaf_index];
 
-	//			if (node.content_type != content_type_t::solid)
+	//			if (node.content_type != content_type_e::solid)
 	//			{
 	//				trace_result.is_all_solid = false;
 	//			}
@@ -767,7 +769,7 @@ namespace mandala
 	//			return false;
 	//		}
 
-	//		if (hull_point_contents(node.children[child_index ^ 1], mid) != content_type_t::solid)
+	//		if (hull_point_contents(node.children[child_index ^ 1], mid) != content_type_e::solid)
 	//		{
 	//			return recursive_hull_check(node.children[child_index ^ 1], midf, p2, mid, end);
 	//		}
@@ -786,7 +788,7 @@ namespace mandala
 	//			trace_result.plane = -plane.plane;
 	//		}
 
-	//		while (hull_point_contents(models.front().head_nodes[0], mid) == content_type_t::solid)
+	//		while (hull_point_contents(models.front().head_nodes[0], mid) == content_type_e::solid)
 	//		{
 	//			frac -= 0.1f;
 

@@ -12,7 +12,7 @@ namespace mandala
 		const auto screen_size = platform.get_screen_size();
 
 		layout = std::make_shared<gui_layout_t>();
-		layout->dock_mode = gui_node_t::dock_mode_t::fill;
+		layout->dock_mode = gui_node_t::dock_mode_e::fill;
 		layout->bounds.max.x = static_cast<float32_t>(screen_size.x);
 		layout->bounds.max.y = static_cast<float32_t>(screen_size.y);
 	}

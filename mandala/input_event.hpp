@@ -19,7 +19,7 @@ namespace mandala
 			mod_super = (1 << 3)
 		};
 
-		enum class device_type_t : int8_t
+		enum class device_type_e : int8_t
 		{
 			none = -1,
 			touch,
@@ -33,7 +33,7 @@ namespace mandala
 			typedef size_t touch_id_type;
 			typedef vec2_f64_t position_type;
 
-			enum class button_t : int8_t
+			enum class button_e : int8_t
 			{
 				none = -1,
 				left,
@@ -47,7 +47,7 @@ namespace mandala
 				count,
 			};
 
-			enum class type_t : int8_t
+			enum class type_e : int8_t
 			{
 				none = -1,
 				button_press,
@@ -57,8 +57,8 @@ namespace mandala
 			};
 
 			touch_id_type id = 0;
-			type_t type = type_t::none;
-			button_t button = button_t::none;
+            type_e type = type_e::none;
+            button_e button = button_e::none;
 			mods_type mods = 0;
 			position_type position;
 			position_type position_delta;
@@ -66,7 +66,7 @@ namespace mandala
 
 		struct keyboard_t
 		{
-			enum class type_t : int8_t
+			enum class type_e : int8_t
 			{
 				none = -1,
 				key_release,
@@ -75,7 +75,7 @@ namespace mandala
 				character
 			};
 
-			enum class key_t : int16_t
+			enum class key_e : int16_t
 			{
 				none			   = -1,
 				space              = 32,
@@ -200,8 +200,8 @@ namespace mandala
 				menu               = 348
 			};
 
-			type_t type = type_t::none;
-			key_t key = key_t::none;
+			type_e type = type_e::none;
+			key_e key = key_e::none;
 			mods_type mods = 0;
 			wchar_t character = L'\0';
 		};
@@ -211,7 +211,7 @@ namespace mandala
 			typedef uint8_t index_type;
 			typedef float32_t axis_value_type;
 
-			enum class type_t : int8_t
+			enum class type_e : int8_t
 			{
 				none = -1,
 				button_press,
@@ -223,11 +223,11 @@ namespace mandala
             index_type axis_index = 0;
             axis_value_type axis_value = 0;
             axis_value_type axis_value_delta = 0;
-			type_t type = type_t::none;
+            type_e type = type_e::none;
 		};
 
 		id_type id = 0;
-		device_type_t device_type = device_type_t::none;
+		device_type_e device_type = device_type_e::none;
 		device_index_type device_index = 0;
 		touch_t touch;
 		keyboard_t keyboard;

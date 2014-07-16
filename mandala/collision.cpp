@@ -27,7 +27,7 @@ namespace mandala
 		return e / d;
 	}
 
-	intersect_type_t intersects(circle_f32_t circle, const aabb2_t& aabb)
+	intersect_type_e intersects(circle_f32_t circle, const aabb2_t& aabb)
 	{
 		auto aabb_center = aabb.center();
 		auto distance = vec2_t(glm::abs(circle.origin.x - aabb_center.x), glm::abs(circle.origin.y - aabb_center.y));
@@ -35,26 +35,26 @@ namespace mandala
 		if (distance.x > ((aabb.width() / 2) + circle.radius) ||
 			distance.y > ((aabb.height() / 2) + circle.radius))
 		{
-			return intersect_type_t::disjoint;
+			return intersect_type_e::disjoint;
 		}
 
 		if (distance.x <= (aabb.width() / 2) ||
 			distance.y <= (aabb.height() / 2))
 		{
-			return intersect_type_t::intersect;
+			return intersect_type_e::intersect;
 		}
 
 		auto distance_2 = glm::pow2(distance.x - aabb.width() / 2) + glm::pow2(distance.y - aabb.height() / 2);
 
 		if (distance_2 <= glm::pow2(circle.radius))
 		{
-			return intersect_type_t::intersect;
+			return intersect_type_e::intersect;
 		}
 
-		return intersect_type_t::disjoint;
+		return intersect_type_e::disjoint;
 	}
 
-	intersect_type_t intersects(const aabb3_t& aabb, const frustum_t& frustum)
+	intersect_type_e intersects(const aabb3_t& aabb, const frustum_t& frustum)
 	{
 		size_t total_in = 0;
 		auto corners = aabb.get_corners();
@@ -78,7 +78,7 @@ namespace mandala
 
 			if (in == 0)
 			{
-				return intersect_type_t::disjoint;
+				return intersect_type_e::disjoint;
 			}
 
 			if (point_in)
@@ -89,18 +89,18 @@ namespace mandala
 
 		if (total_in == frustum_t::plane_count)
 		{
-			return intersect_type_t::contain;
+			return intersect_type_e::contain;
 		}
 
-		return intersect_type_t::intersect;
+		return intersect_type_e::intersect;
 	}
 
-	intersect_type_t intersects(const line3_t& line, const aabb3_t& aabb, float32_t* t, vec3_t* location, vec3_t* normal)
+	intersect_type_e intersects(const line3_t& line, const aabb3_t& aabb, float32_t* t, vec3_t* location, vec3_t* normal)
 	{
 		//http://www.scratchapixel.com/lessons/3d-basic-lessons/lesson-7-intersecting-simple-shapes/ray-box-intersection/
 		if (line.start == line.end)
 		{
-			return intersect_type_t::disjoint;
+			return intersect_type_e::disjoint;
 		}
 
 		auto d = line.direction();
@@ -123,7 +123,7 @@ namespace mandala
 
 		if ((tmin > tymax) || (tymin > tmax))
 		{
-			return intersect_type_t::disjoint;
+			return intersect_type_e::disjoint;
 		}
 
 		if (tymin > tmin)
@@ -146,7 +146,7 @@ namespace mandala
 
 		if (tmin > tzmax || tzmin > tmax)
 		{
-			return intersect_type_t::disjoint;
+			return intersect_type_e::disjoint;
 		}
 
 		if (tzmin > tmin)
@@ -161,7 +161,7 @@ namespace mandala
 
 		if (tmin < 0.0f)
 		{
-			return intersect_type_t::contain;
+			return intersect_type_e::contain;
 		}
 
 		if (t != nullptr)
@@ -204,10 +204,10 @@ namespace mandala
 			*location = line.start + (d * tmin);
 		}
 
-		return intersect_type_t::intersect;
+		return intersect_type_e::intersect;
 	}
 
-	intersect_type_t intersects(const line3_t& line, const plane3_t& plane, float32_t& t)
+	intersect_type_e intersects(const line3_t& line, const plane3_t& plane, float32_t& t)
 	{
 		auto u = line.end - line.start;
 		auto w = line.start - plane.normal;
@@ -216,20 +216,20 @@ namespace mandala
 
 		if (glm::abs(d) < glm::epsilon<float32_t>())
 		{
-			return n == 0 ? intersect_type_t::parallel : intersect_type_t::disjoint;
+			return n == 0 ? intersect_type_e::parallel : intersect_type_e::disjoint;
 		}
 
 		t = n / d;
 
 		if (t < 0 || t > 1)
 		{
-			return intersect_type_t::disjoint;
+			return intersect_type_e::disjoint;
 		}
 
-		return intersect_type_t::intersect;
+		return intersect_type_e::intersect;
 	}
 
-	intersect_type_t intersects(const aabb3_t aabb0, const vec3_t& d0, const aabb3_t& aabb1, const vec3_t& d1, float32_t& u0, float32_t& u1)
+	intersect_type_e intersects(const aabb3_t aabb0, const vec3_t& d0, const aabb3_t& aabb1, const vec3_t& d1, float32_t& u0, float32_t& u1)
 	{
 		auto v = glm::value_ptr((d1 - d0));
 		auto amin = glm::value_ptr(aabb0.min);
@@ -239,11 +239,11 @@ namespace mandala
 		vec3_t u_0(std::numeric_limits<float32_t>::max());
 		vec3_t u_1(std::numeric_limits<float32_t>::min());
 
-		if (intersects(aabb0, aabb1) != intersect_type_t::disjoint)
+		if (intersects(aabb0, aabb1) != intersect_type_e::disjoint)
 		{
 			u0 = u1 = 0;
 
-			return intersect_type_t::intersect;
+			return intersect_type_e::intersect;
 		}
 
 		for (size_t i = 0; i < 3; ++i)
@@ -280,7 +280,7 @@ namespace mandala
 		u0 = glm::compMax(u_0);
 		u1 = glm::compMin(u_1);
 
-		auto result = (u0 >= 0 && u1 <= 1 && u0 <= u1) ? intersect_type_t::intersect : intersect_type_t::disjoint;
+		auto result = (u0 >= 0 && u1 <= 1 && u0 <= u1) ? intersect_type_e::intersect : intersect_type_e::disjoint;
 
 		return result;
 	}

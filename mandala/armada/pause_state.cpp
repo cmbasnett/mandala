@@ -27,8 +27,8 @@ namespace mandala
 			paused_label = std::make_shared<gui_label_t>();
 			paused_label->bitmap_font = bitmap_fonts[bitmap_font_index];
 			paused_label->string = L"PAUSED";
-			paused_label->vertical_alignment = gui_label_t::vertical_alignment_t::middle;
-			paused_label->justification = gui_label_t::justification_t::center;
+			paused_label->vertical_alignment = gui_label_t::vertical_alignment_e::middle;
+			paused_label->justification = gui_label_t::justification_e::center;
 			paused_label->size = vec2_t(200, 100);
 			paused_label->anchor_flags = gui_node_t::anchor_flag_horizontal | gui_node_t::anchor_flag_vertical;
 			paused_label->should_use_gradient = true;
@@ -50,9 +50,9 @@ namespace mandala
 
 		void pause_state_t::on_input_event(input_event_t& input_event)
         {
-            if (input_event.device_type == input_event_t::device_type_t::keyboard &&
-                input_event.keyboard.key == input_event_t::keyboard_t::key_t::escape &&
-				input_event.keyboard.type == input_event_t::keyboard_t::type_t::key_press)
+            if (input_event.device_type == input_event_t::device_type_e::keyboard &&
+                input_event.keyboard.key == input_event_t::keyboard_t::key_e::escape &&
+				input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press)
             {
 				app.states.pop(shared_from_this());
 
@@ -61,9 +61,9 @@ namespace mandala
 				return;
 			}
 
-			if (input_event.device_type == input_event_t::device_type_t::keyboard &&
-				input_event.keyboard.key == input_event_t::keyboard_t::key_t::backspace &&
-				(input_event.keyboard.type == input_event_t::keyboard_t::type_t::key_press || input_event.keyboard.type == input_event_t::keyboard_t::type_t::key_repeat))
+			if (input_event.device_type == input_event_t::device_type_e::keyboard &&
+				input_event.keyboard.key == input_event_t::keyboard_t::key_e::backspace &&
+				(input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press || input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_repeat))
 			{
 				if (!paused_label->string.empty())
 				{
@@ -76,9 +76,9 @@ namespace mandala
 				}
 			}
 
-			if (input_event.device_type == input_event_t::device_type_t::keyboard &&
-				(input_event.keyboard.key == input_event_t::keyboard_t::key_t::enter || input_event.keyboard.key == input_event_t::keyboard_t::key_t::kp_enter) &&
-				(input_event.keyboard.type == input_event_t::keyboard_t::type_t::key_press || input_event.keyboard.type == input_event_t::keyboard_t::type_t::key_repeat))
+			if (input_event.device_type == input_event_t::device_type_e::keyboard &&
+				(input_event.keyboard.key == input_event_t::keyboard_t::key_e::enter || input_event.keyboard.key == input_event_t::keyboard_t::key_e::kp_enter) &&
+				(input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press || input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_repeat))
 			{
 				paused_label->string += L"\n";
 				paused_label->clean();
@@ -88,7 +88,7 @@ namespace mandala
 				return;
 			}
 
-			if (input_event.keyboard.type == input_event_t::keyboard_t::type_t::character)
+			if (input_event.keyboard.type == input_event_t::keyboard_t::type_e::character)
 			{
 				paused_label->string += input_event.keyboard.character;
 				paused_label->clean();
@@ -98,8 +98,8 @@ namespace mandala
 				return;
 			}
 
-			if (input_event.device_type == input_event_t::device_type_t::touch &&
-				input_event.touch.type == input_event_t::touch_t::type_t::button_press)
+			if (input_event.device_type == input_event_t::device_type_e::touch &&
+				input_event.touch.type == input_event_t::touch_t::type_e::button_press)
 			{
 				gui_node_t::trace_args_t trace_args;
 				trace_args.circle.origin = input_event.touch.position;
@@ -121,8 +121,8 @@ namespace mandala
 					}
 				}
 			}
-			else if (input_event.device_type == input_event_t::device_type_t::touch &&
-				input_event.touch.type == input_event_t::touch_t::type_t::scroll)
+			else if (input_event.device_type == input_event_t::device_type_e::touch &&
+				input_event.touch.type == input_event_t::touch_t::type_e::scroll)
 			{
 				if (input_event.touch.position_delta.y > 0)
 				{

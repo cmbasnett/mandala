@@ -15,9 +15,6 @@
 //boost
 #include <boost\dynamic_bitset.hpp>
 
-#define BSP_MAX_MAP_HULLS	(4)
-#define BSP_VERSION			(30)
-
 namespace mandala
 {
 	struct camera_t;
@@ -30,7 +27,7 @@ namespace mandala
 			uint32_t length = 0;
 		};
 
-		enum class chunk_type_t : uint8_t
+		enum class chunk_type_e : uint8_t
 		{
 			entities,
 			planes,
@@ -50,7 +47,7 @@ namespace mandala
 			count
 		};
 
-		enum class content_type_t : int32_t
+		enum class content_type_e : int32_t
 		{
 			empty = -1,
 			solid = -2,
@@ -69,7 +66,7 @@ namespace mandala
 			translucent = -15
 		};
 
-		enum class render_mode_t : uint8_t
+		enum class render_mode_e : uint8_t
 		{
 			normal,
 			color,
@@ -81,8 +78,10 @@ namespace mandala
 
 		struct node_t
 		{
+            static const auto child_count = 2;
+
 			uint32_t plane_index = 0;
-			int16_t children[2];
+            std::array<int16_t, child_count> children;
 			aabb3_i16_t aabb;
 			uint16_t face_start_index = 0;
 			uint16_t face_count = 0;
@@ -90,28 +89,34 @@ namespace mandala
 
 		struct face_t
 		{
+            static const auto lighting_style_count = 4;
+
 			uint16_t plane_index = 0;
 			uint16_t plane_side = 0;
 			uint32_t surface_edge_start_index = 0;
 			uint16_t surface_edge_count = 0;
 			uint16_t texture_info_index = 0;
-			uint8_t lighting_styles[4];
+            std::array<uint8_t, lighting_style_count> lighting_styles;
 			uint32_t lightmap_offset = 0;
 		};
 
 		struct leaf_t
 		{
-			content_type_t content_type = content_type_t::empty;
+            static const auto ambient_sound_level_count = 4;
+
+			content_type_e content_type = content_type_e::empty;
 			int32_t visibility_offset = 0;
 			aabb3_i16_t aabb;
 			uint16_t mark_surface_start_index = 0;
 			uint16_t mark_surface_count = 0;
-			uint8_t ambient_sound_levels[4];
+            std::array<uint8_t, ambient_sound_level_count> ambient_sound_levels;
 		};
 
 		struct edge_t
 		{
-			uint16_t vertex_indices[2];
+            static const auto vertex_index_count = 2;
+
+            std::array<uint16_t, vertex_index_count> vertex_indices;
 		};
 
 		struct texture_info_t
@@ -128,15 +133,19 @@ namespace mandala
 
 		struct clip_node_t
 		{
+            static const auto child_count = 2;
+
 			int32_t plane_index = 0;
-			int16_t children[2];
+            std::array<int16_t, child_count> children;
 		};
 
 		struct model_t
 		{
+            static const auto head_node_count = 4;
+
 			aabb3_t aabb;
 			vec3_t origin;
-			int32_t head_nodes[BSP_MAX_MAP_HULLS];
+            std::array<int32_t, head_node_count> head_nodes;
 			int32_t vis_leafs = 0;
 			int32_t face_start_index = 0;
 			int32_t face_count = 0;
@@ -144,16 +153,18 @@ namespace mandala
 
 		struct bsp_texture_t
 		{
+            static const auto mipmap_offset_count = 4;
+
 			uint32_t width;
 			uint32_t height;
-			uint32_t mipmap_offsets[4];
+            uint32_t mipmap_offsets[mipmap_offset_count];
 		};
 
 		struct plane_t
 		{
-			typedef plane3_t plane_type_t;
+			typedef plane3_t plane_type;
 
-			enum class type_t : uint32_t
+			enum class type_e : uint32_t
 			{
 				x,
 				y,
@@ -163,20 +174,20 @@ namespace mandala
 				any_z
 			};
 
-			plane_type_t plane;
-			type_t type = type_t::x;
+            plane_type plane;
+            type_e type = type_e::x;
 		};
 
 		struct vertex_t
 		{
-			typedef vec3_t position_type_t;
-			typedef vec3_t normal_type_t;
-			typedef vec2_t texcoord_type_t;
+			typedef vec3_t position_type;
+			typedef vec3_t normal_type;
+            typedef vec2_t texcoord_type;
 
-			position_type_t position;
-			normal_type_t normal;
-			texcoord_type_t diffuse_texcoord;
-			texcoord_type_t lightmap_texcoord;
+            position_type position;
+            normal_type normal;
+            texcoord_type diffuse_texcoord;
+            texcoord_type lightmap_texcoord;
 		};
 
 		struct trace_args_t

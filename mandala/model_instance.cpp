@@ -63,13 +63,13 @@ namespace mandala
 		}
 
 		//TODO: take instance transformation into consideration
-		if(intersects(skeleton.aabb, camera.frustum) == intersect_type_t::disjoint)
+		if(intersects(skeleton.aabb, camera.frustum) == intersect_type_e::disjoint)
 		{
 			//skeleton aabb does not intersect camera frustum
 			//return;
 		}
 
-		auto view_projection_matrix = camera.projection * camera.view;
+		auto view_projection_matrix = camera.projection_matrix * camera.view_matrix;
 
 		model->render(camera.position, world_matrix, view_projection_matrix, bone_matrices, light_position);
 	}

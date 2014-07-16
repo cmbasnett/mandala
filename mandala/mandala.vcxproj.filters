@@ -247,6 +247,15 @@
     <ClInclude Include="index_type.h">
       <Filter>mandala\core</Filter>
     </ClInclude>
+    <ClInclude Include="range.hpp">
+      <Filter>mandala\math</Filter>
+    </ClInclude>
+    <ClInclude Include="viewport.h">
+      <Filter>mandala\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu_buffer.hpp">
+      <Filter>mandala\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -389,6 +398,9 @@
       <Filter>mandala\gui</Filter>
     </ClCompile>
     <ClCompile Include="gpu_mgr.cpp">
+      <Filter>mandala\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="gpu_buffer.cpp">
       <Filter>mandala\graphics</Filter>
     </ClCompile>
   </ItemGroup>

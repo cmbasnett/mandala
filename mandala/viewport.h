@@ -2,11 +2,7 @@
 
 namespace mandala
 {
-	namespace ui
+	struct viewport_t
 	{
-		struct viewport_t
-		{
-
-		};
 	};
 };

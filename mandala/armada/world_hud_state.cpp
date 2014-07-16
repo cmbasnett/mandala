@@ -32,8 +32,8 @@ namespace mandala
 
 		void world_hud_state_t::on_input_event(const input_event_t& input_event, bool& is_consumed)
 		{
-			if (input_event.device_type == input_event_t::device_type_t::touch &&
-				input_event.touch.type == input_event_t::touch_t::type_t::scroll)
+			if (input_event.device_type == input_event_t::device_type_e::touch &&
+				input_event.touch.type == input_event_t::touch_t::type_e::scroll)
 			{
 				if (input_event.touch.position_delta.y > 0)
 				{

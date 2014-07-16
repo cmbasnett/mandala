@@ -327,13 +327,13 @@ namespace mandala
 				else
 				{
 					glEnable(GL_CULL_FACE);
-				}
-			}
+                }
+            }
 
-			mesh->render(world_matrix, view_projection_matrix, bone_matrices);
-		}
+            mesh->render(world_matrix, view_projection_matrix, bone_matrices);
+        }
 
-		gpu.programs.pop();
+        gpu.programs.pop();
 	}
 
 	void model_t::mesh_t::render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices) const

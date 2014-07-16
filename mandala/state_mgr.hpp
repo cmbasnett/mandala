@@ -18,13 +18,13 @@ namespace mandala
 	{
 		struct operation_t
 		{
-			enum class type_t : uint8_t
+			enum class type_e : uint8_t
 			{
 				push,
 				pop
 			};
 
-			type_t type = type_t::push;
+            type_e type = type_e::push;
 			std::shared_ptr<state_t> state;
 		};
 

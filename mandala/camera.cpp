@@ -26,21 +26,21 @@ namespace mandala
 
 		switch (projection_type)
 		{
-			case projection_type_t::orthographic:
+			case projection_type_e::orthographic:
 			{
-				projection = glm::ortho(0.0f, viewport.x, viewport.y, 0.0f);
+				projection_matrix = glm::ortho(0.0f, viewport.x, viewport.y, 0.0f);
 				break;
 			}
-			case projection_type_t::perspective:
+			case projection_type_e::perspective:
 			{
-				projection = glm::perspective(fov, aspect, near, far);
+                projection_matrix = glm::perspective(fov, aspect, near, far);
 				break;
 			}
 		}
 
-		view = glm::lookAt(position, target, up);
+		view_matrix = glm::lookAt(position, target, up);
 
-		frustum = view * projection;
+        frustum = view_matrix * projection_matrix;
 	}
 
 	line3_t camera_t::get_ray(vec2_f64_t screen_location) const
@@ -49,8 +49,8 @@ namespace mandala
 		screen_location.y = viewport.w - screen_location.y;
 
 		line3_t ray;
-		ray.start = glm::unProject(vec3_t(screen_location, 0), view, projection, viewport);
-		ray.end = glm::unProject(vec3_t(screen_location, 1), view, projection, viewport);
+        ray.start = glm::unProject(vec3_t(screen_location, 0), view_matrix, projection_matrix, viewport);
+        ray.end = glm::unProject(vec3_t(screen_location, 1), view_matrix, projection_matrix, viewport);
 
 		return ray;
 	}

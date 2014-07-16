@@ -20,12 +20,12 @@ namespace mandala
 
 		void test_state_t::on_input_event(input_event_t& input_event)
 		{
-			if (input_event.device_type == input_event_t::device_type_t::keyboard &&
-				input_event.keyboard.type == input_event_t::keyboard_t::type_t::key_press)
+			if (input_event.device_type == input_event_t::device_type_e::keyboard &&
+				input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press)
 			{
 				switch (input_event.keyboard.key)
 				{
-					case input_event_t::keyboard_t::key_t::escape:
+					case input_event_t::keyboard_t::key_e::escape:
 					{
 						std::cout << "---------------------------------------------------------------" << std::endl;
 						std::cout << "[" << index << "] pop" << std::endl;
@@ -34,7 +34,7 @@ namespace mandala
 						input_event.is_consumed = true;
 						break;
 					}
-					case input_event_t::keyboard_t::key_t::enter:
+					case input_event_t::keyboard_t::key_e::enter:
 					{
 						std::cout << "---------------------------------------------------------------" << std::endl;
 						std::cout << "[" << index + 1 << "] push" << std::endl;
