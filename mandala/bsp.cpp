@@ -2,7 +2,7 @@
 #include "glm\ext.hpp"
 
 //mandala
-#include "mandala.hpp"
+#include "opengl.hpp"
 #include "bsp.hpp"
 #include "camera.hpp"
 #include "app.hpp"
@@ -14,8 +14,34 @@
 
 namespace mandala
 {
+    struct chunk_t
+    {
+        enum class type_e : uint8_t
+        {
+            entities,
+            planes,
+            textures,
+            vertices,
+            visibliity,
+            nodes,
+            texture_info,
+            faces,
+            lighting,
+            clip_nodes,
+            leaves,
+            mark_surfaces,
+            edges,
+            surface_edges,
+            models,
+            count
+        };
+
+        uint32_t offset = 0;
+        uint32_t length = 0;
+    };
+
 	bsp_t::bsp_t(std::istream& istream)
-	{
+    {
 		if (!istream.good())
 		{
 			throw std::exception();
@@ -31,22 +57,22 @@ namespace mandala
 			throw std::exception();
 		}
 
-		//chunk_infos
-		std::vector<chunk_info_t> chunk_infos;
+		//chunks
+        std::vector<chunk_t> chunks;
 
-		chunk_infos.resize((size_t)chunk_type_e::count);
+        chunks.resize(static_cast<size_t>(chunk_t::type_e::count));
 
-		for (auto& chunk_info : chunk_infos)
+        for (auto& chunk : chunks)
 		{
-			istream.read(reinterpret_cast<char*>(&chunk_info.offset), sizeof(chunk_info.offset));
-			istream.read(reinterpret_cast<char*>(&chunk_info.length), sizeof(chunk_info.length));
+            istream.read(reinterpret_cast<char*>(&chunk.offset), sizeof(chunk.offset));
+            istream.read(reinterpret_cast<char*>(&chunk.length), sizeof(chunk.length));
 		}
 
 		//planes
-		const auto& plane_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::planes)];
-		istream.seekg(plane_chunk_info.offset, std::ios_base::beg);
+        const auto& plane_chunk = chunks[static_cast<size_t>(chunk_t::type_e::planes)];
+        istream.seekg(plane_chunk.offset, std::ios_base::beg);
 
-		auto plane_count = plane_chunk_info.length / sizeof(plane_t);
+		auto plane_count = plane_chunk.length / sizeof(plane_t);
 		planes.resize(plane_count);
 
 		for (auto& plane : planes)
@@ -61,10 +87,10 @@ namespace mandala
 		}
 
 		//vertex_positions
-		const auto& vertices_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::vertices)];
-		istream.seekg(vertices_chunk_info.offset, std::ios_base::beg);
+		const auto& vertices_chunk = chunks[static_cast<size_t>(chunk_t::type_e::vertices)];
+		istream.seekg(vertices_chunk.offset, std::ios_base::beg);
 
-		auto vertex_position_count = vertices_chunk_info.length / sizeof(vec3_t);
+		auto vertex_position_count = vertices_chunk.length / sizeof(vec3_t);
 		vertex_positions.resize(vertex_position_count);
 
 		for (auto& vertex_position : vertex_positions)
@@ -77,10 +103,10 @@ namespace mandala
 		}
 
 		//edges
-		const auto& edges_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::edges)];
-		istream.seekg(edges_chunk_info.offset, std::ios_base::beg);
+		const auto& edges_chunk = chunks[static_cast<size_t>(chunk_t::type_e::edges)];
+		istream.seekg(edges_chunk.offset, std::ios_base::beg);
 
-		auto edge_count = edges_chunk_info.length / sizeof(edge_t);
+		auto edge_count = edges_chunk.length / sizeof(edge_t);
 		edges.resize(edge_count);
 
 		for (auto& edge : edges)
@@ -90,10 +116,10 @@ namespace mandala
 		}
 
 		//surface_edges
-		const auto& surface_edges_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::surface_edges)];
-		istream.seekg(surface_edges_chunk_info.offset, std::ios_base::beg);
+		const auto& surface_edges_chunk = chunks[static_cast<size_t>(chunk_t::type_e::surface_edges)];
+		istream.seekg(surface_edges_chunk.offset, std::ios_base::beg);
 
-		auto surface_edge_count = surface_edges_chunk_info.length / sizeof(int32_t);
+		auto surface_edge_count = surface_edges_chunk.length / sizeof(int32_t);
 		surface_edges.resize(surface_edge_count);
 
 		for (auto& surface_edge : surface_edges)
@@ -102,10 +128,10 @@ namespace mandala
 		}
 
 		//faces
-        const auto& faces_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::faces)];
-		istream.seekg(faces_chunk_info.offset, std::ios_base::beg);
+        const auto& faces_chunk = chunks[static_cast<size_t>(chunk_t::type_e::faces)];
+		istream.seekg(faces_chunk.offset, std::ios_base::beg);
 
-		auto face_count = faces_chunk_info.length / sizeof(face_t);
+		auto face_count = faces_chunk.length / sizeof(face_t);
 		faces.resize(face_count);
 
 		for (auto& face : faces)
@@ -123,10 +149,10 @@ namespace mandala
 		}
 
 		//nodes
-		const auto& nodes_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::nodes)];
-		istream.seekg(nodes_chunk_info.offset, std::ios_base::beg);
+		const auto& nodes_chunk = chunks[static_cast<size_t>(chunk_t::type_e::nodes)];
+		istream.seekg(nodes_chunk.offset, std::ios_base::beg);
 
-		auto node_count = nodes_chunk_info.length / sizeof(node_t);
+		auto node_count = nodes_chunk.length / sizeof(node_t);
 		nodes.resize(node_count);
 
 		for (auto& node : nodes)
@@ -148,10 +174,10 @@ namespace mandala
 		}
 
 		//leaves
-		const auto& leaves_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::leaves)];
-		istream.seekg(leaves_chunk_info.offset, std::ios_base::beg);
+		const auto& leaves_chunk = chunks[static_cast<size_t>(chunk_t::type_e::leaves)];
+		istream.seekg(leaves_chunk.offset, std::ios_base::beg);
 
-		auto leaf_count = leaves_chunk_info.length / sizeof(leaf_t);
+		auto leaf_count = leaves_chunk.length / sizeof(leaf_t);
 		leafs.resize(leaf_count);
 
 		for (auto& leaf : leafs)
@@ -176,10 +202,10 @@ namespace mandala
 		}
 
 		//mark_surfaces
-		const auto& mark_surfaces_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::mark_surfaces)];
-		istream.seekg(mark_surfaces_chunk_info.offset, std::ios_base::beg);
+		const auto& mark_surfaces_chunk = chunks[static_cast<size_t>(chunk_t::type_e::mark_surfaces)];
+		istream.seekg(mark_surfaces_chunk.offset, std::ios_base::beg);
 
-		auto mark_surface_count = mark_surfaces_chunk_info.length / sizeof(uint16_t);
+		auto mark_surface_count = mark_surfaces_chunk.length / sizeof(uint16_t);
 		mark_surfaces.resize(mark_surface_count);
 
 		for (auto& mark_surface : mark_surfaces)
@@ -188,10 +214,10 @@ namespace mandala
 		}
 
 		//clip_nodes
-		const auto& clip_nodes_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::clip_nodes)];
-		istream.seekg(clip_nodes_chunk_info.offset, std::ios_base::beg);
+		const auto& clip_nodes_chunk = chunks[static_cast<size_t>(chunk_t::type_e::clip_nodes)];
+		istream.seekg(clip_nodes_chunk.offset, std::ios_base::beg);
 
-		auto clip_node_count = clip_nodes_chunk_info.length / sizeof(clip_node_t);
+		auto clip_node_count = clip_nodes_chunk.length / sizeof(clip_node_t);
 		clip_nodes.resize(clip_node_count);
 
 		for (auto& clip_node : clip_nodes)
@@ -202,10 +228,10 @@ namespace mandala
 		}
 
 		//models
-		const auto& models_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::models)];
-		istream.seekg(models_chunk_info.offset, std::ios_base::beg);
+		const auto& models_chunk = chunks[static_cast<size_t>(chunk_t::type_e::models)];
+		istream.seekg(models_chunk.offset, std::ios_base::beg);
 
-		auto model_count = models_chunk_info.length / sizeof(model_t);
+		auto model_count = models_chunk.length / sizeof(model_t);
 		models.resize(model_count);
 
 		for (auto& model : models)
@@ -253,11 +279,11 @@ namespace mandala
 
 		count_vis_leaves(0);
 
-		const auto& visibility_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::visibliity)];
-		istream.seekg(visibility_chunk_info.offset, std::ios_base::beg);
+		const auto& visibility_chunk = chunks[static_cast<size_t>(chunk_t::type_e::visibliity)];
+		istream.seekg(visibility_chunk.offset, std::ios_base::beg);
 
 		std::vector<uint8_t> visibility_data;
-		visibility_data.resize(visibility_chunk_info.length, '\0');
+		visibility_data.resize(visibility_chunk.length, '\0');
 		istream.read(reinterpret_cast<char*>(visibility_data.data()), visibility_data.size());
 
 		for (size_t i = 0; i < vis_leaf_count; ++i)
@@ -302,8 +328,8 @@ namespace mandala
 		}
 
 		//textures
-		const auto& textures_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::textures)];
-		istream.seekg(textures_chunk_info.offset, std::ios_base::beg);
+		const auto& textures_chunk = chunks[static_cast<size_t>(chunk_t::type_e::textures)];
+		istream.seekg(textures_chunk.offset, std::ios_base::beg);
 
 		uint32_t texture_count;
 
@@ -321,7 +347,7 @@ namespace mandala
 
 		for (uint32_t i = 0; i < texture_count; ++i)
 		{
-			istream.seekg(textures_chunk_info.offset + texture_offsets[i], std::ios_base::beg);
+			istream.seekg(textures_chunk.offset + texture_offsets[i], std::ios_base::beg);
 
 			char texture_name_bytes[16] = { '\0' };
 			istream.read(reinterpret_cast<char*>(texture_name_bytes), sizeof(texture_name_bytes));
@@ -353,10 +379,10 @@ namespace mandala
 		}
 
 		//texture_info
-		const auto& texture_info_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::texture_info)];
-		istream.seekg(texture_info_chunk_info.offset, std::ios_base::beg);
+		const auto& texture_info_chunk = chunks[static_cast<size_t>(chunk_t::type_e::texture_info)];
+		istream.seekg(texture_info_chunk.offset, std::ios_base::beg);
 
-		auto texture_info_count = texture_info_chunk_info.length / sizeof(texture_info_t);
+		auto texture_info_count = texture_info_chunk.length / sizeof(texture_info_t);
 
 		texture_infos.resize(texture_info_count);
 
@@ -421,11 +447,11 @@ namespace mandala
 		}
 
 		//lighting
-		const auto& lighting_chunk_info = chunk_infos[static_cast<size_t>(chunk_type_e::lighting)];
-		istream.seekg(lighting_chunk_info.offset, std::ios_base::beg);
+		const auto& lighting_chunk = chunks[static_cast<size_t>(chunk_t::type_e::lighting)];
+		istream.seekg(lighting_chunk.offset, std::ios_base::beg);
 
 		std::vector<uint8_t> lighting_data;
-		lighting_data.resize(lighting_chunk_info.length);
+		lighting_data.resize(lighting_chunk.length);
 
 		istream.read(reinterpret_cast<char*>(lighting_data.data()), lighting_data.size());
 
@@ -437,8 +463,8 @@ namespace mandala
 
 			if (face.lighting_styles[0] == 0 && (int32_t)face.lightmap_offset >= -1)
 			{
-				auto min_u = std::numeric_limits<float32_t>::max();
-				auto min_v = std::numeric_limits<float32_t>::max();
+				auto min_u =  std::numeric_limits<float32_t>::max();
+				auto min_v =  std::numeric_limits<float32_t>::max();
 				auto max_u = -std::numeric_limits<float32_t>::max();
 				auto max_v = -std::numeric_limits<float32_t>::max();
 
@@ -451,7 +477,7 @@ namespace mandala
 
 					if (edge_index >= 0)
 					{
-						vertex_position = vertex_positions[edges[edge_index].vertex_indices[0]];
+						vertex_position = vertex_positions[edges[ edge_index].vertex_indices[0]];
 					}
 					else
 					{
@@ -485,7 +511,7 @@ namespace mandala
 
 					if (edge_index >= 0)
 					{
-						vertex_position = vertex_positions[edges[edge_index].vertex_indices[0]];
+						vertex_position = vertex_positions[edges[ edge_index].vertex_indices[0]];
 					}
 					else
 					{
@@ -505,12 +531,12 @@ namespace mandala
 
 				//TODO: this is a bit of a monstrosity, clean this up
 				auto image = std::make_shared<image_t>();
-				image->width = (uint32_t)texture_width;
-				image->height = (uint32_t)texture_height;
+                image->width = static_cast<uint32_t>(texture_width);
+                image->height = static_cast<uint32_t>(texture_height);
 				image->bit_depth = 8;
 				image->color_type = color_type_e::rgb;
 
-				auto lighting_data_length = (3 * (int32_t)texture_width * (int32_t)texture_height);
+                auto lighting_data_length = 3 * static_cast<int32_t>(texture_width) * static_cast<int32_t>(texture_height);
 				auto lighting_data_begin = lighting_data.begin() + face.lightmap_offset;
 				auto lighting_data_end = lighting_data_begin + lighting_data_length;
 
@@ -665,29 +691,29 @@ namespace mandala
 		{
 			glDisable(GL_BLEND);
 		}
-	}
+    }
 
-	int32_t bsp_t::get_leaf_index_from_position(const vec3_t& position) const
-	{
-		int32_t node_index = 0;
+    int32_t bsp_t::get_leaf_index_from_position(const vec3_t& position) const
+    {
+        int32_t node_index = 0;
 
-		while (node_index >= 0)
-		{
-			const auto& node = nodes[node_index];
-			const auto& plane = planes[node.plane_index].plane;
+        while (node_index >= 0)
+        {
+            const auto& node = nodes[node_index];
+            const auto& plane = planes[node.plane_index].plane;
 
-			if (glm::dot(plane.normal, (position - plane.origin())) >= 0)
-			{
-				node_index = node.children[0];
-			}
-			else
-			{
-				node_index = node.children[1];
-			}
-		}
+            if (glm::dot(plane.normal, (position - plane.origin())) >= 0)
+            {
+                node_index = node.children[0];
+            }
+            else
+            {
+                node_index = node.children[1];
+            }
+        }
 
-		return ~node_index;
-	}
+        return ~node_index;
+    }
 
 	//bsp_t::trace_result_t bsp_t::trace(const trace_args_t& trace_args) const
 	//{

@@ -202,9 +202,6 @@
     <ClInclude Include="color.hpp">
       <Filter>mandala\utils</Filter>
     </ClInclude>
-    <ClInclude Include="mandala.hpp">
-      <Filter>mandala</Filter>
-    </ClInclude>
     <ClInclude Include="frame_buffer.hpp">
       <Filter>mandala\graphics</Filter>
     </ClInclude>
@@ -258,6 +255,9 @@
     </ClInclude>
     <ClInclude Include="index_type.hpp">
       <Filter>mandala\type_traits</Filter>
+    </ClInclude>
+    <ClInclude Include="opengl.hpp">
+      <Filter>mandala\graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

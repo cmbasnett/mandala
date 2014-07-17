@@ -1,13 +1,13 @@
 #pragma once
 
+//std
+#include <vector>
+#include <map>
+
 //mandala
 #include "resource.hpp"
 #include "vertex_buffer.hpp"
 #include "index_buffer.hpp"
-
-//std
-#include <vector>
-#include <map>
 
 namespace mandala
 {

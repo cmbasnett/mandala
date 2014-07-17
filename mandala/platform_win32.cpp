@@ -4,7 +4,7 @@
 #include <iostream>
 
 //mandala
-#include "mandala.hpp"
+#include "opengl.hpp"
 #include "platform_win32.hpp"
 
 namespace mandala

@@ -3,7 +3,7 @@
 #include <glm\ext.hpp>
 
 //mandala
-#include "../mandala.hpp"
+#include "../opengl.hpp"
 #include "../app.hpp"
 #include "../camera.hpp"
 #include "../model.hpp"

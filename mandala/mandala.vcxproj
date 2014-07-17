@@ -288,7 +288,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="is_less_than_or_equal.hpp" />
     <ClInclude Include="line.hpp" />
     <ClInclude Include="macros.hpp" />
-    <ClInclude Include="mandala.hpp" />
+    <ClInclude Include="opengl.hpp" />
     <ClInclude Include="material.hpp" />
     <ClInclude Include="md5b.hpp">
       <SubType>

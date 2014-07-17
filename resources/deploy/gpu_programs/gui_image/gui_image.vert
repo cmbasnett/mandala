@@ -11,7 +11,6 @@ in vec2 position;
 in vec2 texcoord;
 
 out vec2 out_texcoord;
-out vec4 out_color;
 
 void main() 
 {

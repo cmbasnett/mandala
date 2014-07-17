@@ -51,8 +51,8 @@ namespace mandala
 
 		int png_color_type = 0;
 
-		png_int_32 interlace_type;
-		png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &png_color_type, &interlace_type, nullptr, nullptr);
+        png_int_32 interlace_method;
+        png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &png_color_type, &interlace_method, nullptr, nullptr);
 
 		switch (png_color_type)
 		{

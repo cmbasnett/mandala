@@ -2,7 +2,7 @@
 #include <png.h>
 
 //mandala
-#include "mandala.hpp"
+#include "opengl.hpp"
 #include "texture.hpp"
 #include "image.hpp"
 #include "app.hpp"

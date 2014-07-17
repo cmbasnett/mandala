@@ -5,7 +5,7 @@
 #include <glm\ext.hpp>
 
 //mandala
-#include "mandala.hpp"
+#include "opengl.hpp"
 #include "bitmap_font.hpp"
 #include "app.hpp"
 #include "hash.hpp"
@@ -252,7 +252,7 @@ namespace mandala
 		return kerning_amount;
 	}
 
-	void bitmap_font_t::render_string(const std::wstring& string, const vec4_t& color_top, const vec4_t& color_bottom, mat4_t world, const mat4_t& view_projection) const
+	void bitmap_font_t::render_string(const std::wstring& string, const vec4_t& color_top, const vec4_t& color_bottom, mat4_t world, mat4_t view_projection) const
 	{
 		auto gpu_program = app.resources.get<gpu_program_t>(hash_t("bitmap_font.gpu"));
 		auto gpu_program_id = gpu_program->id;

@@ -21,32 +21,6 @@ namespace mandala
 
 	struct bsp_t : public resource_t
 	{
-		struct chunk_info_t
-		{
-			uint32_t offset = 0;
-			uint32_t length = 0;
-		};
-
-		enum class chunk_type_e : uint8_t
-		{
-			entities,
-			planes,
-			textures,
-			vertices,
-			visibliity,
-			nodes,
-			texture_info,
-			faces,
-			lighting,
-			clip_nodes,
-			leaves,
-			mark_surfaces,
-			edges,
-			surface_edges,
-			models,
-			count
-		};
-
 		enum class content_type_e : int32_t
 		{
 			empty = -1,

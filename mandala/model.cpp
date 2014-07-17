@@ -11,7 +11,7 @@
 #include <glm\gtc\type_ptr.hpp>	
 
 //mandala
-#include "mandala.hpp"
+#include "opengl.hpp"
 #include "model.hpp"
 #include "app.hpp"
 #include "md5b.hpp"
@@ -260,9 +260,6 @@ namespace mandala
 		glEnable(GL_DEPTH_TEST);
 
 		std::shared_ptr<gpu_program_t> gpu_program;
-
-        GLint program_id;
-        glGetIntegerv(GL_CURRENT_PROGRAM, &program_id);
 
 		for(auto& mesh : meshes)
 		{

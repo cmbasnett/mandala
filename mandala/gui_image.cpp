@@ -2,7 +2,7 @@
 #include "glm\ext.hpp"
 
 //mandala
-#include "mandala.hpp"
+#include "opengl.hpp"
 #include "app.hpp"
 #include "gpu_program.hpp"
 #include "texture.hpp"
@@ -20,17 +20,19 @@ namespace mandala
         };
 
         index_buffer = std::make_shared<index_buffer_type>();
-        index_buffer->data(indices, gpu_mgr_t::buffer_usage_e::stream_draw);
+        index_buffer->data(indices, gpu_mgr_t::buffer_usage_e::static_draw);
 
         vertex_buffer = std::make_shared<vertex_buffer_type>();
     }
 
 	void gui_image_t::render(mat4_t world_matrix, mat4_t view_projection_matrix)
-	{
-		if (is_hidden)
-		{
-			return;
-		}
+    {
+        if (is_hidden)
+        {
+            return;
+        }
+
+        const auto gpu_program = app.resources.get<gpu_program_t>(hash_t("gui_image.gpu"));
 
 		//push GL states
 		GLint blend_src_rgb;
@@ -43,9 +45,12 @@ namespace mandala
         glEnable(GL_BLEND); glCheckError();
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); glCheckError();
 
-        auto gpu_program = app.resources.get<gpu_program_t>(hash_t("gui_image.gpu"));
+        glDisable(GL_CULL_FACE);
 
         gpu.programs.push(gpu_program);
+
+        gpu.buffers.push(gpu_mgr_t::buffer_target_e::array, vertex_buffer);
+        gpu.buffers.push(gpu_mgr_t::buffer_target_e::element_array, index_buffer);
 
         auto diffuse_texture_location = glGetUniformLocation(gpu_program->id, "diffuse_texture"); glCheckError();
         auto view_projection_matrix_location = glGetUniformLocation(gpu_program->id, "view_projection_matrix"); glCheckError();
@@ -54,16 +59,16 @@ namespace mandala
         auto texcoord_location = glGetAttribLocation(gpu_program->id, "texcoord"); glCheckError();
         static const auto* position_offset = reinterpret_cast<void*>(offsetof(vertex_buffer_type::vertex_type, position));
         static const auto* texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_buffer_type::vertex_type, texcoord));
-
+        
         static const auto diffuse_texture_index = 0;
-
-        gpu.buffers.push(gpu_mgr_t::buffer_target_e::array, vertex_buffer);
-        gpu.buffers.push(gpu_mgr_t::buffer_target_e::element_array, index_buffer);
 
         const auto center = bounds.center();
 
         world_matrix *= glm::translate(center.x, center.y, 0.0f);
-        //world_matrix *= glm::scale(size.x, size.y, 0.0f);
+
+        auto sprite_size = static_cast<vec2_t>(sprite.region.rectangle.size());
+
+        world_matrix *= glm::scale(sprite_size.x, sprite_size.y, 0.0f);
 
         glUniform1i(diffuse_texture_location, diffuse_texture_index); glCheckError();
         glUniformMatrix4fv(view_projection_matrix_location, 1, GL_FALSE, glm::value_ptr(view_projection_matrix)); glCheckError();
@@ -115,10 +120,10 @@ namespace mandala
         if (sprite.region.is_rotated)
         {
             vertex_buffer_type::vertex_type vertices[vertex_count] = {
-                vertex_type(vec2_t(-0.5f, -0.5f) * size, vec2_t(sprite.region.uv.min.x, sprite.region.uv.max.y)),
-                vertex_type(vec2_t(0.5f, -0.5f) * size, vec2_t(sprite.region.uv.min.x, sprite.region.uv.min.y)),
-                vertex_type(vec2_t(0.5f, 0.5f) * size, vec2_t(sprite.region.uv.max.x, sprite.region.uv.min.y)),
-                vertex_type(vec2_t(-0.5f, 0.5f) * size, vec2_t(sprite.region.uv.max.x, sprite.region.uv.max.y))
+                vertex_type(vec2_t(-0.5f, -0.5f), vec2_t(sprite.region.uv.min.x, sprite.region.uv.max.y)),
+                vertex_type(vec2_t(0.5f, -0.5f), vec2_t(sprite.region.uv.min.x, sprite.region.uv.min.y)),
+                vertex_type(vec2_t(0.5f, 0.5f), vec2_t(sprite.region.uv.max.x, sprite.region.uv.min.y)),
+                vertex_type(vec2_t(-0.5f, 0.5f), vec2_t(sprite.region.uv.max.x, sprite.region.uv.max.y))
             };
 
             vertex_buffer->data(vertices, vertex_count, gpu_mgr_t::buffer_usage_e::dynamic_draw);
@@ -126,10 +131,10 @@ namespace mandala
         else
         {
             vertex_buffer_type::vertex_type vertices[vertex_count] = {
-                vertex_type(vec2_t(-0.5f, -0.5f) * size, vec2_t(sprite.region.uv.min.x, sprite.region.uv.min.y)),
-                vertex_type(vec2_t(0.5f, -0.5f) * size, vec2_t(sprite.region.uv.max.x, sprite.region.uv.min.y)),
-                vertex_type(vec2_t(0.5f, 0.5f) * size, vec2_t(sprite.region.uv.max.x, sprite.region.uv.max.y)),
-                vertex_type(vec2_t(-0.5f, 0.5f) * size, vec2_t(sprite.region.uv.min.x, sprite.region.uv.max.y))
+                vertex_type(vec2_t(-0.5f, -0.5f), vec2_t(sprite.region.uv.min.x, sprite.region.uv.min.y)),
+                vertex_type(vec2_t(0.5f, -0.5f), vec2_t(sprite.region.uv.max.x, sprite.region.uv.min.y)),
+                vertex_type(vec2_t(0.5f, 0.5f), vec2_t(sprite.region.uv.max.x, sprite.region.uv.max.y)),
+                vertex_type(vec2_t(-0.5f, 0.5f), vec2_t(sprite.region.uv.min.x, sprite.region.uv.max.y))
             };
 
             vertex_buffer->data(vertices, vertex_count, gpu_mgr_t::buffer_usage_e::dynamic_draw);

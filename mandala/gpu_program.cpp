@@ -2,7 +2,7 @@
 #include <boost\property_tree\json_parser.hpp>
 
 //mandala
-#include "mandala.hpp"
+#include "opengl.hpp"
 #include "gpu_program.hpp"
 #include "app.hpp"
 #include "shader.hpp"

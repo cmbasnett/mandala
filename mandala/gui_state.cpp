@@ -2,7 +2,7 @@
 #include "glm\ext.hpp"
 
 //mandala
-#include "mandala.hpp"
+#include "opengl.hpp"
 #include "gui_state.hpp"
 #include "platform.hpp"
 

@@ -56,7 +56,7 @@ namespace mandala
 
 		bitmap_font_t(std::istream& ifstream);
 
-		void render_string(const std::wstring& string, const vec4_t& color_top, const vec4_t& color_bottom, mat4_t world, const mat4_t& view_projection) const;
+		void render_string(const std::wstring& string, const vec4_t& color_top, const vec4_t& color_bottom, mat4_t world, mat4_t view_projection) const;
 		int16_t get_kerning_amount(wchar_t lhs, wchar_t rhs) const;
 		void get_string_pages(std::vector<uint8_t>& pages, const std::wstring& string) const;
 		int16_t get_string_width(const std::wstring& string) const;

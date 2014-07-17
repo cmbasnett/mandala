@@ -16,7 +16,6 @@
 #include "../texture.hpp"
 #include "../material.hpp"
 #include "../gpu_program.hpp"
-#include "../http_request.hpp"
 
 //armada
 #include "world_state.hpp"

@@ -1,5 +1,8 @@
 #pragma once
 
+//mandala
+#include "types.hpp"
+
 namespace mandala
 {
     struct input_event_t;
