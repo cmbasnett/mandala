@@ -6,8 +6,10 @@ uniform sampler2D diffuse_texture;
 
 in vec2 out_texcoord;
 
+out vec4 fragment;
+
 void main() 
 {
-	gl_FragColor = texture2D(diffuse_texture, out_texcoord);
+	fragment = texture2D(diffuse_texture, out_texcoord);
 }"
 }

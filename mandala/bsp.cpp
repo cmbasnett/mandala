@@ -8,9 +8,7 @@
 #include "app.hpp"
 #include "gpu_program.hpp"
 #include "image.hpp"
-#include "gpu_mgr.hpp"
-
-#define BSP_VERSION (30)
+#include "gpu.hpp"
 
 namespace mandala
 {
@@ -52,7 +50,9 @@ namespace mandala
 
 		istream.read(reinterpret_cast<char*>(&version), sizeof(version));
 
-        if (version != BSP_VERSION)
+        static const auto bsp_version = 30;
+
+        if (version != bsp_version)
 		{
 			throw std::exception();
 		}
@@ -373,9 +373,9 @@ namespace mandala
 			catch (...)
 			{
 				std::cerr << "couldn't load " << texture_name << std::endl;
-			}
+            }
 
-			textures.push_back(texture);
+            textures.push_back(texture);
 		}
 
 		//texture_info
@@ -461,7 +461,7 @@ namespace mandala
 		{
 			auto& face = faces[face_index];
 
-			if (face.lighting_styles[0] == 0 && (int32_t)face.lightmap_offset >= -1)
+			if (face.lighting_styles[0] == 0 && static_cast<int32_t>(face.lightmap_offset) >= -1)
 			{
 				auto min_u =  std::numeric_limits<float32_t>::max();
 				auto min_v =  std::numeric_limits<float32_t>::max();
@@ -544,21 +544,17 @@ namespace mandala
 
 				std::copy(lighting_data_begin, lighting_data_end, std::back_inserter(image->data));
 
-				auto lightmap_texture = std::make_shared<texture_t>(image);
+                auto lightmap_texture = std::make_shared<texture_t>(image);
 
-				face_lightmap_textures[face_index] = lightmap_texture;
+                face_lightmap_textures[face_index] = lightmap_texture;
 			}
 		}
 
-		glGenBuffers(1, &vertex_buffer);
-		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vertex_t), vertices.data(), GL_STATIC_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+        vertex_buffer = std::make_shared<vertex_buffer_type>();
+        vertex_buffer->data(vertices, gpu_t::buffer_usage_e::static_draw);
 
-		glGenBuffers(1, &index_buffer);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(uint32_t), indices.data(), GL_STATIC_DRAW);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        index_buffer = std::make_shared<index_buffer_type>();
+        index_buffer->data(indices, gpu_t::buffer_usage_e::static_draw);
 	}
 
 	void bsp_t::render(const camera_t& camera) const
@@ -605,20 +601,20 @@ namespace mandala
         static const auto lightmap_texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_t, lightmap_texcoord));
 
 		//bind buffers
-		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer); glCheckError();
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer); glCheckError();
+        gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
+        gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
 
 		//position
 		glEnableVertexAttribArray(position_location); glCheckError();
-		glVertexAttribPointer(position_location, 3, GL_FLOAT, false, vertex_size, position_offset); glCheckError();
+        glVertexAttribPointer(position_location, 3, GL_FLOAT, GL_FALSE, vertex_size, position_offset); glCheckError();
 
 		//diffuse_texcoord
 		glEnableVertexAttribArray(diffuse_texcoord_location); glCheckError();
-		glVertexAttribPointer(diffuse_texcoord_location, 2, GL_FLOAT, false, vertex_size, diffuse_texcoord_offset); glCheckError();
+        glVertexAttribPointer(diffuse_texcoord_location, 2, GL_FLOAT, GL_FALSE, vertex_size, diffuse_texcoord_offset); glCheckError();
 
 		//lightmap_texcoord
 		glEnableVertexAttribArray(lightmap_texcoord_location); glCheckError();
-		glVertexAttribPointer(lightmap_texcoord_location, 2, GL_FLOAT, false, vertex_size, lightmap_texcoord_offset); glCheckError();
+        glVertexAttribPointer(lightmap_texcoord_location, 2, GL_FLOAT, GL_FALSE, vertex_size, lightmap_texcoord_offset); glCheckError();
 
 		//world
 		glUniformMatrix4fv(world_location, 1, GL_FALSE, glm::value_ptr(mat4_t())); glCheckError();
@@ -656,7 +652,10 @@ namespace mandala
                 gpu.textures.bind(0, diffuse_texture);
                 gpu.textures.bind(1, lightmap_texture);
 
-				glDrawElements(GL_TRIANGLE_FAN, face.surface_edge_count, GL_UNSIGNED_INT, reinterpret_cast<GLvoid*>((face_start_indices[face_index] * sizeof(uint32_t)))); glCheckError();
+                gpu.draw_elements(gpu_t::primitive_type_e::triangle_fan,
+                    face.surface_edge_count,
+                    gpu_t::index_type_e::unsigned_int,
+                    face_start_indices[face_index] * sizeof(index_type));
 			}
 		}
 
@@ -664,8 +663,8 @@ namespace mandala
 		glDisableVertexAttribArray(diffuse_texcoord_location); glCheckError();
 		glDisableVertexAttribArray(lightmap_texcoord_location); glCheckError();
 
-		glBindBuffer(GL_ARRAY_BUFFER, 0); glCheckError();
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); glCheckError();
+        gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
+        gpu.buffers.pop(gpu_t::buffer_target_e::array);
 
 		gpu.programs.pop();
 

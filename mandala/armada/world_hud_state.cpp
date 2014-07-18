@@ -17,13 +17,13 @@ namespace mandala
 
 			crosshair_image = std::make_shared<gui_image_t>();
 			crosshair_image->is_autosized_to_texture = true;
-			crosshair_image->sprite = sprite_t(hash_t("crosshairs.json"), hash_t("crosshair9.png"));
-            crosshair_image->anchor_flags = gui_node_t::anchor_flag_all;
+			crosshair_image->sprite = sprite_t(hash_t("crosshairs.json"), hash_t("crosshair2.png"));
+            crosshair_image->anchor_flags = gui_node_t::anchor_flag_all;;
 			crosshair_image->clean();	//TODO: this shouldn't be necessary!!
 
-			layout->adopt(crosshair_image);
+            layout->adopt(crosshair_image);
 
-			layout->clean();
+            layout->clean();
 		}
 
 		world_hud_state_t::~world_hud_state_t()

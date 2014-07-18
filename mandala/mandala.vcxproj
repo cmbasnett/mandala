@@ -244,7 +244,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="frame_buffer.hpp" />
     <ClInclude Include="glm.hpp" />
     <ClInclude Include="gpu_buffer.hpp" />
-    <ClInclude Include="gpu_mgr.hpp" />
+    <ClInclude Include="gpu.hpp" />
     <ClInclude Include="gui_canvas.hpp" />
     <ClInclude Include="gui_image.hpp" />
     <ClInclude Include="gui_label.hpp" />
@@ -332,7 +332,7 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="app.cpp" />
     <ClCompile Include="collision.cpp" />
     <ClCompile Include="gpu_buffer.cpp" />
-    <ClCompile Include="gpu_mgr.cpp" />
+    <ClCompile Include="gpu.cpp" />
     <ClCompile Include="gui_image.cpp" />
     <ClCompile Include="gui_label.cpp" />
     <ClCompile Include="gui_node.cpp" />

@@ -28,7 +28,7 @@ namespace mandala
 
 			model_instance->render(camera, vec3_t(0));
 
-            //TODO: do through gpu_mgr
+            //TODO: do through gpu
 			glClear(GL_DEPTH_BUFFER_BIT);
 		}
 	};

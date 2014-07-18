@@ -7,7 +7,7 @@
 //mandala
 #include "types.hpp"
 #include "gpu_buffer.hpp"
-#include "gpu_mgr.hpp"
+#include "gpu.hpp"
 
 namespace mandala
 {
@@ -22,20 +22,20 @@ namespace mandala
         {
         }
 
-        void data(vertex_type* vertices, std::size_t count, gpu_mgr_t::buffer_usage_e usage)
+        void data(vertex_type* vertices, std::size_t count, gpu_t::buffer_usage_e usage)
         {
-            gpu.buffers.push(gpu_mgr_t::buffer_target_e::array, shared_from_this());
-            gpu.buffers.data(gpu_mgr_t::buffer_target_e::array, static_cast<void*>(vertices), vertex_size * count, usage);
-            gpu.buffers.pop(gpu_mgr_t::buffer_target_e::array);
+            gpu.buffers.push(gpu_t::buffer_target_e::array, shared_from_this());
+            gpu.buffers.data(gpu_t::buffer_target_e::array, static_cast<void*>(vertices), vertex_size * count, usage);
+            gpu.buffers.pop(gpu_t::buffer_target_e::array);
         }
 
         template<std::uintmax_t N>
-        void data(std::array<vertex_type, N> vertices, gpu_mgr_t::buffer_usage_e usage)
+        void data(std::array<vertex_type, N> vertices, gpu_t::buffer_usage_e usage)
         {
             data(vertices.data(), N, usage);
         }
 
-        void data(std::vector<vertex_type> vertices, gpu_mgr_t::buffer_usage_e usage)
+        void data(std::vector<vertex_type> vertices, gpu_t::buffer_usage_e usage)
         {
             data(vertices.data(), vertices.size(), usage);
         }

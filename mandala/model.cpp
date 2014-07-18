@@ -18,7 +18,7 @@
 #include "material.hpp"
 #include "texture.hpp"
 #include "gpu_program.hpp"
-#include "gpu_mgr.hpp"
+#include "gpu.hpp"
 
 namespace mandala
 {
@@ -228,10 +228,10 @@ namespace mandala
 			}
 
             mesh->vertex_buffer = std::make_shared<mesh_t::vertex_buffer_type>();
-            mesh->vertex_buffer->data(vertices, gpu_mgr_t::buffer_usage_e::static_draw);
+            mesh->vertex_buffer->data(vertices, gpu_t::buffer_usage_e::static_draw);
 
             mesh->index_buffer = std::make_shared<mesh_t::index_buffer_type>();
-            mesh->index_buffer->data(mesh_info.indices, gpu_mgr_t::buffer_usage_e::static_draw);
+            mesh->index_buffer->data(mesh_info.indices, gpu_t::buffer_usage_e::static_draw);
 
 			meshes.push_back(mesh);
 		}
@@ -369,8 +369,8 @@ namespace mandala
         static const auto emissive_texture_index = 3;
 
 		//bind buffers
-        gpu.buffers.push(gpu_mgr_t::buffer_target_e::array, vertex_buffer);
-        gpu.buffers.push(gpu_mgr_t::buffer_target_e::element_array, index_buffer);
+        gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
+        gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
 
         glEnableVertexAttribArray(position_location); glCheckError();
         glVertexAttribPointer(position_location, 3, GL_FLOAT, GL_FALSE, vertex_size, position_offset); glCheckError();
@@ -488,7 +488,7 @@ namespace mandala
         gpu.textures.unbind(diffuse_texture_index);
 
 		//unbind buffers
-        gpu.buffers.pop(gpu_mgr_t::buffer_target_e::array);
-        gpu.buffers.pop(gpu_mgr_t::buffer_target_e::element_array);
+        gpu.buffers.pop(gpu_t::buffer_target_e::array);
+        gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
 	}
 };

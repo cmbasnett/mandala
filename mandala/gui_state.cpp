@@ -29,7 +29,7 @@ namespace mandala
 		auto world_matrix = mat4_t();
 		auto projection_matrix = glm::ortho(0.0f, static_cast<float32_t>(screen_size.x), 0.0f, static_cast<float32_t>(screen_size.y));
 
-        //TODO: do through gpu_mgr
+        //TODO: do through gpu
 
 		//disable depth testing
 		glDisable(GL_DEPTH_TEST);

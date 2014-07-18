@@ -1,3 +1,6 @@
+//std
+#include <iostream>
+
 //mandala
 #include "quake_camera.hpp"
 #include "input_event.hpp"
@@ -38,16 +41,19 @@ namespace mandala
 		pitch += (pitch_target - pitch) * smoothing_value;
 		yaw += (yaw_target - yaw) * smoothing_value;
 
-		auto rotation_quaternion = glm::angleAxis(pitch, vec3_t(1, 0, 0)) * glm::angleAxis(yaw, vec3_t(0, 1, 0));
-		auto rotation_matrix = glm::mat3_cast(glm::normalize(rotation_quaternion));
-		auto forward = glm::row(rotation_matrix, 2);
+        auto rotation_quaternion = glm::angleAxis(pitch, vec3_t(1, 0, 0)) * glm::angleAxis(yaw, vec3_t(0, 1, 0));
+        auto rotation_matrix = glm::mat3_cast(glm::normalize(rotation_quaternion));
+        auto forward = glm::row(rotation_matrix, 2);
 
-		if (glm::length(local_velocity_target) > 1.0f)
+        //temporary local velocity target variable so we don't modify the original
+        auto local_velocity_target_tick = local_velocity_target;
+
+        if (glm::length(local_velocity_target_tick) > 1.0f)
 		{
-			local_velocity_target = glm::normalize(local_velocity_target);
+            local_velocity_target_tick = glm::normalize(local_velocity_target);
 		}
 
-		local_velocity += (local_velocity_target - local_velocity) * smoothing_value;
+        local_velocity += (local_velocity_target_tick - local_velocity) * smoothing_value;
 
 		velocity = glm::inverse(rotation_matrix) * (local_velocity * speed_max);
 		position += velocity * dt;

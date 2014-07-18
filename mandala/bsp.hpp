@@ -11,6 +11,8 @@
 #include "texture.hpp"
 #include "plane.hpp"
 #include "line.hpp"
+#include "vertex_buffer.hpp"
+#include "index_buffer.hpp"
 
 //boost
 #include <boost\dynamic_bitset.hpp>
@@ -164,6 +166,12 @@ namespace mandala
             texcoord_type lightmap_texcoord;
 		};
 
+        typedef vertex_t vertex_type;
+        typedef vertex_buffer_t<vertex_type> vertex_buffer_type;
+
+        typedef uint32_t index_type;
+        typedef index_buffer_t<index_type> index_buffer_type;
+
 		struct trace_args_t
 		{
 			line3_t line;
@@ -207,7 +215,7 @@ namespace mandala
 		bsp_t(const bsp_t&) = delete;
 		bsp_t& operator=(const bsp_t&) = delete;
 
-		uint32_t vertex_buffer = 0;
-		uint32_t index_buffer = 0;
+        std::shared_ptr<vertex_buffer_type> vertex_buffer;
+        std::shared_ptr<index_buffer_type> index_buffer;
 	};
 };

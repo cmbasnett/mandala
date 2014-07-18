@@ -232,9 +232,6 @@
     <ClInclude Include="padding.hpp">
       <Filter>mandala\gui</Filter>
     </ClInclude>
-    <ClInclude Include="gpu_mgr.hpp">
-      <Filter>mandala\graphics</Filter>
-    </ClInclude>
     <ClInclude Include="vertex_buffer.hpp">
       <Filter>mandala\graphics</Filter>
     </ClInclude>
@@ -257,6 +254,9 @@
       <Filter>mandala\type_traits</Filter>
     </ClInclude>
     <ClInclude Include="opengl.hpp">
+      <Filter>mandala\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu.hpp">
       <Filter>mandala\graphics</Filter>
     </ClInclude>
   </ItemGroup>
@@ -400,10 +400,10 @@
     <ClCompile Include="gui_node.cpp">
       <Filter>mandala\gui</Filter>
     </ClCompile>
-    <ClCompile Include="gpu_mgr.cpp">
+    <ClCompile Include="gpu_buffer.cpp">
       <Filter>mandala\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="gpu_buffer.cpp">
+    <ClCompile Include="gpu.cpp">
       <Filter>mandala\graphics</Filter>
     </ClCompile>
   </ItemGroup>

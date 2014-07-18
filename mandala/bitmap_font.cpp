@@ -11,7 +11,7 @@
 #include "hash.hpp"
 #include "texture.hpp"
 #include "gpu_program.hpp"
-#include "gpu_mgr.hpp"
+#include "gpu.hpp"
 
 #define BMF_MAGIC			("BMF")
 #define BMF_MAGIC_LENGTH	(3)
@@ -215,7 +215,7 @@ namespace mandala
 		}
 
         vertex_buffer = std::make_shared<vertex_buffer_type>();
-        vertex_buffer->data(vertices, gpu_mgr_t::buffer_usage_e::static_draw);
+        vertex_buffer->data(vertices, gpu_t::buffer_usage_e::static_draw);
 
 		//index buffer
 		std::vector<index_type> indices;
@@ -232,7 +232,7 @@ namespace mandala
 		}
 
         index_buffer = std::make_shared<index_buffer_type>();
-        index_buffer->data(indices, gpu_mgr_t::buffer_usage_e::static_draw);
+        index_buffer->data(indices, gpu_t::buffer_usage_e::static_draw);
 	}
 
 	int16_t bitmap_font_t::get_kerning_amount(const wchar_t lhs, const wchar_t rhs) const
@@ -285,10 +285,10 @@ namespace mandala
 		glDepthMask(GL_FALSE);
 
 		//vertex buffer
-        gpu.buffers.push(gpu_mgr_t::buffer_target_e::array, vertex_buffer);
+        gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
 
 		//index buffer
-        gpu.buffers.push(gpu_mgr_t::buffer_target_e::element_array, index_buffer);
+        gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
 
 		//position
 		glEnableVertexAttribArray(position_location);
@@ -366,8 +366,8 @@ namespace mandala
 		}
 
 		//unbind buffers
-        gpu.buffers.pop(gpu_mgr_t::buffer_target_e::element_array);
-        gpu.buffers.pop(gpu_mgr_t::buffer_target_e::array);
+        gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
+        gpu.buffers.pop(gpu_t::buffer_target_e::array);
 
 		glDepthMask(depth_mask);
 

@@ -38,20 +38,15 @@ namespace mandala
 
             bsp = app.resources.get<bsp_t>(hash_t("dod_flash.bsp"));
 
-            frame_buffer = std::make_shared<frame_buffer_t>(1024, 768);
-
             debug_label = std::make_shared<gui_label_t>();
             debug_label->bitmap_font = app.resources.get<bitmap_font_t>(hash_t("terminal_8.fnt"));
-            debug_label->color = vec4_t(1, 0, 0, 1);
+            debug_label->color = vec4_t(1, 1, 1, 1);
             debug_label->dock_mode = gui_node_t::dock_mode_e::fill;
             debug_label->vertical_alignment = gui_label_t::vertical_alignment_e::bottom;
             debug_label->justification = gui_label_t::justification_e::center;
             debug_label->padding = padding_t(16);
 
-            crosshair_sprite_refs.emplace_back(hash_t("crono.json"), hash_t("chrono_01.png"));
-            crosshair_sprite_refs.emplace_back(hash_t("crono.json"), hash_t("chrono_02.gif"));
-            crosshair_sprite_refs.emplace_back(hash_t("crono.json"), hash_t("chrono_03.gif"));
-            crosshair_sprite_refs.emplace_back(hash_t("crono.json"), hash_t("chrono_04.gif"));
+            crosshair_sprite_refs.emplace_back(hash_t("crosshairs.json"), hash_t("crosshair2.png"));
 
             crosshair_image = std::make_shared<gui_image_t>();
             crosshair_image->is_autosized_to_texture = true;

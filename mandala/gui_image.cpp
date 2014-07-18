@@ -9,7 +9,7 @@
 #include "sprite_set.hpp"
 #include "sprite.hpp"
 #include "gui_image.hpp"
-#include "gpu_mgr.hpp"
+#include "gpu.hpp"
 
 namespace mandala
 {
@@ -20,7 +20,7 @@ namespace mandala
         };
 
         index_buffer = std::make_shared<index_buffer_type>();
-        index_buffer->data(indices, gpu_mgr_t::buffer_usage_e::static_draw);
+        index_buffer->data(indices, gpu_t::buffer_usage_e::static_draw);
 
         vertex_buffer = std::make_shared<vertex_buffer_type>();
     }
@@ -49,8 +49,8 @@ namespace mandala
 
         gpu.programs.push(gpu_program);
 
-        gpu.buffers.push(gpu_mgr_t::buffer_target_e::array, vertex_buffer);
-        gpu.buffers.push(gpu_mgr_t::buffer_target_e::element_array, index_buffer);
+        gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
+        gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
 
         auto diffuse_texture_location = glGetUniformLocation(gpu_program->id, "diffuse_texture"); glCheckError();
         auto view_projection_matrix_location = glGetUniformLocation(gpu_program->id, "view_projection_matrix"); glCheckError();
@@ -82,15 +82,15 @@ namespace mandala
 
         gpu.textures.bind(diffuse_texture_index, sprite.sprite_set->texture);
 
-        glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_SHORT, nullptr); glCheckError();
+        gpu.draw_elements(gpu_t::primitive_type_e::triangle_fan, 4, gpu_t::index_type_e::unsigned_byte, 0);
 
         gpu.textures.unbind(diffuse_texture_index);
 
         glDisableVertexAttribArray(texcoord_location); glCheckError();
         glDisableVertexAttribArray(position_location); glCheckError();
 
-        gpu.buffers.pop(gpu_mgr_t::buffer_target_e::element_array);
-        gpu.buffers.pop(gpu_mgr_t::buffer_target_e::array);
+        gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
+        gpu.buffers.pop(gpu_t::buffer_target_e::array);
 
         gpu.programs.pop();
 
@@ -126,7 +126,7 @@ namespace mandala
                 vertex_type(vec2_t(-0.5f, 0.5f), vec2_t(sprite.region.uv.max.x, sprite.region.uv.max.y))
             };
 
-            vertex_buffer->data(vertices, vertex_count, gpu_mgr_t::buffer_usage_e::dynamic_draw);
+            vertex_buffer->data(vertices, vertex_count, gpu_t::buffer_usage_e::dynamic_draw);
         }
         else
         {
@@ -137,7 +137,7 @@ namespace mandala
                 vertex_type(vec2_t(-0.5f, 0.5f), vec2_t(sprite.region.uv.min.x, sprite.region.uv.max.y))
             };
 
-            vertex_buffer->data(vertices, vertex_count, gpu_mgr_t::buffer_usage_e::dynamic_draw);
+            vertex_buffer->data(vertices, vertex_count, gpu_t::buffer_usage_e::dynamic_draw);
         }
 
 		return gui_node_t::clean();
