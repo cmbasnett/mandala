@@ -42,8 +42,8 @@ namespace mandala
             debug_label->bitmap_font = app.resources.get<bitmap_font_t>(hash_t("terminal_8.fnt"));
             debug_label->color = vec4_t(1, 1, 1, 1);
             debug_label->dock_mode = gui_node_t::dock_mode_e::fill;
-            debug_label->vertical_alignment = gui_label_t::vertical_alignment_e::bottom;
-            debug_label->justification = gui_label_t::justification_e::center;
+            debug_label->vertical_alignment = gui_label_t::vertical_alignment_e::top;
+            debug_label->justification = gui_label_t::justification_e::left;
             debug_label->padding = padding_t(16);
 
             crosshair_sprite_refs.emplace_back(hash_t("crosshairs.json"), hash_t("crosshair2.png"));
@@ -75,7 +75,11 @@ namespace mandala
             render_info.leaf_index = bsp->get_leaf_index_from_position(camera.position);
 
             std::wostringstream oss;
-            oss << L"leaf index: " << render_info.leaf_index;
+            oss << L"position: [" << camera.position.x << ", " << camera.position.y << ", " << camera.position.z << "]" << std::endl;
+            oss << L"rotation: [pitch=" << camera.pitch << ", yaw=" << camera.yaw << "]" << std::endl;
+            oss << L"leaf index: " << bsp->render_stats.leaf_index << std::endl;
+            oss << L"leafs rendered: " << bsp->render_stats.leaf_count << std::endl;
+            oss << L"faces rendered: " << bsp->render_stats.face_count << std::endl;
             debug_label->string = oss.str();
 
             layout->clean();
@@ -157,16 +161,12 @@ namespace mandala
                 {
                     if (input_event.touch.position_delta.y > 0)
                     {
-                        ++crosshair_sprite_index;
+                        bsp->render_settings.gamma += 0.1f;
                     }
                     else
                     {
-                        --crosshair_sprite_index;
+                        bsp->render_settings.gamma -= 0.1f;
                     }
-
-                    crosshair_sprite_index = crosshair_sprite_index % crosshair_sprite_refs.size();
-
-                    crosshair_image->sprite = crosshair_sprite_refs[crosshair_sprite_index];
                 }
             }
 

@@ -50,49 +50,57 @@ namespace mandala
 			glow,
 			solid,
 			additive
-		};
+        };
 
-		struct node_t
-		{
+        struct node_t
+        {
             static const auto child_count = 2;
 
-			uint32_t plane_index = 0;
-            std::array<int16_t, child_count> children;
-			aabb3_i16_t aabb;
-			uint16_t face_start_index = 0;
-			uint16_t face_count = 0;
-		};
+            uint32_t plane_index = 0;
+            std::array<int16_t, child_count> child_indices;
+            aabb3_i16_t aabb;
+            uint16_t face_start_index = 0;
+            uint16_t face_count = 0;
+        };
 
 		struct face_t
-		{
+        {
+            typedef uint8_t lighting_style_type;
+
             static const auto lighting_style_count = 4;
+            static const lighting_style_type lighting_style_none = 255;
 
 			uint16_t plane_index = 0;
 			uint16_t plane_side = 0;
 			uint32_t surface_edge_start_index = 0;
 			uint16_t surface_edge_count = 0;
 			uint16_t texture_info_index = 0;
-            std::array<uint8_t, lighting_style_count> lighting_styles;
+            std::array<lighting_style_type, lighting_style_count> lighting_styles;
 			uint32_t lightmap_offset = 0;
 		};
 
 		struct leaf_t
 		{
             static const auto ambient_sound_level_count = 4;
+            
+            typedef uint8_t ambient_sound_level_type;
+            typedef aabb3_i16_t aabb_type;
 
 			content_type_e content_type = content_type_e::empty;
 			int32_t visibility_offset = 0;
-			aabb3_i16_t aabb;
+            aabb_type aabb;
 			uint16_t mark_surface_start_index = 0;
 			uint16_t mark_surface_count = 0;
-            std::array<uint8_t, ambient_sound_level_count> ambient_sound_levels;
+            std::array<ambient_sound_level_type, ambient_sound_level_count> ambient_sound_levels;
 		};
 
 		struct edge_t
 		{
+            typedef uint16_t vertex_index_type;
+
             static const auto vertex_index_count = 2;
 
-            std::array<uint16_t, vertex_index_count> vertex_indices;
+            std::array<vertex_index_type, vertex_index_count> vertex_indices;
 		};
 
 		struct texture_info_t
@@ -111,17 +119,21 @@ namespace mandala
 		{
             static const auto child_count = 2;
 
+            typedef int16_t child_index_type;
+
 			int32_t plane_index = 0;
-            std::array<int16_t, child_count> children;
+            std::array<child_index_type, child_count> child_indices;
 		};
 
 		struct model_t
 		{
-            static const auto head_node_count = 4;
+            static const auto head_node_index_count = 4;
+
+            typedef int32_t head_node_index_type;
 
 			aabb3_t aabb;
 			vec3_t origin;
-            std::array<int32_t, head_node_count> head_nodes;
+            std::array<head_node_index_type, head_node_index_count> head_node_indices;
 			int32_t vis_leafs = 0;
 			int32_t face_start_index = 0;
 			int32_t face_count = 0;
@@ -164,7 +176,7 @@ namespace mandala
             normal_type normal;
             texcoord_type diffuse_texcoord;
             texcoord_type lightmap_texcoord;
-		};
+        };
 
         typedef vertex_t vertex_type;
         typedef vertex_buffer_t<vertex_type> vertex_buffer_type;
@@ -184,12 +196,30 @@ namespace mandala
 			vec3_t position;
 			plane3_t plane;
 			float32_t ratio = 0.0f;
-		};
+        };
+
+        struct render_settings_t
+        {
+            float32_t gamma = 1.0f;
+        };
+
+        struct render_stats_t
+        {
+            uint32_t face_count = 0;
+            uint32_t leaf_count = 0;
+            uint32_t leaf_index = 0;
+
+            void reset()
+            {
+                face_count = 0;
+                leaf_count = 0;
+                leaf_index = 0;
+            }
+        };
 
 		bsp_t(std::istream& istream);
 
 		std::vector<plane_t> planes;
-		std::vector<vec3_t> vertex_positions;
 		std::vector<edge_t> edges;
 		std::vector<face_t> faces;
 		std::vector<int32_t> surface_edges;
@@ -204,12 +234,12 @@ namespace mandala
 		std::vector<size_t> face_start_indices;
 		size_t vis_leaf_count = 0;
 		std::vector<std::shared_ptr<texture_t>> textures;
-		std::vector<vertex_t> vertices;
-		std::vector<uint32_t> indices;
+        render_settings_t render_settings;
+        render_stats_t render_stats;
 
-		int32_t get_leaf_index_from_position(const vec3_t& position) const;
-		trace_result_t trace(const trace_args_t& args) const;
-		void render(const camera_t& camera) const;
+        int32_t get_leaf_index_from_position(const vec3_t& position) const;
+        trace_result_t trace(const trace_args_t& args) const;
+        void render(const camera_t& camera);
 
 	private:
 		bsp_t(const bsp_t&) = delete;
@@ -217,5 +247,9 @@ namespace mandala
 
         std::shared_ptr<vertex_buffer_type> vertex_buffer;
         std::shared_ptr<index_buffer_type> index_buffer;
+
+        void render_node(const camera_t& camera, int32_t node_index);
+        void render_leaf(const camera_t& camera, int32_t leaf_index);
+        void render_face(const camera_t& camera, int32_t face_index);
 	};
 };

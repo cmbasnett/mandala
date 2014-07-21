@@ -31,15 +31,16 @@ namespace mandala
 
 	void quake_camera_t::tick(float32_t dt)
 	{
-		const auto smoothing_value = glm::min(dt * (QUAKE_CAMERA_SMOOTHING_CONSTANT * smoothing_strength), 1.0f);
+		const auto rotation_smoothing_value = glm::min(dt * (QUAKE_CAMERA_SMOOTHING_CONSTANT * smoothing_strength), 1.0f);
+        const auto movement_smoothing_value = glm::min(dt * (QUAKE_CAMERA_SMOOTHING_CONSTANT * 0.25f), 1.0f);
 
 		pitch_target += pitch_speed * dt;
 		yaw_target += yaw_speed * dt;
 
 		pitch_target = glm::clamp(pitch_target, pitch_min, pitch_max);
 
-		pitch += (pitch_target - pitch) * smoothing_value;
-		yaw += (yaw_target - yaw) * smoothing_value;
+        pitch += (pitch_target - pitch) * rotation_smoothing_value;
+        yaw += (yaw_target - yaw) * rotation_smoothing_value;
 
         auto rotation_quaternion = glm::angleAxis(pitch, vec3_t(1, 0, 0)) * glm::angleAxis(yaw, vec3_t(0, 1, 0));
         auto rotation_matrix = glm::mat3_cast(glm::normalize(rotation_quaternion));
@@ -53,7 +54,7 @@ namespace mandala
             local_velocity_target_tick = glm::normalize(local_velocity_target);
 		}
 
-        local_velocity += (local_velocity_target_tick - local_velocity) * smoothing_value;
+        local_velocity += (local_velocity_target_tick - local_velocity) * movement_smoothing_value;
 
 		velocity = glm::inverse(rotation_matrix) * (local_velocity * speed_max);
 		position += velocity * dt;

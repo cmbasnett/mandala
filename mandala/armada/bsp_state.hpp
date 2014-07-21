@@ -4,6 +4,7 @@
 #include "../state.hpp"
 #include "../quake_camera.hpp"
 #include "../gui_state.hpp"
+#include "../bsp.hpp"
 
 //armada
 #include "skybox.hpp"
@@ -26,16 +27,17 @@ namespace mandala
 				size_t leaf_index = 0;
 			};
 
-			std::shared_ptr<bsp_t> bsp;
-			quake_camera_t camera;
-			std::shared_ptr<gui_label_t> debug_label;
-			std::shared_ptr<gui_image_t> crosshair_image;
-			skybox_t skybox;
-			render_info_t render_info;
-			std::vector<sprite_ref_t> crosshair_sprite_refs;
-			int32_t crosshair_sprite_index = 0;
-			std::shared_ptr<pause_state_t> pause_state;
+            std::shared_ptr<bsp_t> bsp;
+            quake_camera_t camera;
+            std::shared_ptr<gui_label_t> debug_label;
+            std::shared_ptr<gui_image_t> crosshair_image;
+            skybox_t skybox;
+            render_info_t render_info;
+            std::vector<sprite_ref_t> crosshair_sprite_refs;
+            int32_t crosshair_sprite_index = 0;
+            std::shared_ptr<pause_state_t> pause_state;
             std::shared_ptr<frame_buffer_t> frame_buffer;
+            bsp_t::render_stats_t render_stats;
 
 			bsp_state_t();
 			virtual ~bsp_state_t();
@@ -48,7 +50,7 @@ namespace mandala
 
 		private:
 			bsp_state_t(const bsp_state_t&) = delete;
-			bsp_state_t& operator=(const bsp_state_t&) = delete;
+            bsp_state_t& operator=(const bsp_state_t&) = delete;
 		};
 	};
 };

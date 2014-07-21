@@ -88,7 +88,9 @@ namespace mandala
 
 		//vertex_positions
 		const auto& vertices_chunk = chunks[static_cast<size_t>(chunk_t::type_e::vertices)];
-		istream.seekg(vertices_chunk.offset, std::ios_base::beg);
+        istream.seekg(vertices_chunk.offset, std::ios_base::beg);
+
+        std::vector<vec3_t> vertex_positions;
 
 		auto vertex_position_count = vertices_chunk.length / sizeof(vec3_t);
 		vertex_positions.resize(vertex_position_count);
@@ -158,8 +160,8 @@ namespace mandala
 		for (auto& node : nodes)
 		{
 			istream.read(reinterpret_cast<char*>(&node.plane_index), sizeof(node.plane_index));
-			istream.read(reinterpret_cast<char*>(&node.children[0]), sizeof(node.children[0]));
-			istream.read(reinterpret_cast<char*>(&node.children[1]), sizeof(node.children[1]));
+            istream.read(reinterpret_cast<char*>(&node.child_indices[0]), sizeof(node.child_indices[0]));
+            istream.read(reinterpret_cast<char*>(&node.child_indices[1]), sizeof(node.child_indices[1]));
 			istream.read(reinterpret_cast<char*>(&node.aabb.min.x), sizeof(node.aabb.min.x));
 			istream.read(reinterpret_cast<char*>(&node.aabb.min.z), sizeof(node.aabb.min.z));
 			istream.read(reinterpret_cast<char*>(&node.aabb.min.y), sizeof(node.aabb.min.y));
@@ -223,8 +225,8 @@ namespace mandala
 		for (auto& clip_node : clip_nodes)
 		{
 			istream.read(reinterpret_cast<char*>(&clip_node.plane_index), sizeof(clip_node.plane_index));
-			istream.read(reinterpret_cast<char*>(&clip_node.children[0]), sizeof(clip_node.children[0]));
-			istream.read(reinterpret_cast<char*>(&clip_node.children[1]), sizeof(clip_node.children[1]));
+            istream.read(reinterpret_cast<char*>(&clip_node.child_indices[0]), sizeof(clip_node.child_indices[0]));
+            istream.read(reinterpret_cast<char*>(&clip_node.child_indices[1]), sizeof(clip_node.child_indices[1]));
 		}
 
 		//models
@@ -245,10 +247,10 @@ namespace mandala
 			istream.read(reinterpret_cast<char*>(&model.origin.x), sizeof(model.origin.x));
 			istream.read(reinterpret_cast<char*>(&model.origin.z), sizeof(model.origin.z));
 			istream.read(reinterpret_cast<char*>(&model.origin.y), sizeof(model.origin.y));
-			istream.read(reinterpret_cast<char*>(&model.head_nodes[0]), sizeof(model.head_nodes[0]));
-			istream.read(reinterpret_cast<char*>(&model.head_nodes[1]), sizeof(model.head_nodes[1]));
-			istream.read(reinterpret_cast<char*>(&model.head_nodes[2]), sizeof(model.head_nodes[2]));
-			istream.read(reinterpret_cast<char*>(&model.head_nodes[3]), sizeof(model.head_nodes[3]));
+            istream.read(reinterpret_cast<char*>(&model.head_node_indices[0]), sizeof(model.head_node_indices[0]));
+            istream.read(reinterpret_cast<char*>(&model.head_node_indices[1]), sizeof(model.head_node_indices[1]));
+            istream.read(reinterpret_cast<char*>(&model.head_node_indices[2]), sizeof(model.head_node_indices[2]));
+            istream.read(reinterpret_cast<char*>(&model.head_node_indices[3]), sizeof(model.head_node_indices[3]));
 			istream.read(reinterpret_cast<char*>(&model.vis_leafs), sizeof(model.vis_leafs));
 			istream.read(reinterpret_cast<char*>(&model.face_start_index), sizeof(model.face_start_index));
 			istream.read(reinterpret_cast<char*>(&model.face_count), sizeof(model.face_count));
@@ -258,74 +260,77 @@ namespace mandala
 			model.origin.z = -model.origin.z;
 		}
 
-		//visibility
-		std::function<void(int32_t)> count_vis_leaves = [&](int32_t node_index)
-		{
-			if (node_index < 0)
-			{
-				if (node_index == -1 || leafs[~node_index].content_type == content_type_e::solid)
-				{
-					return;
-				}
+        //visibility
+        const auto& visibility_chunk = chunks[static_cast<size_t>(chunk_t::type_e::visibliity)];
+        istream.seekg(visibility_chunk.offset, std::ios_base::beg);
 
-				++vis_leaf_count;
+        if (visibility_chunk.length > 0)
+        {
+            std::function<void(int32_t)> count_vis_leaves = [&](int32_t node_index)
+            {
+                if (node_index < 0)
+                {
+                    if (node_index == -1 || leafs[~node_index].content_type == content_type_e::solid)
+                    {
+                        return;
+                    }
 
-				return;
-			}
+                    ++vis_leaf_count;
 
-			count_vis_leaves(nodes[node_index].children[0]);
-			count_vis_leaves(nodes[node_index].children[1]);
-		};
+                    return;
+                }
 
-		count_vis_leaves(0);
+                count_vis_leaves(nodes[node_index].child_indices[0]);
+                count_vis_leaves(nodes[node_index].child_indices[1]);
+            };
 
-		const auto& visibility_chunk = chunks[static_cast<size_t>(chunk_t::type_e::visibliity)];
-		istream.seekg(visibility_chunk.offset, std::ios_base::beg);
+            count_vis_leaves(0);
 
-		std::vector<uint8_t> visibility_data;
-		visibility_data.resize(visibility_chunk.length, '\0');
-		istream.read(reinterpret_cast<char*>(visibility_data.data()), visibility_data.size());
+            std::vector<uint8_t> visibility_data;
+            visibility_data.resize(visibility_chunk.length, '\0');
+            istream.read(reinterpret_cast<char*>(visibility_data.data()), visibility_data.size());
 
-		for (size_t i = 0; i < vis_leaf_count; ++i)
-		{
-			const auto& leaf = leafs[i + 1];
+            for (size_t i = 0; i < vis_leaf_count; ++i)
+            {
+                const auto& leaf = leafs[i + 1];
 
-			if (leaf.visibility_offset == 0)
-			{
-				continue;
-			}
+                if (leaf.visibility_offset < 0)
+                {
+                    continue;
+                }
 
-			auto leaf_pvs = boost::dynamic_bitset<>(leaf_count - 1);
-			leaf_pvs.reset();
+                auto leaf_pvs = boost::dynamic_bitset<>(leaf_count - 1);
+                leaf_pvs.reset();
 
-			size_t leaf_pvs_index = 0;
+                size_t leaf_pvs_index = 0;
 
-			auto visibility_data_itr = visibility_data.begin() + leaf.visibility_offset;
+                auto visibility_data_itr = visibility_data.begin() + leaf.visibility_offset;
 
-			while (leaf_pvs_index < vis_leaf_count)
-			{
-				if (*visibility_data_itr == 0)
-				{
-					++visibility_data_itr;
+                while (leaf_pvs_index < vis_leaf_count)
+                {
+                    if (*visibility_data_itr == 0)
+                    {
+                        ++visibility_data_itr;
 
-					leaf_pvs_index += 8 * (*visibility_data_itr);
-				}
-				else
-				{
-					for (uint8_t mask = 1; mask != 0; ++leaf_pvs_index, mask <<= 1)
-					{
-						if ((*visibility_data_itr & mask) && (leaf_pvs_index < leaf_count))
-						{
-							leaf_pvs[leaf_pvs_index] = true;
-						}
-					}
-				}
+                        leaf_pvs_index += 8 * (*visibility_data_itr);
+                    }
+                    else
+                    {
+                        for (uint8_t mask = 1; mask != 0; ++leaf_pvs_index, mask <<= 1)
+                        {
+                            if ((*visibility_data_itr & mask) && (leaf_pvs_index < vis_leaf_count))
+                            {
+                                leaf_pvs[leaf_pvs_index] = true;
+                            }
+                        }
+                    }
 
-				++visibility_data_itr;
-			}
+                    ++visibility_data_itr;
+                }
 
-			leaf_pvs_map.insert(std::make_pair(i, std::move(leaf_pvs)));
-		}
+                leaf_pvs_map.insert(std::make_pair(i, std::move(leaf_pvs)));
+            }
+        }
 
 		//textures
 		const auto& textures_chunk = chunks[static_cast<size_t>(chunk_t::type_e::textures)];
@@ -403,6 +408,9 @@ namespace mandala
 			texture_info.t.axis.z = -texture_info.t.axis.z;
 		}
 
+        std::vector<index_type> indices;
+        std::vector<vertex_type> vertices;
+
 		for (size_t face_index = 0; face_index < faces.size(); ++face_index)
 		{
 			const auto& face = faces[face_index];
@@ -462,11 +470,11 @@ namespace mandala
 			auto& face = faces[face_index];
 
 			if (face.lighting_styles[0] == 0 && static_cast<int32_t>(face.lightmap_offset) >= -1)
-			{
-				auto min_u =  std::numeric_limits<float32_t>::max();
-				auto min_v =  std::numeric_limits<float32_t>::max();
-				auto max_u = -std::numeric_limits<float32_t>::max();
-				auto max_v = -std::numeric_limits<float32_t>::max();
+            {
+                auto min_u = std::numeric_limits<float32_t>::max();
+                auto min_v = std::numeric_limits<float32_t>::max();
+                auto max_u = -std::numeric_limits<float32_t>::max();
+                auto max_v = -std::numeric_limits<float32_t>::max();
 
 				auto& texture_info = texture_infos[face.texture_info_index];
 
@@ -557,17 +565,18 @@ namespace mandala
         index_buffer->data(indices, gpu_t::buffer_usage_e::static_draw);
 	}
 
-	void bsp_t::render(const camera_t& camera) const
+	void bsp_t::render(const camera_t& camera)
     {
-        auto leaf_index = get_leaf_index_from_position(camera.position);
+        render_stats.reset();
 
-        if (leaf_index <= 0)
+        render_stats.leaf_index = get_leaf_index_from_position(camera.position);
+
+        if (render_stats.leaf_index <= 0)
         {
             return;
         }
 
-		auto gpu_program = app.resources.get<gpu_program_t>(hash_t("bsp.gpu"));
-		auto program_id = gpu_program->id;
+		const auto gpu_program = app.resources.get<gpu_program_t>(hash_t("bsp.gpu"));
 
 		//cull face
 		auto is_cull_face_enabled = glIsEnabled(GL_CULL_FACE);
@@ -587,77 +596,45 @@ namespace mandala
 
 		gpu.programs.push(gpu_program);
 
-        static const auto position_location = glGetAttribLocation(program_id, "position"); glCheckError();
-        static const auto diffuse_texcoord_location = glGetAttribLocation(program_id, "diffuse_texcoord"); glCheckError();
-        static const auto lightmap_texcoord_location = glGetAttribLocation(program_id, "lightmap_texcoord"); glCheckError();
-        static const auto world_location = glGetUniformLocation(program_id, "world"); glCheckError();
-        static const auto view_projection_location = glGetUniformLocation(program_id, "view_projection"); glCheckError();
-        static const auto diffuse_texture_location = glGetUniformLocation(program_id, "diffuse_texture"); glCheckError();
-        static const auto lightmap_texture_location = glGetUniformLocation(program_id, "lightmap_texture"); glCheckError();
-        static const auto lightmap_gamma_location = glGetUniformLocation(program_id, "lightmap_gamma"); glCheckError();
-		static const auto vertex_size = sizeof(vertex_t);
+        static const auto position_location = glGetAttribLocation(gpu_program->id, "position"); glCheckError();
+        static const auto diffuse_texcoord_location = glGetAttribLocation(gpu_program->id, "diffuse_texcoord"); glCheckError();
+        static const auto lightmap_texcoord_location = glGetAttribLocation(gpu_program->id, "lightmap_texcoord"); glCheckError();
+
+        static const auto world_location = glGetUniformLocation(gpu_program->id, "world"); glCheckError();
+        static const auto view_projection_location = glGetUniformLocation(gpu_program->id, "view_projection"); glCheckError();
+        static const auto diffuse_texture_location = glGetUniformLocation(gpu_program->id, "diffuse_texture"); glCheckError();
+        static const auto lightmap_texture_location = glGetUniformLocation(gpu_program->id, "lightmap_texture"); glCheckError();
+        static const auto lightmap_gamma_location = glGetUniformLocation(gpu_program->id, "lightmap_gamma"); glCheckError();
+
+        static const auto vertex_size = sizeof(vertex_t);
+
         static const auto position_offset = reinterpret_cast<void*>(offsetof(vertex_t, position));
         static const auto diffuse_texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_t, diffuse_texcoord));
         static const auto lightmap_texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_t, lightmap_texcoord));
 
-		//bind buffers
+        static const auto diffuse_texture_index = 0;
+        static const auto lightmap_texture_index = 1;
+
+        //bind buffers
         gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
         gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
 
-		//position
-		glEnableVertexAttribArray(position_location); glCheckError();
+        //position
+        glEnableVertexAttribArray(position_location); glCheckError();
+        glEnableVertexAttribArray(diffuse_texcoord_location); glCheckError();
+        glEnableVertexAttribArray(lightmap_texcoord_location); glCheckError();
+
         glVertexAttribPointer(position_location, 3, GL_FLOAT, GL_FALSE, vertex_size, position_offset); glCheckError();
-
-		//diffuse_texcoord
-		glEnableVertexAttribArray(diffuse_texcoord_location); glCheckError();
         glVertexAttribPointer(diffuse_texcoord_location, 2, GL_FLOAT, GL_FALSE, vertex_size, diffuse_texcoord_offset); glCheckError();
-
-		//lightmap_texcoord
-		glEnableVertexAttribArray(lightmap_texcoord_location); glCheckError();
         glVertexAttribPointer(lightmap_texcoord_location, 2, GL_FLOAT, GL_FALSE, vertex_size, lightmap_texcoord_offset); glCheckError();
 
-		//world
-		glUniformMatrix4fv(world_location, 1, GL_FALSE, glm::value_ptr(mat4_t())); glCheckError();
+        glUniformMatrix4fv(world_location, 1, GL_FALSE, glm::value_ptr(mat4_t())); glCheckError();
+        glUniformMatrix4fv(view_projection_location, 1, GL_FALSE, glm::value_ptr(camera.projection_matrix * camera.view_matrix)); glCheckError();
+		glUniform1i(diffuse_texture_location, diffuse_texture_index); glCheckError();
+		glUniform1i(lightmap_texture_location, lightmap_texture_index); glCheckError();
+		glUniform1f(lightmap_gamma_location, render_settings.gamma); glCheckError();
 
-		//view_projection
-		glUniformMatrix4fv(view_projection_location, 1, GL_FALSE, glm::value_ptr(camera.projection_matrix * camera.view_matrix)); glCheckError();
-
-		//diffuse_texture
-		glUniform1i(diffuse_texture_location, 0); glCheckError();
-
-		//lightmap_texture
-		glUniform1i(lightmap_texture_location, 1); glCheckError();
-
-		//lightmap_gamma
-		glUniform1f(lightmap_gamma_location, 1.0f); glCheckError();
-
-		auto& leaf_pvs = leaf_pvs_map.at(leaf_index);
-
-		for (size_t i = 0; i < leaf_pvs.size(); ++i)
-		{
-			//if (!leaf_pvs[i])
-			//{
-			//	continue;
-			//}
-
-			auto& leaf = leafs[i];
-
-			for (auto j = 0; j < leaf.mark_surface_count; ++j)
-			{
-				auto face_index = mark_surfaces[leaf.mark_surface_start_index + j];
-				auto& face = faces[face_index];
-				auto& diffuse_texture = textures[texture_infos[face.texture_info_index].texture_index];
-				auto& lightmap_texture = face_lightmap_textures[face_index];
-
-                gpu.textures.bind(0, diffuse_texture);
-                gpu.textures.bind(1, lightmap_texture);
-
-                gpu.draw_elements(gpu_t::primitive_type_e::triangle_fan,
-                    face.surface_edge_count,
-                    gpu_t::index_type_e::unsigned_int,
-                    face_start_indices[face_index] * sizeof(index_type));
-			}
-		}
+        render_node(camera, 0);
 
 		glDisableVertexAttribArray(position_location); glCheckError();
 		glDisableVertexAttribArray(diffuse_texcoord_location); glCheckError();
@@ -667,6 +644,8 @@ namespace mandala
         gpu.buffers.pop(gpu_t::buffer_target_e::array);
 
 		gpu.programs.pop();
+
+        auto viewport = gpu.viewports.peek();
 
 		//cull face
 		if (is_cull_face_enabled)
@@ -692,6 +671,97 @@ namespace mandala
 		}
     }
 
+    void bsp_t::render_node(const camera_t& camera, int32_t node_index)
+    {
+        if (node_index < 0)
+        {
+            if (node_index == -1)
+            {
+                return;
+            }
+
+            auto camera_leaf_index = get_leaf_index_from_position(camera.position);
+            auto leaf_pvs_map_itr = leaf_pvs_map.find(camera_leaf_index - 1);
+
+            if (camera_leaf_index > 0 &&
+                leaf_pvs_map_itr != leaf_pvs_map.end() &&
+                !leaf_pvs_map[camera_leaf_index - 1][~node_index - 1])
+            {
+                return;
+            }
+
+            render_leaf(camera, ~node_index);
+        }
+        else
+        {
+            float32_t distance;
+
+            const auto& node = nodes[node_index];
+            const auto& plane = planes[node.plane_index];
+
+            switch (plane.type)
+            {
+            case plane_t::type_e::x:
+                distance = camera.position.x - plane.plane.distance;
+                break;
+            case plane_t::type_e::y:
+                distance = camera.position.y - plane.plane.distance;
+                break;
+            case plane_t::type_e::z:
+                distance = camera.position.z - plane.plane.distance;
+                break;
+            default:
+                distance = glm::dot(plane.plane.normal, camera.position) - plane.plane.distance;
+            }
+
+            if (distance > 0)
+            {
+                render_node(camera, node.child_indices[1]);
+                render_node(camera, node.child_indices[0]);
+            }
+            else
+            {
+                render_node(camera, node.child_indices[0]);
+                render_node(camera, node.child_indices[1]);
+            }
+        }
+    }
+
+    void bsp_t::render_leaf(const camera_t& camera, int32_t leaf_index)
+    {
+        const auto& leaf = leafs[leaf_index];
+
+        for (auto i = 0; i < leaf.mark_surface_count; ++i)
+        {
+            render_face(camera, mark_surfaces[leaf.mark_surface_start_index + i]);
+        }
+
+        ++render_stats.leaf_count;
+    }
+
+    void bsp_t::render_face(const camera_t& camera, int32_t face_index)
+    {
+        const auto& face = faces[face_index];
+
+        if (face.lighting_styles[0] == face_t::lighting_style_none)
+        {
+            return;
+        }
+
+        const auto& diffuse_texture = textures[texture_infos[face.texture_info_index].texture_index];
+        const auto& lightmap_texture = face_lightmap_textures[face_index];
+
+        gpu.textures.bind(0, diffuse_texture);
+        gpu.textures.bind(1, lightmap_texture);
+
+        gpu.draw_elements(gpu_t::primitive_type_e::triangle_fan,
+            face.surface_edge_count,
+            gpu_t::index_type_e::unsigned_int,
+            face_start_indices[face_index] * sizeof(index_type));
+
+        ++render_stats.face_count;
+    }
+
     int32_t bsp_t::get_leaf_index_from_position(const vec3_t& position) const
     {
         int32_t node_index = 0;
@@ -703,11 +773,11 @@ namespace mandala
 
             if (glm::dot(plane.normal, (position - plane.origin())) >= 0)
             {
-                node_index = node.children[0];
+                node_index = node.child_indices[0];
             }
             else
             {
-                node_index = node.children[1];
+                node_index = node.child_indices[1];
             }
         }
 
