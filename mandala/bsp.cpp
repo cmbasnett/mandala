@@ -567,14 +567,110 @@ namespace mandala
 
 	void bsp_t::render(const camera_t& camera)
     {
-        render_stats.reset();
+        static boost::dynamic_bitset<> faces_rendered = boost::dynamic_bitset<>(faces.size());
+        faces_rendered.reset();
 
-        render_stats.leaf_index = get_leaf_index_from_position(camera.position);
-
-        if (render_stats.leaf_index <= 0)
+        auto render_face = [&](int32_t face_index)
         {
-            return;
-        }
+            if (faces_rendered[face_index])
+            {
+                ++render_stats.face_overdraw_count;
+
+                return;
+            }
+
+            const auto& face = faces[face_index];
+
+            if (face.lighting_styles[0] == face_t::lighting_style_none)
+            {
+                return;
+            }
+
+            const auto& diffuse_texture = textures[texture_infos[face.texture_info_index].texture_index];
+            const auto& lightmap_texture = face_lightmap_textures[face_index];
+
+            gpu.textures.bind(0, diffuse_texture);
+            gpu.textures.bind(1, lightmap_texture);
+
+            gpu.draw_elements(gpu_t::primitive_type_e::triangle_fan,
+                face.surface_edge_count,
+                gpu_t::index_type_e::unsigned_int,
+                face_start_indices[face_index] * sizeof(index_type));
+
+            faces_rendered[face_index] = true;
+
+            ++render_stats.face_count;
+        };
+
+        auto render_leaf = [&](int32_t leaf_index)
+        {
+            const auto& leaf = leafs[leaf_index];
+
+            for (auto i = 0; i < leaf.mark_surface_count; ++i)
+            {
+                render_face(mark_surfaces[leaf.mark_surface_start_index + i]);
+            }
+
+            ++render_stats.leaf_count;
+        };
+
+        std::function<void(int32_t)> render_node = [&](int32_t node_index)
+        {
+            if (node_index < 0)
+            {
+                if (node_index == -1)
+                {
+                    return;
+                }
+
+                auto camera_leaf_index = get_leaf_index_from_position(camera.position);
+                auto leaf_pvs_map_itr = leaf_pvs_map.find(camera_leaf_index - 1);
+
+                if (camera_leaf_index > 0 &&
+                    leaf_pvs_map_itr != leaf_pvs_map.end() &&
+                    !leaf_pvs_map[camera_leaf_index - 1][~node_index - 1])
+                {
+                    return;
+                }
+
+                render_leaf(~node_index);
+            }
+            else
+            {
+                float32_t distance;
+
+                const auto& node = nodes[node_index];
+                const auto& plane = planes[node.plane_index];
+
+                switch (plane.type)
+                {
+                case plane_t::type_e::x:
+                    distance = camera.position.x - plane.plane.distance;
+                    break;
+                case plane_t::type_e::y:
+                    distance = camera.position.y - plane.plane.distance;
+                    break;
+                case plane_t::type_e::z:
+                    distance = camera.position.z - plane.plane.distance;
+                    break;
+                default:
+                    distance = glm::dot(plane.plane.normal, camera.position) - plane.plane.distance;
+                }
+
+                if (distance > 0)
+                {
+                    render_node(node.child_indices[1]);
+                    render_node(node.child_indices[0]);
+                }
+                else
+                {
+                    render_node(node.child_indices[0]);
+                    render_node(node.child_indices[1]);
+                }
+            }
+        };
+
+        render_stats.reset();
 
 		const auto gpu_program = app.resources.get<gpu_program_t>(hash_t("bsp.gpu"));
 
@@ -634,7 +730,7 @@ namespace mandala
 		glUniform1i(lightmap_texture_location, lightmap_texture_index); glCheckError();
 		glUniform1f(lightmap_gamma_location, render_settings.gamma); glCheckError();
 
-        render_node(camera, 0);
+        render_node(0);
 
 		glDisableVertexAttribArray(position_location); glCheckError();
 		glDisableVertexAttribArray(diffuse_texcoord_location); glCheckError();
@@ -669,97 +765,6 @@ namespace mandala
 		{
 			glDisable(GL_BLEND);
 		}
-    }
-
-    void bsp_t::render_node(const camera_t& camera, int32_t node_index)
-    {
-        if (node_index < 0)
-        {
-            if (node_index == -1)
-            {
-                return;
-            }
-
-            auto camera_leaf_index = get_leaf_index_from_position(camera.position);
-            auto leaf_pvs_map_itr = leaf_pvs_map.find(camera_leaf_index - 1);
-
-            if (camera_leaf_index > 0 &&
-                leaf_pvs_map_itr != leaf_pvs_map.end() &&
-                !leaf_pvs_map[camera_leaf_index - 1][~node_index - 1])
-            {
-                return;
-            }
-
-            render_leaf(camera, ~node_index);
-        }
-        else
-        {
-            float32_t distance;
-
-            const auto& node = nodes[node_index];
-            const auto& plane = planes[node.plane_index];
-
-            switch (plane.type)
-            {
-            case plane_t::type_e::x:
-                distance = camera.position.x - plane.plane.distance;
-                break;
-            case plane_t::type_e::y:
-                distance = camera.position.y - plane.plane.distance;
-                break;
-            case plane_t::type_e::z:
-                distance = camera.position.z - plane.plane.distance;
-                break;
-            default:
-                distance = glm::dot(plane.plane.normal, camera.position) - plane.plane.distance;
-            }
-
-            if (distance > 0)
-            {
-                render_node(camera, node.child_indices[1]);
-                render_node(camera, node.child_indices[0]);
-            }
-            else
-            {
-                render_node(camera, node.child_indices[0]);
-                render_node(camera, node.child_indices[1]);
-            }
-        }
-    }
-
-    void bsp_t::render_leaf(const camera_t& camera, int32_t leaf_index)
-    {
-        const auto& leaf = leafs[leaf_index];
-
-        for (auto i = 0; i < leaf.mark_surface_count; ++i)
-        {
-            render_face(camera, mark_surfaces[leaf.mark_surface_start_index + i]);
-        }
-
-        ++render_stats.leaf_count;
-    }
-
-    void bsp_t::render_face(const camera_t& camera, int32_t face_index)
-    {
-        const auto& face = faces[face_index];
-
-        if (face.lighting_styles[0] == face_t::lighting_style_none)
-        {
-            return;
-        }
-
-        const auto& diffuse_texture = textures[texture_infos[face.texture_info_index].texture_index];
-        const auto& lightmap_texture = face_lightmap_textures[face_index];
-
-        gpu.textures.bind(0, diffuse_texture);
-        gpu.textures.bind(1, lightmap_texture);
-
-        gpu.draw_elements(gpu_t::primitive_type_e::triangle_fan,
-            face.surface_edge_count,
-            gpu_t::index_type_e::unsigned_int,
-            face_start_indices[face_index] * sizeof(index_type));
-
-        ++render_stats.face_count;
     }
 
     int32_t bsp_t::get_leaf_index_from_position(const vec3_t& position) const

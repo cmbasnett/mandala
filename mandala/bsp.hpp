@@ -208,12 +208,14 @@ namespace mandala
             uint32_t face_count = 0;
             uint32_t leaf_count = 0;
             uint32_t leaf_index = 0;
+            uint32_t face_overdraw_count = 0;
 
             void reset()
             {
                 face_count = 0;
                 leaf_count = 0;
                 leaf_index = 0;
+                face_overdraw_count = 0;
             }
         };
 
@@ -247,9 +249,5 @@ namespace mandala
 
         std::shared_ptr<vertex_buffer_type> vertex_buffer;
         std::shared_ptr<index_buffer_type> index_buffer;
-
-        void render_node(const camera_t& camera, int32_t node_index);
-        void render_leaf(const camera_t& camera, int32_t leaf_index);
-        void render_face(const camera_t& camera, int32_t face_index);
 	};
 };
