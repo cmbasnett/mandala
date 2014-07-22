@@ -68,7 +68,6 @@ namespace mandala
             camera.tick(dt);
 
             //app.audio.doppler.factor = 0.0f;
-
             //app.audio.listener.position = camera.position;
             //app.audio.listener.velocity = camera.velocity;
 
@@ -80,7 +79,6 @@ namespace mandala
             oss << L"leaf index: " << bsp->render_stats.leaf_index << std::endl;
             oss << L"leafs rendered: " << bsp->render_stats.leaf_count << std::endl;
             oss << L"faces rendered: " << bsp->render_stats.face_count << std::endl;
-            oss << L"face overdraw: " << bsp->render_stats.face_overdraw_count << std::endl;
             debug_label->string = oss.str();
 
             layout->clean();

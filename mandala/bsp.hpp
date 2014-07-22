@@ -16,6 +16,8 @@
 
 //boost
 #include <boost\dynamic_bitset.hpp>
+#include <boost\lexical_cast.hpp>
+#include <boost\optional.hpp>
 
 namespace mandala
 {
@@ -23,6 +25,8 @@ namespace mandala
 
 	struct bsp_t : public resource_t
 	{
+        typedef int32_t node_index_type;
+
 		enum class content_type_e : int32_t
 		{
 			empty = -1,
@@ -123,21 +127,21 @@ namespace mandala
 
 			int32_t plane_index = 0;
             std::array<child_index_type, child_count> child_indices;
-		};
+        };
 
-		struct model_t
-		{
+        struct model_t
+        {
             static const auto head_node_index_count = 4;
 
             typedef int32_t head_node_index_type;
 
-			aabb3_t aabb;
-			vec3_t origin;
+            aabb3_t aabb;
+            vec3_t origin;
             std::array<head_node_index_type, head_node_index_count> head_node_indices;
-			int32_t vis_leafs = 0;
-			int32_t face_start_index = 0;
-			int32_t face_count = 0;
-		};
+            int32_t vis_leafs = 0;
+            int32_t face_start_index = 0;
+            int32_t face_count = 0;
+        };
 
 		struct bsp_texture_t
 		{
@@ -208,15 +212,77 @@ namespace mandala
             uint32_t face_count = 0;
             uint32_t leaf_count = 0;
             uint32_t leaf_index = 0;
-            uint32_t face_overdraw_count = 0;
 
             void reset()
             {
                 face_count = 0;
                 leaf_count = 0;
                 leaf_index = 0;
-                face_overdraw_count = 0;
             }
+        };
+
+        struct entity_t
+        {
+            entity_t(std::string& string)
+            {
+                size_t end = -1;
+
+                for (;;)
+                {
+                    auto begin = string.find_first_of('"', end + 1);
+
+                    if (begin == -1)
+                    {
+                        break;
+                    }
+
+                    end = string.find_first_of('"', begin + 1);
+
+                    auto key = string.substr(begin + 1, end - begin - 1);
+
+                    begin = string.find_first_of('"', end + 1);
+                    end = string.find_first_of('"', begin + 1);
+
+                    auto value = string.substr(begin + 1, end - begin - 1);
+
+                    properties.insert(std::make_pair(key, value));
+                }
+            }
+
+            entity_t(entity_t&& copy) :
+                properties(std::move(copy.properties))
+            {
+            }
+
+            template<typename T = std::string>
+            T get_property(std::string key) const
+            {
+                return boost::lexical_cast<T>(properties.at(key));
+            }
+
+            template<typename T = std::string>
+            boost::optional<T> get_property_optional(std::string key) const
+            {
+                boost::optional<T> property;
+
+                auto properties_itr = properties.find(key);
+
+                if (properties_itr != properties.end())
+                {
+                    try
+                    {
+                        property = boost::lexical_cast<T>(properties_itr->second);
+                    }
+                    catch (boost::bad_lexical_cast e)
+                    {
+                    }
+                }
+
+                return property;
+            }
+
+        private:
+            std::map<std::string, std::string> properties;
         };
 
 		bsp_t(std::istream& istream);
@@ -231,9 +297,11 @@ namespace mandala
 		std::vector<texture_info_t> texture_infos;
 		std::vector<std::shared_ptr<texture_t>> face_lightmap_textures;
 		std::vector<clip_node_t> clip_nodes;
-		std::vector<model_t> models;
-		std::map<size_t, boost::dynamic_bitset<>> leaf_pvs_map;
-		std::vector<size_t> face_start_indices;
+        std::vector<model_t> models;
+        std::vector<entity_t> entities;
+        std::vector<size_t> brush_entity_indices;
+        std::map<size_t, boost::dynamic_bitset<>> leaf_pvs_map;
+        std::vector<size_t> face_start_indices;
 		size_t vis_leaf_count = 0;
 		std::vector<std::shared_ptr<texture_t>> textures;
         render_settings_t render_settings;

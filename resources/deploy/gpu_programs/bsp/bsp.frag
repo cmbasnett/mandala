@@ -12,10 +12,13 @@ in vec3 out_normal;
 in vec2 out_diffuse_texcoord;
 in vec2 out_lightmap_texcoord;
 
+out vec4 fragment;
+
 void main() 
 {
 	vec4 lightmap_term = texture(lightmap_texture, out_lightmap_texcoord);
 	lightmap_term.xyz *= lightmap_gamma;
-	gl_FragColor = texture(diffuse_texture, out_diffuse_texcoord) * lightmap_term;
+	
+	fragment = texture(diffuse_texture, out_diffuse_texcoord) * lightmap_term;
 }"
 }

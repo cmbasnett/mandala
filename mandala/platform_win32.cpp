@@ -141,7 +141,7 @@ namespace mandala
 		//glfw
 		glfwInit();
 
-		//glfwWindowHint(GLFW_SAMPLES, 16);
+		glfwWindowHint(GLFW_SAMPLES, 16);
 
 		window_ptr = glfwCreateWindow(1, 1, "mandala", nullptr, nullptr);
 
