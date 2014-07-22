@@ -6,23 +6,21 @@
 
 precision lowp float;
 
-uniform mat4 world;
-uniform mat4 view_projection;
+uniform mat4 world_matrix;
+uniform mat4 view_projection_matrix;
 uniform sampler2D diffuse_texture;
 uniform sampler2D lightmap_texture;
 
 in vec3 position;
-//in vec3 normal;
 in vec2 diffuse_texcoord;
 in vec2 lightmap_texcoord;
 
-//out vec3 out_normal;
 out vec2 out_diffuse_texcoord;
 out vec2 out_lightmap_texcoord;
 
 void main() 
 {
-	gl_Position = (view_projection) * (world * vec4(position, 1));
+	gl_Position = view_projection_matrix * (world_matrix * vec4(position, 1));
 	
 	//out_normal = normal;
 	out_diffuse_texcoord = diffuse_texcoord;

@@ -643,11 +643,13 @@ namespace mandala
         static const auto diffuse_texcoord_location = glGetAttribLocation(gpu_program->id, "diffuse_texcoord"); glCheckError();
         static const auto lightmap_texcoord_location = glGetAttribLocation(gpu_program->id, "lightmap_texcoord"); glCheckError();
 
-        static const auto world_location = glGetUniformLocation(gpu_program->id, "world"); glCheckError();
-        static const auto view_projection_location = glGetUniformLocation(gpu_program->id, "view_projection"); glCheckError();
+        static const auto world_location = glGetUniformLocation(gpu_program->id, "world_matrix"); glCheckError();
+        static const auto view_projection_location = glGetUniformLocation(gpu_program->id, "view_projection_matrix"); glCheckError();
         static const auto diffuse_texture_location = glGetUniformLocation(gpu_program->id, "diffuse_texture"); glCheckError();
         static const auto lightmap_texture_location = glGetUniformLocation(gpu_program->id, "lightmap_texture"); glCheckError();
         static const auto lightmap_gamma_location = glGetUniformLocation(gpu_program->id, "lightmap_gamma"); glCheckError();
+        static const auto alpha_location = glGetUniformLocation(gpu_program->id, "alpha"); glCheckError();
+        static const auto should_test_alpha_location = glGetUniformLocation(gpu_program->id, "should_test_alpha"); glCheckError();
 
         static const auto vertex_size = sizeof(vertex_t);
 
@@ -780,6 +782,7 @@ namespace mandala
             const auto model_index = boost::lexical_cast<int32_t>(entity.get_property("model").substr(1));
             const auto& model = models[model_index];
 
+            //render mode
             auto render_mode_optional = entity.get_property_optional<int32_t>("rendermode");
 
             render_mode_e render_mode = render_mode_e::normal;
@@ -789,11 +792,21 @@ namespace mandala
                 render_mode = static_cast<render_mode_e>(render_mode_optional.get());
             }
 
+            //alpha
+            float32_t alpha = 1.0f; 
+
+            auto alpha_optional = entity.get_property_optional<uint8_t>("renderamt");
+
+            if (alpha_optional)
+            {
+                alpha = static_cast<float32_t>(alpha_optional.get()) / 255.0f;
+            }
+
             switch (render_mode)
             {
             case render_mode_e::texture:
             {
-                //throw alpha in
+                glUniform1f(alpha_location, alpha); 
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE);
                 glDepthMask(GL_FALSE);
@@ -801,12 +814,12 @@ namespace mandala
                 break;
             case render_mode_e::solid:
             {
-                //alpha test?
+                glUniform1i(should_test_alpha_location, 1);
             }
                 break;
             case render_mode_e::additive:
             {
-                //throw alpha in
+                glUniform1f(alpha_location, alpha);
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_ONE, GL_ONE);
                 glDepthMask(GL_FALSE);
@@ -831,12 +844,14 @@ namespace mandala
             case render_mode_e::texture:
             case render_mode_e::additive:
             {
+                glUniform1f(alpha_location, 1.0f);
                 glDisable(GL_BLEND);
                 glDepthMask(GL_TRUE);
             }
                 break;
             case render_mode_e::solid:
             {
+                glUniform1i(should_test_alpha_location, 0);
             }
                 break;
             default:

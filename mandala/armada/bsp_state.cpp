@@ -97,20 +97,12 @@ namespace mandala
 
         void bsp_state_t::on_input_event(input_event_t& input_event)
         {
-            if (input_event.device_type == input_event_t::device_type_e::keyboard &&
+            if ((input_event.device_type == input_event_t::device_type_e::keyboard &&
                 input_event.keyboard.key == input_event_t::keyboard_t::key_e::escape &&
-                input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press)
-            {
-                app.states.push(pause_state);
-
-                input_event.is_consumed = true;
-
-                return;
-            }
-
-            if (input_event.device_type == input_event_t::device_type_e::gamepad &&
+                input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press) ||
+                (input_event.device_type == input_event_t::device_type_e::gamepad &&
                 input_event.gamepad.type == input_event_t::gamepad_t::type_e::button_release &&
-                input_event.gamepad.button_index == 0)
+                input_event.gamepad.button_index == 0))
             {
                 app.states.push(pause_state);
 
