@@ -67,8 +67,44 @@ namespace mandala
             unsigned_byte,
             unsigned_short,
             unsigned_int
-        };
+		};
 
+		enum class blend_factor_e
+		{
+			zero,
+			one,
+			src_color,
+			one_minus_src_color,
+			dst_color,
+			one_minus_dst_color,
+			src_alpha,
+			one_minus_src_alpha,
+			dst_alpha,
+			one_minus_dst_alpha,
+			constant_color,
+			one_minus_constant_color,
+			constant_alpha,
+			one_minus_constant_alpha,
+			src_alpha_saturate
+		};
+
+		enum class blend_equation_e
+		{
+			add,
+			subtract,
+			subtract_reverse,
+			min,
+			max
+		};
+
+		enum class cull_face_e
+		{
+			front,
+			back,
+			front_and_back
+		};
+
+		//programs
         struct program_mgr_t
         {
             typedef std::weak_ptr<gpu_program_t> weak_type;
@@ -82,12 +118,13 @@ namespace mandala
             std::stack<shared_type> programs;
         } programs;
 
+		//frame buffers
         struct frame_buffer_mgr_t
         {
             typedef std::weak_ptr<frame_buffer_t> weak_type;
             typedef std::shared_ptr<frame_buffer_t> shared_type;
 
-            weak_type get() const;
+            weak_type top() const;
             void push(const shared_type& frame_buffer);
             weak_type pop();
 
@@ -95,6 +132,7 @@ namespace mandala
             std::stack<shared_type> frame_buffers;
         } frame_buffers;
 
+		//textures
         struct texture_mgr_t
         {
             const static auto texture_count = 32;
@@ -111,11 +149,12 @@ namespace mandala
             std::array<shared_type, texture_count> textures;
         } textures;
 
+		//viewports
         struct viewport_mgr_t
         {
             typedef rectangle_i32_t viewport_type;
 
-            viewport_type peek() const;
+			viewport_type top() const;
             void push(const viewport_type& viewport);
             viewport_type pop();
 
@@ -123,12 +162,13 @@ namespace mandala
             std::stack<viewport_type> viewports;
         } viewports;
 
+		//buffers
         struct buffer_mgr_t
         {
             typedef std::shared_ptr<gpu_buffer_t> buffer_type;
 
             void push(buffer_target_e target, buffer_type buffer);
-            buffer_type peek(buffer_target_e target);
+			buffer_type top(buffer_target_e target);
             buffer_type pop(buffer_target_e target);
             void data(buffer_target_e target, void* data, size_t size, buffer_usage_e usage);
 
@@ -136,8 +176,28 @@ namespace mandala
             std::map<buffer_target_e, std::stack<buffer_type>> target_buffers;
         } buffers;
 
-        void draw_elements(primitive_type_e primitive_type, size_t count, index_type_e index_type, size_t offset);
-	}; 
+		//blend
+		struct blend_t
+		{
+			struct state_t
+			{
+				bool is_enabled = false;
+				blend_factor_e src_factor = blend_factor_e::one;
+				blend_factor_e dst_factor = blend_factor_e::zero;
+				blend_equation_e equation = blend_equation_e::add;
+			};
+
+			void push(const state_t& state);
+			void pop();
+		private:
+			std::stack<state_t> states;
+
+			void apply(const state_t& state);
+
+		} blend;
+
+		void draw_elements(primitive_type_e primitive_type, size_t count, index_type_e index_type, size_t offset) const;
+	};
 
     extern gpu_t gpu;
 };

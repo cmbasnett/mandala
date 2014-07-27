@@ -274,10 +274,12 @@ namespace mandala
 		gpu.programs.push(gpu_program);
 
 		//blend
-		glEnable(GL_BLEND);
+		gpu_t::blend_t::state_t gpu_blend_state;
+		gpu_blend_state.is_enabled = true;
+		gpu_blend_state.src_factor = gpu_t::blend_factor_e::src_alpha;
+		gpu_blend_state.dst_factor = gpu_t::blend_factor_e::one_minus_src_alpha;
 
-		//blend function
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		gpu.blend.push(gpu_blend_state);
 
 		//depth mask
 		GLboolean depth_mask;
@@ -365,13 +367,12 @@ namespace mandala
 			gpu.textures.unbind(page_index);
 		}
 
-		//unbind buffers
         gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
         gpu.buffers.pop(gpu_t::buffer_target_e::array);
 
 		glDepthMask(depth_mask);
 
-		glDisable(GL_BLEND);
+		gpu.blend.pop();
 
 		gpu.programs.pop();
 	}

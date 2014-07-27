@@ -22,6 +22,18 @@ namespace mandala
 			scalar_type width = scalar_type(0);
 			scalar_type height = scalar_type(0);
 
+            rectangle_t()
+            {
+            }
+
+            rectangle_t(scalar_type x, scalar_type y, scalar_type width, scalar_type height) :
+                x(x),
+                y(y),
+                width(width),
+                height(height)
+            {
+            }
+
 			scalar_type area() const
 			{
 				return width * height;

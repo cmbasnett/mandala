@@ -95,6 +95,64 @@ namespace mandala
         }
     }
 
+	inline GLenum get_blend_factor(gpu_t::blend_factor_e blend_factor)
+	{
+		switch (blend_factor)
+		{
+		case gpu_t::blend_factor_e::zero:
+			return GL_ZERO;
+		case gpu_t::blend_factor_e::one:
+			return GL_ONE;
+		case gpu_t::blend_factor_e::src_color:
+			return GL_SRC_COLOR;
+		case gpu_t::blend_factor_e::one_minus_src_color:
+			return GL_ONE_MINUS_SRC_COLOR;
+		case gpu_t::blend_factor_e::dst_color:
+			return GL_DST_COLOR;
+		case gpu_t::blend_factor_e::one_minus_dst_color:
+			return GL_ONE_MINUS_DST_COLOR;
+		case gpu_t::blend_factor_e::src_alpha:
+			return GL_SRC_ALPHA;
+		case gpu_t::blend_factor_e::one_minus_src_alpha:
+			return GL_ONE_MINUS_SRC_ALPHA;
+		case gpu_t::blend_factor_e::dst_alpha:
+			return GL_DST_ALPHA;
+		case gpu_t::blend_factor_e::one_minus_dst_alpha:
+			return GL_ONE_MINUS_DST_ALPHA;
+		case gpu_t::blend_factor_e::constant_color:
+			return GL_CONSTANT_COLOR;
+		case gpu_t::blend_factor_e::one_minus_constant_color:
+			return GL_ONE_MINUS_CONSTANT_COLOR;
+		case gpu_t::blend_factor_e::constant_alpha:
+			return GL_CONSTANT_ALPHA;
+		case gpu_t::blend_factor_e::one_minus_constant_alpha:
+			return GL_ONE_MINUS_CONSTANT_ALPHA;
+		case gpu_t::blend_factor_e::src_alpha_saturate:
+			return GL_SRC_ALPHA_SATURATE;
+		default:
+			throw std::invalid_argument("");
+		}
+	}
+
+	inline GLenum get_blend_equation(gpu_t::blend_equation_e blend_equation)
+	{
+		switch (blend_equation)
+		{
+		case gpu_t::blend_equation_e::add:
+			return GL_FUNC_ADD;
+		case gpu_t::blend_equation_e::subtract:
+			return GL_FUNC_SUBTRACT;
+		case gpu_t::blend_equation_e::subtract_reverse:
+			return GL_FUNC_REVERSE_SUBTRACT;
+		case gpu_t::blend_equation_e::min:
+			return GL_MIN;
+		case gpu_t::blend_equation_e::max:
+			return GL_MAX;
+		default:
+			throw std::invalid_argument("");
+		}
+	}
+
     inline GLenum get_index_type(gpu_t::index_type_e index_type)
     {
         switch (index_type)
@@ -153,7 +211,7 @@ namespace mandala
 		}
 	}
 
-    gpu_t::frame_buffer_mgr_t::weak_type gpu_t::frame_buffer_mgr_t::get() const
+	gpu_t::frame_buffer_mgr_t::weak_type gpu_t::frame_buffer_mgr_t::top() const
     {
         if (frame_buffers.empty())
         {
@@ -240,7 +298,7 @@ namespace mandala
         return previous_texture;
     }
 
-    gpu_t::viewport_mgr_t::viewport_type gpu_t::viewport_mgr_t::peek() const
+    gpu_t::viewport_mgr_t::viewport_type gpu_t::viewport_mgr_t::top() const
     {
         if (viewports.empty())
         {
@@ -311,8 +369,41 @@ namespace mandala
         glBufferData(get_buffer_target(target), size, data, get_buffer_usage(usage)); glCheckError();
     }
 
-    void gpu_t::draw_elements(primitive_type_e primitive_type, size_t count, index_type_e index_type, size_t offset)
+    void gpu_t::draw_elements(primitive_type_e primitive_type, size_t count, index_type_e index_type, size_t offset) const
     {
         glDrawElements(get_primitive_type(primitive_type), count, get_index_type(index_type), reinterpret_cast<GLvoid*>(offset)); glCheckError();
     }
+
+	void gpu_t::blend_t::pop()
+	{
+		states.pop();
+
+		if (!states.empty())
+		{
+			apply(states.top());
+		}
+	}
+
+	void gpu_t::blend_t::apply(const gpu_t::blend_t::state_t& state)
+	{
+		if (state.is_enabled)
+		{
+			glEnable(GL_BLEND);
+		}
+		else
+		{
+			glDisable(GL_BLEND);
+		}
+
+		glBlendFunc(get_blend_factor(state.src_factor), get_blend_factor(state.dst_factor));
+
+		glBlendEquation(get_blend_equation(state.equation));
+	}
+
+	void gpu_t::blend_t::push(const gpu_t::blend_t::state_t& state)
+	{
+		apply(state);
+
+		states.push(state);
+	}
 };

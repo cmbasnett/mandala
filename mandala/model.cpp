@@ -252,10 +252,12 @@ namespace mandala
 	void model_t::render(const vec3_t& camera_position, const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices, const vec3_t& light_position) const
 	{
 		//blending
-		GLboolean blend;
-		glGetBooleanv(GL_BLEND, &blend);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		gpu_t::blend_t::state_t gpu_blend_state;
+		gpu_blend_state.is_enabled = true;
+		gpu_blend_state.src_factor = gpu_t::blend_factor_e::src_alpha;
+		gpu_blend_state.dst_factor = gpu_t::blend_factor_e::one_minus_src_alpha;
+
+		gpu.blend.push(gpu_blend_state);
 
 		glEnable(GL_DEPTH_TEST);
 

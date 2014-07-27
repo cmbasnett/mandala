@@ -1,0 +1,30 @@
+#include "bsp_entity.hpp"
+
+namespace mandala
+{
+    bsp_entity_t::bsp_entity_t(const std::string& string)
+    {
+        std::string::size_type end = -1;
+
+        for (;;)
+        {
+            auto begin = string.find_first_of('"', end + 1);
+
+            if (begin == -1)
+            {
+                break;
+            }
+
+            end = string.find_first_of('"', begin + 1);
+
+            auto key = string.substr(begin + 1, end - begin - 1);
+
+            begin = string.find_first_of('"', end + 1);
+            end = string.find_first_of('"', begin + 1);
+
+            auto value = string.substr(begin + 1, end - begin - 1);
+
+            properties.insert(std::make_pair(key, value));
+        }
+    }
+}

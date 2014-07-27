@@ -34,16 +34,12 @@ namespace mandala
 
         const auto gpu_program = app.resources.get<gpu_program_t>(hash_t("gui_image.gpu"));
 
-		//push GL states
-		GLint blend_src_rgb;
-        GLint blend_dst_alpha;
-        bool is_blend_enabled = glIsEnabled(GL_BLEND) != 0; glCheckError();
+		gpu_t::blend_t::state_t gpu_blend_state;
+		gpu_blend_state.is_enabled = true;
+		gpu_blend_state.src_factor = gpu_t::blend_factor_e::src_alpha;
+		gpu_blend_state.dst_factor = gpu_t::blend_factor_e::one_minus_src_alpha;
 
-        glGetIntegerv(GL_BLEND_SRC_RGB, &blend_src_rgb); glCheckError();
-        glGetIntegerv(GL_BLEND_SRC_ALPHA, &blend_dst_alpha); glCheckError();
-
-        glEnable(GL_BLEND); glCheckError();
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); glCheckError();
+		gpu.blend.push(gpu_blend_state);
 
         glDisable(GL_CULL_FACE);
 
@@ -65,10 +61,6 @@ namespace mandala
         const auto center = bounds.center();
 
         world_matrix *= glm::translate(center.x, center.y, 0.0f);
-
-        auto sprite_size = static_cast<vec2_t>(sprite.region.rectangle.size());
-
-        world_matrix *= glm::scale(sprite_size.x, sprite_size.y, 0.0f);
 
         glUniform1i(diffuse_texture_location, diffuse_texture_index); glCheckError();
         glUniformMatrix4fv(view_projection_matrix_location, 1, GL_FALSE, glm::value_ptr(view_projection_matrix)); glCheckError();
@@ -94,24 +86,15 @@ namespace mandala
 
         gpu.programs.pop();
 
-        //blend
-        if (is_blend_enabled)
-        {
-            glEnable(GL_BLEND);
-        }
-        else
-        {
-            glDisable(GL_BLEND);
-        }
-
-		//blend function
-		glBlendFunc(blend_src_rgb, blend_dst_alpha);
+		gpu.blend.pop();
 
         gui_node_t::render(world_matrix, view_projection_matrix);
 	}
 
     bool gui_image_t::clean()
-	{
+    {
+        auto sprite_size = static_cast<vec2_t>(sprite.region.rectangle.size());
+
 		if (is_autosized_to_texture)
 		{
 			size = static_cast<vec2_t>(sprite.region.source_size);
@@ -120,10 +103,10 @@ namespace mandala
         if (sprite.region.is_rotated)
         {
             vertex_buffer_type::vertex_type vertices[vertex_count] = {
-                vertex_type(vec2_t(-0.5f, -0.5f), vec2_t(sprite.region.uv.min.x, sprite.region.uv.max.y)),
-                vertex_type(vec2_t(0.5f, -0.5f), vec2_t(sprite.region.uv.min.x, sprite.region.uv.min.y)),
-                vertex_type(vec2_t(0.5f, 0.5f), vec2_t(sprite.region.uv.max.x, sprite.region.uv.min.y)),
-                vertex_type(vec2_t(-0.5f, 0.5f), vec2_t(sprite.region.uv.max.x, sprite.region.uv.max.y))
+                vertex_type(vec2_t(0, 0) * sprite_size, vec2_t(sprite.region.uv.min.x, sprite.region.uv.max.y)),
+                vertex_type(vec2_t(1, 0) * sprite_size, vec2_t(sprite.region.uv.min.x, sprite.region.uv.min.y)),
+                vertex_type(vec2_t(1, 1) * sprite_size, vec2_t(sprite.region.uv.max.x, sprite.region.uv.min.y)),
+                vertex_type(vec2_t(0, 1) * sprite_size, vec2_t(sprite.region.uv.max.x, sprite.region.uv.max.y))
             };
 
             vertex_buffer->data(vertices, vertex_count, gpu_t::buffer_usage_e::dynamic_draw);
@@ -131,10 +114,10 @@ namespace mandala
         else
         {
             vertex_buffer_type::vertex_type vertices[vertex_count] = {
-                vertex_type(vec2_t(-0.5f, -0.5f), vec2_t(sprite.region.uv.min.x, sprite.region.uv.min.y)),
-                vertex_type(vec2_t(0.5f, -0.5f), vec2_t(sprite.region.uv.max.x, sprite.region.uv.min.y)),
-                vertex_type(vec2_t(0.5f, 0.5f), vec2_t(sprite.region.uv.max.x, sprite.region.uv.max.y)),
-                vertex_type(vec2_t(-0.5f, 0.5f), vec2_t(sprite.region.uv.min.x, sprite.region.uv.max.y))
+                vertex_type(vec2_t(0, 0) * sprite_size, vec2_t(sprite.region.uv.min.x, sprite.region.uv.min.y)),
+                vertex_type(vec2_t(1, 0) * sprite_size, vec2_t(sprite.region.uv.max.x, sprite.region.uv.min.y)),
+                vertex_type(vec2_t(1, 1) * sprite_size, vec2_t(sprite.region.uv.max.x, sprite.region.uv.max.y)),
+                vertex_type(vec2_t(0, 1) * sprite_size, vec2_t(sprite.region.uv.min.x, sprite.region.uv.max.y))
             };
 
             vertex_buffer->data(vertices, vertex_count, gpu_t::buffer_usage_e::dynamic_draw);

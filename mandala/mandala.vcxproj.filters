@@ -259,6 +259,12 @@
     <ClInclude Include="gpu.hpp">
       <Filter>mandala\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="bsp_entity.hpp">
+      <Filter>mandala\resources\bsp</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu_vertex.hpp">
+      <Filter>mandala\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -405,6 +411,12 @@
     </ClCompile>
     <ClCompile Include="gpu.cpp">
       <Filter>mandala\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="bsp_entity.cpp">
+      <Filter>mandala\resources\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="gui_canvas.cpp">
+      <Filter>mandala\gui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

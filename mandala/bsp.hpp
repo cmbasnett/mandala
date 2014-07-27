@@ -13,6 +13,7 @@
 #include "line.hpp"
 #include "vertex_buffer.hpp"
 #include "index_buffer.hpp"
+#include "bsp_entity.hpp"
 
 //boost
 #include <boost\dynamic_bitset.hpp>
@@ -221,70 +222,6 @@ namespace mandala
             }
         };
 
-        struct entity_t
-        {
-            entity_t(std::string& string)
-            {
-                size_t end = -1;
-
-                for (;;)
-                {
-                    auto begin = string.find_first_of('"', end + 1);
-
-                    if (begin == -1)
-                    {
-                        break;
-                    }
-
-                    end = string.find_first_of('"', begin + 1);
-
-                    auto key = string.substr(begin + 1, end - begin - 1);
-
-                    begin = string.find_first_of('"', end + 1);
-                    end = string.find_first_of('"', begin + 1);
-
-                    auto value = string.substr(begin + 1, end - begin - 1);
-
-                    properties.insert(std::make_pair(key, value));
-                }
-            }
-
-            entity_t(entity_t&& copy) :
-                properties(std::move(copy.properties))
-            {
-            }
-
-            template<typename T = std::string>
-            T get_property(std::string key) const
-            {
-                return boost::lexical_cast<T>(properties.at(key));
-            }
-
-            template<typename T = std::string>
-            boost::optional<T> get_property_optional(std::string key) const
-            {
-                boost::optional<T> property;
-
-                auto properties_itr = properties.find(key);
-
-                if (properties_itr != properties.end())
-                {
-                    try
-                    {
-                        property = boost::lexical_cast<T>(properties_itr->second);
-                    }
-                    catch (boost::bad_lexical_cast e)
-                    {
-                    }
-                }
-
-                return property;
-            }
-
-        private:
-            std::map<std::string, std::string> properties;
-        };
-
 		bsp_t(std::istream& istream);
 
 		std::vector<plane_t> planes;
@@ -298,7 +235,7 @@ namespace mandala
 		std::vector<std::shared_ptr<texture_t>> face_lightmap_textures;
 		std::vector<clip_node_t> clip_nodes;
         std::vector<model_t> models;
-        std::vector<entity_t> entities;
+        std::vector<bsp_entity_t> entities;
         std::vector<size_t> brush_entity_indices;
         std::map<size_t, boost::dynamic_bitset<>> leaf_pvs_map;
         std::vector<size_t> face_start_indices;

@@ -8,7 +8,13 @@
 
 namespace mandala
 {
-    frame_buffer_t::frame_buffer_t(uint32_t width, uint32_t height)
+    frame_buffer_t::frame_buffer_t(const size_type& size) :
+        frame_buffer_t(size.x, size.y)
+    {
+    }
+
+    frame_buffer_t::frame_buffer_t(uint32_t width, uint32_t height) :
+        size(width, height)
     {
         glGenFramebuffers(1, &id);
         glBindFramebuffer(GL_FRAMEBUFFER, id);
