@@ -5,18 +5,13 @@
 
 //mandala
 #include "gpu_program.hpp"
+#include "bitmap_font.hpp"
 
 namespace mandala
 {
 	struct bitmap_font_gpu_program_t : gpu_program_t
 	{
-		struct vertex_t
-		{
-			vec2_t position;
-			vec2_t texcoord;
-		};
-
-		typedef vertex_t vertex_type;
+		typedef bitmap_font_t::vertex_type vertex_type;
 
 		static std::string vertex_shader_source;
 		static std::string fragment_shader_source;

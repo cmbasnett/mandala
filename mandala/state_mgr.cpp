@@ -21,7 +21,7 @@ namespace mandala
 				return node.state == operation.state;
 			});
 
-			auto state_reverse_itr = std::reverse_iterator<decltype(nodes_itr)>(nodes_itr);
+			auto nodes_reverse_itr = std::reverse_iterator<decltype(nodes_itr)>(nodes_itr);
 
 			switch (operation.type)
 			{
@@ -33,21 +33,21 @@ namespace mandala
 					throw std::exception();
 				}
 
-				if (state_reverse_itr != nodes.rend())
+				if (nodes_reverse_itr != nodes.rend())
 				{
-					nodes_itr->state->on_active();
+					nodes_reverse_itr.base()->state->on_active();
 				}
 
-				while (state_reverse_itr != nodes.rend())
+				while (nodes_reverse_itr != nodes.rend())
 				{
-					nodes_itr->state->on_start_input();
+					nodes_reverse_itr->state->on_start_input();
 
-					if ((nodes_itr->link_flags & link_flag_input) == 0)
+					if ((nodes_reverse_itr->link_flags & link_flag_input) == 0)
 					{
 						break;
 					}
 
-					++state_reverse_itr;
+					++nodes_reverse_itr;
 				}
 
 				//remove state from stack

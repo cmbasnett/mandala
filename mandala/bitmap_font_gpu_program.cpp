@@ -73,14 +73,11 @@ void main()
 
 	void bitmap_font_gpu_program_t::on_bind()
 	{
-		static const auto position_offset = reinterpret_cast<void*>(offsetof(vertex_t, position));
-		static const auto texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_t, texcoord));
-
 		glEnableVertexAttribArray(position_location); glCheckError();
 		glEnableVertexAttribArray(texcoord_location); glCheckError();
 
-		glVertexAttribPointer(position_location, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_type), position_offset); glCheckError();
-		glVertexAttribPointer(texcoord_location, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_type), texcoord_offset); glCheckError();
+		glVertexAttribPointer(position_location, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, position))); glCheckError();
+		glVertexAttribPointer(texcoord_location, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, texcoord))); glCheckError();
 	}
 
 	void bitmap_font_gpu_program_t::on_unbind()
