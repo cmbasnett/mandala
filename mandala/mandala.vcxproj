@@ -283,7 +283,6 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="pack_mgr.hpp" />
     <ClInclude Include="platform.hpp" />
     <ClInclude Include="platform_win32.hpp" />
-    <ClInclude Include="shader.hpp" />
     <ClInclude Include="sprite.hpp" />
     <ClInclude Include="sprite_set.hpp" />
     <ClInclude Include="state.hpp" />
@@ -359,7 +358,6 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="pack.cpp" />
     <ClCompile Include="pack_mgr.cpp" />
     <ClCompile Include="platform_win32.cpp" />
-    <ClCompile Include="shader.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="sprite_set.cpp" />

@@ -254,6 +254,10 @@ namespace mandala
 
 	void bitmap_font_t::render_string(const std::wstring& string, const vec4_t& color_top, const vec4_t& color_bottom, mat4_t world_matrix, mat4_t view_projection_matrix) const
 	{
+		//buffers
+		gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
+		gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
+
 		//program
 		gpu.programs.push(bitmap_font_gpu_program);
 
@@ -270,12 +274,6 @@ namespace mandala
 		gpu_depth_state.should_write_mask = false;
 
 		gpu.depth.push(gpu_depth_state);
-
-		//vertex buffer
-        gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
-
-		//index buffer
-        gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
 
 		//view projection matrix
 		bitmap_font_gpu_program->view_projection_matrix(view_projection_matrix);
@@ -332,10 +330,6 @@ namespace mandala
 			gpu.textures.unbind(page_index);
 		}
 
-		//buffers
-        gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
-        gpu.buffers.pop(gpu_t::buffer_target_e::array);
-
 		//depth
 		gpu.depth.pop();
 
@@ -344,6 +338,10 @@ namespace mandala
 
 		//program
 		gpu.programs.pop();
+
+		//buffers
+		gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
+		gpu.buffers.pop(gpu_t::buffer_target_e::array);
 	}
 
 	void bitmap_font_t::get_string_pages(std::vector<uint8_t>& pages, const std::wstring& string) const

@@ -48,18 +48,18 @@ void main()
 	gui_gpu_program_t::gui_gpu_program_t() :
 		gpu_program_t(vertex_shader_source, fragment_shader_source)
 	{
+		position_location = glGetAttribLocation(id, "position"); glCheckError();
+		texcoord_location = glGetAttribLocation(id, "texcoord"); glCheckError();
+
+		world_matrix_location = glGetUniformLocation(id, "world_matrix"); glCheckError();
+		view_projection_matrix_location = glGetUniformLocation(id, "view_projection_matrix"); glCheckError();
+		diffuse_texture_index_location = glGetUniformLocation(id, "diffuse_texture"); glCheckError();
 	}
 
 	void gui_gpu_program_t::on_bind()
 	{
 		static const auto position_offset = reinterpret_cast<void*>(offsetof(vertex_t, position));
 		static const auto texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_t, texcoord));
-
-		//TODO: attribute and uniform locations should only be fetched once
-
-		//attributes
-		position_location = glGetAttribLocation(id, "position"); glCheckError();
-		texcoord_location = glGetAttribLocation(id, "texcoord"); glCheckError();
 
 		glEnableVertexAttribArray(position_location); glCheckError();
 		glEnableVertexAttribArray(texcoord_location); glCheckError();
@@ -68,9 +68,6 @@ void main()
 		glVertexAttribPointer(texcoord_location, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_type), texcoord_offset); glCheckError();
 
 		//uniforms
-		world_matrix_location = glGetUniformLocation(id, "world_matrix"); glCheckError();
-		view_projection_matrix_location = glGetUniformLocation(id, "view_projection_matrix"); glCheckError();
-		diffuse_texture_index_location = glGetUniformLocation(id, "diffuse_texture"); glCheckError();
 	}
 
 	void gui_gpu_program_t::on_unbind()

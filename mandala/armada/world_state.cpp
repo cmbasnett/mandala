@@ -66,7 +66,7 @@ namespace mandala
 
 		void world_state_t::on_enter()
 		{
-			app.states.push(hud_state, state_mgr_t::link_flag_render);
+			app.states.push(hud_state, state_mgr_t::link_flag_all);
 		}
 
 		void world_state_t::on_active()

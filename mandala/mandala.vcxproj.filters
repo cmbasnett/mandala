@@ -259,9 +259,6 @@
     <ClInclude Include="gpu_program.hpp">
       <Filter>mandala\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="shader.hpp">
-      <Filter>mandala\graphics</Filter>
-    </ClInclude>
     <ClInclude Include="bsp_gpu_program.hpp">
       <Filter>mandala\graphics\gpu_programs</Filter>
     </ClInclude>
@@ -428,9 +425,6 @@
       <Filter>mandala\gui</Filter>
     </ClCompile>
     <ClCompile Include="gpu_program.cpp">
-      <Filter>mandala\graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="shader.cpp">
       <Filter>mandala\graphics</Filter>
     </ClCompile>
     <ClCompile Include="bsp_gpu_program.cpp">

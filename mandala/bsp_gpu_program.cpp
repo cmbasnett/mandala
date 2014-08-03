@@ -74,6 +74,17 @@ void main()
 	bsp_gpu_program_t::bsp_gpu_program_t() :
 		gpu_program_t(vertex_shader_source, fragment_shader_source)
 	{
+		position_location = glGetAttribLocation(id, "position"); glCheckError();
+		diffuse_texcoord_location = glGetAttribLocation(id, "diffuse_texcoord"); glCheckError();
+		lightmap_texcoord_location = glGetAttribLocation(id, "lightmap_texcoord"); glCheckError();
+
+		world_matrix_location = glGetUniformLocation(id, "world_matrix"); glCheckError();
+		view_projection_matrix_location = glGetUniformLocation(id, "view_projection_matrix"); glCheckError();
+		diffuse_texture_location = glGetUniformLocation(id, "diffuse_texture"); glCheckError();
+		lightmap_texture_location = glGetUniformLocation(id, "lightmap_texture"); glCheckError();
+		lightmap_gamma_location = glGetUniformLocation(id, "lightmap_gamma"); glCheckError();
+		alpha_location = glGetUniformLocation(id, "alpha"); glCheckError();
+		should_test_alpha_location = glGetUniformLocation(id, "should_test_alpha"); glCheckError();
 	}
 
 	void bsp_gpu_program_t::on_bind()
@@ -82,13 +93,6 @@ void main()
 		static const auto diffuse_texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_t, diffuse_texcoord));
 		static const auto lightmap_texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_t, lightmap_texcoord));
 
-		//TODO: attribute and uniform locations should only be fetched once
-
-		//attributes
-		position_location = glGetAttribLocation(id, "position"); glCheckError();
-		diffuse_texcoord_location = glGetAttribLocation(id, "diffuse_texcoord"); glCheckError();
-		lightmap_texcoord_location = glGetAttribLocation(id, "lightmap_texcoord"); glCheckError();
-
 		glEnableVertexAttribArray(position_location); glCheckError();
 		glEnableVertexAttribArray(diffuse_texcoord_location); glCheckError();
 		glEnableVertexAttribArray(lightmap_texcoord_location); glCheckError();
@@ -96,15 +100,6 @@ void main()
 		glVertexAttribPointer(position_location, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_type), position_offset); glCheckError();
 		glVertexAttribPointer(diffuse_texcoord_location, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_type), diffuse_texcoord_offset); glCheckError();
 		glVertexAttribPointer(lightmap_texcoord_location, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_type), lightmap_texcoord_offset); glCheckError();
-
-		//uniforms
-		world_matrix_location = glGetUniformLocation(id, "world_matrix"); glCheckError();
-		view_projection_matrix_location = glGetUniformLocation(id, "view_projection_matrix"); glCheckError();
-		diffuse_texture_location = glGetUniformLocation(id, "diffuse_texture"); glCheckError();
-		lightmap_texture_location = glGetUniformLocation(id, "lightmap_texture"); glCheckError();
-		lightmap_gamma_location = glGetUniformLocation(id, "lightmap_gamma"); glCheckError();
-		alpha_location = glGetUniformLocation(id, "alpha"); glCheckError();
-		should_test_alpha_location = glGetUniformLocation(id, "should_test_alpha"); glCheckError();
 	}
 
 	void bsp_gpu_program_t::on_unbind()

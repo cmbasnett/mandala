@@ -628,26 +628,26 @@ namespace mandala
         glCullFace(GL_FRONT);
 
         //blend
-		gpu_t::blend_t::state_t blend_state;
+		auto blend_state = gpu.blend.top();
 		blend_state.is_enabled = false;
 
 		gpu.blend.push(blend_state);
 
-		//bind program
-		gpu.programs.push(bsp_gpu_program);
-
 		static const auto diffuse_texture_index = 0;
 		static const auto lightmap_texture_index = 1;
+
+        //bind buffers
+        gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
+		gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
+
+		//bind program
+		gpu.programs.push(bsp_gpu_program);
 
 		bsp_gpu_program->world_matrix(mat4_t());
 		bsp_gpu_program->view_projection_matrix(camera.projection_matrix * camera.view_matrix);
 		bsp_gpu_program->diffuse_texture_index(diffuse_texture_index);
 		bsp_gpu_program->lightmap_texture_index(lightmap_texture_index);
 		bsp_gpu_program->lightmap_gamma(render_settings.lightmap_gamma);
-
-        //bind buffers
-        gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
-        gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
 
         auto render_face = [&](int32_t face_index)
         {
@@ -863,12 +863,12 @@ namespace mandala
         for (auto brush_entity_index : brush_entity_indices)
         {
             render_brush_entity(brush_entity_index);
-        }
+		}
+
+		gpu.programs.pop();
 
         gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
         gpu.buffers.pop(gpu_t::buffer_target_e::array);
-
-        gpu.programs.pop();
 
         //cull face
         if (is_cull_face_enabled)

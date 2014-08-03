@@ -28,6 +28,7 @@ namespace mandala
 
 		void world_matrix(const mat4_t&) const;
 		void view_projection_matrix(const mat4_t&) const;
+		void diffuse_texture_index(uint32_t) const;
 		void font_line_height(float32_t) const;
 		void font_base(float32_t) const;
 		void font_diffuse_texture_index(uint32_t) const;
@@ -44,6 +45,7 @@ namespace mandala
 		gpu_t::uniform_location_type font_diffuse_texture_index_location = -1;
 		gpu_t::uniform_location_type font_color_top_location = -1;
 		gpu_t::uniform_location_type font_color_bottom_location = -1;
+		gpu_t::uniform_location_type diffuse_texture_index_location = -1;
 	};
 
 	extern std::shared_ptr<bitmap_font_gpu_program_t> bitmap_font_gpu_program;

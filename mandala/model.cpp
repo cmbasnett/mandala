@@ -265,25 +265,31 @@ namespace mandala
 
 		gpu.depth.push(depth_state);
 
-		gpu.programs.push(model_gpu_program);
-
-		model_gpu_program->world_matrix(world_matrix);
-		model_gpu_program->view_projection_matrix(view_projection_matrix);
-		model_gpu_program->normal_matrix(glm::inverseTranspose(glm::mat3(world_matrix)));
-		model_gpu_program->bone_matrices(bone_matrices);
-		model_gpu_program->light_position(light_position);
-		model_gpu_program->camera_position(camera_position);
-
 		for(auto& mesh : meshes)
 		{
+			gpu.buffers.push(gpu_t::buffer_target_e::array, mesh->vertex_buffer);
+			gpu.buffers.push(gpu_t::buffer_target_e::element_array, mesh->index_buffer);
+
+			gpu.programs.push(model_gpu_program);
+
+			model_gpu_program->world_matrix(world_matrix);
+			model_gpu_program->view_projection_matrix(view_projection_matrix);
+			model_gpu_program->normal_matrix(glm::inverseTranspose(glm::mat3(world_matrix)));
+			model_gpu_program->bone_matrices(bone_matrices);
+			model_gpu_program->light_position(light_position);
+			model_gpu_program->camera_position(camera_position);
+
             mesh->render(world_matrix, view_projection_matrix, bone_matrices);
+
+			gpu.programs.pop();
+
+			gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
+			gpu.buffers.pop(gpu_t::buffer_target_e::array);
         }
 
 		gpu.depth.pop();
 
 		gpu.blend.pop();
-
-        gpu.programs.pop();
 	}
 
 	void model_t::mesh_t::render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices) const
@@ -302,10 +308,6 @@ namespace mandala
 		//{
 		//	glEnable(GL_CULL_FACE); glCheckError();
 		//}
-
-		//bind buffers
-        gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
-        gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
 
 		//material
 		if(material != nullptr)
@@ -347,18 +349,12 @@ namespace mandala
 			model_gpu_program->emissive_intensity(emissive.intensity);
 		}
 
-		gpu.programs.push(model_gpu_program);
-
 		gpu.draw_elements(gpu_t::primitive_type_e::triangles, index_count, gpu_t::index_type_e::unsigned_short, 0);
 
 		//unbind textures
-        gpu.textures.unbind(emissive_texture_index);
-        gpu.textures.unbind(specular_texture_index);
-        gpu.textures.unbind(normal_texture_index);
-        gpu.textures.unbind(diffuse_texture_index);
-
-		//unbind 
-		gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
-        gpu.buffers.pop(gpu_t::buffer_target_e::array);
+		gpu.textures.unbind(emissive_texture_index);
+		gpu.textures.unbind(specular_texture_index);
+		gpu.textures.unbind(normal_texture_index);
+		gpu.textures.unbind(diffuse_texture_index);
 	}
 };

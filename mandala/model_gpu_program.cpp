@@ -162,13 +162,6 @@ void main()
 	model_gpu_program_t::model_gpu_program_t() :
 		gpu_program_t(vertex_shader_source, fragment_shader_source)
 	{
-	}
-
-	void model_gpu_program_t::on_bind()
-	{
-		//TODO: attribute and uniform locations should only be fetched once
-
-		//attributes
 		position_location = glGetAttribLocation(id, "position"); glCheckError();
 		normal_location = glGetAttribLocation(id, "normal"); glCheckError();
 		tangent_location = glGetAttribLocation(id, "tangent"); glCheckError();
@@ -177,6 +170,29 @@ void main()
 		bone_indices_1_location = glGetAttribLocation(id, "bone_indices_1"); glCheckError();
 		bone_weights_0_location = glGetAttribLocation(id, "bone_weights_0"); glCheckError();
 		bone_weights_1_location = glGetAttribLocation(id, "bone_weights_1"); glCheckError();
+
+		world_matrix_location = glGetUniformLocation(id, "world_matrix"); glCheckError();
+		normal_matrix_location = glGetUniformLocation(id, "normal_matrix"); glCheckError();
+		view_projection_matrix_location = glGetUniformLocation(id, "view_projection_matrix"); glCheckError();
+		bone_matrices_location = glGetUniformLocation(id, "bone_matrices"); glCheckError();
+		light_position_location = glGetUniformLocation(id, "light_position"); glCheckError();
+		camera_position_location = glGetUniformLocation(id, "camera_position"); glCheckError();
+		diffuse_texture_index_location = glGetUniformLocation(id, "diffuse.texture"); glCheckError();
+		diffuse_color_location = glGetUniformLocation(id, "diffuse.color"); glCheckError();
+		normal_texture_index_location = glGetUniformLocation(id, "normal.texture"); glCheckError();
+		specular_texture_index_location = glGetUniformLocation(id, "specular.texture"); glCheckError();
+		specular_color_location = glGetUniformLocation(id, "specular.color"); glCheckError();
+		specular_intensity_location = glGetUniformLocation(id, "specular.intensity"); glCheckError();
+		emissive_texture_index_location = glGetUniformLocation(id, "emissive.texture"); glCheckError();
+		emissive_color_location = glGetUniformLocation(id, "emissive.color"); glCheckError();
+		emissive_intensity_location = glGetUniformLocation(id, "emissive.intensity"); glCheckError();
+	}
+
+	void model_gpu_program_t::on_bind()
+	{
+		//TODO: attribute and uniform locations should only be fetched once
+
+		//attributes
 
 		glEnableVertexAttribArray(position_location); glCheckError();
 		glEnableVertexAttribArray(normal_location); glCheckError();
@@ -204,23 +220,6 @@ void main()
 		glVertexAttribIPointer(bone_indices_1_location, 4, GL_INT, sizeof(vertex_type), bone_indices_1_offset); glCheckError();
 		glVertexAttribPointer(bone_weights_0_location, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_type), bone_weights_0_offset); glCheckError();
 		glVertexAttribPointer(bone_weights_1_location, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_type), bone_weights_1_offset); glCheckError();
-
-		//uniforms
-		world_matrix_location = glGetUniformLocation(id, "world_matrix"); glCheckError();
-		normal_matrix_location = glGetUniformLocation(id, "normal_matrix"); glCheckError();
-		view_projection_matrix_location = glGetUniformLocation(id, "view_projection_matrix"); glCheckError();
-		bone_matrices_location = glGetUniformLocation(id, "bone_matrices"); glCheckError();
-		light_position_location = glGetUniformLocation(id, "light_position"); glCheckError();
-		camera_position_location = glGetUniformLocation(id, "camera_position"); glCheckError();
-		diffuse_texture_index_location = glGetUniformLocation(id, "diffuse.texture"); glCheckError();
-		diffuse_color_location = glGetUniformLocation(id, "diffuse.color"); glCheckError();
-		normal_texture_index_location = glGetUniformLocation(id, "normal.texture"); glCheckError();
-		specular_texture_index_location = glGetUniformLocation(id, "specular.texture"); glCheckError();
-		specular_color_location = glGetUniformLocation(id, "specular.color"); glCheckError();
-		specular_intensity_location = glGetUniformLocation(id, "specular.intensity"); glCheckError();
-		emissive_texture_index_location = glGetUniformLocation(id, "emissive.texture"); glCheckError();
-		emissive_color_location = glGetUniformLocation(id, "emissive.color"); glCheckError();
-		emissive_intensity_location = glGetUniformLocation(id, "emissive.intensity"); glCheckError();
 	}
 
 	void model_gpu_program_t::on_unbind()

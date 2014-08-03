@@ -32,19 +32,21 @@ namespace mandala
             return;
         }
 
-		gpu_t::blend_t::state_t gpu_blend_state;
-		gpu_blend_state.is_enabled = true;
-		gpu_blend_state.src_factor = gpu_t::blend_factor_e::src_alpha;
-		gpu_blend_state.dst_factor = gpu_t::blend_factor_e::one_minus_src_alpha;
+		auto blend_state = gpu.blend.top();
+		blend_state.is_enabled = true;
+		blend_state.src_factor = gpu_t::blend_factor_e::src_alpha;
+		blend_state.dst_factor = gpu_t::blend_factor_e::one_minus_src_alpha;
 
-		gpu.blend.push(gpu_blend_state);
+		gpu.blend.push(blend_state);
 
         //glDisable(GL_CULL_FACE);
 
-		gpu.programs.push(gui_gpu_program);
-
+		//buffers
         gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
-        gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
+		gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
+
+		//program
+		gpu.programs.push(gui_gpu_program);
 
         static const auto diffuse_texture_index = 0;
 
@@ -62,10 +64,10 @@ namespace mandala
 
         gpu.textures.unbind(diffuse_texture_index);
 
-        gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
-        gpu.buffers.pop(gpu_t::buffer_target_e::array);
+		gpu.programs.pop();
 
-        gpu.programs.pop();
+		gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
+		gpu.buffers.pop(gpu_t::buffer_target_e::array);
 
 		gpu.blend.pop();
 
