@@ -5,19 +5,13 @@
 
 //mandala
 #include "gpu_program.hpp"
+#include "bsp.hpp"
 
 namespace mandala
 {
 	struct bsp_gpu_program_t : gpu_program_t
 	{
-		struct vertex_t
-		{
-			vec3_t position;
-			vec2_t diffuse_texcoord;
-			vec2_t lightmap_texcoord;
-		};
-
-		typedef vertex_t vertex_type;
+		typedef bsp_t::vertex_type vertex_type;
 
 		static std::string vertex_shader_source;
 		static std::string fragment_shader_source;

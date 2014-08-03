@@ -89,9 +89,9 @@ void main()
 
 	void bsp_gpu_program_t::on_bind()
 	{
-		static const auto position_offset = reinterpret_cast<void*>(offsetof(vertex_t, position));
-		static const auto diffuse_texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_t, diffuse_texcoord));
-		static const auto lightmap_texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_t, lightmap_texcoord));
+		static const auto position_offset = reinterpret_cast<void*>(offsetof(vertex_type, position));
+		static const auto diffuse_texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_type, diffuse_texcoord));
+		static const auto lightmap_texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_type, lightmap_texcoord));
 
 		glEnableVertexAttribArray(position_location); glCheckError();
 		glEnableVertexAttribArray(diffuse_texcoord_location); glCheckError();

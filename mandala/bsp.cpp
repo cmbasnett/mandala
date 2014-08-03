@@ -620,14 +620,14 @@ namespace mandala
 
         //cull face
         auto is_cull_face_enabled = glIsEnabled(GL_CULL_FACE);
-        glEnable(GL_CULL_FACE);
+		glEnable(GL_CULL_FACE);
 
-        //cull face mode
-        GLint cull_face_mode;
-        glGetIntegerv(GL_CULL_FACE_MODE, &cull_face_mode);
-        glCullFace(GL_FRONT);
+		//cull face mode
+		GLint cull_face_mode;
+		glGetIntegerv(GL_CULL_FACE_MODE, &cull_face_mode);
+		glCullFace(GL_FRONT);
 
-        //blend
+		//blend
 		auto blend_state = gpu.blend.top();
 		blend_state.is_enabled = false;
 
@@ -804,6 +804,7 @@ namespace mandala
 
 			auto blend_state = gpu.blend.top();
 			auto depth_state = gpu.depth.top();
+			depth_state.should_test = true;
 
             switch (render_mode)
             {
@@ -858,7 +859,15 @@ namespace mandala
 
         render_stats.reset();
 
+		//depth
+		auto depth_state = gpu.depth.top();
+		depth_state.should_test = true;
+
+		gpu.depth.push(depth_state);
+
         render_node(0, camera_leaf_index);
+
+		gpu.depth.pop();
 
         for (auto brush_entity_index : brush_entity_indices)
         {

@@ -190,10 +190,6 @@ void main()
 
 	void model_gpu_program_t::on_bind()
 	{
-		//TODO: attribute and uniform locations should only be fetched once
-
-		//attributes
-
 		glEnableVertexAttribArray(position_location); glCheckError();
 		glEnableVertexAttribArray(normal_location); glCheckError();
 		glEnableVertexAttribArray(tangent_location); glCheckError();
@@ -261,7 +257,7 @@ void main()
 
 	void model_gpu_program_t::camera_position(const vec3_t& camera_position) const
 	{
-		//glUniform3fv(camera_position_location, 1, glm::value_ptr(camera_position)); glCheckError();
+		glUniform3fv(camera_position_location, 1, glm::value_ptr(camera_position)); glCheckError();
 	}
 
 	void model_gpu_program_t::diffuse_texture_index(uint32_t diffuse_texture_index) const
@@ -281,17 +277,17 @@ void main()
 
 	void model_gpu_program_t::specular_texture_index(uint32_t specular_texture_index) const
 	{
-		//glUniform1i(specular_texture_index_location, specular_texture_index); glCheckError();
+		glUniform1i(specular_texture_index_location, specular_texture_index); glCheckError();
 	}
 
 	void model_gpu_program_t::specular_color(const vec4_t& specular_color) const
 	{
-		//glUniform4fv(specular_color_location, 1, glm::value_ptr(specular_color)); glCheckError();
+		glUniform4fv(specular_color_location, 1, glm::value_ptr(specular_color)); glCheckError();
 	}
 
 	void model_gpu_program_t::specular_intensity(float32_t specular_intensity) const
 	{
-		//glUniform1f(specular_intensity_location, specular_intensity); glCheckError();
+		glUniform1f(specular_intensity_location, specular_intensity); glCheckError();
 	}
 
 	void model_gpu_program_t::emissive_texture_index(uint32_t emissive_texture_index) const
