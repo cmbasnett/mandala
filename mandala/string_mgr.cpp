@@ -10,6 +10,8 @@
 
 namespace mandala
 {
+	std::string string_mgr_t::default_language = "en";
+
     string_mgr_t::string_mgr_t(const std::string& language) :
         language(language)
     {

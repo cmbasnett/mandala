@@ -168,14 +168,41 @@ namespace mandala
         }
     }
 
-    gpu_t::program_mgr_t::weak_type gpu_t::program_mgr_t::get() const
+	inline GLenum get_depth_function(gpu_t::depth_function_e depth_function)
 	{
-        if (programs.empty())
+		switch (depth_function)
 		{
-            throw new std::out_of_range("");
+		case gpu_t::depth_function_e::never:
+			return GL_NEVER;
+		case gpu_t::depth_function_e::less:
+			return GL_LESS;
+		case gpu_t::depth_function_e::equal:
+			return GL_EQUAL;
+		case gpu_t::depth_function_e::lequal:
+			return GL_LEQUAL;
+		case gpu_t::depth_function_e::greater:
+			return GL_GREATER;
+		case gpu_t::depth_function_e::notequal:
+			return GL_NOTEQUAL;
+		case gpu_t::depth_function_e::gequal:
+			return GL_GEQUAL;
+		case gpu_t::depth_function_e::always:
+			return GL_ALWAYS;
+		default:
+			return GL_LESS;
+		}
+	}
+
+    boost::optional<gpu_t::program_mgr_t::weak_type> gpu_t::program_mgr_t::top() const
+	{
+		boost::optional<weak_type> gpu_program;
+
+        if (!programs.empty())
+		{
+			gpu_program = programs.top();
 		}
 
-        return programs.top();
+		return gpu_program;
 	}
 
     void gpu_t::program_mgr_t::push(const gpu_t::program_mgr_t::shared_type& program)
@@ -186,16 +213,22 @@ namespace mandala
 		}
 
         programs.push(program);
+
+		program->on_bind();
 	}
 
     gpu_t::program_mgr_t::weak_type gpu_t::program_mgr_t::pop()
 	{
-        if (programs.size() == 0)
+		if (programs.empty())
 		{
 			throw std::exception();
 		}
 
+		auto previous_program = programs.top();
+
 		programs.pop();
+
+		previous_program->on_unbind();
 
         if (programs.empty())
 		{
@@ -211,14 +244,16 @@ namespace mandala
 		}
 	}
 
-	gpu_t::frame_buffer_mgr_t::weak_type gpu_t::frame_buffer_mgr_t::top() const
+	boost::optional<gpu_t::frame_buffer_mgr_t::weak_type> gpu_t::frame_buffer_mgr_t::top() const
     {
-        if (frame_buffers.empty())
+		boost::optional<weak_type> frame_buffer;
+
+        if (!frame_buffers.empty())
         {
-            throw new std::out_of_range("");
+			frame_buffer = frame_buffers.top();
         }
 
-        return frame_buffers.top();
+		return frame_buffer;
     }
 
     void gpu_t::frame_buffer_mgr_t::push(const gpu_t::frame_buffer_mgr_t::shared_type& frame_buffer)
@@ -233,9 +268,9 @@ namespace mandala
 
     gpu_t::frame_buffer_mgr_t::weak_type gpu_t::frame_buffer_mgr_t::pop()
     {
-        if (frame_buffers.size() == 0)
+		if (frame_buffers.empty())
         {
-            throw std::exception();
+			throw std::out_of_range("");
         }
 
         frame_buffers.pop();
@@ -374,6 +409,105 @@ namespace mandala
         glDrawElements(get_primitive_type(primitive_type), count, get_index_type(index_type), reinterpret_cast<GLvoid*>(offset)); glCheckError();
     }
 
+	uint32_t gpu_t::create_program(const std::string& vertex_shader_source, const std::string& fragment_shader_source) const
+	{
+		auto create_shader = [&](GLenum type, const std::string& source) -> GLint
+		{
+			//create shader
+			auto id = glCreateShader(type); glCheckError();
+
+			auto strings = source.c_str();
+			GLint lengths[1] = { static_cast<GLint>(source.length()) };
+
+			//set shader source
+			glShaderSource(id, 1, &strings, &lengths[0]); glCheckError();
+
+			//compile shader
+			glCompileShader(id); glCheckError();
+
+			GLsizei compile_status;
+			glGetShaderiv(id, GL_COMPILE_STATUS, &compile_status); glCheckError();
+
+			if (compile_status == GL_FALSE)
+			{
+#ifdef _DEBUG
+				GLsizei shader_info_log_length = 0;
+				GLchar shader_info_log[GL_INFO_LOG_LENGTH] = { '\0' };
+
+				glGetShaderInfoLog(id, GL_INFO_LOG_LENGTH, &shader_info_log_length, &shader_info_log[0]); glCheckError();
+
+				std::cerr << shader_info_log << std::endl;
+#endif
+				glDeleteShader(id); glCheckError();
+
+				throw std::exception();
+			}
+
+			return id;
+		};
+
+		auto vertex_shader = create_shader(GL_VERTEX_SHADER, vertex_shader_source);
+		auto fragment_shader = create_shader(GL_FRAGMENT_SHADER, fragment_shader_source);
+
+		//create program
+		auto id = glCreateProgram(); glCheckError();
+		
+		//attach shaders
+		glAttachShader(id, vertex_shader); glCheckError();
+		glAttachShader(id, fragment_shader); glCheckError();
+
+		//link program
+		glLinkProgram(id); glCheckError();
+
+		//link status
+		GLint link_status;
+		glGetProgramiv(id, GL_LINK_STATUS, &link_status); glCheckError();
+
+		if (link_status == GL_FALSE)
+		{
+			GLint program_info_log_length = 0;
+
+			glGetProgramiv(id, GL_INFO_LOG_LENGTH, &program_info_log_length); glCheckError();
+
+			if (program_info_log_length > 0)
+			{
+				std::string program_info_log;
+				program_info_log.resize(program_info_log_length);
+
+				glGetProgramInfoLog(id, program_info_log_length, nullptr, &program_info_log[0]); glCheckError();
+
+				std::cout << program_info_log << std::endl;
+			}
+
+			glDeleteProgram(id); glCheckError();
+
+			throw std::exception();
+		}
+
+		glDetachShader(id, vertex_shader); glCheckError();
+		glDetachShader(id, fragment_shader); glCheckError();
+
+		glDeleteShader(vertex_shader); glCheckError();
+		glDeleteShader(fragment_shader); glCheckError();
+
+		return id;
+	}
+
+	void gpu_t::destroy_program(uint32_t id)
+	{
+		glDeleteProgram(id);
+	}
+
+	gpu_t::blend_t::state_t gpu_t::blend_t::top() const
+	{
+		if (!states.empty())
+		{
+			return states.top();
+		}
+
+		return state_t();
+	}
+
 	void gpu_t::blend_t::pop()
 	{
 		states.pop();
@@ -388,16 +522,15 @@ namespace mandala
 	{
 		if (state.is_enabled)
 		{
-			glEnable(GL_BLEND);
+			glEnable(GL_BLEND); glCheckError();
 		}
 		else
 		{
-			glDisable(GL_BLEND);
+			glDisable(GL_BLEND); glCheckError();
 		}
 
-		glBlendFunc(get_blend_factor(state.src_factor), get_blend_factor(state.dst_factor));
-
-		glBlendEquation(get_blend_equation(state.equation));
+		glBlendFunc(get_blend_factor(state.src_factor), get_blend_factor(state.dst_factor)); glCheckError();
+		glBlendEquation(get_blend_equation(state.equation)); glCheckError();
 	}
 
 	void gpu_t::blend_t::push(const gpu_t::blend_t::state_t& state)
@@ -405,5 +538,48 @@ namespace mandala
 		apply(state);
 
 		states.push(state);
+	}
+
+	void gpu_t::depth_t::pop()
+	{
+		states.pop();
+
+		if (!states.empty())
+		{
+			apply(states.top());
+		}
+	}
+
+	void gpu_t::depth_t::apply(const state_t& state)
+	{
+		if (state.should_test)
+		{
+			glEnable(GL_DEPTH_TEST); glCheckError();
+		}
+		else
+		{
+			glDisable(GL_DEPTH_TEST); glCheckError();
+		}
+		
+		glDepthMask(state.should_write_mask ? GL_TRUE : GL_FALSE);
+
+		glDepthFunc(get_depth_function(state.function)); glCheckError();
+	}
+
+	void gpu_t::depth_t::push(const state_t& state)
+	{
+		apply(state);
+
+		states.push(state);
+	}
+
+	gpu_t::depth_t::state_t gpu_t::depth_t::top() const
+	{
+		if (!states.empty())
+		{
+			return states.top();
+		}
+
+		return state_t();
 	}
 };

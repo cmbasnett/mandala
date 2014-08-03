@@ -6,6 +6,12 @@
 #include "platform.hpp"
 #include "game.hpp"
 
+//HACK:
+#include "gui_gpu_program.hpp"
+#include "model_gpu_program.hpp"
+#include "bitmap_font_gpu_program.hpp"
+#include "bsp_gpu_program.hpp"
+
 namespace mandala
 {
     app_t app;
@@ -22,6 +28,11 @@ namespace mandala
 		game = game_;
 
 		platform.app_run_start();
+
+		gui_gpu_program = std::make_shared<gui_gpu_program_t>();
+		model_gpu_program = std::make_shared<model_gpu_program_t>();
+		bitmap_font_gpu_program = std::make_shared<bitmap_font_gpu_program_t>();
+		bsp_gpu_program = std::make_shared<bsp_gpu_program_t>();
 
 		game->app_run_start();
 
@@ -43,6 +54,7 @@ namespace mandala
 		states.purge();
 		resources.purge();
 		strings.purge();
+		gpu_programs.purge();
 
 		platform.app_run_end();
 

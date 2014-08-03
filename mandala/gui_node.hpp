@@ -29,7 +29,7 @@ namespace mandala
             anchor_flag_all = (anchor_flag_vertical | anchor_flag_horizontal)
         };
 
-		enum class dock_mode_e : uint8_t
+		enum class dock_mode_e
 		{
             none,
             bottom,

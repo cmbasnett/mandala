@@ -205,7 +205,7 @@ namespace mandala
 
         struct render_settings_t
         {
-            float32_t gamma = 1.0f;
+            float32_t lightmap_gamma = 1.0f;
         };
 
         struct render_stats_t

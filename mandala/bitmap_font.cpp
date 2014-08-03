@@ -5,13 +5,13 @@
 #include <glm\ext.hpp>
 
 //mandala
-#include "opengl.hpp"
 #include "bitmap_font.hpp"
 #include "app.hpp"
 #include "hash.hpp"
 #include "texture.hpp"
 #include "gpu_program.hpp"
 #include "gpu.hpp"
+#include "bitmap_font_gpu_program.hpp"
 
 #define BMF_MAGIC			("BMF")
 #define BMF_MAGIC_LENGTH	(3)
@@ -111,8 +111,8 @@ namespace mandala
 		}
 
 		//TODO: abstract and this value in some sort of opengl capabilities struct
-		int32_t pages_max = 0;
-		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS_ARB, &pages_max);
+		int32_t pages_max = 32;
+		//glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS_ARB, &pages_max);
 
 		if (page_textures.size() > static_cast<size_t>(pages_max))
 		{
@@ -138,7 +138,7 @@ namespace mandala
 			istream.read(reinterpret_cast<char*>(&character.offset_x), sizeof(character.offset_x));
 			istream.read(reinterpret_cast<char*>(&character.offset_y), sizeof(character.offset_y));
 			istream.read(reinterpret_cast<char*>(&character.advance_x), sizeof(character.advance_x));
-			istream.read(reinterpret_cast<char*>(&character.page), sizeof(character.page));
+			istream.read(reinterpret_cast<char*>(&character.texture_index), sizeof(character.texture_index));
 			istream.read(reinterpret_cast<char*>(&character.channel), sizeof(character.channel));
 
 			characters.insert(std::make_pair(character.id, character));
@@ -252,29 +252,13 @@ namespace mandala
 		return kerning_amount;
 	}
 
-	void bitmap_font_t::render_string(const std::wstring& string, const vec4_t& color_top, const vec4_t& color_bottom, mat4_t world, mat4_t view_projection) const
+	void bitmap_font_t::render_string(const std::wstring& string, const vec4_t& color_top, const vec4_t& color_bottom, mat4_t world_matrix, mat4_t view_projection_matrix) const
 	{
-		auto gpu_program = app.resources.get<gpu_program_t>(hash_t("bitmap_font.gpu"));
-		auto gpu_program_id = gpu_program->id;
-
-		static const auto position_location = glGetAttribLocation(gpu_program_id, "position");
-		static const auto texcoord_location = glGetAttribLocation(gpu_program_id, "texcoord");
-		static const auto world_location = glGetUniformLocation(gpu_program_id, "world");
-		static const auto view_projection_location = glGetUniformLocation(gpu_program_id, "view_projection");
-		static const auto line_height_location = glGetUniformLocation(gpu_program_id, "line_height");
-		static const auto base_location = glGetUniformLocation(gpu_program_id, "base");
-		static const auto diffuse_map_location = glGetUniformLocation(gpu_program_id, "diffuse_map");
-		static const auto color_top_location = glGetUniformLocation(gpu_program_id, "color_top");
-		static const auto color_bottom_location = glGetUniformLocation(gpu_program_id, "color_bottom");
-		static const GLuint vertex_size = sizeof(bitmap_font_t::vertex_t);
-		static const auto* position_offset = reinterpret_cast<void*>(offsetof(bitmap_font_t::vertex_t, position));
-		static const auto* texcoord_offset = reinterpret_cast<void*>(offsetof(bitmap_font_t::vertex_t, texcoord));
-
 		//program
-		gpu.programs.push(gpu_program);
+		gpu.programs.push(bitmap_font_gpu_program);
 
 		//blend
-		gpu_t::blend_t::state_t gpu_blend_state;
+		auto gpu_blend_state = gpu.blend.top();
 		gpu_blend_state.is_enabled = true;
 		gpu_blend_state.src_factor = gpu_t::blend_factor_e::src_alpha;
 		gpu_blend_state.dst_factor = gpu_t::blend_factor_e::one_minus_src_alpha;
@@ -282,9 +266,10 @@ namespace mandala
 		gpu.blend.push(gpu_blend_state);
 
 		//depth mask
-		GLboolean depth_mask;
-		glGetBooleanv(GL_DEPTH_WRITEMASK, &depth_mask);
-		glDepthMask(GL_FALSE);
+		auto gpu_depth_state = gpu.depth.top();
+		gpu_depth_state.should_write_mask = false;
+
+		gpu.depth.push(gpu_depth_state);
 
 		//vertex buffer
         gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
@@ -292,24 +277,14 @@ namespace mandala
 		//index buffer
         gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
 
-		//position
-		glEnableVertexAttribArray(position_location);
-		glVertexAttribPointer(position_location, 2, GL_FLOAT, false, vertex_size, position_offset);
+		//view projection matrix
+		bitmap_font_gpu_program->view_projection_matrix(view_projection_matrix);
+		bitmap_font_gpu_program->font_line_height(line_height);
+		bitmap_font_gpu_program->font_base(base);
+		bitmap_font_gpu_program->font_color_top(color_top);
+		bitmap_font_gpu_program->font_color_bottom(color_bottom);
 
-		//texcoord
-		glEnableVertexAttribArray(texcoord_location);
-		glVertexAttribPointer(texcoord_location, 2, GL_FLOAT, false, vertex_size, texcoord_offset);
-
-		//view
-		glUniformMatrix4fv(view_projection_location, 1, GL_FALSE, glm::value_ptr(view_projection));
-
-		//line_height
-		glUniform1f(line_height_location, line_height);
-
-		//base
-		glUniform1f(base_location, base);
-
-		//diffuse map
+		//textures
 		std::vector<uint8_t> page_indices;
 		get_string_pages(page_indices, string);
 
@@ -318,27 +293,20 @@ namespace mandala
             gpu.textures.bind(page_index, page_textures[page_index]);
 		}
 
-		//color top
-		glUniform4fv(color_top_location, 1, glm::value_ptr(color_top));
-
-		//color bottom
-		glUniform4fv(color_bottom_location, 1, glm::value_ptr(color_bottom));
-
 		//TODO: this is kind of sloppy, find cleaner way to do this
-		uint8_t character_page = -1;
+		uint8_t character_texture_index = -1;
 
 		for (auto c = string.begin(); c != string.end(); ++c)
 		{
-			//model
-			glUniformMatrix4fv(world_location, 1, GL_FALSE, glm::value_ptr(world));
+			bitmap_font_gpu_program->world_matrix(world_matrix);
 
 			const auto character = characters.at(*c);
 
-			if (character_page != character.page)
+			if (character_texture_index != character.texture_index)
 			{
-				character_page = character.page;
+				character_texture_index = character.texture_index;
 
-				glUniform1i(diffuse_map_location, character_page);
+				bitmap_font_gpu_program->font_diffuse_texture_index(character_texture_index);
 			}
 
 			auto x = static_cast<float32_t>(character.advance_x);
@@ -347,7 +315,7 @@ namespace mandala
 
             static const auto character_index_stride = sizeof(index_type) * indices_per_character;
 
-			glDrawElements(GL_TRIANGLES, indices_per_character, GL_UNSIGNED_INT, reinterpret_cast<GLvoid*>(character_index * character_index_stride));
+			gpu.draw_elements(gpu_t::primitive_type_e::triangles, indices_per_character, gpu_t::index_type_e::unsigned_int, character_index * character_index_stride);
 
 			auto next = (c + 1);
 
@@ -356,24 +324,25 @@ namespace mandala
 				x += get_kerning_amount(*c, *next);
 			}
 
-			world *= glm::translate(x, 0.0f, 0.0f);
+			world_matrix *= glm::translate(x, 0.0f, 0.0f);
 		}
-
-		glDisableVertexAttribArray(position_location);
-		glDisableVertexAttribArray(texcoord_location);
 
 		for (auto page_index : page_indices)
 		{
 			gpu.textures.unbind(page_index);
 		}
 
+		//buffers
         gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
         gpu.buffers.pop(gpu_t::buffer_target_e::array);
 
-		glDepthMask(depth_mask);
+		//depth
+		gpu.depth.pop();
 
+		//blend
 		gpu.blend.pop();
 
+		//program
 		gpu.programs.pop();
 	}
 
@@ -385,7 +354,7 @@ namespace mandala
 		{
 			auto characters_itr = characters.at(c);
 
-			pages_set.insert(characters_itr.page);
+			pages_set.insert(characters_itr.texture_index);
 		}
 
 		std::copy(pages_set.begin(), pages_set.end(), std::back_inserter(pages));

@@ -40,7 +40,6 @@ namespace mandala
 
 		material_t(std::istream& ifstream);
 
-		std::shared_ptr<gpu_program_t> gpu_program;
 		bool is_two_sided = true;
 		diffuse_t diffuse;
 		normal_t normal;

@@ -14,6 +14,8 @@ namespace mandala
 {
     struct string_mgr_t
     {
+		static std::string default_language;
+
         typedef std::wstring string_type;
 
         struct string_t
@@ -24,7 +26,7 @@ namespace mandala
             uint32_t length = 0;
         };
 
-        string_mgr_t(const std::string& language = "en");
+		string_mgr_t(const std::string& language = default_language);
 
         std::string language;
         std::vector<std::shared_ptr<std::istream>> streams;

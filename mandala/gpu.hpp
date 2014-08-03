@@ -11,6 +11,9 @@
 #include "rectangle.hpp"
 #include "index_type.hpp"
 
+//boost
+#include <boost\optional.hpp>
+
 namespace mandala
 {
 	struct gpu_program_t;
@@ -19,7 +22,11 @@ namespace mandala
     struct gpu_buffer_t;
 
     struct gpu_t
-    {
+	{
+		typedef uint32_t program_id_type;
+		typedef int32_t attribute_location_type;
+		typedef int32_t uniform_location_type;
+
         enum class buffer_target_e
         {
             array,
@@ -85,7 +92,8 @@ namespace mandala
 			one_minus_constant_color,
 			constant_alpha,
 			one_minus_constant_alpha,
-			src_alpha_saturate
+			src_alpha_saturate,
+			default = one
 		};
 
 		enum class blend_equation_e
@@ -94,14 +102,29 @@ namespace mandala
 			subtract,
 			subtract_reverse,
 			min,
-			max
+			max,
+			default = add
 		};
 
 		enum class cull_face_e
 		{
 			front,
 			back,
-			front_and_back
+			front_and_back,
+			default = back
+		};
+
+		enum class depth_function_e
+		{
+			never,
+			less,
+			equal,
+			lequal,
+			greater,
+			notequal,
+			gequal,
+			always,
+			default = less
 		};
 
 		//programs
@@ -110,7 +133,7 @@ namespace mandala
             typedef std::weak_ptr<gpu_program_t> weak_type;
             typedef std::shared_ptr<gpu_program_t> shared_type;
 
-            weak_type get() const;
+            boost::optional<weak_type> top() const;
             void push(const shared_type& data);
             weak_type pop();
 
@@ -124,7 +147,7 @@ namespace mandala
             typedef std::weak_ptr<frame_buffer_t> weak_type;
             typedef std::shared_ptr<frame_buffer_t> shared_type;
 
-            weak_type top() const;
+            boost::optional<weak_type> top() const;
             void push(const shared_type& frame_buffer);
             weak_type pop();
 
@@ -187,16 +210,39 @@ namespace mandala
 				blend_equation_e equation = blend_equation_e::add;
 			};
 
+			state_t top() const;
 			void push(const state_t& state);
 			void pop();
 		private:
 			std::stack<state_t> states;
 
 			void apply(const state_t& state);
-
 		} blend;
 
+		//depth
+		struct depth_t
+		{
+			struct state_t
+			{
+				bool should_test = false;
+				bool should_write_mask = true;
+				depth_function_e function = depth_function_e::default;
+			};
+
+			state_t top() const;
+			void push(const state_t& state);
+			void pop();
+
+		private:
+			std::stack<state_t> states;
+
+			void apply(const state_t& state);
+		} depth;
+
 		void draw_elements(primitive_type_e primitive_type, size_t count, index_type_e index_type, size_t offset) const;
+
+		program_id_type create_program(const std::string& vertex_shader_source, const std::string& fragment_shader_source) const;
+		void destroy_program(program_id_type id);
 	};
 
     extern gpu_t gpu;

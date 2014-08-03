@@ -13,8 +13,6 @@ namespace mandala
 	{
 		world_hud_state_t::world_hud_state_t()
 		{
-			link_flags = state_t::link_flag_all;
-
 			crosshair_image = std::make_shared<gui_image_t>();
 			crosshair_image->is_autosized_to_texture = true;
 			crosshair_image->sprite = sprite_t(hash_t("crosshairs.json"), hash_t("crosshair2.png"));

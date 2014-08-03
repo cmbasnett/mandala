@@ -9,18 +9,18 @@
 namespace mandala
 {
     struct gui_canvas_t : gui_node_t
-    {
-        struct vertex_t
-        {
-            vertex_t(vec2_t position, vec2_t texcoord) :
-                position(position),
-                texcoord(texcoord)
-            {
-            }
+	{
+		struct vertex_t
+		{
+			vertex_t(vec2_t position, vec2_t texcoord) :
+			position(position),
+			texcoord(texcoord)
+			{
+			}
 
-            vec2_t position;
-            vec2_t texcoord;
-        };
+			vec2_t position;
+			vec2_t texcoord;
+		};
 
         gui_canvas_t();
 

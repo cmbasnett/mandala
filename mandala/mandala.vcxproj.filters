@@ -124,12 +124,6 @@
     <ClInclude Include="bsp.hpp">
       <Filter>mandala\resources\bsp</Filter>
     </ClInclude>
-    <ClInclude Include="gpu_program.hpp">
-      <Filter>mandala\resources\gpu_program</Filter>
-    </ClInclude>
-    <ClInclude Include="shader.hpp">
-      <Filter>mandala\resources\gpu_program</Filter>
-    </ClInclude>
     <ClInclude Include="image.hpp">
       <Filter>mandala\resources\image</Filter>
     </ClInclude>
@@ -238,9 +232,6 @@
     <ClInclude Include="index_buffer.hpp">
       <Filter>mandala\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="index_type.h">
-      <Filter>mandala\core</Filter>
-    </ClInclude>
     <ClInclude Include="range.hpp">
       <Filter>mandala\math</Filter>
     </ClInclude>
@@ -264,6 +255,30 @@
     </ClInclude>
     <ClInclude Include="gpu_vertex.hpp">
       <Filter>mandala\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu_program.hpp">
+      <Filter>mandala\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="shader.hpp">
+      <Filter>mandala\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="bsp_gpu_program.hpp">
+      <Filter>mandala\graphics\gpu_programs</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu_program_mgr.hpp">
+      <Filter>mandala\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="bitmap_font_gpu_program.hpp">
+      <Filter>mandala\graphics\gpu_programs</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu_program_mgr.h">
+      <Filter>mandala\app</Filter>
+    </ClInclude>
+    <ClInclude Include="model_gpu_program.hpp">
+      <Filter>mandala\graphics\gpu_programs</Filter>
+    </ClInclude>
+    <ClInclude Include="gui_gpu_program.hpp">
+      <Filter>mandala\graphics\gpu_programs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -297,9 +312,6 @@
     </ClCompile>
     <ClCompile Include="material.cpp">
       <Filter>mandala\resources\material</Filter>
-    </ClCompile>
-    <ClCompile Include="gpu_program.cpp">
-      <Filter>mandala\resources\gpu_program</Filter>
     </ClCompile>
     <ClCompile Include="texture.cpp">
       <Filter>mandala\resources\texture</Filter>
@@ -351,9 +363,6 @@
     </ClCompile>
     <ClCompile Include="gui_state.cpp">
       <Filter>mandala\states</Filter>
-    </ClCompile>
-    <ClCompile Include="shader.cpp">
-      <Filter>mandala\resources\gpu_program</Filter>
     </ClCompile>
     <ClCompile Include="sprite.cpp">
       <Filter>mandala\resources\sprite_set</Filter>
@@ -418,6 +427,24 @@
     <ClCompile Include="gui_canvas.cpp">
       <Filter>mandala\gui</Filter>
     </ClCompile>
+    <ClCompile Include="gpu_program.cpp">
+      <Filter>mandala\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="shader.cpp">
+      <Filter>mandala\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="bsp_gpu_program.cpp">
+      <Filter>mandala\graphics\gpu_programs</Filter>
+    </ClCompile>
+    <ClCompile Include="bitmap_font_gpu_program.cpp">
+      <Filter>mandala\graphics\gpu_programs</Filter>
+    </ClCompile>
+    <ClCompile Include="model_gpu_program.cpp">
+      <Filter>mandala\graphics\gpu_programs</Filter>
+    </ClCompile>
+    <ClCompile Include="gui_gpu_program.cpp">
+      <Filter>mandala\graphics\gpu_programs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="mandala">
@@ -474,9 +501,6 @@
     <Filter Include="mandala\resources\bitmap_font">
       <UniqueIdentifier>{e14915e5-fb06-4ae2-8bf0-816a9ef249ad}</UniqueIdentifier>
     </Filter>
-    <Filter Include="mandala\resources\gpu_program">
-      <UniqueIdentifier>{ba2ac560-bbf7-4205-bdd7-4af4c14b5c5c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="mandala\resources\image">
       <UniqueIdentifier>{e76e9958-510f-46f6-8954-a1b22f68cb47}</UniqueIdentifier>
     </Filter>
@@ -509,6 +533,9 @@
     </Filter>
     <Filter Include="mandala\graphics">
       <UniqueIdentifier>{fcc9abfa-e288-478a-974f-74d68eb048f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\graphics\gpu_programs">
+      <UniqueIdentifier>{668639aa-ec9f-40a4-9016-25982341aad1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

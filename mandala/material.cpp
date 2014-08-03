@@ -11,7 +11,6 @@
 #include "app.hpp"
 #include "texture.hpp"
 #include "material.hpp"
-#include "gpu_program.hpp"
 #include "boost.hpp"
 
 namespace mandala
@@ -24,37 +23,27 @@ namespace mandala
 		
 		read_json(istream, ptree_);
 
-		//gpu_program
-		auto gpu_program_hash = ptree_.get<hash_t>("gpu_program");
-
-		gpu_program = app.resources.get<gpu_program_t>(gpu_program_hash);
-
-		if (gpu_program == nullptr)
-		{
-			throw std::exception();
-		}
-
-		//is_two_sided
+		//is two sided
 		is_two_sided = ptree_.get<bool>("is_two_sided", false);
 
 		//diffuse
-		auto diffuse_optional = ptree_.get_child_optional("diffuse");
+		const auto diffuse_optional = ptree_.get_child_optional("diffuse");
 
 		if(diffuse_optional)
 		{
-			auto diffuse_ptree = diffuse_optional.get();
+			const auto diffuse_ptree = diffuse_optional.get();
 
 			//texture
-			auto texture_hash = diffuse_ptree.get<hash_t>("texture");
+			const auto texture_hash = diffuse_ptree.get<hash_t>("texture");
 
 			diffuse.texture = app.resources.get<texture_t>(texture_hash);
 
 			//color
-			auto color_optional = diffuse_ptree.get_child_optional("color");
+			const auto color_optional = diffuse_ptree.get_child_optional("color");
 
 			if(color_optional)
 			{
-				auto color_ptree = color_optional.get();
+				const auto color_ptree = color_optional.get();
 				auto color_value_ptr = glm::value_ptr(diffuse.color);
 
 				//TODO: pointer operations are unsafe and obfuscate meaning, switch to something better
@@ -71,14 +60,14 @@ namespace mandala
 		}
 
 		//normal
-		auto normal_optional = ptree_.get_child_optional("normal");
+		const auto normal_optional = ptree_.get_child_optional("normal");
 
 		if(normal_optional)
 		{
-			auto normal_ptree = normal_optional.get();
+			const auto normal_ptree = normal_optional.get();
 
 			//texture
-			auto texture_hash = normal_ptree.get<hash_t>("texture");
+			const auto texture_hash = normal_ptree.get<hash_t>("texture");
 
 			normal.texture = app.resources.get<texture_t>(texture_hash);
 		}
@@ -88,19 +77,19 @@ namespace mandala
 
 		if(specular_optional)
 		{
-			auto specular_ptree = specular_optional.get();
+			const auto specular_ptree = specular_optional.get();
 
 			//texture
-			auto texture_hash = specular_ptree.get<hash_t>("texture");
+			const auto texture_hash = specular_ptree.get<hash_t>("texture");
 
 			specular.texture = app.resources.get<texture_t>(texture_hash);
 
 			//color
-			auto color_optional = specular_ptree.get_child_optional("color");
+			const auto color_optional = specular_ptree.get_child_optional("color");
 
 			if(color_optional)
 			{
-				auto color_ptree = color_optional.get();
+				const auto color_ptree = color_optional.get();
 				auto color_value_ptr = glm::value_ptr(specular.color);
 
 				//TODO: pointer operations are unsafe and obfuscate meaning, switch to something better
@@ -116,7 +105,7 @@ namespace mandala
 			}
 
 			//intensity
-			auto intensity_optional = specular_ptree.get_optional<float32_t>("intensity");
+			const auto intensity_optional = specular_ptree.get_optional<float32_t>("intensity");
 
 			if(intensity_optional)
 			{
@@ -129,19 +118,19 @@ namespace mandala
 
 		if(emissive_optional)
 		{
-			auto emissive_ptree = emissive_optional.get();
+			const auto emissive_ptree = emissive_optional.get();
 
 			//texture
-			auto texture_hash = emissive_ptree.get<hash_t>("texture");
+			const auto texture_hash = emissive_ptree.get<hash_t>("texture");
 
 			emissive.texture = app.resources.get<texture_t>(texture_hash);
 
 			//color
-			auto color_optional = emissive_ptree.get_child_optional("color");
+			const auto color_optional = emissive_ptree.get_child_optional("color");
 
 			if(color_optional)
 			{
-				auto color_ptree = color_optional.get();
+				const auto color_ptree = color_optional.get();
 				auto color_value_ptr = glm::value_ptr(emissive.color);
 
 				//TODO: pointer operations are unsafe and obfuscate meaning, switch to something better
@@ -157,7 +146,7 @@ namespace mandala
 			}
 
 			//intensity
-			auto intensity_optional = emissive_ptree.get_optional<float32_t>("intensity");
+			const auto intensity_optional = emissive_ptree.get_optional<float32_t>("intensity");
 
 			if(intensity_optional)
 			{

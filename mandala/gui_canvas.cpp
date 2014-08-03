@@ -2,8 +2,7 @@
 #include "gui_canvas.hpp"
 #include "gpu.hpp"
 #include "app.hpp"
-#include "gpu_program.hpp"
-#include "opengl.hpp"
+#include "gui_gpu_program.hpp"
 
 //glm
 #include <glm\ext.hpp>
@@ -42,15 +41,10 @@ namespace mandala
 
         gpu.frame_buffers.pop();
 
-        auto gpu_program = app.resources.get<gpu_program_t>(hash_t("gui_image.gpu"));
+		gpu.programs.push(gui_gpu_program);
 
-        gpu.programs.push(gpu_program);
-
-        auto world_matrix_location = glGetUniformLocation(gpu_program->id, "world_matrix"); glCheckError();
-        auto view_projection_matrix_location = glGetUniformLocation(gpu_program->id, "view_projection_matrix"); glCheckError();
-
-        glUniformMatrix4fv(world_matrix_location, 1, GL_FALSE, glm::value_ptr(world_matrix)); glCheckError();
-        glUniformMatrix4fv(view_projection_matrix_location, 1, GL_FALSE, glm::value_ptr(view_projection_matrix)); glCheckError();
+		gui_gpu_program->world_matrix(world_matrix);
+		gui_gpu_program->view_projection_matrix(view_projection_matrix);
 
         gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
         gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);

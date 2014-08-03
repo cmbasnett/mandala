@@ -38,13 +38,16 @@ namespace mandala
             std::shared_ptr<pause_state_t> pause_state;
             std::shared_ptr<frame_buffer_t> frame_buffer;
             bsp_t::render_stats_t render_stats;
+			bool is_rendering = false;
 
 			bsp_state_t();
 			virtual ~bsp_state_t();
 
 			virtual void tick(float32_t dt) override;
 			virtual void render() override;
-			virtual void on_input_event(input_event_t& input_event);
+			virtual void on_input_event(input_event_t& input_event) override;
+			virtual void on_active() override;
+			virtual void on_passive() override;
 			virtual void on_stop_input() override;
 			virtual void on_start_input() override;
 

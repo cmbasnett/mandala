@@ -27,8 +27,6 @@ namespace mandala
 
         bsp_state_t::bsp_state_t()
         {
-            link_flags = link_flag_all;
-
             skybox.model_instance = std::make_shared<model_instance_t>(app.resources.get<model_t>(hash_t("skybox.md5m")));
 
             pause_state = std::make_shared<pause_state_t>();
@@ -56,7 +54,7 @@ namespace mandala
             layout->adopt(debug_label);
             layout->adopt(crosshair_image);
 
-            layout->clean();
+			layout->clean();
         }
 
         bsp_state_t::~bsp_state_t()
@@ -83,16 +81,27 @@ namespace mandala
 
             layout->clean();
 
+			//frame_buffer = std::make_shared<frame_buffer_t>(static_cast<frame_buffer_t::size_type>(layout->size));
+
             gui_state_t::tick(dt);
         }
 
         void bsp_state_t::render()
         {
-            skybox.render(camera);
+			//if (is_rendering)
+			//{
+				//gpu.frame_buffers.push(frame_buffer);
 
-            bsp->render(camera);
+				skybox.render(camera);
 
-            gui_state_t::render();
+				bsp->render(camera);
+
+				gui_state_t::render();
+
+				//gpu.frame_buffers.pop();
+			//}
+
+			//draw frame buffer to the screen (need a nice interface for doing this!)
         }
 
         void bsp_state_t::on_input_event(input_event_t& input_event)
@@ -104,7 +113,7 @@ namespace mandala
                 input_event.gamepad.type == input_event_t::gamepad_t::type_e::button_release &&
                 input_event.gamepad.button_index == 0))
             {
-                app.states.push(pause_state);
+                app.states.push(pause_state, state_mgr_t::link_flag_render);
 
                 input_event.is_consumed = true;
 
@@ -152,11 +161,11 @@ namespace mandala
                 {
                     if (input_event.touch.position_delta.y > 0)
                     {
-                        bsp->render_settings.gamma += 0.1f;
+                        bsp->render_settings.lightmap_gamma += 0.1f;
                     }
                     else
                     {
-                        bsp->render_settings.gamma -= 0.1f;
+                        bsp->render_settings.lightmap_gamma -= 0.1f;
                     }
                 }
             }
@@ -178,5 +187,15 @@ namespace mandala
             platform.is_cursor_centered = true;
             platform.set_cursor_hidden(true);
         }
+
+		void bsp_state_t::on_active()
+		{
+			is_rendering = true;
+		}
+
+		void bsp_state_t::on_passive()
+		{
+			is_rendering = true;
+		}
     };
 };

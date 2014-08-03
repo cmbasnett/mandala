@@ -6,23 +6,22 @@
 //boost
 #include <boost\preprocessor.hpp>
 
-#define SEQ (w) (x) (y) (z)
+#define DECLARE_DATA_MEMBER1(R,TYPES,INDEX,NAME) \
+	BOOST_PP_SEQ_ELEM(INDEX, TYPES) NAME;
 
-#define MACRO(R, DATA, ELEM) BOOST_PP_CAT(ELEM, DATA);
+#define DEFINE_ACCESSOR1(R,TYPES,INDEX,NAME) \
+	BOOST_PP_SEQ_ELEM(INDEX, TYPES) NAME() { return NAME; }
 
-#define CREATE_ATTRIBUTE(TYPE,NAME,...) TYPE NAME;
+#define MY_MACRO1(TYPES,NAMES) \
+	BOOST_PP_SEQ_FOR_EACH_I(DECLARE_DATA_MEMBER1, TYPES, NAMES) \
+public: \
+	//BOOST_PP_SEQ_FOR_EACH_I(DEFINE_ACCESSOR1, TYPES, NAMES)
 
-#define CREATE_GPU_VERTEX(NAME,...) struct NAME\
-{\
-    typedef NAME type;\
-}
-
-CREATE_GPU_VERTEX(vertex_t, size_t a = 0;);
+struct A
+{
+	MY_MACRO1((mandala::vec3_t)(mandala::vec2_t), (position)(texcoord))
+};
 
 namespace mandala
 {
-    void abc()
-    {
-        vertex_t v;
-    }
 };

@@ -1,10 +1,8 @@
-//gl
-#include <GL\glew.h>
-
 //mandala
 #include "opengl.hpp"
 #include "frame_buffer.hpp"
 #include "texture.hpp"
+#include "gpu.hpp"
 
 namespace mandala
 {
@@ -26,7 +24,15 @@ namespace mandala
         glGenRenderbuffers(1, &depth_stencil_render_buffer);
         glBindRenderbuffer(GL_RENDERBUFFER, depth_stencil_render_buffer);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depth_stencil_render_buffer);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depth_stencil_render_buffer);
+
+		//restore previously bound frame buffer
+		auto frame_buffer = gpu.frame_buffers.top();
+
+		if (frame_buffer)
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer->lock()->id);
+		}
     }
 
     frame_buffer_t::~frame_buffer_t()

@@ -20,8 +20,6 @@ namespace mandala
     {
 		pause_state_t::pause_state_t()
         {
-			link_flags = state_t::link_flag_render;
-
 			bitmap_fonts.push_back(app.resources.get<bitmap_font_t>(hash_t("04b_19_32_s.fnt")));
 
 			paused_label = std::make_shared<gui_label_t>();

@@ -5,6 +5,7 @@
 #include "resource_mgr.hpp"
 #include "audio_mgr.hpp"
 #include "string_mgr.hpp"
+#include "gpu_program_mgr.h"
 
 //std
 #include <chrono>
@@ -47,6 +48,7 @@ namespace mandala
 		resource_mgr_t resources;
 		performance_t performance;
         string_mgr_t strings;
+		gpu_program_mgr_t gpu_programs;
 		//audio_mgr_t audio;
 
 		app_t();

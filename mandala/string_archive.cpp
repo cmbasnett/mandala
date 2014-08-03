@@ -10,7 +10,7 @@ namespace mandala
         
         istream.read(magic, sizeof(magic));
 
-        if (strcmp(magic, "STAR") != 0)
+        if (strcmp(magic, "LOCA") != 0)
         {
             throw std::exception();
         }

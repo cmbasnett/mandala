@@ -6,10 +6,10 @@
 #include "bsp.hpp"
 #include "camera.hpp"
 #include "app.hpp"
-#include "gpu_program.hpp"
 #include "image.hpp"
 #include "gpu.hpp"
 #include "collision.hpp"
+#include "bsp_gpu_program.hpp"
 
 //boost
 #include <boost\algorithm\string.hpp>
@@ -618,8 +618,6 @@ namespace mandala
 
         auto camera_leaf_index = get_leaf_index_from_position(camera.position);
 
-        const auto gpu_program = app.resources.get<gpu_program_t>(hash_t("bsp.gpu"));
-
         //cull face
         auto is_cull_face_enabled = glIsEnabled(GL_CULL_FACE);
         glEnable(GL_CULL_FACE);
@@ -635,47 +633,21 @@ namespace mandala
 
 		gpu.blend.push(blend_state);
 
-        gpu.programs.push(gpu_program);
+		//bind program
+		gpu.programs.push(bsp_gpu_program);
 
-        static const auto position_location = glGetAttribLocation(gpu_program->id, "position"); glCheckError();
-        static const auto diffuse_texcoord_location = glGetAttribLocation(gpu_program->id, "diffuse_texcoord"); glCheckError();
-        static const auto lightmap_texcoord_location = glGetAttribLocation(gpu_program->id, "lightmap_texcoord"); glCheckError();
+		static const auto diffuse_texture_index = 0;
+		static const auto lightmap_texture_index = 1;
 
-        static const auto world_matrix_location = glGetUniformLocation(gpu_program->id, "world_matrix"); glCheckError();
-        static const auto view_projection_matrix_location = glGetUniformLocation(gpu_program->id, "view_projection_matrix"); glCheckError();
-        static const auto diffuse_texture_location = glGetUniformLocation(gpu_program->id, "diffuse_texture"); glCheckError();
-        static const auto lightmap_texture_location = glGetUniformLocation(gpu_program->id, "lightmap_texture"); glCheckError();
-        static const auto lightmap_gamma_location = glGetUniformLocation(gpu_program->id, "lightmap_gamma"); glCheckError();
-        static const auto alpha_location = glGetUniformLocation(gpu_program->id, "alpha"); glCheckError();
-        static const auto should_test_alpha_location = glGetUniformLocation(gpu_program->id, "should_test_alpha"); glCheckError();
-
-        static const auto vertex_size = sizeof(vertex_t);
-
-        static const auto position_offset = reinterpret_cast<void*>(offsetof(vertex_t, position));
-        static const auto diffuse_texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_t, diffuse_texcoord));
-        static const auto lightmap_texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_t, lightmap_texcoord));
-
-        static const auto diffuse_texture_index = 0;
-        static const auto lightmap_texture_index = 1;
+		bsp_gpu_program->world_matrix(mat4_t());
+		bsp_gpu_program->view_projection_matrix(camera.projection_matrix * camera.view_matrix);
+		bsp_gpu_program->diffuse_texture_index(diffuse_texture_index);
+		bsp_gpu_program->lightmap_texture_index(lightmap_texture_index);
+		bsp_gpu_program->lightmap_gamma(render_settings.lightmap_gamma);
 
         //bind buffers
         gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
         gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
-
-        //position
-        glEnableVertexAttribArray(position_location); glCheckError();
-        glEnableVertexAttribArray(diffuse_texcoord_location); glCheckError();
-        glEnableVertexAttribArray(lightmap_texcoord_location); glCheckError();
-
-        glVertexAttribPointer(position_location, 3, GL_FLOAT, GL_FALSE, vertex_size, position_offset); glCheckError();
-        glVertexAttribPointer(diffuse_texcoord_location, 2, GL_FLOAT, GL_FALSE, vertex_size, diffuse_texcoord_offset); glCheckError();
-        glVertexAttribPointer(lightmap_texcoord_location, 2, GL_FLOAT, GL_FALSE, vertex_size, lightmap_texcoord_offset); glCheckError();
-
-		glUniformMatrix4fv(world_matrix_location, 1, GL_FALSE, glm::value_ptr(mat4_t())); glCheckError();
-		glUniformMatrix4fv(view_projection_matrix_location, 1, GL_FALSE, glm::value_ptr(camera.projection_matrix * camera.view_matrix)); glCheckError();
-		glUniform1i(diffuse_texture_location, diffuse_texture_index); glCheckError();
-		glUniform1i(lightmap_texture_location, lightmap_texture_index); glCheckError();
-		glUniform1f(lightmap_gamma_location, render_settings.gamma); glCheckError();
 
         auto render_face = [&](int32_t face_index)
         {
@@ -830,39 +802,40 @@ namespace mandala
             //    color.b = boost::lexical_cast<float32_t>(tokens[2]) / 255.0f;
             //}
 
-			gpu_t::blend_t::state_t blend_state;
+			auto blend_state = gpu.blend.top();
+			auto depth_state = gpu.depth.top();
 
             switch (render_mode)
             {
             case render_mode_e::texture:
-                glUniform1f(alpha_location, alpha);
+				bsp_gpu_program->alpha(0.0f);
 				blend_state.is_enabled = true;
 				blend_state.src_factor = gpu_t::blend_factor_e::src_alpha;
 				blend_state.dst_factor = gpu_t::blend_factor_e::one;
-                glDepthMask(GL_FALSE);
                 break;
             case render_mode_e::solid:
-                glUniform1i(should_test_alpha_location, 1);
+				bsp_gpu_program->should_test_alpha(true);
                 break;
             case render_mode_e::additive:
-                glUniform1f(alpha_location, alpha);
+				bsp_gpu_program->alpha(alpha);
 				blend_state.is_enabled = true;
 				blend_state.src_factor = gpu_t::blend_factor_e::one;
 				blend_state.dst_factor = gpu_t::blend_factor_e::one;
-                glDepthMask(GL_FALSE);
+				depth_state.should_write_mask = false;
                 break;
             default:
 				blend_state.is_enabled = false;
-                glDepthMask(GL_TRUE);
+				depth_state.should_write_mask = true;
                 break;
             }
 
 			gpu.blend.push(blend_state);
+			gpu.depth.push(depth_state);
 
             auto world_matrix = glm::translate(model.origin);
             world_matrix *= glm::translate(origin);
 
-            glUniformMatrix4fv(world_matrix_location, 1, GL_FALSE, glm::value_ptr(world_matrix)); glCheckError();
+			bsp_gpu_program->world_matrix(world_matrix);
 
             render_node(model.head_node_indices[0], -1);
 
@@ -870,20 +843,16 @@ namespace mandala
             {
             case render_mode_e::texture:
             case render_mode_e::additive:
-            {
-                glUniform1f(alpha_location, 1.0f); glCheckError();
-				glDepthMask(GL_TRUE); glCheckError();
-            }
+				bsp_gpu_program->alpha(1.0f);
                 break;
             case render_mode_e::solid:
-            {
-                glUniform1i(should_test_alpha_location, 0); glCheckError();
-            }
+				bsp_gpu_program->should_test_alpha(false);
                 break;
             default:
                 break;
             }
 
+			gpu.depth.pop();
 			gpu.blend.pop();
         };
 
@@ -895,10 +864,6 @@ namespace mandala
         {
             render_brush_entity(brush_entity_index);
         }
-
-        glDisableVertexAttribArray(position_location); glCheckError();
-        glDisableVertexAttribArray(diffuse_texcoord_location); glCheckError();
-        glDisableVertexAttribArray(lightmap_texcoord_location); glCheckError();
 
         gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
         gpu.buffers.pop(gpu_t::buffer_target_e::array);

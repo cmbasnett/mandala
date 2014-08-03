@@ -5,6 +5,7 @@
 #include "opengl.hpp"
 #include "gui_state.hpp"
 #include "platform.hpp"
+#include "gpu.hpp"
 
 namespace mandala
 {
@@ -29,13 +30,13 @@ namespace mandala
 		auto world_matrix = mat4_t();
 		auto projection_matrix = glm::ortho(0.0f, static_cast<float32_t>(screen_size.x), 0.0f, static_cast<float32_t>(screen_size.y));
 
-        //TODO: do through gpu
+		auto gpu_depth_state = gpu.depth.top();
+		gpu_depth_state.should_test = false;
 
-		//disable depth testing
-		glDisable(GL_DEPTH_TEST);
+		gpu.depth.push(gpu_depth_state);
 
 		layout->render(world_matrix, projection_matrix);
 
-		glEnable(GL_DEPTH_TEST);
+		gpu.depth.pop();
 	}
 };

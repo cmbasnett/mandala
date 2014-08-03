@@ -27,7 +27,7 @@ namespace mandala
 			int16_t offset_x = 0;
 			int16_t offset_y = 0;
 			int16_t advance_x = 0;
-			uint8_t page = 0;
+			uint8_t texture_index = 0;
 			uint8_t channel = 0;
 		};
 

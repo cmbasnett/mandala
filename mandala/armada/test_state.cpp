@@ -15,7 +15,6 @@ namespace mandala
 		test_state_t::test_state_t(uint64_t index) :
 			index(index)
 		{
-			link_flags = link_flag_all;
 		}
 
 		void test_state_t::on_input_event(input_event_t& input_event)
@@ -39,7 +38,7 @@ namespace mandala
 						std::cout << "---------------------------------------------------------------" << std::endl;
 						std::cout << "[" << index + 1 << "] push" << std::endl;
 						std::cout << "---------------------------------------------------------------" << std::endl;
-						app.states.push(std::make_shared<test_state_t>(index + 1));
+						app.states.push(std::make_shared<test_state_t>(index + 1), state_mgr_t::link_flag_all);
 						input_event.is_consumed = true;
 						break;
 					}

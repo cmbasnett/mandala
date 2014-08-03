@@ -34,9 +34,9 @@ namespace mandala
 				vec4_t bone_weights_0;
 				vec4_t bone_weights_1;
 			};
-            
-            typedef uint16_t index_type;
-            typedef vertex_t vertex_type;
+
+			typedef uint16_t index_type;
+			typedef vertex_t vertex_type;
 
             typedef vertex_buffer_t<vertex_t> vertex_buffer_type;
             typedef index_buffer_t<index_type> index_buffer_type;
@@ -46,7 +46,7 @@ namespace mandala
             std::shared_ptr<index_buffer_type> index_buffer;
 			std::shared_ptr<material_t> material;
 
-			mesh_t() { }
+			mesh_t() = default;
 
 			void render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices) const;
 
@@ -94,7 +94,7 @@ namespace mandala
             quat_t orientation;
         };
 
-		model_t(const model_t&);
-		model_t& operator=(const model_t&);
+		model_t(const model_t&) = delete;
+		model_t& operator=(const model_t&) = delete;
 	};
 };
