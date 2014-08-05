@@ -17,4 +17,4 @@ namespace mandala
 		std::map<hash_t, pack_t::file_t> files;
 		std::map<hash_t, pack_t> packs;
 	};
-};
+}

@@ -56,12 +56,13 @@ namespace mandala
 		void push(const std::shared_ptr<state_t>& state, link_flags_type link_flags);
 		void pop(const std::shared_ptr<state_t>& state);
 		void purge();
+		size_t count() const;
 		
 	private:
 		state_mgr_t(const state_mgr_t&) = delete;
 		state_mgr_t& operator=(const state_mgr_t&) = delete;
 
-		std::deque<operation_t> operations;
 		std::list<node_t> nodes;
+		std::deque<operation_t> operations;
 	};
-};
+}

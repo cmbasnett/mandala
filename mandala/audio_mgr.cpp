@@ -21,6 +21,7 @@ namespace mandala
 	{
 		auto device = std::make_shared<audio_device_t>();
         devices.push_back(device);
+
 		context = std::make_shared<audio_context_t>(device);
 
         set_context(context);
@@ -80,4 +81,4 @@ namespace mandala
 
 		return source;
 	}
-};
+}

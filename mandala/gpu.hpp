@@ -26,6 +26,7 @@ namespace mandala
 		typedef uint32_t program_id_type;
 		typedef int32_t attribute_location_type;
 		typedef int32_t uniform_location_type;
+		typedef rectangle_i32_t viewport_type;
 
         enum class buffer_target_e
         {
@@ -170,13 +171,11 @@ namespace mandala
 
         private:
             std::array<shared_type, texture_count> textures;
-        } textures;
+		} textures;
 
 		//viewports
         struct viewport_mgr_t
         {
-            typedef rectangle_i32_t viewport_type;
-
 			viewport_type top() const;
             void push(const viewport_type& viewport);
             viewport_type pop();
@@ -246,4 +245,4 @@ namespace mandala
 	};
 
     extern gpu_t gpu;
-};
+}

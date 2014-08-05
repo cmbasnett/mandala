@@ -32,4 +32,4 @@ namespace mandala
 
 		skeleton.aabb = aabb3_t::join(a.aabb, b.aabb);
 	}
-};
+}

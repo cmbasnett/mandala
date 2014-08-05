@@ -22,5 +22,5 @@ namespace mandala
 			else
 				quaternion.w = -glm::sqrt(t);
 		}
-	};
-};
+	}
+}

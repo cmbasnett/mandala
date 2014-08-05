@@ -40,9 +40,9 @@ namespace mandala
 
 				while (nodes_reverse_itr != nodes.rend())
 				{
-					nodes_reverse_itr->state->on_start_input();
+					nodes_reverse_itr.base()->state->on_start_input();
 
-					if ((nodes_reverse_itr->link_flags & link_flag_input) == 0)
+					if ((nodes_reverse_itr.base()->link_flags & link_flag_input) == link_flag_none)
 					{
 						break;
 					}
@@ -63,20 +63,51 @@ namespace mandala
 
 				if (!nodes.empty())
 				{
-					auto nodes_itr = nodes.rbegin();
+					auto nodes_reverse_itr = nodes.rbegin();
 
 					//call on_passive on previous top state
-					nodes_itr->state->on_passive();
+					nodes_reverse_itr->state->on_passive();
 
+					//cascade on_stop_render to states that were previously rendering
+					if ((operation.link_flags & link_flag_render) == link_flag_none)
+					{
+						for (auto nodes_reverse_itr = nodes.rbegin(); nodes_reverse_itr != nodes.rend(); ++nodes_reverse_itr)
+						{
+							nodes_reverse_itr->state->on_stop_render();
+
+							if ((nodes_reverse_itr->link_flags & link_flag_render) == link_flag_none)
+							{
+								break;
+							}
+						}
+					}
+
+					//cascade on_stop_input to states that were previously processing input
 					if ((operation.link_flags & link_flag_input) == link_flag_none)
 					{
 						//pushed state is now blocking input to lower states
 						//cascade on_stop_input to top states that were accepting input
-						for (auto nodes_itr = nodes.rbegin(); nodes_itr != nodes.rend(); ++nodes_itr)
+						for (auto nodes_reverse_itr = nodes.rbegin(); nodes_reverse_itr != nodes.rend(); ++nodes_reverse_itr)
 						{
-							nodes_itr->state->on_stop_input();
+							nodes_reverse_itr->state->on_stop_input();
 
-							if ((nodes_itr->link_flags & link_flag_input) == link_flag_none)
+							if ((nodes_reverse_itr->link_flags & link_flag_input) == link_flag_none)
+							{
+								break;
+							}
+						}
+					}
+
+					//cascade on_stop_tick to states that were previously ticking
+					if ((operation.link_flags & link_flag_tick) == link_flag_none)
+					{
+						//pushed state is now blocking input to lower states
+						//cascade on_stop_input to top states that were accepting input
+						for (auto nodes_reverse_itr = nodes.rbegin(); nodes_reverse_itr != nodes.rend(); ++nodes_reverse_itr)
+						{
+							nodes_reverse_itr->state->on_stop_tick();
+
+							if ((nodes_reverse_itr->link_flags & link_flag_tick) == link_flag_none)
 							{
 								break;
 							}
@@ -94,9 +125,9 @@ namespace mandala
 				//call on_enter, on_active etc. on pushed state
 				operation.state->on_enter();
 				operation.state->on_active();
-				operation.state->on_start_tick();
 				operation.state->on_start_render();
 				operation.state->on_start_input();
+				operation.state->on_start_tick();
 
 				break;
 			}
@@ -208,4 +239,9 @@ namespace mandala
 	{
 		nodes.clear();
 	}
-};
+
+	size_t state_mgr_t::count() const
+	{
+		return nodes.size();
+	}
+}

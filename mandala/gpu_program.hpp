@@ -25,4 +25,4 @@ namespace mandala
 		gpu_program_t(const gpu_program_t&) = delete;
 		gpu_program_t& operator=(const gpu_program_t&) = delete;
 	};
-};
+}

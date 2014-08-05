@@ -1,5 +1,6 @@
 #pragma once
 
+//std
 #include <type_traits>
 
 namespace mandala
@@ -24,4 +25,4 @@ namespace mandala
 	{
 		static const bool value = is_negative<std::underlying_type<T>::value(N)>::value;
 	};
-};
+}

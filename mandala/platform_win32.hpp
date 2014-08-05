@@ -81,4 +81,4 @@ namespace mandala
     };
 
     extern platform_win32_t platform;
-};
+}

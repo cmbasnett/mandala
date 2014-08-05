@@ -97,7 +97,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)ext\glm-0.9.4.4;$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)ext\glew-1.10.0\include;$(SolutionDir)ext\zlib-1.2.8\include;$(SolutionDir)ext\libpng-1.6.3;$(SolutionDir)ext\openal-soft-1.15.1-bin\include;C:\boost_1_55_0</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <PreprocessorDefinitions>_WIN32_WINNT=0x0501;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0501;DEBUG;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <UndefinePreprocessorDefinitions>APIENTRY;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
@@ -164,7 +164,7 @@ echo $(PlatformTarget)</Command>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)ext\glm-0.9.4.4;$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)ext\glew-1.10.0\include;$(SolutionDir)ext\zlib-1.2.8\include;$(SolutionDir)ext\libpng-1.6.3;$(SolutionDir)ext\openal-soft-1.15.1-bin\include;C:\boost_1_55_0</AdditionalIncludeDirectories>
       <UndefinePreprocessorDefinitions>APIENTRY;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
-      <PreprocessorDefinitions>_WIN32_WINNT=0x0501;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0501;NDEBUG;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -222,6 +222,7 @@ echo $(PlatformTarget)</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="animation.hpp" />
+    <ClInclude Include="armada\debug_state.hpp" />
     <ClInclude Include="armada\test_state.hpp" />
     <ClInclude Include="audio_context.hpp" />
     <ClInclude Include="audio_device.hpp" />
@@ -252,7 +253,6 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="gpu.hpp" />
     <ClInclude Include="gpu_program_mgr.h" />
     <ClInclude Include="gpu_program_mgr.hpp" />
-    <ClInclude Include="gpu_vertex.hpp" />
     <ClInclude Include="gui_canvas.hpp" />
     <ClInclude Include="gui_gpu_program.hpp" />
     <ClInclude Include="gui_image.hpp" />
@@ -295,7 +295,6 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="is_less_than.hpp" />
     <ClInclude Include="is_less_than_or_equal.hpp" />
     <ClInclude Include="line.hpp" />
-    <ClInclude Include="macros.hpp" />
     <ClInclude Include="opengl.hpp" />
     <ClInclude Include="material.hpp" />
     <ClInclude Include="md5b.hpp">
@@ -314,11 +313,10 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="texture.hpp" />
     <ClInclude Include="triangle.hpp" />
     <ClInclude Include="types.hpp" />
-    <ClInclude Include="vertex_buffer.hpp" />
-    <ClInclude Include="viewport.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="animation.cpp" />
+    <ClCompile Include="armada\debug_state.cpp" />
     <ClCompile Include="armada\test_state.cpp" />
     <ClCompile Include="audio_context.cpp" />
     <ClCompile Include="audio_device.cpp" />
@@ -329,7 +327,6 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="bsp_gpu_program.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="frame_buffer.cpp" />
-    <ClCompile Include="frustum.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="arcball_camera.cpp" />
     <ClCompile Include="armada\armada.cpp" />
@@ -341,7 +338,6 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="bitmap_font.cpp" />
     <ClCompile Include="bsp.cpp" />
     <ClCompile Include="app.cpp" />
-    <ClCompile Include="collision.cpp" />
     <ClCompile Include="gpu_buffer.cpp" />
     <ClCompile Include="gpu.cpp" />
     <ClCompile Include="gui_canvas.cpp" />

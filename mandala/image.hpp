@@ -25,4 +25,4 @@ namespace mandala
 		image_t(const image_t&) = delete;
 		image_t& operator=(const image_t&) = delete;
 	};
-};
+}

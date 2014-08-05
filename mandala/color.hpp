@@ -48,5 +48,5 @@ namespace mandala
 
 			return vec3_t(h, s, v);
 		}
-	};
-};
+	}
+}

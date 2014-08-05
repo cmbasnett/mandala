@@ -42,6 +42,8 @@ namespace mandala
 		{
 			auto dt = static_cast<float32_t>(duration_cast<milliseconds>(high_resolution_clock::now() - frame_start_time).count()) / std::milli::den;
 
+			performance.fps = 1.0f / dt;
+
 			frame_start_time = high_resolution_clock::now();
 
 			handle_input();
@@ -84,7 +86,7 @@ namespace mandala
 
 		states.tick(dt);
 
-		//audio.tick(dt);
+		audio.tick(dt);
 
 		game->app_tick_end();
 
@@ -123,4 +125,4 @@ namespace mandala
 	{
 		return !is_exiting && !is_resetting && !platform.should_exit();
 	}
-};
+}

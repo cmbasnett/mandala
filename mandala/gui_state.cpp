@@ -39,4 +39,4 @@ namespace mandala
 
 		gpu.depth.pop();
 	}
-};
+}

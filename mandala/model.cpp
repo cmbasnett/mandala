@@ -357,4 +357,4 @@ namespace mandala
 		gpu.textures.unbind(normal_texture_index);
 		gpu.textures.unbind(diffuse_texture_index);
 	}
-};
+}

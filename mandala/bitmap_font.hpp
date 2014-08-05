@@ -99,4 +99,4 @@ namespace mandala
 		bitmap_font_t(const bitmap_font_t&) = delete;
 		bitmap_font_t& operator=(const bitmap_font_t&) = delete;
 	};
-};
+}

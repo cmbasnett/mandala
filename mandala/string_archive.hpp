@@ -22,4 +22,4 @@ namespace mandala
 
         std::vector<string_t> strings;
     };
-};
+}

@@ -49,4 +49,4 @@ namespace mandala
 		animation_t(const animation_t&) = delete;
 		animation_t& operator=(const animation_t&) = delete;
 	};
-};
+}

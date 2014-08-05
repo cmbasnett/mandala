@@ -50,4 +50,4 @@ namespace mandala
 		material_t(const material_t&) = delete;
 		material_t& operator=(const material_t&) = delete;
 	};
-};
+}

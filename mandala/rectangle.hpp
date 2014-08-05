@@ -59,7 +59,7 @@ namespace mandala
 				return vector_type(x + width, y + height);
 			}
 		};
-	};
+	}
 
 	typedef details::rectangle_t<int8_t> rectangle_i8_t;
 	typedef details::rectangle_t<int16_t> rectangle_i16_t;
@@ -68,4 +68,4 @@ namespace mandala
 	typedef details::rectangle_t<float32_t> rectangle_f32_t;
 	typedef details::rectangle_t<float64_t> rectangle_f64_t;
 	typedef rectangle_f32_t rectangle_t;
-};
+}

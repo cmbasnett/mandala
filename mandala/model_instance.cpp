@@ -85,4 +85,4 @@ namespace mandala
 
 		return skeleton.bones[bone_index];
 	}
-};
+}

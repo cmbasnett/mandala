@@ -23,4 +23,4 @@ namespace mandala
 		uint32_t buffer_id = 0;
         duration_type duration;
 	};
-};
+}

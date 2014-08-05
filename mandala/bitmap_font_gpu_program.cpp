@@ -125,4 +125,4 @@ void main()
 	{
 		glUniform4fv(font_color_bottom_location, 1, glm::value_ptr(font_color_bottom)); glCheckError();
 	}
-};
+}

@@ -79,9 +79,6 @@
     <ClInclude Include="hash.hpp">
       <Filter>mandala\core</Filter>
     </ClInclude>
-    <ClInclude Include="macros.hpp">
-      <Filter>mandala\core</Filter>
-    </ClInclude>
     <ClInclude Include="types.hpp">
       <Filter>mandala\core</Filter>
     </ClInclude>
@@ -92,9 +89,6 @@
       <Filter>mandala\math</Filter>
     </ClInclude>
     <ClInclude Include="frustum.hpp">
-      <Filter>mandala\math</Filter>
-    </ClInclude>
-    <ClInclude Include="glm.hpp">
       <Filter>mandala\math</Filter>
     </ClInclude>
     <ClInclude Include="line.hpp">
@@ -226,17 +220,11 @@
     <ClInclude Include="padding.hpp">
       <Filter>mandala\gui</Filter>
     </ClInclude>
-    <ClInclude Include="vertex_buffer.hpp">
-      <Filter>mandala\graphics</Filter>
-    </ClInclude>
     <ClInclude Include="index_buffer.hpp">
       <Filter>mandala\graphics</Filter>
     </ClInclude>
     <ClInclude Include="range.hpp">
       <Filter>mandala\math</Filter>
-    </ClInclude>
-    <ClInclude Include="viewport.h">
-      <Filter>mandala\graphics</Filter>
     </ClInclude>
     <ClInclude Include="gpu_buffer.hpp">
       <Filter>mandala\graphics</Filter>
@@ -252,9 +240,6 @@
     </ClInclude>
     <ClInclude Include="bsp_entity.hpp">
       <Filter>mandala\resources\bsp</Filter>
-    </ClInclude>
-    <ClInclude Include="gpu_vertex.hpp">
-      <Filter>mandala\graphics</Filter>
     </ClInclude>
     <ClInclude Include="gpu_program.hpp">
       <Filter>mandala\graphics</Filter>
@@ -276,6 +261,12 @@
     </ClInclude>
     <ClInclude Include="gui_gpu_program.hpp">
       <Filter>mandala\graphics\gpu_programs</Filter>
+    </ClInclude>
+    <ClInclude Include="armada\debug_state.hpp">
+      <Filter>armada\states\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="glm.hpp">
+      <Filter>mandala\math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -325,9 +316,6 @@
     <ClCompile Include="pack_mgr.cpp">
       <Filter>mandala\app</Filter>
     </ClCompile>
-    <ClCompile Include="collision.cpp">
-      <Filter>mandala\math</Filter>
-    </ClCompile>
     <ClCompile Include="platform_win32.cpp">
       <Filter>mandala\platform\win32</Filter>
     </ClCompile>
@@ -369,9 +357,6 @@
     </ClCompile>
     <ClCompile Include="camera.cpp">
       <Filter>mandala\cameras</Filter>
-    </ClCompile>
-    <ClCompile Include="frustum.cpp">
-      <Filter>mandala\math</Filter>
     </ClCompile>
     <ClCompile Include="armada\test_state.cpp">
       <Filter>armada\states\test</Filter>
@@ -438,6 +423,9 @@
     </ClCompile>
     <ClCompile Include="gui_gpu_program.cpp">
       <Filter>mandala\graphics\gpu_programs</Filter>
+    </ClCompile>
+    <ClCompile Include="armada\debug_state.cpp">
+      <Filter>armada\states\debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -530,6 +518,9 @@
     </Filter>
     <Filter Include="mandala\graphics\gpu_programs">
       <UniqueIdentifier>{668639aa-ec9f-40a4-9016-25982341aad1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="armada\states\debug">
+      <UniqueIdentifier>{6da3830c-56d2-47e0-8a15-feb63af739c1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

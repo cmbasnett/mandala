@@ -108,4 +108,4 @@ namespace mandala
 
 		return gui_node_t::clean();
 	}
-};
+}

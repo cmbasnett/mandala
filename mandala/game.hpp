@@ -21,4 +21,4 @@ namespace mandala
 
 		std::string name;
 	};
-};
+}

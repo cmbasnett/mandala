@@ -329,4 +329,4 @@ namespace mandala
 	{
         glfwSetWindowPos(static_cast<GLFWwindow*>(window_ptr), window_position.x, window_position.y);
 	}
-};
+}

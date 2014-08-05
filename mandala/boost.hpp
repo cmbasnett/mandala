@@ -27,7 +27,7 @@ namespace mandala
 			}
 		}
 	};
-};
+}
 
 namespace boost
 {
@@ -39,4 +39,4 @@ namespace boost
 			typedef mandala::hash_translator<T> type;
 		};
 	};
-};
+}

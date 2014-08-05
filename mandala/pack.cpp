@@ -73,4 +73,4 @@ namespace mandala
 
 		return *this;
 	}
-};
+}

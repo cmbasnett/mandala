@@ -71,4 +71,4 @@ namespace mandala
 
         return wstring_convert.from_bytes(buffer.data());
     }
-};
+}

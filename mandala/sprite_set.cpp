@@ -90,4 +90,4 @@ namespace mandala
 			regions.insert(std::make_pair(region.hash, region));
 		}
 	}
-};
+}

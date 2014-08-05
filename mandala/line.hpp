@@ -110,7 +110,7 @@ namespace mandala
 				return *this;
 			}
 		};
-	};
+	}
 
 	typedef details::line2_t<int8_t>	line2_i8_t;
 	typedef details::line2_t<int16_t>	line2_i16_t;
@@ -127,4 +127,4 @@ namespace mandala
 	typedef details::line3_t<float32_t> line3_f32_t;
 	typedef details::line3_t<float64_t> line3_f64_t;
 	typedef line3_f32_t line3_t;
-};
+}

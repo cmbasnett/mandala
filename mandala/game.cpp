@@ -36,4 +36,4 @@ namespace mandala
 	void game_t::app_render_end()
 	{
 	}
-};
+}

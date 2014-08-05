@@ -17,4 +17,4 @@ namespace mandala
 
 		std::shared_ptr<gui_layout_t> layout;
 	};
-};
+}

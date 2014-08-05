@@ -6,6 +6,12 @@
 #include "texture.hpp"
 #include "gpu_buffer.hpp"
 
+//glm
+#include <glm\gtc\type_ptr.hpp>
+
+//std
+#include <iostream>
+
 namespace mandala
 {
 	gpu_t gpu;
@@ -333,11 +339,14 @@ namespace mandala
         return previous_texture;
     }
 
-    gpu_t::viewport_mgr_t::viewport_type gpu_t::viewport_mgr_t::top() const
+    gpu_t::viewport_type gpu_t::viewport_mgr_t::top() const
     {
         if (viewports.empty())
         {
-            return viewport_type();
+			vec4_i32_t viewport;
+			glGetIntegerv(GL_VIEWPORT, glm::value_ptr(viewport));
+
+			return viewport_type(viewport.x, viewport.y, viewport.z, viewport.w);
         }
 
         return viewports.top();
@@ -350,7 +359,7 @@ namespace mandala
         glViewport(viewport.x, viewport.y, viewport.width, viewport.height); glCheckError();
     }
 
-    gpu_t::viewport_mgr_t::viewport_type gpu_t::viewport_mgr_t::pop()
+    gpu_t::viewport_type gpu_t::viewport_mgr_t::pop()
     {
         if (viewports.empty())
         {
@@ -582,4 +591,4 @@ namespace mandala
 
 		return state_t();
 	}
-};
+}

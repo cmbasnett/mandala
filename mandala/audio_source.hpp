@@ -17,14 +17,14 @@ namespace mandala
     struct sound_t;
 
     struct audio_source_t
-    {
-        enum class state_t
-        {
-            initial,
-            playing,
-            paused,
-            stopped
-        };
+	{
+		enum class state_t
+		{
+			initial,
+			playing,
+			paused,
+			stopped
+		};
 
         audio_source_t();
         ~audio_source_t();
@@ -52,4 +52,4 @@ namespace mandala
 
         uint32_t _id;
     };
-};
+}

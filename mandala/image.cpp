@@ -89,4 +89,4 @@ namespace mandala
 
 		png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
 	}
-};
+}

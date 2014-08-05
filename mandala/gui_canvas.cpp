@@ -27,7 +27,7 @@ namespace mandala
 
         gpu.frame_buffers.push(frame_buffer);
 
-        gpu_t::viewport_mgr_t::viewport_type viewport;
+        gpu_t::viewport_type viewport;
         viewport.x = static_cast<int32_t>(bounds.min.x);
         viewport.y = static_cast<int32_t>(bounds.min.y);
         viewport.width = static_cast<int32_t>(bounds.width());

@@ -42,6 +42,7 @@ namespace mandala
 		bool is_multiline = true;
 		bool should_use_ellipses = true;
 		bool should_use_gradient = false;
+		bool should_use_color_codes = true;
 		gradient_t gradient;
 
 		virtual bool clean();
@@ -59,7 +60,7 @@ namespace mandala
 				{
 				}
 
-                line_t(const string_type& string, width_type width) :
+				line_t(const string_type& string, width_type width) :
 					string(string),
 					width(width)
 				{
@@ -76,8 +77,9 @@ namespace mandala
 			};
 
 			std::vector<line_t> lines;
+			vec2_t base_translation;
 		};
 
 		render_info_t render_info;
 	};
-};
+}

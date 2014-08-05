@@ -100,4 +100,4 @@ namespace mandala
             throw boost::system::system_error(error);
         }
     }
-};
+}

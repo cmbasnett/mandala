@@ -1,5 +1,6 @@
 #pragma once
 
+//std
 #include <type_traits>
 
 namespace mandala
@@ -18,4 +19,4 @@ namespace mandala
 	{
 		return (N != 0 && (N & (~N + 1)) == N);
 	}
-};
+}

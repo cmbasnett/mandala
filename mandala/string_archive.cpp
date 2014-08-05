@@ -44,4 +44,4 @@ namespace mandala
             istream.read(reinterpret_cast<char*>(&string.length), sizeof(string.length));
         }
     }
-};
+}

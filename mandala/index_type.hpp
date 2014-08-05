@@ -1,5 +1,6 @@
 #pragma once
 
+//mandala
 #include "types.hpp"
 
 //std
@@ -17,4 +18,4 @@ namespace mandala
             std::conditional_t < N <= 18446744073709551615ULL, uint64_t,
             std::uintmax_t >> >> ;
     };
-};
+}

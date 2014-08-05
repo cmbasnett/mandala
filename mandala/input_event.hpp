@@ -33,6 +33,15 @@ namespace mandala
 			typedef size_t touch_id_type;
 			typedef vec2_f64_t position_type;
 
+			enum class type_e : int8_t
+			{
+				none = -1,
+				button_press,
+				button_release,
+				scroll,
+				move
+			};
+
 			enum class button_e : int8_t
 			{
 				none = -1,
@@ -47,21 +56,12 @@ namespace mandala
 				count,
 			};
 
-			enum class type_e : int8_t
-			{
-				none = -1,
-				button_press,
-				button_release,
-				scroll,
-				move
-			};
-
 			touch_id_type id = 0;
-            type_e type = type_e::none;
-            button_e button = button_e::none;
-			mods_type mods = 0;
+			type_e type = type_e::none;
+			button_e button = button_e::none;
 			position_type position;
 			position_type position_delta;
+			mods_type mods = 0;
 		};
 
 		struct keyboard_t
@@ -234,4 +234,4 @@ namespace mandala
 		gamepad_t gamepad;
 		bool is_consumed = false;
 	};
-};
+}

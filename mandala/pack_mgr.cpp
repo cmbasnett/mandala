@@ -56,4 +56,4 @@ namespace mandala
 
 		return std::make_shared<std::istrstream>(pack.mapped_file_source.data() + file.offset, file.length);
 	}
-};
+}

@@ -36,4 +36,4 @@ namespace mandala
         vec3_t target_target;
 		bool is_panning = false;
 	};
-};
+}

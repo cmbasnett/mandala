@@ -36,4 +36,4 @@ namespace mandala
 		pack_t(const pack_t&) = delete;
 		pack_t& operator=(const pack_t&) = delete;
 	};
-};
+}

@@ -20,4 +20,4 @@ namespace mandala
         audio_device_t(const audio_device_t&) = delete;
         audio_device_t& operator=(const audio_device_t&) = delete;
     };
-};
+}

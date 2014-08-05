@@ -18,4 +18,4 @@ namespace glm
 
 		return clamp((x - minVal) / (maxVal - minVal), valType(0), valType(1));
 	}
-};
+}

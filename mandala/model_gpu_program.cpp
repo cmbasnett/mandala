@@ -304,4 +304,4 @@ void main()
 	{
 		glUniform1f(emissive_intensity_location, emissive_intensity); glCheckError();
 	}
-};
+}

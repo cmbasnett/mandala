@@ -44,4 +44,4 @@ namespace mandala
 	private:
 		std::shared_ptr<audio_context_t> context;
 	};
-};
+}

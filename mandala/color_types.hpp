@@ -10,4 +10,4 @@ namespace mandala
         rgba,
         palette
     };
-};
+}

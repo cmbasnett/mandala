@@ -27,4 +27,4 @@ namespace mandala
 		virtual void on_stop_input() { }
 		virtual void on_start_input() { }
 	};
-};
+}

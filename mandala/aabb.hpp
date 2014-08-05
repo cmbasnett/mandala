@@ -6,7 +6,6 @@
 //mandala
 #include "types.hpp"
 #include "plane.hpp"
-#include "macros.hpp"
 
 namespace mandala
 {
@@ -207,7 +206,7 @@ namespace mandala
 				return *this;
 			}
 		};
-	};
+	}
 
 	typedef details::aabb2_t<int8_t>	aabb2_i8_t;
 	typedef details::aabb2_t<int16_t>	aabb2_i16_t;
@@ -224,4 +223,4 @@ namespace mandala
 	typedef details::aabb3_t<float32_t>	aabb3_f32_t;
 	typedef details::aabb3_t<float64_t>	aabb3_f36_t;
 	typedef aabb3_f32_t					aabb3_t;
-};
+}

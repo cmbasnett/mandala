@@ -13,4 +13,4 @@ namespace mandala
 	{
 		gpu.destroy_program(id);
 	}
-};
+}

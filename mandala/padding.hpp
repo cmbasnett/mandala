@@ -10,19 +10,20 @@ namespace mandala
 		template<typename T>
 		struct padding_t
 		{
+			typedef T value_type;
 			typedef padding_t<T> type;
 			typedef glm::detail::tvec2<T> size_type;
 
-			T bottom = 0;
-			T left = 0;
-			T top = 0;
-			T right = 0;
+			value_type bottom = 0;
+			value_type left = 0;
+			value_type top = 0;
+			value_type right = 0;
 
 			padding_t()
 			{
 			}
 
-			padding_t(T bottom, T left, T top, T right) :
+			padding_t(value_type bottom, value_type left, value_type top, value_type right) :
 				bottom(bottom),
 				left(left),
 				top(top),
@@ -30,17 +31,17 @@ namespace mandala
 			{
 			}
 
-			padding_t(T all) :
+			padding_t(value_type all) :
 				padding_t(all, all, all, all)
 			{
 			}
 
-			T vertical() const
+			value_type vertical() const
 			{
 				return bottom + top;
 			}
 
-			T horizontal() const
+			value_type horizontal() const
 			{
 				return left + right;
 			}
@@ -88,7 +89,7 @@ namespace mandala
 				return *this;
 			}
 		};
-	};
+	}
 
 	typedef details::padding_t<uint8_t>		padding_u8_t;
 	typedef details::padding_t<uint16_t>	padding_u16_t;
@@ -127,4 +128,4 @@ namespace mandala
 		aabb.max.x += padding.right;
 		aabb.max.y += padding.top;
 	}
-};
+}

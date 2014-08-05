@@ -40,4 +40,4 @@ namespace mandala
         virtual void render(mat4_t world_matrix, mat4_t view_projection_matrix);
         virtual bool clean();
     };
-};
+}

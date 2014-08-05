@@ -33,4 +33,4 @@ namespace mandala
 
 		void on_input_event(input_event_t& input_event);
 	};
-};
+}

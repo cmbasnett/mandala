@@ -10,16 +10,44 @@
 //mandala
 #include "hash.hpp"
 #include "pack_mgr.hpp"
+#include "resource.hpp"
 
 namespace mandala
 {
-	struct resource_t;
-
 	struct resource_mgr_t : public pack_mgr_t
 	{
 		typedef std::map<hash_t, std::shared_ptr<resource_t>> resource_map_type;
 
         std::recursive_mutex mutex;
+
+		size_t count()
+		{
+			size_t count = 0;
+
+			for (auto resources : type_resources)
+			{
+				count += resources.second.size();
+			}
+
+			return count;
+		}
+
+		template<typename T = std::enable_if<std::is_base_of<resource_t, T>::value, T>::type>
+		size_t count()
+		{
+			static const std::type_index type_index = typeid(T);
+
+			auto lock_guard = std::unique_lock<std::recursive_mutex>(mutex);
+
+			auto type_resources_itr = type_resources.find(type_index);
+
+			if (type_resources_itr == type_resources.end())
+			{
+				return 0;
+			}
+
+			return type_resources_itr->second.size();
+		}
 
 		template<typename T>
 		std::shared_ptr<T> get(const hash_t& hash)
@@ -102,4 +130,4 @@ namespace mandala
     private:
         std::map<std::type_index, resource_map_type> type_resources;
 	};
-};
+}

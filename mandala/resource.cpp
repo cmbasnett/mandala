@@ -7,4 +7,4 @@ namespace mandala
 		last_access_time(std::chrono::system_clock::now())
 	{
 	}
-};
+}

@@ -53,4 +53,4 @@ namespace mandala
 
 		return ray;
 	}
-};
+}

@@ -255,4 +255,4 @@ namespace mandala
         std::shared_ptr<vertex_buffer_type> vertex_buffer;
         std::shared_ptr<index_buffer_type> index_buffer;
 	};
-};
+}

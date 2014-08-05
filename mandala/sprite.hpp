@@ -28,4 +28,4 @@ namespace mandala
 
 		sprite_t& operator=(const sprite_ref_t& sprite_ref);
 	};
-};
+}

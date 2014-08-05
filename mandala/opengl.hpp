@@ -27,4 +27,4 @@ namespace mandala
 			throw std::exception();
 		}
 	}
-};
+}

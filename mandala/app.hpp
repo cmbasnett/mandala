@@ -33,23 +33,24 @@ namespace mandala
 				size_t unconsumed_input_event_count;
 			};
 
-			static const auto frames_max = 256;
-
-			std::deque<frame_t> frames;
-
 			performance_t()
 			{
+				static const auto frames_max = 256;
+
 				frames.resize(frames_max);
 			}
+
+			std::deque<frame_t> frames;
+			fps_type fps = 0;
         };
 		
 		std::shared_ptr<game_t> game;
 		state_mgr_t states;
 		resource_mgr_t resources;
 		performance_t performance;
-        string_mgr_t strings;
+		string_mgr_t strings;
 		gpu_program_mgr_t gpu_programs;
-		//audio_mgr_t audio;
+		audio_mgr_t audio;
 
 		app_t();
 
@@ -73,4 +74,4 @@ namespace mandala
 	};
 
 	extern app_t app;
-};
+}

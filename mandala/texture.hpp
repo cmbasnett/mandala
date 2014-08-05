@@ -30,4 +30,4 @@ namespace mandala
 		texture_t(texture_t&) = delete;
 		texture_t& operator=(texture_t&) = delete;
 	};
-};
+}

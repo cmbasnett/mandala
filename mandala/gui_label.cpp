@@ -1,9 +1,4 @@
-#pragma once
-
-//mandala
-#include "app.hpp"
-#include "bitmap_font.hpp"
-#include "gui_label.hpp"
+﻿#pragma once
 
 //std
 #include <sstream>
@@ -14,6 +9,11 @@
 
 //boost
 #include <boost\algorithm\string.hpp>
+
+//mandala
+#include "app.hpp"
+#include "bitmap_font.hpp"
+#include "gui_label.hpp"
 
 namespace mandala
 {
@@ -30,6 +30,9 @@ namespace mandala
 
 		auto string_itr = string.begin();
 		const auto padded_size = (bounds - padding).size();
+		static const auto color_push_character = L'↑';
+		static const auto color_pop_character = L'↓';
+		static const auto fallback_character = L'?';
 
 		while (string_itr != string.end())
 		{
@@ -40,9 +43,9 @@ namespace mandala
 				if (should_use_ellipses && !render_info.lines.empty() && !render_info.lines.back().string.empty())
 				{
 					//attempt to add ellipses to the end of the last line
-					const auto ellipse_char = L'.';
-					const auto ellipses_max = 3;
-					const auto ellipse_width = bitmap_font->characters.at(ellipse_char).advance_x;
+					static const auto ellipse_character = L'.';
+					static const auto ellipses_max = 3;
+					const auto ellipse_width = bitmap_font->characters.at(ellipse_character).advance_x;
 					const auto ellipse_count = glm::min(static_cast<decltype(ellipse_width)>(padded_size.x) / ellipse_width, ellipses_max);
 
 					auto& line_string = render_info.lines.back().string;
@@ -62,7 +65,7 @@ namespace mandala
 					}
 
 					line_string.erase(string_reverse_itr.base() + 1, line_string.end());
-					line_string.append(ellipse_count, ellipse_char);
+					line_string.append(ellipse_count, ellipse_character);
 				}
 
 				break;
@@ -72,13 +75,64 @@ namespace mandala
 			auto string_begin = string_itr;
 			auto string_end = string_itr;
 			auto was_line_added = false;
+			auto string_space_itr = string.end();
 
-			decltype(string_itr) string_space_itr = string.end();
-
-			auto add_line = [&](string_type&& string)
+			auto strip_color_codes = [&](string_type& string)
 			{
+				auto string_itr = string.begin();
+
+				while (string_itr != string.end())
+				{
+					if (*string_itr == color_push_character)
+					{
+						string_itr = string.erase(string_itr);
+
+						if (string_itr != string.end() && *string_itr != color_push_character)
+						{
+							string_itr = string.erase(string_itr);
+						}
+					}
+					else if (*string_itr == color_pop_character)
+					{
+						string_itr = string.erase(string_itr);
+					}
+
+					if (string_itr != string.end())
+					{
+						++string_itr;
+					}
+				}
+			};
+
+			auto replace_unrecognized_characters = [&](string_type& string)
+			{
+				auto string_itr = string.begin();
+
+				while (string_itr != string.end())
+				{
+					if (bitmap_font->characters.find(*string_itr) == bitmap_font->characters.end())
+					{
+						string.replace(string_itr, string_itr + 1, 1, fallback_character);
+					}
+
+					++string_itr;
+				}
+			};
+
+			auto add_line = [&](string_type string)
+			{
+				//strip color codes from string
+				if (should_use_color_codes)
+				{
+					strip_color_codes(string);
+				}
+
+				replace_unrecognized_characters(string);
+
 				auto width = bitmap_font->get_string_width(string);
+
 				render_info.lines.emplace_back(std::forward<string_type>(string), width);
+
 				was_line_added = true;
 			};
 
@@ -97,7 +151,72 @@ namespace mandala
 					string_space_itr = string_itr;
 				}
 
-				auto character_width = bitmap_font->characters.at(*string_itr).advance_x;
+				int16_t character_width = 0;
+				
+				if (should_use_color_codes)
+				{
+					if (*string_itr == color_push_character)
+					{
+						//encountered color push character
+
+						//skip to next character
+						++string_itr;
+
+						if (string_itr == string.end())
+						{
+							break;
+						}
+						else if (*string_itr != color_push_character)
+						{
+							//parse 16-bit character to color
+							auto color_data = static_cast<uint16_t>(*string_itr);
+
+							const uint16_t color_r_mask = (0xF000);
+							const uint16_t color_g_mask = (0x0F00);
+							const uint16_t color_b_mask = (0x00F0);
+							const uint16_t color_a_mask = (0x000F);
+
+							vec4_t color;
+							color.r = static_cast<float32_t>(color_data & color_r_mask) / 255.0f;
+							color.g = static_cast<float32_t>(color_data & color_g_mask) / 255.0f;
+							color.b = static_cast<float32_t>(color_data & color_b_mask) / 255.0f;
+							color.a = static_cast<float32_t>(color_data & color_a_mask) / 255.0f;
+
+							++string_itr;
+
+							continue;
+						}
+					}
+					else if (*string_itr == color_pop_character)
+					{
+						//encountered color push character
+						++string_itr;
+
+						if (string_itr == string.end())
+						{
+							break;
+						}
+						else if (*string_itr != color_pop_character)
+						{
+							continue;
+						}
+					}
+				}
+
+				auto characters_itr = bitmap_font->characters.find(*string_itr);
+
+				string_type::value_type character;
+
+				if (characters_itr == bitmap_font->characters.end())
+				{
+					character = fallback_character;
+				}
+				else
+				{
+					character = *string_itr;
+				}
+
+				character_width = bitmap_font->characters.at(character).advance_x;
 
 				if (line_width + character_width > padded_size.x)
 				{
@@ -122,6 +241,39 @@ namespace mandala
 			}
 		}
 
+		render_info.base_translation = bounds.min;
+		render_info.base_translation.x += padding.left;
+		render_info.base_translation.y += padding.bottom;
+
+		const auto line_count = render_info.lines.size();
+
+		switch (vertical_alignment)
+		{
+		case vertical_alignment_e::top:
+			render_info.base_translation.y += padded_size.y - bitmap_font->base;
+			break;
+		case vertical_alignment_e::middle:
+			render_info.base_translation.y += (padded_size.y / 2) - (bitmap_font->base / 2) + ((bitmap_font->line_height * (line_count - 1)) / 2);
+			break;
+		case vertical_alignment_e::bottom:
+			render_info.base_translation.y += (bitmap_font->line_height * line_count) - bitmap_font->base;
+			break;
+		default:
+			break;
+		}
+
+		switch (justification)
+		{
+		case justification_e::center:
+			render_info.base_translation.x += padded_size.x / 2;
+			break;
+		case justification_e::right:
+			render_info.base_translation.x += padded_size.x;
+			break;
+		default:
+			break;
+		}
+
 		return did_clean;
 	}
 
@@ -137,40 +289,7 @@ namespace mandala
             throw std::exception();
         }
 
-        //node translation
-		auto base_translation = bounds.min;
-		base_translation.x += padding.left;
-		base_translation.y += padding.bottom;
-
-		const auto line_count = render_info.lines.size();
-		const auto padded_size = (bounds - padding).size();
-
-        switch (vertical_alignment)
-        {
-        case vertical_alignment_e::top:
-			base_translation.y += padded_size.y - bitmap_font->base;
-            break;
-		case vertical_alignment_e::middle:
-			base_translation.y += (padded_size.y / 2) - (bitmap_font->base / 2) + ((bitmap_font->line_height * (line_count - 1)) / 2);
-			break;
-		case vertical_alignment_e::bottom:
-			base_translation.y += (bitmap_font->line_height * line_count) - bitmap_font->base;
-			break;
-        default:
-            break;
-        }
-
-        switch (justification)
-        {
-        case justification_e::center:
-			base_translation.x += padded_size.x / 2;
-            break;
-        case justification_e::right:
-			base_translation.x += padded_size.x;
-            break;
-        default:
-            break;
-        }
+		auto base_translation = render_info.base_translation;
 
 		for (const auto& line : render_info.lines)
 		{
@@ -188,10 +307,9 @@ namespace mandala
 				break;
 			}
 
-            auto line_world_matrix = world_matrix * glm::translate(translation.x, translation.y, 0.0f);
-
-			auto color_top = should_use_gradient ? gradient.color1 : color;
-			auto color_bottom = should_use_gradient ? gradient.color2 : color;
+            const auto line_world_matrix = world_matrix * glm::translate(translation.x, translation.y, 0.0f);
+			const auto color_top = should_use_gradient ? gradient.color1 : color;
+			const auto color_bottom = should_use_gradient ? gradient.color2 : color;
 
 			bitmap_font->render_string(line.string, color_top, color_bottom, line_world_matrix, view_projection_matrix);
 
@@ -200,4 +318,4 @@ namespace mandala
 
         gui_node_t::render(world_matrix, view_projection_matrix);
     }
-};
+}

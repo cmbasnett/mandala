@@ -97,4 +97,4 @@ namespace mandala
 		model_t(const model_t&) = delete;
 		model_t& operator=(const model_t&) = delete;
 	};
-};
+}

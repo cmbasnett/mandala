@@ -90,4 +90,4 @@ void main()
 	{
 		glUniform1i(diffuse_texture_index_location, diffuse_texture_index); glCheckError();
 	}
-};
+}

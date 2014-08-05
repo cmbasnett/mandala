@@ -58,7 +58,7 @@ namespace mandala
 		vec2_f64_t cursor_position;
 #endif
 	};
-};
+}
 
 //WIN32
 #if defined(_WIN32) || defined(WIN32)

@@ -41,4 +41,4 @@ namespace mandala
 		sprite_set_t(const sprite_set_t&) = delete;
 		sprite_set_t& operator=(const sprite_set_t&) = delete;
 	};
-};
+}

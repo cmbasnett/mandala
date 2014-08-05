@@ -1,5 +1,6 @@
 #pragma once
 
+//std
 #include <type_traits>
 
 namespace mandala
@@ -12,4 +13,4 @@ namespace mandala
 	{
 		static const bool value = (N <= M);
 	};
-};
+}

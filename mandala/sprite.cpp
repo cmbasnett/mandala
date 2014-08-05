@@ -60,4 +60,4 @@ namespace mandala
 
 		return *this;
 	}
-};
+}

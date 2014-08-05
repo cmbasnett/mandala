@@ -78,4 +78,4 @@ namespace mandala
 		void orphan();
         void adopt(std::shared_ptr<gui_node_t> child);
 	};
-};
+}

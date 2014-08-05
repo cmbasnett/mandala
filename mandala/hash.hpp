@@ -81,9 +81,9 @@ namespace mandala
 			inline bool operator>=(const hash_t& rhs) const { return value >= rhs.value; }
 			inline bool operator<=(const hash_t& rhs) const { return value <= rhs.value; }
 		};
-	};
+	}
 
 	typedef details::hash_t<uint32_t> hash32_t;
 	typedef details::hash_t<uint64_t> hash64_t;
 	typedef hash32_t hash_t;
-};
+}

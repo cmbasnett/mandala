@@ -36,4 +36,4 @@ namespace mandala
         void purge();
         string_type get(const hash_t& hash) const;
     };
-};
+}

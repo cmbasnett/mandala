@@ -40,4 +40,4 @@ namespace mandala
         glDeleteRenderbuffers(1, &depth_stencil_render_buffer); glCheckError();
         glDeleteFramebuffers(1, &id); glCheckError();
     }
-};
+}

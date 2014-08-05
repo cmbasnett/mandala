@@ -13,24 +13,24 @@ namespace mandala
 		template<typename T>
 		struct plane2_t<T, typename std::enable_if<std::is_floating_point<T>::value>::type>
 		{
-			typedef plane2_t<T> type_t;
-			typedef T distance_type_t;
-			typedef glm::detail::tvec2<T> vector_type_t;
+			typedef plane2_t<T> type;
+			typedef T distance_type;
+			typedef glm::detail::tvec2<T> vector_type;
 
-			vector_type_t normal;
-			distance_type_t distance = distance_type_t(0);
+			vector_type normal;
+			distance_type distance = distance_type(0);
 
 			plane2_t()
 			{
 			}
 
-			plane2_t(const vector_type_t& normal, distance_type_t distance) :
+			plane2_t(const vector_type& normal, distance_type distance) :
 				normal(normal),
 				distance(distance)
 			{
 			}
 
-			plane2_t(const vector_type_t& origin, const vector_type_t& normal) :
+			plane2_t(const vector_type& origin, const vector_type& normal) :
 				normal(normal)
 			{
 				distance = glm::dot(normal, origin);
@@ -43,20 +43,20 @@ namespace mandala
 				distance /= length;
 			}
 
-			inline vector_type_t origin() const
+			inline vector_type origin() const
 			{
 				return normal * distance;
 			}
 
-			type_t operator-() const
+			type operator-() const
 			{
-				type_t plane;
+				type plane;
 				plane.normal = -normal;
 				plane.distance = -distance;
 				return plane;
 			}
 		};
-	};
+	}
 
 	typedef details::plane2_t<float32_t> plane2_f32_t;
 	typedef details::plane2_t<float64_t> plane2_f64_t;
@@ -70,30 +70,30 @@ namespace mandala
 		template<typename T>
 		struct plane3_t<T, typename std::enable_if<std::is_floating_point<T>::value>::type>
 		{
-			typedef plane3_t<T> type_t;
-			typedef T distance_type_t;
-			typedef glm::detail::tvec3<T> vector_type_t;
+			typedef plane3_t<T> type;
+			typedef T distance_type;
+			typedef glm::detail::tvec3<T> vector_type;
 
-			vector_type_t normal;
-			distance_type_t distance = 0;
+			vector_type normal;
+			distance_type distance = 0;
 
 			plane3_t()
 			{
 			}
 
-			plane3_t(const vector_type_t& normal, distance_type_t distance) :
+			plane3_t(const vector_type& normal, distance_type distance) :
 				normal(normal),
 				distance(distance)
 			{
 			}
 
-			plane3_t(const vector_type_t& origin, const vector_type_t& normal) :
+			plane3_t(const vector_type& origin, const vector_type& normal) :
 				normal(normal)
 			{
 				distance = glm::dot(normal, origin);
 			}
 
-			plane3_t(const vector_type_t& v0, const vector_type_t& v1, const vector_type_t& v2)
+			plane3_t(const vector_type& v0, const vector_type& v1, const vector_type& v2)
 			{
 				auto a = v1 - v0;
 				auto b = v2 - v0;
@@ -109,22 +109,22 @@ namespace mandala
 				distance /= length;
 			}
 
-			inline vector_type_t origin() const
+			inline vector_type origin() const
 			{
 				return normal * distance;
 			}
 
-			type_t operator-() const
+			type operator-() const
 			{
-				type_t plane;
+				type plane;
 				plane.normal = -normal;
 				plane.distance = -distance;
 				return plane;
 			}
 		};
-	};
+	}
 
 	typedef details::plane3_t<float32_t> plane3_f32_t;
 	typedef details::plane3_t<float64_t> plane3_f64_t;
 	typedef plane3_f32_t plane3_t;
-};
+}

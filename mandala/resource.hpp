@@ -23,4 +23,4 @@ namespace mandala
 		resource_t(const resource_t&) = delete;
 		resource_t& operator=(const resource_t&) = delete;
 	};
-};
+}

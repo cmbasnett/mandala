@@ -25,4 +25,4 @@ namespace mandala
 		std::vector<mat4_t> bone_matrices;
 		aabb3_t aabb;
 	};
-};
+}

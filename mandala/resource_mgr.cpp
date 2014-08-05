@@ -29,4 +29,4 @@ namespace mandala
 	{
 		type_resources.clear();
 	}
-};
+}

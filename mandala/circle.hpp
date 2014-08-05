@@ -35,8 +35,7 @@ namespace mandala
 				return radius * 2;
 			}
 		};
-	};
-
+	}
 	
     typedef details::circle_t<int8_t> circle_i8_t;
 	typedef details::circle_t<int16_t> circle_i16_t;
@@ -45,4 +44,4 @@ namespace mandala
 	typedef details::circle_t<float32_t> circle_f32_t;
 	typedef details::circle_t<float64_t> circle_f64_t;
 	typedef circle_f32_t circle_t;
-};
+}

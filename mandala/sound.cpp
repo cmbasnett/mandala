@@ -110,4 +110,4 @@ namespace mandala
 	{
         alDeleteBuffers(1, &buffer_id);
 	}
-};
+}

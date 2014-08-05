@@ -1,5 +1,6 @@
 #pragma once
 
+//std
 #include <type_traits>
 
 namespace mandala
@@ -18,4 +19,4 @@ namespace mandala
 			static const int value = 1;
 		};
 	};
-};
+}

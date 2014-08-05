@@ -1051,4 +1051,4 @@ namespace mandala
 
     //	return result;
     //}
-};
+}

@@ -143,4 +143,4 @@ void main()
 	{
 		glUniform1i(should_test_alpha_location, should_test_alpha); glCheckError();
 	}
-};
+}
