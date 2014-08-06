@@ -614,6 +614,7 @@ namespace mandala
     void bsp_t::render(const camera_t& camera)
     {
         static boost::dynamic_bitset<> faces_rendered = boost::dynamic_bitset<>(faces.size());
+
         faces_rendered.reset();
 
         auto camera_leaf_index = get_leaf_index_from_position(camera.position);
@@ -679,7 +680,7 @@ namespace mandala
             ++render_stats.face_count;
         };
 
-        auto render_leaf = [&](int32_t leaf_index)
+        auto render_leaf = [&](node_index_type leaf_index)
         {
             const auto& leaf = leafs[leaf_index];
 
@@ -691,7 +692,7 @@ namespace mandala
             ++render_stats.leaf_count;
         };
 
-        std::function<void(int32_t, int32_t)> render_node = [&](int32_t node_index, int32_t camera_leaf_index)
+		std::function<void(node_index_type, node_index_type)> render_node = [&](node_index_type node_index, node_index_type camera_leaf_index)
         {
             if (node_index < 0)
             {
@@ -748,6 +749,8 @@ namespace mandala
 
         auto render_brush_entity = [&](int32_t entity_index)
         {
+			return;
+
             const auto& entity = entities[entity_index];
             const auto model_index = boost::lexical_cast<int32_t>(entity.get_property("model").substr(1));
             const auto& model = models[model_index];
@@ -804,6 +807,7 @@ namespace mandala
 
 			auto blend_state = gpu.blend.top();
 			auto depth_state = gpu.depth.top();
+
 			depth_state.should_test = true;
 
             switch (render_mode)
@@ -897,7 +901,7 @@ namespace mandala
 
     int32_t bsp_t::get_leaf_index_from_position(const vec3_t& position) const
     {
-        int32_t node_index = 0;
+        node_index_type node_index = 0;
 
         while (node_index >= 0)
         {

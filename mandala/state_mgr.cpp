@@ -11,7 +11,9 @@ namespace mandala
 
 	void state_mgr_t::tick(float32_t dt)
 	{
-		//process stack actions
+		std::shared_ptr<state_t> previous_top_state = nodes.empty() ? nullptr : nodes.rbegin()->state;
+
+		//process stack operations
 		while (!operations.empty())
 		{
 			const auto& operation = operations.front();
@@ -21,37 +23,20 @@ namespace mandala
 				return node.state == operation.state;
 			});
 
-			auto nodes_reverse_itr = std::reverse_iterator<decltype(nodes_itr)>(nodes_itr);
-
 			switch (operation.type)
 			{
 			case operation_t::type_e::pop:
-
 				if (nodes_itr == nodes.end())
 				{
 					//state does not exist, cannot pop
 					throw std::exception();
 				}
 
-				if (nodes_reverse_itr != nodes.rend())
-				{
-					nodes_reverse_itr.base()->state->on_active();
-				}
-
-				while (nodes_reverse_itr != nodes.rend())
-				{
-					nodes_reverse_itr.base()->state->on_start_input();
-
-					if ((nodes_reverse_itr.base()->link_flags & link_flag_input) == link_flag_none)
-					{
-						break;
-					}
-
-					++nodes_reverse_itr;
-				}
+				//call on_exit on popped state
+				nodes_itr->state->on_exit();
 
 				//remove state from stack
-				nodes.erase(nodes_itr);
+				nodes_itr = nodes.erase(nodes_itr);
 
 				break;
 			case operation_t::type_e::push:
@@ -61,59 +46,8 @@ namespace mandala
 					throw std::exception();
 				}
 
-				if (!nodes.empty())
-				{
-					auto nodes_reverse_itr = nodes.rbegin();
-
-					//call on_passive on previous top state
-					nodes_reverse_itr->state->on_passive();
-
-					//cascade on_stop_render to states that were previously rendering
-					if ((operation.link_flags & link_flag_render) == link_flag_none)
-					{
-						for (auto nodes_reverse_itr = nodes.rbegin(); nodes_reverse_itr != nodes.rend(); ++nodes_reverse_itr)
-						{
-							nodes_reverse_itr->state->on_stop_render();
-
-							if ((nodes_reverse_itr->link_flags & link_flag_render) == link_flag_none)
-							{
-								break;
-							}
-						}
-					}
-
-					//cascade on_stop_input to states that were previously processing input
-					if ((operation.link_flags & link_flag_input) == link_flag_none)
-					{
-						//pushed state is now blocking input to lower states
-						//cascade on_stop_input to top states that were accepting input
-						for (auto nodes_reverse_itr = nodes.rbegin(); nodes_reverse_itr != nodes.rend(); ++nodes_reverse_itr)
-						{
-							nodes_reverse_itr->state->on_stop_input();
-
-							if ((nodes_reverse_itr->link_flags & link_flag_input) == link_flag_none)
-							{
-								break;
-							}
-						}
-					}
-
-					//cascade on_stop_tick to states that were previously ticking
-					if ((operation.link_flags & link_flag_tick) == link_flag_none)
-					{
-						//pushed state is now blocking input to lower states
-						//cascade on_stop_input to top states that were accepting input
-						for (auto nodes_reverse_itr = nodes.rbegin(); nodes_reverse_itr != nodes.rend(); ++nodes_reverse_itr)
-						{
-							nodes_reverse_itr->state->on_stop_tick();
-
-							if ((nodes_reverse_itr->link_flags & link_flag_tick) == link_flag_none)
-							{
-								break;
-							}
-						}
-					}
-				}
+				//call on_enter on pushed state
+				operation.state->on_enter();
 
 				//add state to stack
 				node_t node;
@@ -122,47 +56,95 @@ namespace mandala
 
 				nodes.push_back(node);
 
-				//call on_enter, on_active etc. on pushed state
-				operation.state->on_enter();
-				operation.state->on_active();
-				operation.state->on_start_render();
-				operation.state->on_start_input();
-				operation.state->on_start_tick();
-
 				break;
 			}
 
 			operations.pop_front();
 		}
 
-		link_flags_type link_flags = link_flag_all;
-
-		for (auto nodes_itr = nodes.rbegin(); nodes_itr != nodes.rend(); ++nodes_itr)
+		//check if top state changed
+		if (previous_top_state != nodes.rbegin()->state)
 		{
-			const auto& state = nodes_itr->state;
+			//call on_passive on previous top state
+			if (previous_top_state != nullptr)
+			{
+				previous_top_state->on_passive();
+			}
 
-			if ((link_flags & link_flag_tick) == link_flag_none)
+			//call on_active on new top state
+			if (!nodes.empty())
+			{
+				nodes.rbegin()->state->on_active();
+			}
+		}
+
+		//compare previous node flags to current ones, fire off start/top flag events to states
+		flags_type flags = flag_all;
+
+		
+
+		for (auto nodes_reverse_itr = nodes.rbegin(); nodes_reverse_itr != nodes.rend(); ++nodes_reverse_itr)
+		{
+			auto previous_node_flags = nodes_reverse_itr->flags;
+
+			nodes_reverse_itr->flags = flags;
+
+			flags &= nodes_reverse_itr->flags;
+
+			//render
+			if ((previous_node_flags & flag_render) == flag_none && (flags & flag_render) == flag_render)
+			{
+				nodes_reverse_itr->state->on_start_render();
+			}
+			else if ((previous_node_flags & flag_render) == flag_render && (flags & flag_render) == flag_none)
+			{
+				nodes_reverse_itr->state->on_stop_render();
+			}
+
+			//tick
+			if ((previous_node_flags & flag_tick) == flag_none && (flags & flag_tick) == flag_tick)
+			{
+				nodes_reverse_itr->state->on_start_tick();
+			}
+			else if ((previous_node_flags & flag_tick) == flag_tick && (flags & flag_tick) == flag_none)
+			{
+				nodes_reverse_itr->state->on_stop_tick();
+			}
+
+			//input
+			if ((previous_node_flags & flag_input) == flag_none && (flags & flag_input) == flag_input)
+			{
+				nodes_reverse_itr->state->on_start_input();
+			}
+			else if ((previous_node_flags & flag_input) == flag_input && (flags & flag_input) == flag_none)
+			{
+				nodes_reverse_itr->state->on_stop_input();
+			}
+		}
+
+		//tick states
+		for (auto nodes_reverse_itr = nodes.rbegin(); nodes_reverse_itr != nodes.rend(); ++nodes_reverse_itr)
+		{
+			if ((nodes_reverse_itr->flags & flag_tick) == flag_none)
 			{
 				//state not ticking, break
 				break;
 			}
 
-			state->tick(dt);
-
-			link_flags &= nodes_itr->link_flags;
+			nodes_reverse_itr->state->tick(dt);
 		}
 	}
 
 	void state_mgr_t::render()
 	{
-		link_flags_type link_flags = link_flag_all;
+		flags_type link_flags = flag_all;
 
 		//find first renderable state
 		auto nodes_reverse_itr = nodes.rbegin();
 
 		while (nodes_reverse_itr != nodes.rend())
 		{
-			if ((link_flags & link_flag_render) == link_flag_none)
+			if ((link_flags & flag_render) == flag_none)
 			{
 				break;
 			}
@@ -180,11 +162,11 @@ namespace mandala
 
 	void state_mgr_t::on_input_event(input_event_t& input_event)
 	{
-		link_flags_type link_flags = link_flag_all;
+		flags_type link_flags = flag_all;
 
 		for (auto nodes_itr = nodes.rbegin(); nodes_itr != nodes.rend(); ++nodes_itr)
 		{
-			if ((link_flags & link_flag_input) == link_flag_none)
+			if ((link_flags & flag_input) == flag_none)
 			{
 				//state not handling input, return
 				return;
@@ -205,7 +187,7 @@ namespace mandala
 	}
 
 	//push a state onto the stack
-	void state_mgr_t::push(const std::shared_ptr<state_t>& state, link_flags_type link_flags)
+	void state_mgr_t::push(const std::shared_ptr<state_t>& state, flags_type link_flags)
 	{
 		if (state == nullptr)
 		{

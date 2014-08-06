@@ -7,6 +7,7 @@
 #include "../model.hpp"
 #include "../sprite_set.hpp"
 #include "../material.hpp"
+#include "../color.hpp"
 
 //armada
 #include "debug_state.hpp"
@@ -23,7 +24,6 @@ namespace mandala
 		label->dock_mode = gui_node_t::dock_mode_e::fill;
 		label->vertical_alignment = gui_label_t::vertical_alignment_e::bottom;
 		label->justification = gui_label_t::justification_e::right;
-		label->should_use_color_codes = false;
 		label->padding = padding_t(16);
 
 		layout->adopt(label);
@@ -33,14 +33,32 @@ namespace mandala
 
 	void debug_state_t::tick(float32_t dt)
 	{
+		static const auto green_color = rgb_to_hex(vec3_t(0, 1, 0));
+		static const auto yellow_color = rgb_to_hex(vec3_t(1, 1, 0));
+		static const auto red_color = rgb_to_hex(vec3_t(1, 0, 0));
+
 		std::wostringstream oss;
 
-		oss << L"debug test↑0cool↓" << std::endl;
-		oss << "[audio]" << std::endl;
+		oss << L"↑fba089[audio]↓" << std::endl;
 		oss << "sources: " << app.audio.sources.size() << std::endl;
 		oss << std::endl;
 		oss << "[performance]" << std::endl;
-		oss << "fps: " << static_cast<int32_t>(app.performance.fps) << std::endl;
+		oss << L"↑";
+
+		if (app.performance.fps >= 30)
+		{
+			oss << std::wstring(green_color.begin(), green_color.end());
+		}
+		else if (app.performance.fps >= 25)
+		{
+			oss << std::wstring(yellow_color.begin(), yellow_color.end());
+		}
+		else
+		{
+			oss << std::wstring(red_color.begin(), red_color.end());
+		}
+
+		oss << "fps: " << static_cast<int32_t>(app.performance.fps) << L"↓" << std::endl;
 		oss << std::endl;
 		oss << "[resources]" << std::endl;
 		oss << "bitmap fonts: " << app.resources.count<bitmap_font_t>() << std::endl;

@@ -26,7 +26,7 @@ namespace mandala
 
 	struct bsp_t : public resource_t
 	{
-        typedef int32_t node_index_type;
+		typedef int32_t node_index_type;
 
 		enum class content_type_e : int32_t
 		{

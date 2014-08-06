@@ -3,6 +3,7 @@
 //std
 #include <string>
 #include <memory>
+#include <vector>
 
 //mandala
 #include "gui_node.hpp"
@@ -51,6 +52,8 @@ namespace mandala
 	private:
 		struct render_info_t
 		{
+			typedef vec4_t color_type;
+
 			struct line_t
 			{
 				typedef int32_t width_type;
@@ -60,20 +63,10 @@ namespace mandala
 				{
 				}
 
-				line_t(const string_type& string, width_type width) :
-					string(string),
-					width(width)
-				{
-				}
-
-                line_t(string_type&& string, width_type width) :
-					string(std::move(string)),
-					width(width)
-				{
-				}
-
 				string_type string;
 				width_type width = 0;
+				std::vector<std::pair<size_t, color_type>> colors_pushes;
+				std::vector<size_t> color_pop_indices;
 			};
 
 			std::vector<line_t> lines;

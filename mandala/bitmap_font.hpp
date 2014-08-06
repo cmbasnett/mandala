@@ -10,6 +10,8 @@
 #include <vector>
 #include <memory>
 #include <map>
+#include <set>
+#include <vector>
 
 namespace mandala
 {
@@ -56,7 +58,7 @@ namespace mandala
 
 		bitmap_font_t(std::istream& ifstream);
 
-		void render_string(const std::wstring& string, const vec4_t& color_top, const vec4_t& color_bottom, mat4_t world, mat4_t view_projection) const;
+		void render_string(const std::wstring& string, mat4_t world_matrix, mat4_t view_projection_matrix, const vec4_t& base_color, std::stack<vec4_t>& color_stack, const std::vector<std::pair<size_t, vec4_t>>& color_pushes, const std::vector<size_t>& color_pop_indices) const;
 		int16_t get_kerning_amount(wchar_t lhs, wchar_t rhs) const;
 		void get_string_pages(std::vector<uint8_t>& pages, const std::wstring& string) const;
 		int16_t get_string_width(const std::wstring& string) const;

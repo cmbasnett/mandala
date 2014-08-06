@@ -3,9 +3,10 @@
 //std
 #include <memory>
 #include <vector>
+#include <array>
 
-//al
-#include <AL\alext.h>
+//mandala
+#include "index_type.hpp"
 
 namespace mandala
 {
@@ -28,6 +29,14 @@ namespace mandala
             vec3_t velocity;
         };
 
+		struct channel_t
+		{
+		};
+
+		static const int channel_count = 16;
+
+		typedef index_type<channel_count>::type channel_index_type;
+
 		audio_mgr_t();
 		~audio_mgr_t();
 
@@ -40,6 +49,7 @@ namespace mandala
         doppler_t doppler;
         std::vector<std::shared_ptr<audio_source_t>> sources;
         std::vector<std::shared_ptr<audio_device_t>> devices;
+		std::array<channel_t, channel_count> channels;
 
 	private:
 		std::shared_ptr<audio_context_t> context;

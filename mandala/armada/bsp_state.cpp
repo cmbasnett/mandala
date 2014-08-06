@@ -113,7 +113,7 @@ namespace mandala
                 input_event.gamepad.type == input_event_t::gamepad_t::type_e::button_release &&
                 input_event.gamepad.button_index == 0))
             {
-                app.states.push(pause_state, state_mgr_t::link_flag_render);
+                app.states.push(pause_state, state_mgr_t::flag_render);
 
                 input_event.is_consumed = true;
 

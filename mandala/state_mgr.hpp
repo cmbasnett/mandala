@@ -16,22 +16,23 @@ namespace mandala
 
 	struct state_mgr_t
 	{
-		typedef uint8_t link_flags_type;
+		typedef uint8_t flags_type;
 
-		enum : link_flags_type
+		enum : flags_type
 		{
-			link_flag_none = (0 << 0),
-			link_flag_render = (1 << 0),
-			link_flag_input = (1 << 1),
-			link_flag_tick = (1 << 2),
-			link_flag_all = (link_flag_render | link_flag_input | link_flag_tick),
-			link_flag_default = (link_flag_render)
+			flag_none = (0 << 0),
+			flag_render = (1 << 0),
+			flag_input = (1 << 1),
+			flag_tick = (1 << 2),
+			flag_all = (flag_render | flag_input | flag_tick),
+			flag_default = (flag_render)
 		};
 
 		struct node_t
 		{
 			std::shared_ptr<state_t> state;
-			link_flags_type link_flags = link_flag_default;
+			flags_type link_flags = flag_none;
+			flags_type flags = flag_none;
 		};
 
 		struct operation_t
@@ -44,7 +45,7 @@ namespace mandala
 
             type_e type = type_e::push;
 			std::shared_ptr<state_t> state;
-			link_flags_type link_flags = link_flag_default;
+			flags_type link_flags = flag_none;
 		};
 
 		state_mgr_t();
@@ -53,7 +54,7 @@ namespace mandala
 		void render();
 		void on_input_event(input_event_t& input_event);
 
-		void push(const std::shared_ptr<state_t>& state, link_flags_type link_flags);
+		void push(const std::shared_ptr<state_t>& state, flags_type link_flags);
 		void pop(const std::shared_ptr<state_t>& state);
 		void purge();
 		size_t count() const;

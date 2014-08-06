@@ -42,6 +42,7 @@ namespace mandala
 			gpu_programs.clear();
 		}
 
+	private:
 		std::map<std::type_index, std::shared_ptr<gpu_program_t>> gpu_programs;
 	};
 }

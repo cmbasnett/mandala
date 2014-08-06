@@ -14,6 +14,7 @@
 #include "app.hpp"
 #include "bitmap_font.hpp"
 #include "gui_label.hpp"
+#include "color.hpp"
 
 namespace mandala
 {
@@ -21,7 +22,14 @@ namespace mandala
 	{
 		bool did_clean = gui_node_t::clean();
 
+		//TODO: make a render_info.reset() function
 		render_info.lines.clear();
+
+		for (auto& line : render_info.lines)
+		{
+			line.colors_pushes.clear();
+			line.color_pop_indices.clear();
+		}
 
 		if (bitmap_font == nullptr)
 		{
@@ -77,7 +85,7 @@ namespace mandala
 			auto was_line_added = false;
 			auto string_space_itr = string.end();
 
-			auto strip_color_codes = [&](string_type& string)
+			auto parse_color_codes = [&](string_type& string, std::vector<std::pair<size_t, vec4_t>>& color_pushes, std::vector<size_t>& color_pops)
 			{
 				auto string_itr = string.begin();
 
@@ -85,16 +93,42 @@ namespace mandala
 				{
 					if (*string_itr == color_push_character)
 					{
+						//encountered push character
 						string_itr = string.erase(string_itr);
 
 						if (string_itr != string.end() && *string_itr != color_push_character)
 						{
-							string_itr = string.erase(string_itr);
+							auto erase_count = std::min(std::distance(string_itr, string.end()), 6);
+
+							if (erase_count >= 6)
+							{
+								//try to parse a hex color from string
+								string_type hex_string = { string_itr, string_itr + 6 };
+
+								try
+								{
+									auto color = vec4_t(hex_to_rgb(hex_string), 1.0f);
+
+									color_pushes.push_back(std::make_pair(std::distance(string.begin(), string_itr), color));
+								}
+								catch (...)
+								{
+								}
+							}
+
+							string_itr = string.erase(string_itr, string_itr + erase_count);
+
+							continue;
 						}
 					}
 					else if (*string_itr == color_pop_character)
 					{
+						color_pops.push_back(std::distance(string.begin(), string_itr));
+
+						//encountered pop character
 						string_itr = string.erase(string_itr);
+
+						continue;
 					}
 
 					if (string_itr != string.end())
@@ -121,17 +155,20 @@ namespace mandala
 
 			auto add_line = [&](string_type string)
 			{
+				render_info_t::line_t line;
+
 				//strip color codes from string
 				if (should_use_color_codes)
 				{
-					strip_color_codes(string);
+					parse_color_codes(string, line.colors_pushes, line.color_pop_indices);
 				}
 
 				replace_unrecognized_characters(string);
 
-				auto width = bitmap_font->get_string_width(string);
+				line.string = string;
+				line.width = bitmap_font->get_string_width(string);
 
-				render_info.lines.emplace_back(std::forward<string_type>(string), width);
+				render_info.lines.emplace_back(line);
 
 				was_line_added = true;
 			};
@@ -168,21 +205,7 @@ namespace mandala
 						}
 						else if (*string_itr != color_push_character)
 						{
-							//parse 16-bit character to color
-							auto color_data = static_cast<uint16_t>(*string_itr);
-
-							const uint16_t color_r_mask = (0xF000);
-							const uint16_t color_g_mask = (0x0F00);
-							const uint16_t color_b_mask = (0x00F0);
-							const uint16_t color_a_mask = (0x000F);
-
-							vec4_t color;
-							color.r = static_cast<float32_t>(color_data & color_r_mask) / 255.0f;
-							color.g = static_cast<float32_t>(color_data & color_g_mask) / 255.0f;
-							color.b = static_cast<float32_t>(color_data & color_b_mask) / 255.0f;
-							color.a = static_cast<float32_t>(color_data & color_a_mask) / 255.0f;
-
-							++string_itr;
+							string_itr += std::min(std::distance(string_itr, string.end()), 6);
 
 							continue;
 						}
@@ -291,6 +314,8 @@ namespace mandala
 
 		auto base_translation = render_info.base_translation;
 
+		std::stack<vec4_t> color_stack;
+
 		for (const auto& line : render_info.lines)
 		{
 			auto translation = base_translation;
@@ -311,7 +336,7 @@ namespace mandala
 			const auto color_top = should_use_gradient ? gradient.color1 : color;
 			const auto color_bottom = should_use_gradient ? gradient.color2 : color;
 
-			bitmap_font->render_string(line.string, color_top, color_bottom, line_world_matrix, view_projection_matrix);
+			bitmap_font->render_string(line.string, line_world_matrix, view_projection_matrix, color, color_stack, line.colors_pushes, line.color_pop_indices);
 
 			base_translation.y -= bitmap_font->line_height;
         }

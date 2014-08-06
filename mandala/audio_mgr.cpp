@@ -4,6 +4,7 @@
 //al
 #include <AL\al.h>
 #include <AL\alc.h>
+#include <AL\alext.h>
 
 //glm
 #include <glm\ext.hpp>

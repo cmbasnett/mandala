@@ -252,7 +252,7 @@ namespace mandala
 		return kerning_amount;
 	}
 
-	void bitmap_font_t::render_string(const std::wstring& string, const vec4_t& color_top, const vec4_t& color_bottom, mat4_t world_matrix, mat4_t view_projection_matrix) const
+	void bitmap_font_t::render_string(const std::wstring& string, mat4_t world_matrix, mat4_t view_projection_matrix, const vec4_t& base_color, std::stack<vec4_t>& color_stack, const std::vector<std::pair<size_t, vec4_t>>& color_pushes, const std::vector<size_t>& color_pop_indices) const
 	{
 		//buffers
 		gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
@@ -279,8 +279,11 @@ namespace mandala
 		bitmap_font_gpu_program->view_projection_matrix(view_projection_matrix);
 		bitmap_font_gpu_program->font_line_height(line_height);
 		bitmap_font_gpu_program->font_base(base);
-		bitmap_font_gpu_program->font_color_top(color_top);
-		bitmap_font_gpu_program->font_color_bottom(color_bottom);
+
+		auto start_color = color_stack.empty() ? base_color : color_stack.top();
+
+		bitmap_font_gpu_program->font_color_top(start_color);
+		bitmap_font_gpu_program->font_color_bottom(start_color);
 
 		//textures
 		std::vector<uint8_t> page_indices;
@@ -293,6 +296,9 @@ namespace mandala
 
 		//TODO: this is kind of sloppy, find cleaner way to do this
 		uint8_t character_texture_index = -1;
+		bool did_color_stack_change = false;
+		auto color_pushes_itr = color_pushes.begin();
+		auto color_pop_indices_itr = color_pop_indices.begin();
 
 		for (auto c = string.begin(); c != string.end(); ++c)
 		{
@@ -313,6 +319,39 @@ namespace mandala
 
             static const auto character_index_stride = sizeof(index_type) * indices_per_character;
 
+			auto string_index = std::distance(string.begin(), c);
+
+			//color push
+			while (color_pushes_itr != color_pushes.end() && color_pushes_itr->first == string_index)
+			{
+				color_stack.push(color_pushes_itr->second);
+
+				did_color_stack_change = true;
+
+				++color_pushes_itr;
+			}
+
+			//color pop
+			while (color_pop_indices_itr != color_pop_indices.end() && *color_pop_indices_itr == string_index)
+			{
+				if (!color_stack.empty())
+				{
+					color_stack.pop();
+
+					did_color_stack_change = true;
+				}
+
+				++color_pop_indices_itr;
+			}
+
+			if (did_color_stack_change)
+			{
+				auto color = color_stack.empty() ? base_color : color_stack.top();
+
+				bitmap_font_gpu_program->font_color_top(color);
+				bitmap_font_gpu_program->font_color_bottom(color);
+			}
+
 			gpu.draw_elements(gpu_t::primitive_type_e::triangles, indices_per_character, gpu_t::index_type_e::unsigned_int, character_index * character_index_stride);
 
 			auto next = (c + 1);
@@ -323,6 +362,25 @@ namespace mandala
 			}
 
 			world_matrix *= glm::translate(x, 0.0f, 0.0f);
+		}
+
+		//color push
+		while (color_pushes_itr != color_pushes.end() && color_pushes_itr->first == string.length())
+		{
+			color_stack.push(color_pushes_itr->second);
+
+			++color_pushes_itr;
+		}
+
+		//color pop
+		while (color_pop_indices_itr != color_pop_indices.end() && *color_pop_indices_itr == string.length())
+		{
+			if (!color_stack.empty())
+			{
+				color_stack.pop();
+			}
+
+			++color_pop_indices_itr;
 		}
 
 		for (auto page_index : page_indices)
