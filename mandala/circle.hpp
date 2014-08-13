@@ -30,7 +30,7 @@ namespace mandala
                 return glm::pi<float32_t>() * radius * 2;
 			}
 
-            float32_t diameter() const
+			radius_type diameter() const
 			{
 				return radius * 2;
 			}

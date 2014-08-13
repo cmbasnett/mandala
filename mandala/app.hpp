@@ -5,10 +5,11 @@
 #include "resource_mgr.hpp"
 #include "audio_mgr.hpp"
 #include "string_mgr.hpp"
-#include "gpu_program_mgr.h"
+#include "gpu_program_mgr.hpp"
 
 //std
 #include <chrono>
+#include <array>
 
 namespace mandala
 {
@@ -21,29 +22,24 @@ namespace mandala
 		{
 			typedef float32_t fps_type;
 
+			static const auto frame_count = 256;
+
 			struct frame_t
 			{
 				typedef std::chrono::milliseconds duration_type;
 
-                duration_type duration;
-                duration_type render_duration;
-                duration_type tick_duration;
-                duration_type input_duration;
-				size_t consumed_input_event_count;
-				size_t unconsumed_input_event_count;
+				duration_type duration;
+				duration_type render_duration;
+				duration_type tick_duration;
+				duration_type input_duration;
+				size_t consumed_input_event_count = 0;
+				size_t unconsumed_input_event_count = 0;
 			};
 
-			performance_t()
-			{
-				static const auto frames_max = 256;
-
-				frames.resize(frames_max);
-			}
-
-			std::deque<frame_t> frames;
+			std::array<frame_t, frame_count> frames;
 			fps_type fps = 0;
-        };
-		
+		};
+
 		std::shared_ptr<game_t> game;
 		state_mgr_t states;
 		resource_mgr_t resources;

@@ -37,7 +37,7 @@ namespace mandala
         std::shared_ptr<vertex_buffer_type> vertex_buffer;
         std::shared_ptr<index_buffer_type> index_buffer;
 
-        virtual void render(mat4_t world_matrix, mat4_t view_projection_matrix);
-        virtual bool clean();
+		virtual void render(mat4_t world_matrix, mat4_t view_projection_matrix) override;
+		virtual void clean() override;
     };
 }

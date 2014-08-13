@@ -61,7 +61,7 @@ namespace mandala
 
     void audio_mgr_t::set_context(const std::shared_ptr<audio_context_t>& context)
     {
-        if (alcMakeContextCurrent(context->ptr) == ALC_FALSE)
+        if (alcMakeContextCurrent(context->ptr()) == ALC_FALSE)
         {
             throw std::exception();
         }

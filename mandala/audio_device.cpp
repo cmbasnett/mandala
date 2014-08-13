@@ -1,24 +1,16 @@
-//std
-#include <exception>
-
 //mandala
 #include "audio_device.hpp"
 
-//al
-#include <AL\al.h>
+//openal
+#include "openal.hpp"
 
 namespace mandala
 {
     audio_device_t::audio_device_t()
     {
-        ptr = alcOpenDevice(nullptr);
+		_ptr = alcOpenDevice(nullptr); alCheckError();
 
-        if (ptr == nullptr)
-        {
-            throw std::exception();
-        }
-
-        if (alGetError() != AL_NO_ERROR)
+		if (_ptr == nullptr)
         {
             throw std::exception();
         }
@@ -26,14 +18,9 @@ namespace mandala
 
     audio_device_t::audio_device_t(const std::string& name)
     {
-        ptr = alcOpenDevice(name.c_str());
+		_ptr = alcOpenDevice(name.c_str()); alCheckError();
 
-        if (ptr == nullptr)
-        {
-            throw std::exception();
-        }
-
-        if (alGetError() != AL_NO_ERROR)
+		if (_ptr == nullptr)
         {
             throw std::exception();
         }
@@ -41,11 +28,6 @@ namespace mandala
 
     audio_device_t::~audio_device_t()
     {
-        alcCloseDevice(ptr);
-
-        if (alGetError() != AL_NO_ERROR)
-        {
-            throw std::exception();
-        }
+		alcCloseDevice(_ptr); alCheckError();
     }
 }

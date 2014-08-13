@@ -18,9 +18,9 @@
 
 namespace mandala
 {
-	bool gui_label_t::clean()
+	void gui_label_t::clean()
 	{
-		bool did_clean = gui_node_t::clean();
+		gui_node_t::clean();
 
 		//TODO: make a render_info.reset() function
 		render_info.lines.clear();
@@ -64,12 +64,14 @@ namespace mandala
 					//travel backwards from the end and calculate what part of the string will be replaced with ellipses
 					while (string_reverse_itr != line_string.rend())
 					{
-						width += bitmap_font->characters.at(*string_reverse_itr++).advance_x;
+						width += bitmap_font->characters.at(*string_reverse_itr).advance_x;
 
 						if (width >= (ellipse_count * ellipse_width))
 						{
 							break;
 						}
+
+						++string_reverse_itr;
 					}
 
 					line_string.erase(string_reverse_itr.base() + 1, line_string.end());
@@ -296,8 +298,6 @@ namespace mandala
 		default:
 			break;
 		}
-
-		return did_clean;
 	}
 
     void gui_label_t::render(mat4_t world_matrix, mat4_t view_projection_matrix)
@@ -333,8 +333,6 @@ namespace mandala
 			}
 
             const auto line_world_matrix = world_matrix * glm::translate(translation.x, translation.y, 0.0f);
-			const auto color_top = should_use_gradient ? gradient.color1 : color;
-			const auto color_bottom = should_use_gradient ? gradient.color2 : color;
 
 			bitmap_font->render_string(line.string, line_world_matrix, view_projection_matrix, color, color_stack, line.colors_pushes, line.color_pop_indices);
 

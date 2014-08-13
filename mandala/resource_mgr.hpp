@@ -18,19 +18,9 @@ namespace mandala
 	{
 		typedef std::map<hash_t, std::shared_ptr<resource_t>> resource_map_type;
 
-        std::recursive_mutex mutex;
+		std::recursive_mutex mutex;
 
-		size_t count()
-		{
-			size_t count = 0;
-
-			for (auto resources : type_resources)
-			{
-				count += resources.second.size();
-			}
-
-			return count;
-		}
+		size_t count() const;
 
 		template<typename T = std::enable_if<std::is_base_of<resource_t, T>::value, T>::type>
 		size_t count()

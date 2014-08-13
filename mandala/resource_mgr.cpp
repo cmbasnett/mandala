@@ -3,6 +3,18 @@
 
 namespace mandala
 {
+	size_t resource_mgr_t::count() const
+	{
+		size_t count = 0;
+
+		for (auto resources : type_resources)
+		{
+			count += resources.second.size();
+		}
+
+		return count;
+	}
+
 	void resource_mgr_t::prune()
 	{
 		for (auto& type_resource : type_resources)

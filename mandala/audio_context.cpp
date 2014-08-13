@@ -1,5 +1,5 @@
-//al
-#include <AL\al.h>
+//openal
+#include "openal.hpp"
 
 //mandala
 #include "audio_device.hpp"
@@ -14,33 +14,18 @@ namespace mandala
             throw std::exception();
         }
 
-        ptr = alcCreateContext(device->ptr, nullptr);
+		_ptr = alcCreateContext(device->ptr(), nullptr); alCheckError();
 
-        if (ptr == nullptr)
+        if (_ptr == nullptr)
         {
             throw std::exception();
         }
 
-        if (alGetError() != AL_NO_ERROR)
-        {
-            throw std::exception();
-        }
-
-        alcProcessContext(ptr);
-
-        if (alGetError() != AL_NO_ERROR)
-        {
-            throw std::exception();
-        }
+		alcProcessContext(_ptr); alCheckError();
     }
 
     audio_context_t::~audio_context_t()
     {
-        alcDestroyContext(ptr);
-
-        if (alGetError() != AL_NO_ERROR)
-        {
-            throw std::exception();
-        }
+		alcDestroyContext(_ptr); alCheckError();
     }
 }

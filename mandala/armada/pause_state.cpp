@@ -20,7 +20,7 @@ namespace mandala
     {
 		pause_state_t::pause_state_t()
         {
-			bitmap_fonts.push_back(app.resources.get<bitmap_font_t>(hash_t("terminal_8.fnt")));
+			bitmap_fonts.push_back(app.resources.get<bitmap_font_t>(hash_t("terminal_16.fnt")));
 
 			raw_label = std::make_shared<gui_label_t>();
 			raw_label->bitmap_font = bitmap_fonts[bitmap_font_index];
@@ -28,7 +28,7 @@ namespace mandala
 			raw_label->vertical_alignment = gui_label_t::vertical_alignment_e::middle;
 			raw_label->justification = gui_label_t::justification_e::center;
 			raw_label->size = vec2_t(200, 100);
-			raw_label->anchor_flags = gui_node_t::anchor_flag_left | gui_node_t::anchor_flag_bottom;
+			raw_label->anchor_flags = gui_anchor_flag_left | gui_anchor_flag_bottom;
 			raw_label->should_use_color_codes = false;
 
 			color_label = std::make_shared<gui_label_t>();
@@ -37,7 +37,7 @@ namespace mandala
 			color_label->vertical_alignment = gui_label_t::vertical_alignment_e::middle;
 			color_label->justification = gui_label_t::justification_e::center;
 			color_label->size = vec2_t(200, 100);
-			color_label->anchor_flags = gui_node_t::anchor_flag_right | gui_node_t::anchor_flag_bottom;
+			color_label->anchor_flags = gui_anchor_flag_right | gui_anchor_flag_bottom;
 
 			layout->adopt(raw_label);
 			layout->adopt(color_label);

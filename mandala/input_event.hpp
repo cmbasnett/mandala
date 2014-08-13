@@ -9,14 +9,14 @@ namespace mandala
 	{
 		typedef size_t id_type;
 		typedef uint8_t device_index_type;
-		typedef uint8_t mods_type;
+		typedef uint8_t mod_flags_type;
 
-		enum mods_t : mods_type
+		enum : mod_flags_type
 		{
-			mod_shift = (1 << 0),
-			mod_ctrl = (1 << 1),
-			mod_alt = (1 << 2),
-			mod_super = (1 << 3)
+			mod_flag_shift = (1 << 0),
+			mod_flag_ctrl = (1 << 1),
+			mod_flag_alt = (1 << 2),
+			mod_flag_super = (1 << 3)
 		};
 
 		enum class device_type_e : int8_t
@@ -61,7 +61,7 @@ namespace mandala
 			button_e button = button_e::none;
 			position_type position;
 			position_type position_delta;
-			mods_type mods = 0;
+			mod_flags_type mod_flags = 0;
 		};
 
 		struct keyboard_t
@@ -202,7 +202,7 @@ namespace mandala
 
 			type_e type = type_e::none;
 			key_e key = key_e::none;
-			mods_type mods = 0;
+			mod_flags_type mod_flags = 0;
 			wchar_t character = L'\0';
 		};
 

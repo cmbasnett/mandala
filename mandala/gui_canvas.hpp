@@ -13,8 +13,8 @@ namespace mandala
 		struct vertex_t
 		{
 			vertex_t(vec2_t position, vec2_t texcoord) :
-			position(position),
-			texcoord(texcoord)
+				position(position),
+				texcoord(texcoord)
 			{
 			}
 
@@ -37,6 +37,6 @@ namespace mandala
         std::shared_ptr<index_buffer_type> index_buffer;
 
         virtual void render(mat4_t world_matrix, mat4_t view_projection_matrix) override;
-        virtual bool clean() override;
+        virtual void clean() override;
     };
 }

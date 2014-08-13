@@ -13,6 +13,7 @@ namespace mandala
 		gui_state_t();
 		virtual ~gui_state_t();
 
+		virtual void tick(float32_t dt) override;
 		virtual void render() override;
 
 		std::shared_ptr<gui_layout_t> layout;

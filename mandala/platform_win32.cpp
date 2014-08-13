@@ -10,29 +10,29 @@
 namespace mandala
 {
     static inline void on_keyboard_key(GLFWwindow* window, int key, int scancode, int action, int mods)
-    {
-        input_event_t input_event;
-        input_event.device_type = input_event_t::device_type_e::keyboard;
-        input_event.keyboard.key = static_cast<input_event_t::keyboard_t::key_e>(key);
+	{
+		input_event_t input_event;
+		input_event.device_type = input_event_t::device_type_e::keyboard;
+		input_event.keyboard.key = static_cast<input_event_t::keyboard_t::key_e>(key);
 
-        if ((key & GLFW_MOD_SHIFT) != 0)
-        {
-            input_event.keyboard.mods |= input_event_t::mod_shift;
-        }
+		if ((key & GLFW_MOD_SHIFT) != 0)
+		{
+			input_event.keyboard.mod_flags |= input_event_t::mod_flag_shift;
+		}
 
         if ((key & GLFW_MOD_CONTROL) != 0)
         {
-            input_event.keyboard.mods |= input_event_t::mod_ctrl;
+			input_event.keyboard.mod_flags |= input_event_t::mod_flag_ctrl;
         }
 
         if ((key & GLFW_MOD_ALT) != 0)
         {
-            input_event.keyboard.mods |= input_event_t::mod_alt;
+			input_event.keyboard.mod_flags |= input_event_t::mod_flag_alt;
         }
 
         if ((key & GLFW_MOD_SUPER) != 0)
         {
-            input_event.keyboard.mods |= input_event_t::mod_super;
+			input_event.keyboard.mod_flags |= input_event_t::mod_flag_super;
         }
 
         switch (action)
@@ -66,7 +66,7 @@ namespace mandala
         input_event_t input_event;
         input_event.device_type = input_event_t::device_type_e::touch;
         input_event.touch.button = static_cast<input_event_t::touch_t::button_e>(button);
-        input_event.touch.mods = mods;
+		input_event.touch.mod_flags = mods;
 
         bool is_press = action == GLFW_PRESS;
 
@@ -83,21 +83,21 @@ namespace mandala
     }
 
     static inline void on_mouse_move(GLFWwindow* window, double x, double y)
-    {
-        input_event_t input_event;
-        input_event.device_type = input_event_t::device_type_e::touch;
-        input_event.touch.type = input_event_t::touch_t::type_e::move;
-        input_event.touch.position.x = x;
-        input_event.touch.position.y = y;
-        input_event.touch.position_delta.x = x - platform.cursor_position.x;
-        input_event.touch.position_delta.y = y - platform.cursor_position.y;
+	{
+		input_event_t input_event;
+		input_event.device_type = input_event_t::device_type_e::touch;
+		input_event.touch.type = input_event_t::touch_t::type_e::move;
+		input_event.touch.position.x = x;
+		input_event.touch.position.y = y;
+		input_event.touch.position_delta.x = x - platform.cursor_position.x;
+		input_event.touch.position_delta.y = y - platform.cursor_position.y;
 
-        if (platform.is_cursor_centered)
-        {
-            const auto screen_size = platform.get_screen_size();
+		if (platform.is_cursor_centered)
+		{
+			const auto screen_size = platform.get_screen_size();
 
-            platform.set_cursor_position(static_cast<vec2_f64_t>(screen_size) / 2.0);
-        }
+			platform.set_cursor_position(static_cast<vec2_f64_t>(screen_size) / 2.0);
+		}
 
         platform.cursor_position = platform.get_cursor_position();
 

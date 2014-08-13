@@ -38,7 +38,7 @@ namespace mandala
 						std::cout << "---------------------------------------------------------------" << std::endl;
 						std::cout << "[" << index + 1 << "] push" << std::endl;
 						std::cout << "---------------------------------------------------------------" << std::endl;
-						app.states.push(std::make_shared<test_state_t>(index + 1), state_mgr_t::flag_all);
+						app.states.push(std::make_shared<test_state_t>(index + 1), state_flag_all);
 						input_event.is_consumed = true;
 						break;
 					}

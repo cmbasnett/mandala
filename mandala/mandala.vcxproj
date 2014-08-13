@@ -222,6 +222,7 @@ echo $(PlatformTarget)</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="animation.hpp" />
+    <ClInclude Include="armada\console_state.hpp" />
     <ClInclude Include="armada\debug_state.hpp" />
     <ClInclude Include="armada\test_state.hpp" />
     <ClInclude Include="audio_context.hpp" />
@@ -251,7 +252,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="glm.hpp" />
     <ClInclude Include="gpu_buffer.hpp" />
     <ClInclude Include="gpu.hpp" />
-    <ClInclude Include="gpu_program_mgr.h" />
+    <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="gui_canvas.hpp" />
     <ClInclude Include="gui_gpu_program.hpp" />
@@ -264,6 +265,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="index_buffer.hpp" />
     <ClInclude Include="index_type.hpp" />
     <ClInclude Include="model_gpu_program.hpp" />
+    <ClInclude Include="openal.hpp" />
     <ClInclude Include="padding.hpp" />
     <ClInclude Include="range.hpp" />
     <ClInclude Include="sound.hpp" />
@@ -316,6 +318,7 @@ echo $(PlatformTarget)</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="animation.cpp" />
+    <ClCompile Include="armada\console_state.cpp" />
     <ClCompile Include="armada\debug_state.cpp" />
     <ClCompile Include="armada\test_state.cpp" />
     <ClCompile Include="audio_context.cpp" />

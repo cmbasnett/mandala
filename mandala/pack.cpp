@@ -31,16 +31,16 @@ namespace mandala
 
 		//version
 		uint32_t version = 0;
-		istream.read((char*)&version, sizeof(version));
+		istream.read(reinterpret_cast<char*>(&version), sizeof(version));
 
-		if(version != PACK_VERSION)
+		if (version != PACK_VERSION)
 		{
 			throw std::exception();
 		}
 
 		//file count
 		uint32_t file_count = 0;
-		istream.read((char*)&file_count, sizeof(file_count)); 
+		istream.read(reinterpret_cast<char*>(&file_count), sizeof(file_count));
 
 		for(uint32_t i = 0; i < file_count; ++i)
 		{
@@ -48,9 +48,9 @@ namespace mandala
 
 			std::getline(istream, file.name, '\0');
 
-			istream.read((char*)&file.offset, sizeof(file.offset));
-			istream.read((char*)&file.length, sizeof(file.length));
-			istream.read((char*)&file.crc32, sizeof(file.crc32));
+			istream.read(reinterpret_cast<char*>(&file.offset), sizeof(file.offset));
+			istream.read(reinterpret_cast<char*>(&file.length), sizeof(file.length));
+			istream.read(reinterpret_cast<char*>(&file.crc32), sizeof(file.crc32));
 
 			files.emplace(hash_t(file.name), std::forward<file_t>(file));
 		}

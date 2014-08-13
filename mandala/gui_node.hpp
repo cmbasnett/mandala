@@ -13,32 +13,32 @@ namespace mandala
 {
 	struct input_event_t;
 
+	typedef uint8_t gui_anchor_flags_type;
+
+	enum : gui_anchor_flags_type
+	{
+		gui_anchor_flag_none = 0,
+		gui_anchor_flag_bottom = (1 << 0),
+		gui_anchor_flag_left = (1 << 1),
+		gui_anchor_flag_right = (1 << 2),
+		gui_anchor_flag_top = (1 << 3),
+		gui_anchor_flag_vertical = (gui_anchor_flag_bottom | gui_anchor_flag_top),
+		gui_anchor_flag_horizontal = (gui_anchor_flag_left | gui_anchor_flag_right),
+		gui_anchor_flag_all = (gui_anchor_flag_vertical | gui_anchor_flag_horizontal)
+	};
+
+	enum class gui_dock_mode_e
+	{
+		none,
+		bottom,
+		fill,
+		left,
+		right,
+		top
+	};
+
 	struct gui_node_t
 	{
-		typedef uint8_t anchor_flags_type;
-
-        enum : anchor_flags_type
-        {
-            anchor_flag_none = 0,
-            anchor_flag_bottom = (1 << 0),
-            anchor_flag_left = (1 << 1),
-            anchor_flag_right = (1 << 2),
-            anchor_flag_top = (1 << 3),
-            anchor_flag_vertical = (anchor_flag_bottom | anchor_flag_top),
-            anchor_flag_horizontal = (anchor_flag_left | anchor_flag_right),
-            anchor_flag_all = (anchor_flag_vertical | anchor_flag_horizontal)
-        };
-
-		enum class dock_mode_e
-		{
-            none,
-            bottom,
-            fill,
-            left,
-            right,
-			top
-		};
-
 		struct trace_args_t
 		{
 			circle_f32_t circle;
@@ -53,8 +53,8 @@ namespace mandala
 
         std::shared_ptr<gui_node_t> parent;
         std::vector<std::shared_ptr<gui_node_t>> children;
-		dock_mode_e dock_mode = dock_mode_e::none;
-        anchor_flags_type anchor_flags = (anchor_flag_top | anchor_flag_left);
+		gui_dock_mode_e dock_mode = gui_dock_mode_e::none;
+        gui_anchor_flags_type anchor_flags = (gui_anchor_flag_top | gui_anchor_flag_left);
 		vec2_t anchor_offset;
 		padding_t padding;
 		padding_t margin;
@@ -69,7 +69,7 @@ namespace mandala
         static bool trace(std::shared_ptr<gui_node_t> node, trace_args_t args, trace_result_t& result);
 
         virtual void render(mat4_t world_matrix, mat4_t view_projection_matrix);
-		virtual bool clean();
+		virtual void clean();
 		virtual void on_input_event(input_event_t& input_event);
 
         inline bool has_children() const { return children.size() > 0; }

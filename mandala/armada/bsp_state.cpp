@@ -18,6 +18,7 @@
 //armada
 #include "bsp_state.hpp"
 #include "pause_state.hpp"
+#include "console_state.hpp"
 
 namespace mandala
 {
@@ -31,15 +32,17 @@ namespace mandala
 
             pause_state = std::make_shared<pause_state_t>();
 
+			console_state = std::make_shared<console_state_t>();
+
             camera.speed_max = 512;
             camera.far = 8192;
 
             bsp = app.resources.get<bsp_t>(hash_t("dod_flash.bsp"));
 
             debug_label = std::make_shared<gui_label_t>();
-            debug_label->bitmap_font = app.resources.get<bitmap_font_t>(hash_t("terminal_8.fnt"));
+            debug_label->bitmap_font = app.resources.get<bitmap_font_t>(hash_t("terminal_16.fnt"));
             debug_label->color = vec4_t(1, 1, 1, 1);
-            debug_label->dock_mode = gui_node_t::dock_mode_e::fill;
+            debug_label->dock_mode = gui_dock_mode_e::fill;
             debug_label->vertical_alignment = gui_label_t::vertical_alignment_e::top;
             debug_label->justification = gui_label_t::justification_e::left;
             debug_label->padding = padding_t(16);
@@ -49,7 +52,7 @@ namespace mandala
             crosshair_image = std::make_shared<gui_image_t>();
             crosshair_image->is_autosized_to_texture = true;
             crosshair_image->sprite = crosshair_sprite_refs[crosshair_sprite_index];
-            crosshair_image->anchor_flags = gui_node_t::anchor_flag_all;
+            crosshair_image->anchor_flags = gui_anchor_flag_all;
 
             layout->adopt(debug_label);
             layout->adopt(crosshair_image);
@@ -105,7 +108,14 @@ namespace mandala
         }
 
         void bsp_state_t::on_input_event(input_event_t& input_event)
-        {
+		{
+			if (input_event.device_type == input_event_t::device_type_e::keyboard &&
+				input_event.keyboard.key == input_event_t::keyboard_t::key_e::f1 &&
+				input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press)
+			{
+				app.states.push(console_state, state_flag_render_tick);
+			}
+
             if ((input_event.device_type == input_event_t::device_type_e::keyboard &&
                 input_event.keyboard.key == input_event_t::keyboard_t::key_e::escape &&
                 input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press) ||
@@ -113,7 +123,7 @@ namespace mandala
                 input_event.gamepad.type == input_event_t::gamepad_t::type_e::button_release &&
                 input_event.gamepad.button_index == 0))
             {
-                app.states.push(pause_state, state_mgr_t::flag_render);
+                app.states.push(pause_state, state_flag_render);
 
                 input_event.is_consumed = true;
 
@@ -150,6 +160,7 @@ namespace mandala
                     camera.yaw_target += yaw_target_delta;
 
                     auto sound = app.resources.get<sound_t>(hash_t("garand_shoot.wav"));
+
                     auto source = app.audio.create_source();
                     source->position(camera.position);
                     source->max_distance(500.0f);
@@ -179,23 +190,23 @@ namespace mandala
         void bsp_state_t::on_stop_input()
         {
             platform.is_cursor_centered = false;
+
             platform.set_cursor_hidden(false);
         }
 
         void bsp_state_t::on_start_input()
         {
             platform.is_cursor_centered = true;
+
             platform.set_cursor_hidden(true);
         }
 
 		void bsp_state_t::on_active()
 		{
-			is_rendering = true;
 		}
 
 		void bsp_state_t::on_passive()
 		{
-			is_rendering = true;
 		}
     };
 };

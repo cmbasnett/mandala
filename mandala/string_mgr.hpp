@@ -5,6 +5,7 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <mutex>
 
 //mandala
 #include "types.hpp"
@@ -13,27 +14,26 @@
 namespace mandala
 {
     struct string_mgr_t
-    {
-		static std::string default_language;
+	{
+		typedef std::wstring string_type;
 
-        typedef std::wstring string_type;
+		struct string_t
+		{
+			uint32_t stream_index = 0;
+			hash_t hash;
+			uint32_t offset = 0;
+			uint32_t length = 0;
+		};
 
-        struct string_t
-        {
-            uint32_t stream_index = 0;
-            hash_t hash;
-            uint32_t offset = 0;
-            uint32_t length = 0;
-        };
-
-		string_mgr_t(const std::string& language = default_language);
-
-        std::string language;
-        std::vector<std::shared_ptr<std::istream>> streams;
-        std::map<hash_t, string_t> strings;
+		std::string language = "en";
 
         void mount(const std::string& file);
         void purge();
-        string_type get(const hash_t& hash) const;
+        string_type get(const hash_t& hash);
+
+	private:
+		std::mutex mutex;
+		std::vector<std::shared_ptr<std::istream>> streams;
+		std::map<const hash_t, const string_t> strings;
     };
 }

@@ -30,12 +30,6 @@ namespace mandala
 			bottom
 		};
 
-		struct gradient_t
-		{
-			vec4_t color1 = vec4_t(1);
-			vec4_t color2 = vec4_t(1);
-		};
-
         string_type string;
 		std::shared_ptr<bitmap_font_t> bitmap_font;
 		justification_e justification = justification_e::left;
@@ -44,9 +38,8 @@ namespace mandala
 		bool should_use_ellipses = true;
 		bool should_use_gradient = false;
 		bool should_use_color_codes = true;
-		gradient_t gradient;
 
-		virtual bool clean();
+		virtual void clean() override;
         virtual void render(mat4_t world_matrix, mat4_t view_projection_matrix) override;
 
 	private:

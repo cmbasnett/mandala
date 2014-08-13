@@ -4,6 +4,7 @@
 //mandala
 #include "camera.hpp"
 #include "platform.hpp"
+#include "gpu.hpp"
 
 namespace mandala
 {
@@ -13,21 +14,20 @@ namespace mandala
 
 	void camera_t::tick(float32_t dt)
 	{
-		vec4_t viewport;
+		const auto viewport = gpu.viewports.top();
 		
-		//TODO: have current viewport set in some sort of graphics manager
-		auto window_size = static_cast<vec2_t>(platform.get_window_size());
+		const auto window_size = static_cast<vec2_t>(platform.get_window_size());
 		aspect = window_size.x / window_size.y;
 
-		auto forward = glm::normalize(target - position);
-        auto left = glm::normalize(glm::cross(vec3_t(0, 1, 0), forward));
+		const auto forward = glm::normalize(target - position);
+		auto left = glm::normalize(glm::cross(vec3_t(0, 1, 0), forward));
         auto up = glm::normalize(glm::cross(forward, left));
 
 		switch (projection_type)
 		{
 			case projection_type_e::orthographic:
 			{
-				projection_matrix = glm::ortho(0.0f, viewport.x, viewport.y, 0.0f);
+				projection_matrix = glm::ortho(viewport.x, viewport.x + viewport.width, viewport.y + viewport.height, viewport.y);
 				break;
 			}
 			case projection_type_e::perspective:
@@ -36,6 +36,9 @@ namespace mandala
 				break;
 			}
 		}
+
+		//rotate up matrix along forward axis
+		up = glm::rotate(glm::angleAxis(roll, forward), up);
 
 		view_matrix = glm::lookAt(position, target, up);
 

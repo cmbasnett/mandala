@@ -3,7 +3,7 @@
 //std
 #include <memory>
 
-//al
+//openal
 #include <AL\alc.h>
 
 namespace mandala
@@ -12,13 +12,17 @@ namespace mandala
 
     struct audio_context_t
     {
+		typedef ALCcontext* ptr_type;
+
         audio_context_t(const std::shared_ptr<audio_device_t>& device);
         ~audio_context_t();
 
-        ALCcontext* ptr = nullptr;
+		ptr_type ptr() const { return _ptr; }
 
     private:
         audio_context_t(const audio_context_t&) = delete;
-        audio_context_t& operator=(const audio_context_t&) = delete;
+		audio_context_t& operator=(const audio_context_t&) = delete;
+
+		ptr_type _ptr = nullptr;
     };
 }

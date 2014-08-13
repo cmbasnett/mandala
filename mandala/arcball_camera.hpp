@@ -12,6 +12,7 @@
 #define ARCBALL_CAMERA_DEFAULT_DISTANCE				(16.0f)
 #define ARCBALL_CAMERA_FOV_MIN						(70.0f)
 #define ARCBALL_CAMERA_FOV_MAX						(40.0f)
+#define ARCBALL_CAMERA_DEFAULT_ROLL_TARGET			(0.0f)
 
 namespace mandala
 {
@@ -28,6 +29,7 @@ namespace mandala
 		float32_t pitch_target = ARCBALL_CAMERA_DEFAULT_PITCH_MIN;
 		float32_t yaw = ARCBALL_CAMERA_DEFAULT_YAW;
 		float32_t yaw_target = ARCBALL_CAMERA_DEFAULT_YAW;
+		float32_t roll_target = ARCBALL_CAMERA_DEFAULT_ROLL_TARGET;
 		float32_t distance_min = ARCBALL_CAMERA_DEFAULT_DISTANCE_MIN;
 		float32_t distance_max = ARCBALL_CAMERA_DEFAULT_DISTANCE_MAX;
 		float32_t distance = ARCBALL_CAMERA_DEFAULT_DISTANCE;

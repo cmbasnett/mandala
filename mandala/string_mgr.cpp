@@ -10,23 +10,11 @@
 
 namespace mandala
 {
-	std::string string_mgr_t::default_language = "en";
-
-    string_mgr_t::string_mgr_t(const std::string& language) :
-        language(language)
-    {
-    }
-
     void string_mgr_t::mount(const std::string& file)
-    {
-        auto resources_lock = std::unique_lock<std::recursive_mutex>(app.resources.mutex);
-
-        auto stream_hash = hash_t(file);
-
-        std::shared_ptr<std::istream> stream;
-
-        stream = app.resources.extract(stream_hash);
-
+	{
+		auto strings_lock = std::unique_lock<std::mutex>(mutex);
+		auto resources_lock = std::unique_lock<std::recursive_mutex>(app.resources.mutex);
+		auto stream = app.resources.extract(hash_t(file));
         auto archive = string_archive_t(*stream);
 
         streams.push_back(stream);
@@ -44,13 +32,17 @@ namespace mandala
     }
 
     void string_mgr_t::purge()
-    {
+	{
+		auto strings_lock = std::unique_lock<std::mutex>(mutex);
+
         streams.clear();
         strings.clear();
     }
 
-    string_mgr_t::string_type string_mgr_t::get(const hash_t& hash) const
-    {
+    string_mgr_t::string_type string_mgr_t::get(const hash_t& hash)
+	{
+		auto strings_lock = std::unique_lock<std::mutex>(mutex);
+		auto resources_lock = std::unique_lock<std::recursive_mutex>(app.resources.mutex);
         auto strings_itr = strings.find(hash);
 
         if (strings_itr == strings.end())

@@ -66,7 +66,7 @@ namespace mandala
 
 		void world_state_t::on_enter()
 		{
-			app.states.push(hud_state, state_mgr_t::flag_all);
+			app.states.push(hud_state, state_flag_all);
 		}
 
 		void world_state_t::on_active()
@@ -103,7 +103,7 @@ namespace mandala
 				input_event.keyboard.key == input_event_t::keyboard_t::key_e::escape &&
 				input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press)
 			{
-				app.states.push(std::make_shared<pause_state_t>(), state_mgr_t::flag_render);
+				app.states.push(std::make_shared<pause_state_t>(), state_flag_render);
 
 				input_event.is_consumed = true;
 			}

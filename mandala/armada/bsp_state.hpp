@@ -19,6 +19,7 @@ namespace mandala
 	namespace armada
 	{
 		struct pause_state_t;
+		struct console_state_t;
 
 		struct bsp_state_t : gui_state_t
 		{
@@ -35,10 +36,10 @@ namespace mandala
             render_info_t render_info;
             std::vector<sprite_ref_t> crosshair_sprite_refs;
             int32_t crosshair_sprite_index = 0;
-            std::shared_ptr<pause_state_t> pause_state;
+			std::shared_ptr<pause_state_t> pause_state;
+			std::shared_ptr<console_state_t> console_state;
             std::shared_ptr<frame_buffer_t> frame_buffer;
             bsp_t::render_stats_t render_stats;
-			bool is_rendering = false;
 
 			bsp_state_t();
 			virtual ~bsp_state_t();

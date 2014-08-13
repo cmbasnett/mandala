@@ -61,9 +61,9 @@ namespace mandala
         gpu.programs.pop();
     }
 
-    bool gui_canvas_t::clean()
+    void gui_canvas_t::clean()
     {
-        auto did_clean = gui_node_t::clean();
+		gui_node_t::clean();
 
         static const auto vertex_count = 4;
 
@@ -76,7 +76,5 @@ namespace mandala
             vertex_type(vec2_t(0, size.y), vec2_t(0, 1))
         };
         vertex_buffer->data(vertices, vertex_count, gpu_t::buffer_usage_e::static_draw);
-
-        return did_clean;
     }
 }

@@ -22,6 +22,7 @@ namespace mandala
 		float32_t far = 1024.0f;
 		float32_t aspect = 0.0f;
         float32_t fov = 45.0f;
+		float32_t roll = 0.0f;
         vec3_t position;
         vec3_t target;
 		frustum_t frustum;

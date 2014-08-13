@@ -3,7 +3,7 @@
 //glm
 #include <glm\gtc\type_ptr.hpp>
 
-//al
+//openal
 #include <AL\al.h>
 
 //std
@@ -18,6 +18,8 @@ namespace mandala
 
     struct audio_source_t
 	{
+		typedef uint32_t id_type;
+
 		enum class state_t
 		{
 			initial,
@@ -29,7 +31,7 @@ namespace mandala
         audio_source_t();
         ~audio_source_t();
 
-        inline uint32_t id() const { return _id; }
+		inline id_type id() const { return _id; }
 
         state_t state() const;
         void position(const vec3_t& position) const;
@@ -50,6 +52,6 @@ namespace mandala
         audio_source_t(const audio_source_t&) = delete;
         audio_source_t& operator=(const audio_source_t&) = delete;
 
-        uint32_t _id;
+		id_type _id;
     };
 }

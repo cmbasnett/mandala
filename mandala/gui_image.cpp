@@ -39,8 +39,6 @@ namespace mandala
 
 		gpu.blend.push(blend_state);
 
-        //glDisable(GL_CULL_FACE);
-
 		//buffers
         gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
 		gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
@@ -74,7 +72,7 @@ namespace mandala
         gui_node_t::render(world_matrix, view_projection_matrix);
 	}
 
-    bool gui_image_t::clean()
+    void gui_image_t::clean()
     {
         auto sprite_size = static_cast<vec2_t>(sprite.region.rectangle.size());
 
@@ -105,7 +103,7 @@ namespace mandala
 
             vertex_buffer->data(vertices, vertex_count, gpu_t::buffer_usage_e::dynamic_draw);
         }
-
-		return gui_node_t::clean();
+		
+		gui_node_t::clean();
 	}
 }

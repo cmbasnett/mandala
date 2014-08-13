@@ -14,25 +14,29 @@ namespace mandala
 	struct app_t;
 	struct state_t;
 
+	typedef uint8_t state_flags_type;
+
+	enum : state_flags_type
+	{
+		state_flag_none = (0 << 0),
+		state_flag_render = (1 << 0),
+		state_flag_input = (1 << 1),
+		state_flag_tick = (1 << 2),
+		state_flag_render_input = (state_flag_render | state_flag_input),
+		state_flag_render_tick = (state_flag_render | state_flag_tick),
+		state_flag_input_tick = (state_flag_input | state_flag_tick),
+		state_flag_all = (state_flag_render | state_flag_input | state_flag_tick)
+	};
+
 	struct state_mgr_t
 	{
-		typedef uint8_t flags_type;
-
-		enum : flags_type
-		{
-			flag_none = (0 << 0),
-			flag_render = (1 << 0),
-			flag_input = (1 << 1),
-			flag_tick = (1 << 2),
-			flag_all = (flag_render | flag_input | flag_tick),
-			flag_default = (flag_render)
-		};
+		typedef std::shared_ptr<state_t> state_type;
 
 		struct node_t
 		{
-			std::shared_ptr<state_t> state;
-			flags_type link_flags = flag_none;
-			flags_type flags = flag_none;
+			state_type state;
+			state_flags_type link_flags = state_flag_none;
+			state_flags_type flags = state_flag_none;
 		};
 
 		struct operation_t
@@ -44,20 +48,25 @@ namespace mandala
 			};
 
             type_e type = type_e::push;
-			std::shared_ptr<state_t> state;
-			flags_type link_flags = flag_none;
+			state_type state;
+			state_flags_type link_flags = state_flag_none;
+			size_t index = 0;
 		};
 
-		state_mgr_t();
+		state_mgr_t() = default;
 
 		void tick(float32_t dt);
 		void render();
 		void on_input_event(input_event_t& input_event);
 
-		void push(const std::shared_ptr<state_t>& state, flags_type link_flags);
-		void pop(const std::shared_ptr<state_t>& state);
+		void push(const state_type& state, state_flags_type link_flags);
+		void pop(const state_type& state);
 		void purge();
+
+		state_flags_type get_flags(const state_type& state) const;
 		size_t count() const;
+		state_type at(size_t node_index) const;
+		size_t index_of(const state_type& state) const;
 		
 	private:
 		state_mgr_t(const state_mgr_t&) = delete;
