@@ -19,9 +19,11 @@ namespace mandala
 
 	struct bitmap_font_t : resource_t
 	{
+		typedef uint32_t character_id_type;
+
 		struct character_t
 		{
-			uint32_t id = 0;
+			character_id_type id = 0;
 			uint16_t x = 0;
 			uint16_t y = 0;
 			uint16_t width = 0;
@@ -56,7 +58,7 @@ namespace mandala
         typedef vertex_buffer_t<vertex_type> vertex_buffer_type;
         typedef index_buffer_t<index_type> index_buffer_type;
 
-		bitmap_font_t(std::istream& ifstream);
+		bitmap_font_t(std::istream& istream);
 
 		void render_string(const std::wstring& string, mat4_t world_matrix, mat4_t view_projection_matrix, const vec4_t& base_color, std::stack<vec4_t>& color_stack, const std::vector<std::pair<size_t, vec4_t>>& color_pushes, const std::vector<size_t>& color_pop_indices) const;
 		int16_t get_kerning_amount(wchar_t lhs, wchar_t rhs) const;
@@ -89,9 +91,9 @@ namespace mandala
 		uint8_t red_channel = 0;
 		uint8_t green_channel = 0;
 		uint8_t blue_channel = 0;
-		std::vector<uint32_t> character_ids;
-		std::map<uint32_t, size_t> character_indices;
-		std::map<uint32_t, character_t> characters;
+		std::vector<character_id_type> character_ids;
+		std::map<character_id_type, size_t> character_indices;
+		std::map<character_id_type, character_t> characters;
         std::vector<kerning_pair_t> kerning_pairs;
         std::shared_ptr<vertex_buffer_type> vertex_buffer;
         std::shared_ptr<index_buffer_type> index_buffer;

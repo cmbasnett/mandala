@@ -44,7 +44,8 @@ namespace mandala
 			enum class type_e : uint8_t
 			{
 				push,
-				pop
+				pop,
+				change_link_flags
 			};
 
             type_e type = type_e::push;
@@ -61,12 +62,17 @@ namespace mandala
 
 		void push(const state_type& state, state_flags_type link_flags);
 		void pop(const state_type& state);
+		void change_link_flags(const state_type& state, state_flags_type link_flags);
 		void purge();
 
 		state_flags_type get_flags(const state_type& state) const;
+		state_flags_type get_link_flags(const state_type& state) const;
 		size_t count() const;
 		state_type at(size_t node_index) const;
 		size_t index_of(const state_type& state) const;
+		bool is_state_rendering(const state_type& state) const;
+		bool is_state_ticking(const state_type& state) const;
+		bool is_state_handling_input(const state_type& state) const;
 		
 	private:
 		state_mgr_t(const state_mgr_t&) = delete;

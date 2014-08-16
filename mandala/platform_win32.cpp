@@ -6,6 +6,7 @@
 //mandala
 #include "opengl.hpp"
 #include "platform_win32.hpp"
+#include "gpu.hpp"
 
 namespace mandala
 {
@@ -15,22 +16,22 @@ namespace mandala
 		input_event.device_type = input_event_t::device_type_e::keyboard;
 		input_event.keyboard.key = static_cast<input_event_t::keyboard_t::key_e>(key);
 
-		if ((key & GLFW_MOD_SHIFT) != 0)
+		if ((key & GLFW_MOD_SHIFT) == GLFW_MOD_SHIFT)
 		{
 			input_event.keyboard.mod_flags |= input_event_t::mod_flag_shift;
 		}
 
-        if ((key & GLFW_MOD_CONTROL) != 0)
+		if ((key & GLFW_MOD_CONTROL) == GLFW_MOD_CONTROL)
         {
 			input_event.keyboard.mod_flags |= input_event_t::mod_flag_ctrl;
         }
 
-        if ((key & GLFW_MOD_ALT) != 0)
+		if ((key & GLFW_MOD_ALT) == GLFW_MOD_ALT)
         {
 			input_event.keyboard.mod_flags |= input_event_t::mod_flag_alt;
         }
 
-        if ((key & GLFW_MOD_SUPER) != 0)
+		if ((key & GLFW_MOD_SUPER) == GLFW_MOD_SUPER)
         {
 			input_event.keyboard.mod_flags |= input_event_t::mod_flag_super;
         }
@@ -118,7 +119,7 @@ namespace mandala
 
     static inline void on_window_resize(GLFWwindow* window, int width, int height)
     {
-        glViewport(0, 0, width, height);
+		gpu.viewports.push({ 0, 0, width, height });
     }
 
     static inline void on_error(int error_code, const char* message)
@@ -141,7 +142,7 @@ namespace mandala
 		//glfw
 		glfwInit();
 
-		glfwWindowHint(GLFW_SAMPLES, 16);
+		//glfwWindowHint(GLFW_SAMPLES, 16);
 
 		window_ptr = glfwCreateWindow(1, 1, "mandala", nullptr, nullptr);
 

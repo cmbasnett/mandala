@@ -23,15 +23,15 @@ namespace mandala
 
     void gui_canvas_t::render(mat4_t world_matrix, mat4_t view_projection_matrix)
     {
-        world_matrix *= glm::translate(bounds.min.x, bounds.min.y, 0.0f);
+		world_matrix *= glm::translate(bounds().min.x, bounds().min.y, 0.0f);
 
-        gpu.frame_buffers.push(frame_buffer);
+		gpu.frame_buffers.push(frame_buffer);
 
-        gpu_t::viewport_type viewport;
-        viewport.x = static_cast<int32_t>(bounds.min.x);
-        viewport.y = static_cast<int32_t>(bounds.min.y);
-        viewport.width = static_cast<int32_t>(bounds.width());
-        viewport.height = static_cast<int32_t>(bounds.height());
+		gpu_t::viewport_type viewport;
+		viewport.x = static_cast<int32_t>(bounds().min.x);
+		viewport.y = static_cast<int32_t>(bounds().min.y);
+		viewport.width = static_cast<int32_t>(bounds().width());
+		viewport.height = static_cast<int32_t>(bounds().height());
 
         gpu.viewports.push(viewport);
 
@@ -67,13 +67,13 @@ namespace mandala
 
         static const auto vertex_count = 4;
 
-        frame_buffer = std::make_shared<frame_buffer_t>(static_cast<uint32_t>(size.x), static_cast<uint32_t>(size.y));
+		frame_buffer = std::make_shared<frame_buffer_t>(static_cast<uint32_t>(size().x), static_cast<uint32_t>(size().y));
 
         vertex_buffer_type::vertex_type vertices[vertex_count] = {
             vertex_type(vec2_t(0, 0), vec2_t(0, 0)),
-            vertex_type(vec2_t(size.x, 0), vec2_t(1, 0)),
-            vertex_type(vec2_t(size.x, size.y), vec2_t(1, 1)),
-            vertex_type(vec2_t(0, size.y), vec2_t(0, 1))
+			vertex_type(vec2_t(size().x, 0), vec2_t(1, 0)),
+			vertex_type(vec2_t(size().x, size().y), vec2_t(1, 1)),
+			vertex_type(vec2_t(0, size().y), vec2_t(0, 1))
         };
         vertex_buffer->data(vertices, vertex_count, gpu_t::buffer_usage_e::static_draw);
     }

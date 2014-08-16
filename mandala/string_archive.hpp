@@ -10,13 +10,13 @@
 namespace mandala
 {
     struct string_archive_t
-    {
-        struct string_t
-        {
-            hash_t hash;
-            uint32_t offset;
-            uint32_t length;
-        };
+	{
+		struct string_t
+		{
+			hash_t hash;
+			uint32_t offset;
+			uint32_t length;
+		};
 
         string_archive_t(std::istream& istream);
 

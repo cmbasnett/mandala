@@ -90,4 +90,31 @@ namespace mandala
 			regions.insert(std::make_pair(region.hash, region));
 		}
 	}
+
+	sprite_set_t::sprite_set_t(const std::shared_ptr<texture_t>& texture) :
+		texture(texture)
+	{
+		region_t region;
+		region.frame_rectangle.x = 0;
+		region.frame_rectangle.y = 0;
+		region.frame_rectangle.width = texture->width;
+		region.frame_rectangle.height = texture->height;
+		region.hash = texture->hash;
+		region.is_rotated = false;
+		region.is_trimmed = false;
+		region.rectangle.x = 0;
+		region.rectangle.y = 0;
+		region.rectangle.width = texture->width;
+		region.rectangle.height = texture->height;
+		region.source_size.x = texture->width;
+		region.source_size.y = texture->height;
+		region.uv.min.x = 0.0f;
+		region.uv.min.y = 0.0f;
+		region.uv.max.x = 1.0f;
+		region.uv.max.y = 1.0f;
+
+		region_hashes.emplace_back();
+
+		regions.emplace(hash_t(), region);
+	}
 }

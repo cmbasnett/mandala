@@ -366,13 +366,15 @@ namespace mandala
             throw std::exception();
         }
 
-        auto previous_viewport = viewports.top();
+		const auto previous_viewport = viewports.top();
 
-        glViewport(previous_viewport.x, previous_viewport.y, previous_viewport.width, previous_viewport.height); glCheckError();
+		viewports.pop();
 
-        viewports.pop();
+		const auto top_viewport = top();
 
-        return previous_viewport;
+		glViewport(top_viewport.x, top_viewport.y, top_viewport.width, top_viewport.height); glCheckError();
+
+		return previous_viewport;
     }
 
     void gpu_t::buffer_mgr_t::push(buffer_target_e target, buffer_type buffer)

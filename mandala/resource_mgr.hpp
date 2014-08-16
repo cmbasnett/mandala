@@ -80,7 +80,7 @@ namespace mandala
 		}
 
 		template<typename T>
-		void put(std::shared_ptr<T> resource)
+		void put(std::shared_ptr<T> resource, const hash_t& hash)
 		{
 			auto lock_guard = std::unique_lock<std::recursive_mutex>(mutex);
 
@@ -109,8 +109,9 @@ namespace mandala
 				//TODO: overwrite?
 			}
 
+			resource->hash = hash;
 			resource->last_access_time = std::chrono::system_clock::now();
-
+			
 			resources.emplace(resource->hash, resource);
 		}
 

@@ -104,6 +104,26 @@ namespace mandala
 				*this = join(*this, rhs);
 				return *this;
 			}
+
+			template<typename U>
+			bool operator==(const aabb2_t<U>& rhs) const
+			{
+				return min == rhs.min && max == rhs.max;
+			}
+
+			template<typename U>
+			bool operator!=(const aabb2_t<U>& rhs) const
+			{
+				return min != rhs.min || max != rhs.max;
+			}
+
+			template<typename U>
+			type& operator=(const aabb2_t<U>& rhs) const
+			{
+				min = static_cast<value_type>(rhs.min);
+				max = static_cast<value_type>(rhs.max);
+				return *this;
+			}
 		};
 
 		template<typename T, typename Enable = void>
@@ -203,6 +223,26 @@ namespace mandala
 			type& join(const type& rhs)
 			{
 				*this = join(*this, rhs);
+				return *this;
+			}
+
+			template<typename U>
+			bool operator==(const aabb3_t<U>& rhs) const
+			{
+				return min == rhs.min && max == rhs.max;
+			}
+
+			template<typename U>
+			bool operator!=(const aabb3_t<U>& rhs) const
+			{
+				return min != rhs.min || max != rhs.max;
+			}
+
+			template<typename U>
+			type& operator=(const aabb3_t<U>& rhs) const
+			{
+				min = static_cast<value_type>(rhs.min);
+				max = static_cast<value_type>(rhs.max);
 				return *this;
 			}
 		};

@@ -1,11 +1,5 @@
 #pragma once
 
-//glm
-#include <glm\gtc\type_ptr.hpp>
-
-//openal
-#include <AL\al.h>
-
 //std
 #include <memory>
 
@@ -31,8 +25,7 @@ namespace mandala
         audio_source_t();
         ~audio_source_t();
 
-		inline id_type id() const { return _id; }
-
+		id_type id() const;
         state_t state() const;
         void position(const vec3_t& position) const;
         void velocity(const vec3_t& velocity) const;
@@ -46,7 +39,6 @@ namespace mandala
         void stop();
         void queue_sound(const std::shared_ptr<sound_t>& sound);
         void unqueue_sound(const std::shared_ptr<sound_t>& sound);
-
 
     private:
         audio_source_t(const audio_source_t&) = delete;

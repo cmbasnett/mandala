@@ -45,11 +45,18 @@ namespace mandala
 	{
 	}
 
-	sprite_t& sprite_t::operator=(const sprite_ref_t& sprite_ref)
+	sprite_t& sprite_t::operator=(const sprite_t& rhs)
 	{
-		sprite_set = app.resources.get<sprite_set_t>(sprite_ref.sprite_set_hash);
+		region = rhs.region;
+		sprite_set = rhs.sprite_set;
+		return *this;
+	}
 
-		auto regions_itr = sprite_set->regions.find(sprite_ref.region_hash);
+	sprite_t& sprite_t::operator=(const sprite_ref_t& rhs)
+	{
+		sprite_set = app.resources.get<sprite_set_t>(rhs.sprite_set_hash);
+
+		auto regions_itr = sprite_set->regions.find(rhs.region_hash);
 
 		if (regions_itr == sprite_set->regions.end())
 		{
@@ -59,5 +66,15 @@ namespace mandala
 		region = regions_itr->second;
 
 		return *this;
+	}
+
+	bool sprite_t::operator==(const sprite_ref_t& sprite_ref) const
+	{
+		return region.hash == sprite_ref.region_hash && sprite_set->hash == sprite_ref.sprite_set_hash;
+	}
+
+	bool sprite_t::operator!=(const sprite_ref_t& sprite_ref) const
+	{
+		return region.hash != sprite_ref.region_hash || sprite_set->hash != sprite_ref.sprite_set_hash;
 	}
 }

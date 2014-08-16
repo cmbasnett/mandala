@@ -17,7 +17,7 @@ precision lowp float;
 uniform mat4 world_matrix;
 uniform mat4 view_projection_matrix;
 
-in vec2 position;
+in vec3 position;
 in vec2 texcoord;
 
 out vec2 out_texcoord;
@@ -26,7 +26,7 @@ void main()
 {
 	out_texcoord = texcoord;
 	
-	gl_Position = (view_projection_matrix) * (world_matrix * vec4(position, 0, 1));
+	gl_Position = (view_projection_matrix) * (world_matrix * vec4(position, 1));
 }
 )";
 
@@ -41,7 +41,9 @@ out vec4 fragment;
 
 void main() 
 {
-	fragment = texture2D(diffuse_texture, out_texcoord);
+	vec4 co = texture2D(diffuse_texture, out_texcoord);
+
+	fragment = co + fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453) * 0.1;
 }
 )";
 
@@ -58,8 +60,8 @@ void main()
 
 	void gui_gpu_program_t::on_bind()
 	{
-		static const auto position_offset = reinterpret_cast<void*>(offsetof(vertex_t, position));
-		static const auto texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_t, texcoord));
+		static const auto position_offset = reinterpret_cast<void*>(offsetof(vertex_type, position));
+		static const auto texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_type, texcoord));
 
 		glEnableVertexAttribArray(position_location); glCheckError();
 		glEnableVertexAttribArray(texcoord_location); glCheckError();

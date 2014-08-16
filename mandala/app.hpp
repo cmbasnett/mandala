@@ -36,7 +36,7 @@ namespace mandala
 				size_t unconsumed_input_event_count = 0;
 			};
 
-			std::array<frame_t, frame_count> frames;
+			std::deque<frame_t> frames;
 			fps_type fps = 0;
 		};
 

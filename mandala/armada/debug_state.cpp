@@ -20,11 +20,11 @@ namespace mandala
 	debug_state_t::debug_state_t()
 	{
 		label = std::make_shared<gui_label_t>();
-		label->bitmap_font = app.resources.get<bitmap_font_t>(hash_t("terminal_16.fnt"));
-		label->dock_mode = gui_dock_mode_e::fill;
-		label->vertical_alignment = gui_label_t::vertical_alignment_e::bottom;
-		label->justification = gui_label_t::justification_e::right;
-		label->padding = padding_t(16);
+		label->set_bitmap_font(app.resources.get<bitmap_font_t>(hash_t("terminal_16.fnt")));
+		label->set_dock_mode(gui_dock_mode_e::fill);
+		label->set_vertical_alignment(gui_label_t::vertical_alignment_e::bottom);
+		label->set_justification(gui_label_t::justification_e::right);
+		label->set_padding(padding_t(16));
 
 		layout->adopt(label);
 
@@ -73,7 +73,7 @@ namespace mandala
 		oss << "[states]" << std::endl;
 		oss << app.states.count() << std::endl;
 
-		label->string = oss.str();
+		label->set_string(oss.str());
 
 		layout->clean();
 	}

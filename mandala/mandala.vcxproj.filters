@@ -196,9 +196,6 @@
     <ClInclude Include="color_types.hpp">
       <Filter>mandala\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="string_archive.hpp">
-      <Filter>mandala</Filter>
-    </ClInclude>
     <ClInclude Include="string_mgr.hpp">
       <Filter>mandala\app</Filter>
     </ClInclude>
@@ -273,6 +270,17 @@
     </ClInclude>
     <ClInclude Include="gpu_program_mgr.hpp">
       <Filter>mandala\app</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="string_archive.hpp">
+      <Filter>mandala\app</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="blur_horizontal_gpu_program.hpp">
+      <Filter>mandala\graphics\gpu_programs</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu_vertices.hpp">
+      <Filter>mandala\graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -391,9 +399,6 @@
     <ClCompile Include="string_mgr.cpp">
       <Filter>mandala\app</Filter>
     </ClCompile>
-    <ClCompile Include="string_archive.cpp">
-      <Filter>mandala</Filter>
-    </ClCompile>
     <ClCompile Include="gui_image.cpp">
       <Filter>mandala\gui</Filter>
     </ClCompile>
@@ -435,6 +440,15 @@
     </ClCompile>
     <ClCompile Include="armada\console_state.cpp">
       <Filter>armada\states\console</Filter>
+    </ClCompile>
+    <ClCompile Include="string_archive.cpp">
+      <Filter>mandala\app</Filter>
+    </ClCompile>
+    <ClCompile Include="gui_layout.cpp">
+      <Filter>mandala\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="blur_horizontal_gpu_program.cpp">
+      <Filter>mandala\graphics\gpu_programs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

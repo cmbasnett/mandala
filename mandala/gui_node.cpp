@@ -14,27 +14,108 @@
 
 namespace mandala
 {
+	void gui_node_t::set_dock_mode(gui_dock_mode_e dock_mode)
+	{
+		if (_dock_mode != dock_mode)
+		{
+			_dock_mode = dock_mode;
+			_is_dirty = true;
+		}
+	}
+
+	void gui_node_t::set_anchor_flags(gui_anchor_flags_type anchor_flags)
+	{
+		if (_anchor_flags != anchor_flags)
+		{
+			_anchor_flags = anchor_flags;
+			_is_dirty = true;
+		}
+	}
+
+	void gui_node_t::set_anchor_offset(const vec2_t& anchor_offset)
+	{
+		if (_anchor_offset != anchor_offset)
+		{
+			_anchor_offset = anchor_offset;
+			_is_dirty = true;
+		}
+	}
+
+	void gui_node_t::set_padding(const padding_t& padding)
+	{
+		if (_padding != padding)
+		{
+			_padding = padding;
+			_is_dirty = true;
+		}
+	}
+
+	void gui_node_t::set_margin(const padding_t& margin)
+	{
+		if (_margin != margin)
+		{
+			_margin = margin;
+			_is_dirty = true;
+		}
+	}
+
+	void gui_node_t::set_size(const size_type& size)
+	{
+		if (_size != size)
+		{
+			_size = size;
+			_is_dirty = true;
+		}
+	}
+
+	void gui_node_t::set_color(const vec4_t& color)
+	{
+		if (_color != color)
+		{
+			_color = color;
+			_is_dirty = true;
+		}
+	}
+
+	void gui_node_t::set_bounds(const bounds_type& bounds)
+	{
+		if (_bounds != bounds)
+		{
+			_bounds = bounds;
+			_is_dirty = true;
+		}
+	}
+
+	void gui_node_t::set_is_hidden(bool is_hidden)
+	{
+		if (_is_hidden != is_hidden)
+		{
+			_is_hidden = is_hidden;
+			_is_dirty = true;
+		}
+	}
+
     void gui_node_t::orphan()
 	{
-		if (parent.get() == nullptr)
+		if (_parent.get() == nullptr)
 		{
 			return;
 		}
 
-		auto parent_children_itr = std::find(parent->children.begin(), parent->children.end(), parent);
+		auto parent_children_itr = std::find(_parent->children.begin(), _parent->children.end(), _parent);
 
-		if (parent_children_itr == parent->children.end())
+		if (parent_children_itr == _parent->children.end())
 		{
 			throw std::exception();
 		}
 			
-		parent->children.erase(parent_children_itr);
+		_parent->children.erase(parent_children_itr);
 
-		parent->is_dirty = true;
+		_parent->_is_dirty = true;
 
-		parent = nullptr;
+		_parent = nullptr;
 
-		is_dirty = true;
+		_is_dirty = true;
 	}
 
     void gui_node_t::adopt(std::shared_ptr<gui_node_t> node)
@@ -54,125 +135,125 @@ namespace mandala
 
 		children.push_back(node);
 
-		is_dirty = true;
+		_is_dirty = true;
 	}
 
     void gui_node_t::clean()
 	{
         if (has_children())
         {
-            auto children_bounds = bounds;
+			auto children_bounds = _bounds;
 
-			children_bounds -= padding;
+			children_bounds -= _padding;
 
             for (auto child : children)
             {
-                switch (child->dock_mode)
+                switch (child->_dock_mode)
                 {
 				case gui_dock_mode_e::bottom:
-                    child->bounds.min = children_bounds.min;
+                    child->_bounds.min = children_bounds.min;
 
-                    child->bounds.max.x = children_bounds.max.x;
-                    child->bounds.max.y = children_bounds.min.y + child->size.y + child->padding.vertical();
+                    child->_bounds.max.x = children_bounds.max.x;
+                    child->_bounds.max.y = children_bounds.min.y + child->_size.y + child->_padding.vertical();
 
-					child->bounds -= child->margin;
+					child->_bounds -= child->_margin;
 
-					children_bounds.min.y += child->bounds.height() + child->margin.vertical();
+					children_bounds.min.y += child->_bounds.height() + child->_margin.vertical();
 
                     break;
                 case gui_dock_mode_e::fill:
-                    child->bounds = children_bounds;
+                    child->_bounds = children_bounds;
                     break;
 				case gui_dock_mode_e::left:
-                    child->bounds.min = children_bounds.min;
+                    child->_bounds.min = children_bounds.min;
 
-                    child->bounds.max.x = children_bounds.min.x + child->size.x + child->padding.horizontal();
-                    child->bounds.max.y = children_bounds.max.y;
+					child->_bounds.max.x = children_bounds.min.x + child->_size.x + child->_padding.horizontal();
+                    child->_bounds.max.y = children_bounds.max.y;
 
-					child->bounds -= child->margin;
+					child->_bounds -= child->_margin;
 
-					children_bounds.min.x += child->bounds.width() + child->margin.horizontal();
+					children_bounds.min.x += child->_bounds.width() + child->_margin.horizontal();
 
                     break;
 				case gui_dock_mode_e::right:
-                    child->bounds.min.x = children_bounds.max.x - child->size.x - child->padding.horizontal();
-                    child->bounds.min.y = children_bounds.min.y;
+                    child->_bounds.min.x = children_bounds.max.x - child->_size.x - child->_padding.horizontal();
+                    child->_bounds.min.y = children_bounds.min.y;
 
-					child->bounds.max = children_bounds.max;
+					child->_bounds.max = children_bounds.max;
 
-					child->bounds -= child->margin;
+					child->_bounds -= child->_margin;
 
-					children_bounds.max.x -= child->bounds.width() + child->margin.horizontal();
+					children_bounds.max.x -= child->_bounds.width() + child->_margin.horizontal();
 
                     break;
 				case gui_dock_mode_e::top:
-                    child->bounds.min.x = children_bounds.min.x;
-                    child->bounds.min.y = children_bounds.max.y - child->size.y - child->padding.vertical();
+                    child->_bounds.min.x = children_bounds.min.x;
+                    child->_bounds.min.y = children_bounds.max.y - child->_size.y - child->_padding.vertical();
 
-					child->bounds.max = children_bounds.max;
+					child->_bounds.max = children_bounds.max;
 
-					child->bounds -= child->margin;
+					child->_bounds -= child->_margin;
 
-					children_bounds.max.y -= child->bounds.height() + child->margin.vertical();
+					children_bounds.max.y -= child->_bounds.height() + child->_margin.vertical();
 
                     break;
                 default:
-					child->bounds.min = vec2_t(0);
-					child->bounds.max = child->size;
+					child->_bounds.min = vec2_t(0);
+					child->_bounds.max = child->_size;
 
                     vec2_t anchor_location;
                     vec2_t anchor_translation;
 
-					if ((child->anchor_flags & gui_anchor_flag_horizontal) == gui_anchor_flag_horizontal)
+					if ((child->_anchor_flags & gui_anchor_flag_horizontal) == gui_anchor_flag_horizontal)
                     {
 						anchor_location.x = (children_bounds.max.x - children_bounds.min.x) / 2;
-						anchor_translation.x = -((child->size.x / 2) + ((child->margin.right - child->margin.left) / 2));
+						anchor_translation.x = -((child->_size.x / 2) + ((child->_margin.right - child->_margin.left) / 2));
                     }
                     else
                     {
-						if ((child->anchor_flags & gui_anchor_flag_left) == gui_anchor_flag_left)
+						if ((child->_anchor_flags & gui_anchor_flag_left) == gui_anchor_flag_left)
                         {
                             anchor_location.x = children_bounds.min.x;
-							anchor_translation.x = child->margin.left;
+							anchor_translation.x = child->_margin.left;
                         }
-						else if ((child->anchor_flags & gui_anchor_flag_right) == gui_anchor_flag_right)
+						else if ((child->_anchor_flags & gui_anchor_flag_right) == gui_anchor_flag_right)
                         {
                             anchor_location.x = children_bounds.max.x;
-							anchor_translation.x = -(child->size.x + child->margin.right);
+							anchor_translation.x = -(child->_size.x + child->_margin.right);
                         }
                     }
 
-					if ((child->anchor_flags & gui_anchor_flag_vertical) == gui_anchor_flag_vertical)
+					if ((child->_anchor_flags & gui_anchor_flag_vertical) == gui_anchor_flag_vertical)
                     {
 						anchor_location.y = (children_bounds.max.y - children_bounds.min.y) / 2;
-						anchor_translation.y = -((child->size.y / 2) + ((child->margin.top - child->margin.bottom) / 2));
+						anchor_translation.y = -((child->_size.y / 2) + ((child->_margin.top - child->_margin.bottom) / 2));
                     }
                     else
                     {
-						if ((child->anchor_flags & gui_anchor_flag_bottom) == gui_anchor_flag_bottom)
+						if ((child->_anchor_flags & gui_anchor_flag_bottom) == gui_anchor_flag_bottom)
                         {
                             anchor_location.y = children_bounds.min.y;
-							anchor_translation.y = child->margin.bottom;
+							anchor_translation.y = child->_margin.bottom;
                         }
-						else if ((child->anchor_flags & gui_anchor_flag_top) == gui_anchor_flag_top)
+						else if ((child->_anchor_flags & gui_anchor_flag_top) == gui_anchor_flag_top)
                         {
                             anchor_location.y = children_bounds.max.y;
-							anchor_translation.y = -(child->size.y + child->margin.top);
+							anchor_translation.y = -(child->_size.y + child->_margin.top);
                         }
                     }
 
-					child->bounds += anchor_location + anchor_translation + child->anchor_offset;
+					child->_bounds += anchor_location + anchor_translation + child->_anchor_offset;
 
                     break;
                 }
 
 				child->clean();
 
-				child->size = child->bounds.size();
+				child->_size = child->_bounds.size();
             }
         }
 
-		is_dirty = false;
+		_is_dirty = false;
 	}
 
     void gui_node_t::on_input_event(input_event_t& input_event)
@@ -182,7 +263,7 @@ namespace mandala
 
     bool gui_node_t::trace(std::shared_ptr<gui_node_t> node, gui_node_t::trace_args_t args, gui_node_t::trace_result_t& result)
 	{
-		if (intersects(args.circle, node->bounds) != intersect_type_e::intersect)
+		if (intersects(args.circle, node->_bounds) != intersect_type_e::intersect)
 		{
 			return false;
 		}
@@ -206,7 +287,7 @@ namespace mandala
 
     void gui_node_t::render(mat4_t world_matrix, mat4_t view_projection_matrix)
     {
-		if (is_hidden)
+		if (is_hidden())
 		{
 			return;
 		}

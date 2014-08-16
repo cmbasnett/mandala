@@ -49,7 +49,6 @@ namespace mandala
         doppler_t doppler;
         std::vector<std::shared_ptr<audio_source_t>> sources;
         std::vector<std::shared_ptr<audio_device_t>> devices;
-		std::array<channel_t, channel_count> channels;
 
 	private:
 		std::shared_ptr<audio_context_t> context;

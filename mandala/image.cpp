@@ -43,7 +43,7 @@ namespace mandala
 		{
 			auto png_io_ptr = png_get_io_ptr(png_ptr);
 
-			static_cast<std::istream*>(png_io_ptr)->read((char*)data, length);
+			static_cast<std::istream*>(png_io_ptr)->read(reinterpret_cast<char*>(data), length);
 		});
 
 		png_set_sig_bytes(png_ptr, sig_read);

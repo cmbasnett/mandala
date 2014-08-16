@@ -10,7 +10,7 @@ namespace mandala
         
         istream.read(magic, sizeof(magic));
 
-        if (strcmp(magic, "LOCA") != 0)
+        if (strcmp(magic, "TEXT") != 0)
         {
             throw std::exception();
         }
@@ -18,12 +18,12 @@ namespace mandala
         //version
         uint32_t version = 0;
 
-        istream.read(reinterpret_cast<char*>(&version), sizeof(version));
+		istream.read(reinterpret_cast<char*>(&version), sizeof(version));
 
-        if (version != 1)
-        {
-            throw std::exception();
-        }
+		if (version != 1)
+		{
+			throw std::exception();
+		}
 
         //string count
         uint32_t string_count = 0;

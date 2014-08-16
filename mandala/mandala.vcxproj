@@ -230,6 +230,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="audio_mgr.hpp" />
     <ClInclude Include="audio_source.hpp" />
     <ClInclude Include="bitmap_font_gpu_program.hpp" />
+    <ClInclude Include="blur_horizontal_gpu_program.hpp" />
     <ClInclude Include="bsp_entity.hpp" />
     <ClInclude Include="bsp_gpu_program.hpp" />
     <ClInclude Include="camera.hpp" />
@@ -315,6 +316,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="texture.hpp" />
     <ClInclude Include="triangle.hpp" />
     <ClInclude Include="types.hpp" />
+    <ClInclude Include="gpu_vertices.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="animation.cpp" />
@@ -326,6 +328,7 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="audio_mgr.cpp" />
     <ClCompile Include="audio_source.cpp" />
     <ClCompile Include="bitmap_font_gpu_program.cpp" />
+    <ClCompile Include="blur_horizontal_gpu_program.cpp" />
     <ClCompile Include="bsp_entity.cpp" />
     <ClCompile Include="bsp_gpu_program.cpp" />
     <ClCompile Include="camera.cpp" />
@@ -347,6 +350,7 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="gui_gpu_program.cpp" />
     <ClCompile Include="gui_image.cpp" />
     <ClCompile Include="gui_label.cpp" />
+    <ClCompile Include="gui_layout.cpp" />
     <ClCompile Include="gui_node.cpp" />
     <ClCompile Include="gui_state.cpp" />
     <ClCompile Include="http_request.cpp" />

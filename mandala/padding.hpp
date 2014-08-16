@@ -88,6 +88,18 @@ namespace mandala
 
 				return *this;
 			}
+
+			template<typename U>
+			bool operator==(const padding_t<U>& rhs) const
+			{
+				return bottom == rhs.bottom && left == rhs.left && right == rhs.right && top == rhs.top;
+			}
+
+			template<typename U>
+			bool operator!=(const padding_t<U>& rhs) const
+			{
+				return bottom != rhs.bottom || left != rhs.left || right != rhs.right || top != rhs.top;
+			}
 		};
 	}
 

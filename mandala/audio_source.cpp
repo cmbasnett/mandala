@@ -20,6 +20,11 @@ namespace mandala
 		alDeleteSources(1, &_id); alCheckError();
 	}
 
+	audio_source_t::id_type audio_source_t::id() const
+	{
+		return _id;
+	}
+
 	audio_source_t::state_t audio_source_t::state() const
 	{
 		ALint state;
