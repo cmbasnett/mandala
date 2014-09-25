@@ -30,7 +30,7 @@ namespace mandala
 
         bsp_state_t::bsp_state_t()
 		{
-			frame_buffer = std::make_shared<frame_buffer_t>(static_cast<frame_buffer_t::size_type>(layout->bounds().size()));
+			frame_buffer = std::make_shared<frame_buffer_t>(frame_buffer_t::type_e::color_depth_stencil, static_cast<frame_buffer_t::size_type>(layout->bounds().size()));
 
 			skybox.model_instance = std::make_shared<model_instance_t>(app.resources.get<model_t>(hash_t("skybox.md5m")));
 			pause_state = std::make_shared<pause_state_t>();

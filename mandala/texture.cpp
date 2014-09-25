@@ -9,11 +9,11 @@
 
 namespace mandala
 {
+    //TODO: move all these GL calls into the gpu_mgr_t class
     texture_t::texture_t(color_type_e color_type, uint32_t width, uint32_t height) :
         width(width),
         height(height)
     {
-        //TODO: move all these GL calls into the gpu_mgr_t class
         glGenTextures(1, &id); glCheckError();
         glBindTexture(GL_TEXTURE_2D, id); glCheckError();
 
@@ -81,7 +81,12 @@ namespace mandala
             internal_format = 2;
             type = GL_UNSIGNED_BYTE;
             break;
-        case color_type_e::depth24_stencil8:
+        case color_type_e::depth:
+            format = GL_DEPTH_COMPONENT;
+            internal_format = GL_DEPTH_COMPONENT;
+            type = GL_UNSIGNED_BYTE;
+            break;
+        case color_type_e::depth_stencil:
             format = GL_DEPTH_STENCIL;
             internal_format = GL_DEPTH24_STENCIL8;
             type = GL_UNSIGNED_INT_24_8;

@@ -510,7 +510,7 @@ namespace mandala
 	}
 
     //blend
-	gpu_t::blend_t::state_t gpu_t::blend_t::top() const
+    gpu_t::blend_t::state_t gpu_t::blend_t::get_state() const
 	{
 		if (!states.empty())
 		{
@@ -520,24 +520,21 @@ namespace mandala
 		return state_t();
     }
 
-    void gpu_t::blend_t::push(const gpu_t::blend_t::state_t& state)
+    void gpu_t::blend_t::push_state(const gpu_t::blend_t::state_t& state)
     {
-        apply(state);
+        apply_state(state);
 
         states.push(state);
     }
 
-	void gpu_t::blend_t::pop()
+    void gpu_t::blend_t::pop_state()
 	{
 		states.pop();
 
-		if (!states.empty())
-		{
-			apply(states.top());
-		}
+        apply_state(get_state());
 	}
 
-	void gpu_t::blend_t::apply(const gpu_t::blend_t::state_t& state)
+    void gpu_t::blend_t::apply_state(const gpu_t::blend_t::state_t& state)
 	{
 		if (state.is_enabled)
 		{
@@ -553,7 +550,7 @@ namespace mandala
 	}
 
     //depth
-    gpu_t::depth_t::state_t gpu_t::depth_t::top() const
+    gpu_t::depth_t::state_t gpu_t::depth_t::get_state() const
     {
         if (!states.empty())
         {
@@ -563,24 +560,21 @@ namespace mandala
         return state_t();
     }
 
-	void gpu_t::depth_t::push(const state_t& state)
+    void gpu_t::depth_t::push_state(const state_t& state)
 	{
-		apply(state);
+        apply_state(state);
 
 		states.push(state);
     }
 
-    void gpu_t::depth_t::pop()
+    void gpu_t::depth_t::pop_state()
     {
         states.pop();
 
-        if (!states.empty())
-        {
-            apply(states.top());
-        }
+        apply_state(get_state());
     }
 
-    void gpu_t::depth_t::apply(const state_t& state)
+    void gpu_t::depth_t::apply_state(const state_t& state)
     {
         if (state.should_test)
         {
@@ -597,7 +591,7 @@ namespace mandala
     }
 
     //culling
-    gpu_t::culling_t::state_t gpu_t::culling_t::top() const
+    gpu_t::culling_t::state_t gpu_t::culling_t::get_state() const
     {
         if (!states.empty())
         {
@@ -607,24 +601,21 @@ namespace mandala
         return state_t();
     }
 
-    void gpu_t::culling_t::push(const state_t& state)
+    void gpu_t::culling_t::push_state(const state_t& state)
     {
-        apply(state);
+        apply_state(state);
 
         states.push(state);
     }
 
-    void gpu_t::culling_t::pop()
+    void gpu_t::culling_t::pop_state()
     {
         states.pop();
 
-        if (!states.empty())
-        {
-            apply(states.top());
-        }
+        apply_state(get_state());
     }
 
-    void gpu_t::culling_t::apply(const state_t& state)
+    void gpu_t::culling_t::apply_state(const state_t& state)
     {
         if (state.is_enabled)
         {

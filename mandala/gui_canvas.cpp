@@ -67,7 +67,7 @@ namespace mandala
 
         static const auto vertex_count = 4;
 
-		frame_buffer = std::make_shared<frame_buffer_t>(static_cast<uint32_t>(size().x), static_cast<uint32_t>(size().y));
+		frame_buffer = std::make_shared<frame_buffer_t>(frame_buffer_t::type_e::color_depth_stencil, static_cast<uint32_t>(size().x), static_cast<uint32_t>(size().y));
 
         vertex_buffer_type::vertex_type vertices[vertex_count] = {
             vertex_type(vec2_t(0, 0), vec2_t(0, 0)),

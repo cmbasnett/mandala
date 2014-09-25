@@ -223,13 +223,13 @@ namespace mandala
 				blend_equation_e equation = blend_equation_e::add;
 			};
 
-			state_t top() const;
-			void push(const state_t& state);
-			void pop();
+			state_t get_state() const;
+			void push_state(const state_t& state);
+			void pop_state();
 		private:
 			std::stack<state_t> states;
 
-			void apply(const state_t& state);
+			void apply_state(const state_t& state);
 		} blend;
 
 		//depth
@@ -242,14 +242,14 @@ namespace mandala
 				depth_function_e function = depth_function_e::default;
 			};
 
-			state_t top() const;
-			void push(const state_t& state);
-			void pop();
+            state_t get_state() const;
+			void push_state(const state_t& state);
+			void pop_state();
 
 		private:
 			std::stack<state_t> states;
 
-			void apply(const state_t& state);
+			void apply_state(const state_t& state);
 		} depth;
 
         struct culling_t
@@ -261,14 +261,14 @@ namespace mandala
                 culling_mode_e mode = culling_mode_e::back;
             };
 
-            state_t top() const;
-            void push(const state_t& state);
-            void pop();
+            state_t get_state() const;
+            void push_state(const state_t& state);
+            void pop_state();
 
         private:
             std::stack<state_t> states;
 
-            void apply(const state_t& state);
+            void apply_state(const state_t& state);
         } culling;
 
 		void draw_elements(primitive_type_e primitive_type, size_t count, index_type_e index_type, size_t offset) const;

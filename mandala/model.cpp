@@ -252,27 +252,27 @@ namespace mandala
 	void model_t::render(const vec3_t& camera_position, const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices, const vec3_t& light_position) const
 	{
 		//blend
-		auto blend_state = gpu.blend.top();
+		auto blend_state = gpu.blend.get_state();
 		blend_state.is_enabled = true;
 		blend_state.src_factor = gpu_t::blend_factor_e::src_alpha;
 		blend_state.dst_factor = gpu_t::blend_factor_e::one_minus_src_alpha;
 
-		gpu.blend.push(blend_state);
+		gpu.blend.push_state(blend_state);
 
 		//depth
-		auto depth_state = gpu.depth.top();
+        auto depth_state = gpu.depth.get_state();
 		depth_state.should_test = true;
 
-		gpu.depth.push(depth_state);
+		gpu.depth.push_state(depth_state);
 
 		for(auto& mesh : meshes)
 		{
             //culling
-            auto culling_state = gpu.culling.top();
+            auto culling_state = gpu.culling.get_state();
 
             culling_state.is_enabled = !mesh->material->is_two_sided;
 
-            gpu.culling.push(culling_state);
+            gpu.culling.push_state(culling_state);
 
 			gpu.buffers.push(gpu_t::buffer_target_e::array, mesh->vertex_buffer);
 			gpu.buffers.push(gpu_t::buffer_target_e::element_array, mesh->index_buffer);
@@ -294,12 +294,12 @@ namespace mandala
 			gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
 			gpu.buffers.pop(gpu_t::buffer_target_e::array);
 
-            gpu.culling.pop();
+            gpu.culling.pop_state();
         }
 
-		gpu.depth.pop();
+        gpu.depth.pop_state();
 
-		gpu.blend.pop();
+        gpu.blend.pop_state();
 	}
 
 	void model_t::mesh_t::render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices) const

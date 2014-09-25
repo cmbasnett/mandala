@@ -38,14 +38,14 @@ namespace mandala
 		auto world_matrix = mat4_t();
 		auto view_projection_matrix = glm::ortho(0.0f, static_cast<float32_t>(screen_size.x), 0.0f, static_cast<float32_t>(screen_size.y));
 
-		auto gpu_depth_state = gpu.depth.top();
-		gpu_depth_state.should_test = false;
+        auto depth_state = gpu.depth.get_state();
+        depth_state.should_test = false;
 
-		gpu.depth.push(gpu_depth_state);
+        gpu.depth.push_state(depth_state);
 
 		layout->render(world_matrix, view_projection_matrix);
 
-		gpu.depth.pop();
+		gpu.depth.pop_state();
 	}
 
 	void gui_state_t::on_input_event(input_event_t& input_event)
@@ -74,5 +74,4 @@ namespace mandala
 			}
 		}
 	}
-
 }

@@ -619,17 +619,17 @@ namespace mandala
         auto camera_leaf_index = get_leaf_index_from_position(camera.position);
 
         //culling
-        auto culling_state = gpu.culling.top();
+        auto culling_state = gpu.culling.get_state();
         culling_state.is_enabled = true;
         culling_state.mode = gpu_t::culling_mode_e::front;
 
-        gpu.culling.push(culling_state);
+        gpu.culling.push_state(culling_state);
 
 		//blend
-		auto blend_state = gpu.blend.top();
+        auto blend_state = gpu.blend.get_state();
 		blend_state.is_enabled = false;
 
-		gpu.blend.push(blend_state);
+        gpu.blend.push_state(blend_state);
 
 		static const auto diffuse_texture_index = 0;
 		static const auto lightmap_texture_index = 1;
@@ -801,8 +801,8 @@ namespace mandala
 			//    color.b = boost::lexical_cast<float32_t>(tokens[2]) / 255.0f;
 			//}
 
-			auto blend_state = gpu.blend.top();
-			auto depth_state = gpu.depth.top();
+			auto blend_state = gpu.blend.get_state();
+			auto depth_state = gpu.depth.get_state();
 
 			depth_state.should_test = true;
 
@@ -830,8 +830,8 @@ namespace mandala
                 break;
             }
 
-			gpu.blend.push(blend_state);
-			gpu.depth.push(depth_state);
+			gpu.blend.push_state(blend_state);
+            gpu.depth.push_state(depth_state);
 
             auto world_matrix = glm::translate(model.origin);
             world_matrix *= glm::translate(origin);
@@ -853,21 +853,21 @@ namespace mandala
                 break;
             }
 
-			gpu.depth.pop();
-			gpu.blend.pop();
+			gpu.depth.pop_state();
+            gpu.blend.pop_state();
         };
 
         render_stats.reset();
 
 		//depth
-		auto depth_state = gpu.depth.top();
+        auto depth_state = gpu.depth.get_state();
 		depth_state.should_test = true;
 
-		gpu.depth.push(depth_state);
+        gpu.depth.push_state(depth_state);
 
         render_node(0, camera_leaf_index);
 
-		gpu.depth.pop();
+        gpu.depth.pop_state();
 
         for (auto brush_entity_index : brush_entity_indices)
         {
@@ -879,9 +879,9 @@ namespace mandala
         gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
         gpu.buffers.pop(gpu_t::buffer_target_e::array);
 
-        gpu.culling.pop();
+        gpu.culling.pop_state();
 
-		gpu.blend.pop();
+        gpu.blend.pop_state();
     }
 
     int32_t bsp_t::get_leaf_index_from_position(const vec3_t& position) const

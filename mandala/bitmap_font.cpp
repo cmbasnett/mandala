@@ -261,19 +261,18 @@ namespace mandala
 		//program
 		gpu.programs.push(bitmap_font_gpu_program);
 
-		//blend
-		auto gpu_blend_state = gpu.blend.top();
-		gpu_blend_state.is_enabled = true;
-		gpu_blend_state.src_factor = gpu_t::blend_factor_e::src_alpha;
-		gpu_blend_state.dst_factor = gpu_t::blend_factor_e::one_minus_src_alpha;
+		//states
+		auto blend_state = gpu.blend.get_state();
+        blend_state.is_enabled = true;
+        blend_state.src_factor = gpu_t::blend_factor_e::src_alpha;
+        blend_state.dst_factor = gpu_t::blend_factor_e::one_minus_src_alpha;
 
-		gpu.blend.push(gpu_blend_state);
+        gpu.blend.push_state(blend_state);
 
-		//depth mask
-		auto gpu_depth_state = gpu.depth.top();
-		gpu_depth_state.should_write_mask = false;
+		auto depth_state = gpu.depth.get_state();
+        depth_state.should_write_mask = false;
 
-		gpu.depth.push(gpu_depth_state);
+        gpu.depth.push_state(depth_state);
 
 		//view projection matrix
 		bitmap_font_gpu_program->view_projection_matrix(view_projection_matrix);
@@ -388,14 +387,13 @@ namespace mandala
 			gpu.textures.unbind(page_index);
 		}
 
-		//depth
-		gpu.depth.pop();
-
-		//blend
-		gpu.blend.pop();
+		
+        //states
+		gpu.depth.pop_state();
+		gpu.blend.pop_state();
 
 		//program
-		gpu.programs.pop();
+        gpu.programs.pop();
 
 		//buffers
 		gpu.buffers.pop(gpu_t::buffer_target_e::element_array);

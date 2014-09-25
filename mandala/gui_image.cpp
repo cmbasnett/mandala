@@ -33,12 +33,12 @@ namespace mandala
             return;
         }
 
-		auto blend_state = gpu.blend.top();
+		auto blend_state = gpu.blend.get_state();
 		blend_state.is_enabled = true;
 		blend_state.src_factor = gpu_t::blend_factor_e::src_alpha;
 		blend_state.dst_factor = gpu_t::blend_factor_e::one_minus_src_alpha;
 
-		gpu.blend.push(blend_state);
+		gpu.blend.push_state(blend_state);
 
 		//buffers
         gpu.buffers.push(gpu_t::buffer_target_e::array, _vertex_buffer);
@@ -72,7 +72,7 @@ namespace mandala
 		gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
 		gpu.buffers.pop(gpu_t::buffer_target_e::array);
 
-		gpu.blend.pop();
+		gpu.blend.pop_state();
 
         gui_node_t::render(world_matrix, view_projection_matrix);
 	}
