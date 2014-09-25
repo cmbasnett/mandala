@@ -1,5 +1,4 @@
 {
-	"gpu_program":"model.gpu",
 	"diffuse":
 	{
 		"texture":"space_station_4_color.png",

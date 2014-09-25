@@ -16,6 +16,7 @@
 #include "../texture.hpp"
 #include "../material.hpp"
 #include "../gpu_program.hpp"
+#include "../collision.hpp"
 
 //armada
 #include "world_state.hpp"
@@ -58,7 +59,16 @@ namespace mandala
 
             for (auto& model_instance : model_instances)
             {
-                model_instance->render(camera, light_position);
+				if (intersects(camera.frustum, model_instance->skeleton.aabb) != intersect_type_e::disjoint)
+				{
+					std::cout << "rendering" << std::endl;
+
+					model_instance->render(camera, light_position);
+				}
+				else
+				{
+					std::cout << "not rendering" << std::endl;
+				}
             }
 
             state_t::render();

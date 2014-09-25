@@ -303,7 +303,7 @@ namespace mandala
 	}
 
     void gui_label_t::render(mat4_t world_matrix, mat4_t view_projection_matrix)
-    {
+	{
 		if (is_hidden())
 		{
 			return;

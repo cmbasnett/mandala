@@ -30,16 +30,17 @@ namespace mandala
         }
 
         template<std::uintmax_t N>
-        void data(std::array<vertex_type, N> vertices, gpu_t::buffer_usage_e usage)
+        void data(std::array<vertex_type, N>& vertices, gpu_t::buffer_usage_e usage)
         {
             data(vertices.data(), N, usage);
         }
 
-        void data(std::vector<vertex_type> vertices, gpu_t::buffer_usage_e usage)
+		void data(std::vector<vertex_type>& vertices, gpu_t::buffer_usage_e usage)
         {
             data(vertices.data(), vertices.size(), usage);
         }
 
+	private:
         vertex_buffer_t(const vertex_buffer_t&) = delete;
         vertex_buffer_t& operator=(const vertex_buffer_t&) = delete;
     };

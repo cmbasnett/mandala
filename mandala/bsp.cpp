@@ -2,7 +2,6 @@
 #include "glm\ext.hpp"
 
 //mandala
-#include "opengl.hpp"
 #include "bsp.hpp"
 #include "camera.hpp"
 #include "app.hpp"
@@ -619,14 +618,12 @@ namespace mandala
 
         auto camera_leaf_index = get_leaf_index_from_position(camera.position);
 
-        //cull face
-        auto is_cull_face_enabled = glIsEnabled(GL_CULL_FACE);
-		glEnable(GL_CULL_FACE);
+        //culling
+        auto culling_state = gpu.culling.top();
+        culling_state.is_enabled = true;
+        culling_state.mode = gpu_t::culling_mode_e::front;
 
-		//cull face mode
-		GLint cull_face_mode;
-		glGetIntegerv(GL_CULL_FACE_MODE, &cull_face_mode);
-		glCullFace(GL_FRONT);
+        gpu.culling.push(culling_state);
 
 		//blend
 		auto blend_state = gpu.blend.top();
@@ -715,10 +712,9 @@ namespace mandala
                 return;
             }
 
-            float32_t distance;
-
             const auto& node = nodes[node_index];
-            const auto& plane = planes[node.plane_index];
+			const auto& plane = planes[node.plane_index];
+			float32_t distance = 0;
 
             switch (plane.type)
             {
@@ -737,13 +733,13 @@ namespace mandala
 
             if (distance > 0)
             {
-                render_node(node.child_indices[1], camera_leaf_index);
-                render_node(node.child_indices[0], camera_leaf_index);
+				render_node(node.child_indices[1], camera_leaf_index);
+				render_node(node.child_indices[0], camera_leaf_index);
             }
             else
             {
-                render_node(node.child_indices[0], camera_leaf_index);
-                render_node(node.child_indices[1], camera_leaf_index);
+				render_node(node.child_indices[0], camera_leaf_index);
+				render_node(node.child_indices[1], camera_leaf_index);
             }
         };
 
@@ -883,18 +879,7 @@ namespace mandala
         gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
         gpu.buffers.pop(gpu_t::buffer_target_e::array);
 
-        //cull face
-        if (is_cull_face_enabled)
-        {
-			glEnable(GL_CULL_FACE); glCheckError();
-        }
-        else
-        {
-			glDisable(GL_CULL_FACE); glCheckError();
-        }
-
-        //cull face mode
-        glCullFace(cull_face_mode);
+        gpu.culling.pop();
 
 		gpu.blend.pop();
     }

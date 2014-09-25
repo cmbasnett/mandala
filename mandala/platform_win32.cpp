@@ -8,6 +8,13 @@
 #include "platform_win32.hpp"
 #include "gpu.hpp"
 
+//glfw
+#ifndef GLFW_DLL
+#define GLFW_DLL
+#endif
+
+#include "GLFW\glfw3.h"
+
 namespace mandala
 {
     static inline void on_keyboard_key(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -142,7 +149,7 @@ namespace mandala
 		//glfw
 		glfwInit();
 
-		//glfwWindowHint(GLFW_SAMPLES, 16);
+		glfwWindowHint(GLFW_SAMPLES, 16);
 
 		window_ptr = glfwCreateWindow(1, 1, "mandala", nullptr, nullptr);
 

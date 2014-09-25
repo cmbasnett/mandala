@@ -1,5 +1,4 @@
 {
-	"gpu_program":"model.gpu",
 	"diffuse":
 	{
 		"texture":"dark_fighter_6_color.png",

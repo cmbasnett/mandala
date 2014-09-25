@@ -7,96 +7,90 @@
 #include "types.hpp"
 #include "plane.hpp"
 
+#include <boost\range\any_range.hpp>
+
 namespace mandala
 {
 	namespace details
 	{
-		template<typename T, typename Enable = void>
+		template<typename Scalar, typename Enable = void>
 		struct aabb2_t;
 
-		template<typename T>
-		struct aabb2_t<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
+		template<typename Scalar>
+		struct aabb2_t<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
 		{
-			typedef aabb2_t<T> type;
-			typedef glm::detail::tvec2<T> value_type;
+			typedef Scalar scalar_type;
+			typedef aabb2_t<scalar_type> type;
+			typedef glm::detail::tvec2<scalar_type> vector_type;
 
 			static const size_t corner_count = 4;
 
-			value_type min;
-			value_type max;
+			vector_type min;
+			vector_type max;
 
 			aabb2_t()
 			{
 			}
 
-            aabb2_t(const value_type& min, const value_type& max) :
+			aabb2_t(const vector_type& min, const vector_type& max) :
 				min(min),
 				max(max)
 			{
 			}
 
-			inline T width() const
+			inline scalar_type width() const
 			{
 				return max.x - min.x;
 			}
 
-			inline T height() const
+			inline scalar_type height() const
 			{
 				return max.y - min.y;
 			}
 
-            inline value_type size() const
+			inline vector_type size() const
 			{
 				return max - min;
 			}
 
-            inline value_type center() const
+			inline vector_type center() const
 			{
-				return min + (size() / static_cast<T>(2));
+				return min + (size() / static_cast<scalar_type>(2));
 			}
 
-            std::array<value_type, corner_count> get_corners() const
+			std::array<vector_type, corner_count> get_corners() const
 			{
 				return { min,
-						 value_type_t(min.x, max.y),
-						 value_type_t(max.x, min.y),
+						 vector_type(min.x, max.y),
+						 vector_type(max.x, min.y),
 						 max };
 			}
 
-			type operator-(const value_type& t) const
+			type operator-(const vector_type& rhs) const
 			{
-                type sum;
-				sum.min = min - t;
-				sum.max = max - t;
-				return sum;
+				return type(min - t, max - t);
 			}
 
-            type& operator-=(const value_type& t)
+			type& operator-=(const vector_type& rhs)
 			{
-				*this = *this - t;
+				*this = *this - rhs;
 				return *this;
 			}
 
-            type operator+(const value_type& t) const
+			type operator+(const vector_type& rhs) const
 			{
-                type sum;
-				sum.min = min + t;
-				sum.max = max + t;
-				return sum;
+				return type(min + rhs, max + rhs);
 			}
 
-            type& operator+=(const value_type& t)
+			type& operator+=(const vector_type& rhs)
 			{
-				*this = *this + t;
+				*this = *this + rhs;
 				return *this;
 			}
 
             static type join(const type& lhs, const type& rhs)
 			{
-                type result;
-				result.min = glm::min(lhs.min, rhs.min);
-				result.max = glm::max(lhs.max, rhs.max);
-				return result;
+				return type(glm::min(lhs.min, rhs.min), glm::max(lhs.max, rhs.max));
 			}
 
             type& join(const type& rhs)
@@ -105,61 +99,68 @@ namespace mandala
 				return *this;
 			}
 
-			template<typename U>
-			bool operator==(const aabb2_t<U>& rhs) const
+			template<typename Scalar>
+			bool operator==(const aabb2_t<Scalar>& rhs) const
 			{
 				return min == rhs.min && max == rhs.max;
 			}
 
-			template<typename U>
-			bool operator!=(const aabb2_t<U>& rhs) const
+			template<typename Scalar>
+			bool operator!=(const aabb2_t<Scalar>& rhs) const
 			{
 				return min != rhs.min || max != rhs.max;
 			}
 
-			template<typename U>
-			type& operator=(const aabb2_t<U>& rhs) const
+			template<typename Scalar>
+			type& operator=(const aabb2_t<Scalar>& rhs) const
 			{
-				min = static_cast<value_type>(rhs.min);
-				max = static_cast<value_type>(rhs.max);
+				min = static_cast<vector_type>(rhs.min);
+				max = static_cast<vector_type>(rhs.max);
 				return *this;
+			}
+
+			template<typename T>
+			operator aabb2_t<T>()
+			{
+				return aabb2_t<T>(static_cast<aabb2_t<T>::vector_type>(min), static_cast<aabb2_t<T>::vector_type>(max));
 			}
 		};
 
 		template<typename T, typename Enable = void>
 		struct aabb3_t;
 
-		template<typename T>
-		struct aabb3_t<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
+		template<typename Scalar>
+		struct aabb3_t<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
 		{
-			typedef aabb3_t<T> type;
-			typedef glm::detail::tvec3<T> value_type;
+			typedef Scalar scalar_type;
+			typedef aabb3_t<scalar_type> type;
+			typedef glm::detail::tvec3<scalar_type> vector_type;
 			typedef plane3_t<float32_t> plane_type;
 
 			static const size_t corner_count = 8;
 			static const size_t plane_count = 6;
 
-			value_type min;
-			value_type max;
+			vector_type min;
+			vector_type max;
 
 			aabb3_t()
 			{
 			}
 
-            aabb3_t(const value_type& min, const value_type& max) :
+			aabb3_t(const vector_type& min, const vector_type& max) :
 				min(min),
 				max(max)
 			{
 			}
 
-            value_type size() const
+			vector_type size() const
 			{
 				return max - min;
 			}
 
-            value_type center() const
+			vector_type center() const
 			{
-				return min + ((max - min) / T(2));
+				return min + ((max - min) / scalar_type(2));
 			}
 
 			std::array<plane_type, plane_count> get_planes() const
@@ -172,41 +173,35 @@ namespace mandala
 						 { max, VEC3_FORWARD } };
 			}
 
-			std::array<value_type, corner_count> get_corners() const
+			std::array<vector_type, corner_count> get_corners() const
 			{
 				return{ min,
-						value_type(min.x, min.y, max.z),
-						value_type(min.x, max.y, min.z),
-						value_type(min.x, max.y, max.z),
-						value_type(max.x, min.y, min.z),
-						value_type(max.x, min.y, max.z),
-						value_type(max.x, max.y, min.z),
+						vector_type(min.x, min.y, max.z),
+						vector_type(min.x, max.y, min.z),
+						vector_type(min.x, max.y, max.z),
+						vector_type(max.x, min.y, min.z),
+						vector_type(max.x, min.y, max.z),
+						vector_type(max.x, max.y, min.z),
 						max };
 			}
 
-			type operator-(const value_type& t) const
+			type operator-(const vector_type& rhs) const
 			{
-				type sum;
-				sum.min = min - t;
-				sum.max = max - t;
-				return sum;
+				return type(min - t, max - t);
 			}
 
-			type& operator-=(const value_type& t)
+			type& operator-=(const vector_type& rhs)
 			{
 				*this = *this - t;
 				return *this;
 			}
 
-			type operator+(const value_type& t) const
+			type operator+(const vector_type& rhs) const
 			{
-                type sum;
-				sum.min = min + t;
-				sum.max = max + t;
-				return sum;
+				return type(min + t, max + t);
 			}
 
-			type& operator+=(const value_type& t)
+			type& operator+=(const vector_type& rhs)
 			{
 				*this = *this + t;
 				return *this;
@@ -214,11 +209,8 @@ namespace mandala
 
 			static type join(const type& lhs, const type& rhs)
 			{
-				type result;
-				result.min = glm::min(lhs.min, rhs.min);
-				result.max = glm::max(lhs.max, rhs.max);
-				return result;
-			}
+				return type(glm::min(lhs.min, rhs.min), glm::max(lhs.max, rhs.max));
+			};
 
 			type& join(const type& rhs)
 			{
@@ -239,10 +231,25 @@ namespace mandala
 			}
 
 			template<typename U>
-			type& operator=(const aabb3_t<U>& rhs) const
+			type& operator=(const aabb3_t<U>& rhs)
 			{
-				min = static_cast<value_type>(rhs.min);
-				max = static_cast<value_type>(rhs.max);
+				min = static_cast<vector_type>(rhs.min);
+				max = static_cast<vector_type>(rhs.max);
+				return *this;
+			}
+
+			template<typename PointScalar, size_t N>
+			type& operator=(const std::array<glm::detail::tvec3<PointScalar>, N>& points)
+			{
+				min = vector_type(std::numeric_limits<scalar_type>::max());
+				max = vector_type(-std::numeric_limits<scalar_type>::max());
+
+				for (const auto& point : points)
+				{
+					min = glm::min(min, point);
+					max = glm::max(max, point);
+				}
+
 				return *this;
 			}
 		};

@@ -18,7 +18,7 @@ namespace mandala
 
 			skybox_t();
 
-			void render(const camera_t& camera_);
+			void render(const camera_t& camera);
 
 		private:
 			skybox_t(const skybox_t&) = delete;

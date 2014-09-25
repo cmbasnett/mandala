@@ -14,87 +14,6 @@
 
 namespace mandala
 {
-	void gui_node_t::set_dock_mode(gui_dock_mode_e dock_mode)
-	{
-		if (_dock_mode != dock_mode)
-		{
-			_dock_mode = dock_mode;
-			_is_dirty = true;
-		}
-	}
-
-	void gui_node_t::set_anchor_flags(gui_anchor_flags_type anchor_flags)
-	{
-		if (_anchor_flags != anchor_flags)
-		{
-			_anchor_flags = anchor_flags;
-			_is_dirty = true;
-		}
-	}
-
-	void gui_node_t::set_anchor_offset(const vec2_t& anchor_offset)
-	{
-		if (_anchor_offset != anchor_offset)
-		{
-			_anchor_offset = anchor_offset;
-			_is_dirty = true;
-		}
-	}
-
-	void gui_node_t::set_padding(const padding_t& padding)
-	{
-		if (_padding != padding)
-		{
-			_padding = padding;
-			_is_dirty = true;
-		}
-	}
-
-	void gui_node_t::set_margin(const padding_t& margin)
-	{
-		if (_margin != margin)
-		{
-			_margin = margin;
-			_is_dirty = true;
-		}
-	}
-
-	void gui_node_t::set_size(const size_type& size)
-	{
-		if (_size != size)
-		{
-			_size = size;
-			_is_dirty = true;
-		}
-	}
-
-	void gui_node_t::set_color(const vec4_t& color)
-	{
-		if (_color != color)
-		{
-			_color = color;
-			_is_dirty = true;
-		}
-	}
-
-	void gui_node_t::set_bounds(const bounds_type& bounds)
-	{
-		if (_bounds != bounds)
-		{
-			_bounds = bounds;
-			_is_dirty = true;
-		}
-	}
-
-	void gui_node_t::set_is_hidden(bool is_hidden)
-	{
-		if (_is_hidden != is_hidden)
-		{
-			_is_hidden = is_hidden;
-			_is_dirty = true;
-		}
-	}
-
     void gui_node_t::orphan()
 	{
 		if (_parent.get() == nullptr)
@@ -102,14 +21,14 @@ namespace mandala
 			return;
 		}
 
-		auto parent_children_itr = std::find(_parent->children.begin(), _parent->children.end(), _parent);
+		auto parent_children_itr = std::find(_parent->_children.begin(), _parent->_children.end(), _parent);
 
-		if (parent_children_itr == _parent->children.end())
+		if (parent_children_itr == _parent->_children.end())
 		{
 			throw std::exception();
 		}
 			
-		_parent->children.erase(parent_children_itr);
+		_parent->_children.erase(parent_children_itr);
 
 		_parent->_is_dirty = true;
 
@@ -125,15 +44,15 @@ namespace mandala
             throw std::exception();
         }
 
-		auto children_itr = std::find(children.begin(), children.end(), node);
+		auto children_itr = std::find(_children.begin(), _children.end(), node);
 
-		if (children_itr != children.end())
+		if (children_itr != _children.end())
 		{
-			//node already exists in children
+			//node already exists in _children
 			throw std::exception();
 		}
 
-		children.push_back(node);
+		_children.push_back(node);
 
 		_is_dirty = true;
 	}
@@ -146,7 +65,7 @@ namespace mandala
 
 			children_bounds -= _padding;
 
-            for (auto child : children)
+            for (auto child : _children)
             {
                 switch (child->_dock_mode)
                 {
@@ -258,7 +177,26 @@ namespace mandala
 
     void gui_node_t::on_input_event(input_event_t& input_event)
 	{
-		input_event.is_consumed = true;
+		//input_event.is_consumed = true;
+	}
+
+	bool gui_node_t::is_dirty() const
+	{
+		//TODO: this is naive and stupid, change eventually
+		if (_is_dirty)
+		{
+			return true;
+		}
+
+		for (auto& child : _children)
+		{
+			if (child->is_dirty())
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
     bool gui_node_t::trace(std::shared_ptr<gui_node_t> node, gui_node_t::trace_args_t args, gui_node_t::trace_result_t& result)
@@ -270,13 +208,13 @@ namespace mandala
 
 		result.nodes_hit.push_back(node);
 
-        std::vector<std::shared_ptr<gui_node_t>> children_hit;
+        std::vector<std::shared_ptr<gui_node_t>> _children_hit;
 
-		for (auto& child : node->children)
+		for (auto& child : node->_children)
 		{
 			if (trace(child, args, result))
 			{
-				children_hit.push_back(child);
+				_children_hit.push_back(child);
 
 				result.nodes_hit.push_back(child);
 			}
@@ -292,7 +230,7 @@ namespace mandala
 			return;
 		}
 
-        for (auto& child : children)
+        for (auto& child : _children)
         {
             child->render(world_matrix, view_projection_matrix);
         }

@@ -41,5 +41,6 @@ namespace mandala
 
     private:
         std::map<std::string, std::string> properties;
+		std::string classname;
     };
 }

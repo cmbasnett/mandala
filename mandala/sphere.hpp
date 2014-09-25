@@ -48,4 +48,5 @@ namespace mandala
     typedef details::sphere_t<int64_t> sphere_i64_t;
     typedef details::sphere_t<float32_t> sphere_f32_t;
     typedef details::sphere_t<float64_t> sphere_f64_t;
+	typedef sphere_f32_t sphere_t;
 }

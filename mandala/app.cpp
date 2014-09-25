@@ -12,6 +12,7 @@
 #include "bitmap_font_gpu_program.hpp"
 #include "bsp_gpu_program.hpp"
 #include "blur_horizontal_gpu_program.hpp"
+#include "basic_gpu_program.hpp"
 
 namespace mandala
 {
@@ -35,6 +36,7 @@ namespace mandala
 		bitmap_font_gpu_program = std::make_shared<bitmap_font_gpu_program_t>();
 		bsp_gpu_program = std::make_shared<bsp_gpu_program_t>();
 		blur_horizontal_gpu_program = std::make_shared<blur_horizontal_gpu_program_t>();
+		basic_gpu_program = std::make_shared<basic_gpu_program_t>();
 
 		game->app_run_start();
 
@@ -119,7 +121,7 @@ namespace mandala
 	}
 
     void app_t::on_input_event(input_event_t& input_event)
-    {
+	{
 		states.on_input_event(input_event);
     }
 

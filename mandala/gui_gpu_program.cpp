@@ -34,16 +34,15 @@ void main()
 #version 150
 
 uniform sampler2D diffuse_texture;
+uniform vec4 color;
 
 in vec2 out_texcoord;
 
 out vec4 fragment;
 
-void main() 
+void main()
 {
-	vec4 co = texture2D(diffuse_texture, out_texcoord);
-
-	fragment = co + fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453) * 0.1;
+	fragment = texture2D(diffuse_texture, out_texcoord) * color;
 }
 )";
 
@@ -56,6 +55,7 @@ void main()
 		world_matrix_location = glGetUniformLocation(id, "world_matrix"); glCheckError();
 		view_projection_matrix_location = glGetUniformLocation(id, "view_projection_matrix"); glCheckError();
 		diffuse_texture_index_location = glGetUniformLocation(id, "diffuse_texture"); glCheckError();
+		color_location = glGetUniformLocation(id, "color"); glCheckError();
 	}
 
 	void gui_gpu_program_t::on_bind()
@@ -91,5 +91,10 @@ void main()
 	void gui_gpu_program_t::diffuse_texture_index(uint32_t diffuse_texture_index) const
 	{
 		glUniform1i(diffuse_texture_index_location, diffuse_texture_index); glCheckError();
+	}
+
+	void gui_gpu_program_t::color(const vec4_t& color) const
+	{
+		glUniform4fv(color_location, 1, glm::value_ptr(color)); glCheckError();
 	}
 }

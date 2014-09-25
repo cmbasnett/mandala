@@ -14,8 +14,8 @@ namespace mandala
 		struct rectangle_t<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
 		{
 			typedef T scalar_type;
-			typedef glm::detail::tvec2<T> vector_type;
-			typedef rectangle_t<T> type;
+			typedef glm::detail::tvec2<scalar_type> vector_type;
+			typedef rectangle_t<scalar_type> type;
 
 			scalar_type x = scalar_type(0);
 			scalar_type y = scalar_type(0);

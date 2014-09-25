@@ -14,7 +14,7 @@ namespace mandala
 
         id_type id = 0;
 
-        ~gpu_buffer_t();
+        virtual ~gpu_buffer_t();
 
     protected:
         gpu_buffer_t();

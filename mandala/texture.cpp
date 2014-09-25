@@ -13,15 +13,16 @@ namespace mandala
         width(width),
         height(height)
     {
+        //TODO: move all these GL calls into the gpu_mgr_t class
         glGenTextures(1, &id); glCheckError();
         glBindTexture(GL_TEXTURE_2D, id); glCheckError();
 
-        get_formats(color_type, internal_format, format);
+        get_formats(color_type, internal_format, format, type);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, format, GL_UNSIGNED_BYTE, NULL); glCheckError();
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glBindTexture(GL_TEXTURE_2D, 0);
+        glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, format, type, NULL); glCheckError();
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); glCheckError();
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); glCheckError();
+        glBindTexture(GL_TEXTURE_2D, 0); glCheckError();
     }
 
     texture_t::texture_t(std::shared_ptr<image_t> image)
@@ -30,7 +31,7 @@ namespace mandala
         height = image->height;
         width = image->width;
 
-        get_formats(image->color_type, internal_format, format);
+        get_formats(image->color_type, internal_format, format, type);
 
         glGenTextures(1, &id); glCheckError();
         glBindTexture(GL_TEXTURE_2D, id); glCheckError();
@@ -41,7 +42,7 @@ namespace mandala
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); glCheckError();
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); glCheckError();
-        glTexImage2D(GL_TEXTURE_2D, 0, internal_format, image->width, image->height, 0, format, GL_UNSIGNED_BYTE, image->data.data()); glCheckError();
+        glTexImage2D(GL_TEXTURE_2D, 0, internal_format, image->width, image->height, 0, format, type, image->data.data()); glCheckError();
         glPixelStorei(GL_UNPACK_ALIGNMENT, unpack_alignment); glCheckError();
         glBindTexture(GL_TEXTURE_2D, 0); glCheckError();
     }
@@ -56,25 +57,34 @@ namespace mandala
         glDeleteTextures(1, &id);
     }
 
-    void texture_t::get_formats(color_type_e color_type, int32_t& internal_format, int32_t& format)
+    void texture_t::get_formats(color_type_e color_type, int32_t& internal_format, int32_t& format, int32_t& type)
     {
         switch (color_type)
         {
         case color_type_e::g:
             format = GL_LUMINANCE;
             internal_format = 1;
+            type = GL_UNSIGNED_BYTE;
             break;
         case color_type_e::rgb:
             format = GL_RGB;
             internal_format = GL_RGB;
+            type = GL_UNSIGNED_BYTE;
             break;
         case color_type_e::rgba:
             format = GL_RGBA;
             internal_format = GL_RGBA;
+            type = GL_UNSIGNED_BYTE;
             break;
         case color_type_e::ga:
             format = GL_LUMINANCE_ALPHA;
             internal_format = 2;
+            type = GL_UNSIGNED_BYTE;
+            break;
+        case color_type_e::depth24_stencil8:
+            format = GL_DEPTH_STENCIL;
+            internal_format = GL_DEPTH24_STENCIL8;
+            type = GL_UNSIGNED_INT_24_8;
             break;
         default:
             throw std::exception();

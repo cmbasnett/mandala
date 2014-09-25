@@ -42,7 +42,6 @@ namespace mandala
 
 		void tick(float32_t dt);
 
-        void set_context(const std::shared_ptr<audio_context_t>& context);
         std::shared_ptr<audio_source_t> create_source();
 
         listener_t listener;
@@ -51,6 +50,6 @@ namespace mandala
         std::vector<std::shared_ptr<audio_device_t>> devices;
 
 	private:
-		std::shared_ptr<audio_context_t> context;
+		std::shared_ptr<audio_context_t> _context;
 	};
 }

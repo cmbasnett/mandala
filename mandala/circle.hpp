@@ -7,18 +7,18 @@ namespace mandala
 {
 	namespace details
 	{
-		template<typename T, typename Enable = void>
+		template<typename Scalar, typename Enable = void>
 		struct circle_t;
 
-		template<typename T>
-		struct circle_t<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
+		template<typename Scalar>
+		struct circle_t<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
 		{
-			typedef circle_t<T> type;
-			typedef glm::detail::tvec2<T> origin_type;
-			typedef T radius_type;
+			typedef Scalar scalar_type;
+			typedef glm::detail::tvec2<Scalar> origin_type;
+			typedef circle_t<Scalar> type;
 
             origin_type origin;
-            radius_type radius = 0;
+			scalar_type radius = 0;
 
             float32_t area() const
 			{
@@ -30,7 +30,7 @@ namespace mandala
                 return glm::pi<float32_t>() * radius * 2;
 			}
 
-			radius_type diameter() const
+			scalar_type diameter() const
 			{
 				return radius * 2;
 			}

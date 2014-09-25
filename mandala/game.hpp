@@ -2,7 +2,6 @@
 
 //std
 #include <string>
-#include <memory>
 
 namespace mandala
 {

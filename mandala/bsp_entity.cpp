@@ -24,7 +24,15 @@ namespace mandala
 
             auto value = string.substr(begin + 1, end - begin - 1);
 
-            properties.insert(std::make_pair(key, value));
+
+			if (key == "classname")
+			{
+				classname = value;
+			}
+			else
+			{
+				properties.insert(std::make_pair(key, value));
+			}
         }
     }
 }

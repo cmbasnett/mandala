@@ -82,9 +82,9 @@ namespace mandala
 		template<typename T>
 		void put(std::shared_ptr<T> resource, const hash_t& hash)
 		{
-			auto lock_guard = std::unique_lock<std::recursive_mutex>(mutex);
-
 			static const std::type_index type_index = typeid(T);
+
+			auto lock_guard = std::unique_lock<std::recursive_mutex>(mutex);
 
 			auto type_resources_itr = type_resources.find(type_index);
 

@@ -16,7 +16,7 @@ namespace mandala
 	{
 		struct file_t
 		{
-			hash_t pack_hash;	//TODO: pack_hash relies on logic in the pack_mgr, maybe move this struct elsewhere or separate functionality
+			hash_t pack_hash;
 			std::string name;
 			uint32_t offset = 0;
 			uint32_t length = 0;

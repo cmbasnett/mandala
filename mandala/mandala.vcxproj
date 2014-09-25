@@ -250,6 +250,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="collision.hpp" />
     <ClInclude Include="color_types.hpp" />
     <ClInclude Include="frame_buffer.hpp" />
+    <ClInclude Include="basic_gpu_program.hpp" />
     <ClInclude Include="glm.hpp" />
     <ClInclude Include="gpu_buffer.hpp" />
     <ClInclude Include="gpu.hpp" />
@@ -265,6 +266,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="http_request.hpp" />
     <ClInclude Include="index_buffer.hpp" />
     <ClInclude Include="index_type.hpp" />
+    <ClInclude Include="interpolation.hpp" />
     <ClInclude Include="model_gpu_program.hpp" />
     <ClInclude Include="openal.hpp" />
     <ClInclude Include="padding.hpp" />
@@ -327,6 +329,7 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="audio_device.cpp" />
     <ClCompile Include="audio_mgr.cpp" />
     <ClCompile Include="audio_source.cpp" />
+    <ClCompile Include="basic_gpu_program.cpp" />
     <ClCompile Include="bitmap_font_gpu_program.cpp" />
     <ClCompile Include="blur_horizontal_gpu_program.cpp" />
     <ClCompile Include="bsp_entity.cpp" />

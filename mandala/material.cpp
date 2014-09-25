@@ -24,7 +24,10 @@ namespace mandala
 		read_json(istream, ptree_);
 
 		//is two sided
-		is_two_sided = ptree_.get<bool>("is_two_sided", false);
+        is_two_sided = ptree_.get<bool>("is_two_sided", is_two_sided);
+
+        //is lit
+        is_lit = ptree_.get<bool>("is_lit", is_lit);
 
 		//diffuse
 		const auto diffuse_optional = ptree_.get_child_optional("diffuse");

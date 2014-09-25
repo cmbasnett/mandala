@@ -41,8 +41,6 @@ namespace mandala
 
 			layout->adopt(raw_label);
 			layout->adopt(color_label);
-
-			layout->clean();
         }
 
         pause_state_t::~pause_state_t()
@@ -54,7 +52,14 @@ namespace mandala
 		}
 
 		void pause_state_t::on_input_event(input_event_t& input_event)
-        {
+		{
+			gui_state_t::on_input_event(input_event);
+
+			if (input_event.is_consumed)
+			{
+				return;
+			}
+
 			bool did_string_change = false;
 			auto string = raw_label->string();
 
@@ -131,44 +136,13 @@ namespace mandala
 					break;
 				}
 
-				if (input_event.device_type == input_event_t::device_type_e::touch &&
-					input_event.touch.type == input_event_t::touch_t::type_e::button_press)
-				{
-					gui_node_t::trace_args_t trace_args;
-					trace_args.circle.origin = input_event.touch.position;
-					trace_args.circle.radius = 8.0f;
-
-					gui_node_t::trace_result_t trace_result;
-
-					auto did_hit = gui_node_t::trace(layout, trace_args, trace_result);
-
-					std::cout << trace_result.nodes_hit.size() << std::endl;
-
-					for (auto& node : trace_result.nodes_hit)
-					{
-						node->on_input_event(input_event);
-
-						if (input_event.is_consumed)
-						{
-							break;
-						}
-					}
-
-					if (input_event.is_consumed)
-					{
-						break;
-					}
-				}
-
 				break;
 			}
 
 			if (did_string_change)
 			{
+				raw_label->set_string(string);
 				color_label->set_string(string);
-
-				raw_label->clean();
-				color_label->clean();
 			}
         }
 	};

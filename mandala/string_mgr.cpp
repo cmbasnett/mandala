@@ -11,38 +11,38 @@
 namespace mandala
 {
     void string_mgr_t::mount(const std::string& file)
-	{
-		auto strings_lock = std::unique_lock<std::mutex>(mutex);
-		auto resources_lock = std::unique_lock<std::recursive_mutex>(app.resources.mutex);
-		auto stream = app.resources.extract(hash_t(file));
+    {
+        auto strings_lock = std::unique_lock<std::mutex>(mutex);
+        auto resources_lock = std::unique_lock<std::recursive_mutex>(app.resources.mutex);
+        auto stream = app.resources.extract(hash_t(file));
         auto archive = string_archive_t(*stream);
 
         streams.push_back(stream);
 
-		for (auto& archive_string : archive.strings)
+        for (auto& archive_string : archive.strings)
         {
-             string_t string;
-			 string.hash = std::move(archive_string.hash);
-             string.stream_index = streams.size() - 1;
-			 string.offset = archive_string.offset;
-			 string.length = archive_string.length;
+            string_t string;
+            string.hash = std::move(archive_string.hash);
+            string.stream_index = streams.size() - 1;
+            string.offset = archive_string.offset;
+            string.length = archive_string.length;
 
-             strings.insert(std::make_pair(string.hash, string));
+            strings.insert(std::make_pair(string.hash, string));
         }
     }
 
     void string_mgr_t::purge()
-	{
-		auto strings_lock = std::unique_lock<std::mutex>(mutex);
+    {
+        auto strings_lock = std::unique_lock<std::mutex>(mutex);
 
         streams.clear();
         strings.clear();
     }
 
     string_mgr_t::string_type string_mgr_t::get(const hash_t& hash)
-	{
-		auto strings_lock = std::unique_lock<std::mutex>(mutex);
-		auto resources_lock = std::unique_lock<std::recursive_mutex>(app.resources.mutex);
+    {
+        auto strings_lock = std::unique_lock<std::mutex>(mutex);
+        auto resources_lock = std::unique_lock<std::recursive_mutex>(app.resources.mutex);
         auto strings_itr = strings.find(hash);
 
         if (strings_itr == strings.end())

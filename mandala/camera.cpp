@@ -5,6 +5,7 @@
 #include "camera.hpp"
 #include "platform.hpp"
 #include "gpu.hpp"
+#include "collision.hpp"
 
 namespace mandala
 {
@@ -14,13 +15,13 @@ namespace mandala
 
 	void camera_t::tick(float32_t dt)
 	{
-		const auto viewport = gpu.viewports.top();
+        auto& viewport = gpu.viewports.top();
 		
 		const auto window_size = static_cast<vec2_t>(platform.get_window_size());
 		aspect = window_size.x / window_size.y;
 
 		const auto forward = glm::normalize(target - position);
-		auto left = glm::normalize(glm::cross(vec3_t(0, 1, 0), forward));
+		const auto left = glm::normalize(glm::cross(vec3_t(0, 1, 0), forward));
         auto up = glm::normalize(glm::cross(forward, left));
 
 		switch (projection_type)
@@ -42,7 +43,7 @@ namespace mandala
 
 		view_matrix = glm::lookAt(position, target, up);
 
-        frustum = view_matrix * projection_matrix;
+		frustum.set(position, left, up, forward, fov, near, far, aspect);
 	}
 
 	line3_t camera_t::get_ray(vec2_f64_t screen_location) const

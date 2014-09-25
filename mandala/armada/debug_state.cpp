@@ -27,8 +27,6 @@ namespace mandala
 		label->set_padding(padding_t(16));
 
 		layout->adopt(label);
-
-		layout->clean();
 	}
 
 	void debug_state_t::tick(float32_t dt)
@@ -75,6 +73,6 @@ namespace mandala
 
 		label->set_string(oss.str());
 
-		layout->clean();
+		gui_state_t::tick(dt);
 	}
 }

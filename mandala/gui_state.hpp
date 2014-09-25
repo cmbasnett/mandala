@@ -15,6 +15,7 @@ namespace mandala
 
 		virtual void tick(float32_t dt) override;
 		virtual void render() override;
+		virtual void on_input_event(input_event_t& input_event) override;
 
 		std::shared_ptr<gui_layout_t> layout;
 	};

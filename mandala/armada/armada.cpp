@@ -36,8 +36,8 @@ namespace mandala
 
 			app.resources.mount("resources\\armada.pack");
 
-			app.states.push(std::make_shared<bsp_state_t>(), state_flag_all);
-			app.states.push(std::make_shared<debug_state_t>(), state_flag_all);
+			app.states.push(std::make_shared<world_state_t>(), state_flag_all);
+			//app.states.push(std::make_shared<debug_state_t>(), state_flag_all);
 		}
 
 		void armada_t::app_run_end()

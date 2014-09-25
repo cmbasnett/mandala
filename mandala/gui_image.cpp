@@ -58,6 +58,7 @@ namespace mandala
 		gpu_program->diffuse_texture_index(diffuse_texture_index);
 		gpu_program->world_matrix(world_matrix);
 		gpu_program->view_projection_matrix(view_projection_matrix);
+		gpu_program->color(color());
 		//gpu_program->blur_size(1.0f / 256.0f);
 
         gpu.textures.bind(diffuse_texture_index, _sprite.sprite_set->texture);
@@ -78,12 +79,18 @@ namespace mandala
 
     void gui_image_t::clean()
     {
-        const auto sprite_size = static_cast<vec2_t>(_sprite.region.rectangle.size());
+        auto sprite_size = static_cast<vec2_t>(_sprite.region.rectangle.size());
 
 		if (_is_autosized_to_texture)
 		{
 			set_size(static_cast<vec2_t>(_sprite.region.source_size));
         }
+		else
+		{
+			set_size(bounds().size());
+
+			sprite_size = bounds().size();
+		}
 
 		if (_sprite.region.is_rotated)
         {
@@ -100,9 +107,9 @@ namespace mandala
         {
             vertex_buffer_type::vertex_type vertices[vertex_count] = {
 				vertex_type(vec3_t(vec2_t(-0.5f, -0.5f) * sprite_size, 0.0f), vec2_t(_sprite.region.uv.min.x, _sprite.region.uv.min.y)),
-				vertex_type(vec3_t(vec2_t(0.5f, -0.5f) * sprite_size, 0.0f), vec2_t(_sprite.region.uv.max.x, _sprite.region.uv.min.y)),
-				vertex_type(vec3_t(vec2_t(0.5f, 0.5f) * sprite_size, 0.0f), vec2_t(_sprite.region.uv.max.x, _sprite.region.uv.max.y)),
-				vertex_type(vec3_t(vec2_t(-0.5f, 0.5f) * sprite_size, 0.0f), vec2_t(_sprite.region.uv.min.x, _sprite.region.uv.max.y))
+				vertex_type(vec3_t(vec2_t( 0.5f, -0.5f) * sprite_size, 0.0f), vec2_t(_sprite.region.uv.max.x, _sprite.region.uv.min.y)),
+				vertex_type(vec3_t(vec2_t( 0.5f,  0.5f) * sprite_size, 0.0f), vec2_t(_sprite.region.uv.max.x, _sprite.region.uv.max.y)),
+				vertex_type(vec3_t(vec2_t(-0.5f,  0.5f) * sprite_size, 0.0f), vec2_t(_sprite.region.uv.min.x, _sprite.region.uv.max.y))
             };
 
 			_vertex_buffer->data(vertices, vertex_count, gpu_t::buffer_usage_e::dynamic_draw);

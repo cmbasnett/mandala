@@ -16,7 +16,7 @@ namespace mandala
 			world_hud_state_t();
 			virtual ~world_hud_state_t();
 
-			virtual void on_input_event(const input_event_t& input_event, bool& is_consumed);
+			virtual void on_input_event(input_event_t& input_event) override;
 
 			std::shared_ptr<gui_image_t> crosshair_image;
 			std::vector<sprite_t> crosshair_sprites;

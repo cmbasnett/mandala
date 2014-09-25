@@ -5,6 +5,8 @@
 #include "../quake_camera.hpp"
 #include "../gui_state.hpp"
 #include "../bsp.hpp"
+#include "../vertex_buffer.hpp"
+#include "../gpu_vertices.hpp"
 
 //armada
 #include "skybox.hpp"
@@ -41,6 +43,10 @@ namespace mandala
 			std::shared_ptr<console_state_t> console_state;
 			std::shared_ptr<frame_buffer_t> frame_buffer;
 			bsp_t::render_stats_t render_stats;
+			frustum_t camera_frustum;
+			bool should_update_camera_frustum = true;
+			std::shared_ptr<vertex_buffer_t<basic_gpu_vertex_t>> frustum_vertex_buffer;
+			std::shared_ptr<index_buffer_t<uint8_t>> frustum_index_buffer;
 
 			bsp_state_t();
 			virtual ~bsp_state_t();

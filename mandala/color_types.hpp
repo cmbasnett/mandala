@@ -8,6 +8,7 @@ namespace mandala
         ga,
         rgb,
         rgba,
+        depth24_stencil8,
         palette
     };
 }

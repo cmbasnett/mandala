@@ -41,6 +41,7 @@ namespace mandala
 		material_t(std::istream& ifstream);
 
 		bool is_two_sided = true;
+        bool is_lit = true;
 		diffuse_t diffuse;
 		normal_t normal;
 		specular_t specular;

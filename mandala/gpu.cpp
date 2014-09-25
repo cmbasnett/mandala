@@ -509,6 +509,7 @@ namespace mandala
 		glDeleteProgram(id);
 	}
 
+    //blend
 	gpu_t::blend_t::state_t gpu_t::blend_t::top() const
 	{
 		if (!states.empty())
@@ -517,7 +518,14 @@ namespace mandala
 		}
 
 		return state_t();
-	}
+    }
+
+    void gpu_t::blend_t::push(const gpu_t::blend_t::state_t& state)
+    {
+        apply(state);
+
+        states.push(state);
+    }
 
 	void gpu_t::blend_t::pop()
 	{
@@ -544,53 +552,110 @@ namespace mandala
 		glBlendEquation(get_blend_equation(state.equation)); glCheckError();
 	}
 
-	void gpu_t::blend_t::push(const gpu_t::blend_t::state_t& state)
-	{
-		apply(state);
+    //depth
+    gpu_t::depth_t::state_t gpu_t::depth_t::top() const
+    {
+        if (!states.empty())
+        {
+            return states.top();
+        }
 
-		states.push(state);
-	}
-
-	void gpu_t::depth_t::pop()
-	{
-		states.pop();
-
-		if (!states.empty())
-		{
-			apply(states.top());
-		}
-	}
-
-	void gpu_t::depth_t::apply(const state_t& state)
-	{
-		if (state.should_test)
-		{
-			glEnable(GL_DEPTH_TEST); glCheckError();
-		}
-		else
-		{
-			glDisable(GL_DEPTH_TEST); glCheckError();
-		}
-		
-		glDepthMask(state.should_write_mask ? GL_TRUE : GL_FALSE);
-
-		glDepthFunc(get_depth_function(state.function)); glCheckError();
-	}
+        return state_t();
+    }
 
 	void gpu_t::depth_t::push(const state_t& state)
 	{
 		apply(state);
 
 		states.push(state);
-	}
+    }
 
-	gpu_t::depth_t::state_t gpu_t::depth_t::top() const
-	{
-		if (!states.empty())
-		{
-			return states.top();
-		}
+    void gpu_t::depth_t::pop()
+    {
+        states.pop();
 
-		return state_t();
-	}
+        if (!states.empty())
+        {
+            apply(states.top());
+        }
+    }
+
+    void gpu_t::depth_t::apply(const state_t& state)
+    {
+        if (state.should_test)
+        {
+            glEnable(GL_DEPTH_TEST); glCheckError();
+        }
+        else
+        {
+            glDisable(GL_DEPTH_TEST); glCheckError();
+        }
+
+        glDepthMask(state.should_write_mask ? GL_TRUE : GL_FALSE);
+
+        glDepthFunc(get_depth_function(state.function)); glCheckError();
+    }
+
+    //culling
+    gpu_t::culling_t::state_t gpu_t::culling_t::top() const
+    {
+        if (!states.empty())
+        {
+            return states.top();
+        }
+
+        return state_t();
+    }
+
+    void gpu_t::culling_t::push(const state_t& state)
+    {
+        apply(state);
+
+        states.push(state);
+    }
+
+    void gpu_t::culling_t::pop()
+    {
+        states.pop();
+
+        if (!states.empty())
+        {
+            apply(states.top());
+        }
+    }
+
+    void gpu_t::culling_t::apply(const state_t& state)
+    {
+        if (state.is_enabled)
+        {
+            glEnable(GL_CULL_FACE);
+        }
+        else
+        {
+            glDisable(GL_CULL_FACE);
+        }
+
+        switch (state.front_face)
+        {
+        case culling_front_face_e::ccw:
+            glFrontFace(GL_CCW);
+            break;
+        case culling_front_face_e::cw:
+            glFrontFace(GL_CW);
+            break;
+        }
+        
+        switch (state.mode)
+        {
+        case culling_mode_e::back:
+            glCullFace(GL_BACK);
+            break;
+        case culling_mode_e::front:
+            glCullFace(GL_FRONT);
+            break;
+        case culling_mode_e::front_and_back:
+            glCullFace(GL_FRONT_AND_BACK);
+            break;
+        }
+    }
 }

@@ -267,6 +267,13 @@ namespace mandala
 
 		for(auto& mesh : meshes)
 		{
+            //culling
+            auto culling_state = gpu.culling.top();
+
+            culling_state.is_enabled = !mesh->material->is_two_sided;
+
+            gpu.culling.push(culling_state);
+
 			gpu.buffers.push(gpu_t::buffer_target_e::array, mesh->vertex_buffer);
 			gpu.buffers.push(gpu_t::buffer_target_e::element_array, mesh->index_buffer);
 
@@ -278,6 +285,7 @@ namespace mandala
 			model_gpu_program->bone_matrices(bone_matrices);
 			model_gpu_program->light_position(light_position);
 			model_gpu_program->camera_position(camera_position);
+            model_gpu_program->is_lit(mesh->material->is_lit);
 
             mesh->render(world_matrix, view_projection_matrix, bone_matrices);
 
@@ -285,6 +293,8 @@ namespace mandala
 
 			gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
 			gpu.buffers.pop(gpu_t::buffer_target_e::array);
+
+            gpu.culling.pop();
         }
 
 		gpu.depth.pop();

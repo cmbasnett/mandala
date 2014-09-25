@@ -5,6 +5,19 @@
 
 namespace mandala
 {
+	struct basic_gpu_vertex_t
+	{
+		basic_gpu_vertex_t() = default;
+		basic_gpu_vertex_t(const vec3_t& position, vec4_t& color) :
+			position(position),
+			color(color)
+		{
+		}
+
+		vec3_t position;
+		vec4_t color;
+	};
+
 	struct position_texcoord_vertex_t
 	{
 		position_texcoord_vertex_t() = default;

@@ -54,7 +54,7 @@ namespace mandala
             std::vector<std::shared_ptr<gui_node_t>> nodes_hit;
 		};
 
-		std::shared_ptr<gui_node_t> parent() const { return _parent; }
+		const std::shared_ptr<gui_node_t>& parent() const { return _parent; }
 		gui_dock_mode_e dock_mode() const { return _dock_mode; }
 		gui_anchor_flags_type anchor_flags() const { return _anchor_flags; }
 		const vec2_t& anchor_offset() const { return _anchor_offset; }
@@ -63,20 +63,19 @@ namespace mandala
 		const vec2_t& size() const { return _size; }
 		const vec4_t& color() const { return _color; }
 		const bounds_type& bounds() const { return _bounds; }
-		const bool is_dirty() const { return _is_dirty; }
-		const bool is_hidden() const { return _is_hidden; }
+		bool is_dirty() const;
+		bool is_hidden() const { return _is_hidden; }
+		const std::vector<std::shared_ptr<gui_node_t>>& children() const { return _children; }
 
-		void set_dock_mode(gui_dock_mode_e dock_mode);
-		void set_anchor_flags(gui_anchor_flags_type anchor_flags);
-		void set_anchor_offset(const vec2_t& anchor_offset);
-		void set_padding(const padding_t& padding);
-		void set_margin(const padding_t& margin);
-		void set_size(const vec2_t& size);
-		void set_color(const vec4_t& color);
-		void set_bounds(const bounds_type& bounds);
-		void set_is_hidden(bool is_hidden);
-
-        std::vector<std::shared_ptr<gui_node_t>> children;
+		void set_dock_mode(gui_dock_mode_e dock_mode) { _dock_mode = dock_mode; _is_dirty = true; }
+		void set_anchor_flags(gui_anchor_flags_type anchor_flags) { _anchor_flags = anchor_flags; _is_dirty = true; }
+		void set_anchor_offset(const vec2_t& anchor_offset) { _anchor_offset = anchor_offset; _is_dirty = true; }
+		void set_padding(const padding_t& padding) { _padding = padding; _is_dirty = true; }
+		void set_margin(const padding_t& margin) { _margin = margin; _is_dirty = true; }
+		void set_size(const vec2_t& size) { _size = size; _is_dirty = true; }
+		void set_color(const vec4_t& color) { _color = color; _is_dirty = true; }
+		void set_bounds(const bounds_type& bounds) { _bounds = bounds; _is_dirty = true; }
+		void set_is_hidden(bool is_hidden) { _is_hidden = is_hidden; _is_dirty = true; }
 
 		//TODO: move trace logic into "layout" class
         static bool trace(std::shared_ptr<gui_node_t> node, trace_args_t args, trace_result_t& result);
@@ -85,7 +84,7 @@ namespace mandala
 		virtual void clean();
 		virtual void on_input_event(input_event_t& input_event);
 
-        bool has_children() const { return children.size() > 0; }
+        bool has_children() const { return !_children.empty(); }
 		bool has_parent() const { return _parent.get() != nullptr; }
 
 		void orphan();
@@ -93,6 +92,7 @@ namespace mandala
 
 	private:
 		std::shared_ptr<gui_node_t> _parent;
+		std::vector<std::shared_ptr<gui_node_t>> _children;
 		gui_dock_mode_e _dock_mode = gui_dock_mode_e::none;
 		gui_anchor_flags_type _anchor_flags = (gui_anchor_flag_top | gui_anchor_flag_left);
 		vec2_t _anchor_offset;

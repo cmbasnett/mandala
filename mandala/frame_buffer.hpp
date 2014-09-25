@@ -22,7 +22,7 @@ namespace mandala
 
         id_type id;
         std::shared_ptr<texture_t> color_texture;
-        uint32_t depth_stencil_render_buffer;
+        std::shared_ptr<texture_t> depth_stencil_render_buffer;
         size_type size;
 
     private:

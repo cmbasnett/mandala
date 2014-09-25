@@ -14,6 +14,8 @@
 #include "../sound.hpp"
 #include "../audio_source.hpp"
 #include "../frame_buffer.hpp"
+#include "../interpolation.hpp"
+#include "../basic_gpu_program.hpp"
 
 //armada
 #include "bsp_state.hpp"
@@ -58,16 +60,32 @@ namespace mandala
 			auto sprite_set = std::make_shared<sprite_set_t>(frame_buffer->color_texture);
 			app.resources.put<sprite_set_t>(sprite_set, hash_t(""));
 
-			sprite_t sprite;
-			sprite = sprite_ref_t(sprite_set->hash, sprite_set->regions.begin()->second.hash);
-
+			sprite_t sprite(sprite_ref_t(sprite_set->hash, sprite_set->regions.begin()->second.hash));
 			bsp_render_image->set_sprite(sprite);
 
 			layout->adopt(bsp_render_image);
-            layout->adopt(debug_label);
+			layout->adopt(debug_label);
 			layout->adopt(crosshair_image);
 
-			layout->clean();
+			const std::array<uint8_t, 24> indices = {
+				frustum_corner_index_left_top_near, frustum_corner_index_right_top_near,
+				frustum_corner_index_right_top_near, frustum_corner_index_right_bottom_near,
+				frustum_corner_index_right_bottom_near, frustum_corner_index_left_bottom_near,
+				frustum_corner_index_left_bottom_near, frustum_corner_index_left_top_near,
+				frustum_corner_index_left_top_near, frustum_corner_index_left_top_far,
+				frustum_corner_index_right_top_near, frustum_corner_index_right_top_far,
+				frustum_corner_index_right_bottom_near, frustum_corner_index_right_bottom_far,
+				frustum_corner_index_left_bottom_near, frustum_corner_index_left_bottom_far,
+				frustum_corner_index_left_top_far, frustum_corner_index_right_top_far,
+				frustum_corner_index_right_top_far, frustum_corner_index_right_bottom_far,
+				frustum_corner_index_right_bottom_far, frustum_corner_index_left_bottom_far,
+				frustum_corner_index_left_bottom_far, frustum_corner_index_left_top_far,
+				};
+
+			frustum_index_buffer = std::make_shared<index_buffer_t<uint8_t>>();
+			frustum_index_buffer->data(indices, gpu_t::buffer_usage_e::static_draw);
+
+			frustum_vertex_buffer = std::make_shared<vertex_buffer_t<basic_gpu_vertex_t>>();
         }
 
         bsp_state_t::~bsp_state_t()
@@ -89,10 +107,33 @@ namespace mandala
             oss << L"rotation: [pitch=" << camera.pitch << ", yaw=" << camera.yaw << "]" << std::endl;
             oss << L"leaf index: " << bsp->render_stats.leaf_index << std::endl;
             oss << L"leafs rendered: " << bsp->render_stats.leaf_count << std::endl;
-            oss << L"faces rendered: " << bsp->render_stats.face_count << std::endl;
+			oss << L"faces rendered: " << bsp->render_stats.face_count << std::endl;
 			debug_label->set_string(oss.str());
 
-            layout->clean();
+			if (should_update_camera_frustum)
+			{
+				camera_frustum = camera.frustum;
+
+				const auto& corners = camera_frustum.corners();
+
+				std::array<basic_gpu_vertex_t, frustum_corner_count> vertices =
+				{
+					basic_gpu_vertex_t(corners[frustum_corner_index_left_top_near], vec4_t(1)),
+					basic_gpu_vertex_t(corners[frustum_corner_index_left_top_far], vec4_t(1)),
+					basic_gpu_vertex_t(corners[frustum_corner_index_left_bottom_near], vec4_t(1)),
+					basic_gpu_vertex_t(corners[frustum_corner_index_left_bottom_far], vec4_t(1)),
+					basic_gpu_vertex_t(corners[frustum_corner_index_right_top_near], vec4_t(1)),
+					basic_gpu_vertex_t(corners[frustum_corner_index_right_top_far], vec4_t(1)),
+					basic_gpu_vertex_t(corners[frustum_corner_index_right_bottom_near], vec4_t(1)),
+					basic_gpu_vertex_t(corners[frustum_corner_index_right_bottom_far], vec4_t(1)),
+				};
+
+				frustum_vertex_buffer->data(vertices, gpu_t::buffer_usage_e::dynamic_draw);
+			}
+			else
+			{
+				camera.frustum = camera_frustum;
+			}
 
             gui_state_t::tick(dt);
         }
@@ -101,13 +142,36 @@ namespace mandala
         {
 			if (app.states.is_state_ticking(shared_from_this()))
 			{
+				gpu_t::viewport_type viewport;
+				viewport.x = 0;
+				viewport.y = 0;
+				viewport.width = frame_buffer->size.x;
+				viewport.height = frame_buffer->size.y;
+
+				gpu.viewports.push(viewport);
 				gpu.frame_buffers.push(frame_buffer);
 
 				skybox.render(camera);
 
 				bsp->render(camera);
 
+				gpu.buffers.push(gpu_t::buffer_target_e::array, frustum_vertex_buffer);
+				gpu.buffers.push(gpu_t::buffer_target_e::element_array, frustum_index_buffer);
+
+				gpu.programs.push(basic_gpu_program);
+
+				basic_gpu_program->world_matrix(mat4_t());
+				basic_gpu_program->view_projection_matrix(camera.projection_matrix * camera.view_matrix);
+
+				gpu.draw_elements(gpu_t::primitive_type_e::lines, 24, gpu_t::index_type_e::unsigned_byte, 0);
+
+				gpu.programs.pop();
+
+				gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
+				gpu.buffers.pop(gpu_t::buffer_target_e::array);
+
 				gpu.frame_buffers.pop();
+				gpu.viewports.pop();
 			}
 
 			gui_state_t::render();
@@ -115,11 +179,28 @@ namespace mandala
 
         void bsp_state_t::on_input_event(input_event_t& input_event)
 		{
+			gui_state_t::on_input_event(input_event);
+
+			if (input_event.is_consumed)
+			{
+				return;
+			}
+
 			if (input_event.device_type == input_event_t::device_type_e::keyboard &&
 				input_event.keyboard.key == input_event_t::keyboard_t::key_e::f1 &&
 				input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press)
 			{
 				app.states.push(console_state, state_flag_render_tick);
+
+				input_event.is_consumed = true;
+				return;
+			}
+
+			if (input_event.device_type == input_event_t::device_type_e::keyboard &&
+				input_event.keyboard.key == input_event_t::keyboard_t::key_e::f2 &&
+				input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press)
+			{
+				should_update_camera_frustum = !should_update_camera_frustum;
 
 				input_event.is_consumed = true;
 				return;
@@ -151,7 +232,7 @@ namespace mandala
 				{
 					if (input_event.touch.type == input_event_t::touch_t::type_e::button_press)
 					{
-						camera.fov = 10;
+						camera.fov = 90.0f / 2;
 						camera.sensitivity = 0.01f;
 
 						input_event.is_consumed = true;
@@ -159,7 +240,7 @@ namespace mandala
 					}
 					else if (input_event.touch.type == input_event_t::touch_t::type_e::button_release)
 					{
-						camera.fov = 70;
+						camera.fov = 90;
 						camera.sensitivity = 0.1f;
 
 						input_event.is_consumed = true;

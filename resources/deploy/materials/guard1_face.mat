@@ -1,5 +1,4 @@
 {
-	"gpu_program":"model.gpu",
 	"diffuse":
 	{
 		"texture":"guard1_face.png"

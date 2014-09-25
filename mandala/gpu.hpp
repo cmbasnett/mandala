@@ -26,6 +26,7 @@ namespace mandala
 		typedef uint32_t program_id_type;
 		typedef int32_t attribute_location_type;
 		typedef int32_t uniform_location_type;
+        typedef uint32_t subroutine_index_type;
 		typedef rectangle_i32_t viewport_type;
 
         enum class buffer_target_e
@@ -127,6 +128,19 @@ namespace mandala
 			always,
 			default = less
 		};
+
+        enum culling_front_face_e
+        {
+            cw,
+            ccw
+        } front_face;
+
+        enum culling_mode_e
+        {
+            front,
+            back,
+            front_and_back
+        } mode;
 
 		//programs
         struct program_mgr_t
@@ -237,6 +251,25 @@ namespace mandala
 
 			void apply(const state_t& state);
 		} depth;
+
+        struct culling_t
+        {
+            struct state_t
+            {
+                bool is_enabled = false;
+                culling_front_face_e front_face = culling_front_face_e::ccw;
+                culling_mode_e mode = culling_mode_e::back;
+            };
+
+            state_t top() const;
+            void push(const state_t& state);
+            void pop();
+
+        private:
+            std::stack<state_t> states;
+
+            void apply(const state_t& state);
+        } culling;
 
 		void draw_elements(primitive_type_e primitive_type, size_t count, index_type_e index_type, size_t offset) const;
 

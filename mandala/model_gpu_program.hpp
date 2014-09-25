@@ -32,21 +32,22 @@ namespace mandala
 		void on_bind() override;
 		void on_unbind() override;
 
-		void world_matrix(const mat4_t&) const;
-		void normal_matrix(const mat3_t&) const;
-		void view_projection_matrix(const mat4_t&) const;
-		void bone_matrices(const std::vector<mat4_t>&) const;
-		void light_position(const vec3_t&) const;
-		void camera_position(const vec3_t&) const;
-		void diffuse_texture_index(uint32_t) const;
-		void diffuse_color(const vec4_t&) const;
-		void normal_texture_index(uint32_t) const;
-		void specular_texture_index(uint32_t) const;
-		void specular_color(const vec4_t&) const;
-		void specular_intensity(float32_t) const;
-		void emissive_texture_index(uint32_t) const;
-		void emissive_color(const vec4_t&) const;
-		void emissive_intensity(float32_t) const;
+        void world_matrix(const mat4_t&) const;
+        void normal_matrix(const mat3_t&) const;
+        void view_projection_matrix(const mat4_t&) const;
+        void bone_matrices(const std::vector<mat4_t>&) const;
+        void light_position(const vec3_t&) const;
+        void camera_position(const vec3_t&) const;
+        void diffuse_texture_index(uint32_t) const;
+        void diffuse_color(const vec4_t&) const;
+        void normal_texture_index(uint32_t) const;
+        void specular_texture_index(uint32_t) const;
+        void specular_color(const vec4_t&) const;
+        void specular_intensity(float32_t) const;
+        void emissive_texture_index(uint32_t) const;
+        void emissive_color(const vec4_t&) const;
+        void emissive_intensity(float32_t) const;
+        void is_lit(bool) const;
 
 	private:
 		gpu_t::attribute_location_type position_location = -1;
@@ -72,6 +73,9 @@ namespace mandala
 		gpu_t::uniform_location_type emissive_texture_index_location = -1;
 		gpu_t::uniform_location_type emissive_color_location = -1;
 		gpu_t::uniform_location_type emissive_intensity_location = -1;
+        gpu_t::uniform_location_type calculate_lighting_function_location = -1;
+        gpu_t::subroutine_index_type calculate_lighting_lit_subroutine_index = -1;
+        gpu_t::subroutine_index_type calculate_lighting_unlit_subroutine_index = -1;
 	};
 
 	extern std::shared_ptr<model_gpu_program_t> model_gpu_program;

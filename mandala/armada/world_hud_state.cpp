@@ -19,16 +19,21 @@ namespace mandala
 			crosshair_image->set_anchor_flags(gui_anchor_flag_all);
 
             layout->adopt(crosshair_image);
-
-            layout->clean();
 		}
 
 		world_hud_state_t::~world_hud_state_t()
 		{
 		}
 
-		void world_hud_state_t::on_input_event(const input_event_t& input_event, bool& is_consumed)
+		void world_hud_state_t::on_input_event(input_event_t& input_event)
 		{
+			gui_state_t::on_input_event(input_event);
+
+			if (input_event.is_consumed)
+			{
+				return;
+			}
+
 			if (input_event.device_type == input_event_t::device_type_e::touch &&
 				input_event.touch.type == input_event_t::touch_t::type_e::scroll)
 			{
