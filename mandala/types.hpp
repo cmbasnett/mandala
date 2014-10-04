@@ -44,4 +44,10 @@ namespace mandala
 	typedef glm::fquat			quat_t;
 	typedef glm::mat3			mat3_t;
 	typedef glm::mat4			mat4_t;
+
+    template<typename T, typename U>
+    T unsafe_cast(U u)
+    {
+        return (T)u;
+    }
 };

@@ -639,13 +639,15 @@ namespace mandala
 		gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
 
 		//bind program
-		gpu.programs.push(bsp_gpu_program);
+        const auto gpu_program = app.gpu_programs.get<bsp_gpu_program_t>();
 
-		bsp_gpu_program->world_matrix(mat4_t());
-		bsp_gpu_program->view_projection_matrix(camera.projection_matrix * camera.view_matrix);
-		bsp_gpu_program->diffuse_texture_index(diffuse_texture_index);
-		bsp_gpu_program->lightmap_texture_index(lightmap_texture_index);
-		bsp_gpu_program->lightmap_gamma(render_settings.lightmap_gamma);
+        gpu.programs.push(gpu_program);
+
+        gpu_program->world_matrix(mat4_t());
+        gpu_program->view_projection_matrix(camera.projection_matrix * camera.view_matrix);
+        gpu_program->diffuse_texture_index(diffuse_texture_index);
+        gpu_program->lightmap_texture_index(lightmap_texture_index);
+        gpu_program->lightmap_gamma(render_settings.lightmap_gamma);
 
         auto render_face = [&](int32_t face_index)
         {
@@ -806,19 +808,21 @@ namespace mandala
 
 			depth_state.should_test = true;
 
+            const auto gpu_program = app.gpu_programs.get<bsp_gpu_program_t>();
+
             switch (render_mode)
             {
             case render_mode_e::texture:
-				bsp_gpu_program->alpha(0.0f);
+                gpu_program->alpha(0.0f);
 				blend_state.is_enabled = true;
 				blend_state.src_factor = gpu_t::blend_factor_e::src_alpha;
 				blend_state.dst_factor = gpu_t::blend_factor_e::one;
                 break;
             case render_mode_e::solid:
-				bsp_gpu_program->should_test_alpha(true);
+                gpu_program->should_test_alpha(true);
                 break;
             case render_mode_e::additive:
-				bsp_gpu_program->alpha(alpha);
+                gpu_program->alpha(alpha);
 				blend_state.is_enabled = true;
 				blend_state.src_factor = gpu_t::blend_factor_e::one;
 				blend_state.dst_factor = gpu_t::blend_factor_e::one;
@@ -836,7 +840,7 @@ namespace mandala
             auto world_matrix = glm::translate(model.origin);
             world_matrix *= glm::translate(origin);
 
-			bsp_gpu_program->world_matrix(world_matrix);
+            gpu_program->world_matrix(world_matrix);
 
             render_node(model.head_node_indices[0], -1);
 
@@ -844,10 +848,10 @@ namespace mandala
             {
             case render_mode_e::texture:
             case render_mode_e::additive:
-				bsp_gpu_program->alpha(1.0f);
+                gpu_program->alpha(1.0f);
                 break;
             case render_mode_e::solid:
-				bsp_gpu_program->should_test_alpha(false);
+                gpu_program->should_test_alpha(false);
                 break;
             default:
                 break;

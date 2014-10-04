@@ -1,14 +1,16 @@
 //mandala
 #include "string_archive.hpp"
 
+#define MAGIC_LENGTH    (4)
+
 namespace mandala
 {
     string_archive_t::string_archive_t(std::istream& istream)
     {
         //magic
-        char magic[4] = { '\0' };
+        char magic[MAGIC_LENGTH] = { '\0' };
         
-        istream.read(magic, sizeof(magic));
+        istream.read(magic, MAGIC_LENGTH);
 
         if (strcmp(magic, "TEXT") != 0)
         {

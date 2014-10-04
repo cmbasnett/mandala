@@ -7,8 +7,6 @@
 
 namespace mandala
 {
-	std::shared_ptr<bitmap_font_gpu_program_t> bitmap_font_gpu_program;
-
 	std::string bitmap_font_gpu_program_t::vertex_shader_source = R"(
 #version 150
 #extension GL_ARB_explicit_attrib_location : enable

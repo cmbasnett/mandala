@@ -177,7 +177,15 @@ namespace mandala
 
     void gui_node_t::on_input_event(input_event_t& input_event)
 	{
-		//input_event.is_consumed = true;
+        for (auto& child : _children)
+        {
+            child->on_input_event(input_event);
+
+            if (input_event.is_consumed)
+            {
+                break;
+            }
+        }
 	}
 
 	bool gui_node_t::is_dirty() const

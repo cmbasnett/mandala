@@ -11,75 +11,89 @@ namespace mandala
 {
 	namespace details
 	{
-		template<typename T>
+		template<typename Value>
 		struct hash_t
 		{
-			typedef T value_type;
+            typedef std::string string_type;
+            typedef Value value_type;
+            typedef hash_t<value_type> type;
 
-			hash_t() :
-				value(0)
-			{
-			}
+            hash_t() :
+                value_(0)
+            {
+            }
 
-			explicit hash_t(const std::string& string) :
+            explicit hash_t(const string_type& string_) :
 #ifdef _DEBUG
-				string(string),
+                string_(string_),
 #endif //_DEBUG
-				value(fnv::fnv1a<T>((void*)string.c_str(), string.length()))
+                value_(fnv::fnv1a<value_type>(reinterpret_cast<string_type::value_type*>(const_cast<string_type::value_type*>(string_.c_str())), string_.length()))
 			{
 			}
 
-			hash_t(hash_t<T>&& copy) :
+            hash_t(type&& copy) :
 #ifdef _DEBUG
-				string(std::move(copy.string)),
+				string_(std::move(copy.string_)),
 #endif //_DEBUG
-				value(copy.value)
+                value_(copy.value_)
 			{
 			}
+
+#ifdef _DEBUG
+            const string_type& string() const
+            {
+                return string_;
+            }
+#endif //_DEBUG
+
+            const value_type& value() const
+            {
+                return value_;
+            }
 
 		private:
 #ifdef _DEBUG
-			std::string string;
+            string_type string_;
 #endif //_DEBUG
-			T value = T(0);
+            value_type value_ = value_type(0);
 
 		public:
 			hash_t& operator=(const hash_t& rhs)
 			{
 #ifdef _DEBUG
-				string = rhs.string;
+                string_ = rhs.string_;
 #endif //_DEBUG
-				value = rhs.value;
+                value_ = rhs.value_;
 
 				return *this;
 			}
 
-			hash_t& operator=(std::string&& string_)
+            hash_t& operator=(string_type&& string__)
 			{
 #ifdef _DEBUG
-				string = string_;
+                string_ = string__;
 #endif //_DEBUG
-				value = fnv::fnv1a<T>((void*)(string_.c_str()), string_.length());
+                value_(fnv::fnv1a<value_type>(reinterpret_cast<char*>(const_cast<char*>(string.c_str())), string.length()))
 
 				return *this;
 			}
 
-			inline hash_t& operator=(hash_t<T>&& copy)
+            inline hash_t& operator=(type&& copy)
 			{
 #ifdef _DEBUG
-				string = std::move(copy.string);
+				string_ = std::move(copy.string_);
 #endif //_DEBUG
-				value = copy.value;
+				value_ = copy.value_;
 
 				return *this;
 			}
 
-			inline bool operator==(const hash_t& rhs) const { return value == rhs.value; }
-			inline bool operator!=(const hash_t& rhs) const { return value != rhs.value; }
-			inline bool operator>(const hash_t& rhs) const { return value > rhs.value; }
-			inline bool operator<(const hash_t& rhs) const { return value < rhs.value; }
-			inline bool operator>=(const hash_t& rhs) const { return value >= rhs.value; }
-			inline bool operator<=(const hash_t& rhs) const { return value <= rhs.value; }
+            inline bool operator==(const hash_t& rhs) const { return value_ == rhs.value_; }
+            inline bool operator!=(const hash_t& rhs) const { return value_ != rhs.value_; }
+            inline bool operator>(const hash_t& rhs) const { return value_ > rhs.value_; }
+            inline bool operator<(const hash_t& rhs) const { return value_ < rhs.value_; }
+            inline bool operator>=(const hash_t& rhs) const { return value_ >= rhs.value_; }
+            inline bool operator<=(const hash_t& rhs) const { return value_ <= rhs.value_; }
 		};
 	}
 

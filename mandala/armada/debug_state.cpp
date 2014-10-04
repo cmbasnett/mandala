@@ -20,7 +20,7 @@ namespace mandala
 	debug_state_t::debug_state_t()
 	{
 		label = std::make_shared<gui_label_t>();
-		label->set_bitmap_font(app.resources.get<bitmap_font_t>(hash_t("terminal_16.fnt")));
+		label->set_bitmap_font(app.resources.get<bitmap_font_t>(hash_t("terminal_8.fnt")));
 		label->set_dock_mode(gui_dock_mode_e::fill);
 		label->set_vertical_alignment(gui_label_t::vertical_alignment_e::bottom);
 		label->set_justification(gui_label_t::justification_e::right);

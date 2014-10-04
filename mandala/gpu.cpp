@@ -197,7 +197,44 @@ namespace mandala
 		default:
 			return GL_LESS;
 		}
-	}
+    }
+
+    inline GLbitfield get_clear_flag_mask(gpu_t::clear_flag_type clear_flag)
+    {
+        switch (clear_flag)
+        {
+        case gpu_t::clear_flag_color:
+            return GL_COLOR_BUFFER_BIT;
+        case gpu_t::clear_flag_depth:
+            return GL_DEPTH_BUFFER_BIT;
+        case gpu_t::clear_flag_accum:
+            return GL_ACCUM_BUFFER_BIT;
+        case gpu_t::clear_flag_stencil:
+            return GL_STENCIL_BUFFER_BIT;
+        default:
+            throw std::invalid_argument("");
+        }
+    }
+
+    void gpu_t::clear(const clear_flag_type clear_flags) const
+    {
+        GLbitfield clear_mask = 0;
+
+        auto build_clear_mask = [&](const clear_flag_type clear_flag)
+        {
+            if ((clear_flags & clear_flag) == clear_flag)
+            {
+                clear_mask |= get_clear_flag_mask(clear_flag);
+            }
+        };
+
+        build_clear_mask(clear_flag_color);
+        build_clear_mask(clear_flag_depth);
+        build_clear_mask(clear_flag_accum);
+        build_clear_mask(clear_flag_stencil);
+
+        glClear(clear_mask); glCheckError();
+    }
 
     boost::optional<gpu_t::program_mgr_t::weak_type> gpu_t::program_mgr_t::top() const
 	{
@@ -211,16 +248,16 @@ namespace mandala
 		return gpu_program;
 	}
 
-    void gpu_t::program_mgr_t::push(const gpu_t::program_mgr_t::shared_type& program)
+    void gpu_t::program_mgr_t::push(const gpu_t::program_mgr_t::weak_type& program)
     {
-        if (programs.empty() || program != programs.top())
+        if (programs.empty() || program.lock() != programs.top().lock())
 		{
-            glUseProgram(program->id); glCheckError();
+            glUseProgram(program.lock()->id); glCheckError();
 		}
 
         programs.push(program);
 
-		program->on_bind();
+		program.lock()->on_bind();
 	}
 
     gpu_t::program_mgr_t::weak_type gpu_t::program_mgr_t::pop()
@@ -234,7 +271,7 @@ namespace mandala
 
 		programs.pop();
 
-		previous_program->on_unbind();
+		previous_program.lock()->on_unbind();
 
         if (programs.empty())
 		{
@@ -244,7 +281,7 @@ namespace mandala
 		}
 		else
 		{
-            glUseProgram(programs.top()->id); glCheckError();
+            glUseProgram(programs.top().lock()->id); glCheckError();
             
             return programs.top();
 		}
@@ -267,6 +304,8 @@ namespace mandala
         if (frame_buffers.size() == 0 || frame_buffer != frame_buffers.top())
         {
             glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer->id); glCheckError();
+
+            frame_buffer->on_bind();
         }
 
         frame_buffers.push(frame_buffer);
@@ -284,12 +323,17 @@ namespace mandala
         if (frame_buffers.empty())
         {
             glBindFramebuffer(GL_FRAMEBUFFER, 0); glCheckError();
+            glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+            glDepthMask(GL_TRUE);
+            //TODO: stencil mask
 
             return weak_type();
         }
         else
         {
             glBindFramebuffer(GL_FRAMEBUFFER, frame_buffers.top()->id); glCheckError();
+
+            frame_buffers.top()->on_bind();
 
             return frame_buffers.top();
         }
@@ -366,7 +410,7 @@ namespace mandala
             throw std::exception();
         }
 
-		const auto previous_viewport = viewports.top();
+		const auto& previous_viewport = viewports.top();
 
 		viewports.pop();
 
@@ -457,11 +501,11 @@ namespace mandala
 			return id;
 		};
 
-		auto vertex_shader = create_shader(GL_VERTEX_SHADER, vertex_shader_source);
-		auto fragment_shader = create_shader(GL_FRAGMENT_SHADER, fragment_shader_source);
+		const auto vertex_shader = create_shader(GL_VERTEX_SHADER, vertex_shader_source);
+		const auto fragment_shader = create_shader(GL_FRAGMENT_SHADER, fragment_shader_source);
 
 		//create program
-		auto id = glCreateProgram(); glCheckError();
+		const auto id = glCreateProgram(); glCheckError();
 		
 		//attach shaders
 		glAttachShader(id, vertex_shader); glCheckError();

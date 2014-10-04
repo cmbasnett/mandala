@@ -149,8 +149,6 @@ namespace mandala
 		//glfw
 		glfwInit();
 
-		glfwWindowHint(GLFW_SAMPLES, 16);
-
 		window_ptr = glfwCreateWindow(1, 1, "mandala", nullptr, nullptr);
 
         glfwMakeContextCurrent(static_cast<GLFWwindow*>(window_ptr));
@@ -162,13 +160,23 @@ namespace mandala
         glfwSetScrollCallback(static_cast<GLFWwindow*>(window_ptr), on_mouse_scroll);
         glfwSetWindowSizeCallback(static_cast<GLFWwindow*>(window_ptr), on_window_resize);
 
+        const auto gl_version_string = unsafe_cast<char*>(glGetString(GL_VERSION)); glCheckError();
+
 		//glew
-		glewInit();
+        auto glew_init_result = glewInit();
+
+        if (glew_init_result != GLEW_OK)
+        {
+            throw std::exception(unsafe_cast<char*>(glewGetErrorString(glew_init_result)));
+        }
 	}
 
 	void platform_win32_t::app_run_end()
 	{
-		glfwTerminate();
+        glfwDestroyWindow(static_cast<GLFWwindow*>(window_ptr));
+        glfwTerminate();
+
+        window_ptr = nullptr;
 	}
 
 	void platform_win32_t::app_tick_start(float32_t dt)
@@ -231,7 +239,7 @@ namespace mandala
 	void platform_win32_t::app_render_start()
 	{
 		glClearColor(0, 0, 0, 0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        gpu.clear(gpu_t::clear_flag_color | gpu_t::clear_flag_depth);
 	}
 
 	void platform_win32_t::app_render_end()

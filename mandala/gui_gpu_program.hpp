@@ -34,6 +34,4 @@ namespace mandala
 		gpu_t::uniform_location_type diffuse_texture_index_location = -1;
 		gpu_t::uniform_location_type color_location = -1;
 	};
-
-	extern std::shared_ptr<gui_gpu_program_t> gui_gpu_program;
 }

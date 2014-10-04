@@ -8,5 +8,5 @@ using namespace mandala;
 
 int main()
 {
-	app.run(armada::armada);
+    app.run(armada::game);
 }

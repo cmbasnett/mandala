@@ -42,6 +42,4 @@ namespace mandala
 		gpu_t::uniform_location_type font_color_bottom_location = -1;
 		gpu_t::uniform_location_type diffuse_texture_index_location = -1;
 	};
-
-	extern std::shared_ptr<bitmap_font_gpu_program_t> bitmap_font_gpu_program;
 }

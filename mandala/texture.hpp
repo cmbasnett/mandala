@@ -21,6 +21,7 @@ namespace mandala
         int32_t type = 0;
 
         texture_t(color_type_e color_type, uint32_t width, uint32_t height);
+        texture_t(color_type_e color_type, vec2_u32_t size);
 		texture_t(std::shared_ptr<image_t> image);
 		texture_t(std::istream& istream);
 		virtual ~texture_t();

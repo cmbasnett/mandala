@@ -7,8 +7,6 @@
 
 namespace mandala
 {
-	std::shared_ptr<model_gpu_program_t> model_gpu_program;
-
 	std::string model_gpu_program_t::vertex_shader_source = R"(
 #version 400
 

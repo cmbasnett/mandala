@@ -50,7 +50,7 @@ namespace mandala
 
 			if (type_resources_itr == type_resources.end())
 			{
-				//no resources of this type allocated
+				//no resources of this type have yet been allocated
                 type_resources.insert(std::make_pair(type_index, resource_map_type()));
 			}
 

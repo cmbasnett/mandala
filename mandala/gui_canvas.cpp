@@ -11,7 +11,8 @@ namespace mandala
 {
     gui_canvas_t::gui_canvas_t()
     {
-        std::array<index_buffer_type::index_type, 4> indices = {
+        std::array<index_buffer_type::index_type, 4> indices =
+        {
             0, 1, 2, 3
         };
 
@@ -27,13 +28,7 @@ namespace mandala
 
 		gpu.frame_buffers.push(frame_buffer);
 
-		gpu_t::viewport_type viewport;
-		viewport.x = static_cast<int32_t>(bounds().min.x);
-		viewport.y = static_cast<int32_t>(bounds().min.y);
-		viewport.width = static_cast<int32_t>(bounds().width());
-		viewport.height = static_cast<int32_t>(bounds().height());
-
-        gpu.viewports.push(viewport);
+        gpu.viewports.push(gpu_t::viewport_type(bounds()));
 
         gui_node_t::render(world_matrix, view_projection_matrix);
 
@@ -41,10 +36,12 @@ namespace mandala
 
         gpu.frame_buffers.pop();
 
-		gpu.programs.push(gui_gpu_program);
+        const auto gpu_program = app.gpu_programs.get<gui_gpu_program_t>();
 
-		gui_gpu_program->world_matrix(world_matrix);
-		gui_gpu_program->view_projection_matrix(view_projection_matrix);
+        gpu.programs.push(gpu_program);
+
+        gpu_program->world_matrix(world_matrix);
+        gpu_program->view_projection_matrix(view_projection_matrix);
 
         gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
         gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
@@ -67,13 +64,14 @@ namespace mandala
 
         static const auto vertex_count = 4;
 
-		frame_buffer = std::make_shared<frame_buffer_t>(frame_buffer_t::type_e::color_depth_stencil, static_cast<uint32_t>(size().x), static_cast<uint32_t>(size().y));
+        frame_buffer = std::make_shared<frame_buffer_t>(frame_buffer_t::type_e::color_depth_stencil, static_cast<frame_buffer_t::size_type>(size()));
 
-        vertex_buffer_type::vertex_type vertices[vertex_count] = {
-            vertex_type(vec2_t(0, 0), vec2_t(0, 0)),
-			vertex_type(vec2_t(size().x, 0), vec2_t(1, 0)),
-			vertex_type(vec2_t(size().x, size().y), vec2_t(1, 1)),
-			vertex_type(vec2_t(0, size().y), vec2_t(0, 1))
+        vertex_type vertices[vertex_count] =
+        {
+            vertex_type(vertex_type::position_type(0, 0), vertex_type::texcoord_type(0, 0)),
+            vertex_type(vertex_type::position_type(size().x, 0), vertex_type::texcoord_type(1, 0)),
+            vertex_type(vertex_type::position_type(size().x, size().y), vertex_type::texcoord_type(1, 1)),
+            vertex_type(vertex_type::position_type(0, size().y), vertex_type::texcoord_type(0, 1))
         };
         vertex_buffer->data(vertices, vertex_count, gpu_t::buffer_usage_e::static_draw);
     }

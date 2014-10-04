@@ -30,6 +30,4 @@ namespace mandala
 		gpu_t::uniform_location_type world_matrix_location = -1;
 		gpu_t::uniform_location_type view_projection_matrix_location = -1;
 	};
-
-	extern std::shared_ptr<basic_gpu_program_t> basic_gpu_program;
 }

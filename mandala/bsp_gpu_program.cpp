@@ -7,8 +7,6 @@
 
 namespace mandala
 {
-	std::shared_ptr<bsp_gpu_program_t> bsp_gpu_program;
-
 	std::string bsp_gpu_program_t::vertex_shader_source = R"(
 #version 150
 #extension GL_ARB_explicit_attrib_location : enable

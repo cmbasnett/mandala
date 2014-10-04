@@ -31,29 +31,29 @@ namespace mandala
 
 		platform.app_run_start();
 
-		gui_gpu_program = std::make_shared<gui_gpu_program_t>();
-		model_gpu_program = std::make_shared<model_gpu_program_t>();
-		bitmap_font_gpu_program = std::make_shared<bitmap_font_gpu_program_t>();
-		bsp_gpu_program = std::make_shared<bsp_gpu_program_t>();
-		blur_horizontal_gpu_program = std::make_shared<blur_horizontal_gpu_program_t>();
-		basic_gpu_program = std::make_shared<basic_gpu_program_t>();
+        gpu_programs.make<gui_gpu_program_t>();
+        gpu_programs.make<model_gpu_program_t>();
+        gpu_programs.make<bitmap_font_gpu_program_t>();
+        gpu_programs.make<bsp_gpu_program_t>();
+        gpu_programs.make<blur_horizontal_gpu_program_t>();
+        gpu_programs.make<basic_gpu_program_t>();
 
 		game->app_run_start();
 
 		auto frame_start_time = high_resolution_clock::now();
 
-		while (should_keep_running())
-		{
-			auto dt = static_cast<float32_t>(duration_cast<milliseconds>(high_resolution_clock::now() - frame_start_time).count()) / std::milli::den;
+        while (should_keep_running())
+        {
+            auto dt = static_cast<float32_t>(duration_cast<milliseconds>(high_resolution_clock::now() - frame_start_time).count()) / std::milli::den;
 
-			performance.fps = 1.0f / dt;
+            performance.fps = 1.0f / dt;
 
-			frame_start_time = high_resolution_clock::now();
+            frame_start_time = high_resolution_clock::now();
 
-			handle_input();
-			tick(dt);
-			render();
-		}
+            handle_input();
+            tick(dt);
+            render();
+        }
 
 		game->app_run_end();
 

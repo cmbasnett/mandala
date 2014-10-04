@@ -7,6 +7,7 @@ namespace mandala
 {
 	struct gui_node_t;
 	struct gui_label_t;
+    struct gui_textfield_t;
 
 	namespace armada
 	{
@@ -18,7 +19,11 @@ namespace mandala
 
 			std::shared_ptr<gui_node_t> root_node;
 			std::shared_ptr<gui_label_t> output_label;
-			std::shared_ptr<gui_label_t> input_label;
+            std::shared_ptr<gui_textfield_t> input_textfield;
+            
+        private:
+            std::deque<std::wstring> commands;
+            std::deque<std::wstring>::iterator commands_itr = commands.end();
 		};
 	}
 }

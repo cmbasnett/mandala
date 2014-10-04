@@ -2,18 +2,19 @@
 
 //mandala
 #include "types.hpp"
+#include "aabb.hpp"
 
 namespace mandala
 {
 	namespace details
 	{
-		template<typename T, typename Enable = void>
+		template<typename Scalar, typename Enable = void>
 		struct rectangle_t;
 
-		template<typename T>
-		struct rectangle_t<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
+		template<typename Scalar>
+        struct rectangle_t<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
 		{
-			typedef T scalar_type;
+            typedef Scalar scalar_type;
 			typedef glm::detail::tvec2<scalar_type> vector_type;
 			typedef rectangle_t<scalar_type> type;
 
@@ -32,6 +33,15 @@ namespace mandala
                 width(width),
                 height(height)
             {
+            }
+
+            template<typename Scalar>
+            rectangle_t(const aabb2_t<Scalar>& aabb)
+            {
+                x = static_cast<scalar_type>(aabb.min.x);
+                y = static_cast<scalar_type>(aabb.min.y);
+                width = static_cast<scalar_type>(aabb.width());
+                height = static_cast<scalar_type>(aabb.height());
             }
 
 			scalar_type area() const
@@ -57,7 +67,7 @@ namespace mandala
 			vector_type max() const
 			{
 				return vector_type(x + width, y + height);
-			}
+            }
 		};
 	}
 

@@ -28,6 +28,7 @@ namespace mandala
 		typedef int32_t uniform_location_type;
         typedef uint32_t subroutine_index_type;
 		typedef rectangle_i32_t viewport_type;
+        typedef uint8_t clear_flag_type;
 
         enum class buffer_target_e
         {
@@ -129,31 +130,38 @@ namespace mandala
 			default = less
 		};
 
-        enum culling_front_face_e
+        enum class culling_front_face_e
         {
             cw,
             ccw
-        } front_face;
+        };
 
-        enum culling_mode_e
+        enum class culling_mode_e
         {
             front,
             back,
             front_and_back
-        } mode;
+        };
+
+        enum clear_flag_e : clear_flag_type
+        {
+            clear_flag_color = (1 << 0),
+            clear_flag_depth = (1 << 1),
+            clear_flag_accum = (1 << 2),
+            clear_flag_stencil = (1 << 3)
+        };
 
 		//programs
         struct program_mgr_t
         {
             typedef std::weak_ptr<gpu_program_t> weak_type;
-            typedef std::shared_ptr<gpu_program_t> shared_type;
 
             boost::optional<weak_type> top() const;
-            void push(const shared_type& data);
+            void push(const weak_type& data);
             weak_type pop();
 
         private:
-            std::stack<shared_type> programs;
+            std::stack<weak_type> programs;
         } programs;
 
 		//frame buffers
@@ -275,6 +283,7 @@ namespace mandala
 
 		program_id_type create_program(const std::string& vertex_shader_source, const std::string& fragment_shader_source) const;
 		void destroy_program(program_id_type id);
+        void clear(const clear_flag_type clear_flags) const;
 	};
 
     extern gpu_t gpu;

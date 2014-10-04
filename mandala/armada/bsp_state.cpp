@@ -9,6 +9,7 @@
 #include "../bitmap_font.hpp"
 #include "../model.hpp"
 #include "../model_instance.hpp"
+#include "../animation.hpp"
 #include "../gui_image.hpp"
 #include "../gui_label.hpp"
 #include "../sound.hpp"
@@ -29,12 +30,19 @@ namespace mandala
         std::mt19937 mt19937;
 
         bsp_state_t::bsp_state_t()
-		{
-			frame_buffer = std::make_shared<frame_buffer_t>(frame_buffer_t::type_e::color_depth_stencil, static_cast<frame_buffer_t::size_type>(layout->bounds().size()));
+        {
+            light_camera.position = vec3_t(30, 0, 30);
+            light_camera.target = vec3_t(0, 0, 0);
 
-			skybox.model_instance = std::make_shared<model_instance_t>(app.resources.get<model_t>(hash_t("skybox.md5m")));
-			pause_state = std::make_shared<pause_state_t>();
-			console_state = std::make_shared<console_state_t>();
+            model_instance = std::make_shared<model_instance_t>(app.resources.get<model_t>(hash_t("boblampclean.md5m")));
+            model_instance->animation = app.resources.get<animation_t>(hash_t("boblampclean.md5a"));
+
+            frame_buffer = std::make_shared<frame_buffer_t>(frame_buffer_t::type_e::color_depth, static_cast<frame_buffer_t::size_type>(layout->bounds().size()));
+            shadow_frame_buffer = std::make_shared<frame_buffer_t>(frame_buffer_t::type_e::depth, static_cast<frame_buffer_t::size_type>(layout->bounds().size()));
+
+            skybox.model_instance = std::make_shared<model_instance_t>(app.resources.get<model_t>(hash_t("skybox.md5m")));
+            pause_state = std::make_shared<pause_state_t>();
+            console_state = std::make_shared<console_state_t>();
 
 			camera.speed_max = 512;
 			camera.far = 8192;
@@ -42,7 +50,7 @@ namespace mandala
             bsp = app.resources.get<bsp_t>(hash_t("dod_flash.bsp"));
 
             debug_label = std::make_shared<gui_label_t>();
-			debug_label->set_bitmap_font(app.resources.get<bitmap_font_t>(hash_t("terminal_16.fnt")));
+			debug_label->set_bitmap_font(app.resources.get<bitmap_font_t>(hash_t("terminal_8.fnt")));
 			debug_label->set_color(vec4_t(1));
 			debug_label->set_dock_mode(gui_dock_mode_e::fill);
 			debug_label->set_vertical_alignment(gui_label_t::vertical_alignment_e::top);
@@ -58,7 +66,7 @@ namespace mandala
 			bsp_render_image->set_dock_mode(gui_dock_mode_e::fill);
 
 			auto sprite_set = std::make_shared<sprite_set_t>(frame_buffer->color_texture);
-			app.resources.put<sprite_set_t>(sprite_set, hash_t(""));
+			app.resources.put<sprite_set_t>(sprite_set, hash_t("temp"));
 
 			sprite_t sprite(sprite_ref_t(sprite_set->hash, sprite_set->regions.begin()->second.hash));
 			bsp_render_image->set_sprite(sprite);
@@ -86,6 +94,8 @@ namespace mandala
 			frustum_index_buffer->data(indices, gpu_t::buffer_usage_e::static_draw);
 
 			frustum_vertex_buffer = std::make_shared<vertex_buffer_t<basic_gpu_vertex_t>>();
+
+            static const auto bias_matrix = { 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f, 1.0f };
         }
 
         bsp_state_t::~bsp_state_t()
@@ -95,6 +105,7 @@ namespace mandala
         void bsp_state_t::tick(float32_t dt)
         {
             camera.tick(dt);
+            light_camera.tick(dt);
 
             app.audio.doppler.factor = 0.0f;
             app.audio.listener.position = camera.position;
@@ -135,6 +146,8 @@ namespace mandala
 				camera.frustum = camera_frustum;
 			}
 
+            model_instance->tick(dt);
+
             gui_state_t::tick(dt);
         }
 
@@ -142,33 +155,57 @@ namespace mandala
         {
 			if (app.states.is_state_ticking(shared_from_this()))
 			{
-				gpu_t::viewport_type viewport;
+                gpu_t::viewport_type viewport;
 				viewport.x = 0;
 				viewport.y = 0;
-				viewport.width = frame_buffer->size.x;
-				viewport.height = frame_buffer->size.y;
+                viewport.width = shadow_frame_buffer->size.x;
+                viewport.height = shadow_frame_buffer->size.y;
 
 				gpu.viewports.push(viewport);
-				gpu.frame_buffers.push(frame_buffer);
+                gpu.frame_buffers.push(shadow_frame_buffer);
 
-				skybox.render(camera);
+                //culling switching, rendering only backface, this is done to avoid self-shadowing
+                auto culling_state = gpu.culling.get_state();
+                culling_state.mode = gpu_t::culling_mode_e::front;
+                
+                gpu.culling.push_state(culling_state);
 
-				bsp->render(camera);
+                //render model to shadow depth buffer
+                model_instance->render(light_camera, light_camera.position);
 
-				gpu.buffers.push(gpu_t::buffer_target_e::array, frustum_vertex_buffer);
-				gpu.buffers.push(gpu_t::buffer_target_e::element_array, frustum_index_buffer);
+                gpu.culling.pop_state();
 
-				gpu.programs.push(basic_gpu_program);
+                gpu.frame_buffers.pop();
+                gpu.viewports.pop();
 
-				basic_gpu_program->world_matrix(mat4_t());
-				basic_gpu_program->view_projection_matrix(camera.projection_matrix * camera.view_matrix);
+                viewport.x = 0;
+                viewport.y = 0;
+                viewport.width = frame_buffer->size.x;
+                viewport.height = frame_buffer->size.y;
 
-				gpu.draw_elements(gpu_t::primitive_type_e::lines, 24, gpu_t::index_type_e::unsigned_byte, 0);
+                gpu.viewports.push(viewport);
+                gpu.frame_buffers.push(frame_buffer);
 
-				gpu.programs.pop();
+                skybox.render(camera);
 
-				gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
-				gpu.buffers.pop(gpu_t::buffer_target_e::array);
+                bsp->render(camera);
+
+                model_instance->render(camera, light_camera.position);
+
+				//gpu.buffers.push(gpu_t::buffer_target_e::array, frustum_vertex_buffer);
+				//gpu.buffers.push(gpu_t::buffer_target_e::element_array, frustum_index_buffer);
+
+				//gpu.programs.push(basic_gpu_program);
+
+				//basic_gpu_program->world_matrix(mat4_t());
+				//basic_gpu_program->view_projection_matrix(camera.projection_matrix * camera.view_matrix);
+
+				//gpu.draw_elements(gpu_t::primitive_type_e::lines, 24, gpu_t::index_type_e::unsigned_byte, 0);
+
+				//gpu.programs.pop();
+
+				//gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
+				//gpu.buffers.pop(gpu_t::buffer_target_e::array);
 
 				gpu.frame_buffers.pop();
 				gpu.viewports.pop();
@@ -187,12 +224,13 @@ namespace mandala
 			}
 
 			if (input_event.device_type == input_event_t::device_type_e::keyboard &&
-				input_event.keyboard.key == input_event_t::keyboard_t::key_e::f1 &&
+				input_event.keyboard.key == input_event_t::keyboard_t::key_e::grave_accent &&
 				input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press)
 			{
 				app.states.push(console_state, state_flag_render_tick);
 
 				input_event.is_consumed = true;
+
 				return;
 			}
 
@@ -203,6 +241,7 @@ namespace mandala
 				should_update_camera_frustum = !should_update_camera_frustum;
 
 				input_event.is_consumed = true;
+
 				return;
 			}
 
@@ -216,6 +255,7 @@ namespace mandala
 				app.states.push(pause_state, state_flag_render);
 
 				input_event.is_consumed = true;
+
 				return;
 			}
 
@@ -233,9 +273,10 @@ namespace mandala
 					if (input_event.touch.type == input_event_t::touch_t::type_e::button_press)
 					{
 						camera.fov = 90.0f / 2;
-						camera.sensitivity = 0.01f;
+						camera.sensitivity = 0.05f;
 
 						input_event.is_consumed = true;
+
 						return;
 					}
 					else if (input_event.touch.type == input_event_t::touch_t::type_e::button_release)
@@ -244,6 +285,7 @@ namespace mandala
 						camera.sensitivity = 0.1f;
 
 						input_event.is_consumed = true;
+
 						return;
 					}
 				}
@@ -259,7 +301,7 @@ namespace mandala
 					camera.pitch_target += pitch_target_delta;
 					camera.yaw_target += yaw_target_delta;
 
-					auto sound = app.resources.get<sound_t>(hash_t("garand_shoot.wav"));
+                    auto& sound = app.resources.get<sound_t>(hash_t("garand_shoot.wav"));
 
 					auto source = app.audio.create_source();
 					source->position(camera.position);
@@ -269,6 +311,7 @@ namespace mandala
 					source->play();
 
 					input_event.is_consumed = true;
+
 					return;
 				}
 				else if (input_event.touch.type == input_event_t::touch_t::type_e::scroll)
@@ -278,6 +321,7 @@ namespace mandala
 						bsp->render_settings.lightmap_gamma += 0.1f;
 
 						input_event.is_consumed = true;
+
 						return;
 					}
 					else
@@ -285,6 +329,7 @@ namespace mandala
 						bsp->render_settings.lightmap_gamma -= 0.1f;
 
 						input_event.is_consumed = true;
+
 						return;
 					}
 				}

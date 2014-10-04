@@ -10,10 +10,10 @@ namespace mandala
 {
 	namespace armada
 	{
-		struct armada_t : game_t
+		struct armada_game_t : game_t
 		{
-			armada_t();
-			virtual ~armada_t();
+            armada_game_t();
+            virtual ~armada_game_t();
 
 			virtual void app_run_start();
 			virtual void app_run_end();
@@ -25,6 +25,6 @@ namespace mandala
 			virtual void app_render_end();
 		};
 
-		extern std::shared_ptr<armada_t> armada;
+        extern std::shared_ptr<armada_game_t> game;
 	};
 };

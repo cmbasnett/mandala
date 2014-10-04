@@ -277,15 +277,17 @@ namespace mandala
 			gpu.buffers.push(gpu_t::buffer_target_e::array, mesh->vertex_buffer);
 			gpu.buffers.push(gpu_t::buffer_target_e::element_array, mesh->index_buffer);
 
-			gpu.programs.push(model_gpu_program);
+            const auto gpu_program = app.gpu_programs.get<model_gpu_program_t>();
 
-			model_gpu_program->world_matrix(world_matrix);
-			model_gpu_program->view_projection_matrix(view_projection_matrix);
-			model_gpu_program->normal_matrix(glm::inverseTranspose(glm::mat3(world_matrix)));
-			model_gpu_program->bone_matrices(bone_matrices);
-			model_gpu_program->light_position(light_position);
-			model_gpu_program->camera_position(camera_position);
-            model_gpu_program->is_lit(mesh->material->is_lit);
+            gpu.programs.push(gpu_program);
+
+            gpu_program->world_matrix(world_matrix);
+            gpu_program->view_projection_matrix(view_projection_matrix);
+            gpu_program->normal_matrix(glm::inverseTranspose(glm::mat3(world_matrix)));
+            gpu_program->bone_matrices(bone_matrices);
+            gpu_program->light_position(light_position);
+            gpu_program->camera_position(camera_position);
+            gpu_program->is_lit(mesh->material->is_lit);
 
             mesh->render(world_matrix, view_projection_matrix, bone_matrices);
 
@@ -307,7 +309,9 @@ namespace mandala
 		static const auto diffuse_texture_index = 0;
 		static const auto normal_texture_index = 1;
 		static const auto specular_texture_index = 2;
-		static const auto emissive_texture_index = 3;
+        static const auto emissive_texture_index = 3;
+
+        const auto gpu_program = app.gpu_programs.get<model_gpu_program_t>();
 
 		////cull face
 		//if(mesh->material->is_two_sided)
@@ -328,8 +332,8 @@ namespace mandala
 			//texture
             gpu.textures.bind(diffuse_texture_index, diffuse.texture);
 
-			model_gpu_program->diffuse_texture_index(diffuse_texture_index);
-			model_gpu_program->diffuse_color(diffuse.color);
+            gpu_program->diffuse_texture_index(diffuse_texture_index);
+            gpu_program->diffuse_color(diffuse.color);
 
 			//normal
 			const auto& normal = material->normal;
@@ -337,16 +341,16 @@ namespace mandala
 			//texture
             gpu.textures.bind(normal_texture_index, normal.texture);
 
-			model_gpu_program->normal_texture_index(normal_texture_index);
+            gpu_program->normal_texture_index(normal_texture_index);
 
 			//specular
 			auto& specular = material->specular;
 				
             gpu.textures.bind(specular_texture_index, specular.texture);
 
-			model_gpu_program->specular_texture_index(specular_texture_index);
-			model_gpu_program->specular_color(specular.color);
-			model_gpu_program->specular_intensity(specular.intensity);
+            gpu_program->specular_texture_index(specular_texture_index);
+            gpu_program->specular_color(specular.color);
+            gpu_program->specular_intensity(specular.intensity);
 
 			//emissive
 			auto& emissive = material->emissive;
@@ -354,9 +358,9 @@ namespace mandala
 			//texture
             gpu.textures.bind(emissive_texture_index, emissive.texture);
 
-			model_gpu_program->emissive_texture_index(emissive_texture_index);
-			model_gpu_program->emissive_color(emissive.color);
-			model_gpu_program->emissive_intensity(emissive.intensity);
+            gpu_program->emissive_texture_index(emissive_texture_index);
+            gpu_program->emissive_color(emissive.color);
+            gpu_program->emissive_intensity(emissive.intensity);
 		}
 
 		gpu.draw_elements(gpu_t::primitive_type_e::triangles, index_count, gpu_t::index_type_e::unsigned_short, 0);

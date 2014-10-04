@@ -7,8 +7,6 @@
 
 namespace mandala
 {
-	std::shared_ptr<blur_horizontal_gpu_program_t> blur_horizontal_gpu_program;
-
 	std::string blur_horizontal_gpu_program_t::vertex_shader_source = R"(
 #version 150
 

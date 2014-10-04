@@ -50,28 +50,30 @@ namespace mandala
 
 	void gui_state_t::on_input_event(input_event_t& input_event)
 	{
-		if (input_event.device_type == input_event_t::device_type_e::touch &&
-			input_event.touch.type == input_event_t::touch_t::type_e::button_press)
-		{
-			gui_node_t::trace_args_t trace_args;
-			trace_args.circle.origin = input_event.touch.position;
-			trace_args.circle.radius = 8.0f;
+        layout->on_input_event(input_event);
 
-			gui_node_t::trace_result_t trace_result;
+		//if (input_event.device_type == input_event_t::device_type_e::touch &&
+		//	input_event.touch.type == input_event_t::touch_t::type_e::button_press)
+		//{
+		//	gui_node_t::trace_args_t trace_args;
+		//	trace_args.circle.origin = input_event.touch.position;
+		//	trace_args.circle.radius = 8.0f;
 
-			auto did_hit = gui_node_t::trace(layout, trace_args, trace_result);
+		//	gui_node_t::trace_result_t trace_result;
 
-			std::cout << trace_result.nodes_hit.size() << std::endl;
+		//	auto did_hit = gui_node_t::trace(layout, trace_args, trace_result);
 
-			for (auto& node : trace_result.nodes_hit)
-			{
-				node->on_input_event(input_event);
+		//	std::cout << trace_result.nodes_hit.size() << std::endl;
 
-				if (input_event.is_consumed)
-				{
-					break;
-				}
-			}
-		}
+		//	for (auto& node : trace_result.nodes_hit)
+		//	{
+		//		node->on_input_event(input_event);
+
+		//		if (input_event.is_consumed)
+		//		{
+		//			break;
+		//		}
+		//	}
+		//}
 	}
 }

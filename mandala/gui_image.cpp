@@ -44,7 +44,7 @@ namespace mandala
         gpu.buffers.push(gpu_t::buffer_target_e::array, _vertex_buffer);
 		gpu.buffers.push(gpu_t::buffer_target_e::element_array, _index_buffer);
 
-		const auto& gpu_program = gui_gpu_program;
+		const auto& gpu_program = app.gpu_programs.get<gui_gpu_program_t>();
 
 		//program
 		gpu.programs.push(gpu_program);

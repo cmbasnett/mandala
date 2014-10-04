@@ -77,6 +77,4 @@ namespace mandala
         gpu_t::subroutine_index_type calculate_lighting_lit_subroutine_index = -1;
         gpu_t::subroutine_index_type calculate_lighting_unlit_subroutine_index = -1;
 	};
-
-	extern std::shared_ptr<model_gpu_program_t> model_gpu_program;
 }

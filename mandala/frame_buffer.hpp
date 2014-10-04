@@ -33,17 +33,18 @@ namespace mandala
             depth_stencil = (type_flag_depth | type_flag_stencil)
         };
 
+        id_type id;
+        std::shared_ptr<texture_t> color_texture;
+        std::shared_ptr<texture_t> depth_texture;
+        std::shared_ptr<texture_t> depth_stencil_texture;
+        size_type size;
+        type_e type;
+
         frame_buffer_t(type_e type, const size_type& size);
         frame_buffer_t(type_e type, uint32_t width, uint32_t height);
         ~frame_buffer_t();
 
-        id_type id;
-        std::shared_ptr<texture_t> color_texture;
-        std::shared_ptr<texture_t> depth_texture;
-        std::shared_ptr<texture_t> stencil_texture;
-        std::shared_ptr<texture_t> depth_stencil_texture;
-        size_type size;
-        type_e type;
+        void on_bind() const;
 
     private:
         frame_buffer_t(const frame_buffer_t&) = delete;

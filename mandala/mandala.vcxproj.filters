@@ -293,6 +293,18 @@
     <ClInclude Include="gpu_program_mgr.hpp">
       <Filter>mandala\app</Filter>
     </ClInclude>
+    <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="shadow_gpu_program.hpp">
+      <Filter>mandala\graphics\gpu_programs</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="lua_mgr.hpp">
+      <Filter>mandala\app</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="gui_textfield.hpp">
+      <Filter>mandala\gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -463,6 +475,15 @@
     </ClCompile>
     <ClCompile Include="basic_gpu_program.cpp">
       <Filter>mandala\graphics\gpu_programs</Filter>
+    </ClCompile>
+    <ClCompile Include="shadow_gpu_program.cpp">
+      <Filter>mandala\graphics\gpu_programs</Filter>
+    </ClCompile>
+    <ClCompile Include="lua_mgr.cpp">
+      <Filter>mandala\app</Filter>
+    </ClCompile>
+    <ClCompile Include="gui_textfield.cpp">
+      <Filter>mandala\gui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

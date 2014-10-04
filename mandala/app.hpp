@@ -6,6 +6,7 @@
 #include "audio_mgr.hpp"
 #include "string_mgr.hpp"
 #include "gpu_program_mgr.hpp"
+#include "lua_mgr.hpp"
 
 //std
 #include <chrono>
@@ -37,7 +38,7 @@ namespace mandala
 			};
 
 			std::deque<frame_t> frames;
-			fps_type fps = 0;
+            fps_type fps = fps_type(0);
 		};
 
 		std::shared_ptr<game_t> game;
@@ -47,6 +48,7 @@ namespace mandala
 		string_mgr_t strings;
 		gpu_program_mgr_t gpu_programs;
 		audio_mgr_t audio;
+        lua_mgr_t lua;
 
 		app_t();
 

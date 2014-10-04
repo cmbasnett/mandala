@@ -258,8 +258,10 @@ namespace mandala
 		gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
 		gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
 
+        const auto gpu_program = app.gpu_programs.get<bitmap_font_gpu_program_t>();
+
 		//program
-		gpu.programs.push(bitmap_font_gpu_program);
+        gpu.programs.push(gpu_program);
 
 		//states
 		auto blend_state = gpu.blend.get_state();
@@ -275,14 +277,14 @@ namespace mandala
         gpu.depth.push_state(depth_state);
 
 		//view projection matrix
-		bitmap_font_gpu_program->view_projection_matrix(view_projection_matrix);
-		bitmap_font_gpu_program->font_line_height(line_height);
-		bitmap_font_gpu_program->font_base(base);
+        gpu_program->view_projection_matrix(view_projection_matrix);
+        gpu_program->font_line_height(line_height);
+        gpu_program->font_base(base);
 
 		auto start_color = color_stack.empty() ? base_color : color_stack.top();
 
-		bitmap_font_gpu_program->font_color_top(start_color);
-		bitmap_font_gpu_program->font_color_bottom(start_color);
+        gpu_program->font_color_top(start_color);
+        gpu_program->font_color_bottom(start_color);
 
 		//textures
 		std::vector<uint8_t> page_indices;
@@ -301,7 +303,7 @@ namespace mandala
 
 		for (auto c = string.begin(); c != string.end(); ++c)
 		{
-			bitmap_font_gpu_program->world_matrix(world_matrix);
+            gpu_program->world_matrix(world_matrix);
 
 			const auto character = characters.at(*c);
 
@@ -309,7 +311,7 @@ namespace mandala
 			{
 				character_texture_index = character.texture_index;
 
-				bitmap_font_gpu_program->font_diffuse_texture_index(character_texture_index);
+                gpu_program->font_diffuse_texture_index(character_texture_index);
 			}
 
 			auto x = static_cast<float32_t>(character.advance_x);
@@ -347,8 +349,8 @@ namespace mandala
 			{
 				auto color = color_stack.empty() ? base_color : color_stack.top();
 
-				bitmap_font_gpu_program->font_color_top(color);
-				bitmap_font_gpu_program->font_color_bottom(color);
+                gpu_program->font_color_top(color);
+                gpu_program->font_color_bottom(color);
 			}
 
 			gpu.draw_elements(gpu_t::primitive_type_e::triangles, indices_per_character, gpu_t::index_type_e::unsigned_int, character_index * character_index_stride);

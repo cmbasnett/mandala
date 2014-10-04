@@ -41,6 +41,4 @@ namespace mandala
 		gpu_t::uniform_location_type alpha_location = -1;
 		gpu_t::uniform_location_type should_test_alpha_location = -1;
 	};
-
-	extern std::shared_ptr<bsp_gpu_program_t> bsp_gpu_program;
 }

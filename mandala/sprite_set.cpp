@@ -94,6 +94,11 @@ namespace mandala
 	sprite_set_t::sprite_set_t(const std::shared_ptr<texture_t>& texture) :
 		texture(texture)
 	{
+        if (texture == nullptr)
+        {
+            throw std::invalid_argument("");
+        }
+
 		region_t region;
 		region.frame_rectangle.x = 0;
 		region.frame_rectangle.y = 0;

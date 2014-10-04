@@ -34,6 +34,4 @@ namespace mandala
 		gpu_t::uniform_location_type diffuse_texture_index_location = -1;
 		gpu_t::uniform_location_type blur_size_location = -1;
 	};
-
-	extern std::shared_ptr<blur_horizontal_gpu_program_t> blur_horizontal_gpu_program;
 }

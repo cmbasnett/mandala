@@ -38,9 +38,12 @@ namespace mandala
 
 		auto string_itr = _string.begin();
 		const auto padded_size = (bounds() - padding()).size();
+
 		static const auto color_push_character = L'↑';
 		static const auto color_pop_character = L'↓';
-		static const auto fallback_character = L'?';
+        static const auto fallback_character = L'?';
+        static const auto ellipse_character = L'.';
+        static const auto ellipses_max = 3;
 
 		while (string_itr != _string.end())
 		{
@@ -51,8 +54,6 @@ namespace mandala
 				if (_should_use_ellipses && !_render_data.lines.empty() && !_render_data.lines.back().string.empty())
 				{
 					//attempt to add ellipses to the end of the last line
-					static const auto ellipse_character = L'.';
-					static const auto ellipses_max = 3;
 					const auto ellipse_width = _bitmap_font->characters.at(ellipse_character).advance_x;
 					const auto ellipse_count = glm::min(static_cast<decltype(ellipse_width)>(padded_size.x) / ellipse_width, ellipses_max);
 

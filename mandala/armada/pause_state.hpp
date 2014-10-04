@@ -10,10 +10,7 @@ namespace mandala
 	{
 		struct pause_state_t : gui_state_t
 		{
-			std::shared_ptr<gui_label_t> raw_label;
-			std::shared_ptr<gui_label_t> color_label;
-			std::vector<std::shared_ptr<bitmap_font_t>> bitmap_fonts;
-			size_t bitmap_font_index = 0;
+			std::shared_ptr<gui_label_t> paused_label;
 
 			pause_state_t();
 			virtual ~pause_state_t();

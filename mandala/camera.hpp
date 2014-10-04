@@ -32,7 +32,6 @@ namespace mandala
 
 		line3_t get_ray(vec2_f64_t screen_location) const;
 
-	protected:
 		camera_t();
 	};
 }

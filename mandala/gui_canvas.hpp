@@ -12,14 +12,17 @@ namespace mandala
 	{
 		struct vertex_t
 		{
-			vertex_t(vec2_t position, vec2_t texcoord) :
+            typedef vec2_t position_type;
+            typedef vec2_t texcoord_type;
+
+            vertex_t(position_type position, vec2_t texcoord_type) :
 				position(position),
 				texcoord(texcoord)
 			{
 			}
 
-			vec2_t position;
-			vec2_t texcoord;
+            position_type position;
+            texcoord_type texcoord;
 		};
 
         gui_canvas_t();
