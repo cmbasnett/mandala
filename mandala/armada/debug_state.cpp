@@ -31,9 +31,9 @@ namespace mandala
 
 	void debug_state_t::tick(float32_t dt)
 	{
-		static const auto green_color = rgb_to_hex(vec3_t(0, 1, 0));
-		static const auto yellow_color = rgb_to_hex(vec3_t(1, 1, 0));
-		static const auto red_color = rgb_to_hex(vec3_t(1, 0, 0));
+		static const auto green_color = rgb_to_hex<wchar_t>(vec3_t(0, 1, 0));
+        static const auto yellow_color = rgb_to_hex<wchar_t>(vec3_t(1, 1, 0));
+        static const auto red_color = rgb_to_hex<wchar_t>(vec3_t(1, 0, 0));
 
 		std::wostringstream oss;
 

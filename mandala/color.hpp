@@ -12,8 +12,12 @@
 
 namespace mandala
 {
-	inline uint32_t rgb_to_int(const vec3_t& rgb)
+    typedef vec3_t rgb_type;
+    typedef vec4_t rgba_type;
+
+    inline uint32_t rgb_to_uint(const rgb_type& rgb)
 	{
+        //TODO: verify correctness
 		uint32_t i = 0;
 
 		i |= (static_cast<uint32_t>(rgb.r * 255) << 16);
@@ -23,18 +27,25 @@ namespace mandala
 		return i;
 	}
 
-	inline std::string rgb_to_hex(const vec3_t& rgb)
-	{
-		std::ostringstream ostringstream;
-		
-		ostringstream << std::hex << std::setw(6) << std::setfill('0') << rgb_to_int(rgb);
+    inline rgb_type uint_to_rgb(uint32_t i)
+    {
+        //TODO: implement
+    }
 
-		auto s = ostringstream.str();
+    template<typename Char>
+    inline std::basic_string<Char, std::char_traits<Char>, std::allocator<Char>> rgb_to_hex(const vec3_t& rgb)
+	{
+        std::basic_ostringstream<Char, std::char_traits<Char>, std::allocator<Char>> ostringstream;
+		
+		ostringstream << std::hex << std::setw(6) << std::setfill<Char>('0') << rgb_to_uint(rgb);
+
+        auto s = ostringstream.str();
 
 		return ostringstream.str();
 	}
 
-	inline vec3_t hex_to_rgb(const std::wstring& hex_string)
+    template<typename Char>
+    inline vec3_t hex_to_rgb(const std::basic_string<Char, std::char_traits<Char>, std::allocator<Char>>& hex_string)
 	{
 		vec3_t rgb;
 
@@ -47,7 +58,7 @@ namespace mandala
 		return rgb;
 	}
 
-	inline vec3_t rgb_to_hsv(const vec3_t& rgb)
+    inline rgb_type rgb_to_hsv(const rgb_type& rgb)
 	{
 		auto rgb_max = glm::compMax(rgb);
 		auto rgb_min = glm::compMin(rgb);
@@ -55,10 +66,10 @@ namespace mandala
 
 		if (rgb_max == 0)
 		{
-			return vec3_t(-1, 0, 0);
+            return rgb_type(-1, 0, 0);
 		}
 
-		float32_t h, s, v = 0;
+        rgb_type::value_type h, s, v = 0;
 			
 		v = rgb_max;
 		s = delta / rgb_max;
@@ -83,6 +94,13 @@ namespace mandala
 			h += 360;
 		}
 
-		return vec3_t(h, s, v);
+        return rgb_type(h, s, v);
 	}
+
+    const rgb_type color_black = rgb_type(0);
+    const rgb_type color_white = rgb_type(1);
+    const rgb_type color_red = rgb_type(1, 0, 0);
+    const rgb_type color_green = rgb_type(0, 1, 0);
+    const rgb_type color_blue = rgb_type(0, 0, 1);
+    const rgb_type color_yellow = rgb_type(1, 1, 0);
 }

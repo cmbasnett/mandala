@@ -17,8 +17,13 @@ namespace mandala
 
         virtual void on_input_event(input_event_t& input_event) override;
 
+        const string_type& placeholder_string() const { return _placeholder_string; }
+
+        void set_placeholder_string(const string_type& placeholder_string) { _placeholder_string = placeholder_string; _is_dirty = true; }
+
     private:
         bool has_focus = true;
         caret_t caret;
+        string_type _placeholder_string;
     };
 }

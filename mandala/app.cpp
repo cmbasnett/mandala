@@ -108,17 +108,17 @@ namespace mandala
 		game->app_render_end();
 
         platform.app_render_end();
-	}
+    }
 
-	void app_t::handle_input()
-	{
-		input_event_t input_event;
+    void app_t::handle_input()
+    {
+        input_event_t input_event;
 
-		while (platform.pop_input_event(input_event))
-		{
-			on_input_event(input_event);
-		}
-	}
+        while (platform.pop_input_event(input_event))
+        {
+            on_input_event(input_event);
+        }
+    }
 
     void app_t::on_input_event(input_event_t& input_event)
 	{

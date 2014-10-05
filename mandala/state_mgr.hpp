@@ -22,6 +22,8 @@ namespace mandala
 		state_flag_render = (1 << 0),
 		state_flag_input = (1 << 1),
 		state_flag_tick = (1 << 2),
+        state_flag_popping = (1 << 3),
+        state_flag_changing_link_flags = (1 << 4),
 		state_flag_render_input = (state_flag_render | state_flag_input),
 		state_flag_render_tick = (state_flag_render | state_flag_tick),
 		state_flag_input_tick = (state_flag_input | state_flag_tick),
@@ -65,14 +67,16 @@ namespace mandala
 		void change_link_flags(const state_type& state, state_flags_type link_flags);
 		void purge();
 
-		state_flags_type get_flags(const state_type& state) const;
-		state_flags_type get_link_flags(const state_type& state) const;
-		size_t count() const;
-		state_type at(size_t node_index) const;
-		size_t index_of(const state_type& state) const;
-		bool is_state_rendering(const state_type& state) const;
-		bool is_state_ticking(const state_type& state) const;
-		bool is_state_handling_input(const state_type& state) const;
+        state_flags_type get_flags(const state_type& state) const;
+        state_flags_type get_link_flags(const state_type& state) const;
+        size_t count() const;
+        state_type at(size_t node_index) const;
+        size_t index_of(const state_type& state) const;
+        bool is_state_rendering(const state_type& state) const;
+        bool is_state_ticking(const state_type& state) const;
+        bool is_state_handling_input(const state_type& state) const;
+        bool is_state_popping(const state_type& state) const;
+        bool is_state_changing_link_flags(const state_type& state) const;
 		
 	private:
 		state_mgr_t(const state_mgr_t&) = delete;

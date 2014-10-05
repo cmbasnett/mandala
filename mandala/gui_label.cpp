@@ -18,18 +18,22 @@
 
 namespace mandala
 {
+    gui_label_t::line_height_type gui_label_t::get_line_height() const
+    {
+        return _bitmap_font->line_height + _line_spacing;
+    }
+
 	void gui_label_t::clean()
-	{
+    {
+        static const auto color_push_character = L'↑';  //alt+24
+        static const auto color_pop_character = L'↓';   //alt+25
+        static const auto fallback_character = L'?';
+        static const auto ellipse_character = L'.';
+        static const auto ellipses_max = 3;
+
 		gui_node_t::clean();
 
-		//TODO: make a render_data.reset() function
-		_render_data.lines.clear();
-
-		for (auto& line : _render_data.lines)
-		{
-			line.colors_pushes.clear();
-			line.color_pop_indices.clear();
-		}
+        _render_data.reset();
 
 		if (_bitmap_font == nullptr)
 		{
@@ -37,17 +41,12 @@ namespace mandala
 		}
 
 		auto string_itr = _string.begin();
-		const auto padded_size = (bounds() - padding()).size();
-
-		static const auto color_push_character = L'↑';
-		static const auto color_pop_character = L'↓';
-        static const auto fallback_character = L'?';
-        static const auto ellipse_character = L'.';
-        static const auto ellipses_max = 3;
+        const auto padded_size = (bounds() - padding()).size();
+        const auto line_height = get_line_height();
 
 		while (string_itr != _string.end())
 		{
-			if ((_render_data.lines.size() + 1) * _bitmap_font->line_height > padded_size.y || (!_is_multiline && !_render_data.lines.empty()))
+            if ((_render_data.lines.size() + 1) * line_height > padded_size.y || (!_is_multiline && !_render_data.lines.empty()))
 			{
 				//adding another line would exceed maximum height or line count
 
@@ -281,10 +280,10 @@ namespace mandala
 			_render_data.base_translation.y += padded_size.y - _bitmap_font->base;
 			break;
 		case vertical_alignment_e::middle:
-			_render_data.base_translation.y += (padded_size.y / 2) - (_bitmap_font->base / 2) + ((_bitmap_font->line_height * (line_count - 1)) / 2);
+			_render_data.base_translation.y += (padded_size.y / 2) - (_bitmap_font->base / 2) + ((line_height * (line_count - 1)) / 2);
 			break;
 		case vertical_alignment_e::bottom:
-			_render_data.base_translation.y += (_bitmap_font->line_height * line_count) - _bitmap_font->base;
+			_render_data.base_translation.y += (line_height * line_count) - _bitmap_font->base;
 			break;
 		default:
 			break;
@@ -315,6 +314,7 @@ namespace mandala
             throw std::exception("bitmap font not set");
         }
 
+        const auto line_height = get_line_height();
 		auto base_translation = _render_data.base_translation;
 
 		std::stack<vec4_t> color_stack;
@@ -339,7 +339,7 @@ namespace mandala
 
 			_bitmap_font->render_string(line.string, line_world_matrix, view_projection_matrix, color(), color_stack, line.colors_pushes, line.color_pop_indices);
 
-			base_translation.y -= _bitmap_font->line_height;
+            base_translation.y -= line_height;
         }
 
         gui_node_t::render(world_matrix, view_projection_matrix);

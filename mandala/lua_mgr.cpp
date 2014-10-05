@@ -105,8 +105,9 @@ namespace mandala
                 luabind::class_<app_t>("app")
                 .def("exit", &app_t::exit)
                 .def("reset", &app_t::reset)
-                .def_readonly("resources", &app_t::resources)
-                .def_readonly("states", &app_t::states)
+                //.def_readonly("resources", &app_t::resources)
+                //.def_readonly("states", &app_t::states)
+                //.def_readonly("audio", &app_t::audio)
             ];
 
         luabind::globals(state)["app"] = &app;
@@ -122,7 +123,7 @@ namespace mandala
         {
             auto error_string = lua_tostring(state, -1);
 
-            std::cout << error_string << std::endl;
+            throw std::exception(error_string);
         }
     }
 }

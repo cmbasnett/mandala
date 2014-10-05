@@ -53,7 +53,7 @@ namespace mandala
 			debug_label->set_bitmap_font(app.resources.get<bitmap_font_t>(hash_t("terminal_8.fnt")));
 			debug_label->set_color(vec4_t(1));
 			debug_label->set_dock_mode(gui_dock_mode_e::fill);
-			debug_label->set_vertical_alignment(gui_label_t::vertical_alignment_e::top);
+			debug_label->set_vertical_alignment(gui_label_t::vertical_alignment_e::bottom);
 			debug_label->set_justification(gui_label_t::justification_e::left);
 			debug_label->set_padding(padding_t(16));
 
@@ -272,8 +272,8 @@ namespace mandala
 				{
 					if (input_event.touch.type == input_event_t::touch_t::type_e::button_press)
 					{
-						camera.fov = 90.0f / 2;
-						camera.sensitivity = 0.05f;
+                        camera.fov /= 2;
+                        camera.sensitivity /= 2;
 
 						input_event.is_consumed = true;
 
@@ -281,8 +281,8 @@ namespace mandala
 					}
 					else if (input_event.touch.type == input_event_t::touch_t::type_e::button_release)
 					{
-						camera.fov = 90;
-						camera.sensitivity = 0.1f;
+                        camera.fov *= 2;;
+                        camera.sensitivity *= 2;
 
 						input_event.is_consumed = true;
 

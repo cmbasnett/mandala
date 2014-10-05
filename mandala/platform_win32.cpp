@@ -279,6 +279,7 @@ namespace mandala
 
 		input.events.pop_front();
 
+        //increment event_id
 		++input.event_id;
 
         return true;
