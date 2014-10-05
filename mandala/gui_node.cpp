@@ -82,6 +82,12 @@ namespace mandala
                     break;
                 case gui_dock_mode_e::fill:
                     child->_bounds = children_bounds;
+
+                    child->_bounds.min.x += child->_margin.left;
+                    child->_bounds.min.y += child->_margin.bottom;
+                    child->_bounds.max.x -= child->_margin.right;
+                    child->_bounds.max.y -= child->_margin.top;
+
                     break;
 				case gui_dock_mode_e::left:
                     child->_bounds.min = children_bounds.min;
