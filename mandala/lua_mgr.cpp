@@ -12,8 +12,6 @@ extern "C"
 
 //luabind
 #include <luabind\luabind.hpp>
-#include <luabind\function.hpp>
-#include <luabind\adopt_policy.hpp>
 
 namespace mandala
 {
@@ -22,12 +20,10 @@ namespace mandala
         state = luaL_newstate();
 
         luabind::open(state);
-
-        //TODO: bind these modules elsewhere
         
         luabind::module(state)
             [
-                luabind::class_<hash32_t>("hash32")
+                luabind::class_<hash32_t>("hash")
                 .def(luabind::constructor<>())
                 .def(luabind::constructor<const hash32_t::string_type&>())
 #ifdef _DEBUG
@@ -56,6 +52,7 @@ namespace mandala
                 .def(luabind::constructor<>())
                 .def(luabind::constructor<float32_t>())
                 .def(luabind::constructor<float32_t, float32_t, float32_t>())
+                .def(luabind::constructor<vec2_t, float32_t>())
                 .def_readwrite("x", &vec3_t::x)
                 .def_readwrite("y", &vec3_t::y)
                 .def_readwrite("z", &vec3_t::z)
@@ -73,6 +70,7 @@ namespace mandala
                 .def(luabind::constructor<>())
                 .def(luabind::constructor<float32_t>())
                 .def(luabind::constructor<float32_t, float32_t, float32_t, float32_t>())
+                .def(luabind::constructor<vec3_t, float32_t>())
                 .def_readwrite("x", &vec4_t::x)
                 .def_readwrite("y", &vec4_t::y)
                 .def_readwrite("z", &vec4_t::z)
@@ -121,7 +119,7 @@ namespace mandala
     {
         if (luaL_dostring(state, command.c_str()))
         {
-            auto error_string = lua_tostring(state, -1);
+            const auto error_string = lua_tostring(state, -1);
 
             throw std::exception(error_string);
         }

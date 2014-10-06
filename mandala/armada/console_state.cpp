@@ -32,54 +32,57 @@ namespace mandala
             auto output_root_node = std::make_shared<gui_node_t>();
             output_root_node->set_dock_mode(gui_dock_mode_e::fill);
 
-            auto output_background_image = std::make_shared<gui_image_t>();
-            output_background_image->set_color(vec4_t(vec3_t(1), 0.5f));
-            output_background_image->set_dock_mode(gui_dock_mode_e::fill);
-            output_background_image->set_sprite(sprite_t(sprite_ref_t(hash_t("white.json"), hash_t("white.png"))));
+            auto root_background_image = std::make_shared<gui_image_t>();
+            root_background_image->set_color(vec4_t(vec3_t(0), 0.75f));
+            root_background_image->set_dock_mode(gui_dock_mode_e::fill);
+            root_background_image->set_sprite(sprite_t(sprite_ref_t(hash_t("white.json"), hash_t("white.png"))));
 
             output_label = std::make_shared<gui_label_t>();
-            output_label->set_bitmap_font(app.resources.get<bitmap_font_t>(hash_t("terminal_8.fnt")));
+            output_label->set_bitmap_font(app.resources.get<bitmap_font_t>(hash_t("inconsolata_12.fnt")));
             output_label->set_dock_mode(gui_dock_mode_e::fill);
             output_label->set_vertical_alignment(gui_label_t::vertical_alignment_e::bottom);
             output_label->set_justification(gui_label_t::justification_e::left);
-            output_label->set_line_spacing(8);
+            //output_label->set_line_spacing(4);
+            output_label->set_margin(padding_t(8, 8, -32, 8));
             output_label->set_should_use_ellipses(false);
             output_label->set_should_use_color_codes(true);
 
-            output_root_node->adopt(output_background_image);
             output_root_node->adopt(output_label);
 
             auto input_root_node = std::make_shared<gui_node_t>();
             input_root_node->set_dock_mode(gui_dock_mode_e::bottom);
-            input_root_node->set_size(vec2_t(0, app.resources.get<bitmap_font_t>(hash_t("terminal_8.fnt"))->line_height + 16)); //HACK: we don't have parent resizing yet
+            input_root_node->set_size(vec2_t(0, app.resources.get<bitmap_font_t>(hash_t("inconsolata_12.fnt"))->line_height + 16)); //HACK: we don't have parent resizing yet
 
             auto input_background_image = std::make_shared<gui_image_t>();
             input_background_image->set_sprite(sprite_t(sprite_ref_t(hash_t("white.json"), hash_t("white.png"))));
             input_background_image->set_dock_mode(gui_dock_mode_e::fill);
-            input_background_image->set_color(vec4_t(vec3_t(0.01625f), 1.0f));
+            input_background_image->set_color(vec4_t(vec3_t(0), 0.5f));
 
             input_textfield = std::make_shared<gui_textfield_t>();
-            input_textfield->set_bitmap_font(app.resources.get<bitmap_font_t>(hash_t("terminal_8.fnt")));
+            input_textfield->set_bitmap_font(app.resources.get<bitmap_font_t>(hash_t("inconsolata_12.fnt")));
             input_textfield->set_dock_mode(gui_dock_mode_e::fill);
-            input_textfield->set_padding(padding_t(8));
             input_textfield->set_should_use_color_codes(false);
             input_textfield->set_should_use_ellipses(false);
 
-            input_root_node->adopt(input_background_image);
             input_root_node->adopt(input_textfield);
 
-            auto root_border_image = std::make_shared<gui_image_t>();
-            root_border_image->set_color(vec4_t(vec3_t(1), 1));
-            root_border_image->set_dock_mode(gui_dock_mode_e::bottom);
-            root_border_image->set_sprite(sprite_t(sprite_ref_t(hash_t("white.json"), hash_t("white.png"))));
-            root_border_image->set_is_autosized_to_texture(false);
-            root_border_image->set_size(vec2_t(0, 1));
+            input_root_node->adopt(input_background_image);
 
-            root_node->adopt(root_border_image);
+            //auto root_border_image = std::make_shared<gui_image_t>();
+            //root_border_image->set_color(vec4_t(vec3_t(0), 1));
+            //root_border_image->set_dock_mode(gui_dock_mode_e::bottom);
+            //root_border_image->set_sprite(sprite_t(sprite_ref_t(hash_t("white.json"), hash_t("white.png"))));
+            //root_border_image->set_is_autosized_to_texture(false);
+            //root_border_image->set_size(vec2_t(0, 2));
+
+            root_node->adopt(root_background_image);
+            //root_node->adopt(root_border_image);
             root_node->adopt(input_root_node);
             root_node->adopt(output_root_node);
 
 			layout->adopt(root_node);
+
+            layout->clean();
 		}
 
 		void console_state_t::on_input_event(input_event_t& input_event)
@@ -123,17 +126,15 @@ namespace mandala
 
                         typedef std::codecvt_utf8<wchar_t> convert_type;
                         std::wstring_convert<convert_type, wchar_t> converter;
-                        const auto command = converter.to_bytes(input_textfield->string());
 
                         try
                         {
-                            app.lua.execute(command);
+                            app.lua.execute(converter.to_bytes(input_textfield->string()));
                         }
                         catch (const std::exception& exception)
                         {
-                            const auto exception_what = converter.from_bytes(std::string(exception.what()));
-
-                            output_label_string.append(L"\n↑" + rgb_to_hex<wchar_t>(error_color) + exception_what + L"↓");
+                            output_label_string.append(L"\n↑" +
+                                rgb_to_hex<wchar_t>(error_color) + converter.from_bytes(std::string(exception.what())) + L"↓");
                         }
 
                         output_label->set_string(output_label_string);

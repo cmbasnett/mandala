@@ -45,6 +45,9 @@ namespace mandala
 	typedef glm::mat3			mat3_t;
 	typedef glm::mat4			mat4_t;
 
+    typedef vec3_t              rgb_type;
+    typedef vec4_t              rgba_type;
+
     template<typename T, typename U>
     T unsafe_cast(U u)
     {

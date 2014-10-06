@@ -18,6 +18,12 @@
 
 namespace mandala
 {
+    void gui_label_t::render_data_t::reset()
+    {
+        lines.clear();
+        base_translation = vec2_t(0);
+    }
+
     gui_label_t::line_height_type gui_label_t::get_line_height() const
     {
         return _bitmap_font->line_height + _line_spacing;

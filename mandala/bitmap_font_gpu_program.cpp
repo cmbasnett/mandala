@@ -7,7 +7,7 @@
 
 namespace mandala
 {
-	std::string bitmap_font_gpu_program_t::vertex_shader_source = R"(
+    std::string bitmap_font_gpu_program_t::vertex_shader_source = R"(
 #version 150
 #extension GL_ARB_explicit_attrib_location : enable
 #extension GL_ARB_explicit_uniform_location : enable
@@ -20,6 +20,7 @@ uniform float line_height;
 uniform float base;
 uniform vec4 color_top;
 uniform vec4 color_bottom;
+uniform int should_invert_rgb;
 
 in vec2 position;
 in vec2 texcoord;
@@ -35,6 +36,12 @@ void main()
 	
 	float t = (position.y + (line_height - base)) / line_height;
 	out_color = mix(color_bottom, color_top, t);
+
+    //TODO: convert to color modifier subroutine
+    if (should_invert_rgb == 1)
+    {
+        out_color.rgb = vec3(1) - out_color.rgb;
+    }
 }
 )";
 
@@ -67,6 +74,7 @@ void main()
 		font_color_top_location = glGetUniformLocation(id, "color_top"); glCheckError();
 		font_color_bottom_location = glGetUniformLocation(id, "color_bottom"); glCheckError();
 		diffuse_texture_index_location = glGetUniformLocation(id, "diffuse_texture"); glCheckError();
+        should_invert_rgb_location = glGetUniformLocation(id, "should_invert_rgb"); glCheckError();
 	}
 
 	void bitmap_font_gpu_program_t::on_bind()
@@ -123,4 +131,9 @@ void main()
 	{
 		glUniform4fv(font_color_bottom_location, 1, glm::value_ptr(font_color_bottom)); glCheckError();
 	}
+
+    void bitmap_font_gpu_program_t::should_invert_rgb(bool should_invert_rgb) const
+    {
+        glUniform1i(should_invert_rgb_location, should_invert_rgb ? 1 : 0);
+    }
 }

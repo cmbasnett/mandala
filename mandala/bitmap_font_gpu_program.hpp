@@ -29,6 +29,7 @@ namespace mandala
 		void font_diffuse_texture_index(uint32_t) const;
 		void font_color_top(const vec4_t&) const;
 		void font_color_bottom(const vec4_t&) const;
+        void should_invert_rgb(bool should_invert_rgb) const;
 
 	private:
 		gpu_t::attribute_location_type position_location = -1;
@@ -41,5 +42,6 @@ namespace mandala
 		gpu_t::uniform_location_type font_color_top_location = -1;
 		gpu_t::uniform_location_type font_color_bottom_location = -1;
 		gpu_t::uniform_location_type diffuse_texture_index_location = -1;
+        gpu_t::uniform_location_type should_invert_rgb_location = -1;
 	};
 }

@@ -44,11 +44,11 @@ namespace mandala
             throw std::exception();
         }
 
-		auto children_itr = std::find(_children.begin(), _children.end(), node);
+		const auto children_itr = std::find(_children.begin(), _children.end(), node);
 
 		if (children_itr != _children.end())
 		{
-			//node already exists in _children
+			//node already exists in children
 			throw std::exception();
 		}
 

@@ -9,7 +9,7 @@ namespace mandala
 
     struct gui_textfield_t : gui_label_t
     {
-        struct caret_t
+        struct cursor_t
         {
             size_t row_index = 0;
             size_t column_index = 0;
@@ -23,7 +23,8 @@ namespace mandala
 
     private:
         bool has_focus = true;
-        caret_t caret;
+        cursor_t cursor;
         string_type _placeholder_string;
+        string_type::value_type _cursor_character = L'_';
     };
 }

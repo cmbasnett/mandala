@@ -42,6 +42,22 @@ namespace mandala
 
                     break;
                 }
+                case input_event_t::keyboard_t::key_e::home:
+                {
+                    if ((input_event.keyboard.mod_flags & input_event_t::mod_flag_shift) == input_event_t::mod_flag_shift)
+                    {
+                    }
+
+                    cursor.column_index = 0;
+
+                    break;
+                }
+                case input_event_t::keyboard_t::key_e::end:
+                {
+                    cursor.column_index = 0;    //TODO: make this do whatever
+
+                    break;
+                }
                 default:
                     break;
                 }
@@ -49,6 +65,8 @@ namespace mandala
             else if (input_event.keyboard.type == input_event_t::keyboard_t::type_e::character)
             {
                 string_copy += input_event.keyboard.character;
+
+                ++cursor.column_index;
 
                 input_event.is_consumed = true;
             }

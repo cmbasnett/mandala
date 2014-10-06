@@ -57,33 +57,31 @@ namespace mandala
 		virtual void clean() override;
         virtual void render(mat4_t world_matrix, mat4_t view_projection_matrix) override;
 
-	private:
+	protected:
 		struct render_data_t
 		{
-			typedef vec4_t color_type;
+			typedef rgba_type color_type;
 
 			struct line_t
 			{
 				typedef int32_t width_type;
 
-				string_type string;
+				string_type string; //TODO: convert this to a series of iterators or index pairs so we don't need to constantly be copying strings
 				width_type width = 0;
+
 				std::vector<std::pair<size_t, color_type>> colors_pushes;
 				std::vector<size_t> color_pop_indices;
 			};
 
-            void reset()
-            {
-                lines.clear();
-
-                base_translation = vec2_t(0);
-            }
+            void reset();
 
 			std::vector<line_t> lines;
 			vec2_t base_translation;
 		};
 
+    private:
 		string_type _string;
+        //string_type _render_string;  //TODO: make this a string that the render_data can use in conjunction with iterators or index pairs
 		std::shared_ptr<bitmap_font_t> _bitmap_font;
 		justification_e _justification = justification_e::left;
 		vertical_alignment_e _vertical_alignment = vertical_alignment_e::top;

@@ -19,7 +19,7 @@ def main():
 		print file
 
 		if (file.endswith(".bmfc")):
-			process = subprocess.call([bmfont_path, "-c", bitmap_fonts_path + file, "-o", "..\\" + os.path.splitext(basename(file))[0] + ".fnt"])
+			process = subprocess.call([bmfont_path, "-c", bitmap_fonts_path + file, "-o", os.path.splitext(basename(file))[0] + ".fnt"])
 
 	for file in os.listdir(root):
 		if (file.endswith(".fnt")):
@@ -32,4 +32,3 @@ def main():
 
 if __name__ == '__main__':
 	main()
-	

@@ -50,7 +50,7 @@ namespace mandala
             bsp = app.resources.get<bsp_t>(hash_t("dod_flash.bsp"));
 
             debug_label = std::make_shared<gui_label_t>();
-			debug_label->set_bitmap_font(app.resources.get<bitmap_font_t>(hash_t("terminal_8.fnt")));
+			debug_label->set_bitmap_font(app.resources.get<bitmap_font_t>(hash_t("inconsolata_12.fnt")));
 			debug_label->set_color(vec4_t(1));
 			debug_label->set_dock_mode(gui_dock_mode_e::fill);
 			debug_label->set_vertical_alignment(gui_label_t::vertical_alignment_e::bottom);
