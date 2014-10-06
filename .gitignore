@@ -6,3 +6,5 @@ bin/
 intermediate/
 Debug/
 Release/
+tools/pack/projects/msvc/Test/pack.exe
+tools/pack/projects/msvc/pack/Test/vc120.idb
