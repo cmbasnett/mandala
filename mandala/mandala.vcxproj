@@ -116,7 +116,7 @@ xcopy "$(SolutionDir)ext\openal-soft-1.15.1-bin\lib\Win32\*.dll" "$(OutDir)" /y
 xcopy "$(SolutionDir)ext\lua-5.1.4_Win32_dll12_lib\*.dll" "$(OutDir)" /y
 xcopy "$(SolutionDir)ext\luabind-master\bin\msvc-12.0\debug\*.dll" "$(OutDir)" /y
 
-echo $(PlatformTarget)</Command>
+"$(SolutionDir)tools\pack\bin\pack.exe" "$(SolutionDir)resources\deploy\\" "$(OutDir)resources\armada.pack"</Command>
     </PostBuildEvent>
     <CustomBuildStep>
       <Command>
@@ -127,7 +127,8 @@ echo $(PlatformTarget)</Command>
       </Message>
     </CustomBuildStep>
     <PreBuildEvent>
-      <Command>"$(SolutionDir)tools\pack\bin\pack.exe" "$(SolutionDir)resources\deploy\\" "$(OutDir)resources\armada.pack"</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
