@@ -3,19 +3,18 @@
 #include "pack.hpp"
 
 //std
+#include <sstream>
 #include <strstream>
 
 //boost
 #include <boost\filesystem\path.hpp>
-#include <boost\iostreams\device\mapped_file.hpp>
-#include <boost\iostreams\filtering_streambuf.hpp>
-#include <boost\iostreams\stream.hpp>
 
 namespace mandala
 {
 	void pack_mgr_t::mount(const std::string& path)
 	{
-		auto pack_hash = hash_t(boost::filesystem::path(path).filename().string());
+        const auto pack_string = boost::filesystem::path(path).filename().string();
+        const auto pack_hash = hash_t(pack_string);
 
 		packs.erase(pack_hash);
 		
@@ -23,7 +22,10 @@ namespace mandala
 
 		if (!packs_itr.second)
 		{
-			throw std::exception();
+            std::ostringstream ostringstream;
+            ostringstream << "pack \"" << pack_string << "\" already mounted";
+
+            throw std::exception(ostringstream.str().c_str());
 		}
 
 		auto& pack = packs_itr.first->second;
@@ -48,7 +50,10 @@ namespace mandala
 
 		if (files_itr == files.end())
 		{
-            throw std::out_of_range("");
+            std::ostringstream ostringstream;
+            ostringstream << "no such file " << hash;
+
+            throw std::out_of_range(ostringstream.str().c_str());
 		}
 
 		const auto& file = files_itr->second;

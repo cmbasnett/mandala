@@ -1,6 +1,5 @@
-//mandala
-#include "lua_mgr.hpp"
-#include "app.hpp"
+//boost
+#include <boost\filesystem.hpp>
 
 //lua
 extern "C"
@@ -10,8 +9,15 @@ extern "C"
 #include "lauxlib.h"
 }
 
+#include "io.hpp"
+
 //luabind
 #include <luabind\luabind.hpp>
+#include <luabind\operator.hpp>
+
+//mandala
+#include "lua_mgr.hpp"
+#include "app.hpp"
 
 namespace mandala
 {
@@ -19,8 +25,15 @@ namespace mandala
     {
         state = luaL_newstate();
 
+        luaopen_base(state);
+        luaopen_string(state);
+        luaopen_table(state);
+        luaopen_math(state);
+        //luaopen_io(state);
+        luaopen_debug(state);
+
         luabind::open(state);
-        
+
         luabind::module(state)
             [
                 luabind::class_<hash32_t>("hash")
@@ -30,6 +43,10 @@ namespace mandala
                 .def("string", &hash32_t::string)
 #endif
                 .def("value", &hash32_t::value)
+                .def(luabind::tostring(luabind::self))
+                .def(luabind::self == hash32_t())
+                .def(luabind::self <= hash32_t())
+                .def(luabind::self < hash32_t())
             ];
 
         luabind::module(state)
@@ -44,6 +61,10 @@ namespace mandala
                 .def_readwrite("g", &vec2_t::g)
                 .def_readwrite("s", &vec2_t::s)
                 .def_readwrite("t", &vec2_t::t)
+                .def(luabind::self + luabind::other<vec2_t>())
+                .def(luabind::self - luabind::other<vec2_t>())
+                .def(luabind::self == luabind::other<vec2_t>())
+                .def(luabind::tostring(luabind::self))
             ];
 
         luabind::module(state)
@@ -62,6 +83,7 @@ namespace mandala
                 .def_readwrite("s", &vec3_t::s)
                 .def_readwrite("t", &vec3_t::t)
                 .def_readwrite("p", &vec3_t::p)
+                .def(luabind::tostring(luabind::self))
             ];
 
         luabind::module(state)
@@ -83,6 +105,7 @@ namespace mandala
                 .def_readwrite("t", &vec4_t::t)
                 .def_readwrite("p", &vec4_t::p)
                 .def_readwrite("q", &vec4_t::q)
+                .def(luabind::tostring(luabind::self))
             ];
 
         luabind::module(state)
@@ -93,7 +116,12 @@ namespace mandala
 
         luabind::module(state)
             [
-                luabind::class_<resource_mgr_t>("resource_mgr")
+                luabind::class_<pack_mgr_t>("pack_mgr")
+            ];
+
+        luabind::module(state)
+            [
+                luabind::class_<resource_mgr_t, luabind::bases<pack_mgr_t>>("resource_mgr")
                 .def("prune", &resource_mgr_t::prune)
                 .def("purge", &resource_mgr_t::purge)
             ];
@@ -103,12 +131,11 @@ namespace mandala
                 luabind::class_<app_t>("app")
                 .def("exit", &app_t::exit)
                 .def("reset", &app_t::reset)
-                //.def_readonly("resources", &app_t::resources)
-                //.def_readonly("states", &app_t::states)
-                //.def_readonly("audio", &app_t::audio)
+                .property("resources", &app_t::resources)
             ];
 
         luabind::globals(state)["app"] = &app;
+        luabind::globals(state)["resources"] = &app.resources;
     }
 
     lua_mgr_t::~lua_mgr_t()

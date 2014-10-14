@@ -18,7 +18,8 @@ namespace mandala
 	{
 		skybox_t::skybox_t()
 		{
-			auto model = app.resources.get<model_t>(hash_t("skybox.md5m"));
+			const auto model = app.resources.get<model_t>(hash_t("skybox.md5m"));
+
 			model_instance = std::make_shared<model_instance_t>(model);
 		}
 		

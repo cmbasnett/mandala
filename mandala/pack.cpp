@@ -18,7 +18,7 @@ namespace mandala
 	pack_t::pack_t(const std::string& path) :
 		path(path)
 	{
-		auto istream = std::ifstream(path, std::ios_base::binary | std::ios_base::in);
+		auto istream = std::ifstream(path, std::ios_base::binary);
 
 		//magic
         char magic[PACK_MAGIC_LENGTH + 1] = { '\0' };

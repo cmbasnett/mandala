@@ -15,7 +15,7 @@ namespace mandala
             typedef vec2_t position_type;
             typedef vec2_t texcoord_type;
 
-            vertex_t(position_type position, vec2_t texcoord_type) :
+            vertex_t(const position_type& position, const vec2_t& texcoord_type) :
 				position(position),
 				texcoord(texcoord)
 			{

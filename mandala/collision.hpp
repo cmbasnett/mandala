@@ -81,12 +81,20 @@ namespace mandala
 		}
 
 		return intersect_type_e::intersect;
-	}
+    }
+
+    template<typename AABBScalar, typename PointScalar>
+    bool contains(const details::aabb2_t<AABBScalar>& aabb, const glm::detail::tvec2<PointScalar>& point)
+    {
+        return aabb.min == glm::min(aabb.min, static_cast<glm::detail::tvec2<AABBScalar>>(point)) &&
+               aabb.max == glm::max(aabb.max, static_cast<glm::detail::tvec2<AABBScalar>>(point));
+    }
 
 	template<typename AABBScalar, typename PointScalar>
 	bool contains(const details::aabb3_t<AABBScalar>& aabb, const glm::detail::tvec3<PointScalar>& point)
 	{
-		return aabb.min == glm::min(aabb.min, static_cast<glm::detail::tvec3<AABBScalar>>(point)) && aabb.max == glm::max(aabb.max, static_cast<glm::detail::tvec3<AABBScalar>>(point));
+        return aabb.min == glm::min(aabb.min, static_cast<glm::detail::tvec3<AABBScalar>>(point)) &&
+               aabb.max == glm::max(aabb.max, static_cast<glm::detail::tvec3<AABBScalar>>(point));
 	}
 
 	template<typename LHSScalar, typename RHSScalar>

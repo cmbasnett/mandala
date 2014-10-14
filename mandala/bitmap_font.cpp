@@ -252,8 +252,10 @@ namespace mandala
 		return kerning_amount;
 	}
 
-	void bitmap_font_t::render_string(const std::wstring& string, mat4_t world_matrix, mat4_t view_projection_matrix, const vec4_t& base_color, std::stack<vec4_t>& color_stack, const std::vector<std::pair<size_t, vec4_t>>& color_pushes, const std::vector<size_t>& color_pop_indices) const
-	{
+    void bitmap_font_t::render_string(const std::wstring& string, mat4_t world_matrix, mat4_t view_projection_matrix, const rgba_type& base_color, std::stack<rgba_type>& color_stack, const std::vector<std::pair<size_t, rgba_type>>& color_pushes, const std::vector<size_t>& color_pop_indices) const
+    {
+        static const auto character_index_stride = sizeof(index_type) * indices_per_character;
+
 		//buffers
 		gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
 		gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
@@ -315,12 +317,8 @@ namespace mandala
 			}
 
 			auto x = static_cast<float32_t>(character.advance_x);
-
-            auto character_index = character_indices.at(character.id);
-
-            static const auto character_index_stride = sizeof(index_type) * indices_per_character;
-
-			auto string_index = std::distance(string.begin(), c);
+            const auto character_index = character_indices.at(character.id);
+			const auto string_index = std::distance(string.begin(), c);
 
 			//color push
 			while (color_pushes_itr != color_pushes.end() && color_pushes_itr->first == string_index)
@@ -347,7 +345,7 @@ namespace mandala
 
 			if (did_color_stack_change)
 			{
-				auto color = color_stack.empty() ? base_color : color_stack.top();
+				const auto& color = color_stack.empty() ? base_color : color_stack.top();
 
                 gpu_program->font_color_top(color);
                 gpu_program->font_color_bottom(color);
@@ -355,7 +353,7 @@ namespace mandala
 
 			gpu.draw_elements(gpu_t::primitive_type_e::triangles, indices_per_character, gpu_t::index_type_e::unsigned_int, character_index * character_index_stride);
 
-			auto next = (c + 1);
+			const auto next = (c + 1);
 
 			if (kerning_pairs.size() > 0 && next != string.end())
 			{

@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
 
     if (!ifstream.is_open())
     {
-        std::cerr << "failed to open input file" << std::endl;
+        std::cerr << "failed to open input file \"" << input_path << "\"" << std::endl;
 
         return 1;
     }
@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
 
     if (!boost::filesystem::is_directory(output_path))
     {
-        std::cerr << "output path is not a directory" << std::endl;
+        std::cerr << "output path \"" << output_path << "\"is not a directory" << std::endl;
 
         return 1;
     }

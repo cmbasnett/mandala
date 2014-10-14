@@ -27,9 +27,9 @@ namespace mandala
 		{
 			static const std::type_index type_index = typeid(T);
 
-			auto lock_guard = std::unique_lock<std::recursive_mutex>(mutex);
+			const auto lock_guard = std::unique_lock<std::recursive_mutex>(mutex);
 
-			auto type_resources_itr = type_resources.find(type_index);
+			const auto type_resources_itr = type_resources.find(type_index);
 
 			if (type_resources_itr == type_resources.end())
 			{
@@ -44,9 +44,9 @@ namespace mandala
 		{
 			static const std::type_index type_index = typeid(T);
 
-			auto lock_guard = std::unique_lock<std::recursive_mutex>(mutex);
+			const auto lock_guard = std::unique_lock<std::recursive_mutex>(mutex);
 
-			auto type_resources_itr = type_resources.find(type_index);
+			const auto type_resources_itr = type_resources.find(type_index);
 
 			if (type_resources_itr == type_resources.end())
 			{
@@ -84,9 +84,9 @@ namespace mandala
 		{
 			static const std::type_index type_index = typeid(T);
 
-			auto lock_guard = std::unique_lock<std::recursive_mutex>(mutex);
+			const auto lock_guard = std::unique_lock<std::recursive_mutex>(mutex);
 
-			auto type_resources_itr = type_resources.find(type_index);
+			const auto type_resources_itr = type_resources.find(type_index);
 
 			if (type_resources_itr == type_resources.end())
 			{
@@ -96,17 +96,18 @@ namespace mandala
 
 			auto& resources = type_resources[type_index];
 
-			auto resources_itr = std::find_if(resources.begin(), resources.end(), [&](const std::pair<hash_t, std::shared_ptr<resource_t>>& pair)
+			const auto resources_itr = std::find_if(resources.begin(), resources.end(), [&](const std::pair<hash_t, std::shared_ptr<resource_t>>& pair)
 			{
 				return resource == pair.second;
 			});
 
 			if (resources_itr != resources.end())
 			{
-				//resource already exists
-				throw std::exception();
+                std::ostringstream ostringstream;
 
-				//TODO: overwrite?
+                ostringstream << "resource " << hash << " already exists";
+
+                throw std::exception(ostringstream.str().c_str());
 			}
 
 			resource->hash = hash;

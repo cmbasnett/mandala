@@ -15,6 +15,7 @@
 #include "bitmap_font.hpp"
 #include "gui_label.hpp"
 #include "color.hpp"
+#include "collision.hpp"
 
 namespace mandala
 {
@@ -323,7 +324,7 @@ namespace mandala
         const auto line_height = get_line_height();
 		auto base_translation = _render_data.base_translation;
 
-		std::stack<vec4_t> color_stack;
+		std::stack<rgba_type> color_stack;
 
 		for (const auto& line : _render_data.lines)
 		{
@@ -349,5 +350,17 @@ namespace mandala
         }
 
         gui_node_t::render(world_matrix, view_projection_matrix);
+    }
+
+    void gui_label_t::on_input_event(input_event_t& input_event)
+    {
+        if (input_event.device_type == input_event_t::device_type_e::touch &&
+            input_event.touch.type == input_event_t::touch_t::type_e::button_press)
+        {
+            if (contains(bounds(), input_event.touch.position))
+            {
+                //std::cout << "touched a label" << std::endl;
+            }
+        }
     }
 }

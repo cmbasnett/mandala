@@ -101,3 +101,9 @@ namespace mandala
 	typedef details::hash_t<uint64_t> hash64_t;
 	typedef hash32_t hash_t;
 }
+
+template<typename T>
+std::ostream& operator<<(std::ostream& ostream, const mandala::details::hash_t<T>& hash)
+{
+    return ostream << hash.value();
+}

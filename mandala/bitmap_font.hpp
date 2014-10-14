@@ -37,15 +37,18 @@ namespace mandala
 
 		struct kerning_pair_t
 		{
-			uint32_t first = 0;
-			uint32_t second = 0;
+            character_id_type first = 0;
+            character_id_type second = 0;
 			int16_t amount = 0;
 		};
 
 		struct vertex_t
 		{
-			vec2_t position;
-			vec2_t texcoord;
+            typedef vec2_t position_type;
+            typedef vec2_t texcoord_type;
+
+            position_type position;
+            texcoord_type texcoord;
         };
 
         static const auto characters_max = 0xFFFF;
@@ -60,7 +63,7 @@ namespace mandala
 
 		bitmap_font_t(std::istream& istream);
 
-		void render_string(const std::wstring& string, mat4_t world_matrix, mat4_t view_projection_matrix, const vec4_t& base_color, std::stack<vec4_t>& color_stack, const std::vector<std::pair<size_t, vec4_t>>& color_pushes, const std::vector<size_t>& color_pop_indices) const;
+        void render_string(const std::wstring& string, mat4_t world_matrix, mat4_t view_projection_matrix, const rgba_type& base_color, std::stack<rgba_type>& color_stack, const std::vector<std::pair<size_t, rgba_type>>& color_pushes, const std::vector<size_t>& color_pop_indices) const;
 		int16_t get_kerning_amount(wchar_t lhs, wchar_t rhs) const;
 		void get_string_pages(std::vector<uint8_t>& pages, const std::wstring& string) const;
 		int16_t get_string_width(const std::wstring& string) const;

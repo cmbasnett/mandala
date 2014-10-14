@@ -94,7 +94,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)ext\glm-0.9.4.4;$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)ext\glew-1.10.0\include;$(SolutionDir)ext\zlib-1.2.8\include;$(SolutionDir)ext\libpng-1.6.3;$(SolutionDir)ext\openal-soft-1.15.1-bin\include;C:\boost_1_55_0;$(SolutionDir)ext\lua-5.1.4_Win32_dll12_lib\include;$(SolutionDir)ext\luabind-master</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ext\glm-0.9.4.4;$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)ext\glew-1.10.0\include;$(SolutionDir)ext\zlib-1.2.8\include;$(SolutionDir)ext\libpng-1.6.3;$(SolutionDir)ext\openal-soft-1.15.1-bin\include;C:\boost_1_55_0;$(SolutionDir)ext\lua-5.1.4_Win32_dll12_lib\include;$(SolutionDir)ext\luabind-0.9.1</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PreprocessorDefinitions>_WIN32_WINNT=0x0501;DEBUG;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -105,7 +105,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)ext\glew-1.10.0\lib\Release\Win32;$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\lib-msvc110;$(SolutionDir)ext\zlib-1.2.8\lib;$(SolutionDir)ext\libpng-1.6.3\projects\vstudio\Release Library;$(SolutionDir)ext\openal-soft-1.15.1-bin\lib\Win32;C:\boost_1_55_0\stage\lib;$(SolutionDir)ext\lua-5.1.4_Win32_dll12_lib;$(SolutionDir)ext\luabind-master\bin\msvc-12.0\debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)ext\glew-1.10.0\lib\Release\Win32;$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\lib-msvc110;$(SolutionDir)ext\zlib-1.2.8\lib;$(SolutionDir)ext\libpng-1.6.3\projects\vstudio\Release Library;$(SolutionDir)ext\openal-soft-1.15.1-bin\lib\Win32;C:\boost_1_55_0\stage\lib;$(SolutionDir)ext\lua-5.1.4_Win32_dll12_lib;$(SolutionDir)ext\luabind-0.9.1\bin\msvc-12.0\debug</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3dll.lib;zlib.lib;libpng16.lib;libOpenAL32.dll.a;lua5.1.lib;luabindd.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
@@ -114,7 +114,7 @@
 xcopy "$(SolutionDir)ext\glew-1.10.0\bin\Release\Win32\*.dll" "$(OutDir)" /y
 xcopy "$(SolutionDir)ext\openal-soft-1.15.1-bin\lib\Win32\*.dll" "$(OutDir)" /y
 xcopy "$(SolutionDir)ext\lua-5.1.4_Win32_dll12_lib\*.dll" "$(OutDir)" /y
-xcopy "$(SolutionDir)ext\luabind-master\bin\msvc-12.0\debug\*.dll" "$(OutDir)" /y
+xcopy "$(SolutionDir)ext\luabind-0.9.1\bin\msvc-12.0\debug\*.dll" "$(OutDir)" /y
 
 "$(SolutionDir)tools\pack\bin\pack.exe" "$(SolutionDir)resources\deploy\\" "$(OutDir)resources\armada.pack"</Command>
     </PostBuildEvent>
@@ -271,6 +271,8 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="index_buffer.hpp" />
     <ClInclude Include="index_type.hpp" />
     <ClInclude Include="interpolation.hpp" />
+    <ClInclude Include="io.hpp" />
+    <ClInclude Include="luabind.hpp" />
     <ClInclude Include="lua_mgr.hpp" />
     <ClInclude Include="model_gpu_program.hpp" />
     <ClInclude Include="openal.hpp" />

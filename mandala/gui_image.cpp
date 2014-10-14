@@ -11,14 +11,17 @@
 #include "gpu.hpp"
 #include "gui_gpu_program.hpp"
 #include "blur_horizontal_gpu_program.hpp"
+#include "collision.hpp"
 
 namespace mandala
 {
     gui_image_t::gui_image_t()
     {
-        std::array<index_buffer_type::index_type, 4> indices = {
-            0, 1, 2, 3
-        };
+        std::array<index_buffer_type::index_type, 12> indices = {
+            0, 1, 2, 
+            0, 2, 3, 
+            1, 2, 3, 
+            1, 3, 0 };
 
         _index_buffer = std::make_shared<index_buffer_type>();
 		_index_buffer->data(indices, gpu_t::buffer_usage_e::static_draw);
@@ -59,11 +62,27 @@ namespace mandala
 		gpu_program->world_matrix(world_matrix);
 		gpu_program->view_projection_matrix(view_projection_matrix);
 		gpu_program->color(color());
-		//gpu_program->blur_size(1.0f / 256.0f);
 
         gpu.textures.bind(diffuse_texture_index, _sprite.sprite_set->texture);
 
-        gpu.draw_elements(gpu_t::primitive_type_e::triangle_fan, 4, gpu_t::index_type_e::unsigned_byte, 0);
+        switch (_triangle_mode)
+        {
+        case triangle_mode_e::bottom_right:
+            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 3, gpu_t::index_type_e::unsigned_byte, 0);
+            break;
+        case triangle_mode_e::top_left:
+            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 3, gpu_t::index_type_e::unsigned_byte, 3);
+            break;
+        case triangle_mode_e::top_right:
+            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 3, gpu_t::index_type_e::unsigned_byte, 6);
+            break;
+        case triangle_mode_e::bottom_left:
+            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 3, gpu_t::index_type_e::unsigned_byte, 9);
+            break;
+        case triangle_mode_e::both:
+            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 6, gpu_t::index_type_e::unsigned_byte, 0);
+            break;
+        }
 
         gpu.textures.unbind(diffuse_texture_index);
 
@@ -92,29 +111,50 @@ namespace mandala
 			sprite_size = bounds().size();
 		}
 
+        std::array<vertex_type::position_type, vertex_count> vertex_positions = {
+            vertex_type::position_type(vec3_t(vec2_t(-0.5f, -0.5f) * sprite_size, 0.0f)),
+            vertex_type::position_type(vec3_t(vec2_t(0.5f, -0.5f) * sprite_size, 0.0f)),
+            vertex_type::position_type(vec3_t(vec2_t(0.5f, 0.5f) * sprite_size, 0.0f)),
+            vertex_type::position_type(vec3_t(vec2_t(-0.5f, 0.5f) * sprite_size, 0.0f))
+        };
+
 		if (_sprite.region.is_rotated)
         {
-            vertex_buffer_type::vertex_type vertices[vertex_count] = {
-				vertex_type(vec3_t(vec2_t(-0.5f, -0.5f) * sprite_size, 0.0f), vec2_t(_sprite.region.uv.min.x, _sprite.region.uv.max.y)),
-				vertex_type(vec3_t(vec2_t( 0.5f, -0.5f) * sprite_size, 0.0f), vec2_t(_sprite.region.uv.min.x, _sprite.region.uv.min.y)),
-				vertex_type(vec3_t(vec2_t( 0.5f,  0.5f) * sprite_size, 0.0f), vec2_t(_sprite.region.uv.max.x, _sprite.region.uv.min.y)),
-				vertex_type(vec3_t(vec2_t(-0.5f,  0.5f) * sprite_size, 0.0f), vec2_t(_sprite.region.uv.max.x, _sprite.region.uv.max.y))
+            vertex_type vertices[vertex_count] = {
+                vertex_type(vertex_positions[0], vec2_t(_sprite.region.uv.min.x, _sprite.region.uv.max.y)),
+                vertex_type(vertex_positions[1], vec2_t(_sprite.region.uv.min.x, _sprite.region.uv.min.y)),
+                vertex_type(vertex_positions[2], vec2_t(_sprite.region.uv.max.x, _sprite.region.uv.min.y)),
+                vertex_type(vertex_positions[3], vec2_t(_sprite.region.uv.max.x, _sprite.region.uv.max.y))
             };
 
             _vertex_buffer->data(vertices, vertex_count, gpu_t::buffer_usage_e::dynamic_draw);
         }
         else
         {
-            vertex_buffer_type::vertex_type vertices[vertex_count] = {
-				vertex_type(vec3_t(vec2_t(-0.5f, -0.5f) * sprite_size, 0.0f), vec2_t(_sprite.region.uv.min.x, _sprite.region.uv.min.y)),
-				vertex_type(vec3_t(vec2_t( 0.5f, -0.5f) * sprite_size, 0.0f), vec2_t(_sprite.region.uv.max.x, _sprite.region.uv.min.y)),
-				vertex_type(vec3_t(vec2_t( 0.5f,  0.5f) * sprite_size, 0.0f), vec2_t(_sprite.region.uv.max.x, _sprite.region.uv.max.y)),
-				vertex_type(vec3_t(vec2_t(-0.5f,  0.5f) * sprite_size, 0.0f), vec2_t(_sprite.region.uv.min.x, _sprite.region.uv.max.y))
+            vertex_type vertices[vertex_count] = {
+                vertex_type(vertex_positions[0], vec2_t(_sprite.region.uv.min.x, _sprite.region.uv.min.y)),
+                vertex_type(vertex_positions[1], vec2_t(_sprite.region.uv.max.x, _sprite.region.uv.min.y)),
+                vertex_type(vertex_positions[2], vec2_t(_sprite.region.uv.max.x, _sprite.region.uv.max.y)),
+                vertex_type(vertex_positions[3], vec2_t(_sprite.region.uv.min.x, _sprite.region.uv.max.y))
             };
 
 			_vertex_buffer->data(vertices, vertex_count, gpu_t::buffer_usage_e::dynamic_draw);
         }
 		
 		gui_node_t::clean();
-	}
+    }
+
+    void gui_image_t::on_input_event(input_event_t& input_event)
+    {
+        if (input_event.device_type == input_event_t::device_type_e::touch &&
+            input_event.touch.type == input_event_t::touch_t::type_e::button_press)
+        {
+            if (contains(bounds(), input_event.touch.position))
+            {
+
+            }
+        }
+
+        gui_node_t::on_input_event(input_event);
+    }
 }
