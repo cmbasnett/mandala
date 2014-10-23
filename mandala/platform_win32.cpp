@@ -82,7 +82,13 @@ namespace mandala
 
         if (is_press)
         {
-            input_event.touch.id = platform.input.touch_id++;
+            ++platform.input.touch_id;
+
+            input_event.touch.id = platform.input.touch_id;
+        }
+        else
+        {
+            platform.input.touch_id = 0;    //TODO: replace with something better
         }
 
         glfwGetCursorPos(window, &input_event.touch.position.x, &input_event.touch.position.y);
@@ -99,6 +105,7 @@ namespace mandala
 		input_event.touch.position.y = y;
 		input_event.touch.position_delta.x = x - platform.cursor_position.x;
 		input_event.touch.position_delta.y = y - platform.cursor_position.y;
+        input_event.touch.id = platform.input.touch_id;
 
 		if (platform.is_cursor_centered)
 		{

@@ -22,7 +22,7 @@ namespace mandala
         vertex_buffer = std::make_shared<vertex_buffer_type>();
     }
 
-    void gui_canvas_t::render(mat4_t world_matrix, mat4_t view_projection_matrix)
+    void gui_canvas_t::render_override(mat4_t world_matrix, mat4_t view_projection_matrix)
     {
 		world_matrix *= glm::translate(bounds().min.x, bounds().min.y, 0.0f);
 

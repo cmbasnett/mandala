@@ -151,6 +151,29 @@ namespace mandala
             clear_flag_stencil = (1 << 3)
         };
 
+        enum class stencil_function_e
+        {
+            never,
+            less,
+            lequal,
+            greater,
+            gequal,
+            notequal,
+            always
+        };
+
+        enum class stencil_operation_e
+        {
+            keep,
+            zero,
+            replace,
+            incr,
+            incr_wrap,
+            decr,
+            decr_wrap,
+            invert
+        };
+
 		//programs
         struct program_mgr_t
         {
@@ -278,6 +301,61 @@ namespace mandala
 
             void apply_state(const state_t& state);
         } culling;
+
+        //stencil
+        struct stencil_t
+        {
+            struct state_t
+            {
+                struct
+                {
+                    stencil_function_e func = stencil_function_e::always;
+                    int32_t ref = 0;
+                    uint32_t mask = 0xFFFFFFFF;
+                } function;
+
+                struct
+                {
+                    stencil_operation_e fail = stencil_operation_e::keep;
+                    stencil_operation_e zfail = stencil_operation_e::keep;
+                    stencil_operation_e zpass = stencil_operation_e::keep;
+                } operations;
+
+                bool is_enabled = false;
+                uint32_t mask = 0xFFFFFFFF;
+            };
+
+            state_t get_state() const;
+            void push_state(const state_t& state);
+            void pop_state();
+        private:
+            std::stack<state_t> states;
+
+            void apply_state(const state_t& state);
+        } stencil;
+
+        //color
+        struct color_t
+        {
+            struct state_t
+            {
+                struct
+                {
+                    bool r = true;
+                    bool g = true;
+                    bool b = true;
+                    bool a = true;
+                } mask;
+            };
+
+            state_t get_state() const;
+            void push_state(const state_t& state);
+            void pop_state();
+        private:
+            std::stack<state_t> states;
+
+            void apply_state(const state_t& state);
+        } color;
 
 		void draw_elements(primitive_type_e primitive_type, size_t count, index_type_e index_type, size_t offset) const;
 

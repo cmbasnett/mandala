@@ -3,6 +3,7 @@
 //mandala
 #include "gui_node.hpp"
 #include "hash.hpp"
+#include "input_event.hpp"
 
 //std
 #include <typeindex>
@@ -56,7 +57,10 @@ namespace mandala
 			return std::static_pointer_cast<T, gui_node_t>(nodes_itr->second);
 		}
 
+        virtual void on_input_event(input_event_t& input_event) override;
+
 	private:
 		std::map<std::type_index, std::map<const hash_t, std::shared_ptr<gui_node_t>>> type_nodes;
+        std::map<input_event_t::touch_t::touch_id_type, std::weak_ptr<gui_node_t>> touch_nodes;
 	};
 }

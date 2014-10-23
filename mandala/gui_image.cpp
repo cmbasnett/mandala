@@ -29,25 +29,20 @@ namespace mandala
         _vertex_buffer = std::make_shared<vertex_buffer_type>();
 	}
 
-	void gui_image_t::render(mat4_t world_matrix, mat4_t view_projection_matrix)
+	void gui_image_t::render_override(mat4_t world_matrix, mat4_t view_projection_matrix)
     {
-        if (is_hidden())
-        {
-            return;
-        }
-
 		auto blend_state = gpu.blend.get_state();
 		blend_state.is_enabled = true;
 		blend_state.src_factor = gpu_t::blend_factor_e::src_alpha;
 		blend_state.dst_factor = gpu_t::blend_factor_e::one_minus_src_alpha;
 
-		gpu.blend.push_state(blend_state);
+        gpu.blend.push_state(blend_state);
 
-		//buffers
+        //buffers
         gpu.buffers.push(gpu_t::buffer_target_e::array, _vertex_buffer);
-		gpu.buffers.push(gpu_t::buffer_target_e::element_array, _index_buffer);
+        gpu.buffers.push(gpu_t::buffer_target_e::element_array, _index_buffer);
 
-		const auto& gpu_program = app.gpu_programs.get<gui_gpu_program_t>();
+        const auto& gpu_program = app.gpu_programs.get<gui_gpu_program_t>();
 
 		//program
 		gpu.programs.push(gpu_program);
@@ -93,7 +88,7 @@ namespace mandala
 
 		gpu.blend.pop_state();
 
-        gui_node_t::render(world_matrix, view_projection_matrix);
+        gui_node_t::render_override(world_matrix, view_projection_matrix);
 	}
 
     void gui_image_t::clean()

@@ -312,6 +312,13 @@
     <ClInclude Include="luabind.hpp">
       <Filter>mandala\core</Filter>
     </ClInclude>
+    <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="gui_scroll.hpp">
+      <Filter>mandala\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui_button.hpp">
+      <Filter>mandala\gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -490,6 +497,12 @@
       <Filter>mandala\app</Filter>
     </ClCompile>
     <ClCompile Include="gui_textfield.cpp">
+      <Filter>mandala\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui_scroll.cpp">
+      <Filter>mandala\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui_button.cpp">
       <Filter>mandala\gui</Filter>
     </ClCompile>
   </ItemGroup>

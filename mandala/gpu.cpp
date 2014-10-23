@@ -216,6 +216,54 @@ namespace mandala
         }
     }
 
+    inline GLenum get_stencil_function(gpu_t::stencil_function_e stencil_function)
+    {
+        switch (stencil_function)
+        {
+        case gpu_t::stencil_function_e::always:
+            return GL_ALWAYS;
+        case gpu_t::stencil_function_e::gequal:
+            return GL_GEQUAL;
+        case gpu_t::stencil_function_e::greater:
+            return GL_GREATER;
+        case gpu_t::stencil_function_e::lequal:
+            return GL_LEQUAL;
+        case gpu_t::stencil_function_e::less:
+            return GL_LESS;
+        case gpu_t::stencil_function_e::never:
+            return GL_NEVER;
+        case gpu_t::stencil_function_e::notequal:
+            return GL_NOTEQUAL;
+        default:
+            throw std::invalid_argument("");
+        }
+    }
+
+    inline GLenum get_stencil_operation(gpu_t::stencil_operation_e stencil_operation)
+    {
+        switch (stencil_operation)
+        {
+        case gpu_t::stencil_operation_e::decr:
+            return GL_DECR;
+        case gpu_t::stencil_operation_e::decr_wrap:
+            return GL_DECR_WRAP;
+        case gpu_t::stencil_operation_e::incr:
+            return GL_INCR;
+        case gpu_t::stencil_operation_e::incr_wrap:
+            return GL_INCR_WRAP;
+        case gpu_t::stencil_operation_e::invert:
+            return GL_INVERT;
+        case gpu_t::stencil_operation_e::keep:
+            return GL_KEEP;
+        case gpu_t::stencil_operation_e::replace:
+            return GL_REPLACE;
+        case gpu_t::stencil_operation_e::zero:
+            return GL_ZERO;
+        default:
+            throw std::invalid_argument("");
+        }
+    }
+
     void gpu_t::clear(const clear_flag_type clear_flags) const
     {
         GLbitfield clear_mask = 0;
@@ -323,8 +371,8 @@ namespace mandala
         if (frame_buffers.empty())
         {
             glBindFramebuffer(GL_FRAMEBUFFER, 0); glCheckError();
-            glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-            glDepthMask(GL_TRUE);
+            glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE); glCheckError();
+            glDepthMask(GL_TRUE); glCheckError();
             //TODO: stencil mask
 
             return weak_type();
@@ -388,7 +436,7 @@ namespace mandala
         if (viewports.empty())
         {
 			vec4_i32_t viewport;
-			glGetIntegerv(GL_VIEWPORT, glm::value_ptr(viewport));
+            glGetIntegerv(GL_VIEWPORT, glm::value_ptr(viewport)); glCheckError();
 
 			return viewport_type(viewport.x, viewport.y, viewport.z, viewport.w);
         }
@@ -550,7 +598,7 @@ namespace mandala
 
 	void gpu_t::destroy_program(uint32_t id)
 	{
-		glDeleteProgram(id);
+        glDeleteProgram(id); glCheckError();
 	}
 
     //blend
@@ -629,8 +677,7 @@ namespace mandala
             glDisable(GL_DEPTH_TEST); glCheckError();
         }
 
-        glDepthMask(state.should_write_mask ? GL_TRUE : GL_FALSE);
-
+        glDepthMask(state.should_write_mask ? GL_TRUE : GL_FALSE); glCheckError();
         glDepthFunc(get_depth_function(state.function)); glCheckError();
     }
 
@@ -663,34 +710,108 @@ namespace mandala
     {
         if (state.is_enabled)
         {
-            glEnable(GL_CULL_FACE);
+            glEnable(GL_CULL_FACE); glCheckError();
         }
         else
         {
-            glDisable(GL_CULL_FACE);
+            glDisable(GL_CULL_FACE); glCheckError();
         }
 
         switch (state.front_face)
         {
         case culling_front_face_e::ccw:
-            glFrontFace(GL_CCW);
+            glFrontFace(GL_CCW); glCheckError();
             break;
         case culling_front_face_e::cw:
-            glFrontFace(GL_CW);
+            glFrontFace(GL_CW); glCheckError();
             break;
         }
         
         switch (state.mode)
         {
         case culling_mode_e::back:
-            glCullFace(GL_BACK);
+            glCullFace(GL_BACK); glCheckError();
             break;
         case culling_mode_e::front:
-            glCullFace(GL_FRONT);
+            glCullFace(GL_FRONT); glCheckError();
             break;
         case culling_mode_e::front_and_back:
-            glCullFace(GL_FRONT_AND_BACK);
+            glCullFace(GL_FRONT_AND_BACK); glCheckError();
             break;
         }
+    }
+
+    //stencil
+    gpu_t::stencil_t::state_t gpu_t::stencil_t::get_state() const
+    {
+        if (!states.empty())
+        {
+            return states.top();
+        }
+
+        return state_t();
+    }
+
+    void gpu_t::stencil_t::push_state(const state_t& state)
+    {
+        apply_state(state);
+
+        states.push(state);
+    }
+
+    void gpu_t::stencil_t::pop_state()
+    {
+        states.pop();
+
+        apply_state(get_state());
+    }
+
+    void gpu_t::stencil_t::apply_state(const state_t& state)
+    {
+        if (state.is_enabled)
+        {
+            glEnable(GL_STENCIL_TEST); glCheckError();
+        }
+        else
+        {
+            glDisable(GL_STENCIL_TEST); glCheckError();
+        }
+
+        glStencilFunc(get_stencil_function(state.function.func), state.function.mask, state.function.ref); glCheckError();
+        glStencilOp(get_stencil_operation(state.operations.fail), get_stencil_operation(state.operations.zfail), get_stencil_operation(state.operations.zpass)); glCheckError();
+        glStencilMask(state.mask); glCheckError();
+    }
+
+    //color
+    gpu_t::color_t::state_t gpu_t::color_t::get_state() const
+    {
+        if (!states.empty())
+        {
+            return states.top();
+        }
+
+        return state_t();
+    }
+
+    void gpu_t::color_t::push_state(const state_t& state)
+    {
+        apply_state(state);
+
+        states.push(state);
+    }
+
+    void gpu_t::color_t::pop_state()
+    {
+        states.pop();
+
+        apply_state(get_state());
+    }
+
+    void gpu_t::color_t::apply_state(const state_t& state)
+    {
+        glColorMask(state.mask.r ? GL_TRUE : GL_FALSE,
+                    state.mask.g ? GL_TRUE : GL_FALSE, 
+                    state.mask.b ? GL_TRUE : GL_FALSE, 
+                    state.mask.a ? GL_TRUE : GL_FALSE); glCheckError();
     }
 }

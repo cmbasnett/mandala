@@ -309,13 +309,8 @@ namespace mandala
 		}
 	}
 
-    void gui_label_t::render(mat4_t world_matrix, mat4_t view_projection_matrix)
+    void gui_label_t::render_override(mat4_t world_matrix, mat4_t view_projection_matrix)
 	{
-		if (is_hidden())
-		{
-			return;
-		}
-
         if (_bitmap_font == nullptr)
         {
             throw std::exception("bitmap font not set");
@@ -349,7 +344,7 @@ namespace mandala
             base_translation.y -= line_height;
         }
 
-        gui_node_t::render(world_matrix, view_projection_matrix);
+        gui_node_t::render_override(world_matrix, view_projection_matrix);
     }
 
     void gui_label_t::on_input_event(input_event_t& input_event)

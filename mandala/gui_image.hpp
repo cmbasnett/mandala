@@ -46,7 +46,7 @@ namespace mandala
 		bool _is_autosized_to_texture = false;
         triangle_mode_e _triangle_mode = triangle_mode_e::both;
 
-		virtual void render(mat4_t world_matrix, mat4_t view_projection_matrix) override;
+		virtual void render_override(mat4_t world_matrix, mat4_t view_projection_matrix) override;
 		virtual void clean() override;
         virtual void on_input_event(input_event_t& input_event);
     };

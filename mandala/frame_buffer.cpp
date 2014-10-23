@@ -61,23 +61,36 @@ namespace mandala
 
     void frame_buffer_t::on_bind() const
     {
+        //NOTE: setting these flags on binding could have unforseen consequences
+        auto gpu_color_state = gpu.color.get_state();
+        auto gpu_depth_state = gpu.depth.get_state();
+
         if ((static_cast<type_flags_type>(type) & type_flag_color) == type_flag_color)
         {
-            glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE); glCheckError();
+            gpu_color_state.mask.r = true;
+            gpu_color_state.mask.g = true;
+            gpu_color_state.mask.b = true;
+            gpu_color_state.mask.a = true;
         }
         else
         {
-            glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE); glCheckError();
+            gpu_color_state.mask.r = false;
+            gpu_color_state.mask.g = false;
+            gpu_color_state.mask.b = false;
+            gpu_color_state.mask.a = false;
         }
 
         if ((static_cast<type_flags_type>(type) & type_flag_depth) == type_flag_depth)
         {
-            glDepthMask(GL_TRUE); glCheckError();
+            gpu_depth_state.should_write_mask = true;
         }
         else
         {
-            glDepthMask(GL_FALSE); glCheckError();
+            gpu_depth_state.should_write_mask = false;
         }
+
+        gpu.color.push_state(gpu_color_state);
+        gpu.depth.push_state(gpu_depth_state);
 
         //TODO: stencil mask
     }

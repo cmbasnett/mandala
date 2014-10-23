@@ -55,7 +55,7 @@ namespace mandala
 		void set_should_use_color_codes(bool should_use_color_codes) { _should_use_color_codes = should_use_color_codes; _is_dirty = true; }
 
         virtual void clean() override;
-        virtual void render(mat4_t world_matrix, mat4_t view_projection_matrix) override;
+        virtual void render_override(mat4_t world_matrix, mat4_t view_projection_matrix) override;
         virtual void on_input_event(input_event_t& input_event) override;
 
 	protected:

@@ -16,11 +16,11 @@ namespace mandala
 		layout = std::make_shared<gui_layout_t>();
 		layout->set_dock_mode(gui_dock_mode_e::fill);
 		layout->set_bounds(gui_node_t::bounds_type(vec2_t(), vec2_t(static_cast<float32_t>(screen_size.x), static_cast<float32_t>(screen_size.y))));
-	}
+    }
 
-	gui_state_t::~gui_state_t()
-	{
-	}
+    gui_state_t::~gui_state_t()
+    {
+    }
 
 	void gui_state_t::tick(float32_t dt)
 	{
@@ -29,6 +29,8 @@ namespace mandala
 		{
 			layout->clean();
 		}
+
+        layout->tick(dt);
 	}
 
 	void gui_state_t::render()

@@ -41,6 +41,7 @@ namespace mandala
 	{
 		typedef aabb2_t bounds_type;
 		typedef vec2_t size_type;
+        typedef rgba_type color_type;
 
 		struct trace_args_t
 		{
@@ -61,7 +62,7 @@ namespace mandala
 		const padding_t& padding() const { return _padding; }
 		const padding_t& margin() const { return _margin; }
 		const vec2_t& size() const { return _size; }
-		const vec4_t& color() const { return _color; }
+        const color_type& color() const { return _color; }
 		const bounds_type& bounds() const { return _bounds; }
 		bool is_dirty() const;
 		bool is_hidden() const { return _is_hidden; }
@@ -73,7 +74,7 @@ namespace mandala
 		void set_padding(const padding_t& padding) { _padding = padding; _is_dirty = true; }
 		void set_margin(const padding_t& margin) { _margin = margin; _is_dirty = true; }
 		void set_size(const vec2_t& size) { _size = size; _is_dirty = true; }
-		void set_color(const vec4_t& color) { _color = color; _is_dirty = true; }
+        void set_color(const color_type& color) { _color = color; _is_dirty = true; }
 		void set_bounds(const bounds_type& bounds) { _bounds = bounds; _is_dirty = true; }
 		void set_is_hidden(bool is_hidden) { _is_hidden = is_hidden; _is_dirty = true; }
 
@@ -81,7 +82,10 @@ namespace mandala
         static bool trace(std::shared_ptr<gui_node_t> node, trace_args_t args, trace_result_t& result);
 
         virtual void render(mat4_t world_matrix, mat4_t view_projection_matrix);
+
+        virtual void render_override(mat4_t world_matrix, mat4_t view_projection_matrix);
 		virtual void clean();
+        virtual void tick(float32_t dt);
 		virtual void on_input_event(input_event_t& input_event);
 
         bool has_children() const { return !_children.empty(); }
@@ -90,18 +94,19 @@ namespace mandala
 		void orphan();
         void adopt(std::shared_ptr<gui_node_t> child);
 
-	private:
-		std::shared_ptr<gui_node_t> _parent;
-		std::vector<std::shared_ptr<gui_node_t>> _children;
-		gui_dock_mode_e _dock_mode = gui_dock_mode_e::none;
-		gui_anchor_flags_type _anchor_flags = (gui_anchor_flag_top | gui_anchor_flag_left);
-		vec2_t _anchor_offset;
-		padding_t _padding;
-		padding_t _margin;
-		size_type _size;
-		vec4_t _color = vec4_t(1.0f);
-		bounds_type _bounds;
-		bool _is_hidden = false;
+    private:
+        std::shared_ptr<gui_node_t> _parent;
+        std::vector<std::shared_ptr<gui_node_t>> _children;
+        gui_dock_mode_e _dock_mode = gui_dock_mode_e::none;
+        gui_anchor_flags_type _anchor_flags = (gui_anchor_flag_top | gui_anchor_flag_left);
+        vec2_t _anchor_offset;
+        padding_t _padding;
+        padding_t _margin;
+        size_type _size;
+        color_type _color = color_type(1.0f);
+        bounds_type _bounds;
+        bool _is_hidden = false;
+        bool _should_clip = false;
 
 	protected:
 		bool _is_dirty = true;
