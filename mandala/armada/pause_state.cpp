@@ -38,7 +38,7 @@ namespace mandala
             for (auto i = 0; i < 50; ++i)
             {
                 auto a = std::make_shared<gui_image_t>();
-                a->set_sprite(sprite_ref_t(hash_t("white.json"), hash_t("white.png")));
+                a->set_sprite(sprite_ref_t(hash_t("white.tpsb"), hash_t("white.png")));
                 a->set_is_autosized_to_texture(false);
                 a->set_size(vec2_t(1, 0));
                 a->set_color(vec4_t(static_cast<float32_t>(i) / 50, 0, 0, 1));

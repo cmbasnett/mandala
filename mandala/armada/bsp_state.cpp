@@ -59,7 +59,7 @@ namespace mandala
 
             crosshair_image = std::make_shared<gui_image_t>();
 			crosshair_image->set_is_autosized_to_texture(true);
-			crosshair_image->set_sprite(sprite_ref_t(hash_t("crosshairs.json"), hash_t("crosshair2.png")));
+			crosshair_image->set_sprite(sprite_ref_t(hash_t("crosshairs.tpsb"), hash_t("crosshair2.png")));
 			crosshair_image->set_anchor_flags(gui_anchor_flag_all);
 
 			bsp_render_image = std::make_shared<gui_image_t>();

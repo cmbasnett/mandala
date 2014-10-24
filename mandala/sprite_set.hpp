@@ -33,7 +33,6 @@ namespace mandala
 
 		std::shared_ptr<texture_t> texture;
 		std::map<const hash_t, const region_t> regions;
-		std::vector<const hash_t> region_hashes;
 
 		sprite_set_t(std::istream& istream);
 		sprite_set_t(const std::shared_ptr<texture_t>& texture);	//TODO: ugly, feels like this needs to be elsewhere in a helper class

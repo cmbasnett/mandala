@@ -1,94 +1,103 @@
 //std
 #include <fstream>
 
-//boost
-#include <boost\property_tree\json_parser.hpp>
-
 //mandala
 #include "app.hpp"
-#include "boost.hpp"
 #include "sprite_set.hpp"
 #include "texture.hpp"
 
 namespace mandala
 {
+    namespace tpsb
+    {
+        static const auto magic_length = 4;
+        static const auto magic = "TPSB";
+        static const auto version = 1;
+    }
+
 	sprite_set_t::sprite_set_t(std::istream& istream)
-	{
-		using namespace boost::property_tree;
+    {
+        //magic
+        char magic[tpsb::magic_length + 1];
+        memset(magic, '\0', tpsb::magic_length + 1);
+        istream.read(magic, tpsb::magic_length);
 
-		ptree ptree_;
+        if (strcmp(tpsb::magic, magic) != 0)
+        {
+            throw std::exception();
+        }
 
-		read_json(istream, ptree_);
+        //version
+        int32_t version = 0;
+        istream.read(reinterpret_cast<char*>(&version), sizeof(version));
 
-		//meta
-		auto meta_ptree = ptree_.get_child("meta");
+        if (version != tpsb::version)
+        {
+            throw std::exception();
+        }
 
-		//texture
-		auto texture_hash = meta_ptree.get<hash32_t>("image");
+        //texture
+        std::string texture_name;
+        std::getline(istream, texture_name, '\0');
 
-		texture = app.resources.get<texture_t>(texture_hash);
+        texture = app.resources.get<texture_t>(hash_t(texture_name));
 
-		//size
-		auto size_ptree = meta_ptree.get_child("size");
+        //region count
+        uint16_t region_count = 0;
 
-		vec2_t texture_size;
+        istream.read(reinterpret_cast<char*>(&region_count), sizeof(region_count));
 
-		texture_size.x = size_ptree.get<vec2_t::value_type>("w");
-		texture_size.y = size_ptree.get<vec2_t::value_type>("h");
+        for (uint16_t i = 0; i < region_count; ++i)
+        {
+            region_t region;
 
-		//sprites
-		auto regions_ptree = ptree_.get_child("frames");
+            //hash
+            std::string region_name;
+            std::getline(istream, region_name, '\0');
+            
+            region.hash = hash_t(std::move(region_name));
 
-		for (auto& region_ptree : regions_ptree)
-		{
-			region_t region;
+            //frame rectangle
+            istream.read(reinterpret_cast<char*>(&region.frame_rectangle.x), sizeof(region.frame_rectangle.x));
+            istream.read(reinterpret_cast<char*>(&region.frame_rectangle.y), sizeof(region.frame_rectangle.y));
+            istream.read(reinterpret_cast<char*>(&region.frame_rectangle.width), sizeof(region.frame_rectangle.width));
+            istream.read(reinterpret_cast<char*>(&region.frame_rectangle.width), sizeof(region.frame_rectangle.width));
 
-			//hash
-			region.hash = region_ptree.second.get<hash_t>("filename");
+            //rectangle
+            istream.read(reinterpret_cast<char*>(&region.rectangle.x), sizeof(region.rectangle.x));
+            istream.read(reinterpret_cast<char*>(&region.rectangle.y), sizeof(region.rectangle.y));
+            istream.read(reinterpret_cast<char*>(&region.rectangle.width), sizeof(region.rectangle.width));
+            istream.read(reinterpret_cast<char*>(&region.rectangle.height), sizeof(region.rectangle.height));
 
-			//frame_recangle
-			auto frame_rectangle_ptree = region_ptree.second.get_child("frame");
+            //source size
+            istream.read(reinterpret_cast<char*>(&region.source_size.x), sizeof(region.source_size.x));
+            istream.read(reinterpret_cast<char*>(&region.source_size.y), sizeof(region.source_size.y));
 
-			region.frame_rectangle.x = frame_rectangle_ptree.get<region_t::rectangle_type::scalar_type>("x");
-			region.frame_rectangle.y = frame_rectangle_ptree.get<region_t::rectangle_type::scalar_type>("y");
-			region.frame_rectangle.width = frame_rectangle_ptree.get<region_t::rectangle_type::scalar_type>("w");
-			region.frame_rectangle.height = frame_rectangle_ptree.get<region_t::rectangle_type::scalar_type>("h");
+            //uv
+            istream.read(reinterpret_cast<char*>(&region.uv.min.x), sizeof(region.uv.min.x));
+            istream.read(reinterpret_cast<char*>(&region.uv.min.y), sizeof(region.uv.min.y));
+            istream.read(reinterpret_cast<char*>(&region.uv.max.x), sizeof(region.uv.max.x));
+            istream.read(reinterpret_cast<char*>(&region.uv.max.y), sizeof(region.uv.max.y));
 
-			//is_rotated
-			region.is_rotated = region_ptree.second.get<bool>("rotated");
+            //flags
+            typedef uint8_t flags_type;
 
-			//is_trimmed
-			region.is_trimmed = region_ptree.second.get<bool>("trimmed");
+            enum : flags_type
+            {
+                flag_none = 0,
+                flag_rotated = (1 << 0),
+                flag_trimmed = (1 << 1)
+            };
 
-			//source_size
-			auto source_size_ptree = region_ptree.second.get_child("sourceSize");
+            flags_type flags = flag_none;
 
-			region.source_size.x = source_size_ptree.get<region_t::size_type::value_type>("w");
-			region.source_size.y = source_size_ptree.get<region_t::size_type::value_type>("h");
+            istream.read(reinterpret_cast<char*>(&flags), sizeof(flags));
 
-			//rectangle
-			auto rectangle_ptree = region_ptree.second.get_child("spriteSourceSize");
+            region.is_rotated = ((flags & flag_rotated) == flag_rotated);
+            region.is_trimmed = ((flags & flag_trimmed) == flag_trimmed);
 
-			region.rectangle.x = rectangle_ptree.get<region_t::rectangle_type::scalar_type>("x");
-			region.rectangle.y = region.source_size.y - rectangle_ptree.get<region_t::rectangle_type::scalar_type>("y") - region.frame_rectangle.height;
-			region.rectangle.width = rectangle_ptree.get<region_t::rectangle_type::scalar_type>("w");
-			region.rectangle.height = rectangle_ptree.get<region_t::rectangle_type::scalar_type>("h");
-
-			if (region.is_rotated)
-			{
-				std::swap(region.frame_rectangle.width, region.frame_rectangle.height);
-			}
-
-			//uv
-			region.uv.min.x = region.frame_rectangle.x / texture_size.x;
-			region.uv.min.y = (texture_size.y - region.frame_rectangle.y - region.frame_rectangle.height) / texture_size.y;
-			region.uv.max.x = (region.frame_rectangle.x + region.frame_rectangle.width) / texture_size.x;
-			region.uv.max.y = (texture_size.y - region.frame_rectangle.y) / texture_size.y;
-
-			region_hashes.push_back(region.hash);
-
-			regions.insert(std::make_pair(region.hash, region));
-		}
+            regions.insert(std::make_pair(region.hash, region));
+        }
 	}
 
 	sprite_set_t::sprite_set_t(const std::shared_ptr<texture_t>& texture) :
@@ -117,8 +126,6 @@ namespace mandala
 		region.uv.min.y = 0.0f;
 		region.uv.max.x = 1.0f;
 		region.uv.max.y = 1.0f;
-
-		region_hashes.emplace_back();
 
 		regions.emplace(hash_t(), region);
 	}

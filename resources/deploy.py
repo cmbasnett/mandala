@@ -35,13 +35,18 @@ def deploy_bitmap_fonts():
 			shutil.copy(file, deploy_textures_dir)
 			os.remove(file)
 
-def deploy_sprite_sheets():
+def deploy_sprite_sets():
 	sprite_sets_dir = ''.join([cwd, "\\raw\\sprite_sets\\"])
+	sprite_sets_deploy_dir = ''.join([cwd, "\\deploy\\sprite_sets\\"])
+	tpsb_path = os.path.normpath(''.join([cwd, "\\..\\tools\\tpsb\\bin\\tpsb.exe"]))
 	
 	for root, directories, files in os.walk(sprite_sets_dir):
 		for file in files:
 			if (file.endswith(".tps")):
-				process = subprocess.call(["TexturePacker", os.path.abspath(os.path.join(root, file)), "--quiet"])
+				tps_file = os.path.abspath(os.path.join(root, file))
+				process = subprocess.call(["TexturePacker", tps_file, "--quiet"])
+				json_file = tps_file.replace('.tps', '.json')
+				process = subprocess.call([tpsb_path, json_file, sprite_sets_deploy_dir])
 
 def deploy_models():
 	md5b_path = os.path.normpath(''.join([cwd, "\\..\\tools\\md5b\\bin\\md5b.exe"]))
@@ -63,7 +68,7 @@ def deploy_models():
 
 def main():
 	deploy_bitmap_fonts()
-	deploy_sprite_sheets()
+	deploy_sprite_sets()
 	deploy_models()
 	return
 

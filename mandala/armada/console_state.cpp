@@ -35,7 +35,7 @@ namespace mandala
             auto root_background_image = std::make_shared<gui_image_t>();
             root_background_image->set_color(vec4_t(vec3_t(0), 0.75f));
             root_background_image->set_dock_mode(gui_dock_mode_e::fill);
-            root_background_image->set_sprite(sprite_t(sprite_ref_t(hash_t("white.json"), hash_t("white.png"))));
+            root_background_image->set_sprite(sprite_t(sprite_ref_t(hash_t("white.tpsb"), hash_t("white.png"))));
 
             output_label = std::make_shared<gui_label_t>();
             output_label->set_bitmap_font(app.resources.get<bitmap_font_t>(hash_t("inconsolata_12.fnt")));
@@ -54,7 +54,7 @@ namespace mandala
             input_root_node->set_size(vec2_t(0, app.resources.get<bitmap_font_t>(hash_t("inconsolata_12.fnt"))->line_height + 16)); //HACK: we don't have parent resizing yet
 
             auto input_background_image = std::make_shared<gui_image_t>();
-            input_background_image->set_sprite(sprite_t(sprite_ref_t(hash_t("white.json"), hash_t("white.png"))));
+            input_background_image->set_sprite(sprite_t(sprite_ref_t(hash_t("white.tpsb"), hash_t("white.png"))));
             input_background_image->set_dock_mode(gui_dock_mode_e::fill);
             input_background_image->set_color(vec4_t(vec3_t(0), 0.5f));
 
@@ -71,7 +71,7 @@ namespace mandala
             //auto root_border_image = std::make_shared<gui_image_t>();
             //root_border_image->set_color(vec4_t(vec3_t(0), 1));
             //root_border_image->set_dock_mode(gui_dock_mode_e::bottom);
-            //root_border_image->set_sprite(sprite_t(sprite_ref_t(hash_t("white.json"), hash_t("white.png"))));
+            //root_border_image->set_sprite(sprite_t(sprite_ref_t(hash_t("white.tpsb"), hash_t("white.png"))));
             //root_border_image->set_is_autosized_to_texture(false);
             //root_border_image->set_size(vec2_t(0, 2));
 
