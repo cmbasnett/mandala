@@ -6,3 +6,4 @@ bin/
 intermediate/
 Debug/
 Release/
+*.suo
