@@ -26,8 +26,6 @@ namespace mandala
 		texture_t(std::istream& istream);
 		virtual ~texture_t();
 
-        static void get_formats(color_type_e color_type, int32_t& internal_format, int32_t& format, int32_t& type);
-
 	private:
 		texture_t(texture_t&) = delete;
 		texture_t& operator=(texture_t&) = delete;

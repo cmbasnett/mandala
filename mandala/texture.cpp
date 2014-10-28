@@ -9,6 +9,45 @@
 
 namespace mandala
 {
+	void get_formats(color_type_e color_type, int32_t& internal_format, int32_t& format, int32_t& type)
+	{
+		switch (color_type)
+		{
+		case color_type_e::g:
+			format = GL_LUMINANCE;
+			internal_format = 1;
+			type = GL_UNSIGNED_BYTE;
+			break;
+		case color_type_e::rgb:
+			format = GL_RGB;
+			internal_format = GL_RGB;
+			type = GL_UNSIGNED_BYTE;
+			break;
+		case color_type_e::rgba:
+			format = GL_RGBA;
+			internal_format = GL_RGBA;
+			type = GL_UNSIGNED_BYTE;
+			break;
+		case color_type_e::ga:
+			format = GL_LUMINANCE_ALPHA;
+			internal_format = 2;
+			type = GL_UNSIGNED_BYTE;
+			break;
+		case color_type_e::depth:
+			format = GL_DEPTH_COMPONENT;
+			internal_format = GL_DEPTH_COMPONENT;
+			type = GL_UNSIGNED_BYTE;
+			break;
+		case color_type_e::depth_stencil:
+			format = GL_DEPTH_STENCIL;
+			internal_format = GL_DEPTH24_STENCIL8;
+			type = GL_UNSIGNED_INT_24_8;
+			break;
+		default:
+			throw std::exception();
+		}
+	}
+
     //TODO: move all these GL calls into the gpu_mgr_t class
     texture_t::texture_t(color_type_e color_type, uint32_t width, uint32_t height) :
         width(width),
@@ -60,44 +99,5 @@ namespace mandala
     texture_t::~texture_t()
     {
         glDeleteTextures(1, &id);
-    }
-
-    void texture_t::get_formats(color_type_e color_type, int32_t& internal_format, int32_t& format, int32_t& type)
-    {
-        switch (color_type)
-        {
-        case color_type_e::g:
-            format = GL_LUMINANCE;
-            internal_format = 1;
-            type = GL_UNSIGNED_BYTE;
-            break;
-        case color_type_e::rgb:
-            format = GL_RGB;
-            internal_format = GL_RGB;
-            type = GL_UNSIGNED_BYTE;
-            break;
-        case color_type_e::rgba:
-            format = GL_RGBA;
-            internal_format = GL_RGBA;
-            type = GL_UNSIGNED_BYTE;
-            break;
-        case color_type_e::ga:
-            format = GL_LUMINANCE_ALPHA;
-            internal_format = 2;
-            type = GL_UNSIGNED_BYTE;
-            break;
-        case color_type_e::depth:
-            format = GL_DEPTH_COMPONENT;
-            internal_format = GL_DEPTH_COMPONENT;
-            type = GL_UNSIGNED_BYTE;
-            break;
-        case color_type_e::depth_stencil:
-            format = GL_DEPTH_STENCIL;
-            internal_format = GL_DEPTH24_STENCIL8;
-            type = GL_UNSIGNED_INT_24_8;
-            break;
-        default:
-            throw std::exception();
-        }
     }
 }
