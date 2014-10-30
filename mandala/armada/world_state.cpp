@@ -31,7 +31,7 @@ namespace mandala
         {
             auto model = app.resources.get<model_t>(hash_t("boblampclean.md5m"));
             auto model_instance = std::make_shared<model_instance_t>(model);
-            model_instance->animation = app.resources.get<animation_t>(hash_t("boblampclean.md5a"));
+            model_instance->animation = app.resources.get<model_animation_t>(hash_t("boblampclean.md5a"));
             model_instances.push_back(model_instance);
 
 			hud_state = std::make_shared<world_hud_state_t>();

@@ -35,7 +35,7 @@ namespace mandala
             light_camera.target = vec3_t(0, 0, 0);
 
             model_instance = std::make_shared<model_instance_t>(app.resources.get<model_t>(hash_t("boblampclean.md5m")));
-            model_instance->animation = app.resources.get<animation_t>(hash_t("boblampclean.md5a"));
+            model_instance->animation = app.resources.get<model_animation_t>(hash_t("boblampclean.md5a"));
 
             frame_buffer = std::make_shared<frame_buffer_t>(frame_buffer_t::type_e::color_depth, static_cast<frame_buffer_t::size_type>(layout->bounds().size()));
             shadow_frame_buffer = std::make_shared<frame_buffer_t>(frame_buffer_t::type_e::depth, static_cast<frame_buffer_t::size_type>(layout->bounds().size()));

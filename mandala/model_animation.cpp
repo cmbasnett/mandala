@@ -5,11 +5,11 @@
 #include <boost/iostreams/read.hpp>
 
 //mandala
-#include "animation.hpp"
+#include "model_animation.hpp"
 
 namespace mandala
 {
-	animation_t::animation_t(std::istream& istream)
+	model_animation_t::model_animation_t(std::istream& istream)
 	{
 		//magic
         char magic[md5b::magic_length + 1] = { '\0' };

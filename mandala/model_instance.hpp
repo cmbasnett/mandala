@@ -10,7 +10,7 @@
 namespace mandala
 {
 	struct model_t;
-	struct animation_t;
+	struct model_animation_t;
 
 	struct model_instance_t
 	{
@@ -21,7 +21,7 @@ namespace mandala
 
 		mat4_t world_matrix;
 		std::shared_ptr<model_t> model;
-		std::shared_ptr<animation_t> animation;
+		std::shared_ptr<model_animation_t> animation;
 		skeleton_t skeleton;
 		float32_t t = 0.0f;
 		std::vector<mat4_t> bone_matrices;

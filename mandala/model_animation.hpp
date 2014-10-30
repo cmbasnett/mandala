@@ -11,7 +11,7 @@
 
 namespace mandala
 {
-	struct animation_t : resource_t
+	struct model_animation_t : resource_t
 	{
 		struct bone_t
 		{
@@ -37,7 +37,7 @@ namespace mandala
 			quat_t orientation;
 		};
 		
-		animation_t(std::istream& istream);
+		model_animation_t(std::istream& istream);
 
 		std::string name;
 		uint8_t frames_per_second = 0;
@@ -46,7 +46,7 @@ namespace mandala
 		std::vector<skeleton_t> frame_skeletons;
 
 	private:
-		animation_t(const animation_t&) = delete;
-		animation_t& operator=(const animation_t&) = delete;
+		model_animation_t(const model_animation_t&) = delete;
+		model_animation_t& operator=(const model_animation_t&) = delete;
 	};
 }
