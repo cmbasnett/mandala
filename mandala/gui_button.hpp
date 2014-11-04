@@ -10,7 +10,9 @@ namespace mandala
         enum class state_t
         {
             idle,
+#if defined(MANDALA_PC)
             hover,
+#endif
             pressed
         };
 

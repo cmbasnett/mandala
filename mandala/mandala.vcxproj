@@ -226,6 +226,7 @@ echo $(PlatformTarget)</Command>
   <ItemGroup>
     <ClInclude Include="..\triad\login_state.hpp" />
     <ClInclude Include="..\triad\triad.hpp" />
+    <ClInclude Include="model_animation.hpp" />
     <ClInclude Include="armada\console_state.hpp" />
     <ClInclude Include="armada\debug_state.hpp" />
     <ClInclude Include="armada\test_state.hpp" />
@@ -335,6 +336,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="window_event.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="model_animation.cpp" />
     <ClCompile Include="armada\console_state.cpp" />
     <ClCompile Include="armada\debug_state.cpp" />
     <ClCompile Include="armada\test_state.cpp" />
