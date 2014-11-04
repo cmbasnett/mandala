@@ -72,6 +72,10 @@ namespace mandala
 		virtual vec2_i32_t get_window_position() const override;
 		virtual void set_window_position(const vec2_i32_t& window_position) const override;
 
+		//clipboard
+		virtual std::string get_clipboard_string() const override;
+		virtual void set_clipboard_string(const std::string& clipboard) const override;
+
         void* window_ptr = nullptr;
 		vec4_t viewport;
 		input_mgr_t input;

@@ -286,7 +286,6 @@ namespace mandala
 
 		input.events.pop_front();
 
-        //increment event_id
 		++input.event_id;
 
         return true;
@@ -318,6 +317,7 @@ namespace mandala
 
 	std::string platform_win32_t::get_window_title() const
 	{
+		//TODO: implement this
 		return std::string();
 	}
 
@@ -352,5 +352,15 @@ namespace mandala
 	void platform_win32_t::set_window_position(const vec2_i32_t& window_position) const
 	{
         glfwSetWindowPos(static_cast<GLFWwindow*>(window_ptr), window_position.x, window_position.y);
+	}
+
+	std::string platform_win32_t::get_clipboard_string() const
+	{
+		return glfwGetClipboardString(static_cast<GLFWwindow*>(window_ptr));
+	}
+
+	void platform_win32_t::set_clipboard_string(const std::string& clipboard_string) const
+	{
+		glfwSetClipboardString(static_cast<GLFWwindow*>(window_ptr), clipboard_string.c_str());
 	}
 }

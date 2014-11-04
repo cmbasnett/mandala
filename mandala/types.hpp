@@ -9,6 +9,14 @@
 
 namespace mandala
 {
+#if defined(_WIN32) || defined(WIN32)
+#define MANDALA_WINDOWS
+#endif
+
+#if defined(MANDALA_WINDOWS)
+#define MANDALA_PC
+#endif
+
 	typedef char				int8_t;
 	typedef unsigned char		uint8_t;
 	typedef short				int16_t;

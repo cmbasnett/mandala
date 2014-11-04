@@ -124,9 +124,6 @@
     <ClInclude Include="material.hpp">
       <Filter>mandala\resources\material</Filter>
     </ClInclude>
-    <ClInclude Include="animation.hpp">
-      <Filter>mandala\resources\model</Filter>
-    </ClInclude>
     <ClInclude Include="md5b.hpp">
       <Filter>mandala\resources\model</Filter>
     </ClInclude>
@@ -143,10 +140,10 @@
       <Filter>mandala\resources\sound</Filter>
     </ClInclude>
     <ClInclude Include="sprite.hpp">
-      <Filter>mandala\resources\sprite_set</Filter>
+      <Filter>mandala\resources\sprite</Filter>
     </ClInclude>
     <ClInclude Include="sprite_set.hpp">
-      <Filter>mandala\resources\sprite_set</Filter>
+      <Filter>mandala\resources\sprite</Filter>
     </ClInclude>
     <ClInclude Include="texture.hpp">
       <Filter>mandala\resources\texture</Filter>
@@ -320,6 +317,13 @@
       <Filter>mandala\gui</Filter>
     </ClInclude>
     <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="model_animation.hpp">
+      <Filter>mandala\resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="sprite_animation.hpp">
+      <Filter>mandala\resources\sprite</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -342,9 +346,6 @@
       <Filter>mandala\resources\model</Filter>
     </ClCompile>
     <ClCompile Include="model_instance.cpp">
-      <Filter>mandala\resources\model</Filter>
-    </ClCompile>
-    <ClCompile Include="animation.cpp">
       <Filter>mandala\resources\model</Filter>
     </ClCompile>
     <ClCompile Include="app.cpp">
@@ -372,7 +373,7 @@
       <Filter>mandala\platform\win32</Filter>
     </ClCompile>
     <ClCompile Include="sprite_set.cpp">
-      <Filter>mandala\resources\sprite_set</Filter>
+      <Filter>mandala\resources\sprite</Filter>
     </ClCompile>
     <ClCompile Include="resource_mgr.cpp">
       <Filter>mandala\app</Filter>
@@ -402,7 +403,7 @@
       <Filter>mandala\states</Filter>
     </ClCompile>
     <ClCompile Include="sprite.cpp">
-      <Filter>mandala\resources\sprite_set</Filter>
+      <Filter>mandala\resources\sprite</Filter>
     </ClCompile>
     <ClCompile Include="game.cpp">
       <Filter>mandala\app</Filter>
@@ -506,6 +507,12 @@
     <ClCompile Include="gui_button.cpp">
       <Filter>mandala\gui</Filter>
     </ClCompile>
+    <ClCompile Include="model_animation.cpp">
+      <Filter>mandala\resources\model</Filter>
+    </ClCompile>
+    <ClCompile Include="sprite_animation.cpp">
+      <Filter>mandala\resources\sprite</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="mandala">
@@ -571,9 +578,6 @@
     <Filter Include="mandala\resources\model">
       <UniqueIdentifier>{9dfe90f3-bfcd-40ee-beb9-2e6a6a151eaa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="mandala\resources\sprite_set">
-      <UniqueIdentifier>{1ce79b84-b9e4-4689-a458-ac57e0a0a69d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="mandala\resources\texture">
       <UniqueIdentifier>{239dcc50-2a4a-4231-9bc3-8d2c133d0ec8}</UniqueIdentifier>
     </Filter>
@@ -606,6 +610,9 @@
     </Filter>
     <Filter Include="mandala\io">
       <UniqueIdentifier>{30f8257e-cfc0-472d-9b90-7750f64673fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\resources\sprite">
+      <UniqueIdentifier>{1ce79b84-b9e4-4689-a458-ac57e0a0a69d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

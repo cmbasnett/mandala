@@ -224,7 +224,7 @@ echo $(PlatformTarget)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="animation.hpp" />
+    <ClInclude Include="model_animation.hpp" />
     <ClInclude Include="armada\console_state.hpp" />
     <ClInclude Include="armada\debug_state.hpp" />
     <ClInclude Include="armada\test_state.hpp" />
@@ -299,6 +299,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="platform.hpp" />
     <ClInclude Include="platform_win32.hpp" />
     <ClInclude Include="sprite.hpp" />
+    <ClInclude Include="sprite_animation.hpp" />
     <ClInclude Include="sprite_set.hpp" />
     <ClInclude Include="state.hpp" />
     <ClInclude Include="state_mgr.hpp" />
@@ -331,7 +332,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="gpu_vertices.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="animation.cpp" />
+    <ClCompile Include="model_animation.cpp" />
     <ClCompile Include="armada\console_state.cpp" />
     <ClCompile Include="armada\debug_state.cpp" />
     <ClCompile Include="armada\test_state.cpp" />
@@ -381,6 +382,7 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="shadow_gpu_program.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="sprite.cpp" />
+    <ClCompile Include="sprite_animation.cpp" />
     <ClCompile Include="sprite_set.cpp" />
     <ClCompile Include="state_mgr.cpp" />
     <ClCompile Include="image.cpp" />

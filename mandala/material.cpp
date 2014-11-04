@@ -32,7 +32,7 @@ namespace mandala
 		//diffuse
 		const auto diffuse_optional = ptree_.get_child_optional("diffuse");
 
-		if(diffuse_optional)
+		if (diffuse_optional)
 		{
 			const auto diffuse_ptree = diffuse_optional.get();
 
