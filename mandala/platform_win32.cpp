@@ -17,6 +17,8 @@
 
 namespace mandala
 {
+    platform_win32_t platform;
+
     static inline void on_keyboard_key(GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
 		input_event_t input_event;
@@ -76,7 +78,7 @@ namespace mandala
         input_event.touch.button = static_cast<input_event_t::touch_t::button_e>(button);
 		input_event.touch.mod_flags = mods;
 
-        bool is_press = action == GLFW_PRESS;
+        bool is_press = (action == GLFW_PRESS);
 
         input_event.touch.type = is_press ? input_event_t::touch_t::type_e::button_press : input_event_t::touch_t::type_e::button_release;
 
@@ -133,15 +135,22 @@ namespace mandala
 
     static inline void on_window_resize(GLFWwindow* window, int width, int height)
     {
-		gpu.viewports.push({ 0, 0, width, height });
+		//gpu.viewports.push({ 0, 0, width, height });
+
+        window_event_t window_event;
+        window_event.type = window_event_t::type_e::resize;
+        window_event.width = width;
+        window_event.height = height;
+
+        std::cout << width << " " << height << std::endl;
+
+        //platform.window.events.push_back(window_event);
     }
 
     static inline void on_error(int error_code, const char* message)
     {
         throw std::exception();
     }
-
-    platform_win32_t platform;
 
     platform_win32_t::platform_win32_t()
     {
@@ -245,7 +254,8 @@ namespace mandala
 
 	void platform_win32_t::app_render_start()
 	{
-		glClearColor(0, 0, 0, 0);
+		glClearColor(0, 0, 0, 0);   //TODO: have gpu handle clear color
+
         gpu.clear(gpu_t::clear_flag_color | gpu_t::clear_flag_depth);
 	}
 
@@ -290,7 +300,21 @@ namespace mandala
 		++input.event_id;
 
         return true;
-	}
+    }
+
+    bool platform_win32_t::pop_window_event(window_event_t& window_event)
+    {
+        if (window.events.empty())
+        {
+            return false;
+        }
+
+        window_event = window.events.front();
+        
+        window.events.pop_front();
+
+        return true;
+    }
 
 	vec2_f64_t platform_win32_t::get_cursor_position() const
 	{
@@ -318,7 +342,7 @@ namespace mandala
 
 	std::string platform_win32_t::get_window_title() const
 	{
-		return std::string();
+		return std::string();   //TODO: get proper window title from glfw
 	}
 
 	void platform_win32_t::set_window_title(const std::string& window_title) const

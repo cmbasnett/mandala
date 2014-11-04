@@ -124,9 +124,6 @@
     <ClInclude Include="material.hpp">
       <Filter>mandala\resources\material</Filter>
     </ClInclude>
-    <ClInclude Include="animation.hpp">
-      <Filter>mandala\resources\model</Filter>
-    </ClInclude>
     <ClInclude Include="md5b.hpp">
       <Filter>mandala\resources\model</Filter>
     </ClInclude>
@@ -320,6 +317,24 @@
       <Filter>mandala\gui</Filter>
     </ClInclude>
     <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="..\triad\login_state.hpp">
+      <Filter>triad\states</Filter>
+    </ClInclude>
+    <ClInclude Include="..\triad\triad.hpp">
+      <Filter>triad</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="sprite_animation.hpp">
+      <Filter>mandala\resources\sprite_set</Filter>
+    </ClInclude>
+    <ClInclude Include="model_animation.hpp">
+      <Filter>mandala\resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="window_event.hpp">
+      <Filter>mandala\platform</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -342,9 +357,6 @@
       <Filter>mandala\resources\model</Filter>
     </ClCompile>
     <ClCompile Include="model_instance.cpp">
-      <Filter>mandala\resources\model</Filter>
-    </ClCompile>
-    <ClCompile Include="animation.cpp">
       <Filter>mandala\resources\model</Filter>
     </ClCompile>
     <ClCompile Include="app.cpp">
@@ -506,6 +518,12 @@
     <ClCompile Include="gui_button.cpp">
       <Filter>mandala\gui</Filter>
     </ClCompile>
+    <ClCompile Include="sprite_animation.cpp">
+      <Filter>mandala\resources\sprite_set</Filter>
+    </ClCompile>
+    <ClCompile Include="model_animation.cpp">
+      <Filter>mandala\resources\model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="mandala">
@@ -606,6 +624,12 @@
     </Filter>
     <Filter Include="mandala\io">
       <UniqueIdentifier>{30f8257e-cfc0-472d-9b90-7750f64673fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="triad">
+      <UniqueIdentifier>{86851b51-9ea2-42fc-89a5-d2b678cc3e07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="triad\states">
+      <UniqueIdentifier>{9da54b40-cc00-4bc7-950d-f0bc08506b26}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

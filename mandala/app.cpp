@@ -50,7 +50,11 @@ namespace mandala
 
             frame_start_time = high_resolution_clock::now();
 
-            handle_input();
+#if defined(_WIN32) || defined(WIN32)
+            handle_window_events();
+#endif
+            handle_input_events();
+
             tick(dt);
             render();
         }
@@ -110,7 +114,7 @@ namespace mandala
         platform.app_render_end();
     }
 
-    void app_t::handle_input()
+    void app_t::handle_input_events()
     {
         input_event_t input_event;
 
@@ -124,6 +128,23 @@ namespace mandala
 	{
 		states.on_input_event(input_event);
     }
+
+#if defined(_WIN32) || defined(WIN32)
+    void app_t::handle_window_events()
+    {
+        window_event_t window_event;
+
+        while (platform.pop_window_event(window_event))
+        {
+            on_window_event(window_event);
+        }
+    }
+
+    void app_t::on_window_event(window_event_t& window_event)
+    {
+        states.on_window_event(window_event);
+    }
+#endif
 
 	bool app_t::should_keep_running()
 	{

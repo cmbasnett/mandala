@@ -8,6 +8,7 @@
 //mandala
 #include "platform.hpp"
 #include "input_event.hpp"
+#include "window_event.hpp"
 
 namespace mandala
 {
@@ -25,6 +26,11 @@ namespace mandala
             input_event_t::id_type event_id = 0;
             input_event_t::touch_t::touch_id_type touch_id = 1;
             std::array<gamepad_state_t, 4> gamepad_states;
+        };
+
+        struct window_mgr_t
+        {
+            std::deque<window_event_t> events;
         };
 
         platform_win32_t();
@@ -52,6 +58,8 @@ namespace mandala
 		//pop_input_event
 		virtual bool pop_input_event(input_event_t& input_event) override;
 
+        virtual bool pop_window_event(window_event_t& window_event) override;
+
 		//cursor_position
 		virtual vec2_f64_t get_cursor_position() const override;
 		virtual void set_cursor_position(const vec2_f64_t& cursor_position) const override;
@@ -75,6 +83,7 @@ namespace mandala
         void* window_ptr = nullptr;
 		vec4_t viewport;
 		input_mgr_t input;
+        window_mgr_t window;
 
 		platform_win32_t(const platform_win32_t&) = delete;
 		platform_win32_t& operator=(const platform_win32_t&) = delete;

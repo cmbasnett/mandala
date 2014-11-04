@@ -61,7 +61,7 @@ namespace mandala
 
 		if (!response_stream || http_version.substr(0, 5) != "HTTP/")
 		{
-			std::cout << "Invalid response\n";
+            std::cout << "invalid response" << std::endl;
 		}
 
 		//status code
@@ -70,19 +70,19 @@ namespace mandala
 
 		if (status_code != 200)
 		{
-			std::cout << "Response returned with status code " << status_code << "\n";
+            std::cout << "response returned with status code " << status_code << std::endl;
 		}
 
 		//status message
 		std::string status_message;
 		std::getline(response_stream, status_message);
 
-		// Read the response headers, which are terminated by a blank line.
+		//read the response headers (terminated by a blank line)
 		boost::asio::read_until(socket, response, "\r\n\r\n");
 
 		std::ostringstream oss;
 
-		// Write whatever content we already have to output.
+		//write whatever content we already have to output
 		if (response.size() > 0)
 		{
 			oss << &response;

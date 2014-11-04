@@ -2,6 +2,9 @@
 
 //mandala
 #include "types.hpp"
+#if defined(_WIN32) || defined(WIN32)
+#include "window_event.hpp"
+#endif
 
 //std
 #include <memory>
@@ -15,7 +18,10 @@ namespace mandala
 	{
 		virtual void tick(float32_t dt) { }
 		virtual void render() { }
-		virtual void on_input_event(input_event_t& input_event) { }
+        virtual void on_input_event(input_event_t& input_event) { }
+#if defined(_WIN32) || defined(WIN32)
+        virtual void on_window_event(window_event_t& window_event) { }
+#endif
 		virtual void on_active() { }
 		virtual void on_passive() { }
 		virtual void on_enter() { }

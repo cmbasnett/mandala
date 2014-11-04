@@ -68,6 +68,7 @@ namespace mandala
 		bool is_hidden() const { return _is_hidden; }
 		const std::vector<std::shared_ptr<gui_node_t>>& children() const { return _children; }
 
+        void dirty() { _is_dirty = true; }
 		void set_dock_mode(gui_dock_mode_e dock_mode) { _dock_mode = dock_mode; _is_dirty = true; }
 		void set_anchor_flags(gui_anchor_flags_type anchor_flags) { _anchor_flags = anchor_flags; _is_dirty = true; }
 		void set_anchor_offset(const vec2_t& anchor_offset) { _anchor_offset = anchor_offset; _is_dirty = true; }
@@ -86,7 +87,7 @@ namespace mandala
         virtual void render_override(mat4_t world_matrix, mat4_t view_projection_matrix);
 		virtual void clean();
         virtual void tick(float32_t dt);
-		virtual void on_input_event(input_event_t& input_event);
+        virtual void on_input_event(input_event_t& input_event);
 
         bool has_children() const { return !_children.empty(); }
 		bool has_parent() const { return _parent.get() != nullptr; }

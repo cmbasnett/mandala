@@ -18,6 +18,7 @@ extern "C"
 //mandala
 #include "lua_mgr.hpp"
 #include "app.hpp"
+#include "platform.hpp"
 
 namespace mandala
 {
@@ -27,10 +28,10 @@ namespace mandala
 
         luaopen_base(state);
         luaopen_string(state);
-        luaopen_table(state);
-        luaopen_math(state);
+        //luaopen_table(state);
+        //luaopen_math(state);
         //luaopen_io(state);
-        luaopen_debug(state);
+        //luaopen_debug(state);
 
         luabind::open(state);
 
@@ -135,7 +136,6 @@ namespace mandala
             ];
 
         luabind::globals(state)["app"] = &app;
-        luabind::globals(state)["resources"] = &app.resources;
     }
 
     lua_mgr_t::~lua_mgr_t()

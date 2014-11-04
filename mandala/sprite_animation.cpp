@@ -6,11 +6,29 @@ namespace mandala
 	{
 	}
 
-	const sprite_animation_t::frame_t& const sprite_animation_t::get_frame_at_time(const duration_type& time) const
+	const sprite_ref_t& sprite_animation_t::get_sprite_at_time(time_type time) const
 	{
-		if (time >= _duration)
-		{
-
+        if (time.count() <= 0)
+        {
+            return frames.begin()->sprite;
+        }
+        else if (time >= _duration)
+        {
+            return frames.rbegin()->sprite;
 		}
+        else
+        {
+            for (const auto& frame : frames)
+            {
+                if (time < frame.duration)
+                {
+                    return frame.sprite;
+                }
+
+                time -= frame.duration;
+            }
+        }
+
+        return frames.begin()->sprite;
 	}
 }

@@ -6,6 +6,9 @@
 #include "gui_state.hpp"
 #include "platform.hpp"
 #include "gpu.hpp"
+#if defined(_WIN32) || defined(WIN32)
+#include "window_event.hpp"
+#endif
 
 namespace mandala
 {
@@ -53,29 +56,10 @@ namespace mandala
 	void gui_state_t::on_input_event(input_event_t& input_event)
 	{
         layout->on_input_event(input_event);
+    }
 
-		//if (input_event.device_type == input_event_t::device_type_e::touch &&
-		//	input_event.touch.type == input_event_t::touch_t::type_e::button_press)
-		//{
-		//	gui_node_t::trace_args_t trace_args;
-		//	trace_args.circle.origin = input_event.touch.position;
-		//	trace_args.circle.radius = 8.0f;
-
-		//	gui_node_t::trace_result_t trace_result;
-
-		//	auto did_hit = gui_node_t::trace(layout, trace_args, trace_result);
-
-		//	std::cout << trace_result.nodes_hit.size() << std::endl;
-
-		//	for (auto& node : trace_result.nodes_hit)
-		//	{
-		//		node->on_input_event(input_event);
-
-		//		if (input_event.is_consumed)
-		//		{
-		//			break;
-		//		}
-		//	}
-		//}
-	}
+    void gui_state_t::on_window_event(window_event_t& window_event)
+    {
+        layout->dirty();
+    }
 }

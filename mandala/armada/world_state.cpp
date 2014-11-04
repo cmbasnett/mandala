@@ -11,7 +11,7 @@
 #include "../platform.hpp"
 #include "../model.hpp"
 #include "../model_instance.hpp"
-#include "../animation.hpp"
+#include "../model_animation.hpp"
 #include "../color_types.hpp"
 #include "../texture.hpp"
 #include "../material.hpp"

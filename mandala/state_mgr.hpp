@@ -14,6 +14,10 @@ namespace mandala
 	struct app_t;
 	struct state_t;
 
+#if defined(_WIN32) || defined(WIN32)
+    struct window_event_t;
+#endif
+
 	typedef uint8_t state_flags_type;
 
 	enum : state_flags_type
@@ -61,6 +65,9 @@ namespace mandala
 		void tick(float32_t dt);
 		void render();
 		void on_input_event(input_event_t& input_event);
+#if defined(_WIN32) || defined(WIN32)
+        void on_window_event(window_event_t& window_event);
+#endif
 
 		void push(const state_type& state, state_flags_type link_flags);
 		void pop(const state_type& state);

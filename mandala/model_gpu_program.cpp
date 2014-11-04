@@ -144,7 +144,7 @@ subroutine (calculate_lighting) vec3 calculate_lighting_lit()
 	
 	vec3 specular_color = texture(specular.texture, out_texcoord).rgb * specular.color.rgb * specular_power;
 
-    return vec3(normal_dot_light_direction) + specular_color;
+    return vec3(normal_dot_light_direction) * specular_color;
 }
 
 subroutine (calculate_lighting) vec3 calculate_lighting_unlit()

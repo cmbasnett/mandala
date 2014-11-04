@@ -6,6 +6,7 @@
 namespace mandala
 {
     struct input_event_t;
+    struct window_event_t;
 
 	struct platform_t
 	{
@@ -36,6 +37,9 @@ namespace mandala
         virtual bool pop_input_event(input_event_t& input_event) = 0;
 
 #if defined(_WIN32) || defined(WIN32)
+        //pop_window_event
+        virtual bool pop_window_event(window_event_t& window_event) = 0;
+
 		//cursor_position
 		virtual vec2_f64_t get_cursor_position() const = 0;
 		virtual void set_cursor_position(const vec2_f64_t& cursor_position) const = 0;

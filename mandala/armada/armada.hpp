@@ -1,6 +1,6 @@
 #pragma once
 
-//strd
+//std
 #include <memory>
 
 //mandala

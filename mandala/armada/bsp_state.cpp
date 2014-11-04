@@ -9,7 +9,7 @@
 #include "../bitmap_font.hpp"
 #include "../model.hpp"
 #include "../model_instance.hpp"
-#include "../animation.hpp"
+#include "../model_animation.hpp"
 #include "../gui_image.hpp"
 #include "../gui_label.hpp"
 #include "../sound.hpp"
@@ -17,6 +17,9 @@
 #include "../frame_buffer.hpp"
 #include "../interpolation.hpp"
 #include "../basic_gpu_program.hpp"
+#if defined(_WIN32) || defined(WIN32)
+#include "../window_event.hpp"
+#endif
 
 //armada
 #include "bsp_state.hpp"
@@ -38,7 +41,6 @@ namespace mandala
             model_instance->animation = app.resources.get<model_animation_t>(hash_t("boblampclean.md5a"));
 
             frame_buffer = std::make_shared<frame_buffer_t>(frame_buffer_t::type_e::color_depth, static_cast<frame_buffer_t::size_type>(layout->bounds().size()));
-            shadow_frame_buffer = std::make_shared<frame_buffer_t>(frame_buffer_t::type_e::depth, static_cast<frame_buffer_t::size_type>(layout->bounds().size()));
 
             skybox.model_instance = std::make_shared<model_instance_t>(app.resources.get<model_t>(hash_t("skybox.md5m")));
             pause_state = std::make_shared<pause_state_t>();
@@ -50,12 +52,12 @@ namespace mandala
             bsp = app.resources.get<bsp_t>(hash_t("dod_flash.bsp"));
 
             debug_label = std::make_shared<gui_label_t>();
-			debug_label->set_bitmap_font(app.resources.get<bitmap_font_t>(hash_t("inconsolata_12.fnt")));
-			debug_label->set_color(vec4_t(1));
-			debug_label->set_dock_mode(gui_dock_mode_e::fill);
-			debug_label->set_vertical_alignment(gui_label_t::vertical_alignment_e::bottom);
-			debug_label->set_justification(gui_label_t::justification_e::left);
-			debug_label->set_padding(padding_t(16));
+            debug_label->set_bitmap_font(app.resources.get<bitmap_font_t>(hash_t("inconsolata_12.fnt")));
+            debug_label->set_color(vec4_t(1));
+            debug_label->set_dock_mode(gui_dock_mode_e::fill);
+            debug_label->set_vertical_alignment(gui_label_t::vertical_alignment_e::bottom);
+            debug_label->set_justification(gui_label_t::justification_e::left);
+            debug_label->set_padding(padding_t(16));
 
             crosshair_image = std::make_shared<gui_image_t>();
 			crosshair_image->set_is_autosized_to_texture(true);
@@ -156,28 +158,6 @@ namespace mandala
 			if (app.states.is_state_ticking(shared_from_this()))
 			{
                 gpu_t::viewport_type viewport;
-				viewport.x = 0;
-				viewport.y = 0;
-                viewport.width = shadow_frame_buffer->size.x;
-                viewport.height = shadow_frame_buffer->size.y;
-
-				gpu.viewports.push(viewport);
-                gpu.frame_buffers.push(shadow_frame_buffer);
-
-                //culling switching, rendering only backface, this is done to avoid self-shadowing
-                auto culling_state = gpu.culling.get_state();
-                culling_state.mode = gpu_t::culling_mode_e::front;
-                
-                gpu.culling.push_state(culling_state);
-
-                //render model to shadow depth buffer
-                model_instance->render(light_camera, light_camera.position);
-
-                gpu.culling.pop_state();
-
-                gpu.frame_buffers.pop();
-                gpu.viewports.pop();
-
                 viewport.x = 0;
                 viewport.y = 0;
                 viewport.width = frame_buffer->size.x;
@@ -352,6 +332,14 @@ namespace mandala
             platform.is_cursor_centered = true;
 
             platform.set_cursor_hidden(true);
+        }
+
+        void bsp_state_t::on_window_event(window_event_t& window_event)
+        {
+            if (window_event.type == window_event_t::type_e::resize)
+            {
+                frame_buffer = std::make_shared<frame_buffer_t>(frame_buffer_t::type_e::color_depth, static_cast<frame_buffer_t::size_type>(layout->bounds().size()));
+            }
         }
     };
 };

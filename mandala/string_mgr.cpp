@@ -16,7 +16,7 @@ namespace mandala
         const auto resources_lock = std::unique_lock<std::recursive_mutex>(app.resources.mutex);
 
         auto stream = app.resources.extract(hash_t(file));
-        auto archive = string_archive_t(*stream);
+        const auto archive = string_archive_t(*stream);
 
         streams.push_back(stream);
 
@@ -45,7 +45,7 @@ namespace mandala
         const auto strings_lock = std::unique_lock<std::mutex>(mutex);
         const auto resources_lock = std::unique_lock<std::recursive_mutex>(app.resources.mutex);
 
-        auto strings_itr = strings.find(hash);
+        const auto strings_itr = strings.find(hash);
 
         if (strings_itr == strings.end())
         {

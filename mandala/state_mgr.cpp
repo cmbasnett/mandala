@@ -3,6 +3,8 @@
 #include "state.hpp"
 #include "app.hpp"
 
+
+
 namespace mandala
 {
 	void state_mgr_t::tick(float32_t dt)
@@ -182,7 +184,7 @@ namespace mandala
 	{
 		for (auto nodes_reverse_itr = nodes.rbegin(); nodes_reverse_itr != nodes.rend(); ++nodes_reverse_itr)
 		{
-            if ((nodes_reverse_itr->flags & state_flag_input) == state_flag_none ||
+            if ((nodes_reverse_itr->flags & state_flag_input) != state_flag_input ||
                 (nodes_reverse_itr->flags & state_flag_popping) == state_flag_popping)
             {
                 //state not handling input or is being popped, return
@@ -198,6 +200,16 @@ namespace mandala
 			}
 		}
 	}
+
+#if defined(_WIN32) || defined(WIN32)
+    void state_mgr_t::on_window_event(window_event_t& window_event)
+    {
+        for (auto& node : nodes)
+        {
+            node.state->on_window_event(window_event);
+        }
+    }
+#endif
 
 	//push a state onto the stack
 	void state_mgr_t::push(const state_type& state, state_flags_type link_flags)
