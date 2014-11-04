@@ -30,5 +30,9 @@ namespace mandala
 		{
 			return frames.rbegin()->sprite;
 		}
+        else
+        {
+            return frames.begin()->sprite;
+        }
 	}
 }

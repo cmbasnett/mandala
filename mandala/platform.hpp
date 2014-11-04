@@ -32,11 +32,10 @@ namespace mandala
 		//pop_input_event
         virtual bool pop_input_event(input_event_t& input_event) = 0;
 
-<<<<<<< HEAD
-#if defined(_WIN32) || defined(WIN32)
+#if defined(MANDALA_PC)
         //pop_window_event
         virtual bool pop_window_event(window_event_t& window_event) = 0;
-=======
+#endif
 		//clipboard
 		virtual std::string get_clipboard_string() const = 0;
 		virtual void set_clipboard_string(const std::string& clipboard) const = 0;
@@ -45,7 +44,6 @@ namespace mandala
 		typedef vec2_f64_t cursor_position_type;
 		typedef vec2_i32_t window_size_type;
 		typedef std::string window_title_type;
->>>>>>> c8960cb9c312100d7119e504ac4b8cbd6c18e073
 
 		//cursor_position
 		virtual cursor_position_type get_cursor_position() const = 0;
