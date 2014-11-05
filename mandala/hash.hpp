@@ -68,7 +68,7 @@ namespace mandala
 				return *this;
 			}
 
-            hash_t& operator=(string_type&& string__)
+			type& operator=(string_type&& string__)
 			{
 #ifdef _DEBUG
                 string_ = string__;
@@ -78,7 +78,7 @@ namespace mandala
 				return *this;
 			}
 
-            inline hash_t& operator=(type&& copy)
+			inline type& operator=(type&& copy)
 			{
 #ifdef _DEBUG
 				string_ = std::move(copy.string_);
@@ -88,12 +88,12 @@ namespace mandala
 				return *this;
 			}
 
-            inline bool operator==(const hash_t& rhs) const { return value_ == rhs.value_; }
-            inline bool operator!=(const hash_t& rhs) const { return value_ != rhs.value_; }
-            inline bool operator>(const hash_t& rhs) const { return value_ > rhs.value_; }
-            inline bool operator<(const hash_t& rhs) const { return value_ < rhs.value_; }
-            inline bool operator>=(const hash_t& rhs) const { return value_ >= rhs.value_; }
-            inline bool operator<=(const hash_t& rhs) const { return value_ <= rhs.value_; }
+			inline bool operator==(const type& rhs) const { return value_ == rhs.value_; }
+			inline bool operator!=(const type& rhs) const { return value_ != rhs.value_; }
+			inline bool operator>(const type& rhs) const { return value_ > rhs.value_; }
+			inline bool operator<(const type& rhs) const { return value_ < rhs.value_; }
+			inline bool operator>=(const type& rhs) const { return value_ >= rhs.value_; }
+			inline bool operator<=(const type& rhs) const { return value_ <= rhs.value_; }
 		};
 	}
 
