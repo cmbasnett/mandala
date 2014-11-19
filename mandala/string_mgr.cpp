@@ -43,13 +43,11 @@ namespace mandala
     string_mgr_t::string_type string_mgr_t::get(const hash_t& hash)
     {
         const auto strings_lock = std::unique_lock<std::mutex>(mutex);
-        const auto resources_lock = std::unique_lock<std::recursive_mutex>(app.resources.mutex);
-
         const auto strings_itr = strings.find(hash);
 
         if (strings_itr == strings.end())
         {
-            throw std::out_of_range("");
+            throw std::out_of_range("string does not exist");
         }
 
         const auto& string = strings_itr->second;
@@ -61,7 +59,7 @@ namespace mandala
         buffer.resize(string.length);
         stream->read(buffer.data(), string.length);
 
-        static std::wstring_convert<std::codecvt_utf16<wchar_t>> wstring_convert;
+        std::wstring_convert<std::codecvt_utf16<wchar_t>> wstring_convert;
 
         return wstring_convert.from_bytes(buffer.data());
     }

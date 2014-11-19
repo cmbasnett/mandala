@@ -10,7 +10,7 @@
 
 namespace mandala
 {
-	struct skeleton_t
+	struct model_skeleton_t
 	{
 		struct bone_t
 		{
@@ -19,7 +19,7 @@ namespace mandala
 			quat_t orientation;
 		};
 
-		static void interpolate(skeleton_t& skeleton, const skeleton_t& a, const skeleton_t& b, float32_t t);
+		static void interpolate(model_skeleton_t& skeleton, const model_skeleton_t& a, const model_skeleton_t& b, float32_t t);
 
 		std::vector<bone_t> bones;
 		std::vector<mat4_t> bone_matrices;

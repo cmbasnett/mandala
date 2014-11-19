@@ -9,7 +9,7 @@
 
 namespace mandala
 {
-	void get_formats(color_type_e color_type, int32_t& internal_format, int32_t& format, int32_t& type)
+	void get_formats(color_type_e color_type, texture_t::format_type& internal_format, texture_t::format_type& format, texture_t::type_type& type)
 	{
 		switch (color_type)
 		{
@@ -48,8 +48,8 @@ namespace mandala
 		}
 	}
 
-    //TODO: move all these GL calls into the gpu_mgr_t class
-    texture_t::texture_t(color_type_e color_type, uint32_t width, uint32_t height) :
+    //TODO: move all these GL calls into the gpu class
+	texture_t::texture_t(color_type_e color_type, size_type width, size_type height) :
         width(width),
         height(height)
     {
@@ -69,7 +69,7 @@ namespace mandala
     {
     }
 
-    texture_t::texture_t(std::shared_ptr<image_t> image)
+    texture_t::texture_t(const std::shared_ptr<image_t>& image)
     {
         hash = image->hash;
         height = image->height;

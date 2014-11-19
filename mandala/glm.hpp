@@ -18,4 +18,17 @@ namespace glm
 
 		return clamp((x - minVal) / (maxVal - minVal), valType(0), valType(1));
 	}
+
+	template<typename T>
+	inline std::ostream& operator<<(std::ostream& ostream, glm::detail::tvec2<T> const& v)
+	{
+		return ostream << v.x << " " << v.y;
+	}
+
+	template<typename T>
+	inline std::istream& operator>>(std::istream& istream, glm::detail::tvec2<T> const& v)
+	{
+		istream >> v.x;
+		istream >> v.y;
+	}
 }

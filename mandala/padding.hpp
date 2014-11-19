@@ -1,5 +1,8 @@
 #pragma once
 
+//std
+
+//mandala
 #include "types.hpp"
 #include "aabb.hpp"
 
@@ -7,23 +10,26 @@ namespace mandala
 {
 	namespace details
 	{
-		template<typename T>
-		struct padding_t
-		{
-			typedef T value_type;
-			typedef padding_t<T> type;
-			typedef glm::detail::tvec2<T> size_type;
+		template<typename Scalar, typename Enable = void>
+		struct padding_t;
 
-			value_type bottom = 0;
-			value_type left = 0;
-			value_type top = 0;
-			value_type right = 0;
+		template<typename Scalar>
+		struct padding_t<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
+		{
+			typedef Scalar scalar_type;
+			typedef padding_t<scalar_type> type;
+			typedef glm::detail::tvec2<scalar_type> size_type;
+
+			scalar_type bottom = 0;
+			scalar_type left = 0;
+			scalar_type top = 0;
+			scalar_type right = 0;
 
 			padding_t()
 			{
 			}
 
-			padding_t(value_type bottom, value_type left, value_type top, value_type right) :
+			padding_t(scalar_type bottom, scalar_type left, scalar_type top, scalar_type right) :
 				bottom(bottom),
 				left(left),
 				top(top),
@@ -31,17 +37,17 @@ namespace mandala
 			{
 			}
 
-			padding_t(value_type all) :
+			padding_t(scalar_type all) :
 				padding_t(all, all, all, all)
 			{
 			}
 
-			value_type vertical() const
+			scalar_type vertical() const
 			{
 				return bottom + top;
 			}
 
-			value_type horizontal() const
+			scalar_type horizontal() const
 			{
 				return left + right;
 			}

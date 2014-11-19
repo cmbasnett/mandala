@@ -28,6 +28,9 @@ namespace mandala
 
             paused_label = std::make_shared<gui_label_t>();
             paused_label->set_bitmap_font(app.resources.get<bitmap_font_t>(hash_t("terminal_16.fnt")));
+
+			app.strings.get(hash_t("paused"));
+
             paused_label->set_string(L"PAUSED");
             paused_label->set_vertical_alignment(gui_label_t::vertical_alignment_e::middle);
             paused_label->set_justification(gui_label_t::justification_e::center);

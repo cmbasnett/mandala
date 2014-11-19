@@ -94,10 +94,10 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)ext\glm-0.9.4.4;$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)ext\glew-1.10.0\include;$(SolutionDir)ext\zlib-1.2.8\include;$(SolutionDir)ext\libpng-1.6.3;$(SolutionDir)ext\openal-soft-1.15.1-bin\include;C:\boost_1_55_0;$(SolutionDir)ext\lua-5.1.4_Win32_dll12_lib\include;$(SolutionDir)ext\luabind-0.9.1</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ext\glm-0.9.4.4;$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)ext\glew-1.10.0\include;$(SolutionDir)ext\zlib-1.2.8\include;$(SolutionDir)ext\libpng-1.6.3;$(SolutionDir)ext\openal-soft-1.15.1-bin\include;C:\boost_1_55_0;$(SolutionDir)ext\lua-5.1.4_Win32_dll12_lib\include;$(SolutionDir)ext\luabind-0.9.1;$(SolutionDir)ext\Python27\include</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <PreprocessorDefinitions>_WIN32_WINNT=0x0501;DEBUG;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0501;DEBUG;_WINSOCK_DEPRECATED_NO_WARNINGS;BOOST_PYTHON_STATIC_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <UndefinePreprocessorDefinitions>APIENTRY;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
@@ -105,7 +105,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)ext\glew-1.10.0\lib\Release\Win32;$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\lib-msvc110;$(SolutionDir)ext\zlib-1.2.8\lib;$(SolutionDir)ext\libpng-1.6.3\projects\vstudio\Release Library;$(SolutionDir)ext\openal-soft-1.15.1-bin\lib\Win32;C:\boost_1_55_0\stage\lib;$(SolutionDir)ext\lua-5.1.4_Win32_dll12_lib;$(SolutionDir)ext\luabind-0.9.1\bin\msvc-12.0\debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)ext\glew-1.10.0\lib\Release\Win32;$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\lib-msvc110;$(SolutionDir)ext\zlib-1.2.8\lib;$(SolutionDir)ext\libpng-1.6.3\projects\vstudio\Release Library;$(SolutionDir)ext\openal-soft-1.15.1-bin\lib\Win32;C:\boost_1_55_0\stage\lib;$(SolutionDir)ext\lua-5.1.4_Win32_dll12_lib;$(SolutionDir)ext\luabind-0.9.1\bin\msvc-12.0\debug;$(SolutionDir)ext\Python27\libs</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3dll.lib;zlib.lib;libpng16.lib;libOpenAL32.dll.a;lua5.1.lib;luabindd.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
@@ -226,7 +226,6 @@ echo $(PlatformTarget)</Command>
   <ItemGroup>
     <ClInclude Include="..\triad\login_state.hpp" />
     <ClInclude Include="..\triad\triad.hpp" />
-    <ClInclude Include="model_animation.hpp" />
     <ClInclude Include="armada\console_state.hpp" />
     <ClInclude Include="armada\debug_state.hpp" />
     <ClInclude Include="armada\test_state.hpp" />
@@ -276,12 +275,13 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="index_type.hpp" />
     <ClInclude Include="interpolation.hpp" />
     <ClInclude Include="io.hpp" />
-    <ClInclude Include="luabind.hpp" />
     <ClInclude Include="lua_mgr.hpp" />
-    <ClInclude Include="model_animation.hpp" />
+    <ClInclude Include="model_animation_controller.hpp" />
     <ClInclude Include="model_gpu_program.hpp" />
     <ClInclude Include="openal.hpp" />
     <ClInclude Include="padding.hpp" />
+    <ClInclude Include="python.hpp" />
+    <ClInclude Include="python_mgr.hpp" />
     <ClInclude Include="range.hpp" />
     <ClInclude Include="shadow_gpu_program.hpp" />
     <ClInclude Include="sound.hpp" />
@@ -326,7 +326,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="pow.hpp" />
     <ClInclude Include="quake_camera.hpp" />
     <ClInclude Include="resource.hpp" />
-    <ClInclude Include="skeleton.hpp" />
+    <ClInclude Include="model_skeleton.hpp" />
     <ClInclude Include="string_archive.hpp" />
     <ClInclude Include="string_mgr.hpp" />
     <ClInclude Include="texture.hpp" />
@@ -336,7 +336,6 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="window_event.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="model_animation.cpp" />
     <ClCompile Include="armada\console_state.cpp" />
     <ClCompile Include="armada\debug_state.cpp" />
     <ClCompile Include="armada\test_state.cpp" />
@@ -377,6 +376,7 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="http_request.cpp" />
     <ClCompile Include="lua_mgr.cpp" />
     <ClCompile Include="model_animation.cpp" />
+    <ClCompile Include="model_animation_controller.cpp" />
     <ClCompile Include="model_gpu_program.cpp" />
     <ClCompile Include="resource_mgr.cpp" />
     <ClCompile Include="gpu_program.cpp" />
@@ -396,7 +396,7 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="model_instance.cpp" />
     <ClCompile Include="quake_camera.cpp" />
     <ClCompile Include="resource.cpp" />
-    <ClCompile Include="skeleton.cpp" />
+    <ClCompile Include="model_skeleton.cpp" />
     <ClCompile Include="string_archive.cpp" />
     <ClCompile Include="string_mgr.cpp" />
     <ClCompile Include="texture.cpp" />

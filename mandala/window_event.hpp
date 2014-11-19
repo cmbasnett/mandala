@@ -1,9 +1,9 @@
 #pragma once
 
-#if defined(_WIN32) || defined(WIN32)
-
 //mandala
 #include "types.hpp"
+
+#if defined(MANDALA_PC)
 
 namespace mandala
 {
@@ -11,7 +11,8 @@ namespace mandala
     {
         enum class type_e : uint8_t
         {
-            resize
+            resize,
+			move
         };
 
         type_e type;

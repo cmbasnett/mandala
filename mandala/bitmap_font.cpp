@@ -68,10 +68,10 @@ namespace mandala
         istream.read(reinterpret_cast<char*>(&char_set), sizeof(char_set));
 		istream.read(reinterpret_cast<char*>(&stretch_height), sizeof(stretch_height));
 		istream.read(reinterpret_cast<char*>(&antialiasing), sizeof(antialiasing));
-		istream.read(reinterpret_cast<char*>(&padding_top), sizeof(padding_top));
-		istream.read(reinterpret_cast<char*>(&padding_right), sizeof(padding_right));
-		istream.read(reinterpret_cast<char*>(&padding_bottom), sizeof(padding_bottom));
-		istream.read(reinterpret_cast<char*>(&padding_left), sizeof(padding_left));
+		istream.read(reinterpret_cast<char*>(&padding.top), sizeof(padding.top));
+		istream.read(reinterpret_cast<char*>(&padding.right), sizeof(padding.right));
+		istream.read(reinterpret_cast<char*>(&padding.bottom), sizeof(padding.bottom));
+		istream.read(reinterpret_cast<char*>(&padding.left), sizeof(padding.left));
 		istream.read(reinterpret_cast<char*>(&spacing_horizontal), sizeof(spacing_horizontal));
 		istream.read(reinterpret_cast<char*>(&spacing_vertical), sizeof(spacing_vertical));
 		istream.read(reinterpret_cast<char*>(&outline), sizeof(outline));
@@ -131,12 +131,12 @@ namespace mandala
 			character_t character;
 
 			istream.read(reinterpret_cast<char*>(&character.id), sizeof(character.id));
-			istream.read(reinterpret_cast<char*>(&character.x), sizeof(character.x));
-			istream.read(reinterpret_cast<char*>(&character.y), sizeof(character.y));
-			istream.read(reinterpret_cast<char*>(&character.width), sizeof(character.width));
-			istream.read(reinterpret_cast<char*>(&character.height), sizeof(character.height));
-			istream.read(reinterpret_cast<char*>(&character.offset_x), sizeof(character.offset_x));
-			istream.read(reinterpret_cast<char*>(&character.offset_y), sizeof(character.offset_y));
+			istream.read(reinterpret_cast<char*>(&character.rectangle.x), sizeof(character.rectangle.x));
+			istream.read(reinterpret_cast<char*>(&character.rectangle.y), sizeof(character.rectangle.y));
+			istream.read(reinterpret_cast<char*>(&character.rectangle.width), sizeof(character.rectangle.width));
+			istream.read(reinterpret_cast<char*>(&character.rectangle.height), sizeof(character.rectangle.height));
+			istream.read(reinterpret_cast<char*>(&character.offset.x), sizeof(character.offset.x));
+			istream.read(reinterpret_cast<char*>(&character.offset.y), sizeof(character.offset.y));
 			istream.read(reinterpret_cast<char*>(&character.advance_x), sizeof(character.advance_x));
 			istream.read(reinterpret_cast<char*>(&character.texture_index), sizeof(character.texture_index));
 			istream.read(reinterpret_cast<char*>(&character.channel), sizeof(character.channel));
@@ -180,36 +180,36 @@ namespace mandala
 			auto character = characters.at(character_id);
 
 			//location 0
-			vertices[j + 0].position.x = static_cast<float32_t>(character.offset_x);
-			vertices[j + 0].position.y = -static_cast<float32_t>(character.offset_y + character.height - base);
+			vertices[j + 0].position.x = static_cast<float32_t>(character.offset.x);
+			vertices[j + 0].position.y = -static_cast<float32_t>(character.offset.y + character.rectangle.height - base);
 
 			//location 1
-			vertices[j + 1].position.x = static_cast<float32_t>(character.offset_x + character.width);
-			vertices[j + 1].position.y = -static_cast<float32_t>(character.offset_y + character.height - base);
+			vertices[j + 1].position.x = static_cast<float32_t>(character.offset.x + character.rectangle.width);
+			vertices[j + 1].position.y = -static_cast<float32_t>(character.offset.y + character.rectangle.height - base);
 
 			//location 2
-			vertices[j + 2].position.x = static_cast<float32_t>(character.offset_x + character.width);
-			vertices[j + 2].position.y = -static_cast<float32_t>(character.offset_y - base);
+			vertices[j + 2].position.x = static_cast<float32_t>(character.offset.x + character.rectangle.width);
+			vertices[j + 2].position.y = -static_cast<float32_t>(character.offset.y - base);
 
 			//location 3
-			vertices[j + 3].position.x = static_cast<float32_t>(character.offset_x);
-			vertices[j + 3].position.y = -static_cast<float32_t>(character.offset_y - base);
+			vertices[j + 3].position.x = static_cast<float32_t>(character.offset.x);
+			vertices[j + 3].position.y = -static_cast<float32_t>(character.offset.y - base);
 
 			//texcoord 0
-			vertices[j + 0].texcoord.x = static_cast<float32_t>(character.x) / width;
-			vertices[j + 0].texcoord.y = 1.0f - static_cast<float32_t>(character.y + character.height) / height;
+			vertices[j + 0].texcoord.x = static_cast<float32_t>(character.rectangle.x) / width;
+			vertices[j + 0].texcoord.y = 1.0f - static_cast<float32_t>(character.rectangle.y + character.rectangle.height) / height;
 
 			//texcoord 1
-			vertices[j + 1].texcoord.x = static_cast<float32_t>(character.x + character.width) / width;
-			vertices[j + 1].texcoord.y = 1.0f - static_cast<float32_t>(character.y + character.height) / height;
+			vertices[j + 1].texcoord.x = static_cast<float32_t>(character.rectangle.x + character.rectangle.width) / width;
+			vertices[j + 1].texcoord.y = 1.0f - static_cast<float32_t>(character.rectangle.y + character.rectangle.height) / height;
 
 			//texcoord 2
-			vertices[j + 2].texcoord.x = static_cast<float32_t>(character.x + character.width) / width;
-			vertices[j + 2].texcoord.y = 1.0f - static_cast<float32_t>(character.y) / height;
+			vertices[j + 2].texcoord.x = static_cast<float32_t>(character.rectangle.x + character.rectangle.width) / width;
+			vertices[j + 2].texcoord.y = 1.0f - static_cast<float32_t>(character.rectangle.y) / height;
 
 			//texcoord 3
-			vertices[j + 3].texcoord.x = static_cast<float32_t>(character.x) / width;
-			vertices[j + 3].texcoord.y = 1.0f - static_cast<float32_t>(character.y) / height;
+			vertices[j + 3].texcoord.x = static_cast<float32_t>(character.rectangle.x) / width;
+			vertices[j + 3].texcoord.y = 1.0f - static_cast<float32_t>(character.rectangle.y) / height;
 
 			j += 4;
 		}
@@ -235,7 +235,7 @@ namespace mandala
         index_buffer->data(indices, gpu_t::buffer_usage_e::static_draw);
 	}
 
-	int16_t bitmap_font_t::get_kerning_amount(const wchar_t lhs, const wchar_t rhs) const
+	int16_t bitmap_font_t::get_kerning_amount(const char_type lhs, const char_type rhs) const
 	{
 		int16_t kerning_amount = 0;
 
@@ -252,7 +252,7 @@ namespace mandala
 		return kerning_amount;
 	}
 
-    void bitmap_font_t::render_string(const std::wstring& string, mat4_t world_matrix, mat4_t view_projection_matrix, const rgba_type& base_color, std::stack<rgba_type>& color_stack, const std::vector<std::pair<size_t, rgba_type>>& color_pushes, const std::vector<size_t>& color_pop_indices) const
+    void bitmap_font_t::render_string(const string_type& string, mat4_t world_matrix, mat4_t view_projection_matrix, const rgba_type& base_color, std::stack<rgba_type>& color_stack, const std::vector<std::pair<size_t, rgba_type>>& color_pushes, const std::vector<size_t>& color_pop_indices) const
     {
         static const auto character_index_stride = sizeof(index_type) * indices_per_character;
 
@@ -400,7 +400,7 @@ namespace mandala
 		gpu.buffers.pop(gpu_t::buffer_target_e::array);
 	}
 
-	void bitmap_font_t::get_string_pages(std::vector<uint8_t>& pages, const std::wstring& string) const
+	void bitmap_font_t::get_string_pages(std::vector<uint8_t>& pages, const string_type& string) const
 	{
 		std::set<uint8_t> pages_set;
 
@@ -414,12 +414,13 @@ namespace mandala
 		std::copy(pages_set.begin(), pages_set.end(), std::back_inserter(pages));
 	}
 
-	int16_t bitmap_font_t::get_string_width(const std::wstring& string) const
+	int16_t bitmap_font_t::get_string_width(const string_type& string) const
 	{
 		int16_t width = 0;
 
 		for (const auto c : string)
 		{
+			//TODO: handle non-existent characters, will crash otherwise
 			width += characters.at(c).advance_x;
 		}
 

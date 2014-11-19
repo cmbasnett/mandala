@@ -11,6 +11,9 @@ namespace mandala
 {
 #if defined(_WIN32) || defined(WIN32)
 #define MANDALA_WINDOWS
+#if defined(_DEBUG)
+#define MANDALA_DEBUG
+#endif
 #endif
 
 #if defined(MANDALA_WINDOWS)

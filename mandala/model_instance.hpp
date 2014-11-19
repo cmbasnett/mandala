@@ -1,7 +1,8 @@
 #pragma once
 
 //mandala
-#include "skeleton.hpp"
+#include "model_skeleton.hpp"
+#include "model_animation_controller.hpp"
 #include "camera.hpp"
 
 //std
@@ -21,11 +22,11 @@ namespace mandala
 
 		mat4_t world_matrix;
 		std::shared_ptr<model_t> model;
-		std::shared_ptr<model_animation_t> animation;
-		skeleton_t skeleton;
 		float32_t t = 0.0f;
 		std::vector<mat4_t> bone_matrices;
+		model_skeleton_t skeleton;
+		model_animation_controller_t animation_controller;
 
-		const skeleton_t::bone_t& get_bone(const hash_t& bone_name_hash) const;
+		const model_skeleton_t::bone_t& get_bone(const hash_t& bone_name_hash) const;
 	};
 }

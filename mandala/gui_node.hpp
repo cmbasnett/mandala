@@ -37,6 +37,11 @@ namespace mandala
 		top
 	};
 
+	enum class gui_resize_mode_e
+	{
+
+	};
+
 	struct gui_node_t
 	{
 		typedef aabb2_t bounds_type;

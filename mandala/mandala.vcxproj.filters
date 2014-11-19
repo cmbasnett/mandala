@@ -133,9 +133,6 @@
     <ClInclude Include="model_instance.hpp">
       <Filter>mandala\resources\model</Filter>
     </ClInclude>
-    <ClInclude Include="skeleton.hpp">
-      <Filter>mandala\resources\model</Filter>
-    </ClInclude>
     <ClInclude Include="sound.hpp">
       <Filter>mandala\resources\sound</Filter>
     </ClInclude>
@@ -209,9 +206,6 @@
       <Filter>mandala\gui</Filter>
     </ClInclude>
     <ClInclude Include="gui_node.hpp">
-      <Filter>mandala\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="padding.hpp">
       <Filter>mandala\gui</Filter>
     </ClInclude>
     <ClInclude Include="index_buffer.hpp">
@@ -306,9 +300,6 @@
     <ClInclude Include="io.hpp">
       <Filter>mandala\io</Filter>
     </ClInclude>
-    <ClInclude Include="luabind.hpp">
-      <Filter>mandala\core</Filter>
-    </ClInclude>
     <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="gui_scroll.hpp">
       <Filter>mandala\gui</Filter>
@@ -325,23 +316,35 @@
       <Filter>triad</Filter>
     </ClInclude>
     <ClInclude Include="gpu_program_mgr.hpp" />
-    <ClInclude Include="sprite_animation.hpp">
-      <Filter>mandala\resources\sprite_set</Filter>
-    </ClInclude>
-    <ClInclude Include="model_animation.hpp">
-      <Filter>mandala\resources\model</Filter>
-    </ClInclude>
     <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="window_event.hpp">
       <Filter>mandala\platform</Filter>
     </ClInclude>
     <ClInclude Include="gpu_program_mgr.hpp" />
-    <ClInclude Include="model_animation.hpp">
+    <ClInclude Include="sprite_animation.hpp">
+      <Filter>mandala\resources\sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="python.hpp">
+      <Filter>mandala\core</Filter>
+    </ClInclude>
+    <ClInclude Include="python_mgr.hpp">
+      <Filter>mandala\app</Filter>
+    </ClInclude>
+    <ClInclude Include="model_animation_controller.hpp">
       <Filter>mandala\resources\model</Filter>
     </ClInclude>
     <ClInclude Include="sprite_animation.hpp">
       <Filter>mandala\resources\sprite</Filter>
-    </ClInclude>  </ItemGroup>
+    </ClInclude>
+    <ClInclude Include="model_skeleton.hpp">
+      <Filter>mandala\resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="padding.hpp">
+      <Filter>mandala\math</Filter>
+    </ClInclude>
+  </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="arcball_camera.cpp">
@@ -357,9 +360,6 @@
       <Filter>mandala\resources\image</Filter>
     </ClCompile>
     <ClCompile Include="model.cpp">
-      <Filter>mandala\resources\model</Filter>
-    </ClCompile>
-    <ClCompile Include="skeleton.cpp">
       <Filter>mandala\resources\model</Filter>
     </ClCompile>
     <ClCompile Include="model_instance.cpp">
@@ -524,17 +524,23 @@
     <ClCompile Include="gui_button.cpp">
       <Filter>mandala\gui</Filter>
     </ClCompile>
-    <ClCompile Include="sprite_animation.cpp">
-      <Filter>mandala\resources\sprite_set</Filter>
-    </ClCompile>
-    <ClCompile Include="model_animation.cpp">
-      <Filter>mandala\resources\model</Filter>
-    </ClCompile>
     <ClCompile Include="model_animation.cpp">
       <Filter>mandala\resources\model</Filter>
     </ClCompile>
     <ClCompile Include="sprite_animation.cpp">
       <Filter>mandala\resources\sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="sprite_animation.cpp">
+      <Filter>mandala\resources\sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="model_skeleton.cpp">
+      <Filter>mandala\resources\model</Filter>
+    </ClCompile>
+    <ClCompile Include="model_animation.cpp">
+      <Filter>mandala\resources\model</Filter>
+    </ClCompile>
+    <ClCompile Include="model_animation_controller.cpp">
+      <Filter>mandala\resources\model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -642,5 +648,6 @@
     </Filter>
     <Filter Include="mandala\resources\sprite">
       <UniqueIdentifier>{1ce79b84-b9e4-4689-a458-ac57e0a0a69d}</UniqueIdentifier>
-    </Filter>  </ItemGroup>
+    </Filter>
+  </ItemGroup>
 </Project>

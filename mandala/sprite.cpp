@@ -6,10 +6,6 @@
 
 namespace mandala
 {
-	sprite_ref_t::sprite_ref_t()
-	{
-	}
-
 	sprite_ref_t::sprite_ref_t(const hash_t& sprite_set_hash, const hash_t& region_hash) :
 		sprite_set_hash(sprite_set_hash),
 		region_hash(region_hash)
@@ -22,10 +18,6 @@ namespace mandala
 	{
 	}
 
-	sprite_t::sprite_t()
-	{
-	}
-
 	sprite_t::sprite_t(const hash_t& sprite_set_hash, const hash_t& region_hash)
 	{
 		sprite_set = app.resources.get<sprite_set_t>(sprite_set_hash);
@@ -34,7 +26,7 @@ namespace mandala
 
 		if (regions_itr == sprite_set->regions.end())
 		{
-			throw std::exception();
+			throw std::exception("region does not exist in sprite set");
 		}
 
 		region = regions_itr->second;
@@ -60,7 +52,7 @@ namespace mandala
 
 		if (regions_itr == sprite_set->regions.end())
 		{
-			throw std::exception();
+			throw std::exception("region does not exist in sprite set");
 		}
 
 		region = regions_itr->second;

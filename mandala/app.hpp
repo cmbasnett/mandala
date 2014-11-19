@@ -6,7 +6,7 @@
 #include "audio_mgr.hpp"
 #include "string_mgr.hpp"
 #include "gpu_program_mgr.hpp"
-#include "lua_mgr.hpp"
+#include "python_mgr.hpp"
 
 //std
 #include <chrono>
@@ -48,7 +48,7 @@ namespace mandala
         string_mgr_t strings;
         gpu_program_mgr_t gpu_programs;
         audio_mgr_t audio;
-        lua_mgr_t lua;
+		python_mgr_t python_mgr;
 
         app_t();
 

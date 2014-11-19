@@ -106,7 +106,7 @@ namespace mandala
 			{
 				auto k = 0;
 
-				auto& bone = bones[j];
+				const auto& bone = bones[j];
 				auto& skeleton_bone = skeleton.bones[j];
 				skeleton_bone.parent_index = bone.parent_index;
 				skeleton_bone.position = base_bone_frames[j].position;

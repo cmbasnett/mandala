@@ -2,6 +2,7 @@
 #include "string_archive.hpp"
 
 #define MAGIC_LENGTH    (4)
+#define VERSION			(1)
 
 namespace mandala
 {
@@ -22,7 +23,7 @@ namespace mandala
 
 		istream.read(reinterpret_cast<char*>(&version), sizeof(version));
 
-		if (version != 1)
+		if (version != VERSION)
 		{
 			throw std::exception();
 		}
@@ -38,7 +39,7 @@ namespace mandala
         {
             std::string string_name;
             
-            std::getline(istream, string_name, '\n');
+            std::getline(istream, string_name, '\0');
 
             string.hash = hash_t(string_name);
             

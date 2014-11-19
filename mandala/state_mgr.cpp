@@ -3,8 +3,6 @@
 #include "state.hpp"
 #include "app.hpp"
 
-
-
 namespace mandala
 {
 	void state_mgr_t::tick(float32_t dt)
@@ -79,7 +77,7 @@ namespace mandala
 				break;
 			}
 
-			operations.pop_front();
+			operations.pop();
 		}
 
 		//call on_enter on pushed states
@@ -224,7 +222,7 @@ namespace mandala
         operation.state = state;
         operation.link_flags = link_flags;
 
-		operations.push_back(operation);
+		operations.push(operation);
 	}
 
 	//pop a specific state off of the stack
@@ -250,7 +248,7 @@ namespace mandala
 		operation.type = operation_t::type_e::pop;
 		operation.state = state;
 
-		operations.push_back(operation);
+		operations.push(operation);
 
         //add popping flag to node flags
         nodes_itr->flags |= state_flag_popping;
@@ -279,7 +277,7 @@ namespace mandala
 		operation.state = state;
 		operation.link_flags = link_flags;
 
-        operations.push_back(operation);
+        operations.push(operation);
 
         //add changing link flags flag to node flags
         nodes_itr->flags |= state_flag_changing_link_flags;
