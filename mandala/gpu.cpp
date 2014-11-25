@@ -814,4 +814,39 @@ namespace mandala
                     state.mask.b ? GL_TRUE : GL_FALSE, 
                     state.mask.a ? GL_TRUE : GL_FALSE); glCheckError();
     }
+
+    const std::string& gpu_t::get_vendor() const
+    {
+        static const std::string vendor = reinterpret_cast<const char*>(glGetString(GL_VENDOR));
+
+        return vendor;
+    }
+
+    const std::string& gpu_t::get_renderer() const
+    {
+        static const std::string renderer = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
+
+        return renderer;
+    }
+
+    const std::string& gpu_t::get_version() const
+    {
+        static const std::string version = reinterpret_cast<const char*>(glGetString(GL_VERSION));
+
+        return version;
+    }
+
+    const std::string& gpu_t::get_shading_language_version() const
+    {
+        static const std::string shading_language_verison = reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
+
+        return shading_language_verison;
+    }
+
+    const std::string& gpu_t::get_extensions() const
+    {
+        static const std::string extensions = reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS));
+
+        return extensions;
+    }
 }

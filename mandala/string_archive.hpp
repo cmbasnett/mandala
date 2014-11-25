@@ -3,6 +3,7 @@
 //std
 #include <istream>
 #include <vector>
+#include <map>
 
 //mandala
 #include "hash.hpp"
@@ -15,11 +16,10 @@ namespace mandala
 		{
 			hash_t hash;
 			uint32_t offset;
-			uint32_t length;
 		};
 
         string_archive_t(std::istream& istream);
 
-        std::vector<string_t> strings;
+		std::map<std::string, std::vector<string_t>> language_strings;
     };
 }

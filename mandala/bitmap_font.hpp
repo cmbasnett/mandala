@@ -5,6 +5,7 @@
 #include "vertex_buffer.hpp"
 #include "index_buffer.hpp"
 #include "index_type.hpp"
+#include "padding.hpp"
 
 //std
 #include <vector>
@@ -19,17 +20,15 @@ namespace mandala
 
 	struct bitmap_font_t : resource_t
 	{
+        typedef std::wstring string_type;
+        typedef string_type::value_type char_type;
 		typedef uint32_t character_id_type;
 
 		struct character_t
 		{
 			character_id_type id = 0;
-			uint16_t x = 0;
-			uint16_t y = 0;
-			uint16_t width = 0;
-			uint16_t height = 0;
-			int16_t offset_x = 0;
-			int16_t offset_y = 0;
+            rectangle_u16_t rectangle;
+            vec2_i16_t offset;
 			int16_t advance_x = 0;
 			uint8_t texture_index = 0;
 			uint8_t channel = 0;
@@ -63,10 +62,10 @@ namespace mandala
 
 		bitmap_font_t(std::istream& istream);
 
-        void render_string(const std::wstring& string, mat4_t world_matrix, mat4_t view_projection_matrix, const rgba_type& base_color, std::stack<rgba_type>& color_stack, const std::vector<std::pair<size_t, rgba_type>>& color_pushes, const std::vector<size_t>& color_pop_indices) const;
-		int16_t get_kerning_amount(wchar_t lhs, wchar_t rhs) const;
-		void get_string_pages(std::vector<uint8_t>& pages, const std::wstring& string) const;
-		int16_t get_string_width(const std::wstring& string) const;
+        void render_string(const string_type& string, mat4_t world_matrix, mat4_t view_projection_matrix, const rgba_type& base_color, std::stack<rgba_type>& color_stack, const std::vector<std::pair<size_t, rgba_type>>& color_pushes, const std::vector<size_t>& color_pop_indices) const;
+        int16_t get_kerning_amount(char_type lhs, char_type rhs) const;
+        void get_string_pages(std::vector<uint8_t>& pages, const string_type& string) const;
+        int16_t get_string_width(const string_type& string) const;
 		
 		int16_t size = 0;
 		bool is_smooth = false;
@@ -77,10 +76,7 @@ namespace mandala
 		uint8_t char_set = 0;
 		uint16_t stretch_height = 0;
 		uint8_t antialiasing = 0;
-		uint8_t padding_top = 0;
-		uint8_t padding_right = 0;
-		uint8_t padding_bottom = 0;
-		uint8_t padding_left = 0;
+        padding_u8_t padding;
 		uint8_t spacing_horizontal = 0;
 		uint8_t spacing_vertical = 0;
 		uint8_t outline = 0;

@@ -588,7 +588,7 @@ namespace mandala
 
             bsp_entity_t entity(entity_string);
 
-            auto model_optional = entity.get_property_optional<std::string>("model");
+            auto model_optional = entity.get_optional<std::string>("model");
 
             if (model_optional)
             {
@@ -750,11 +750,11 @@ namespace mandala
 			return;
 
             const auto& entity = entities[entity_index];
-            const auto model_index = boost::lexical_cast<int32_t>(entity.get_property("model").substr(1));
+            const auto model_index = boost::lexical_cast<int32_t>(entity.get("model").substr(1));
             const auto& model = models[model_index];
 
             //render mode
-            auto render_mode_optional = entity.get_property_optional<int32_t>("rendermode");
+            auto render_mode_optional = entity.get_optional<int32_t>("rendermode");
 
             render_mode_e render_mode = render_mode_e::normal;
 
@@ -766,7 +766,7 @@ namespace mandala
             //alpha
             float32_t alpha = 1.0f;
 
-            auto alpha_optional = entity.get_property_optional<uint8_t>("renderamt");
+            auto alpha_optional = entity.get_optional<uint8_t>("renderamt");
 
             if (alpha_optional)
             {
@@ -776,7 +776,7 @@ namespace mandala
             //origin
             vec3_t origin;
 
-            auto origin_optional = entity.get_property_optional("origin");
+            auto origin_optional = entity.get_optional("origin");
 
             if (origin_optional)
             {

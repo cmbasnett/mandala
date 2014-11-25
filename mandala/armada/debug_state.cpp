@@ -45,15 +45,15 @@ namespace mandala
 
 		if (app.performance.fps >= 30)
 		{
-			oss << std::wstring(green_color.begin(), green_color.end());
+			oss << green_color;
 		}
 		else if (app.performance.fps >= 25)
 		{
-			oss << std::wstring(yellow_color.begin(), yellow_color.end());
+			oss << yellow_color;
 		}
 		else
 		{
-			oss << std::wstring(red_color.begin(), red_color.end());
+			oss << red_color;
 		}
 
 		oss << "fps: " << static_cast<int32_t>(app.performance.fps) << L"↓" << std::endl;

@@ -2,12 +2,8 @@
 
 //mandala
 #include "md5b.hpp"
-#include "aabb.hpp"
 #include "resource.hpp"
 #include "skeleton.hpp"
-
-//boost
-#include <boost\filesystem\path.hpp>
 
 namespace mandala
 {

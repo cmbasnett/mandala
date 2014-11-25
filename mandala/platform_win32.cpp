@@ -9,10 +9,6 @@
 #include "gpu.hpp"
 
 //glfw
-#ifndef GLFW_DLL
-#define GLFW_DLL
-#endif
-
 #include "GLFW\glfw3.h"
 
 namespace mandala
@@ -25,22 +21,22 @@ namespace mandala
 		input_event.device_type = input_event_t::device_type_e::keyboard;
 		input_event.keyboard.key = static_cast<input_event_t::keyboard_t::key_e>(key);
 
-		if ((key & GLFW_MOD_SHIFT) == GLFW_MOD_SHIFT)
+		if ((mods & GLFW_MOD_SHIFT) == GLFW_MOD_SHIFT)
 		{
 			input_event.keyboard.mod_flags |= input_event_t::mod_flag_shift;
 		}
 
-		if ((key & GLFW_MOD_CONTROL) == GLFW_MOD_CONTROL)
+        if ((mods & GLFW_MOD_CONTROL) == GLFW_MOD_CONTROL)
         {
 			input_event.keyboard.mod_flags |= input_event_t::mod_flag_ctrl;
         }
 
-		if ((key & GLFW_MOD_ALT) == GLFW_MOD_ALT)
+        if ((mods & GLFW_MOD_ALT) == GLFW_MOD_ALT)
         {
 			input_event.keyboard.mod_flags |= input_event_t::mod_flag_alt;
         }
 
-		if ((key & GLFW_MOD_SUPER) == GLFW_MOD_SUPER)
+        if ((mods & GLFW_MOD_SUPER) == GLFW_MOD_SUPER)
         {
 			input_event.keyboard.mod_flags |= input_event_t::mod_flag_super;
         }
@@ -135,16 +131,54 @@ namespace mandala
 
     static inline void on_window_resize(GLFWwindow* window, int width, int height)
     {
-		//gpu.viewports.push({ 0, 0, width, height });
+        auto window_events_itr = std::find_if(platform.window.events.begin(), platform.window.events.end(), [](const window_event_t& window_event)
+        {
+            return window_event.type == window_event_t::type_e::resize;
+        });
 
-        window_event_t window_event;
-        window_event.type = window_event_t::type_e::resize;
-        window_event.width = width;
-        window_event.height = height;
+        if (window_events_itr != platform.window.events.end())
+        {
+            window_events_itr->width = width;
+            window_events_itr->height = height;
+        }
+        else
+        {
+            window_event_t window_event;
+            window_event.type = window_event_t::type_e::resize;
+            window_event.width = width;
+            window_event.height = height;
 
-        std::cout << width << " " << height << std::endl;
+            platform.window.events.push_back(window_event);
+        }
 
-        //platform.window.events.push_back(window_event);
+        platform.window.rectangle.width = width;
+        platform.window.rectangle.height = height;
+    }
+
+    static inline void on_window_move(GLFWwindow* window, int x, int y)
+    {
+        auto window_events_itr = std::find_if(platform.window.events.begin(), platform.window.events.end(), [](const window_event_t& window_event)
+        {
+            return window_event.type == window_event_t::type_e::move;
+        });
+
+        if (window_events_itr != platform.window.events.end())
+        {
+            window_events_itr->x = x;
+            window_events_itr->y = y;
+        }
+        else
+        {
+            window_event_t window_event;
+            window_event.type = window_event_t::type_e::move;
+            window_event.x = x;
+            window_event.y = y;
+
+            platform.window.events.push_back(window_event);
+        }
+
+        platform.window.rectangle.x = x;
+        platform.window.rectangle.y = y;
     }
 
     static inline void on_error(int error_code, const char* message)
@@ -175,8 +209,7 @@ namespace mandala
         glfwSetCursorPosCallback(static_cast<GLFWwindow*>(window_ptr), on_mouse_move);
         glfwSetScrollCallback(static_cast<GLFWwindow*>(window_ptr), on_mouse_scroll);
         glfwSetWindowSizeCallback(static_cast<GLFWwindow*>(window_ptr), on_window_resize);
-
-        const auto gl_version_string = unsafe_cast<char*>(glGetString(GL_VERSION)); glCheckError();
+        glfwSetWindowPosCallback(static_cast<GLFWwindow*>(window_ptr), on_window_move);
 
 		//glew
         auto glew_init_result = glewInit();
@@ -220,7 +253,7 @@ namespace mandala
 					input_event.gamepad.type = input_event_t::gamepad_t::type_e::axis_move;
 					input_event.gamepad.axis_index = axis_index;
 					input_event.gamepad.axis_value = axes[axis_index];
-					input_event.gamepad.axis_value_delta = axes[axis_index] - gamepad_state.axes[axis_index];
+                    input_event.gamepad.axis_value_delta = axes[axis_index] - gamepad_state.axes[axis_index];
 
 					platform.input.events.push_back(input_event);
 				}
@@ -238,7 +271,7 @@ namespace mandala
 					input_event_t input_event;
 					input_event.device_type = input_event_t::device_type_e::gamepad;
 					input_event.gamepad.type = buttons[button_index] == 0 ? input_event_t::gamepad_t::type_e::button_release : input_event_t::gamepad_t::type_e::button_press;
-					input_event.gamepad.button_index = button_index;
+                    input_event.gamepad.button_index = button_index;
 
 					platform.input.events.push_back(input_event);
 				}

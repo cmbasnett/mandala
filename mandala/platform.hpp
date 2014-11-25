@@ -32,10 +32,6 @@ namespace mandala
 		//pop_input_event
         virtual bool pop_input_event(input_event_t& input_event) = 0;
 
-#if defined(MANDALA_PC)
-        //pop_window_event
-        virtual bool pop_window_event(window_event_t& window_event) = 0;
-#endif
 		//clipboard
 		virtual std::string get_clipboard_string() const = 0;
 		virtual void set_clipboard_string(const std::string& clipboard) const = 0;
@@ -62,8 +58,8 @@ namespace mandala
 		virtual window_size_type get_window_position() const = 0;
 		virtual void set_window_position(const window_size_type& window_position) const = 0;
 
-		bool is_cursor_centered = false;
-		cursor_position_type cursor_position;
+        //pop_window_event
+        virtual bool pop_window_event(window_event_t& window_event) = 0;
 #endif
 	};
 }

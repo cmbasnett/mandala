@@ -362,6 +362,12 @@ namespace mandala
 		program_id_type create_program(const std::string& vertex_shader_source, const std::string& fragment_shader_source) const;
 		void destroy_program(program_id_type id);
         void clear(const clear_flag_type clear_flags) const;
+
+        const std::string& get_vendor() const;
+        const std::string& get_renderer() const;
+        const std::string& get_version() const;
+        const std::string& get_shading_language_version() const;
+        const std::string& get_extensions() const;
 	};
 
     extern gpu_t gpu;

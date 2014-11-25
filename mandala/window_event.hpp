@@ -11,7 +11,8 @@ namespace mandala
     {
         enum class type_e : uint8_t
         {
-            resize
+            resize,
+            move
         };
 
         type_e type;

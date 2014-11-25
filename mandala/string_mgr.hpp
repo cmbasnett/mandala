@@ -22,8 +22,9 @@ namespace mandala
             uint32_t stream_index = 0;
             hash_t hash;
             uint32_t offset = 0;
-            uint32_t length = 0;
-        };
+		};
+
+		typedef std::map<const hash_t, string_t> string_map_type;
 
         std::string language = "en";
 
@@ -34,6 +35,6 @@ namespace mandala
     private:
         std::mutex mutex;
         std::vector<std::shared_ptr<std::istream>> streams;
-        std::map<const hash_t, const string_t> strings;
+		std::map<std::string, string_map_type> language_strings;
     };
 }

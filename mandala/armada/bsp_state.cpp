@@ -17,7 +17,8 @@
 #include "../frame_buffer.hpp"
 #include "../interpolation.hpp"
 #include "../basic_gpu_program.hpp"
-#if defined(_WIN32) || defined(WIN32)
+
+#if defined(MANDALA_PC)
 #include "../window_event.hpp"
 #endif
 
@@ -336,9 +337,23 @@ namespace mandala
 
         void bsp_state_t::on_window_event(window_event_t& window_event)
         {
+            gui_state_t::on_window_event(window_event);
+
             if (window_event.type == window_event_t::type_e::resize)
             {
                 frame_buffer = std::make_shared<frame_buffer_t>(frame_buffer_t::type_e::color_depth, static_cast<frame_buffer_t::size_type>(layout->bounds().size()));
+
+                auto sprite_set = std::make_shared<sprite_set_t>(frame_buffer->color_texture);
+
+                //TODO: we should be able to lose reference of bsp_render_image's sprite 
+                std::stringstream ss;
+                ss << rand();
+                
+                app.resources.put<sprite_set_t>(sprite_set, hash_t(ss.str()));
+
+                sprite_t sprite(sprite_ref_t(sprite_set->hash, sprite_set->regions.begin()->second.hash));
+                bsp_render_image->set_sprite(sprite);
+                bsp_render_image->dirty();
             }
         }
     };

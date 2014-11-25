@@ -7,8 +7,6 @@
 
 //armada
 #include "armada.hpp"
-#include "world_state.hpp"
-#include "pause_state.hpp"
 #include "bsp_state.hpp"
 #include "debug_state.hpp"
 
@@ -35,6 +33,8 @@ namespace mandala
             platform.set_window_size(vec2_i32_t(1024, 768));
 
             app.resources.mount("resources\\armada.pack");
+			app.strings.mount("armada.strings");
+			app.strings.language = "es";
 
             app.states.push(std::make_shared<bsp_state_t>(), state_flag_all);
             app.states.push(std::make_shared<debug_state_t>(), state_flag_all);

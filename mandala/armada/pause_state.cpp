@@ -28,24 +28,12 @@ namespace mandala
 
             paused_label = std::make_shared<gui_label_t>();
             paused_label->set_bitmap_font(app.resources.get<bitmap_font_t>(hash_t("terminal_16.fnt")));
-            paused_label->set_string(L"PAUSED");
+			paused_label->set_string(app.strings.get(hash_t("paused")));
             paused_label->set_vertical_alignment(gui_label_t::vertical_alignment_e::middle);
             paused_label->set_justification(gui_label_t::justification_e::center);
             paused_label->set_dock_mode(gui_dock_mode_e::fill);
 
             scroll->adopt(paused_label);
-
-            for (auto i = 0; i < 50; ++i)
-            {
-                auto a = std::make_shared<gui_image_t>();
-                a->set_sprite(sprite_ref_t(hash_t("white.tpsb"), hash_t("white.png")));
-                a->set_is_autosized_to_texture(false);
-                a->set_size(vec2_t(1, 0));
-                a->set_color(vec4_t(static_cast<float32_t>(i) / 50, 0, 0, 1));
-                a->set_dock_mode(gui_dock_mode_e::left);
-
-                scroll->adopt(a);
-            }
 
             auto button = std::make_shared<gui_button_t>();
             button->set_size(vec2_t(100, 100));

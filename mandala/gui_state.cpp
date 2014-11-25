@@ -6,7 +6,8 @@
 #include "gui_state.hpp"
 #include "platform.hpp"
 #include "gpu.hpp"
-#if defined(_WIN32) || defined(WIN32)
+
+#if defined(MANDALA_PC)
 #include "window_event.hpp"
 #endif
 
@@ -58,8 +59,13 @@ namespace mandala
         layout->on_input_event(input_event);
     }
 
+#if defined(MANDALA_PC)
     void gui_state_t::on_window_event(window_event_t& window_event)
     {
+        const auto screen_size = platform.get_screen_size();
+
+        layout->set_bounds(gui_node_t::bounds_type(vec2_t(), vec2_t(static_cast<float32_t>(screen_size.x), static_cast<float32_t>(screen_size.y))));
         layout->dirty();
     }
+#endif
 }

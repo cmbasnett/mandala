@@ -9,6 +9,7 @@
 #include "platform.hpp"
 #include "input_event.hpp"
 #include "window_event.hpp"
+#include "rectangle.hpp"
 
 namespace mandala
 {
@@ -31,6 +32,7 @@ namespace mandala
         struct window_mgr_t
         {
             std::deque<window_event_t> events;
+            rectangle_i32_t rectangle;
         };
 
         platform_win32_t();
@@ -88,6 +90,8 @@ namespace mandala
 		vec4_t viewport;
 		input_mgr_t input;
         window_mgr_t window;
+        bool is_cursor_centered = false;
+        cursor_position_type cursor_position;
 
 		platform_win32_t(const platform_win32_t&) = delete;
 		platform_win32_t& operator=(const platform_win32_t&) = delete;

@@ -129,12 +129,11 @@ namespace mandala
 
                         try
                         {
-                            app.lua.execute(converter.to_bytes(input_textfield->string()));
+                            //app.lua.execute(converter.to_bytes(input_textfield->string()));
                         }
                         catch (const std::exception& exception)
                         {
-                            output_label_string.append(L"\n↑" +
-                                rgb_to_hex<wchar_t>(error_color) + converter.from_bytes(std::string(exception.what())) + L"↓");
+                            output_label_string.append(L"\n↑" + rgb_to_hex<wchar_t>(error_color) + converter.from_bytes(std::string(exception.what())) + L"↓");
                         }
 
                         output_label->set_string(output_label_string);

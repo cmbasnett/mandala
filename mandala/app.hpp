@@ -6,7 +6,6 @@
 #include "audio_mgr.hpp"
 #include "string_mgr.hpp"
 #include "gpu_program_mgr.hpp"
-#include "lua_mgr.hpp"
 
 //std
 #include <chrono>
@@ -15,7 +14,6 @@
 namespace mandala
 {
     struct game_t;
-    struct game_properties_t;
 
     struct app_t
     {
@@ -48,7 +46,6 @@ namespace mandala
         string_mgr_t strings;
         gpu_program_mgr_t gpu_programs;
         audio_mgr_t audio;
-        lua_mgr_t lua;
 
         app_t();
 
@@ -67,7 +64,7 @@ namespace mandala
         void render();
         void handle_input_events();
         void on_input_event(input_event_t& input_event);
-#if defined(_WIN32) || defined(WIN32)
+#if defined(MANDALA_PC)
         void handle_window_events();
         void on_window_event(window_event_t& window_event);
 #endif

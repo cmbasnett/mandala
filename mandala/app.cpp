@@ -6,7 +6,7 @@
 #include "platform.hpp"
 #include "game.hpp"
 
-//HACK:
+//HACK: this doesn't seem like the right place to put this
 #include "gui_gpu_program.hpp"
 #include "model_gpu_program.hpp"
 #include "bitmap_font_gpu_program.hpp"
@@ -49,14 +49,14 @@ namespace mandala
             performance.fps = 1.0f / dt;
 
             frame_start_time = high_resolution_clock::now();
-
-#if defined(_WIN32) || defined(WIN32)
-            handle_window_events();
-#endif
             handle_input_events();
 
             tick(dt);
             render();
+
+#if defined(MANDALA_PC)
+            handle_window_events();
+#endif
         }
 
 		game->app_run_end();
@@ -129,7 +129,7 @@ namespace mandala
 		states.on_input_event(input_event);
     }
 
-#if defined(_WIN32) || defined(WIN32)
+#if defined(MANDALA_PC)
     void app_t::handle_window_events()
     {
         window_event_t window_event;
