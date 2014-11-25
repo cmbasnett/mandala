@@ -400,7 +400,7 @@ namespace mandala
 		gpu.buffers.pop(gpu_t::buffer_target_e::array);
 	}
 
-	void bitmap_font_t::get_string_pages(std::vector<uint8_t>& pages, const std::wstring& string) const
+	void bitmap_font_t::get_string_pages(std::vector<uint8_t>& pages, const string_type& string) const
 	{
 		std::set<uint8_t> pages_set;
 
@@ -414,12 +414,13 @@ namespace mandala
 		std::copy(pages_set.begin(), pages_set.end(), std::back_inserter(pages));
 	}
 
-	int16_t bitmap_font_t::get_string_width(const std::wstring& string) const
+	int16_t bitmap_font_t::get_string_width(const string_type& string) const
 	{
 		int16_t width = 0;
 
 		for (const auto c : string)
 		{
+			//TODO: handle non-existent characters, will crash otherwise
 			width += characters.at(c).advance_x;
 		}
 

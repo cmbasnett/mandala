@@ -1,7 +1,7 @@
 #pragma once
 
 //std
-#include <fstream>
+#include <istream>
 #include <vector>
 
 //mandala
@@ -18,7 +18,7 @@ namespace mandala
         color_type_e color_type = color_type_e::g;
 		std::vector<uint8_t> data;
 
-		image_t();
+		image_t() = default;
 		image_t(std::istream& istream);
 
 	private:

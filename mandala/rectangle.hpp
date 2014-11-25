@@ -74,8 +74,13 @@ namespace mandala
 	typedef details::rectangle_t<int8_t> rectangle_i8_t;
     typedef details::rectangle_t<int16_t> rectangle_i16_t;
     typedef details::rectangle_t<uint16_t> rectangle_u16_t;
+	typedef details::rectangle_t<uint8_t> rectangle_u8_t;
+	typedef details::rectangle_t<int16_t> rectangle_i16_t;
+	typedef details::rectangle_t<uint16_t> rectangle_u16_t;
 	typedef details::rectangle_t<int32_t> rectangle_i32_t;
+	typedef details::rectangle_t<uint32_t> rectangle_u32_t;
 	typedef details::rectangle_t<int64_t> rectangle_i64_t;
+	typedef details::rectangle_t<uint64_t> rectangle_u64_t;
 	typedef details::rectangle_t<float32_t> rectangle_f32_t;
 	typedef details::rectangle_t<float64_t> rectangle_f64_t;
 	typedef rectangle_f32_t rectangle_t;

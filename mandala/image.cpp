@@ -6,10 +6,6 @@
 
 namespace mandala
 {
-	image_t::image_t()
-	{
-	}
-
 	image_t::image_t(std::istream& istream)
 	{
 		png_structp png_ptr;

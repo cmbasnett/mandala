@@ -7,6 +7,9 @@
 //mandala
 #include "hash.hpp"
 
+//glm
+#include <glm\glm.hpp>
+
 namespace mandala
 {
 	template<typename T>
@@ -17,14 +20,37 @@ namespace mandala
 
 		boost::optional<external_type> get_value(const internal_type& string)
 		{
-			if (!string.empty())
+			if (string.empty())
 			{
-				return boost::optional<external_type>(external_type(string));
+				return boost::optional<external_type>(external_type());
 			}
-			else
+
+			return boost::optional<external_type>(external_type(string));
+		}
+	};
+
+	template<typename T>
+	struct vec2_translator
+	{
+		typedef std::string internal_type;
+		typedef glm::detail::tvec2<T> external_type;
+
+		boost::optional<external_type> get_value(const internal_type& string)
+		{
+
+			if (string.empty())
 			{
 				return boost::optional<external_type>(boost::none);
 			}
+
+			external_type vec2;
+
+			std::stringstream ss;
+			ss.write(string);
+			ss.seekg(0, std::ios_base::beg);
+			ss >> vec2.x >> vec2.y;
+
+			return vec2;
 		}
 	};
 }

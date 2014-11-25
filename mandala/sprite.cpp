@@ -26,7 +26,7 @@ namespace mandala
 
 		if (regions_itr == sprite_set->regions.end())
 		{
-			throw std::exception();
+			throw std::exception("region does not exist in sprite set");
 		}
 
 		region = regions_itr->second;
@@ -52,7 +52,7 @@ namespace mandala
 
 		if (regions_itr == sprite_set->regions.end())
 		{
-			throw std::exception();
+			throw std::exception("region does not exist in sprite set");
 		}
 
 		region = regions_itr->second;

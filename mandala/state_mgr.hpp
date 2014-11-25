@@ -6,7 +6,7 @@
 //std
 #include <vector>
 #include <memory>
-#include <deque>
+#include <queue>
 #include <list>
 
 namespace mandala
@@ -14,7 +14,7 @@ namespace mandala
 	struct app_t;
 	struct state_t;
 
-#if defined(_WIN32) || defined(WIN32)
+#if defined(MANDALA_PC)
     struct window_event_t;
 #endif
 
@@ -65,7 +65,7 @@ namespace mandala
 		void tick(float32_t dt);
 		void render();
 		void on_input_event(input_event_t& input_event);
-#if defined(_WIN32) || defined(WIN32)
+#if defined(MANDALA_PC)
         void on_window_event(window_event_t& window_event);
 #endif
 
@@ -90,6 +90,6 @@ namespace mandala
 		state_mgr_t& operator=(const state_mgr_t&) = delete;
 
 		std::list<node_t> nodes;
-		std::deque<operation_t> operations;
+		std::queue<operation_t> operations;
 	};
 }

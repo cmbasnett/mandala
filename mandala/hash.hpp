@@ -24,27 +24,27 @@ namespace mandala
             }
 
             explicit hash_t(const string_type& string_) :
-#ifdef _DEBUG
+#if defined(DEBUG)
                 string_(string_),
-#endif //_DEBUG
+#endif
                 value_(fnv::fnv1a<value_type>(reinterpret_cast<string_type::value_type*>(const_cast<string_type::value_type*>(string_.c_str())), string_.length()))
 			{
 			}
 
-            hash_t(type&& copy) :
-#ifdef _DEBUG
+			hash_t(type&& copy) :
+#if defined(DEBUG)
 				string_(std::move(copy.string_)),
-#endif //_DEBUG
+#endif
                 value_(copy.value_)
 			{
 			}
 
-#ifdef _DEBUG
+#if defined(DEBUG)
             const string_type& string() const
             {
                 return string_;
             }
-#endif //_DEBUG
+#endif
 
             const value_type& value() const
             {
@@ -52,17 +52,17 @@ namespace mandala
             }
 
 		private:
-#ifdef _DEBUG
+#if defined(DEBUG)
             string_type string_;
-#endif //_DEBUG
+#endif
             value_type value_ = value_type(0);
 
 		public:
 			hash_t& operator=(const hash_t& rhs)
 			{
-#ifdef _DEBUG
+#if defined(DEBUG)
                 string_ = rhs.string_;
-#endif //_DEBUG
+#endif
                 value_ = rhs.value_;
 
 				return *this;
@@ -70,9 +70,9 @@ namespace mandala
 
 			type& operator=(string_type&& string__)
 			{
-#ifdef _DEBUG
+#if defined(DEBUG)
                 string_ = string__;
-#endif //_DEBUG
+#endif
                 value_(fnv::fnv1a<value_type>(reinterpret_cast<char*>(const_cast<char*>(string.c_str())), string.length()))
 
 				return *this;
@@ -80,9 +80,9 @@ namespace mandala
 
 			inline type& operator=(type&& copy)
 			{
-#ifdef _DEBUG
+#if defined(DEBUG)
 				string_ = std::move(copy.string_);
-#endif //_DEBUG
+#endif
 				value_ = copy.value_;
 
 				return *this;

@@ -3,7 +3,7 @@
 //mandala
 #include "md5b.hpp"
 #include "resource.hpp"
-#include "skeleton.hpp"
+#include "model_skeleton.hpp"
 
 namespace mandala
 {
@@ -39,7 +39,7 @@ namespace mandala
 		uint8_t frames_per_second = 0;
 		uint16_t frame_count = 0;
 		uint8_t bone_count = 0;
-		std::vector<skeleton_t> frame_skeletons;
+		std::vector<model_skeleton_t> frame_skeletons;
 
 	private:
 		model_animation_t(const model_animation_t&) = delete;

@@ -17,10 +17,7 @@ namespace mandala
 		{
 			auto t = 1.0f - ((quaternion.x * quaternion.x) + (quaternion.y * quaternion.y) + (quaternion.z * quaternion.z));
 
-			if (t < 0.0f)
-				quaternion.w = 0.0f;
-			else
-				quaternion.w = -glm::sqrt(t);
+			quaternion.w = t < 0.0f ? 0.0f : -glm::sqrt(t);
 		}
 	}
 }

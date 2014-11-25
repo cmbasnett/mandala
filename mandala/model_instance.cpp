@@ -31,22 +31,9 @@ namespace mandala
 
 	void model_instance_t::tick(float32_t dt)
 	{
-		//TODO: replace with animation controller class
-		t += dt;
-		
-		if(animation != nullptr)
-		{
-			auto frame_count = static_cast<float32_t>(animation->frame_count);
-            auto seconds_per_frame = 1.0f / animation->frames_per_second;
-            auto frame_0_index = static_cast<size_t>(glm::floor(glm::mod(t / seconds_per_frame, frame_count)));
-            auto frame_1_index = (frame_0_index + 1) % animation->frame_count;
-            auto interpolate_t = glm::mod(t, seconds_per_frame) / seconds_per_frame;
-            auto& frame_skeleton_0 = animation->frame_skeletons[frame_0_index];
-            auto& frame_skeleton_1 = animation->frame_skeletons[frame_1_index];
+		animation_controller.tick(dt);
 
-			skeleton_t::interpolate(skeleton, frame_skeleton_0, frame_skeleton_1, interpolate_t);
-		}
-
+		//TODO: figure out where to put this
 		bone_matrices.resize(skeleton.bones.size());
 
 		for(size_t i = 0; i < skeleton.bones.size(); ++i)
@@ -74,7 +61,7 @@ namespace mandala
 		model->render(camera.position, world_matrix, view_projection_matrix, bone_matrices, light_position);
 	}
 	
-	const skeleton_t::bone_t& model_instance_t::get_bone(const hash_t& bone_name_hash) const
+	const model_skeleton_t::bone_t& model_instance_t::get_bone(const hash_t& bone_name_hash) const
 	{
 		if (model->bone_indices.find(bone_name_hash) == model->bone_indices.end())
 		{

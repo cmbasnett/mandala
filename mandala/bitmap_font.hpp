@@ -59,6 +59,8 @@ namespace mandala
         typedef index_type<indices_max>::type index_type;
         typedef vertex_buffer_t<vertex_type> vertex_buffer_type;
         typedef index_buffer_t<index_type> index_buffer_type;
+		typedef std::wstring string_type;
+		typedef string_type::value_type char_type;
 
 		bitmap_font_t(std::istream& istream);
 
@@ -73,7 +75,7 @@ namespace mandala
 		bool is_italic = false;
 		bool is_bold = false;
 		bool is_fixed_height = false;
-		uint8_t char_set = 0;
+		uint8_t char_set = 0;	//TODO: represent with an enum?
 		uint16_t stretch_height = 0;
 		uint8_t antialiasing = 0;
         padding_u8_t padding;

@@ -88,6 +88,7 @@ namespace mandala
 		vertical_alignment_e _vertical_alignment = vertical_alignment_e::top;
         line_height_type _line_spacing = 0;
 		bool _is_multiline = true;
+		bool _is_uppercase = false;
 		bool _should_use_ellipses = true;
 		bool _should_use_color_codes = true;
 		render_data_t _render_data;

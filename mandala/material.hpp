@@ -27,14 +27,14 @@ namespace mandala
 		struct specular_t
 		{
 			std::shared_ptr<texture_t> texture;
-			vec4_t color = vec4_t(1.0f);
+			rgba_type color = rgba_type(1);
 			float32_t intensity = 1.0f;
 		};
 
 		struct emissive_t
 		{
 			std::shared_ptr<texture_t> texture;
-			vec4_t color = vec4_t(1.0f);
+			rgba_type color = rgba_type(1);
 			float32_t intensity = 1.0f;
 		};
 
