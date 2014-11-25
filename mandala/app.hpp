@@ -1,17 +1,16 @@
 #pragma once
 
+//std
+#include <chrono>
+#include <array>
+
 //mandala
 #include "state_mgr.hpp"
 #include "resource_mgr.hpp"
 #include "audio_mgr.hpp"
 #include "string_mgr.hpp"
 #include "gpu_program_mgr.hpp"
-#include "lua_mgr.hpp"
 #include "python_mgr.hpp"
-
-//std
-#include <chrono>
-#include <array>
 
 namespace mandala
 {

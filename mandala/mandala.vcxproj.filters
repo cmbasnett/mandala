@@ -130,9 +130,6 @@
     <ClInclude Include="model_instance.hpp">
       <Filter>mandala\resources\model</Filter>
     </ClInclude>
-    <ClInclude Include="skeleton.hpp">
-      <Filter>mandala\resources\model</Filter>
-    </ClInclude>
     <ClInclude Include="sound.hpp">
       <Filter>mandala\resources\sound</Filter>
     </ClInclude>
@@ -330,6 +327,13 @@
     <ClInclude Include="exceptions.hpp">
       <Filter>mandala\core</Filter>
     </ClInclude>
+    <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="model_animation_controller.hpp">
+      <Filter>mandala\resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="model_skeleton.hpp">
+      <Filter>mandala\resources\model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -346,9 +350,6 @@
       <Filter>mandala\resources\image</Filter>
     </ClCompile>
     <ClCompile Include="model.cpp">
-      <Filter>mandala\resources\model</Filter>
-    </ClCompile>
-    <ClCompile Include="skeleton.cpp">
       <Filter>mandala\resources\model</Filter>
     </ClCompile>
     <ClCompile Include="model_instance.cpp">
@@ -520,6 +521,12 @@
       <Filter>mandala\resources\sprite</Filter>
     </ClCompile>
     <ClCompile Include="model_animation.cpp">
+      <Filter>mandala\resources\model</Filter>
+    </ClCompile>
+    <ClCompile Include="model_animation_controller.cpp">
+      <Filter>mandala\resources\model</Filter>
+    </ClCompile>
+    <ClCompile Include="model_skeleton.cpp">
       <Filter>mandala\resources\model</Filter>
     </ClCompile>
   </ItemGroup>
