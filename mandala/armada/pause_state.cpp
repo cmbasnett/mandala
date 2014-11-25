@@ -53,7 +53,7 @@ namespace mandala
                 std::cout << "pressed" << std::endl;
             };
 
-            layout->adopt(button);
+            scroll->adopt(button);
 
             layout->adopt(scroll);
         }

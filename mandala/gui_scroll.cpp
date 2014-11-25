@@ -44,7 +44,9 @@ namespace mandala
                     _scroll_position.y -= static_cast<float32_t>(input_event.touch.position_delta.y);
                 }
                 break;
-            }
+			}
+
+			input_event.touch.position -= _scroll_position;
         }
 
         gui_node_t::on_input_event(input_event);
@@ -56,4 +58,13 @@ namespace mandala
 
         gui_node_t::tick(dt);
     }
+
+	void gui_scroll_t::clean()
+	{
+		gui_node_t::clean();
+
+		for (auto& child : children())
+		{
+		}
+	}
 }
