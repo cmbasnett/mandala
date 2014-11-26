@@ -1,5 +1,8 @@
 #pragma once
 
+//std
+#include <string>
+
 namespace mandala
 {
     struct http_request_t

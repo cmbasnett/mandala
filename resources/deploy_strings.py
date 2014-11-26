@@ -39,7 +39,7 @@ if __name__ == '__main__':
 			keys[row['']] = string_indices
 
 	with open('C:/Users/Colin Basnett/Documents/Visual Studio 2013/Projects/mandala/resources/deploy/strings/armada.strings', 'wb') as file:
-		# magic, version, language count, string count, key count
+		# magic, version, language count, key count
 		s = struct.Struct('4s I I I')
 		file.write(s.pack('LANG', version, len(languages), len(keys)))
 
