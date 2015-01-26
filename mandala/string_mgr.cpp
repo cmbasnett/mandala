@@ -5,17 +5,19 @@
 
 //mandala
 #include "string_mgr.hpp"
-#include "app.hpp"
+#include "resource_mgr.hpp"
 #include "string_archive.hpp"
 
 namespace mandala
 {
+	string_mgr_t strings;
+
     void string_mgr_t::mount(const std::string& file)
     {
         const auto strings_lock = std::unique_lock<std::mutex>(mutex);
-        const auto resources_lock = std::unique_lock<std::recursive_mutex>(app.resources.mutex);
+        const auto resources_lock = std::unique_lock<std::recursive_mutex>(resources.mutex);
 
-        auto stream = app.resources.extract(hash_t(file));
+        auto stream = resources.extract(hash_t(file));
         const auto archive = string_archive_t(*stream);
 
         streams.push_back(stream);
@@ -51,7 +53,7 @@ namespace mandala
     string_mgr_t::string_type string_mgr_t::get(const hash_t& hash)
     {
         const auto strings_lock = std::unique_lock<std::mutex>(mutex);
-        const auto resources_lock = std::unique_lock<std::recursive_mutex>(app.resources.mutex);
+        const auto resources_lock = std::unique_lock<std::recursive_mutex>(resources.mutex);
 
 		auto language_strings_itr = language_strings.find(language);
 

@@ -3,8 +3,10 @@
 #include <random>
 
 //mandala
-#include "../app.hpp"
 #include "../platform.hpp"
+#include "../resource_mgr.hpp"
+#include "../audio_mgr.hpp"
+#include "../state_mgr.hpp"
 #include "../bsp.hpp"
 #include "../bitmap_font.hpp"
 #include "../model.hpp"
@@ -17,6 +19,7 @@
 #include "../frame_buffer.hpp"
 #include "../interpolation.hpp"
 #include "../basic_gpu_program.hpp"
+#include "../gpu_program_mgr.hpp"
 
 #if defined(MANDALA_PC)
 #include "../window_event.hpp"
@@ -38,22 +41,22 @@ namespace mandala
             light_camera.position = vec3_t(30, 0, 30);
             light_camera.target = vec3_t(0, 0, 0);
 
-            model_instance = std::make_shared<model_instance_t>(app.resources.get<model_t>(hash_t("boblampclean.md5m")));
-            //model_instance->animation = app.resources.get<model_animation_t>(hash_t("boblampclean.md5a"));
+            model_instance = std::make_shared<model_instance_t>(resources.get<model_t>(hash_t("boblampclean.md5m")));
+            //model_instance->animation = resources.get<model_animation_t>(hash_t("boblampclean.md5a"));
 
-            frame_buffer = std::make_shared<frame_buffer_t>(frame_buffer_t::type_e::color_depth, static_cast<frame_buffer_t::size_type>(layout->bounds().size()));
+            frame_buffer = std::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::color_depth, static_cast<gpu_frame_buffer_size_type>(layout->bounds().size()));
 
-            skybox.model_instance = std::make_shared<model_instance_t>(app.resources.get<model_t>(hash_t("skybox.md5m")));
+            skybox.model_instance = std::make_shared<model_instance_t>(resources.get<model_t>(hash_t("skybox.md5m")));
             pause_state = std::make_shared<pause_state_t>();
             console_state = std::make_shared<console_state_t>();
 
 			camera.speed_max = 512;
 			camera.far = 8192;
 
-            bsp = app.resources.get<bsp_t>(hash_t("dod_flash.bsp"));
+            bsp = resources.get<bsp_t>(hash_t("dod_flash.bsp"));
 
             debug_label = std::make_shared<gui_label_t>();
-            debug_label->set_bitmap_font(app.resources.get<bitmap_font_t>(hash_t("inconsolata_12.fnt")));
+            debug_label->set_bitmap_font(resources.get<bitmap_font_t>(hash_t("inconsolata_12.fnt")));
             debug_label->set_color(vec4_t(1));
             debug_label->set_dock_mode(gui_dock_mode_e::fill);
             debug_label->set_vertical_alignment(gui_label_t::vertical_alignment_e::bottom);
@@ -69,7 +72,7 @@ namespace mandala
 			bsp_render_image->set_dock_mode(gui_dock_mode_e::fill);
 
 			auto sprite_set = std::make_shared<sprite_set_t>(frame_buffer->color_texture);
-			app.resources.put<sprite_set_t>(sprite_set, hash_t("temp"));
+			resources.put<sprite_set_t>(sprite_set, hash_t("temp"));
 
 			sprite_t sprite(sprite_ref_t(sprite_set->hash, sprite_set->regions.begin()->second.hash));
 			bsp_render_image->set_sprite(sprite);
@@ -110,9 +113,9 @@ namespace mandala
             camera.tick(dt);
             light_camera.tick(dt);
 
-            app.audio.doppler.factor = 0.0f;
-            app.audio.listener.position = camera.position;
-            app.audio.listener.velocity = camera.velocity;
+            audio.doppler.factor = 0.0f;
+            audio.listener.position = camera.position;
+            audio.listener.velocity = camera.velocity;
 
             render_data.leaf_index = bsp->get_leaf_index_from_position(camera.position);
 
@@ -156,9 +159,9 @@ namespace mandala
 
         void bsp_state_t::render()
         {
-			if (app.states.is_state_ticking(shared_from_this()))
+			if (states.is_state_ticking(shared_from_this()))
 			{
-                gpu_t::viewport_type viewport;
+                gpu_viewport_type viewport;
                 viewport.x = 0;
                 viewport.y = 0;
                 viewport.width = frame_buffer->size.x;
@@ -173,20 +176,22 @@ namespace mandala
 
                 model_instance->render(camera, light_camera.position);
 
-				//gpu.buffers.push(gpu_t::buffer_target_e::array, frustum_vertex_buffer);
-				//gpu.buffers.push(gpu_t::buffer_target_e::element_array, frustum_index_buffer);
+				gpu.buffers.push(gpu_t::buffer_target_e::array, frustum_vertex_buffer);
+				gpu.buffers.push(gpu_t::buffer_target_e::element_array, frustum_index_buffer);
 
-				//gpu.programs.push(basic_gpu_program);
+				const auto gpu_program = gpu_programs.get<basic_gpu_program_t>();
 
-				//basic_gpu_program->world_matrix(mat4_t());
-				//basic_gpu_program->view_projection_matrix(camera.projection_matrix * camera.view_matrix);
+				gpu.programs.push(gpu_program);
 
-				//gpu.draw_elements(gpu_t::primitive_type_e::lines, 24, gpu_t::index_type_e::unsigned_byte, 0);
+				gpu_program->world_matrix(mat4_t());
+				gpu_program->view_projection_matrix(camera.projection_matrix * camera.view_matrix);
 
-				//gpu.programs.pop();
+				gpu.draw_elements(gpu_t::primitive_type_e::lines, 24, gpu_t::index_type_e::unsigned_byte, 0);
 
-				//gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
-				//gpu.buffers.pop(gpu_t::buffer_target_e::array);
+				gpu.programs.pop();
+
+				gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
+				gpu.buffers.pop(gpu_t::buffer_target_e::array);
 
 				gpu.frame_buffers.pop();
 				gpu.viewports.pop();
@@ -204,11 +209,12 @@ namespace mandala
 				return;
 			}
 
+#if defined(MANDALA_PC)
 			if (input_event.device_type == input_event_t::device_type_e::keyboard &&
 				input_event.keyboard.key == input_event_t::keyboard_t::key_e::grave_accent &&
 				input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press)
 			{
-				app.states.push(console_state, state_flag_render_tick);
+				states.push(console_state, state_flag_render_tick);
 
 				input_event.is_consumed = true;
 
@@ -230,15 +236,16 @@ namespace mandala
 				input_event.keyboard.key == input_event_t::keyboard_t::key_e::escape &&
 				input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press) ||
 				(input_event.device_type == input_event_t::device_type_e::gamepad &&
-				input_event.gamepad.type == input_event_t::gamepad_t::type_e::button_release &&
+				input_event.gamepad.type == input_event_t::gamepad_t::type_e::release &&
 				input_event.gamepad.button_index == 0))
 			{
-				app.states.push(pause_state, state_flag_render);
+				states.push(pause_state, state_flag_render);
 
 				input_event.is_consumed = true;
 
 				return;
 			}
+#endif
 
 			camera.on_input_event(input_event);
 
@@ -247,11 +254,12 @@ namespace mandala
 				return;
 			}
 
+#if defined(MANDALA_PC)
 			if (input_event.device_type == input_event_t::device_type_e::touch)
 			{
 				if (input_event.touch.button == input_event_t::touch_t::button_e::right)
 				{
-					if (input_event.touch.type == input_event_t::touch_t::type_e::button_press)
+					if (input_event.touch.type == input_event_t::touch_t::type_e::press)
 					{
                         camera.fov /= 2;
                         camera.sensitivity /= 2;
@@ -260,7 +268,7 @@ namespace mandala
 
 						return;
 					}
-					else if (input_event.touch.type == input_event_t::touch_t::type_e::button_release)
+					else if (input_event.touch.type == input_event_t::touch_t::type_e::release)
 					{
                         camera.fov *= 2;;
                         camera.sensitivity *= 2;
@@ -269,31 +277,6 @@ namespace mandala
 
 						return;
 					}
-				}
-				else if (input_event.touch.button == input_event_t::touch_t::button_e::left &&
-					input_event.touch.type == input_event_t::touch_t::type_e::button_press)
-				{
-					std::uniform_real_distribution<float32_t> pitch_target_delta_distribution(1.0f, 2.0f);
-					std::uniform_real_distribution<float32_t> yaw_target_delta_distribution(-0.5f, 0.5f);
-
-					auto pitch_target_delta = pitch_target_delta_distribution(mt19937);
-					auto yaw_target_delta = yaw_target_delta_distribution(mt19937);
-
-					camera.pitch_target += pitch_target_delta;
-					camera.yaw_target += yaw_target_delta;
-
-                    auto& sound = app.resources.get<sound_t>(hash_t("garand_shoot.wav"));
-
-					auto source = app.audio.create_source();
-					source->position(camera.position);
-					source->max_distance(500.0f);
-					source->reference_distance(250.0f);
-					source->queue_sound(sound);
-					source->play();
-
-					input_event.is_consumed = true;
-
-					return;
 				}
 				else if (input_event.touch.type == input_event_t::touch_t::type_e::scroll)
 				{
@@ -314,7 +297,33 @@ namespace mandala
 						return;
 					}
 				}
+				else if (input_event.touch.button == input_event_t::touch_t::button_e::left &&
+					input_event.touch.type == input_event_t::touch_t::type_e::press)
+				{
+					std::uniform_real_distribution<float32_t> pitch_target_delta_distribution(1.0f, 2.0f);
+					std::uniform_real_distribution<float32_t> yaw_target_delta_distribution(-0.5f, 0.5f);
+
+					auto pitch_target_delta = pitch_target_delta_distribution(mt19937);
+					auto yaw_target_delta = yaw_target_delta_distribution(mt19937);
+
+					camera.pitch_target += pitch_target_delta;
+					camera.yaw_target += yaw_target_delta;
+
+                    auto& sound = resources.get<sound_t>(hash_t("garand_shoot.wav"));
+
+					auto source = audio.create_source();
+					source->position(camera.position);
+					source->max_distance(500.0f);
+					source->reference_distance(250.0f);
+					source->queue_sound(sound);
+					source->play();
+
+					input_event.is_consumed = true;
+
+					return;
+				}
 			}
+#endif
 
 			gui_state_t::on_input_event(input_event);
         }
@@ -335,13 +344,14 @@ namespace mandala
             platform.set_cursor_hidden(true);
         }
 
+#if defined(MANDALA_PC)
         void bsp_state_t::on_window_event(window_event_t& window_event)
         {
             gui_state_t::on_window_event(window_event);
 
             if (window_event.type == window_event_t::type_e::resize)
             {
-                frame_buffer = std::make_shared<frame_buffer_t>(frame_buffer_t::type_e::color_depth, static_cast<frame_buffer_t::size_type>(layout->bounds().size()));
+                frame_buffer = std::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::color_depth, static_cast<gpu_frame_buffer_size_type>(layout->bounds().size()));
 
                 auto sprite_set = std::make_shared<sprite_set_t>(frame_buffer->color_texture);
 
@@ -349,12 +359,13 @@ namespace mandala
                 std::stringstream ss;
                 ss << rand();
                 
-                app.resources.put<sprite_set_t>(sprite_set, hash_t(ss.str()));
+                resources.put<sprite_set_t>(sprite_set, hash_t(ss.str()));
 
                 sprite_t sprite(sprite_ref_t(sprite_set->hash, sprite_set->regions.begin()->second.hash));
                 bsp_render_image->set_sprite(sprite);
                 bsp_render_image->dirty();
             }
         }
+#endif
     };
 };

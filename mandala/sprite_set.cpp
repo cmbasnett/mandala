@@ -2,7 +2,8 @@
 #include <fstream>
 
 //mandala
-#include "app.hpp"
+#include "io.hpp"
+#include "resource_mgr.hpp"
 #include "sprite_set.hpp"
 #include "texture.hpp"
 
@@ -29,7 +30,7 @@ namespace mandala
 
         //version
         int32_t version = 0;
-        istream.read(reinterpret_cast<char*>(&version), sizeof(version));
+		read(istream, version);
 
         if (version != tpsb::version)
         {
@@ -40,12 +41,12 @@ namespace mandala
         std::string texture_name;
         std::getline(istream, texture_name, '\0');
 
-        texture = app.resources.get<texture_t>(hash_t(texture_name));
+        texture = resources.get<texture_t>(hash_t(texture_name));
 
         //region count
         uint16_t region_count = 0;
 
-        istream.read(reinterpret_cast<char*>(&region_count), sizeof(region_count));
+		read(istream, region_count);
 
         for (uint16_t i = 0; i < region_count; ++i)
         {
@@ -57,27 +58,27 @@ namespace mandala
             
             region.hash = hash_t(std::move(region_name));
 
-            //frame rectangle
-            istream.read(reinterpret_cast<char*>(&region.frame_rectangle.x), sizeof(region.frame_rectangle.x));
-            istream.read(reinterpret_cast<char*>(&region.frame_rectangle.y), sizeof(region.frame_rectangle.y));
-            istream.read(reinterpret_cast<char*>(&region.frame_rectangle.width), sizeof(region.frame_rectangle.width));
-            istream.read(reinterpret_cast<char*>(&region.frame_rectangle.width), sizeof(region.frame_rectangle.width));
+			//frame rectangle
+			read(istream, region.frame_rectangle.x);
+			read(istream, region.frame_rectangle.x);
+			read(istream, region.frame_rectangle.width);
+			read(istream, region.frame_rectangle.height);
 
             //rectangle
-            istream.read(reinterpret_cast<char*>(&region.rectangle.x), sizeof(region.rectangle.x));
-            istream.read(reinterpret_cast<char*>(&region.rectangle.y), sizeof(region.rectangle.y));
-            istream.read(reinterpret_cast<char*>(&region.rectangle.width), sizeof(region.rectangle.width));
-            istream.read(reinterpret_cast<char*>(&region.rectangle.height), sizeof(region.rectangle.height));
+			read(istream, region.rectangle.x);
+			read(istream, region.rectangle.x);
+			read(istream, region.rectangle.width);
+			read(istream, region.rectangle.height);
 
             //source size
-            istream.read(reinterpret_cast<char*>(&region.source_size.x), sizeof(region.source_size.x));
-            istream.read(reinterpret_cast<char*>(&region.source_size.y), sizeof(region.source_size.y));
+			read(istream, region.source_size.x);
+			read(istream, region.source_size.y);
 
             //uv
-            istream.read(reinterpret_cast<char*>(&region.uv.min.x), sizeof(region.uv.min.x));
-            istream.read(reinterpret_cast<char*>(&region.uv.min.y), sizeof(region.uv.min.y));
-            istream.read(reinterpret_cast<char*>(&region.uv.max.x), sizeof(region.uv.max.x));
-            istream.read(reinterpret_cast<char*>(&region.uv.max.y), sizeof(region.uv.max.y));
+			read(istream, region.uv.min.x);
+			read(istream, region.uv.min.y);
+			read(istream, region.uv.max.x);
+			read(istream, region.uv.max.y);
 
             //flags
             typedef uint8_t flags_type;
@@ -91,7 +92,7 @@ namespace mandala
 
             flags_type flags = flag_none;
 
-            istream.read(reinterpret_cast<char*>(&flags), sizeof(flags));
+			read(istream, flags);
 
             region.is_rotated = ((flags & flag_rotated) == flag_rotated);
             region.is_trimmed = ((flags & flag_trimmed) == flag_trimmed);

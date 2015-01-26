@@ -15,8 +15,8 @@ namespace mandala
 		struct bone_t
 		{
 			uint8_t parent_index = 0;
-			vec3_t position;
-			quat_t orientation;
+			vec3_t location;
+			quat_t rotation;
 		};
 
 		static void interpolate(model_skeleton_t& skeleton, const model_skeleton_t& a, const model_skeleton_t& b, float32_t t);

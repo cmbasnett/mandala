@@ -61,7 +61,7 @@ namespace mandala
 		model->render(camera.position, world_matrix, view_projection_matrix, bone_matrices, light_position);
 	}
 	
-	const model_skeleton_t::bone_t& model_instance_t::get_bone(const hash_t& bone_name_hash) const
+	const void model_instance_t::get_bone(const hash_t& bone_name_hash, vec3_t& location, quat_t& rotation) const
 	{
 		if (model->bone_indices.find(bone_name_hash) == model->bone_indices.end())
 		{
@@ -69,7 +69,9 @@ namespace mandala
 		}
 
 		auto bone_index = model->bone_indices.at(bone_name_hash);
+		const auto& bone = skeleton.bones[bone_index];
 
-		return skeleton.bones[bone_index];
+		location = bone.location;
+		rotation = bone.rotation;
 	}
 }

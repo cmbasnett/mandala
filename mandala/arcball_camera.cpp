@@ -50,7 +50,7 @@ namespace mandala
 			{
 				switch (input_event.touch.type)
 				{
-				case input_event_t::touch_t::type_e::button_press:
+				case input_event_t::touch_t::type_e::press:
 					{
 						switch (input_event.touch.button)
 						{
@@ -66,7 +66,7 @@ namespace mandala
 						}
 					}
 					break;
-				case input_event_t::touch_t::type_e::button_release:
+				case input_event_t::touch_t::type_e::release:
 					{
 						switch (input_event.touch.button)
 						{

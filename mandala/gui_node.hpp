@@ -39,7 +39,6 @@ namespace mandala
 
 	enum class gui_resize_mode_e
 	{
-
 	};
 
 	struct gui_node_t
@@ -73,7 +72,7 @@ namespace mandala
 		bool is_hidden() const { return _is_hidden; }
 		const std::vector<std::shared_ptr<gui_node_t>>& children() const { return _children; }
 
-        void dirty() { _is_dirty = true; }
+        void dirty() { _is_dirty = true; }	//TODO: cascade dirtyiness upwards if parent relies on this element for sizing
 		void set_dock_mode(gui_dock_mode_e dock_mode) { _dock_mode = dock_mode; _is_dirty = true; }
 		void set_anchor_flags(gui_anchor_flags_type anchor_flags) { _anchor_flags = anchor_flags; _is_dirty = true; }
 		void set_anchor_offset(const vec2_t& anchor_offset) { _anchor_offset = anchor_offset; _is_dirty = true; }
@@ -113,6 +112,7 @@ namespace mandala
         bounds_type _bounds;
         bool _is_hidden = false;
         bool _should_clip = false;
+		bool _has_focus = false;
 
 	protected:
 		bool _is_dirty = true;

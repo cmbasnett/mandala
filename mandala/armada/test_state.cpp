@@ -3,7 +3,7 @@
 
 //mandala
 #include "../input_event.hpp"
-#include "../app.hpp"
+#include "../state_mgr.hpp"
 
 //armada
 #include "test_state.hpp"
@@ -29,7 +29,7 @@ namespace mandala
 						std::cout << "---------------------------------------------------------------" << std::endl;
 						std::cout << "[" << index << "] pop" << std::endl;
 						std::cout << "---------------------------------------------------------------" << std::endl;
-						app.states.pop(shared_from_this());
+						states.pop(shared_from_this());
 						input_event.is_consumed = true;
 						break;
 					}
@@ -38,7 +38,7 @@ namespace mandala
 						std::cout << "---------------------------------------------------------------" << std::endl;
 						std::cout << "[" << index + 1 << "] push" << std::endl;
 						std::cout << "---------------------------------------------------------------" << std::endl;
-						app.states.push(std::make_shared<test_state_t>(index + 1), state_flag_all);
+						states.push(std::make_shared<test_state_t>(index + 1), state_flag_all);
 						input_event.is_consumed = true;
 						break;
 					}

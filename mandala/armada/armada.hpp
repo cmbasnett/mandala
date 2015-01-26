@@ -13,7 +13,6 @@ namespace mandala
 		struct armada_game_t : game_t
 		{
             armada_game_t();
-            virtual ~armada_game_t();
 
 			virtual void app_run_start();
 			virtual void app_run_end();

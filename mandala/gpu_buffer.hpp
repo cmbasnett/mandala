@@ -4,15 +4,13 @@
 #include <memory>
 
 //mandala
-#include "types.hpp"
+#include "gpu_defs.hpp"
 
 namespace mandala
 {
     struct gpu_buffer_t : std::enable_shared_from_this<gpu_buffer_t>
     {
-        typedef uint32_t id_type;
-
-        id_type id = 0;
+		gpu_id_t id;
 
         virtual ~gpu_buffer_t();
 

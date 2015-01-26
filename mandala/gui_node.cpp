@@ -34,8 +34,9 @@ namespace mandala
         //remove node from parent child list
 		_parent->_children.erase(parent_children_itr);
 
+		//TODO: might be able to forego dirtying parent removing this node doesn't affect positioning of sibling elements
         //mark parent as dirty
-		_parent->_is_dirty = true;
+		_parent->dirty();
 
         //unparent
 		_parent = nullptr;

@@ -8,6 +8,7 @@
 #include "resource.hpp"
 #include "vertex_buffer.hpp"
 #include "index_buffer.hpp"
+#include "gpu_vertices.hpp"
 
 namespace mandala
 {
@@ -23,22 +24,10 @@ namespace mandala
 
 		struct mesh_t
 		{
-			struct vertex_t
-			{
-				vec3_t position;
-				vec3_t normal;
-				vec3_t tangent;
-				vec2_t texcoord;
-				vec4_i32_t bone_indices_0;
-				vec4_i32_t bone_indices_1;
-				vec4_t bone_weights_0;
-				vec4_t bone_weights_1;
-			};
-
 			typedef uint16_t index_type;
-			typedef vertex_t vertex_type;
+			typedef model_vertex_t vertex_type;
 
-            typedef vertex_buffer_t<vertex_t> vertex_buffer_type;
+            typedef vertex_buffer_t<vertex_type> vertex_buffer_type;
             typedef index_buffer_t<index_type> index_buffer_type;
 
 			size_t index_count = 0;

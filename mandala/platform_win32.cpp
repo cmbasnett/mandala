@@ -4,12 +4,15 @@
 #include <iostream>
 
 //mandala
-#include "opengl.hpp"
 #include "platform_win32.hpp"
 #include "gpu.hpp"
 
+//glew
+#include <GL\glew.h>
+
 //glfw
-#include "GLFW\glfw3.h"
+#include <GLFW\glfw3.h>
+
 
 namespace mandala
 {
@@ -76,7 +79,7 @@ namespace mandala
 
         bool is_press = (action == GLFW_PRESS);
 
-        input_event.touch.type = is_press ? input_event_t::touch_t::type_e::button_press : input_event_t::touch_t::type_e::button_release;
+        input_event.touch.type = is_press ? input_event_t::touch_t::type_e::press : input_event_t::touch_t::type_e::release;
 
         if (is_press)
         {
@@ -130,7 +133,8 @@ namespace mandala
     }
 
     static inline void on_window_resize(GLFWwindow* window, int width, int height)
-    {
+	{
+		//TODO: a less vebose solution is possible
         auto window_events_itr = std::find_if(platform.window.events.begin(), platform.window.events.end(), [](const window_event_t& window_event)
         {
             return window_event.type == window_event_t::type_e::resize;
@@ -138,15 +142,15 @@ namespace mandala
 
         if (window_events_itr != platform.window.events.end())
         {
-            window_events_itr->width = width;
-            window_events_itr->height = height;
+            window_events_itr->rectangle.width = width;
+			window_events_itr->rectangle.height = height;
         }
         else
         {
             window_event_t window_event;
             window_event.type = window_event_t::type_e::resize;
-            window_event.width = width;
-            window_event.height = height;
+			window_event.rectangle.width = width;
+			window_event.rectangle.height = height;
 
             platform.window.events.push_back(window_event);
         }
@@ -156,7 +160,8 @@ namespace mandala
     }
 
     static inline void on_window_move(GLFWwindow* window, int x, int y)
-    {
+	{
+		//TODO: a less vebose solution is possible
         auto window_events_itr = std::find_if(platform.window.events.begin(), platform.window.events.end(), [](const window_event_t& window_event)
         {
             return window_event.type == window_event_t::type_e::move;
@@ -164,15 +169,15 @@ namespace mandala
 
         if (window_events_itr != platform.window.events.end())
         {
-            window_events_itr->x = x;
-            window_events_itr->y = y;
+			window_events_itr->rectangle.x = x;
+			window_events_itr->rectangle.y = y;
         }
         else
         {
             window_event_t window_event;
             window_event.type = window_event_t::type_e::move;
-            window_event.x = x;
-            window_event.y = y;
+			window_event.rectangle.x = x;
+			window_event.rectangle.y = y;
 
             platform.window.events.push_back(window_event);
         }
@@ -250,6 +255,7 @@ namespace mandala
 				{
 					input_event_t input_event;
 					input_event.device_type = input_event_t::device_type_e::gamepad;
+					input_event.gamepad.index = gamepad_index;
 					input_event.gamepad.type = input_event_t::gamepad_t::type_e::axis_move;
 					input_event.gamepad.axis_index = axis_index;
 					input_event.gamepad.axis_value = axes[axis_index];
@@ -270,7 +276,8 @@ namespace mandala
 				{
 					input_event_t input_event;
 					input_event.device_type = input_event_t::device_type_e::gamepad;
-					input_event.gamepad.type = buttons[button_index] == 0 ? input_event_t::gamepad_t::type_e::button_release : input_event_t::gamepad_t::type_e::button_press;
+					input_event.gamepad.index = gamepad_index;
+					input_event.gamepad.type = buttons[button_index] == 0 ? input_event_t::gamepad_t::type_e::release : input_event_t::gamepad_t::type_e::press;
                     input_event.gamepad.button_index = button_index;
 
 					platform.input.events.push_back(input_event);
@@ -287,7 +294,7 @@ namespace mandala
 
 	void platform_win32_t::app_render_start()
 	{
-		glClearColor(0, 0, 0, 0);   //TODO: have gpu handle clear color
+		gpu.set_clear_color(rgba_type(0));
 
         gpu.clear(gpu_t::clear_flag_color | gpu_t::clear_flag_depth);
 	}

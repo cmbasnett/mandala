@@ -38,7 +38,7 @@ namespace mandala
 			float32_t intensity = 1.0f;
 		};
 
-		material_t(std::istream& ifstream);
+		material_t(std::istream& istream);
 
 		bool is_two_sided = false;
         bool is_lit = true;

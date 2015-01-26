@@ -23,7 +23,7 @@ namespace mandala
         template<typename T = std::string>
         boost::optional<T> get_optional(const std::string& key) const
         {
-            boost::optional<T> property;
+			boost::optional<T> property = boost::none;
 
             auto properties_itr = _properties.find(key);
 

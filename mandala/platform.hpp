@@ -2,6 +2,7 @@
 
 //mandala
 #include "types.hpp"
+#include "platform_defs.hpp"
 
 namespace mandala
 {

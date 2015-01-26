@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 //mandala
 #include "types.hpp"
@@ -58,6 +58,9 @@ namespace mandala
         return rgb;
     }
 
+	static ptrdiff_t rgb_hex_string_length = 6;
+	static ptrdiff_t rgba_hex_string_length = 8;
+
     template<typename Char>
     inline std::basic_string<Char, std::char_traits<Char>, std::allocator<Char>> rgb_to_hex(const rgb_type& rgb)
 	{
@@ -111,7 +114,7 @@ namespace mandala
 	{
 		auto rgb_max = glm::compMax(rgb);
 		auto rgb_min = glm::compMin(rgb);
-		auto delta = rgb_max - rgb_min;
+		auto rgb_diff = rgb_max - rgb_min;
 
 		if (rgb_max == 0)
 		{
@@ -121,19 +124,19 @@ namespace mandala
         rgb_type::value_type h, s, v = 0;
 			
 		v = rgb_max;
-		s = delta / rgb_max;
+		s = rgb_diff / rgb_max;
 
 		if (rgb.r == rgb_max)
 		{
-			h = (rgb.g - rgb.b) / delta;
+			h = (rgb.g - rgb.b) / rgb_diff;
 		}
 		else if (rgb.g == rgb_max)
 		{
-			h = 2 + (rgb.b - rgb.r) / delta;
+			h = 2 + (rgb.b - rgb.r) / rgb_diff;
 		}
 		else
 		{
-			h = 4 + (rgb.r - rgb.g) / delta;
+			h = 4 + (rgb.r - rgb.g) / rgb_diff;
 		}
 
 		h *= 60;
@@ -152,4 +155,59 @@ namespace mandala
     const rgb_type color_green = rgb_type(0, 1, 0);
     const rgb_type color_blue = rgb_type(0, 0, 1);
     const rgb_type color_yellow = rgb_type(1, 1, 0);
+
+	struct color_push
+	{
+		color_push() = delete;
+		color_push(const color_push&) = delete;
+		color_push(const rgb_type& color) :
+			color(color)
+		{
+		}
+
+		rgb_type color;
+	};
+
+	namespace details
+	{
+		struct color_pop_t
+		{
+		};
+	}
+
+	const details::color_pop_t color_pop;
+
+	template<typename Char>
+	struct color_pop_character;
+
+	template<>
+	struct color_pop_character<wchar_t>
+	{
+		static const wchar_t value = L'↓';
+	};
+
+	template<typename Char>
+	struct color_push_character;
+
+	template<>
+	struct color_push_character<wchar_t>
+	{
+		static const wchar_t value = L'↑';
+	};
+}
+
+template<typename Char>
+std::basic_ostringstream<Char, std::char_traits<Char>, std::allocator<Char>>& operator<<(std::basic_ostringstream<Char, std::char_traits<Char>, std::allocator<Char>>& oss, const mandala::color_push& push)
+{
+	oss << mandala::color_push_character<Char>::value << mandala::rgb_to_hex<Char>(push.color);
+
+	return oss;
+}
+
+template<typename Char>
+std::basic_ostringstream<Char, std::char_traits<Char>, std::allocator<Char>>& operator<<(std::basic_ostringstream<Char, std::char_traits<Char>, std::allocator<Char>>& oss, const mandala::details::color_pop_t& pop)
+{
+	oss << mandala::color_pop_character<Char>::value;
+
+	return oss;
 }

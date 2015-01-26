@@ -37,4 +37,6 @@ namespace mandala
         std::vector<std::shared_ptr<std::istream>> streams;
 		std::map<std::string, string_map_type> language_strings;
     };
+
+	extern string_mgr_t strings;
 }

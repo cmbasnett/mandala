@@ -1,18 +1,16 @@
 //mandala
 #include "gpu_buffer.hpp"
-
-//glew
-#include <GL\glew.h>
+#include "gpu.hpp"
 
 namespace mandala
 {
     gpu_buffer_t::gpu_buffer_t()
     {
-        glGenBuffers(1, &id);
+		id = gpu.create_buffer();
     }
 
     gpu_buffer_t::~gpu_buffer_t()
     {
-        glDeleteBuffers(1, &id);
+		gpu.destroy_buffer(id);
     }
 }

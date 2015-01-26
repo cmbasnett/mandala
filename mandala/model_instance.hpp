@@ -27,6 +27,6 @@ namespace mandala
 		model_skeleton_t skeleton;
 		model_animation_controller_t animation_controller;
 
-		const model_skeleton_t::bone_t& get_bone(const hash_t& bone_name_hash) const;
+		const void get_bone(const hash_t& bone_name_hash, vec3_t& location, quat_t& rotation) const;
 	};
 }

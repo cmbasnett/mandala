@@ -5,7 +5,6 @@
 #include "opengl.hpp"
 #include "texture.hpp"
 #include "image.hpp"
-#include "app.hpp"
 
 namespace mandala
 {
@@ -51,23 +50,23 @@ namespace mandala
     //TODO: move all these GL calls into the gpu class
 	texture_t::texture_t(color_type_e color_type, size_type width, size_type height) :
         width(width),
-        height(height)
-    {
-        glGenTextures(1, &id); glCheckError();
-        glBindTexture(GL_TEXTURE_2D, id); glCheckError();
+		height(height)
+	{
+		glGenTextures(1, &id); glCheckError();
+		glBindTexture(GL_TEXTURE_2D, id); glCheckError();
 
-        get_formats(color_type, internal_format, format, type);
+		get_formats(color_type, internal_format, format, type);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, format, type, nullptr); glCheckError();
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); glCheckError();
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); glCheckError();
-        glBindTexture(GL_TEXTURE_2D, 0); glCheckError();
-    }
+		glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, format, type, nullptr); glCheckError();
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); glCheckError();
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); glCheckError();
+		glBindTexture(GL_TEXTURE_2D, 0); glCheckError();
+	}
 
     texture_t::texture_t(color_type_e color_type, vec2_u32_t size) :
-        texture_t(color_type, size.x, size.y)
-    {
-    }
+		texture_t(color_type, size.x, size.y)
+	{
+	}
 
     texture_t::texture_t(const std::shared_ptr<image_t>& image)
     {

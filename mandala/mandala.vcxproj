@@ -94,10 +94,10 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)ext\glm-0.9.4.4;$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)ext\glew-1.10.0\include;$(SolutionDir)ext\zlib-1.2.8\include;$(SolutionDir)ext\libpng-1.6.3;$(SolutionDir)ext\openal-soft-1.15.1-bin\include;C:\boost_1_55_0;$(SolutionDir)ext\Python27\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ext\glm-0.9.4.4;$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)ext\glew-1.10.0\include;$(SolutionDir)ext\zlib-1.2.8\include;$(SolutionDir)ext\libpng-1.6.3;$(SolutionDir)ext\openal-soft-1.15.1-bin\include;C:\boost_1_55_0;$(SolutionDir)ext\Python27\include;$(SolutionDir)ext\cpp-netlib-0.11.1-final;$(SolutionDir)ext\openssl-0.9.8k_WIN32\include</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <PreprocessorDefinitions>_WIN32_WINNT=0x0501;DEBUG;_WINSOCK_DEPRECATED_NO_WARNINGS;BOOST_PYTHON_STATIC_LIB;GLFW_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;_WIN32_WINNT=0x0501;DEBUG;_WINSOCK_DEPRECATED_NO_WARNINGS;BOOST_PYTHON_STATIC_LIB;GLFW_DLL;BOOST_NETWORK_ENABLE_HTTPS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <UndefinePreprocessorDefinitions>APIENTRY;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
@@ -105,8 +105,8 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)ext\glew-1.10.0\lib\Release\Win32;$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\lib-msvc110;$(SolutionDir)ext\zlib-1.2.8\lib;$(SolutionDir)ext\libpng-1.6.3\projects\vstudio\Release Library;$(SolutionDir)ext\openal-soft-1.15.1-bin\lib\Win32;C:\boost_1_55_0\stage\lib;$(SolutionDir)ext\Python27\libs</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3dll.lib;zlib.lib;libpng16.lib;libOpenAL32.dll.a</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\boost_1_55_0\stage\lib;$(SolutionDir)ext\glew-1.10.0\lib\Release\Win32;$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\lib-msvc110;$(SolutionDir)ext\zlib-1.2.8\lib;$(SolutionDir)ext\libpng-1.6.3\projects\vstudio\Release Library;$(SolutionDir)ext\openal-soft-1.15.1-bin\lib\Win32;$(SolutionDir)ext\Python27\libs;$(SolutionDir)ext\cpp-netlib-0.11.1-final\cpp-netlib-build\libs\network\src\Debug;$(SolutionDir)ext\openssl-0.9.8k_WIN32\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3dll.lib;zlib.lib;libpng16.lib;libOpenAL32.dll.a;ssleay32.lib;libeay32.lib;cppnetlib-uri.lib;cppnetlib-server-parsers.lib;cppnetlib-client-connections.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
@@ -242,8 +242,6 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="armada\bsp_state.hpp" />
     <ClInclude Include="armada\pause_state.hpp" />
     <ClInclude Include="armada\skybox.hpp" />
-    <ClInclude Include="armada\world_hud_state.hpp" />
-    <ClInclude Include="armada\world_state.hpp" />
     <ClInclude Include="bitmap_font.hpp" />
     <ClInclude Include="aabb.hpp" />
     <ClInclude Include="boost.hpp" />
@@ -257,6 +255,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="glm.hpp" />
     <ClInclude Include="gpu_buffer.hpp" />
     <ClInclude Include="gpu.hpp" />
+    <ClInclude Include="gpu_defs.hpp" />
     <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="gui_button.hpp" />
@@ -268,19 +267,20 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="gui_node.hpp" />
     <ClInclude Include="gui_scroll.hpp" />
     <ClInclude Include="gui_state.hpp" />
-    <ClInclude Include="gui_textfield.hpp" />
-    <ClInclude Include="http_request.hpp" />
+    <ClInclude Include="http_mgr.hpp" />
     <ClInclude Include="index_buffer.hpp" />
     <ClInclude Include="index_type.hpp" />
     <ClInclude Include="interpolation.hpp" />
     <ClInclude Include="io.hpp" />
+    <ClInclude Include="mandala.hpp" />
     <ClInclude Include="model_animation_controller.hpp" />
     <ClInclude Include="model_gpu_program.hpp" />
     <ClInclude Include="model_skeleton.hpp" />
     <ClInclude Include="openal.hpp" />
     <ClInclude Include="padding.hpp" />
+    <ClInclude Include="platform_defs.hpp" />
+    <ClInclude Include="python_mgr.hpp" />
     <ClInclude Include="range.hpp" />
-    <ClInclude Include="shadow_gpu_program.hpp" />
     <ClInclude Include="sound.hpp" />
     <ClInclude Include="sphere.hpp" />
     <ClInclude Include="is_pow2.hpp" />
@@ -325,10 +325,14 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="resource.hpp" />
     <ClInclude Include="string_archive.hpp" />
     <ClInclude Include="string_mgr.hpp" />
+    <ClInclude Include="terrain.hpp" />
     <ClInclude Include="texture.hpp" />
     <ClInclude Include="triangle.hpp" />
     <ClInclude Include="types.hpp" />
     <ClInclude Include="gpu_vertices.hpp" />
+    <ClInclude Include="voxel.hpp" />
+    <ClInclude Include="voxel_map.hpp" />
+    <ClInclude Include="voxel_type.hpp" />
     <ClInclude Include="window_event.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -352,13 +356,12 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="armada\bsp_state.cpp" />
     <ClCompile Include="armada\pause_state.cpp" />
     <ClCompile Include="armada\skybox.cpp" />
-    <ClCompile Include="armada\world_hud_state.cpp" />
-    <ClCompile Include="armada\world_state.cpp" />
     <ClCompile Include="bitmap_font.cpp" />
     <ClCompile Include="bsp.cpp" />
     <ClCompile Include="app.cpp" />
     <ClCompile Include="gpu_buffer.cpp" />
     <ClCompile Include="gpu.cpp" />
+    <ClCompile Include="gpu_program_mgr.cpp" />
     <ClCompile Include="gui_button.cpp" />
     <ClCompile Include="gui_canvas.cpp" />
     <ClCompile Include="gui_gpu_program.cpp" />
@@ -368,19 +371,18 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="gui_node.cpp" />
     <ClCompile Include="gui_scroll.cpp" />
     <ClCompile Include="gui_state.cpp" />
-    <ClCompile Include="gui_textfield.cpp" />
-    <ClCompile Include="http_request.cpp" />
+    <ClCompile Include="http_mgr.cpp" />
     <ClCompile Include="model_animation.cpp" />
     <ClCompile Include="model_animation_controller.cpp" />
     <ClCompile Include="model_gpu_program.cpp" />
     <ClCompile Include="model_skeleton.cpp" />
+    <ClCompile Include="python_mgr.cpp" />
     <ClCompile Include="resource_mgr.cpp" />
     <ClCompile Include="gpu_program.cpp" />
     <ClCompile Include="material.cpp" />
     <ClCompile Include="pack.cpp" />
     <ClCompile Include="pack_mgr.cpp" />
     <ClCompile Include="platform_win32.cpp" />
-    <ClCompile Include="shadow_gpu_program.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="sprite_animation.cpp" />
@@ -394,7 +396,11 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="resource.cpp" />
     <ClCompile Include="string_archive.cpp" />
     <ClCompile Include="string_mgr.cpp" />
+    <ClCompile Include="terrain.cpp" />
     <ClCompile Include="texture.cpp" />
+    <ClCompile Include="voxel.cpp" />
+    <ClCompile Include="voxel_map.cpp" />
+    <ClCompile Include="voxel_type.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

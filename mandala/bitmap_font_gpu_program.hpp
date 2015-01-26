@@ -32,16 +32,16 @@ namespace mandala
         void should_invert_rgb(bool should_invert_rgb) const;
 
 	private:
-		gpu_t::attribute_location_type position_location = -1;
-		gpu_t::attribute_location_type texcoord_location = -1;
-		gpu_t::uniform_location_type world_matrix_location = -1;
-		gpu_t::uniform_location_type view_projection_matrix_location = -1;
-		gpu_t::uniform_location_type font_line_height_location = -1;
-		gpu_t::uniform_location_type font_base_location = -1;
-		gpu_t::uniform_location_type font_diffuse_texture_index_location = -1;
-		gpu_t::uniform_location_type font_color_top_location = -1;
-		gpu_t::uniform_location_type font_color_bottom_location = -1;
-		gpu_t::uniform_location_type diffuse_texture_index_location = -1;
-        gpu_t::uniform_location_type should_invert_rgb_location = -1;
+		gpu_location_t position_location;
+		gpu_location_t texcoord_location;
+		gpu_location_t world_matrix_location;
+		gpu_location_t view_projection_matrix_location;
+		gpu_location_t font_line_height_location;
+		gpu_location_t font_base_location;
+		gpu_location_t font_diffuse_texture_index_location;
+		gpu_location_t font_color_top_location;
+		gpu_location_t font_color_bottom_location;
+		gpu_location_t diffuse_texture_index_location;
+        gpu_location_t should_invert_rgb_location;
 	};
 }

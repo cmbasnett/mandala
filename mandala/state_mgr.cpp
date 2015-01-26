@@ -1,10 +1,11 @@
 //mandala
 #include "state_mgr.hpp"
 #include "state.hpp"
-#include "app.hpp"
 
 namespace mandala
 {
+	state_mgr_t states;
+
 	void state_mgr_t::tick(float32_t dt)
 	{
 		bool did_nodes_change = !operations.empty();
@@ -199,7 +200,7 @@ namespace mandala
 		}
 	}
 
-#if defined(_WIN32) || defined(WIN32)
+#if defined(MANDALA_PC)
     void state_mgr_t::on_window_event(window_event_t& window_event)
     {
         for (auto& node : nodes)

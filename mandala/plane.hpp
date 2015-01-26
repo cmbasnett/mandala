@@ -7,22 +7,20 @@ namespace mandala
 {
 	namespace details
 	{
-		template<typename T, typename Enable = void>
+		template<typename Scalar, typename Enable = void>
 		struct plane2_t;
 
-		template<typename T>
-		struct plane2_t<T, typename std::enable_if<std::is_floating_point<T>::value>::type>
+		template<typename Scalar>
+		struct plane2_t<Scalar, typename std::enable_if<std::is_floating_point<Scalar>::value>::type>
 		{
-			typedef T scalar_type;
+			typedef Scalar scalar_type;
 			typedef plane2_t<scalar_type> type;
 			typedef glm::detail::tvec2<scalar_type> vector_type;
 
 			vector_type normal;
 			scalar_type distance = scalar_type(0);
 
-			plane2_t()
-			{
-			}
+			plane2_t() = default;
 
 			plane2_t(const vector_type& normal, scalar_type distance) :
 				normal(normal),
@@ -67,22 +65,20 @@ namespace mandala
 
 	namespace details
 	{
-		template<typename T, typename Enable = void>
+		template<typename Scalar, typename Enable = void>
 		struct plane3_t;
 
-		template<typename T>
-		struct plane3_t<T, typename std::enable_if<std::is_floating_point<T>::value>::type>
+		template<typename Scalar>
+		struct plane3_t<Scalar, typename std::enable_if<std::is_floating_point<Scalar>::value>::type>
 		{
-			typedef T scalar_type;
+			typedef Scalar scalar_type;
 			typedef plane3_t<scalar_type> type;
 			typedef glm::detail::tvec3<scalar_type> vector_type;
 
 			vector_type normal;
 			scalar_type distance = 0;
 
-			plane3_t()
-			{
-			}
+			plane3_t() = default;
 
 			plane3_t(const vector_type& normal, scalar_type distance) :
 				normal(normal),

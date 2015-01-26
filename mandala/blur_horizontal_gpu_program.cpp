@@ -1,6 +1,5 @@
 //mandala
 #include "blur_horizontal_gpu_program.hpp"
-#include "opengl.hpp"
 
 //glm
 #include <glm\ext.hpp>
@@ -55,47 +54,47 @@ void main()
 	blur_horizontal_gpu_program_t::blur_horizontal_gpu_program_t() :
 		gpu_program_t(vertex_shader_source, fragment_shader_source)
 	{
-		position_location = glGetAttribLocation(id, "position"); glCheckError();
-		texcoord_location = glGetAttribLocation(id, "texcoord"); glCheckError();
+		position_location = gpu.get_attribute_location(id(), "position");
+		texcoord_location = gpu.get_attribute_location(id(), "texcoord");
 
-		world_matrix_location = glGetUniformLocation(id, "world_matrix"); glCheckError();
-		view_projection_matrix_location = glGetUniformLocation(id, "view_projection_matrix"); glCheckError();
-		blur_size_location = glGetUniformLocation(id, "blur_size"); glCheckError();
-		diffuse_texture_index_location = glGetUniformLocation(id, "diffuse_texture");
+		world_matrix_location = gpu.get_uniform_location(id(), "world_matrix");
+		view_projection_matrix_location = gpu.get_uniform_location(id(), "view_projection_matrix");
+		blur_size_location = gpu.get_uniform_location(id(), "blur_size");
+		diffuse_texture_index_location = gpu.get_uniform_location(id(), "diffuse_texture");
 	}
 
 	void blur_horizontal_gpu_program_t::on_bind()
 	{
-		glEnableVertexAttribArray(position_location); glCheckError();
-		glEnableVertexAttribArray(texcoord_location); glCheckError();
+		gpu.enable_vertex_attribute_array(position_location);
+		gpu.enable_vertex_attribute_array(texcoord_location);
 
-		glVertexAttribPointer(position_location, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, position))); glCheckError();
-		glVertexAttribPointer(texcoord_location, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, texcoord))); glCheckError();
+		gpu.set_vertex_attrib_pointer(position_location, 2, gpu_t::data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, position)));
+		gpu.set_vertex_attrib_pointer(texcoord_location, 2, gpu_t::data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, texcoord)));
 	}
 
 	void blur_horizontal_gpu_program_t::on_unbind()
 	{
-		glDisableVertexAttribArray(position_location); glCheckError();
-		glDisableVertexAttribArray(texcoord_location); glCheckError();
+		gpu.disable_vertex_attribute_array(position_location);
+		gpu.disable_vertex_attribute_array(texcoord_location);
 	}
 
 	void blur_horizontal_gpu_program_t::world_matrix(const mat4_t& world_matrix) const
 	{
-		glUniformMatrix4fv(world_matrix_location, 1, GL_FALSE, glm::value_ptr(world_matrix)); glCheckError();
+		gpu.set_uniform(world_matrix_location, world_matrix, false);
 	}
 
 	void blur_horizontal_gpu_program_t::view_projection_matrix(const mat4_t& view_projection_matrix) const
 	{
-		glUniformMatrix4fv(view_projection_matrix_location, 1, GL_FALSE, glm::value_ptr(view_projection_matrix)); glCheckError();
+		gpu.set_uniform(view_projection_matrix_location, view_projection_matrix, false);
 	}
 
 	void blur_horizontal_gpu_program_t::diffuse_texture_index(uint32_t diffuse_texture_index) const
 	{
-		glUniform1i(diffuse_texture_index_location, diffuse_texture_index);
+		gpu.set_uniform(diffuse_texture_index_location, diffuse_texture_index);
 	}
 
 	void blur_horizontal_gpu_program_t::blur_size(float32_t blur_size) const
 	{
-		glUniform1f(blur_size_location, blur_size);
+		gpu.set_uniform(blur_size_location, blur_size);
 	}
 }

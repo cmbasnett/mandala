@@ -30,15 +30,15 @@ namespace mandala
 		void should_test_alpha(bool) const;
 
 	private:
-		gpu_t::attribute_location_type position_location = -1;
-		gpu_t::attribute_location_type diffuse_texcoord_location = -1;
-		gpu_t::attribute_location_type lightmap_texcoord_location = -1;
-		gpu_t::uniform_location_type world_matrix_location = -1;
-		gpu_t::uniform_location_type view_projection_matrix_location = -1;
-		gpu_t::uniform_location_type diffuse_texture_location = -1;
-		gpu_t::uniform_location_type lightmap_texture_location = -1;
-		gpu_t::uniform_location_type lightmap_gamma_location = -1;
-		gpu_t::uniform_location_type alpha_location = -1;
-		gpu_t::uniform_location_type should_test_alpha_location = -1;
+		gpu_location_t position_location = -1;
+		gpu_location_t diffuse_texcoord_location = -1;
+		gpu_location_t lightmap_texcoord_location = -1;
+		gpu_location_t world_matrix_location = -1;
+		gpu_location_t view_projection_matrix_location = -1;
+		gpu_location_t diffuse_texture_location = -1;
+		gpu_location_t lightmap_texture_location = -1;
+		gpu_location_t lightmap_gamma_location = -1;
+		gpu_location_t alpha_location = -1;
+		gpu_location_t should_test_alpha_location = -1;
 	};
 }

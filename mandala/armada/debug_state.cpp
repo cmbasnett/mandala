@@ -1,5 +1,5 @@
 ﻿//mandala
-#include "../app.hpp"
+#include "../resource_mgr.hpp"
 #include "../bitmap_font.hpp"
 #include "../texture.hpp"
 #include "../sound.hpp"
@@ -8,19 +8,23 @@
 #include "../sprite_set.hpp"
 #include "../material.hpp"
 #include "../color.hpp"
+#include "../audio_mgr.hpp"
+#include "../app.hpp"
+#include "../state_mgr.hpp"
 
 //armada
 #include "debug_state.hpp"
 
 //std
 #include <sstream>
+#include <codecvt>
 
 namespace mandala
 {
 	debug_state_t::debug_state_t()
 	{
 		label = std::make_shared<gui_label_t>();
-		label->set_bitmap_font(app.resources.get<bitmap_font_t>(hash_t("inconsolata_12.fnt")));
+		label->set_bitmap_font(resources.get<bitmap_font_t>(hash_t("inconsolata_12.fnt")));
 		label->set_dock_mode(gui_dock_mode_e::fill);
 		label->set_vertical_alignment(gui_label_t::vertical_alignment_e::bottom);
 		label->set_justification(gui_label_t::justification_e::right);
@@ -31,45 +35,49 @@ namespace mandala
 
 	void debug_state_t::tick(float32_t dt)
 	{
-		static const auto green_color = rgb_to_hex<wchar_t>(vec3_t(0, 1, 0));
-        static const auto yellow_color = rgb_to_hex<wchar_t>(vec3_t(1, 1, 0));
-        static const auto red_color = rgb_to_hex<wchar_t>(vec3_t(1, 0, 0));
+		typedef std::codecvt_utf8<wchar_t> convert_type;
+		std::wstring_convert<convert_type, wchar_t> converter;
 
 		std::wostringstream oss;
 
-		oss << L"↑fba089[audio]↓" << std::endl;
-		oss << "sources: " << app.audio.sources.size() << std::endl;
+		oss << converter.from_bytes(gpu.get_vendor()) << std::endl;
+		oss << converter.from_bytes(gpu.get_renderer()) << std::endl;
+		oss << converter.from_bytes(gpu.get_shading_language_version()) << std::endl;
+		oss << converter.from_bytes(gpu.get_version()) << std::endl;
+		oss << std::endl;
+		oss << "[audio]" << std::endl;
+		oss << "sources: " << audio.sources.size() << std::endl;
 		oss << std::endl;
 		oss << "[performance]" << std::endl;
-		oss << L"↑";
+		oss << "fps: ";
 
 		if (app.performance.fps >= 30)
 		{
-			oss << green_color;
+			oss << color_push(color_green);
 		}
 		else if (app.performance.fps >= 25)
 		{
-			oss << yellow_color;
+			oss << color_push(color_yellow);
 		}
 		else
 		{
-			oss << red_color;
+			oss << color_push(color_red);
 		}
 
-		oss << "fps: " << static_cast<int32_t>(app.performance.fps) << L"↓" << std::endl;
-		oss << std::endl;
+		oss << static_cast<int32_t>(app.performance.fps);
+		oss << color_pop << std::endl;
 		oss << "[resources]" << std::endl;
-		oss << "bitmap fonts: " << app.resources.count<bitmap_font_t>() << std::endl;
-		oss << "textures: " << app.resources.count<texture_t>() << std::endl;
-		oss << "sounds: " << app.resources.count<sound_t>() << std::endl;
-		oss << "images: " << app.resources.count<image_t>() << std::endl;
-		oss << "models: " << app.resources.count<model_t>() << std::endl;
-		oss << "sprite sets: " << app.resources.count<sprite_set_t>() << std::endl;
-		oss << "materials: " << app.resources.count<material_t>() << std::endl;
-		oss << "total: " << app.resources.count() << std::endl;
+		oss << "bitmap fonts: " << resources.count<bitmap_font_t>() << std::endl;
+		oss << "textures: " << resources.count<texture_t>() << std::endl;
+		oss << "sounds: " << resources.count<sound_t>() << std::endl;
+		oss << "images: " << resources.count<image_t>() << std::endl;
+		oss << "models: " << resources.count<model_t>() << std::endl;
+		oss << "sprite sets: " << resources.count<sprite_set_t>() << std::endl;
+		oss << "materials: " << resources.count<material_t>() << std::endl;
+		oss << "total: " << resources.count() << std::endl;
 		oss << std::endl;
 		oss << "[states]" << std::endl;
-		oss << app.states.count() << std::endl;
+		oss << states.count() << std::endl;
 
 		label->set_string(oss.str());
 

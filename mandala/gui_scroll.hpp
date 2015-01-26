@@ -27,6 +27,6 @@ namespace mandala
         scroll_position_type _scroll_position;
         scroll_extents_type _scroll_extents;
         bool _is_scrolling = false;
-        input_event_t::touch_t::touch_id_type _touch_id = 0;
+        input_event_t::touch_t::touch_id_type _touch_id = 0;	//TODO: figure out 
     };
 };

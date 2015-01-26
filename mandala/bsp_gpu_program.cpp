@@ -1,6 +1,5 @@
 //mandala
 #include "bsp_gpu_program.hpp"
-#include "opengl.hpp"
 
 //glm
 #include <glm\ext.hpp>
@@ -72,17 +71,17 @@ void main()
 	bsp_gpu_program_t::bsp_gpu_program_t() :
 		gpu_program_t(vertex_shader_source, fragment_shader_source)
 	{
-		position_location = glGetAttribLocation(id, "position"); glCheckError();
-		diffuse_texcoord_location = glGetAttribLocation(id, "diffuse_texcoord"); glCheckError();
-		lightmap_texcoord_location = glGetAttribLocation(id, "lightmap_texcoord"); glCheckError();
+		position_location = gpu.get_attribute_location(id(), "position");
+		diffuse_texcoord_location = gpu.get_attribute_location(id(), "diffuse_texcoord");
+		lightmap_texcoord_location = gpu.get_attribute_location(id(), "lightmap_texcoord");
 
-		world_matrix_location = glGetUniformLocation(id, "world_matrix"); glCheckError();
-		view_projection_matrix_location = glGetUniformLocation(id, "view_projection_matrix"); glCheckError();
-		diffuse_texture_location = glGetUniformLocation(id, "diffuse_texture"); glCheckError();
-		lightmap_texture_location = glGetUniformLocation(id, "lightmap_texture"); glCheckError();
-		lightmap_gamma_location = glGetUniformLocation(id, "lightmap_gamma"); glCheckError();
-		alpha_location = glGetUniformLocation(id, "alpha"); glCheckError();
-		should_test_alpha_location = glGetUniformLocation(id, "should_test_alpha"); glCheckError();
+		world_matrix_location = gpu.get_uniform_location(id(), "world_matrix");
+		view_projection_matrix_location = gpu.get_uniform_location(id(), "view_projection_matrix");
+		diffuse_texture_location = gpu.get_uniform_location(id(), "diffuse_texture");
+		lightmap_texture_location = gpu.get_uniform_location(id(), "lightmap_texture");
+		lightmap_gamma_location = gpu.get_uniform_location(id(), "lightmap_gamma");
+		alpha_location = gpu.get_uniform_location(id(), "alpha");
+		should_test_alpha_location = gpu.get_uniform_location(id(), "should_test_alpha");
 	}
 
 	void bsp_gpu_program_t::on_bind()
@@ -91,54 +90,54 @@ void main()
 		static const auto diffuse_texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_type, diffuse_texcoord));
 		static const auto lightmap_texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_type, lightmap_texcoord));
 
-		glEnableVertexAttribArray(position_location); glCheckError();
-		glEnableVertexAttribArray(diffuse_texcoord_location); glCheckError();
-		glEnableVertexAttribArray(lightmap_texcoord_location); glCheckError();
+		gpu.enable_vertex_attribute_array(position_location);
+		gpu.enable_vertex_attribute_array(diffuse_texcoord_location);
+		gpu.enable_vertex_attribute_array(lightmap_texcoord_location);
 
-		glVertexAttribPointer(position_location, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_type), position_offset); glCheckError();
-		glVertexAttribPointer(diffuse_texcoord_location, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_type), diffuse_texcoord_offset); glCheckError();
-		glVertexAttribPointer(lightmap_texcoord_location, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_type), lightmap_texcoord_offset); glCheckError();
+		gpu.set_vertex_attrib_pointer(position_location, 3, gpu_t::data_type_e::float_, false, sizeof(vertex_type), position_offset);
+		gpu.set_vertex_attrib_pointer(diffuse_texcoord_location, 2, gpu_t::data_type_e::float_, false, sizeof(vertex_type), diffuse_texcoord_offset);
+		gpu.set_vertex_attrib_pointer(lightmap_texcoord_location, 2, gpu_t::data_type_e::float_, false, sizeof(vertex_type), lightmap_texcoord_offset);
 	}
 
 	void bsp_gpu_program_t::on_unbind()
 	{
-		glDisableVertexAttribArray(position_location); glCheckError();
-		glDisableVertexAttribArray(diffuse_texcoord_location); glCheckError();
-		glDisableVertexAttribArray(lightmap_texcoord_location); glCheckError();
+		gpu.disable_vertex_attribute_array(position_location);
+		gpu.disable_vertex_attribute_array(diffuse_texcoord_location);
+		gpu.disable_vertex_attribute_array(lightmap_texcoord_location);
 	}
 
 	void bsp_gpu_program_t::world_matrix(const mat4_t& world_matrix) const
 	{
-		glUniformMatrix4fv(world_matrix_location, 1, GL_FALSE, glm::value_ptr(world_matrix)); glCheckError();
+		gpu.set_uniform(world_matrix_location, world_matrix, false);
 	}
 
 	void bsp_gpu_program_t::view_projection_matrix(const mat4_t& view_projection_matrix) const
 	{
-		glUniformMatrix4fv(view_projection_matrix_location, 1, GL_FALSE, glm::value_ptr(view_projection_matrix)); glCheckError();
+		gpu.set_uniform(view_projection_matrix_location, view_projection_matrix, false);
 	}
 
 	void bsp_gpu_program_t::diffuse_texture_index(uint32_t diffuse_texture_index) const
 	{
-		glUniform1i(diffuse_texture_location, diffuse_texture_index); glCheckError();
+		gpu.set_uniform(diffuse_texture_location, diffuse_texture_index);
 	}
 
 	void bsp_gpu_program_t::lightmap_texture_index(uint32_t lightmap_texture_index) const
 	{
-		glUniform1i(lightmap_texture_location, lightmap_texture_index); glCheckError();
+		gpu.set_uniform(lightmap_texture_location, lightmap_texture_index);
 	}
 
 	void bsp_gpu_program_t::lightmap_gamma(float32_t lightmap_gamma) const
 	{
-		glUniform1f(lightmap_gamma_location, lightmap_gamma); glCheckError();
+		gpu.set_uniform(lightmap_gamma_location, lightmap_gamma);
 	}
 
 	void bsp_gpu_program_t::alpha(float32_t alpha) const
 	{
-		glUniform1f(alpha_location, alpha); glCheckError();
+		gpu.set_uniform(alpha_location, alpha);
 	}
 
 	void bsp_gpu_program_t::should_test_alpha(bool should_test_alpha) const
 	{
-		glUniform1i(should_test_alpha_location, should_test_alpha); glCheckError();
+		gpu.set_uniform(should_test_alpha_location, should_test_alpha ? 1 : 0);
 	}
 }

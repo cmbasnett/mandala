@@ -1,9 +1,10 @@
 #pragma once
 
-#if defined(_WIN32) || defined(WIN32)
+#if defined(MANDALA_PC)
 
 //mandala
 #include "types.hpp"
+#include "rectangle.hpp"
 
 namespace mandala
 {
@@ -16,10 +17,7 @@ namespace mandala
         };
 
         type_e type;
-        uint16_t x = 0;
-        uint16_t y = 0;
-        uint16_t width = 0;
-        uint16_t height = 0;
+		rectangle_u16_t rectangle;
     };
 }
 #endif

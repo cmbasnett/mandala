@@ -45,17 +45,17 @@ namespace mandala
 		}
     }
 
-    void audio_source_t::position(const vec3_t& position) const
+    void audio_source_t::position(const vec3_t& position)
     {
 		alSourcefv(_id, AL_POSITION, glm::value_ptr(position)); alCheckError();
     }
 
-    void audio_source_t::velocity(const vec3_t& velocity) const
+    void audio_source_t::velocity(const vec3_t& velocity)
     {
 		alSourcefv(_id, AL_VELOCITY, glm::value_ptr(velocity)); alCheckError();
     }
 
-    void audio_source_t::gain(float32_t gain) const
+    void audio_source_t::gain(float32_t gain)
     {
 		alSourcef(_id, AL_GAIN, gain); alCheckError();
     }

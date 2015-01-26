@@ -47,4 +47,6 @@ namespace mandala
 	private:
 		std::map<std::type_index, std::shared_ptr<gpu_program_t>> gpu_programs;
 	};
+
+	extern gpu_program_mgr_t gpu_programs;
 }

@@ -27,9 +27,9 @@ namespace mandala
 
 		id_type id() const;
         state_t state() const;
-        void position(const vec3_t& position) const;
-        void velocity(const vec3_t& velocity) const;
-        void gain(float32_t gain) const;
+        void position(const vec3_t& position);
+        void velocity(const vec3_t& velocity);
+        void gain(float32_t gain);
         void reference_distance(float32_t reference_distance);
         void max_distance(float32_t max_distance);
 

@@ -55,7 +55,7 @@ namespace mandala
 			virtual void tick(float32_t dt) override;
 			virtual void render() override;
 			virtual void on_input_event(input_event_t& input_event) override;
-#if defined(_WIN32) || defined(WIN32)
+#if defined(MANDALA_PC)
             virtual void on_window_event(window_event_t& window_event) override;
 #endif
 			virtual void on_stop_input() override;

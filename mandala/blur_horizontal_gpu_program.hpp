@@ -27,11 +27,11 @@ namespace mandala
 		void blur_size(float32_t) const;
 
 	private:
-		gpu_t::attribute_location_type position_location = -1;
-		gpu_t::attribute_location_type texcoord_location = -1;
-		gpu_t::uniform_location_type world_matrix_location = -1;
-		gpu_t::uniform_location_type view_projection_matrix_location = -1;
-		gpu_t::uniform_location_type diffuse_texture_index_location = -1;
-		gpu_t::uniform_location_type blur_size_location = -1;
+		gpu_location_t position_location;
+		gpu_location_t texcoord_location;
+		gpu_location_t world_matrix_location;
+		gpu_location_t view_projection_matrix_location;
+		gpu_location_t diffuse_texture_index_location;
+		gpu_location_t blur_size_location;
 	};
 }

@@ -4,7 +4,7 @@
 
 //mandala
 #include "../opengl.hpp"
-#include "../app.hpp"
+#include "../resource_mgr.hpp"
 #include "../camera.hpp"
 #include "../model.hpp"
 #include "../model_instance.hpp"
@@ -18,7 +18,7 @@ namespace mandala
 	{
 		skybox_t::skybox_t()
 		{
-			const auto model = app.resources.get<model_t>(hash_t("skybox.md5m"));
+			const auto model = resources.get<model_t>(hash_t("skybox.md5m"));
 
 			model_instance = std::make_shared<model_instance_t>(model);
 		}

@@ -12,7 +12,8 @@
 
 //mandala
 #include "model.hpp"
-#include "app.hpp"
+#include "resource_mgr.hpp"
+#include "gpu_program_mgr.hpp"
 #include "md5b.hpp"
 #include "material.hpp"
 #include "texture.hpp"
@@ -136,10 +137,10 @@ namespace mandala
             auto material_name = shader_path.filename().replace_extension(".mat");
 
 			//material
-            mesh->material = app.resources.get<material_t>(hash_t(material_name.string()));	//TODO: don't resort to string concat
+            mesh->material = resources.get<material_t>(hash_t(material_name.string()));	//TODO: don't resort to string concat
 
 			//vertices
-			std::vector<mesh_t::vertex_t> vertices;
+			std::vector<mesh_t::vertex_type> vertices;
 			vertices.resize(mesh_info.vertices.size());
 
 			for(size_t j = 0; j < mesh_info.vertices.size(); ++j)
@@ -169,9 +170,11 @@ namespace mandala
 					vertex.position += (bone.position + rotated_position) * weight.bias;
 				}
 			}
-#ifdef _DEBUG
+
+#if defined(DEBUG)
 			size_t bad_face_count = 0;
-#endif //_DEBUG
+#endif
+
 			//normals, tangents & binormals
 			for(size_t j = 0; j < mesh_info.indices.size();)
 			{
@@ -196,17 +199,17 @@ namespace mandala
 
                 auto denominator = (t0.x * t1.y) - (t1.x * t0.y);
 
-				if(t0 == vec2_t(0) || t1 == vec2_t(0) || denominator == 0.0f)
+				if (t0 == mesh_t::vertex_type::texcoord_type(0) || t1 == mesh_t::vertex_type::texcoord_type(0) || denominator == 0.0f)
 				{
-#ifdef _DEBUG
+#if defined(DEBUG)
 					++bad_face_count;
-#endif //_DEBUG
+#endif
 					continue;
 				}
 
 				denominator = 1.0f / denominator;
 
-				vec3_t tangent;
+				mesh_t::vertex_type::normal_type tangent;
 				tangent.x = denominator * ((v0.x * t1.y)  + (v1.x * -t0.y));
 				tangent.y = denominator * ((v0.y * t1.y)  + (v1.y * -t0.y));
 				tangent.z = denominator * ((v0.z * t1.y)  + (v1.z * -t0.y));
@@ -221,7 +224,7 @@ namespace mandala
 			{
 				vertex.normal = glm::normalize(vertex.normal);
 
-				if (vertex.tangent != vec3_t(0))
+				if (vertex.tangent != mesh_t::vertex_type::normal_type(0))
 				{
 					vertex.tangent = glm::normalize(vertex.tangent);
 				}
@@ -277,7 +280,7 @@ namespace mandala
 			gpu.buffers.push(gpu_t::buffer_target_e::array, mesh->vertex_buffer);
 			gpu.buffers.push(gpu_t::buffer_target_e::element_array, mesh->index_buffer);
 
-            const auto gpu_program = app.gpu_programs.get<model_gpu_program_t>();
+            const auto gpu_program = gpu_programs.get<model_gpu_program_t>();
 
             gpu.programs.push(gpu_program);
 
@@ -311,7 +314,7 @@ namespace mandala
 		static const auto specular_texture_index = 2;
         static const auto emissive_texture_index = 3;
 
-        const auto gpu_program = app.gpu_programs.get<model_gpu_program_t>();
+        const auto gpu_program = gpu_programs.get<model_gpu_program_t>();
 
 		////cull face
 		//if(mesh->material->is_two_sided)

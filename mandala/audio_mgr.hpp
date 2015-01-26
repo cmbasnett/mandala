@@ -38,7 +38,6 @@ namespace mandala
 		typedef index_type<channel_count>::type channel_index_type;
 
 		audio_mgr_t();
-		~audio_mgr_t();
 
 		void tick(float32_t dt);
 
@@ -52,4 +51,6 @@ namespace mandala
 	private:
 		std::shared_ptr<audio_context_t> _context;
 	};
+
+	extern audio_mgr_t audio;
 }

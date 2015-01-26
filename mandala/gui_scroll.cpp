@@ -18,38 +18,50 @@ namespace mandala
     void gui_scroll_t::on_input_event(input_event_t& input_event)
     {
         //TODO: have some way for layouts to keep track of certain nodes 'owning' touch events by id so that they get exclusive rights to handle future touch events of the same id
-
-        if (input_event.device_type == input_event_t::device_type_e::touch)
-        {
-            switch (input_event.touch.type)
-            {
-            case input_event_t::touch_t::type_e::button_press:
-                if (contains(bounds(), input_event.touch.position))
-                {
-                    _is_scrolling = true;
-                    _touch_id = input_event.touch.id;
-                }
-                break;
-            case input_event_t::touch_t::type_e::button_release:
-                if (_is_scrolling && _touch_id == input_event.touch.id)
-                {
-                    _is_scrolling = false;
-                    _touch_id = 0;
-                }
-                break;
-            case input_event_t::touch_t::type_e::move:
-                if (_is_scrolling && _touch_id == input_event.touch.id)
-                {
-                    _scroll_position.x += static_cast<float32_t>(input_event.touch.position_delta.x);
-                    _scroll_position.y -= static_cast<float32_t>(input_event.touch.position_delta.y);
-                }
-                break;
-			}
-
+		if (input_event.device_type == input_event_t::device_type_e::touch)
+		{
 			input_event.touch.position -= _scroll_position;
-        }
+		}
 
-        gui_node_t::on_input_event(input_event);
+		gui_node_t::on_input_event(input_event);
+
+		if (input_event.is_consumed)
+		{
+			return;
+		}
+		
+		if (input_event.device_type == input_event_t::device_type_e::touch)
+		{
+			input_event.touch.position += _scroll_position;
+		}
+
+        switch (input_event.touch.type)
+        {
+        case input_event_t::touch_t::type_e::press:
+            if (contains(bounds(), input_event.touch.position))
+            {
+                _is_scrolling = true;
+                _touch_id = input_event.touch.id;
+				input_event.is_consumed = true;
+            }
+            break;
+        case input_event_t::touch_t::type_e::release:
+            if (_is_scrolling && _touch_id == input_event.touch.id)
+            {
+                _is_scrolling = false;
+				_touch_id = 0;
+				input_event.is_consumed = true;
+            }
+            break;
+        case input_event_t::touch_t::type_e::move:
+            if (_is_scrolling && _touch_id == input_event.touch.id)
+            {
+                _scroll_position.x += static_cast<float32_t>(input_event.touch.position_delta.x);
+				_scroll_position.y -= static_cast<float32_t>(input_event.touch.position_delta.y);
+				input_event.is_consumed = true;
+            }
+            break;
+		}
     }
 
     void gui_scroll_t::tick(float32_t dt)
@@ -63,6 +75,7 @@ namespace mandala
 	{
 		gui_node_t::clean();
 
+		//TODO: automatically size scroll extents based on children?
 		for (auto& child : children())
 		{
 		}

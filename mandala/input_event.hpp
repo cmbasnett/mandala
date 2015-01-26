@@ -1,6 +1,7 @@
 #pragma once
 
 //mandala
+#include "platform_defs.hpp"
 #include "types.hpp"
 
 namespace mandala
@@ -8,7 +9,8 @@ namespace mandala
 	struct input_event_t
 	{
 		typedef size_t id_type;
-		typedef uint8_t device_index_type;
+
+#if defined(MANDALA_PC)
 		typedef uint8_t mod_flags_type;
 
 		enum : mod_flags_type
@@ -18,13 +20,16 @@ namespace mandala
 			mod_flag_alt = (1 << 2),
 			mod_flag_super = (1 << 3)
 		};
+#endif
 
 		enum class device_type_e : int8_t
 		{
 			none = -1,
 			touch,
+#if defined(MANDALA_PC)
 			keyboard,
 			gamepad,
+#endif
 			count
 		};
 
@@ -36,12 +41,13 @@ namespace mandala
 			enum class type_e : int8_t
 			{
 				none = -1,
-				button_press,
-				button_release,
+				press,
+				release,
 				scroll,
 				move
 			};
 
+#if defined(MANDALA_PC)
 			enum class button_e : int8_t
 			{
 				none = -1,
@@ -55,15 +61,19 @@ namespace mandala
 				eight,
 				count,
 			};
+#endif
 
 			touch_id_type id = 0;
 			type_e type = type_e::none;
+#if defined(MANDALA_PC)
 			button_e button = button_e::none;
+#endif
 			position_type position;
 			position_type position_delta;
 			mod_flags_type mod_flags = 0;
 		};
 
+#if defined(MANDALA_PC)
 		struct keyboard_t
 		{
 			enum class type_e : int8_t
@@ -214,24 +224,27 @@ namespace mandala
 			enum class type_e : int8_t
 			{
 				none = -1,
-				button_press,
-				button_release,
+				press,
+				release,
 				axis_move
 			};
 
+			index_type index = 0;
             index_type button_index = 0;
             index_type axis_index = 0;
             axis_value_type axis_value = 0;
             axis_value_type axis_value_delta = 0;
             type_e type = type_e::none;
 		};
+#endif
 
 		id_type id = 0;
 		device_type_e device_type = device_type_e::none;
-		device_index_type device_index = 0;
 		touch_t touch;
+#if defined(MANDALA_PC)
 		keyboard_t keyboard;
 		gamepad_t gamepad;
+#endif
 		bool is_consumed = false;
 	};
 }

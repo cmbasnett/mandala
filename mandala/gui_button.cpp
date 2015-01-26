@@ -11,13 +11,13 @@ namespace mandala
         {
             switch (input_event.touch.type)
             {
-            case input_event_t::touch_t::type_e::button_press:
+            case input_event_t::touch_t::type_e::press:
                 if (contains(bounds(), input_event.touch.position))
                 {
                     _state = state_t::pressed;
                 }
                 break;
-            case input_event_t::touch_t::type_e::button_release:
+            case input_event_t::touch_t::type_e::release:
                 if (_state == state_t::pressed && contains(bounds(), input_event.touch.position))
                 {
                     _state = state_t::idle;
@@ -32,6 +32,7 @@ namespace mandala
                 switch (_state)
                 {
                 case state_t::idle:
+#if defined(MANDALA_PC)
                     if (contains(bounds(), input_event.touch.position))
                     {
                         _state = state_t::hover;
@@ -41,7 +42,9 @@ namespace mandala
                             _hover_function();
                         }
                     }
+#endif
                     break;
+#if defined(MANDALA_PC)
                 case state_t::hover:
                     if (!contains(bounds(), input_event.touch.position))
                     {
@@ -53,6 +56,7 @@ namespace mandala
                         }
                     }
                     break;
+#endif
                 default:
                     break;
                 }

@@ -10,6 +10,7 @@
 //mandala
 #include "rectangle.hpp"
 #include "index_type.hpp"
+#include "gpu_defs.hpp"
 
 //boost
 #include <boost\optional.hpp>
@@ -23,13 +24,6 @@ namespace mandala
 
     struct gpu_t
 	{
-		typedef uint32_t program_id_type;
-		typedef int32_t attribute_location_type;
-		typedef int32_t uniform_location_type;
-        typedef uint32_t subroutine_index_type;
-		typedef rectangle_i32_t viewport_type;
-        typedef uint8_t clear_flag_type;
-
         enum class buffer_target_e
         {
             array,
@@ -143,7 +137,7 @@ namespace mandala
             front_and_back
         };
 
-        enum clear_flag_e : clear_flag_type
+        enum clear_flag_e : gpu_clear_flag_type
         {
             clear_flag_color = (1 << 0),
             clear_flag_depth = (1 << 1),
@@ -173,6 +167,24 @@ namespace mandala
             decr_wrap,
             invert
         };
+
+		enum class data_type_e
+		{
+			byte,
+			unsigned_byte,
+			short_,
+			unsigned_short,
+			int_,
+			unsigned_int,
+			float_,
+			double_
+		};
+
+		enum class shader_type_e
+		{
+			fragment,
+			vertex
+		};
 
 		//programs
         struct program_mgr_t
@@ -221,12 +233,12 @@ namespace mandala
 		//viewports
         struct viewport_mgr_t
         {
-			viewport_type top() const;
-            void push(const viewport_type& viewport);
-            viewport_type pop();
+			gpu_viewport_type top() const;
+            void push(const gpu_viewport_type& viewport);
+			gpu_viewport_type pop();
 
         private:
-            std::stack<viewport_type> viewports;
+            std::stack<gpu_viewport_type> viewports;
         } viewports;
 
 		//buffers
@@ -307,20 +319,22 @@ namespace mandala
         {
             struct state_t
             {
-                struct
+                struct function_t
                 {
                     stencil_function_e func = stencil_function_e::always;
                     int32_t ref = 0;
                     uint32_t mask = 0xFFFFFFFF;
-                } function;
+                };
 
-                struct
+				struct operations_t
                 {
                     stencil_operation_e fail = stencil_operation_e::keep;
                     stencil_operation_e zfail = stencil_operation_e::keep;
                     stencil_operation_e zpass = stencil_operation_e::keep;
-                } operations;
+                };
 
+				function_t function;
+				operations_t operations;
                 bool is_enabled = false;
                 uint32_t mask = 0xFFFFFFFF;
             };
@@ -339,13 +353,15 @@ namespace mandala
         {
             struct state_t
             {
-                struct
+                struct mask_t
                 {
                     bool r = true;
                     bool g = true;
                     bool b = true;
                     bool a = true;
-                } mask;
+                };
+
+				mask_t mask;
             };
 
             state_t get_state() const;
@@ -359,9 +375,39 @@ namespace mandala
 
 		void draw_elements(primitive_type_e primitive_type, size_t count, index_type_e index_type, size_t offset) const;
 
-		program_id_type create_program(const std::string& vertex_shader_source, const std::string& fragment_shader_source) const;
-		void destroy_program(program_id_type id);
-        void clear(const clear_flag_type clear_flags) const;
+		gpu_id_t create_program(const std::string& vertex_shader_source, const std::string& fragment_shader_source) const;
+		void destroy_program(gpu_id_t id);
+        void clear(const gpu_clear_flag_type clear_flags) const;
+
+		gpu_id_t create_buffer();
+		void destroy_buffer(gpu_id_t id);
+
+		gpu_id_t create_frame_buffer(gpu_frame_buffer_type_e type, gpu_frame_buffer_size_type::value_type width, gpu_frame_buffer_size_type::value_type height, std::shared_ptr<texture_t>& color_texture, std::shared_ptr<texture_t>& depth_stencil_texture, std::shared_ptr<texture_t>& depth_texture);
+		void destroy_frame_buffer(gpu_id_t id);
+
+		gpu_location_t get_uniform_location(gpu_id_t program_id, const std::string& name);
+		gpu_location_t get_attribute_location(gpu_id_t program_id, const std::string& name);
+
+		void enable_vertex_attribute_array(gpu_location_t location);
+		void disable_vertex_attribute_array(gpu_location_t location);
+		void set_vertex_attrib_pointer(gpu_location_t location, int32_t size, data_type_e data_type, bool is_normalized, int32_t stride, const void* pointer);
+		void set_vertex_attrib_pointer(gpu_location_t location, int32_t size, data_type_e data_type, int32_t stride, const void* pointer);
+		void set_uniform(gpu_location_t location, const mat3_t& value, bool should_tranpose);
+		void set_uniform(gpu_location_t location, const mat4_t& value, bool should_tranpose);
+		void set_uniform(gpu_location_t location, int32_t value);
+		void set_uniform(gpu_location_t location, uint32_t value);
+		void set_uniform(gpu_location_t location, float32_t value);
+		void set_uniform(gpu_location_t location, const vec2_t& value);
+		void set_uniform(gpu_location_t location, const vec3_t& value);
+		void set_uniform(gpu_location_t location, const vec4_t& value);
+		void set_uniform(gpu_location_t location, const std::vector<mat4_t>& value, bool should_transpose);
+		void set_uniform_subroutine(shader_type_e shader_type, gpu_index_t index);
+
+		void set_clear_color(rgba_type& color);
+		rgba_type get_clear_color();
+
+		gpu_location_t get_subroutine_uniform_location(gpu_id_t program_id, shader_type_e shader_type, const std::string& name);
+		gpu_index_t get_subroutine_index(gpu_id_t program_id, shader_type_e shader_type, const std::string& name);
 
         const std::string& get_vendor() const;
         const std::string& get_renderer() const;

@@ -2,7 +2,7 @@
 #include "glm\ext.hpp"
 
 //mandala
-#include "app.hpp"
+#include "gpu_program_mgr.hpp"
 #include "gpu_program.hpp"
 #include "texture.hpp"
 #include "sprite_set.hpp"
@@ -12,11 +12,13 @@
 #include "gui_gpu_program.hpp"
 #include "blur_horizontal_gpu_program.hpp"
 #include "collision.hpp"
+#include "input_event.hpp"
 
 namespace mandala
 {
     gui_image_t::gui_image_t()
     {
+		//index buffer
         std::array<index_buffer_type::index_type, 12> indices = {
             0, 1, 2, 
             0, 2, 3, 
@@ -26,6 +28,7 @@ namespace mandala
         _index_buffer = std::make_shared<index_buffer_type>();
 		_index_buffer->data(indices, gpu_t::buffer_usage_e::static_draw);
 
+		//vertex buffer
         _vertex_buffer = std::make_shared<vertex_buffer_type>();
 	}
 
@@ -42,7 +45,7 @@ namespace mandala
         gpu.buffers.push(gpu_t::buffer_target_e::array, _vertex_buffer);
         gpu.buffers.push(gpu_t::buffer_target_e::element_array, _index_buffer);
 
-        const auto& gpu_program = app.gpu_programs.get<gui_gpu_program_t>();
+        const auto& gpu_program = gpu_programs.get<gui_gpu_program_t>();
 
 		//program
 		gpu.programs.push(gpu_program);
@@ -142,11 +145,10 @@ namespace mandala
     void gui_image_t::on_input_event(input_event_t& input_event)
     {
         if (input_event.device_type == input_event_t::device_type_e::touch &&
-            input_event.touch.type == input_event_t::touch_t::type_e::button_press)
+            input_event.touch.type == input_event_t::touch_t::type_e::press)
         {
             if (contains(bounds(), input_event.touch.position))
             {
-
             }
         }
 

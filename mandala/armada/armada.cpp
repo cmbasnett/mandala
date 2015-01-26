@@ -1,9 +1,11 @@
 #pragma once
 
 //mandala
-#include "../app.hpp"
-#include "../sprite_set.hpp"
 #include "../platform.hpp"
+#include "../resource_mgr.hpp"
+#include "../string_mgr.hpp"
+#include "../state_mgr.hpp"
+#include "../sprite_set.hpp"
 
 //armada
 #include "armada.hpp"
@@ -21,10 +23,6 @@ namespace mandala
 		{
 		}
 
-        armada_game_t::~armada_game_t()
-		{
-        }
-
         void armada_game_t::app_run_start()
         {
             game_t::app_run_start();
@@ -32,12 +30,13 @@ namespace mandala
             platform.set_window_title(name);
             platform.set_window_size(vec2_i32_t(1024, 768));
 
-            app.resources.mount("resources\\armada.pack");
-			app.strings.mount("armada.strings");
-			app.strings.language = "es";
+            resources.mount("resources\\armada.pack");
 
-            app.states.push(std::make_shared<bsp_state_t>(), state_flag_all);
-            app.states.push(std::make_shared<debug_state_t>(), state_flag_all);
+			strings.mount("armada.strings");
+			strings.language = "es";
+
+            states.push(std::make_shared<bsp_state_t>(), state_flag_all);
+            states.push(std::make_shared<debug_state_t>(), state_flag_all);
         }
 
         void armada_game_t::app_run_end()

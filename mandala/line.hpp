@@ -7,15 +7,16 @@ namespace mandala
 {
 	namespace details
 	{
-		template<typename T, typename Enable = void>
+		template<typename Scalar, typename Enable = void>
 		struct line2_t;
 
-		template<typename T>
-		struct line2_t<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
+		template<typename Scalar>
+		struct line2_t<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
 		{
-			typedef line2_t<T> type;
-			typedef glm::detail::tvec2<T> value_type;
-            typedef line2_t<float32_t> real_type;
+			typedef Scalar scalar_type;
+			typedef line2_t<scalar_type> type;
+			typedef glm::detail::tvec2<scalar_type> value_type;
+			typedef line2_t<float32_t> real_type;
 
             value_type start;
             value_type end;
@@ -59,15 +60,16 @@ namespace mandala
 			}
 		};
 
-		template<typename T, typename Enable = void>
+		template<typename Scalar, typename Real = void, typename Enable = void>
 		struct line3_t;
 
-		template<typename T>
-		struct line3_t<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
-        {
-            typedef line3_t<T> type;
-            typedef glm::detail::tvec3<T> value_type;
-            typedef line3_t<float32_t> real_type;
+		template<typename Scalar>
+		struct line3_t<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
+		{
+			typedef Scalar scalar_type;
+			typedef line3_t<scalar_type> type;
+			typedef glm::detail::tvec3<scalar_type> value_type;
+			typedef line3_t<float32_t> real_type;
 
 			value_type start;
 			value_type end;

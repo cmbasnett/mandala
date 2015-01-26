@@ -2,6 +2,7 @@
 
 //mandala
 #include "gui_node.hpp"
+#include "platform_defs.hpp"
 
 namespace mandala
 {
@@ -20,8 +21,10 @@ namespace mandala
 
         state_t state() const { return _state; }
 
+#if defined(MANDALA_PC)
         std::function<void()> _hover_function;
         std::function<void()> _unhover_function;
+#endif
         std::function<void()> _pressed_function;
     
     private:

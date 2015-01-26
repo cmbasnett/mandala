@@ -3,18 +3,16 @@
 //std
 #include <chrono>
 #include <array>
+#include <deque>
+#include <memory>
 
 //mandala
-#include "state_mgr.hpp"
-#include "resource_mgr.hpp"
-#include "audio_mgr.hpp"
-#include "string_mgr.hpp"
-#include "gpu_program_mgr.hpp"
-#include "python_mgr.hpp"
+#include "platform.hpp"
 
 namespace mandala
 {
     struct game_t;
+	struct input_event_t;
 
     struct app_t
     {
@@ -41,13 +39,7 @@ namespace mandala
         };
 
         std::shared_ptr<game_t> game;
-        state_mgr_t states;
-        resource_mgr_t resources;
         performance_t performance;
-        string_mgr_t strings;
-        gpu_program_mgr_t gpu_programs;
-        audio_mgr_t audio;
-		python_mgr_t python_mgr;
 
         app_t();
 

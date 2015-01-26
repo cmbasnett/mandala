@@ -4,11 +4,12 @@
 //mandala
 #include "bsp.hpp"
 #include "camera.hpp"
-#include "app.hpp"
 #include "image.hpp"
 #include "gpu.hpp"
 #include "collision.hpp"
 #include "bsp_gpu_program.hpp"
+#include "resource_mgr.hpp"
+#include "gpu_program_mgr.hpp"
 
 //boost
 #include <boost\algorithm\string.hpp>
@@ -376,7 +377,7 @@ namespace mandala
 
             try
             {
-                texture = app.resources.get<texture_t>(hash_t(texture_name));
+                texture = resources.get<texture_t>(hash_t(texture_name));
             }
             catch (...)
             {
@@ -639,7 +640,7 @@ namespace mandala
 		gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
 
 		//bind program
-        const auto gpu_program = app.gpu_programs.get<bsp_gpu_program_t>();
+        const auto gpu_program = gpu_programs.get<bsp_gpu_program_t>();
 
         gpu.programs.push(gpu_program);
 
@@ -808,7 +809,7 @@ namespace mandala
 
 			depth_state.should_test = true;
 
-            const auto gpu_program = app.gpu_programs.get<bsp_gpu_program_t>();
+            const auto gpu_program = gpu_programs.get<bsp_gpu_program_t>();
 
             switch (render_mode)
             {

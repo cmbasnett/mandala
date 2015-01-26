@@ -22,10 +22,6 @@ namespace mandala
 		layout->set_bounds(gui_node_t::bounds_type(vec2_t(), vec2_t(static_cast<float32_t>(screen_size.x), static_cast<float32_t>(screen_size.y))));
     }
 
-    gui_state_t::~gui_state_t()
-    {
-    }
-
 	void gui_state_t::tick(float32_t dt)
 	{
 		//TODO: get child nodes to tell layout about cleanliness

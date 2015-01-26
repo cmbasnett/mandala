@@ -11,10 +11,10 @@
 
 namespace mandala
 {
-    template<typename T>
+    template<typename Vertex>
     struct vertex_buffer_t : gpu_buffer_t
     {
-        typedef T vertex_type;
+        typedef Vertex vertex_type;
         
         static const auto vertex_size = sizeof(vertex_type);
 

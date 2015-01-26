@@ -92,4 +92,6 @@ namespace mandala
 		std::list<node_t> nodes;
 		std::queue<operation_t> operations;
 	};
+
+	extern state_mgr_t states;
 }

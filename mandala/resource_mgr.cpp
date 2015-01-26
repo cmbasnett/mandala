@@ -3,11 +3,13 @@
 
 namespace mandala
 {
+	resource_mgr_t resources;
+
 	size_t resource_mgr_t::count() const
 	{
 		size_t count = 0;
 
-		for (auto resources : type_resources)
+		for (const auto& resources : type_resources)
 		{
 			count += resources.second.size();
 		}

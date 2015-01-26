@@ -1,6 +1,7 @@
 #pragma once
 
 //mandala
+#include "platform_defs.hpp"
 #include "types.hpp"
 
 #if defined(MANDALA_PC)

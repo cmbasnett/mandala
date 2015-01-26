@@ -1,5 +1,5 @@
 //mandala
-#include "app.hpp"
+#include "resource_mgr.hpp"
 #include "model_animation.hpp"
 #include "model_animation_controller.hpp"
 
@@ -12,7 +12,7 @@ namespace mandala
 
 		try
 		{
-			auto animation = app.resources.get<model_animation_t>(animation_hash);
+			auto animation = resources.get<model_animation_t>(animation_hash);
 		}
 		catch (...)
 		{

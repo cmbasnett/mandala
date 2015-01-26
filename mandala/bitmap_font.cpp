@@ -6,10 +6,11 @@
 
 //mandala
 #include "bitmap_font.hpp"
-#include "app.hpp"
+#include "resource_mgr.hpp"
 #include "hash.hpp"
 #include "texture.hpp"
 #include "gpu_program.hpp"
+#include "gpu_program_mgr.hpp"
 #include "gpu.hpp"
 #include "bitmap_font_gpu_program.hpp"
 
@@ -105,7 +106,7 @@ namespace mandala
 
             page_texture_names_length -= static_cast<uint32_t>(page_texture_name.length() + 1);
 
-			auto page_texture = app.resources.get<texture_t>(hash_t(page_texture_name));
+			auto page_texture = resources.get<texture_t>(hash_t(page_texture_name));
 
 			page_textures.push_back(page_texture);
 		}
@@ -260,7 +261,7 @@ namespace mandala
 		gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
 		gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
 
-        const auto gpu_program = app.gpu_programs.get<bitmap_font_gpu_program_t>();
+        const auto gpu_program = gpu_programs.get<bitmap_font_gpu_program_t>();
 
 		//program
         gpu.programs.push(gpu_program);

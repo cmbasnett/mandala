@@ -1,9 +1,10 @@
 ﻿//mandala
-#include "../app.hpp"
+#include "../resource_mgr.hpp"
+#include "../state_mgr.hpp"
+#include "../python_mgr.hpp"
 #include "../bitmap_font.hpp"
 #include "../gui_label.hpp"
 #include "../gui_image.hpp"
-#include "../gui_textfield.hpp"
 #include "../color.hpp"
 
 //armada
@@ -11,6 +12,7 @@
 
 //boost
 #include <boost\algorithm\string.hpp>
+#include <boost\network.hpp>
 
 //std
 #include <codecvt>
@@ -38,7 +40,7 @@ namespace mandala
             root_background_image->set_sprite(sprite_t(sprite_ref_t(hash_t("white.tpsb"), hash_t("white.png"))));
 
             output_label = std::make_shared<gui_label_t>();
-            output_label->set_bitmap_font(app.resources.get<bitmap_font_t>(hash_t("inconsolata_12.fnt")));
+            output_label->set_bitmap_font(resources.get<bitmap_font_t>(hash_t("inconsolata_12.fnt")));
             output_label->set_dock_mode(gui_dock_mode_e::fill);
             output_label->set_vertical_alignment(gui_label_t::vertical_alignment_e::bottom);
             output_label->set_justification(gui_label_t::justification_e::left);
@@ -51,20 +53,22 @@ namespace mandala
 
             auto input_root_node = std::make_shared<gui_node_t>();
             input_root_node->set_dock_mode(gui_dock_mode_e::bottom);
-            input_root_node->set_size(vec2_t(0, app.resources.get<bitmap_font_t>(hash_t("inconsolata_12.fnt"))->line_height + 16)); //HACK: we don't have parent resizing yet
+            input_root_node->set_size(vec2_t(0, resources.get<bitmap_font_t>(hash_t("inconsolata_12.fnt"))->line_height + 16)); //HACK: we don't have parent resizing yet
+			input_root_node->set_margin(padding_t(0, 2, 0, 2));
 
             auto input_background_image = std::make_shared<gui_image_t>();
             input_background_image->set_sprite(sprite_t(sprite_ref_t(hash_t("white.tpsb"), hash_t("white.png"))));
             input_background_image->set_dock_mode(gui_dock_mode_e::fill);
             input_background_image->set_color(vec4_t(vec3_t(0), 0.5f));
 
-            input_textfield = std::make_shared<gui_textfield_t>();
-            input_textfield->set_bitmap_font(app.resources.get<bitmap_font_t>(hash_t("inconsolata_12.fnt")));
-            input_textfield->set_dock_mode(gui_dock_mode_e::fill);
-            input_textfield->set_should_use_color_codes(false);
-            input_textfield->set_should_use_ellipses(false);
+            input_label = std::make_shared<gui_label_t>();
+			input_label->set_bitmap_font(resources.get<bitmap_font_t>(hash_t("inconsolata_12.fnt")));
+			input_label->set_dock_mode(gui_dock_mode_e::fill);
+			input_label->set_should_use_color_codes(false);
+			input_label->set_should_use_ellipses(false);
+			input_label->set_is_read_only(false);
 
-            input_root_node->adopt(input_textfield);
+            input_root_node->adopt(input_label);
 
             input_root_node->adopt(input_background_image);
 
@@ -93,14 +97,14 @@ namespace mandala
                 switch (input_event.keyboard.key)
                 {
                 case input_event_t::keyboard_t::key_e::grave_accent:
-                    app.states.pop(shared_from_this());
+                    states.pop(shared_from_this());
 
                     input_event.is_consumed = true;
                     return;
                 case input_event_t::keyboard_t::key_e::up:
                     if (command_strings_itr != command_strings.end())
                     {
-                        input_textfield->set_string(*command_strings_itr);
+						input_label->set_string(*command_strings_itr);
 
                         ++command_strings_itr;
                     }
@@ -117,40 +121,50 @@ namespace mandala
                 case input_event_t::keyboard_t::key_e::enter:
                 case input_event_t::keyboard_t::key_e::kp_enter:
                 {
-                    if (!input_textfield->string().empty())
-                    {
-                        auto output_label_string = output_label->string();
-                        output_label_string.append(L"\n" + input_textfield->string());
+					if ((input_event.keyboard.mod_flags & input_event_t::mod_flag_shift) == input_event_t::mod_flag_shift)
+					{
+						break;
+					}
 
-                        command_strings.push_front(input_textfield->string());
+					if (!input_label->get_string().empty())
+					{
+						auto output_label_string = output_label->get_string();
+						auto input_string_escaped = input_label->get_string_escaped();
 
-                        typedef std::codecvt_utf8<wchar_t> convert_type;
-                        std::wstring_convert<convert_type, wchar_t> converter;
+						output_label_string.append(L"\n" + input_string_escaped);
 
-                        try
-                        {
-                            //app.lua.execute(converter.to_bytes(input_textfield->string()));
-                        }
-                        catch (const std::exception& exception)
-                        {
-                            output_label_string.append(L"\n↑" + rgb_to_hex<wchar_t>(error_color) + converter.from_bytes(std::string(exception.what())) + L"↓");
-                        }
+						command_strings.push_front(input_label->get_string());
 
-                        output_label->set_string(output_label_string);
+						typedef std::codecvt_utf8<wchar_t> convert_type;
+						std::wstring_convert<convert_type, wchar_t> converter;
 
-                        command_strings_itr = command_strings.begin();
+						try
+						{
+							const auto command = converter.to_bytes(input_label->get_string());
 
-                        input_textfield->set_string(L"");
-                    }
+							python.exec(command);
+						}
+						catch (const std::exception& exception)
+						{
+							output_label_string.append(L"\n↑" + rgb_to_hex<wchar_t>(error_color) + converter.from_bytes(std::string(exception.what())) + L"↓");
+						}
+
+						output_label->set_string(output_label_string);
+
+						command_strings_itr = command_strings.begin();
+
+						input_label->set_string(L"");
+					}
 
                     input_event.is_consumed = true;
+
                     return;
                 }
                 case input_event_t::keyboard_t::key_e::escape:
                 {
                     command_strings_itr = command_strings.begin();
 
-                    input_textfield->set_string(L"");
+					input_label->set_string(L"");
 
                     input_event.is_consumed = true;
                     return;

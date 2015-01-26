@@ -1,6 +1,5 @@
 //mandala
 #include "model_gpu_program.hpp"
-#include "opengl.hpp"
 
 //glm
 #include <glm\ext.hpp>
@@ -167,161 +166,161 @@ void main()
 	model_gpu_program_t::model_gpu_program_t() :
 		gpu_program_t(vertex_shader_source, fragment_shader_source)
 	{
-		position_location = glGetAttribLocation(id, "position"); glCheckError();
-		normal_location = glGetAttribLocation(id, "normal"); glCheckError();
-		tangent_location = glGetAttribLocation(id, "tangent"); glCheckError();
-		texcoord_location = glGetAttribLocation(id, "texcoord"); glCheckError();
-		bone_indices_0_location = glGetAttribLocation(id, "bone_indices_0"); glCheckError();
-		bone_indices_1_location = glGetAttribLocation(id, "bone_indices_1"); glCheckError();
-		bone_weights_0_location = glGetAttribLocation(id, "bone_weights_0"); glCheckError();
-		bone_weights_1_location = glGetAttribLocation(id, "bone_weights_1"); glCheckError();
+		position_location = gpu.get_attribute_location(id(), "position");
+		normal_location = gpu.get_attribute_location(id(), "normal");
+		tangent_location = gpu.get_attribute_location(id(), "tangent");
+		texcoord_location = gpu.get_attribute_location(id(), "texcoord");
+		bone_indices_0_location = gpu.get_attribute_location(id(), "bone_indices_0");
+		bone_indices_1_location = gpu.get_attribute_location(id(), "bone_indices_1");
+		bone_weights_0_location = gpu.get_attribute_location(id(), "bone_weights_0");
+		bone_weights_1_location = gpu.get_attribute_location(id(), "bone_weights_1");
 
-		world_matrix_location = glGetUniformLocation(id, "world_matrix"); glCheckError();
-		normal_matrix_location = glGetUniformLocation(id, "normal_matrix"); glCheckError();
-		view_projection_matrix_location = glGetUniformLocation(id, "view_projection_matrix"); glCheckError();
-		bone_matrices_location = glGetUniformLocation(id, "bone_matrices"); glCheckError();
-		light_position_location = glGetUniformLocation(id, "light_position"); glCheckError();
-		camera_position_location = glGetUniformLocation(id, "camera_position"); glCheckError();
-		diffuse_texture_index_location = glGetUniformLocation(id, "diffuse.texture"); glCheckError();
-		diffuse_color_location = glGetUniformLocation(id, "diffuse.color"); glCheckError();
-		normal_texture_index_location = glGetUniformLocation(id, "normal.texture"); glCheckError();
-		specular_texture_index_location = glGetUniformLocation(id, "specular.texture"); glCheckError();
-		specular_color_location = glGetUniformLocation(id, "specular.color"); glCheckError();
-		specular_intensity_location = glGetUniformLocation(id, "specular.intensity"); glCheckError();
-		emissive_texture_index_location = glGetUniformLocation(id, "emissive.texture"); glCheckError();
-		emissive_color_location = glGetUniformLocation(id, "emissive.color"); glCheckError();
-		emissive_intensity_location = glGetUniformLocation(id, "emissive.intensity"); glCheckError();
-        calculate_lighting_function_location = glGetSubroutineUniformLocation(id, GL_FRAGMENT_SHADER, "calculate_lighting");
-        calculate_lighting_lit_subroutine_index = glGetSubroutineIndex(id, GL_FRAGMENT_SHADER, "calculate_lighting_lit"); glCheckError();
-        calculate_lighting_unlit_subroutine_index = glGetSubroutineIndex(id, GL_FRAGMENT_SHADER, "calculate_lighting_unlit"); glCheckError();
+		world_matrix_location = gpu.get_uniform_location(id(), "world_matrix");
+		normal_matrix_location = gpu.get_uniform_location(id(), "normal_matrix");
+		view_projection_matrix_location = gpu.get_uniform_location(id(), "view_projection_matrix");
+		bone_matrices_location = gpu.get_uniform_location(id(), "bone_matrices");
+		light_position_location = gpu.get_uniform_location(id(), "light_position");
+		camera_position_location = gpu.get_uniform_location(id(), "camera_position");
+		diffuse_texture_index_location = gpu.get_uniform_location(id(), "diffuse.texture");
+		diffuse_color_location = gpu.get_uniform_location(id(), "diffuse.color");
+		normal_texture_index_location = gpu.get_uniform_location(id(), "normal.texture");
+		specular_texture_index_location = gpu.get_uniform_location(id(), "specular.texture");
+		specular_color_location = gpu.get_uniform_location(id(), "specular.color");
+		specular_intensity_location = gpu.get_uniform_location(id(), "specular.intensity");
+		emissive_texture_index_location = gpu.get_uniform_location(id(), "emissive.texture");
+		emissive_color_location = gpu.get_uniform_location(id(), "emissive.color");
+		emissive_intensity_location = gpu.get_uniform_location(id(), "emissive.intensity");
+        calculate_lighting_function_location = gpu.get_subroutine_uniform_location(id(), gpu_t::shader_type_e::fragment, "calculate_lighting");
+        calculate_lighting_lit_subroutine_index = gpu.get_subroutine_index(id(), gpu_t::shader_type_e::fragment, "calculate_lighting_lit");
+        calculate_lighting_unlit_subroutine_index = gpu.get_subroutine_index(id(), gpu_t::shader_type_e::fragment, "calculate_lighting_unlit");
 	}
 
 	void model_gpu_program_t::on_bind()
 	{
-		glEnableVertexAttribArray(position_location); glCheckError();
-		glEnableVertexAttribArray(normal_location); glCheckError();
-		glEnableVertexAttribArray(tangent_location); glCheckError();
-		glEnableVertexAttribArray(texcoord_location); glCheckError();
-		glEnableVertexAttribArray(bone_indices_0_location); glCheckError();
-		glEnableVertexAttribArray(bone_indices_1_location); glCheckError();
-		glEnableVertexAttribArray(bone_weights_0_location); glCheckError();
-		glEnableVertexAttribArray(bone_weights_1_location); glCheckError();
+		gpu.enable_vertex_attribute_array(position_location);
+		gpu.enable_vertex_attribute_array(normal_location);
+		gpu.enable_vertex_attribute_array(tangent_location);
+		gpu.enable_vertex_attribute_array(texcoord_location);
+		gpu.enable_vertex_attribute_array(bone_indices_0_location);
+		gpu.enable_vertex_attribute_array(bone_indices_1_location);
+		gpu.enable_vertex_attribute_array(bone_weights_0_location);
+		gpu.enable_vertex_attribute_array(bone_weights_1_location);
 
-		static const auto position_offset = reinterpret_cast<GLvoid*>(offsetof(vertex_type, position));
-		static const auto normal_offset = reinterpret_cast<GLvoid*>(offsetof(vertex_type, normal));
-		static const auto tangent_offset = reinterpret_cast<GLvoid*>(offsetof(vertex_type, tangent));
-		static const auto texcoord_offset = reinterpret_cast<GLvoid*>(offsetof(vertex_type, texcoord));
-		static const auto bone_indices_0_offset = reinterpret_cast<GLvoid*>(offsetof(vertex_type, bone_indices_0));
-		static const auto bone_indices_1_offset = reinterpret_cast<GLvoid*>(offsetof(vertex_type, bone_indices_1));
-		static const auto bone_weights_0_offset = reinterpret_cast<GLvoid*>(offsetof(vertex_type, bone_weights_0));
-		static const auto bone_weights_1_offset = reinterpret_cast<GLvoid*>(offsetof(vertex_type, bone_weights_1));
+		static const auto position_offset = reinterpret_cast<void*>(offsetof(vertex_type, position));
+		static const auto normal_offset = reinterpret_cast<void*>(offsetof(vertex_type, normal));
+		static const auto tangent_offset = reinterpret_cast<void*>(offsetof(vertex_type, tangent));
+		static const auto texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_type, texcoord));
+		static const auto bone_indices_0_offset = reinterpret_cast<void*>(offsetof(vertex_type, bone_indices_0));
+		static const auto bone_indices_1_offset = reinterpret_cast<void*>(offsetof(vertex_type, bone_indices_1));
+		static const auto bone_weights_0_offset = reinterpret_cast<void*>(offsetof(vertex_type, bone_weights_0));
+		static const auto bone_weights_1_offset = reinterpret_cast<void*>(offsetof(vertex_type, bone_weights_1));
 
-		glVertexAttribPointer(position_location, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_type), position_offset); glCheckError();
-		glVertexAttribPointer(normal_location, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_type), normal_offset); glCheckError();
-		glVertexAttribPointer(tangent_location, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_type), tangent_offset); glCheckError();
-		glVertexAttribPointer(texcoord_location, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_type), texcoord_offset); glCheckError();
-		glVertexAttribIPointer(bone_indices_0_location, 4, GL_INT, sizeof(vertex_type), bone_indices_0_offset); glCheckError();
-		glVertexAttribIPointer(bone_indices_1_location, 4, GL_INT, sizeof(vertex_type), bone_indices_1_offset); glCheckError();
-		glVertexAttribPointer(bone_weights_0_location, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_type), bone_weights_0_offset); glCheckError();
-		glVertexAttribPointer(bone_weights_1_location, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_type), bone_weights_1_offset); glCheckError();
+		gpu.set_vertex_attrib_pointer(position_location, 3, gpu_t::data_type_e::float_, false, sizeof(vertex_type), position_offset);
+		gpu.set_vertex_attrib_pointer(normal_location, 3, gpu_t::data_type_e::float_, false, sizeof(vertex_type), normal_offset);
+		gpu.set_vertex_attrib_pointer(tangent_location, 3, gpu_t::data_type_e::float_, false, sizeof(vertex_type), tangent_offset);
+		gpu.set_vertex_attrib_pointer(texcoord_location, 2, gpu_t::data_type_e::float_, false, sizeof(vertex_type), texcoord_offset);
+		gpu.set_vertex_attrib_pointer(bone_indices_0_location, 4, gpu_t::data_type_e::int_, sizeof(vertex_type), bone_indices_0_offset);
+		gpu.set_vertex_attrib_pointer(bone_indices_1_location, 4, gpu_t::data_type_e::int_, sizeof(vertex_type), bone_indices_1_offset);
+		gpu.set_vertex_attrib_pointer(bone_weights_0_location, 4, gpu_t::data_type_e::float_, false, sizeof(vertex_type), bone_weights_0_offset);
+		gpu.set_vertex_attrib_pointer(bone_weights_1_location, 4, gpu_t::data_type_e::float_, false, sizeof(vertex_type), bone_weights_1_offset);
 	}
 
 	void model_gpu_program_t::on_unbind()
 	{
-		glDisableVertexAttribArray(position_location); glCheckError();
-		glDisableVertexAttribArray(normal_location); glCheckError();
-		glDisableVertexAttribArray(tangent_location); glCheckError();
-		glDisableVertexAttribArray(texcoord_location); glCheckError();
-		glDisableVertexAttribArray(bone_indices_0_location); glCheckError();
-		glDisableVertexAttribArray(bone_indices_1_location); glCheckError();
-		glDisableVertexAttribArray(bone_weights_0_location); glCheckError();
-		glDisableVertexAttribArray(bone_weights_1_location); glCheckError();
+		gpu.disable_vertex_attribute_array(position_location);
+		gpu.disable_vertex_attribute_array(normal_location);
+		gpu.disable_vertex_attribute_array(tangent_location);
+		gpu.disable_vertex_attribute_array(texcoord_location);
+		gpu.disable_vertex_attribute_array(bone_indices_0_location);
+		gpu.disable_vertex_attribute_array(bone_indices_1_location);
+		gpu.disable_vertex_attribute_array(bone_weights_0_location);
+		gpu.disable_vertex_attribute_array(bone_weights_1_location);
 	}
 
 	void model_gpu_program_t::world_matrix(const mat4_t& world_matrix) const
 	{
-		glUniformMatrix4fv(world_matrix_location, 1, GL_FALSE, glm::value_ptr(world_matrix)); glCheckError();
+		gpu.set_uniform(world_matrix_location, world_matrix, false);
 	}
 
 	void model_gpu_program_t::normal_matrix(const mat3_t& normal_matrix) const
 	{
-		glUniformMatrix3fv(normal_matrix_location, 1, GL_FALSE, glm::value_ptr(normal_matrix)); glCheckError();
+		gpu.set_uniform(normal_matrix_location, normal_matrix, false);
 	}
 
 	void model_gpu_program_t::view_projection_matrix(const mat4_t& view_projection_matrix) const
 	{
-		glUniformMatrix4fv(view_projection_matrix_location, 1, GL_FALSE, glm::value_ptr(view_projection_matrix)); glCheckError();
+		gpu.set_uniform(view_projection_matrix_location, view_projection_matrix, false);
 	}
 
 	void model_gpu_program_t::bone_matrices(const std::vector<mat4_t>& bone_matrices) const
 	{
-		glUniformMatrix4fv(bone_matrices_location, static_cast<GLsizei>(bone_matrices.size()), GL_FALSE, (GLfloat*)(bone_matrices.data())); glCheckError();
+		gpu.set_uniform(bone_matrices_location, bone_matrices, false);
 	}
 
 	void model_gpu_program_t::light_position(const vec3_t& light_position) const
 	{
-		glUniform3fv(light_position_location, 1, glm::value_ptr(light_position)); glCheckError();
+		gpu.set_uniform(light_position_location, light_position);
 	}
 
 	void model_gpu_program_t::camera_position(const vec3_t& camera_position) const
 	{
-		glUniform3fv(camera_position_location, 1, glm::value_ptr(camera_position)); glCheckError();
+		gpu.set_uniform(camera_position_location, camera_position);
 	}
 
 	void model_gpu_program_t::diffuse_texture_index(uint32_t diffuse_texture_index) const
 	{
-		glUniform1i(diffuse_texture_index_location, diffuse_texture_index); glCheckError();
+		gpu.set_uniform(diffuse_texture_index_location, diffuse_texture_index);
 	}
 
 	void model_gpu_program_t::diffuse_color(const vec4_t& diffuse_color) const
 	{
-		glUniform4fv(diffuse_color_location, 1, glm::value_ptr(diffuse_color)); glCheckError();
+		gpu.set_uniform(diffuse_color_location, diffuse_color);
 	}
 
 	void model_gpu_program_t::normal_texture_index(uint32_t normal_texture_index) const
 	{
-		glUniform1i(normal_texture_index_location, normal_texture_index); glCheckError();
+		gpu.set_uniform(normal_texture_index_location, normal_texture_index);
 	}
 
 	void model_gpu_program_t::specular_texture_index(uint32_t specular_texture_index) const
 	{
-		glUniform1i(specular_texture_index_location, specular_texture_index); glCheckError();
+		gpu.set_uniform(specular_texture_index_location, specular_texture_index);
 	}
 
 	void model_gpu_program_t::specular_color(const vec4_t& specular_color) const
 	{
-		glUniform4fv(specular_color_location, 1, glm::value_ptr(specular_color)); glCheckError();
+		gpu.set_uniform(specular_color_location, specular_color);
 	}
 
 	void model_gpu_program_t::specular_intensity(float32_t specular_intensity) const
 	{
-		glUniform1f(specular_intensity_location, specular_intensity); glCheckError();
+		gpu.set_uniform(specular_intensity_location, specular_intensity);
 	}
 
 	void model_gpu_program_t::emissive_texture_index(uint32_t emissive_texture_index) const
 	{
-		glUniform1i(emissive_texture_index_location, emissive_texture_index); glCheckError();
+		gpu.set_uniform(emissive_texture_index_location, emissive_texture_index);
 	}
 
 	void model_gpu_program_t::emissive_color(const vec4_t& emissive_color) const
 	{
-		glUniform4fv(emissive_color_location, 1, glm::value_ptr(emissive_color)); glCheckError();
+		gpu.set_uniform(emissive_color_location, emissive_color);
 	}
 
 	void model_gpu_program_t::emissive_intensity(float32_t emissive_intensity) const
 	{
-		glUniform1f(emissive_intensity_location, emissive_intensity); glCheckError();
+		gpu.set_uniform(emissive_intensity_location, emissive_intensity);
 	}
 
     void model_gpu_program_t::is_lit(bool is_lit) const
     {
         if (is_lit)
         {
-            glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, &calculate_lighting_lit_subroutine_index);
+            gpu.set_uniform_subroutine(gpu_t::shader_type_e::fragment, calculate_lighting_lit_subroutine_index);
         }
         else
         {
-            glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, &calculate_lighting_unlit_subroutine_index);
+			gpu.set_uniform_subroutine(gpu_t::shader_type_e::fragment, calculate_lighting_unlit_subroutine_index);
         }
     }
 }

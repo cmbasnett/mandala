@@ -15,7 +15,6 @@ namespace mandala
 	struct gui_state_t : state_t
 	{
 		gui_state_t();
-		virtual ~gui_state_t();
 
 		virtual void tick(float32_t dt) override;
 		virtual void render() override;

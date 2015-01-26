@@ -7,7 +7,6 @@ namespace mandala
 {
 	struct gui_node_t;
 	struct gui_label_t;
-    struct gui_textfield_t;
 
 	namespace armada
 	{
@@ -21,11 +20,11 @@ namespace mandala
 
 			std::shared_ptr<gui_node_t> root_node;
 			std::shared_ptr<gui_label_t> output_label;
-            std::shared_ptr<gui_textfield_t> input_textfield;
+            std::shared_ptr<gui_label_t> input_label;
 
-            static vec3_t echo_color;
-            static vec3_t warning_color;
-            static vec3_t error_color;
+            static rgb_type echo_color;
+			static rgb_type warning_color;
+			static rgb_type error_color;
             
         private:
             std::deque<command_string_type> command_strings;

@@ -7,6 +7,12 @@
 #include <glm\glm.hpp>
 
 template<typename T>
+inline void read(std::istream& istream, T& t)
+{
+	istream.read(reinterpret_cast<char*>(&t), sizeof(T));
+}
+
+template<typename T>
 std::ostream& operator<<(std::ostream& ostream, const glm::detail::tvec2<T>& v)
 {
     return ostream << "[" << v.x << "," << v.y << "]";

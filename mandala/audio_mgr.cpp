@@ -18,6 +18,8 @@
 
 namespace mandala
 {
+	audio_mgr_t audio;
+
 	audio_mgr_t::audio_mgr_t()
 	{
 		auto device = std::make_shared<audio_device_t>();
@@ -36,10 +38,6 @@ namespace mandala
 		}
     }
 
-    audio_mgr_t::~audio_mgr_t()
-    {
-    }
-
 	void audio_mgr_t::tick(float32_t dt)
 	{
         alDopplerFactor(doppler.factor);
@@ -54,7 +52,7 @@ namespace mandala
 
 		while (sources_itr != sources.end())
 		{
-			auto& source = *sources_itr;
+			const auto& source = *sources_itr;
 
 			if (source.use_count() == 1 && source->state() == audio_source_t::state_t::stopped)
 			{

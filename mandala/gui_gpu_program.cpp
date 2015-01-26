@@ -1,6 +1,5 @@
 //mandala
 #include "gui_gpu_program.hpp"
-#include "opengl.hpp"
 
 //glm
 #include <glm\ext.hpp>
@@ -47,13 +46,13 @@ void main()
 	gui_gpu_program_t::gui_gpu_program_t() :
 		gpu_program_t(vertex_shader_source, fragment_shader_source)
 	{
-		position_location = glGetAttribLocation(id, "position"); glCheckError();
-		texcoord_location = glGetAttribLocation(id, "texcoord"); glCheckError();
+		position_location = gpu.get_attribute_location(id(), "position");
+		texcoord_location = gpu.get_attribute_location(id(), "texcoord");
 
-		world_matrix_location = glGetUniformLocation(id, "world_matrix"); glCheckError();
-		view_projection_matrix_location = glGetUniformLocation(id, "view_projection_matrix"); glCheckError();
-		diffuse_texture_index_location = glGetUniformLocation(id, "diffuse_texture"); glCheckError();
-		color_location = glGetUniformLocation(id, "color"); glCheckError();
+		world_matrix_location = gpu.get_uniform_location(id(), "world_matrix");
+		view_projection_matrix_location = gpu.get_uniform_location(id(), "view_projection_matrix");
+		diffuse_texture_index_location = gpu.get_uniform_location(id(), "diffuse_texture");
+		color_location = gpu.get_uniform_location(id(), "color");
 	}
 
 	void gui_gpu_program_t::on_bind()
@@ -61,38 +60,38 @@ void main()
 		static const auto position_offset = reinterpret_cast<void*>(offsetof(vertex_type, position));
 		static const auto texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_type, texcoord));
 
-		glEnableVertexAttribArray(position_location); glCheckError();
-		glEnableVertexAttribArray(texcoord_location); glCheckError();
+		gpu.enable_vertex_attribute_array(position_location);
+		gpu.enable_vertex_attribute_array(texcoord_location);
 
-		glVertexAttribPointer(position_location, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_type), position_offset); glCheckError();
-		glVertexAttribPointer(texcoord_location, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_type), texcoord_offset); glCheckError();
+		gpu.set_vertex_attrib_pointer(position_location, 2, gpu_t::data_type_e::float_, false, sizeof(vertex_type), position_offset);
+		gpu.set_vertex_attrib_pointer(texcoord_location, 2, gpu_t::data_type_e::float_, false, sizeof(vertex_type), texcoord_offset);
 
 		//uniforms
 	}
 
 	void gui_gpu_program_t::on_unbind()
 	{
-		glDisableVertexAttribArray(position_location); glCheckError();
-		glDisableVertexAttribArray(texcoord_location); glCheckError();
+		gpu.disable_vertex_attribute_array(position_location);
+		gpu.disable_vertex_attribute_array(texcoord_location);
 	}
 
 	void gui_gpu_program_t::world_matrix(const mat4_t& world_matrix) const
 	{
-		glUniformMatrix4fv(world_matrix_location, 1, GL_FALSE, glm::value_ptr(world_matrix)); glCheckError();
+		gpu.set_uniform(world_matrix_location, world_matrix, false);
 	}
 
 	void gui_gpu_program_t::view_projection_matrix(const mat4_t& view_projection_matrix) const
 	{
-		glUniformMatrix4fv(view_projection_matrix_location, 1, GL_FALSE, glm::value_ptr(view_projection_matrix)); glCheckError();
+		gpu.set_uniform(view_projection_matrix_location, view_projection_matrix, false);
 	}
 
 	void gui_gpu_program_t::diffuse_texture_index(uint32_t diffuse_texture_index) const
 	{
-		glUniform1i(diffuse_texture_index_location, diffuse_texture_index); glCheckError();
+		gpu.set_uniform(diffuse_texture_index_location, diffuse_texture_index);
 	}
 
 	void gui_gpu_program_t::color(const vec4_t& color) const
 	{
-		glUniform4fv(color_location, 1, glm::value_ptr(color)); glCheckError();
+		gpu.set_uniform(color_location, color);
 	}
 }

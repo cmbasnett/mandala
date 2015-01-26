@@ -1,7 +1,7 @@
 //mandala
 #include "gui_canvas.hpp"
 #include "gpu.hpp"
-#include "app.hpp"
+#include "gpu_program_mgr.hpp"
 #include "gui_gpu_program.hpp"
 
 //glm
@@ -28,7 +28,7 @@ namespace mandala
 
 		gpu.frame_buffers.push(frame_buffer);
 
-        gpu.viewports.push(gpu_t::viewport_type(bounds()));
+        gpu.viewports.push(gpu_viewport_type(bounds()));
 
         gui_node_t::render(world_matrix, view_projection_matrix);
 
@@ -36,7 +36,7 @@ namespace mandala
 
         gpu.frame_buffers.pop();
 
-        const auto gpu_program = app.gpu_programs.get<gui_gpu_program_t>();
+        const auto gpu_program = gpu_programs.get<gui_gpu_program_t>();
 
         gpu.programs.push(gpu_program);
 
@@ -64,7 +64,7 @@ namespace mandala
 
         static const auto vertex_count = 4;
 
-        frame_buffer = std::make_shared<frame_buffer_t>(frame_buffer_t::type_e::color_depth_stencil, static_cast<frame_buffer_t::size_type>(size()));
+        frame_buffer = std::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::color_depth_stencil, static_cast<gpu_frame_buffer_size_type>(size()));
 
         vertex_type vertices[vertex_count] =
         {

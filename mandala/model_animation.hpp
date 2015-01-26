@@ -16,9 +16,9 @@ namespace mandala
 				position_x		= (1 << 0),
 				position_y		= (1 << 1),
 				position_z		= (1 << 2),
-				orientation_x	= (1 << 3),
-				orientation_y	= (1 << 4),
-				orientation_z	= (1 << 5),
+				rotation_x	= (1 << 3),
+				rotation_y	= (1 << 4),
+				rotation_z	= (1 << 5),
 			};
 			
 			hash_t hash;
@@ -29,8 +29,8 @@ namespace mandala
 
 		struct bone_frame_t
 		{
-			vec3_t position;
-			quat_t orientation;
+			vec3_t location;
+			quat_t rotation;
 		};
 		
 		model_animation_t(std::istream& istream);

@@ -7,17 +7,6 @@
 //std
 #include <functional>
 
-//TODO: move elsewhere
-#if defined(_WIN32) || defined(WIN32)
-#define MANDALA_WINDOWS
-#elif defined(__APPLE__)
-#define MANDALA_OSX
-#endif
-
-#if defined(MANDALA_WINDOWS)
-#define MANDALA_PC
-#endif
-
 namespace mandala
 {
 	typedef char				int8_t;

@@ -7,12 +7,19 @@
 #include "game.hpp"
 
 //HACK: this doesn't seem like the right place to put this
-#include "gui_gpu_program.hpp"
 #include "model_gpu_program.hpp"
 #include "bitmap_font_gpu_program.hpp"
 #include "bsp_gpu_program.hpp"
 #include "blur_horizontal_gpu_program.hpp"
 #include "basic_gpu_program.hpp"
+#include "gpu_program_mgr.hpp"
+
+#include "gui_gpu_program.hpp"
+#include "resource_mgr.hpp"
+#include "string_mgr.hpp"
+#include "audio_mgr.hpp"
+#include "http_mgr.hpp"
+#include "state_mgr.hpp"
 
 namespace mandala
 {
@@ -52,12 +59,12 @@ namespace mandala
             handle_input_events();
 
             tick(dt);
-            render();
+			render();
 
 #if defined(MANDALA_PC)
-            handle_window_events();
+			handle_window_events();
 #endif
-        }
+		}
 
 		game->app_run_end();
 
@@ -92,8 +99,8 @@ namespace mandala
 
 		game->app_tick_start();
 
+		//http.tick(dt);
 		states.tick(dt);
-
 		audio.tick(dt);
 
 		game->app_tick_end();

@@ -22,7 +22,7 @@ namespace mandala
 
 		size_t count() const;
 
-		template<typename T = std::enable_if<std::is_base_of<resource_t, T>::value, T>::type>
+		template<typename T = std::enable_if<is_resource<T>::value, T>::type>
 		size_t count()
 		{
 			static const std::type_index type_index = typeid(T);
@@ -39,7 +39,7 @@ namespace mandala
 			return type_resources_itr->second.size();
 		}
 
-		template<typename T>
+		template<typename T = std::enable_if<is_resource<T>::value, T>::type>
 		std::shared_ptr<T> get(const hash_t& hash)
 		{
 			static const std::type_index type_index = typeid(T);
@@ -79,7 +79,7 @@ namespace mandala
 			return resource;
 		}
 
-		template<typename T>
+		template<typename T = std::enable_if<is_resource<T>::value, T>::type>
 		void put(std::shared_ptr<T> resource, const hash_t& hash)
 		{
 			static const std::type_index type_index = typeid(T);
@@ -122,4 +122,6 @@ namespace mandala
     private:
         std::map<std::type_index, resource_map_type> type_resources;
 	};
+
+	extern resource_mgr_t resources;
 }

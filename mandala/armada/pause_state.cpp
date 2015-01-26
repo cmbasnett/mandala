@@ -5,13 +5,15 @@
 #include <glm\ext.hpp>
 
 //mandala
-#include "../app.hpp"
+#include "../resource_mgr.hpp"
 #include "../platform.hpp"
 #include "../gui_label.hpp"
 #include "../gui_scroll.hpp"
 #include "../gui_image.hpp"
 #include "../gui_button.hpp"
 #include "../bitmap_font.hpp"
+#include "../string_mgr.hpp"
+#include "../state_mgr.hpp"
 
 //armada
 #include "pause_state.hpp"
@@ -24,14 +26,20 @@ namespace mandala
         {
             auto scroll = std::make_shared<gui_scroll_t>();
             scroll->set_dock_mode(gui_dock_mode_e::fill);
-            scroll->set_scroll_extents(aabb2_t(vec2_t(-512, 0), vec2_t(512, 0)));
+			scroll->set_scroll_extents(aabb2_t(vec2_t(-512, 0), vec2_t(512, 0)));
+
+			auto scroll2 = std::make_shared<gui_scroll_t>();
+			scroll2->set_dock_mode(gui_dock_mode_e::left);
+			scroll2->set_scroll_extents(aabb2_t(vec2_t(0, -384), vec2_t(0, 384)));
+			scroll2->set_size(vec2_t(512, 0));
 
             paused_label = std::make_shared<gui_label_t>();
-            paused_label->set_bitmap_font(app.resources.get<bitmap_font_t>(hash_t("terminal_16.fnt")));
-			paused_label->set_string(app.strings.get(hash_t("paused")));
+            paused_label->set_bitmap_font(resources.get<bitmap_font_t>(hash_t("terminal_16.fnt")));
+			paused_label->set_string(strings.get(hash_t("paused")));
             paused_label->set_vertical_alignment(gui_label_t::vertical_alignment_e::middle);
             paused_label->set_justification(gui_label_t::justification_e::center);
             paused_label->set_dock_mode(gui_dock_mode_e::fill);
+			paused_label->set_is_read_only(false);
 
             scroll->adopt(paused_label);
 
@@ -55,6 +63,7 @@ namespace mandala
 
             scroll->adopt(button);
 
+			scroll->adopt(scroll2);
             layout->adopt(scroll);
         }
 
@@ -79,7 +88,7 @@ namespace mandala
                 input_event.keyboard.key == input_event_t::keyboard_t::key_e::escape &&
                 input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press)
             {
-                app.states.pop(shared_from_this());
+                states.pop(shared_from_this());
 
                 input_event.is_consumed = true;
             }
