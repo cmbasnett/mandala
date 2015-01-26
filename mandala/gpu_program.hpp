@@ -27,4 +27,14 @@ namespace mandala
 		gpu_program_t(const gpu_program_t&) = delete;
 		gpu_program_t& operator=(const gpu_program_t&) = delete;
 	};
+
+    template<typename T, typename Enable = void>
+    struct is_gpu_program : std::false_type
+    {
+    };
+
+    template<typename T>
+    struct is_gpu_program<T, typename std::enable_if<std::is_base_of<gpu_program_t, T>::value>::type> : std::true_type
+    {
+    };
 }

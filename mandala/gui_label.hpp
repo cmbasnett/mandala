@@ -21,9 +21,6 @@ namespace mandala
 		typedef string_type::iterator string_itr_type;
         typedef uint16_t line_height_type;  //TODO: have this type based on typedef in bitmap_font
 
-		static const auto color_push_character = L'↑';  //alt+24
-		static const auto color_pop_character = L'↓';   //alt+25
-
 		enum class justification_e
 		{
 			left,
@@ -88,8 +85,12 @@ namespace mandala
 
 		struct cursor_data_t
 		{
+			typedef std::chrono::system_clock clock_type;
+			typedef clock_type::time_point time_point_type;
+
 			string_itr_type begin;
 			string_itr_type end;
+			time_point_type time_point;
 		};
 
 		string_type _string;
@@ -109,5 +110,8 @@ namespace mandala
 		//TODO: only have one of these, doesn't need to be constructed per instance (better yet, make a line renderer!)
 		std::shared_ptr<vertex_buffer_t<basic_gpu_vertex_t>> _cursor_vertex_buffer;
 		std::shared_ptr<index_buffer_t<uint8_t>> _cursor_index_buffer;
+
+        std::shared_ptr<vertex_buffer_t<basic_gpu_vertex_t>> _selection_vertex_buffer;
+        std::shared_ptr<index_buffer_t<uint8_t>> _selection_index_buffer;
 	};
 }

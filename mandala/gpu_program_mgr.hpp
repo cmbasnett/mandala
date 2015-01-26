@@ -12,7 +12,7 @@ namespace mandala
 {
 	struct gpu_program_mgr_t
 	{
-		template<typename T = std::enable_if<std::is_base_of<gpu_program_t, T>::value>>
+		template<typename T = std::enable_if<is_gpu_program<T>::value, T>::type>
         std::shared_ptr<T> make()
 		{
 			static const std::type_index type_index = typeid(T);
@@ -24,7 +24,7 @@ namespace mandala
             return gpu_program;
 		}
 
-		template<typename T = std::enable_if<std::is_base_of<gpu_program_t, T>::value>>
+        template<typename T = std::enable_if<is_gpu_program<T>::value, T>::type>
         std::shared_ptr<T> get()
 		{
 			static const std::type_index type_index = typeid(T);

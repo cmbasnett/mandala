@@ -180,6 +180,27 @@ namespace mandala
 			double_
 		};
 
+        template<typename T>
+        struct data_type_;
+
+        template<>
+        struct data_type_<uint8_t>
+        {
+            static const data_type_e value = data_type_e::unsigned_byte;
+        };
+
+        template<>
+        struct data_type_<uint16_t>
+        {
+            static const data_type_e value = data_type_e::unsigned_short;
+        };
+
+        template<>
+        struct data_type_<uint32_t>
+        {
+            static const data_type_e value = data_type_e::unsigned_int;
+        };
+
 		enum class shader_type_e
 		{
 			fragment,
@@ -249,7 +270,7 @@ namespace mandala
             void push(buffer_target_e target, buffer_type buffer);
 			buffer_type top(buffer_target_e target);
             buffer_type pop(buffer_target_e target);
-            void data(buffer_target_e target, void* data, size_t size, buffer_usage_e usage);
+            void data(buffer_target_e target, const void* data, size_t size, buffer_usage_e usage);
 
         private:
             std::map<buffer_target_e, std::stack<buffer_type>> target_buffers;

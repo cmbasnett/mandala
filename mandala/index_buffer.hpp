@@ -20,20 +20,19 @@ namespace mandala
         typedef T index_type;
         static const auto index_size = sizeof(index_type);
 
-        void data(index_type* indices, size_t count, gpu_t::buffer_usage_e usage)
+        void data(const index_type* indices, size_t count, gpu_t::buffer_usage_e usage)
         {
             gpu.buffers.push(gpu_t::buffer_target_e::element_array, shared_from_this());
-            gpu.buffers.data(gpu_t::buffer_target_e::element_array, static_cast<void*>(indices), count * index_size, usage);
+            gpu.buffers.data(gpu_t::buffer_target_e::element_array, static_cast<const void*>(indices), count * index_size, usage);
             gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
         }
 
-        template<std::uintmax_t N>
-        void data(std::array<index_type, N> indices, gpu_t::buffer_usage_e usage)
+        void data(const std::initializer_list<index_type> indices, gpu_t::buffer_usage_e usage)
         {
-            data(indices.data(), N, usage);
+            data(indices.begin(), indices.size(), usage);
         }
 
-        void data(std::vector<index_type> indices, gpu_t::buffer_usage_e usage)
+        void data(const std::vector<index_type> indices, gpu_t::buffer_usage_e usage)
         {
             data(indices.data(), indices.size(), usage);
         }

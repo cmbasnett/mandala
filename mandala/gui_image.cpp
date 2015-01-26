@@ -19,7 +19,7 @@ namespace mandala
     gui_image_t::gui_image_t()
     {
 		//index buffer
-        std::array<index_buffer_type::index_type, 12> indices = {
+        std::initializer_list<index_buffer_type::index_type> indices = {
             0, 1, 2, 
             0, 2, 3, 
             1, 2, 3, 

@@ -36,7 +36,7 @@ namespace mandala
 			strings.language = "es";
 
             states.push(std::make_shared<bsp_state_t>(), state_flag_all);
-            states.push(std::make_shared<debug_state_t>(), state_flag_all);
+            //states.push(std::make_shared<debug_state_t>(), state_flag_all);
         }
 
         void armada_game_t::app_run_end()

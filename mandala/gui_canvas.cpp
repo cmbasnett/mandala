@@ -11,13 +11,8 @@ namespace mandala
 {
     gui_canvas_t::gui_canvas_t()
     {
-        std::array<index_buffer_type::index_type, 4> indices =
-        {
-            0, 1, 2, 3
-        };
-
         index_buffer = std::make_shared<index_buffer_type>();
-        index_buffer->data(indices, gpu_t::buffer_usage_e::static_draw);
+        index_buffer->data({ 0, 1, 2, 3 }, gpu_t::buffer_usage_e::static_draw);
 
         vertex_buffer = std::make_shared<vertex_buffer_type>();
     }

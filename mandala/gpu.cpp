@@ -716,7 +716,7 @@ namespace mandala
         return buffers.empty() ? buffer_type() : buffers.top();
     }
 
-    void gpu_t::buffer_mgr_t::data(buffer_target_e target, void* data, size_t size, buffer_usage_e usage)
+    void gpu_t::buffer_mgr_t::data(buffer_target_e target, const void* data, size_t size, buffer_usage_e usage)
     {
         glBufferData(get_buffer_target(target), size, data, get_buffer_usage(usage)); glCheckError();
     }

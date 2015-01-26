@@ -78,10 +78,10 @@ namespace mandala
 			bsp_render_image->set_sprite(sprite);
 
 			layout->adopt(bsp_render_image);
-			layout->adopt(debug_label);
+			//layout->adopt(debug_label);
 			layout->adopt(crosshair_image);
 
-			const std::array<uint8_t, 24> indices = {
+			const std::initializer_list<uint8_t> indices = {
 				frustum_corner_index_left_top_near, frustum_corner_index_right_top_near,
 				frustum_corner_index_right_top_near, frustum_corner_index_right_bottom_near,
 				frustum_corner_index_right_bottom_near, frustum_corner_index_left_bottom_near,
@@ -133,7 +133,7 @@ namespace mandala
 
 				const auto& corners = camera_frustum.corners();
 
-				std::array<basic_gpu_vertex_t, frustum_corner_count> vertices =
+				std::initializer_list<basic_gpu_vertex_t> vertices =
 				{
 					basic_gpu_vertex_t(corners[frustum_corner_index_left_top_near], vec4_t(1)),
 					basic_gpu_vertex_t(corners[frustum_corner_index_left_top_far], vec4_t(1)),
