@@ -25,11 +25,11 @@ namespace mandala
             1, 2, 3, 
             1, 3, 0 };
 
-        _index_buffer = std::make_shared<index_buffer_type>();
-		_index_buffer->data(indices, gpu_t::buffer_usage_e::static_draw);
+        index_buffer = std::make_shared<index_buffer_type>();
+		index_buffer->data(indices, gpu_t::buffer_usage_e::static_draw);
 
 		//vertex buffer
-        _vertex_buffer = std::make_shared<vertex_buffer_type>();
+        vertex_buffer = std::make_shared<vertex_buffer_type>();
 	}
 
 	void gui_image_t::render_override(mat4_t world_matrix, mat4_t view_projection_matrix)
@@ -42,8 +42,8 @@ namespace mandala
         gpu.blend.push_state(blend_state);
 
         //buffers
-        gpu.buffers.push(gpu_t::buffer_target_e::array, _vertex_buffer);
-        gpu.buffers.push(gpu_t::buffer_target_e::element_array, _index_buffer);
+        gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
+        gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
 
         const auto& gpu_program = gpu_programs.get<gui_gpu_program_t>();
 
@@ -61,24 +61,24 @@ namespace mandala
 		gpu_program->view_projection_matrix(view_projection_matrix);
 		gpu_program->color(color());
 
-        gpu.textures.bind(diffuse_texture_index, _sprite.sprite_set->texture);
+        gpu.textures.bind(diffuse_texture_index, sprite.get_sprite_set()->get_texture());
 
-        switch (_triangle_mode)
+        switch (triangle_mode)
         {
         case triangle_mode_e::bottom_right:
-            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 3, gpu_t::index_type_e::unsigned_byte, 0);
+            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 3, index_buffer_type::data_type, 0);
             break;
         case triangle_mode_e::top_left:
-            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 3, gpu_t::index_type_e::unsigned_byte, 3);
+            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 3, index_buffer_type::data_type, 3);
             break;
         case triangle_mode_e::top_right:
-            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 3, gpu_t::index_type_e::unsigned_byte, 6);
+            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 3, index_buffer_type::data_type, 6);
             break;
         case triangle_mode_e::bottom_left:
-            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 3, gpu_t::index_type_e::unsigned_byte, 9);
+            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 3, index_buffer_type::data_type, 9);
             break;
         case triangle_mode_e::both:
-            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 6, gpu_t::index_type_e::unsigned_byte, 0);
+            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 6, index_buffer_type::data_type, 0);
             break;
         }
 
@@ -96,11 +96,12 @@ namespace mandala
 
     void gui_image_t::clean()
     {
-        auto sprite_size = static_cast<vec2_t>(_sprite.region.rectangle.size());
+        const auto& sprite_region = sprite.get_region();
+        auto sprite_size = static_cast<vec2_t>(sprite_region.rectangle.size());
 
-		if (_is_autosized_to_texture)
+		if (is_autosized_to_texture)
 		{
-			set_size(static_cast<vec2_t>(_sprite.region.source_size));
+			set_size(static_cast<vec2_t>(sprite_region.source_size));
         }
 		else
 		{
@@ -116,27 +117,27 @@ namespace mandala
             vertex_type::position_type(vec3_t(vec2_t(-0.5f, 0.5f) * sprite_size, 0.0f))
         };
 
-		if (_sprite.region.is_rotated)
+		if (sprite_region.is_rotated)
         {
             vertex_type vertices[vertex_count] = {
-                vertex_type(vertex_positions[0], vec2_t(_sprite.region.uv.min.x, _sprite.region.uv.max.y)),
-                vertex_type(vertex_positions[1], vec2_t(_sprite.region.uv.min.x, _sprite.region.uv.min.y)),
-                vertex_type(vertex_positions[2], vec2_t(_sprite.region.uv.max.x, _sprite.region.uv.min.y)),
-                vertex_type(vertex_positions[3], vec2_t(_sprite.region.uv.max.x, _sprite.region.uv.max.y))
+                vertex_type(vertex_positions[0], vec2_t(sprite_region.uv.min.x, sprite_region.uv.max.y)),
+                vertex_type(vertex_positions[1], vec2_t(sprite_region.uv.min.x, sprite_region.uv.min.y)),
+                vertex_type(vertex_positions[2], vec2_t(sprite_region.uv.max.x, sprite_region.uv.min.y)),
+                vertex_type(vertex_positions[3], vec2_t(sprite_region.uv.max.x, sprite_region.uv.max.y))
             };
 
-            _vertex_buffer->data(vertices, vertex_count, gpu_t::buffer_usage_e::dynamic_draw);
+            vertex_buffer->data(vertices, vertex_count, gpu_t::buffer_usage_e::dynamic_draw);
         }
         else
         {
             vertex_type vertices[vertex_count] = {
-                vertex_type(vertex_positions[0], vec2_t(_sprite.region.uv.min.x, _sprite.region.uv.min.y)),
-                vertex_type(vertex_positions[1], vec2_t(_sprite.region.uv.max.x, _sprite.region.uv.min.y)),
-                vertex_type(vertex_positions[2], vec2_t(_sprite.region.uv.max.x, _sprite.region.uv.max.y)),
-                vertex_type(vertex_positions[3], vec2_t(_sprite.region.uv.min.x, _sprite.region.uv.max.y))
+                vertex_type(vertex_positions[0], vec2_t(sprite_region.uv.min.x, sprite_region.uv.min.y)),
+                vertex_type(vertex_positions[1], vec2_t(sprite_region.uv.max.x, sprite_region.uv.min.y)),
+                vertex_type(vertex_positions[2], vec2_t(sprite_region.uv.max.x, sprite_region.uv.max.y)),
+                vertex_type(vertex_positions[3], vec2_t(sprite_region.uv.min.x, sprite_region.uv.max.y))
             };
 
-			_vertex_buffer->data(vertices, vertex_count, gpu_t::buffer_usage_e::dynamic_draw);
+			vertex_buffer->data(vertices, vertex_count, gpu_t::buffer_usage_e::dynamic_draw);
         }
 		
 		gui_node_t::clean();

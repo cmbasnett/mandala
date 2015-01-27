@@ -35,15 +35,14 @@ namespace mandala
 
 	void debug_state_t::tick(float32_t dt)
 	{
-		typedef std::codecvt_utf8<wchar_t> convert_type;
-		std::wstring_convert<convert_type, wchar_t> converter;
+		std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> wstring_convert;
 
 		std::wostringstream oss;
 
-		oss << converter.from_bytes(gpu.get_vendor()) << std::endl;
-		oss << converter.from_bytes(gpu.get_renderer()) << std::endl;
-		oss << converter.from_bytes(gpu.get_shading_language_version()) << std::endl;
-		oss << converter.from_bytes(gpu.get_version()) << std::endl;
+		oss << wstring_convert.from_bytes(gpu.get_vendor()) << std::endl;
+		oss << wstring_convert.from_bytes(gpu.get_renderer()) << std::endl;
+		oss << wstring_convert.from_bytes(gpu.get_shading_language_version()) << std::endl;
+		oss << wstring_convert.from_bytes(gpu.get_version()) << std::endl;
 		oss << std::endl;
 		oss << "[audio]" << std::endl;
 		oss << "sources: " << audio.sources.size() << std::endl;

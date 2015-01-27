@@ -224,35 +224,37 @@ namespace mandala
 
 		bsp_t(std::istream& istream);
 
-		std::vector<plane_t> planes;
-		std::vector<edge_t> edges;
-		std::vector<face_t> faces;
-		std::vector<int32_t> surface_edges;
-		std::vector<node_t> nodes;
-		std::vector<leaf_t> leafs;
-		std::vector<uint16_t> mark_surfaces;
-		std::vector<texture_info_t> texture_infos;
-		std::vector<std::shared_ptr<texture_t>> face_lightmap_textures;
-		std::vector<clip_node_t> clip_nodes;
+        void render(const camera_t& camera);
+
+        int32_t get_leaf_index_from_position(const vec3_t& position) const;
+
+        const render_stats_t& get_render_stats() const { return render_stats; }
+
+        render_settings_t render_settings;  //TODO: sort this out elsewhere
+
+	private:
+        std::vector<plane_t> planes;
+        std::vector<edge_t> edges;
+        std::vector<face_t> faces;
+        std::vector<int32_t> surface_edges;
+        std::vector<node_t> nodes;
+        std::vector<leaf_t> leafs;
+        std::vector<uint16_t> mark_surfaces;
+        std::vector<texture_info_t> texture_infos;
+        std::vector<std::shared_ptr<texture_t>> face_lightmap_textures;
+        std::vector<clip_node_t> clip_nodes;
         std::vector<model_t> models;
         std::vector<bsp_entity_t> entities;
         std::vector<size_t> brush_entity_indices;
         std::map<size_t, boost::dynamic_bitset<>> leaf_pvs_map;
         std::vector<size_t> face_start_indices;
-		size_t vis_leaf_count = 0;
-		std::vector<std::shared_ptr<texture_t>> textures;
-        render_settings_t render_settings;
+        size_t vis_leaf_count = 0;
+        std::vector<std::shared_ptr<texture_t>> textures;
         render_stats_t render_stats;
-
-        int32_t get_leaf_index_from_position(const vec3_t& position) const;
-        trace_result_t trace(const trace_args_t& args) const;
-        void render(const camera_t& camera);
-
-	private:
-		bsp_t(const bsp_t&) = delete;
-		bsp_t& operator=(const bsp_t&) = delete;
-
         std::shared_ptr<vertex_buffer_type> vertex_buffer;
         std::shared_ptr<index_buffer_type> index_buffer;
+
+        bsp_t(const bsp_t&) = delete;
+        bsp_t& operator=(const bsp_t&) = delete;
 	};
 }

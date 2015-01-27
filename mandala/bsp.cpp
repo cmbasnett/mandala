@@ -10,6 +10,7 @@
 #include "bsp_gpu_program.hpp"
 #include "resource_mgr.hpp"
 #include "gpu_program_mgr.hpp"
+#include "io.hpp"
 
 //boost
 #include <boost\algorithm\string.hpp>
@@ -52,7 +53,7 @@ namespace mandala
         //version
         int32_t version;
 
-        istream.read(reinterpret_cast<char*>(&version), sizeof(version));
+        read(istream, version);
 
         static const auto bsp_version = 30;
 
@@ -68,8 +69,8 @@ namespace mandala
 
         for (auto& chunk : chunks)
         {
-            istream.read(reinterpret_cast<char*>(&chunk.offset), sizeof(chunk.offset));
-            istream.read(reinterpret_cast<char*>(&chunk.length), sizeof(chunk.length));
+            read(istream, chunk.offset);
+            read(istream, chunk.length);
         }
 
         //planes
@@ -81,11 +82,11 @@ namespace mandala
 
         for (auto& plane : planes)
         {
-            istream.read(reinterpret_cast<char*>(&plane.plane.normal.x), sizeof(plane.plane.normal.x));
-            istream.read(reinterpret_cast<char*>(&plane.plane.normal.z), sizeof(plane.plane.normal.z));
-            istream.read(reinterpret_cast<char*>(&plane.plane.normal.y), sizeof(plane.plane.normal.y));
-            istream.read(reinterpret_cast<char*>(&plane.plane.distance), sizeof(plane.plane.distance));
-            istream.read(reinterpret_cast<char*>(&plane.type), sizeof(plane.type));
+            read(istream, plane.plane.normal.x);
+            read(istream, plane.plane.normal.z);
+            read(istream, plane.plane.normal.y);
+            read(istream, plane.plane.distance);
+            read(istream, plane.type);
 
             plane.plane.normal.z = -plane.plane.normal.z;
         }
@@ -101,9 +102,9 @@ namespace mandala
 
         for (auto& vertex_position : vertex_positions)
         {
-            istream.read(reinterpret_cast<char*>(&vertex_position.x), sizeof(vertex_position.x));
-            istream.read(reinterpret_cast<char*>(&vertex_position.z), sizeof(vertex_position.z));
-            istream.read(reinterpret_cast<char*>(&vertex_position.y), sizeof(vertex_position.y));
+            read(istream, vertex_position.x);
+            read(istream, vertex_position.z);
+            read(istream, vertex_position.y);
 
             vertex_position.z = -vertex_position.z;
         }
@@ -117,8 +118,8 @@ namespace mandala
 
         for (auto& edge : edges)
         {
-            istream.read(reinterpret_cast<char*>(&edge.vertex_indices[0]), sizeof(edge.vertex_indices[0]));
-            istream.read(reinterpret_cast<char*>(&edge.vertex_indices[1]), sizeof(edge.vertex_indices[1]));
+            read(istream, edge.vertex_indices[0]);
+            read(istream, edge.vertex_indices[1]);
         }
 
         //surface_edges
@@ -130,7 +131,7 @@ namespace mandala
 
         for (auto& surface_edge : surface_edges)
         {
-            istream.read(reinterpret_cast<char*>(&surface_edge), sizeof(surface_edge));
+            read(istream, surface_edge);
         }
 
         //faces
@@ -142,16 +143,16 @@ namespace mandala
 
         for (auto& face : faces)
         {
-            istream.read(reinterpret_cast<char*>(&face.plane_index), sizeof(face.plane_index));
-            istream.read(reinterpret_cast<char*>(&face.plane_side), sizeof(face.plane_side));
-            istream.read(reinterpret_cast<char*>(&face.surface_edge_start_index), sizeof(face.surface_edge_start_index));
-            istream.read(reinterpret_cast<char*>(&face.surface_edge_count), sizeof(face.surface_edge_count));
-            istream.read(reinterpret_cast<char*>(&face.texture_info_index), sizeof(face.texture_info_index));
-            istream.read(reinterpret_cast<char*>(&face.lighting_styles[0]), sizeof(face.lighting_styles[0]));
-            istream.read(reinterpret_cast<char*>(&face.lighting_styles[1]), sizeof(face.lighting_styles[1]));
-            istream.read(reinterpret_cast<char*>(&face.lighting_styles[2]), sizeof(face.lighting_styles[2]));
-            istream.read(reinterpret_cast<char*>(&face.lighting_styles[3]), sizeof(face.lighting_styles[3]));
-            istream.read(reinterpret_cast<char*>(&face.lightmap_offset), sizeof(face.lightmap_offset));
+            read(istream, face.plane_index);
+            read(istream, face.plane_side);
+            read(istream, face.surface_edge_start_index);
+            read(istream, face.surface_edge_count);
+            read(istream, face.texture_info_index);
+            read(istream, face.lighting_styles[0]);
+            read(istream, face.lighting_styles[1]);
+            read(istream, face.lighting_styles[2]);
+            read(istream, face.lighting_styles[3]);
+            read(istream, face.lightmap_offset);
         }
 
         //nodes
@@ -163,17 +164,17 @@ namespace mandala
 
         for (auto& node : nodes)
         {
-            istream.read(reinterpret_cast<char*>(&node.plane_index), sizeof(node.plane_index));
-            istream.read(reinterpret_cast<char*>(&node.child_indices[0]), sizeof(node.child_indices[0]));
-            istream.read(reinterpret_cast<char*>(&node.child_indices[1]), sizeof(node.child_indices[1]));
-            istream.read(reinterpret_cast<char*>(&node.aabb.min.x), sizeof(node.aabb.min.x));
-            istream.read(reinterpret_cast<char*>(&node.aabb.min.z), sizeof(node.aabb.min.z));
-            istream.read(reinterpret_cast<char*>(&node.aabb.min.y), sizeof(node.aabb.min.y));
-            istream.read(reinterpret_cast<char*>(&node.aabb.max.x), sizeof(node.aabb.max.x));
-            istream.read(reinterpret_cast<char*>(&node.aabb.max.z), sizeof(node.aabb.max.z));
-            istream.read(reinterpret_cast<char*>(&node.aabb.max.y), sizeof(node.aabb.max.y));
-            istream.read(reinterpret_cast<char*>(&node.face_start_index), sizeof(node.face_start_index));
-            istream.read(reinterpret_cast<char*>(&node.face_count), sizeof(node.face_count));
+            read(istream, node.plane_index);
+            read(istream, node.child_indices[0]);
+            read(istream, node.child_indices[1]);
+            read(istream, node.aabb.min.x);
+            read(istream, node.aabb.min.z);
+            read(istream, node.aabb.min.y);
+            read(istream, node.aabb.max.x);
+            read(istream, node.aabb.max.z);
+            read(istream, node.aabb.max.y);
+            read(istream, node.face_start_index);
+            read(istream, node.face_count);
 
             node.aabb.min.z = -node.aabb.min.z;
             node.aabb.max.z = -node.aabb.max.z;
@@ -188,20 +189,20 @@ namespace mandala
 
         for (auto& leaf : leafs)
         {
-            istream.read(reinterpret_cast<char*>(&leaf.content_type), sizeof(leaf.content_type));
-            istream.read(reinterpret_cast<char*>(&leaf.visibility_offset), sizeof(leaf.visibility_offset));
-            istream.read(reinterpret_cast<char*>(&leaf.aabb.min.x), sizeof(leaf.aabb.min.x));
-            istream.read(reinterpret_cast<char*>(&leaf.aabb.min.z), sizeof(leaf.aabb.min.z));
-            istream.read(reinterpret_cast<char*>(&leaf.aabb.min.y), sizeof(leaf.aabb.min.y));
-            istream.read(reinterpret_cast<char*>(&leaf.aabb.max.x), sizeof(leaf.aabb.max.x));
-            istream.read(reinterpret_cast<char*>(&leaf.aabb.max.z), sizeof(leaf.aabb.max.z));
-            istream.read(reinterpret_cast<char*>(&leaf.aabb.max.y), sizeof(leaf.aabb.max.y));
-            istream.read(reinterpret_cast<char*>(&leaf.mark_surface_start_index), sizeof(leaf.mark_surface_start_index));
-            istream.read(reinterpret_cast<char*>(&leaf.mark_surface_count), sizeof(leaf.mark_surface_count));
-            istream.read(reinterpret_cast<char*>(&leaf.ambient_sound_levels[0]), sizeof(leaf.ambient_sound_levels[0]));
-            istream.read(reinterpret_cast<char*>(&leaf.ambient_sound_levels[1]), sizeof(leaf.ambient_sound_levels[1]));
-            istream.read(reinterpret_cast<char*>(&leaf.ambient_sound_levels[2]), sizeof(leaf.ambient_sound_levels[2]));
-            istream.read(reinterpret_cast<char*>(&leaf.ambient_sound_levels[3]), sizeof(leaf.ambient_sound_levels[3]));
+            read(istream, leaf.content_type);
+            read(istream, leaf.visibility_offset);
+            read(istream, leaf.aabb.min.x);
+            read(istream, leaf.aabb.min.z);
+            read(istream, leaf.aabb.min.y);
+            read(istream, leaf.aabb.max.x);
+            read(istream, leaf.aabb.max.z);
+            read(istream, leaf.aabb.max.y);
+            read(istream, leaf.mark_surface_start_index);
+            read(istream, leaf.mark_surface_count);
+            read(istream, leaf.ambient_sound_levels[0]);
+            read(istream, leaf.ambient_sound_levels[1]);
+            read(istream, leaf.ambient_sound_levels[2]);
+            read(istream, leaf.ambient_sound_levels[3]);
 
             leaf.aabb.min.z = -leaf.aabb.min.z;
             leaf.aabb.max.z = -leaf.aabb.max.z;
@@ -216,7 +217,7 @@ namespace mandala
 
         for (auto& mark_surface : mark_surfaces)
         {
-            istream.read(reinterpret_cast<char*>(&mark_surface), sizeof(mark_surface));
+            read(istream, mark_surface);
         }
 
         //clip_nodes
@@ -228,9 +229,9 @@ namespace mandala
 
         for (auto& clip_node : clip_nodes)
         {
-            istream.read(reinterpret_cast<char*>(&clip_node.plane_index), sizeof(clip_node.plane_index));
-            istream.read(reinterpret_cast<char*>(&clip_node.child_indices[0]), sizeof(clip_node.child_indices[0]));
-            istream.read(reinterpret_cast<char*>(&clip_node.child_indices[1]), sizeof(clip_node.child_indices[1]));
+            read(istream, clip_node.plane_index);
+            read(istream, clip_node.child_indices[0]);
+            read(istream, clip_node.child_indices[1]);
         }
 
         //models
@@ -242,22 +243,22 @@ namespace mandala
 
         for (auto& model : models)
         {
-            istream.read(reinterpret_cast<char*>(&model.aabb.min.x), sizeof(model.aabb.min.x));
-            istream.read(reinterpret_cast<char*>(&model.aabb.min.z), sizeof(model.aabb.min.z));
-            istream.read(reinterpret_cast<char*>(&model.aabb.min.y), sizeof(model.aabb.min.y));
-            istream.read(reinterpret_cast<char*>(&model.aabb.max.x), sizeof(model.aabb.max.x));
-            istream.read(reinterpret_cast<char*>(&model.aabb.max.z), sizeof(model.aabb.max.z));
-            istream.read(reinterpret_cast<char*>(&model.aabb.max.y), sizeof(model.aabb.max.y));
-            istream.read(reinterpret_cast<char*>(&model.origin.x), sizeof(model.origin.x));
-            istream.read(reinterpret_cast<char*>(&model.origin.z), sizeof(model.origin.z));
-            istream.read(reinterpret_cast<char*>(&model.origin.y), sizeof(model.origin.y));
-            istream.read(reinterpret_cast<char*>(&model.head_node_indices[0]), sizeof(model.head_node_indices[0]));
-            istream.read(reinterpret_cast<char*>(&model.head_node_indices[1]), sizeof(model.head_node_indices[1]));
-            istream.read(reinterpret_cast<char*>(&model.head_node_indices[2]), sizeof(model.head_node_indices[2]));
-            istream.read(reinterpret_cast<char*>(&model.head_node_indices[3]), sizeof(model.head_node_indices[3]));
-            istream.read(reinterpret_cast<char*>(&model.vis_leafs), sizeof(model.vis_leafs));
-            istream.read(reinterpret_cast<char*>(&model.face_start_index), sizeof(model.face_start_index));
-            istream.read(reinterpret_cast<char*>(&model.face_count), sizeof(model.face_count));
+            read(istream, model.aabb.min.x);
+            read(istream, model.aabb.min.z);
+            read(istream, model.aabb.min.y);
+            read(istream, model.aabb.max.x);
+            read(istream, model.aabb.max.z);
+            read(istream, model.aabb.max.y);
+            read(istream, model.origin.x);
+            read(istream, model.origin.z);
+            read(istream, model.origin.y);
+            read(istream, model.head_node_indices[0]);
+            read(istream, model.head_node_indices[1]);
+            read(istream, model.head_node_indices[2]);
+            read(istream, model.head_node_indices[3]);
+            read(istream, model.vis_leafs);
+            read(istream, model.face_start_index);
+            read(istream, model.face_count);
 
             model.aabb.min.z = -model.aabb.min.z;
             model.aabb.max.z = -model.aabb.max.z;
@@ -342,14 +343,14 @@ namespace mandala
 
         uint32_t texture_count;
 
-        istream.read(reinterpret_cast<char*>(&texture_count), sizeof(texture_count));
+        read(istream, texture_count);
 
         std::vector<uint32_t> texture_offsets;
         texture_offsets.resize(texture_count);
 
         for (auto& texture_offset : texture_offsets)
         {
-            istream.read(reinterpret_cast<char*>(&texture_offset), sizeof(texture_offset));
+            read(istream, texture_offset);
         }
 
         std::vector<bsp_texture_t> bsp_textures;
@@ -365,9 +366,9 @@ namespace mandala
 
             bsp_texture_t bsp_texture;
 
-            istream.read(reinterpret_cast<char*>(&bsp_texture.width), sizeof(bsp_texture.width));
-            istream.read(reinterpret_cast<char*>(&bsp_texture.height), sizeof(bsp_texture.height));
-            istream.read(reinterpret_cast<char*>(bsp_texture.mipmap_offsets), sizeof(bsp_texture.mipmap_offsets));
+            read(istream, bsp_texture.width);
+            read(istream, bsp_texture.height);
+            read(istream, bsp_texture.mipmap_offsets);
 
             bsp_textures.push_back(bsp_texture);
 
@@ -397,16 +398,16 @@ namespace mandala
 
         for (auto& texture_info : texture_infos)
         {
-            istream.read(reinterpret_cast<char*>(&texture_info.s.axis.x), sizeof(texture_info.s.axis.x));
-            istream.read(reinterpret_cast<char*>(&texture_info.s.axis.z), sizeof(texture_info.s.axis.z));
-            istream.read(reinterpret_cast<char*>(&texture_info.s.axis.y), sizeof(texture_info.s.axis.y));
-            istream.read(reinterpret_cast<char*>(&texture_info.s.offset), sizeof(texture_info.s.offset));
-            istream.read(reinterpret_cast<char*>(&texture_info.t.axis.x), sizeof(texture_info.t.axis.x));
-            istream.read(reinterpret_cast<char*>(&texture_info.t.axis.z), sizeof(texture_info.t.axis.z));
-            istream.read(reinterpret_cast<char*>(&texture_info.t.axis.y), sizeof(texture_info.t.axis.y));
-            istream.read(reinterpret_cast<char*>(&texture_info.t.offset), sizeof(texture_info.t.offset));
-            istream.read(reinterpret_cast<char*>(&texture_info.texture_index), sizeof(texture_info.texture_index));
-            istream.read(reinterpret_cast<char*>(&texture_info.flags), sizeof(texture_info.flags));
+            read(istream, texture_info.s.axis.x);
+            read(istream, texture_info.s.axis.z);
+            read(istream, texture_info.s.axis.y);
+            read(istream, texture_info.s.offset);
+            read(istream, texture_info.t.axis.x);
+            read(istream, texture_info.t.axis.z);
+            read(istream, texture_info.t.axis.y);
+            read(istream, texture_info.t.offset);
+            read(istream, texture_info.texture_index);
+            read(istream, texture_info.flags);
 
             texture_info.s.axis.z = -texture_info.s.axis.z;
             texture_info.t.axis.z = -texture_info.t.axis.z;
@@ -541,20 +542,17 @@ namespace mandala
                     lightmap_texcoord.y = lightmap_v / texture_height;
                 }
 
-                //TODO: this is a bit of a monstrosity, clean this up
-                auto image = std::make_shared<image_t>();
-                image->width = static_cast<uint32_t>(texture_width);
-                image->height = static_cast<uint32_t>(texture_height);
-                image->bit_depth = 8;
-                image->color_type = color_type_e::rgb;
-
-                auto lighting_data_length = 3 * static_cast<int32_t>(texture_width)* static_cast<int32_t>(texture_height);
+                auto lighting_data_length = 3 * static_cast<int32_t>(texture_width) * static_cast<int32_t>(texture_height);
                 auto lighting_data_begin = lighting_data.begin() + face.lightmap_offset;
                 auto lighting_data_end = lighting_data_begin + lighting_data_length;
 
-                image->data.reserve(lighting_data_length);
-
-                std::copy(lighting_data_begin, lighting_data_end, std::back_inserter(image->data));
+                auto image = std::make_shared<image_t>(
+                    static_cast<image_t::size_value_type>(texture_width),
+                    static_cast<image_t::size_value_type>(texture_height),
+                    8,
+                    color_type_e::rgb,
+                    lighting_data_begin,
+                    lighting_data_end);
 
                 auto lightmap_texture = std::make_shared<texture_t>(image);
 
@@ -645,7 +643,7 @@ namespace mandala
         gpu.programs.push(gpu_program);
 
         gpu_program->world_matrix(mat4_t());
-        gpu_program->view_projection_matrix(camera.projection_matrix * camera.view_matrix);
+        gpu_program->view_projection_matrix(camera.get_projection_matrix() * camera.get_view_matrix());
         gpu_program->diffuse_texture_index(diffuse_texture_index);
         gpu_program->lightmap_texture_index(lightmap_texture_index);
         gpu_program->lightmap_gamma(render_settings.lightmap_gamma);
@@ -672,7 +670,7 @@ namespace mandala
 
             gpu.draw_elements(gpu_t::primitive_type_e::triangle_fan,
                 face.surface_edge_count,
-                gpu_t::index_type_e::unsigned_int,
+                index_buffer_type::data_type,
                 face_start_indices[face_index] * sizeof(index_type));
 
             faces_rendered[face_index] = true;

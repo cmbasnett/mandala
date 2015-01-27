@@ -65,42 +65,47 @@ namespace mandala
 		bitmap_font_t(std::istream& istream);
 
         void render_string(const string_type& string, mat4_t world_matrix, mat4_t view_projection_matrix, const rgba_type& base_color, std::stack<rgba_type>& color_stack, const std::vector<std::pair<size_t, rgba_type>>& color_pushes, const std::vector<size_t>& color_pop_indices) const;
-        int16_t get_kerning_amount(char_type lhs, char_type rhs) const;
         void get_string_pages(std::vector<uint8_t>& pages, const string_type& string) const;
         int16_t get_string_width(const string_type& string) const;
-		
-		int16_t size = 0;
-		bool is_smooth = false;
-		bool is_unicode = false;
-		bool is_italic = false;
-		bool is_bold = false;
-		bool is_fixed_height = false;
-		uint8_t char_set = 0;	//TODO: represent with an enum?
-		uint16_t stretch_height = 0;
-		uint8_t antialiasing = 0;
+
+        uint16_t get_line_height() const { return line_height; }
+        uint16_t get_base() const { return base; }
+        const std::map<character_id_type, character_t>& get_characters() const { return characters; }
+
+	private:
+        int16_t size = 0;
+        bool is_smooth = false;
+        bool is_unicode = false;
+        bool is_italic = false;
+        bool is_bold = false;
+        bool is_fixed_height = false;
+        uint8_t char_set = 0;	//TODO: represent with an enum?
+        uint16_t stretch_height = 0;
+        uint8_t antialiasing = 0;
         padding_u8_t padding;
-		uint8_t spacing_horizontal = 0;
-		uint8_t spacing_vertical = 0;
-		uint8_t outline = 0;
-		uint16_t line_height = 0;
-		uint16_t base = 0;
-		uint16_t width = 0;
-		uint16_t height = 0;
-		uint16_t page_count = 0;
-		uint8_t flags_1 = 0;
-		uint8_t alpha_channel = 0;
-		uint8_t red_channel = 0;
-		uint8_t green_channel = 0;
-		uint8_t blue_channel = 0;
-		std::vector<character_id_type> character_ids;
-		std::map<character_id_type, size_t> character_indices;
-		std::map<character_id_type, character_t> characters;
+        uint8_t spacing_horizontal = 0;
+        uint8_t spacing_vertical = 0;
+        uint8_t outline = 0;
+        uint16_t line_height = 0;
+        uint16_t base = 0;
+        uint16_t width = 0;
+        uint16_t height = 0;
+        uint16_t page_count = 0;
+        uint8_t flags_1 = 0;
+        uint8_t alpha_channel = 0;
+        uint8_t red_channel = 0;
+        uint8_t green_channel = 0;
+        uint8_t blue_channel = 0;
+        std::vector<character_id_type> character_ids;
+        std::map<character_id_type, size_t> character_indices;
+        std::map<character_id_type, character_t> characters;
         std::vector<kerning_pair_t> kerning_pairs;
         std::shared_ptr<vertex_buffer_type> vertex_buffer;
         std::shared_ptr<index_buffer_type> index_buffer;
-		std::vector<std::shared_ptr<texture_t>> page_textures;
+        std::vector<std::shared_ptr<texture_t>> page_textures;
 
-	private:
+        int16_t get_kerning_amount(char_type lhs, char_type rhs) const;
+
 		bitmap_font_t(const bitmap_font_t&) = delete;
 		bitmap_font_t& operator=(const bitmap_font_t&) = delete;
 	};

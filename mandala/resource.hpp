@@ -15,13 +15,18 @@ namespace mandala
         typedef clock_type::time_point time_point_type;
 
         hash_t hash;
-        time_point_type creation_time;
         time_point_type last_access_time;
+
+        const time_point_type& get_creation_time() const { return creation_time; }
 
 	protected:
 		resource_t();
-		resource_t(const resource_t&) = delete;
-		resource_t& operator=(const resource_t&) = delete;
+
+    private:
+        time_point_type creation_time;
+
+        resource_t(const resource_t&) = delete;
+        resource_t& operator=(const resource_t&) = delete;
 	};
 
 	template<typename T, typename Enable = void>

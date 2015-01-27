@@ -31,13 +31,18 @@ namespace mandala
 			uv_type uv;
 		};
 
-		std::shared_ptr<texture_t> texture;
-		std::map<const hash_t, const region_t> regions;
+        typedef std::map<const hash_t, const region_t> regions_type;
 
 		sprite_set_t(std::istream& istream);
 		sprite_set_t(const std::shared_ptr<texture_t>& texture);	//TODO: ugly, feels like this needs to be elsewhere in a helper class
 
+        const std::shared_ptr<texture_t>& get_texture() const { return texture; }
+        const regions_type& get_regions() const { return regions; }
+
 	private:
+        std::shared_ptr<texture_t> texture;
+        regions_type regions;
+
 		sprite_set_t(const sprite_set_t&) = delete;
 		sprite_set_t& operator=(const sprite_set_t&) = delete;
 	};

@@ -54,8 +54,8 @@ namespace mandala
 		virtual bool should_exit() const override;
         
 		//screen_size
-		virtual vec2_i32_t get_screen_size() const override;
-		virtual void set_screen_size(const vec2_i32_t& screen_size) const override;
+		virtual screen_size_type get_screen_size() const override;
+        virtual void set_screen_size(const screen_size_type& screen_size) const override;
 
 		//pop_input_event
 		virtual bool pop_input_event(input_event_t& input_event) override;
@@ -63,24 +63,24 @@ namespace mandala
         virtual bool pop_window_event(window_event_t& window_event) override;
 
 		//cursor_position
-		virtual vec2_f64_t get_cursor_position() const override;
-		virtual void set_cursor_position(const vec2_f64_t& cursor_position) const override;
+		virtual cursor_position_type get_cursor_position() const override;
+		virtual void set_cursor_position(const cursor_position_type& cursor_position) const override;
 
 		//is_cursor_hidden
 		virtual bool is_cursor_hidden() const override;
 		virtual void set_cursor_hidden(bool hide_cursor) const override;
 
 		//window_title
-		virtual std::string get_window_title() const override;
-		virtual void set_window_title(const std::string& window_title) const override;
+		virtual window_title_type get_window_title() const override;
+		virtual void set_window_title(const window_title_type& window_title) const override;
 
 		//window_size
-		virtual vec2_i32_t get_window_size() const override;
-		virtual void set_window_size(const vec2_i32_t& window_size) const override;
+		virtual window_size_type get_window_size() const override;
+		virtual void set_window_size(const window_size_type& window_size) const override;
 
 		//window_position
-		virtual vec2_i32_t get_window_position() const override;
-		virtual void set_window_position(const vec2_i32_t& window_position) const override;
+		virtual window_size_type get_window_position() const override;
+		virtual void set_window_position(const window_size_type& window_position) const override;
 
 		//clipboard
 		virtual std::string get_clipboard_string() const override;

@@ -9,8 +9,6 @@ namespace mandala
 	image_t::image_t(std::istream& istream)
 	{
 		png_structp png_ptr;
-		png_infop info_ptr;
-		png_uint_32 sig_read = 0;
 
 		png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 
@@ -18,6 +16,8 @@ namespace mandala
 		{
 			throw std::exception();
 		}
+
+        png_infop info_ptr;
 
 		info_ptr = png_create_info_struct(png_ptr);
 
@@ -42,12 +42,14 @@ namespace mandala
 			static_cast<std::istream*>(png_io_ptr)->read(reinterpret_cast<char*>(data), length);
 		});
 
+        png_uint_32 sig_read = 0;
+
 		png_set_sig_bytes(png_ptr, sig_read);
 		png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_PACKING | PNG_TRANSFORM_EXPAND, nullptr);
 
-		int png_color_type = 0;
-
+        int png_color_type;
         png_int_32 interlace_method;
+
         png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &png_color_type, &interlace_method, nullptr, nullptr);
 
 		switch (png_color_type)
@@ -85,4 +87,15 @@ namespace mandala
 
 		png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
 	}
+
+    image_t::image_t(size_value_type width, size_value_type height, bit_depth_type bit_depth, color_type_e color_type, const data_type::iterator& data_begin, const data_type::iterator& data_end) :
+        width(width),
+        height(height),
+        bit_depth(bit_depth),
+        color_type(color_type)
+    {
+        data.reserve(std::distance(data_begin, data_end));
+
+        std::copy(data_begin, data_end, std::back_inserter(data));
+    }
 }

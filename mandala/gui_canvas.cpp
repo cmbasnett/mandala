@@ -41,9 +41,9 @@ namespace mandala
         gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
         gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
 
-        gpu.textures.bind(0, frame_buffer->color_texture);
+        gpu.textures.bind(0, frame_buffer->get_color_texture());
 
-        gpu.draw_elements(gpu_t::primitive_type_e::quads, 4, gpu_t::index_type_e::unsigned_byte, 0);
+        gpu.draw_elements(gpu_t::primitive_type_e::quads, 4, index_buffer_type::data_type, 0);
 
         gpu.textures.unbind(0);
 

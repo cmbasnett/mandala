@@ -16,6 +16,7 @@ namespace mandala
     struct string_mgr_t
     {
         typedef std::wstring string_type;
+        typedef std::string language_type;
 
         struct string_t
         {
@@ -24,7 +25,7 @@ namespace mandala
             uint32_t offset = 0;
 		};
 
-		typedef std::map<const hash_t, string_t> string_map_type;
+		typedef std::map<const hash_t, string_t> strings_type;
 
         std::string language = "en";
 
@@ -35,7 +36,7 @@ namespace mandala
     private:
         std::mutex mutex;
         std::vector<std::shared_ptr<std::istream>> streams;
-		std::map<std::string, string_map_type> language_strings;
+		std::map<language_type, strings_type> language_strings;
     };
 
 	extern string_mgr_t strings;

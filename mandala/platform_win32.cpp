@@ -309,16 +309,16 @@ namespace mandala
         return glfwWindowShouldClose(static_cast<GLFWwindow*>(window_ptr)) != 0;
 	}
 
-    vec2_i32_t platform_win32_t::get_screen_size() const
+    platform_t::screen_size_type platform_win32_t::get_screen_size() const
     {
-		vec2_i32_t screen_size;
+        platform_t::screen_size_type screen_size;
 
         glfwGetWindowSize(static_cast<GLFWwindow*>(window_ptr), &screen_size.x, &screen_size.y);
 
 		return screen_size;
     }
 	
-	void platform_win32_t::set_screen_size(const vec2_i32_t& screen_size) const
+	void platform_win32_t::set_screen_size(const screen_size_type& screen_size) const
 	{
         glfwSetWindowSize(static_cast<GLFWwindow*>(window_ptr), screen_size.x, screen_size.y);
 	}
@@ -355,16 +355,16 @@ namespace mandala
         return true;
     }
 
-	vec2_f64_t platform_win32_t::get_cursor_position() const
+	platform_t::cursor_position_type platform_win32_t::get_cursor_position() const
 	{
-		vec2_f64_t cursor_position;
+        cursor_position_type cursor_position;
 
         glfwGetCursorPos(static_cast<GLFWwindow*>(window_ptr), &cursor_position.x, &cursor_position.y);
 
 		return cursor_position;
 	}
 
-	void platform_win32_t::set_cursor_position(const vec2_f64_t& cursor_position) const
+	void platform_win32_t::set_cursor_position(const cursor_position_type& cursor_position) const
 	{
         glfwSetCursorPos(static_cast<GLFWwindow*>(window_ptr), cursor_position.x, cursor_position.y);
 	}
@@ -379,32 +379,32 @@ namespace mandala
         glfwSetInputMode(static_cast<GLFWwindow*>(window_ptr), GLFW_CURSOR, hide_position ? GLFW_CURSOR_HIDDEN : GLFW_CURSOR_NORMAL);
 	}
 
-	std::string platform_win32_t::get_window_title() const
+	platform_t::window_title_type platform_win32_t::get_window_title() const
 	{
 		//TODO: implement this
 		return std::string();
 	}
 
-	void platform_win32_t::set_window_title(const std::string& window_title) const
+	void platform_win32_t::set_window_title(const window_title_type& window_title) const
 	{
         glfwSetWindowTitle(static_cast<GLFWwindow*>(window_ptr), window_title.c_str());
 	}
 
-	vec2_i32_t platform_win32_t::get_window_size() const
+    platform_t::window_size_type platform_win32_t::get_window_size() const
 	{
-		vec2_i32_t window_size;
+        window_size_type window_size;
 
         glfwGetWindowSize(static_cast<GLFWwindow*>(window_ptr), &window_size.x, &window_size.y);
 
 		return window_size;
 	}
 
-	void platform_win32_t::set_window_size(const vec2_i32_t& window_size) const
+	void platform_win32_t::set_window_size(const window_size_type& window_size) const
 	{
         glfwSetWindowSize(static_cast<GLFWwindow*>(window_ptr), window_size.x, window_size.y);
 	}
 
-	vec2_i32_t platform_win32_t::get_window_position() const
+	platform_t::window_size_type platform_win32_t::get_window_position() const
 	{
 		vec2_i32_t window_position;
 
@@ -413,7 +413,7 @@ namespace mandala
 		return window_position;
 	}
 
-	void platform_win32_t::set_window_position(const vec2_i32_t& window_position) const
+	void platform_win32_t::set_window_position(const window_size_type& window_position) const
 	{
         glfwSetWindowPos(static_cast<GLFWwindow*>(window_ptr), window_position.x, window_position.y);
 	}

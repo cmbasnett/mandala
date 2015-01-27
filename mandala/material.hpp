@@ -40,15 +40,23 @@ namespace mandala
 
 		material_t(std::istream& istream);
 
-		bool is_two_sided = false;
-        bool is_lit = true;
-		diffuse_t diffuse;
-		normal_t normal;
-		specular_t specular;
-		emissive_t emissive;
+        const bool get_is_two_sided() const { return is_two_sided; }
+        const bool get_is_lit() const { return is_lit; }
+        const diffuse_t& get_diffuse() const { return diffuse; }
+        const normal_t& get_normal() const { return normal; }
+        const specular_t& get_specular() const { return specular; }
+        const emissive_t& get_emissive() const { return emissive; }
 
 	private:
+        bool is_two_sided = false;
+        bool is_lit = true;
+        diffuse_t diffuse;
+        normal_t normal;
+        specular_t specular;
+        emissive_t emissive;
+
 		material_t(const material_t&) = delete;
 		material_t& operator=(const material_t&) = delete;
+
 	};
 }

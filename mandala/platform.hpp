@@ -11,6 +11,8 @@ namespace mandala
 
 	struct platform_t
 	{
+        typedef vec2_i32_t screen_size_type;
+
 		//run
         virtual void app_run_start() = 0;
         virtual void app_run_end() = 0;
@@ -27,8 +29,8 @@ namespace mandala
         virtual bool should_exit() const = 0;
 
 		//screen_size
-        virtual vec2_i32_t get_screen_size() const = 0;
-		virtual void set_screen_size(const vec2_i32_t& screen_size) const = 0;
+        virtual screen_size_type get_screen_size() const = 0;
+		virtual void set_screen_size(const screen_size_type& screen_size) const = 0;
 
 		//pop_input_event
         virtual bool pop_input_event(input_event_t& input_event) = 0;

@@ -53,7 +53,7 @@ namespace mandala
 
             auto input_root_node = std::make_shared<gui_node_t>();
             input_root_node->set_dock_mode(gui_dock_mode_e::bottom);
-            input_root_node->set_size(vec2_t(0, resources.get<bitmap_font_t>(hash_t("inconsolata_12.fnt"))->line_height + 16)); //HACK: we don't have parent resizing yet
+            input_root_node->set_size(vec2_t(0, resources.get<bitmap_font_t>(hash_t("inconsolata_12.fnt"))->get_line_height() + 16)); //HACK: we don't have parent resizing yet
 			input_root_node->set_margin(padding_t(0, 2, 0, 2));
 
             auto input_background_image = std::make_shared<gui_image_t>();
@@ -100,6 +100,7 @@ namespace mandala
                     states.pop(shared_from_this());
 
                     input_event.is_consumed = true;
+
                     return;
                 case input_event_t::keyboard_t::key_e::up:
                     if (command_strings_itr != command_strings.end())
@@ -110,6 +111,7 @@ namespace mandala
                     }
 
                     input_event.is_consumed = true;
+
                     return;
                 case input_event_t::keyboard_t::key_e::down:
                     {
@@ -117,6 +119,7 @@ namespace mandala
                     }
 
                     input_event.is_consumed = true;
+
                     return;
                 case input_event_t::keyboard_t::key_e::enter:
                 case input_event_t::keyboard_t::key_e::kp_enter:
@@ -136,17 +139,17 @@ namespace mandala
 						command_strings.push_front(input_label->get_string());
 
 						typedef std::codecvt_utf8<wchar_t> convert_type;
-						std::wstring_convert<convert_type, wchar_t> converter;
+						std::wstring_convert<convert_type, wchar_t> wstring_convert;
 
 						try
 						{
-							const auto command = converter.to_bytes(input_label->get_string());
+							const auto command = wstring_convert.to_bytes(input_label->get_string());
 
 							python.exec(command);
 						}
 						catch (const std::exception& exception)
 						{
-							output_label_string.append(L"\n↑" + rgb_to_hex<wchar_t>(error_color) + converter.from_bytes(std::string(exception.what())) + L"↓");
+							output_label_string.append(L"\n↑" + rgb_to_hex<wchar_t>(error_color) + wstring_convert.from_bytes(std::string(exception.what())) + L"↓");
 						}
 
 						output_label->set_string(output_label_string);
@@ -167,6 +170,7 @@ namespace mandala
 					input_label->set_string(L"");
 
                     input_event.is_consumed = true;
+
                     return;
                 }
                 default:

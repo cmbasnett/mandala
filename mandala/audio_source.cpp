@@ -92,11 +92,15 @@ namespace mandala
 
 	void audio_source_t::queue_sound(const std::shared_ptr<sound_t>& sound)
 	{
-		alSourceQueueBuffers(_id, 1, &sound->buffer_id); alCheckError();
+        auto buffer_id = sound->get_buffer_id();
+
+		alSourceQueueBuffers(_id, 1, &buffer_id); alCheckError();
 	}
 
     void audio_source_t::unqueue_sound(const std::shared_ptr<sound_t>& sound)
 	{
-		alSourceUnqueueBuffers(_id, 1, &sound->buffer_id); alCheckError();
+        auto buffer_id = sound->get_buffer_id();
+
+		alSourceUnqueueBuffers(_id, 1, &buffer_id); alCheckError();
 	}
 }

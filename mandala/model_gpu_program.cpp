@@ -215,14 +215,14 @@ void main()
 		static const auto bone_weights_0_offset = reinterpret_cast<void*>(offsetof(vertex_type, bone_weights_0));
 		static const auto bone_weights_1_offset = reinterpret_cast<void*>(offsetof(vertex_type, bone_weights_1));
 
-		gpu.set_vertex_attrib_pointer(position_location, 3, gpu_t::data_type_e::float_, false, sizeof(vertex_type), position_offset);
-		gpu.set_vertex_attrib_pointer(normal_location, 3, gpu_t::data_type_e::float_, false, sizeof(vertex_type), normal_offset);
-		gpu.set_vertex_attrib_pointer(tangent_location, 3, gpu_t::data_type_e::float_, false, sizeof(vertex_type), tangent_offset);
-		gpu.set_vertex_attrib_pointer(texcoord_location, 2, gpu_t::data_type_e::float_, false, sizeof(vertex_type), texcoord_offset);
-		gpu.set_vertex_attrib_pointer(bone_indices_0_location, 4, gpu_t::data_type_e::int_, sizeof(vertex_type), bone_indices_0_offset);
-		gpu.set_vertex_attrib_pointer(bone_indices_1_location, 4, gpu_t::data_type_e::int_, sizeof(vertex_type), bone_indices_1_offset);
-		gpu.set_vertex_attrib_pointer(bone_weights_0_location, 4, gpu_t::data_type_e::float_, false, sizeof(vertex_type), bone_weights_0_offset);
-		gpu.set_vertex_attrib_pointer(bone_weights_1_location, 4, gpu_t::data_type_e::float_, false, sizeof(vertex_type), bone_weights_1_offset);
+		gpu.set_vertex_attrib_pointer(position_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), position_offset);
+		gpu.set_vertex_attrib_pointer(normal_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), normal_offset);
+		gpu.set_vertex_attrib_pointer(tangent_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), tangent_offset);
+		gpu.set_vertex_attrib_pointer(texcoord_location, 2, gpu_data_type_e::float_, false, sizeof(vertex_type), texcoord_offset);
+		gpu.set_vertex_attrib_pointer(bone_indices_0_location, 4, gpu_data_type_e::int_, sizeof(vertex_type), bone_indices_0_offset);
+		gpu.set_vertex_attrib_pointer(bone_indices_1_location, 4, gpu_data_type_e::int_, sizeof(vertex_type), bone_indices_1_offset);
+		gpu.set_vertex_attrib_pointer(bone_weights_0_location, 4, gpu_data_type_e::float_, false, sizeof(vertex_type), bone_weights_0_offset);
+		gpu.set_vertex_attrib_pointer(bone_weights_1_location, 4, gpu_data_type_e::float_, false, sizeof(vertex_type), bone_weights_1_offset);
 	}
 
 	void model_gpu_program_t::on_unbind()

@@ -12,12 +12,12 @@ namespace mandala
     {
         bsp_entity_t(const std::string& string);
 
-		const std::string& classname() const { return _classname; }
+		const std::string& get_classname() const { return classname; }
 
         template<typename T = std::string>
         T get(const std::string& key) const
         {
-			return boost::lexical_cast<T>(_properties.at(key));
+			return boost::lexical_cast<T>(properties.at(key));
         }
 
         template<typename T = std::string>
@@ -25,9 +25,9 @@ namespace mandala
         {
 			boost::optional<T> property = boost::none;
 
-            auto properties_itr = _properties.find(key);
+            auto properties_itr = properties.find(key);
 
-			if (properties_itr != _properties.end())
+			if (properties_itr != properties.end())
             {
                 try
                 {
@@ -42,7 +42,7 @@ namespace mandala
         }
 
     private:
-        std::map<std::string, std::string> _properties;
-		std::string _classname;
+        std::map<std::string, std::string> properties;
+		std::string classname;
     };
 }

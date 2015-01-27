@@ -11,16 +11,17 @@
 #include "rectangle.hpp"
 #include "index_type.hpp"
 #include "gpu_defs.hpp"
+#include "color_types.hpp"
 
 //boost
 #include <boost\optional.hpp>
 
 namespace mandala
 {
-	struct gpu_program_t;
-	struct frame_buffer_t;
-	struct texture_t;
+    struct frame_buffer_t;
     struct gpu_buffer_t;
+	struct gpu_program_t;
+	struct texture_t;
 
     struct gpu_t
 	{
@@ -65,13 +66,6 @@ namespace mandala
             quad_strip,
             polygon
         };
-
-        enum class index_type_e
-        {
-            unsigned_byte,
-            unsigned_short,
-            unsigned_int
-		};
 
 		enum class blend_factor_e
 		{
@@ -168,44 +162,11 @@ namespace mandala
             invert
         };
 
-		enum class data_type_e
-		{
-			byte,
-			unsigned_byte,
-			short_,
-			unsigned_short,
-			int_,
-			unsigned_int,
-			float_,
-			double_
-		};
-
-        template<typename T>
-        struct data_type_;
-
-        template<>
-        struct data_type_<uint8_t>
+        enum class shader_type_e
         {
-            static const data_type_e value = data_type_e::unsigned_byte;
+            fragment,
+            vertex
         };
-
-        template<>
-        struct data_type_<uint16_t>
-        {
-            static const data_type_e value = data_type_e::unsigned_short;
-        };
-
-        template<>
-        struct data_type_<uint32_t>
-        {
-            static const data_type_e value = data_type_e::unsigned_int;
-        };
-
-		enum class shader_type_e
-		{
-			fragment,
-			vertex
-		};
 
 		//programs
         struct program_mgr_t
@@ -268,8 +229,8 @@ namespace mandala
             typedef std::shared_ptr<gpu_buffer_t> buffer_type;
 
             void push(buffer_target_e target, buffer_type buffer);
-			buffer_type top(buffer_target_e target);
             buffer_type pop(buffer_target_e target);
+            buffer_type top(buffer_target_e target) const;
             void data(buffer_target_e target, const void* data, size_t size, buffer_usage_e usage);
 
         private:
@@ -394,7 +355,7 @@ namespace mandala
             void apply_state(const state_t& state);
         } color;
 
-		void draw_elements(primitive_type_e primitive_type, size_t count, index_type_e index_type, size_t offset) const;
+		void draw_elements(primitive_type_e primitive_type, size_t count, gpu_data_type_e index_data_type, size_t offset) const;
 
 		gpu_id_t create_program(const std::string& vertex_shader_source, const std::string& fragment_shader_source) const;
 		void destroy_program(gpu_id_t id);
@@ -406,13 +367,16 @@ namespace mandala
 		gpu_id_t create_frame_buffer(gpu_frame_buffer_type_e type, gpu_frame_buffer_size_type::value_type width, gpu_frame_buffer_size_type::value_type height, std::shared_ptr<texture_t>& color_texture, std::shared_ptr<texture_t>& depth_stencil_texture, std::shared_ptr<texture_t>& depth_texture);
 		void destroy_frame_buffer(gpu_id_t id);
 
+        gpu_id_t create_texture(color_type_e color_type, uint32_t width, uint32_t height, const void* data);
+        void destroy_texture(gpu_id_t id);
+
 		gpu_location_t get_uniform_location(gpu_id_t program_id, const std::string& name);
 		gpu_location_t get_attribute_location(gpu_id_t program_id, const std::string& name);
 
 		void enable_vertex_attribute_array(gpu_location_t location);
 		void disable_vertex_attribute_array(gpu_location_t location);
-		void set_vertex_attrib_pointer(gpu_location_t location, int32_t size, data_type_e data_type, bool is_normalized, int32_t stride, const void* pointer);
-		void set_vertex_attrib_pointer(gpu_location_t location, int32_t size, data_type_e data_type, int32_t stride, const void* pointer);
+		void set_vertex_attrib_pointer(gpu_location_t location, int32_t size, gpu_data_type_e data_type, bool is_normalized, int32_t stride, const void* pointer);
+		void set_vertex_attrib_pointer(gpu_location_t location, int32_t size, gpu_data_type_e data_type, int32_t stride, const void* pointer);
 		void set_uniform(gpu_location_t location, const mat3_t& value, bool should_tranpose);
 		void set_uniform(gpu_location_t location, const mat4_t& value, bool should_tranpose);
 		void set_uniform(gpu_location_t location, int32_t value);

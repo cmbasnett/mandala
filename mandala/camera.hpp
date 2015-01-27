@@ -15,9 +15,6 @@ namespace mandala
 			perspective
 		};
 
-		vec4_t viewport;
-        mat4_t view_matrix;
-        mat4_t projection_matrix;
 		float32_t near = 0.5f;
 		float32_t far = 1024.0f;
 		float32_t aspect = 0.0f;
@@ -25,13 +22,21 @@ namespace mandala
 		float32_t roll = 0.0f;
         vec3_t position;
         vec3_t target;
-		frustum_t frustum;
         projection_type_e projection_type = projection_type_e::perspective;
 
 		virtual void tick(float32_t dt);
 
 		line3_t get_ray(vec2_f64_t screen_location) const;
 
+        const mat4_t& get_view_matrix() const { return view_matrix; }
+        const mat4_t& get_projection_matrix() const { return projection_matrix; }
+        const frustum_t& get_frustum() const { return frustum; }
+
 		camera_t();
+
+    private:
+        mat4_t view_matrix;
+        mat4_t projection_matrix;
+        frustum_t frustum;
 	};
 }

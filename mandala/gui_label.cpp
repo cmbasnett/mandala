@@ -126,8 +126,8 @@ namespace mandala
             _selection_vertex_buffer->data(vertices, gpu_t::buffer_usage_e::static_draw);
         }
 
-        _cursor.begin = _string.begin();
-        _cursor.end = _string.end();
+        _cursor.string_begin = _string.begin();
+        _cursor.string_end = _string.end();
         _cursor.time_point = cursor_data_t::clock_type::now();
     }
 
@@ -151,7 +151,7 @@ namespace mandala
 
     gui_label_t::line_height_type gui_label_t::get_line_height() const
     {
-        return _bitmap_font->line_height + _line_spacing;
+        return _bitmap_font->get_line_height() + _line_spacing;
     }
 
     size_t gui_label_t::get_line_count() const
@@ -177,9 +177,6 @@ namespace mandala
 
         gui_node_t::clean();
 
-        _lines.clear();
-        _render_base_translation = vec2_t(0);
-
         if (_bitmap_font == nullptr)
         {
             throw std::exception();
@@ -189,20 +186,21 @@ namespace mandala
         const auto padded_size = (bounds() - padding()).size();
         const auto line_height = get_line_height();
 
+        _lines.clear();
+
         while (string_itr != _string.end())
         {
             bool will_overflow = (_lines.size() + 1) * line_height > padded_size.y;
 
             if (will_overflow || (!_is_multiline && !_lines.empty()))
             {
-                auto& line_string = _lines.back().render_string;
-
                 //adding another line would exceed maximum height or line count
+                auto& line_string = _lines.back().render_string;
 
                 if (_should_use_ellipses && !_lines.empty() && !line_string.empty())
                 {
                     //attempt to add ellipses to the end of the last line
-                    const auto ellipse_width = _bitmap_font->characters.at(ellipse_character).advance_x;
+                    const auto ellipse_width = _bitmap_font->get_characters().at(ellipse_character).advance_x;
                     const auto ellipse_count = glm::min(static_cast<decltype(ellipse_width)>(padded_size.x) / ellipse_width, ellipses_max);
                     auto width = 0;
 
@@ -211,7 +209,7 @@ namespace mandala
                     //travel backwards from the end and calculate what part of the string will be replaced with ellipses
                     while (string_reverse_itr != line_string.rend())
                     {
-                        width += _bitmap_font->characters.at(*string_reverse_itr).advance_x;
+                        width += _bitmap_font->get_characters().at(*string_reverse_itr).advance_x;
 
                         if (width >= (ellipse_count * ellipse_width))
                         {
@@ -251,7 +249,7 @@ namespace mandala
                             //determine how many characters to erase
                             auto erase_count = std::min(std::distance(string_itr, string.end()), rgb_hex_string_length);
 
-                            if (erase_count >= 6)
+                            if (erase_count == rgb_hex_string_length)
                             {
                                 //try to parse a hex color from string
                                 string_type hex_string = { string_itr, string_itr + rgb_hex_string_length };
@@ -300,7 +298,7 @@ namespace mandala
 
                 while (string_itr != string.end())
                 {
-                    if (_bitmap_font->characters.find(*string_itr) == _bitmap_font->characters.end())
+                    if (_bitmap_font->get_characters().find(*string_itr) == _bitmap_font->get_characters().end())
                     {
                         string.replace(string_itr, string_itr + 1, 1, fallback_character);
                     }
@@ -312,20 +310,38 @@ namespace mandala
             auto add_line = [&](string_itr_type string_begin, string_itr_type string_end)
             {
                 line_t line;
+                line.string_begin = string_begin;
+                line.string_end = string_end;
+
                 string_type render_string = { string_begin, string_end };
 
                 //strip color codes from string
-                if (should_use_color_codes())
+                if (_should_use_color_codes)
                 {
                     parse_color_codes(render_string, line.colors_pushes, line.color_pop_indices);
                 }
 
                 replace_unrecognized_characters(render_string);
 
-                line.string_begin = string_begin;
-                line.string_end = string_end;
+                auto render_string_width = _bitmap_font->get_string_width(render_string);
+
                 line.render_string = render_string;
-                line.width = _bitmap_font->get_string_width(render_string);
+                line.rectangle.width = render_string_width;
+                line.rectangle.height = _bitmap_font->get_line_height();
+                line.rectangle.x = 0;
+                line.rectangle.y = static_cast<float32_t>(_lines.size()) * -get_line_height();
+
+                switch (_justification)
+                {
+                case justification_e::center:
+                    line.rectangle.x -= render_string_width / 2;
+                    break;
+                case justification_e::right:
+                    line.rectangle.x -= render_string_width;
+                    break;
+                default:
+                    break;
+                }
 
                 _lines.emplace_back(line);
 
@@ -339,6 +355,12 @@ namespace mandala
                     add_line(string_begin, string_itr);
 
                     ++string_itr;
+
+                    if (string_itr == _string.end())
+                    {
+                        //add empty line
+                        add_line(string_itr, string_itr);
+                    }
 
                     break;
                 }
@@ -364,7 +386,7 @@ namespace mandala
                         }
                         else if (*string_itr != color_push_character<string_type::value_type>::value)
                         {
-                            string_itr += std::min(std::distance(string_itr, _string.end()), 6);
+                            string_itr += std::min(std::distance(string_itr, _string.end()), rgb_hex_string_length);
 
                             continue;
                         }
@@ -387,11 +409,11 @@ namespace mandala
 
                 uint16_t character_id = *string_itr;
 
-                auto characters_itr = _bitmap_font->characters.find(character_id);
+                auto characters_itr = _bitmap_font->get_characters().find(character_id);
 
                 string_type::value_type character;
 
-                if (characters_itr == _bitmap_font->characters.end())
+                if (characters_itr == _bitmap_font->get_characters().end())
                 {
                     character = fallback_character;
                 }
@@ -400,7 +422,7 @@ namespace mandala
                     character = *string_itr;
                 }
 
-                character_width = _bitmap_font->characters.at(character).advance_x;
+                character_width = _bitmap_font->get_characters().at(character).advance_x;
 
                 if (line_width + character_width > padded_size.x)
                 {
@@ -427,27 +449,31 @@ namespace mandala
 
         if (_lines.empty())
         {
+            //HACK: if no lines, add one in so that the cursor can draw on empty lines
+            //TODO: consolidate this with the normal add_line function
             line_t line;
             line.string_begin = _string.begin();
             line.string_end = _string.end();
+            line.rectangle.height = _bitmap_font->get_line_height();
+
             _lines.emplace_back(line);
         }
 
-        //calculate render base translation
-        _render_base_translation = bounds().min;
-        _render_base_translation.x += padding().left;
-        _render_base_translation.y += padding().bottom;
+        //calculate base translation
+        auto base_translation = bounds().min;
+        base_translation.x += padding().left;
+        base_translation.y += padding().bottom;
 
         switch (_vertical_alignment)
         {
         case vertical_alignment_e::top:
-            _render_base_translation.y += padded_size.y - _bitmap_font->base;
+            base_translation.y += padded_size.y - _bitmap_font->get_base();
             break;
         case vertical_alignment_e::middle:
-            _render_base_translation.y += (padded_size.y / 2) - (_bitmap_font->base / 2) + ((line_height * (_lines.size() - 1)) / 2);
+            base_translation.y += (padded_size.y / 2) - (_bitmap_font->get_base() / 2) + ((line_height * (_lines.size() - 1)) / 2);
             break;
         case vertical_alignment_e::bottom:
-            _render_base_translation.y += (line_height * _lines.size()) - _bitmap_font->base;
+            base_translation.y += (line_height * _lines.size()) - _bitmap_font->get_base();
             break;
         default:
             break;
@@ -456,14 +482,23 @@ namespace mandala
         switch (_justification)
         {
         case justification_e::center:
-            _render_base_translation.x += padded_size.x / 2;
+            base_translation.x += padded_size.x / 2;
             break;
         case justification_e::right:
-            _render_base_translation.x += padded_size.x;
+            base_translation.x += padded_size.x;
             break;
         default:
             break;
         }
+
+        //add base translation to all line rectangles
+        for (auto& line : _lines)
+        {
+            line.rectangle.x += base_translation.x;
+            line.rectangle.y += base_translation.y;
+        }
+
+        update_cursor();
     }
 
     void gui_label_t::render_override(mat4_t world_matrix, mat4_t view_projection_matrix)
@@ -473,75 +508,44 @@ namespace mandala
             throw std::exception("bitmap font not set");
         }
 
-        const auto line_height = get_line_height();
-        auto base_translation = _render_base_translation;
-
         std::stack<rgba_type> color_stack;
 
         for (const auto& line : _lines)
         {
-            bool is_cursor_on_line = _cursor.begin >= line.string_begin && _cursor.begin <= line.string_end;
-
-            auto translation = base_translation;
-
-            switch (_justification)
-            {
-            case justification_e::center:
-                translation.x -= line.width / 2;
-                break;
-            case justification_e::right:
-                translation.x -= line.width;
-                break;
-            default:
-                break;
-            }
-
-            const auto line_world_matrix = world_matrix * glm::translate(translation.x, translation.y, 0.0f);
-
-            //cursor
-            if (!is_read_only() && is_cursor_on_line)
-            {
-                bool should_show_cursor = ((_cursor.time_point - std::chrono::system_clock::now()).count() / (std::chrono::system_clock::period::den / 2)) % 2 == 0;
-
-                if (should_show_cursor)
-                {
-                    string_type line_string = { line.string_begin, _cursor.begin };	//TODO: should not do this every render, only when cursor is invalidated?
-                    float32_t x = _bitmap_font->get_string_width(line_string);
-
-                    gpu.buffers.push(gpu_t::buffer_target_e::array, _cursor_vertex_buffer);
-                    gpu.buffers.push(gpu_t::buffer_target_e::element_array, _cursor_index_buffer);
-
-                    auto cursor_world_matrix = line_world_matrix;
-
-                    cursor_world_matrix *= glm::translate(0.0f, static_cast<float32_t>(_bitmap_font->base - _bitmap_font->line_height), 0.0f);
-                    cursor_world_matrix *= glm::scale(1.0f, static_cast<float32_t>(line_height), 1.0f);
-                    cursor_world_matrix *= glm::translate(x, 0.0f, 0.0f);
-
-                    const auto& gpu_program = gpu_programs.get<basic_gpu_program_t>();
-
-                    gpu.programs.push(gpu_program);
-
-                    gpu_program->world_matrix(cursor_world_matrix);
-                    gpu_program->view_projection_matrix(view_projection_matrix);
-
-                    gpu.draw_elements(gpu_t::primitive_type_e::lines, 2, gpu_t::index_type_e::unsigned_byte, 0);
-
-                    gpu.programs.pop();
-
-                    gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
-                    gpu.buffers.pop(gpu_t::buffer_target_e::array);
-                }
-            }
-
-            //selection
-            if (_cursor.begin != _cursor.end)
-            {
-                //TODO: figure out how to draw the selection box when it's not 7:06AM
-            }
+            const auto line_world_matrix = world_matrix * glm::translate(line.rectangle.x, line.rectangle.y, 0.0f);
 
             _bitmap_font->render_string(line.render_string, line_world_matrix, view_projection_matrix, color(), color_stack, line.colors_pushes, line.color_pop_indices);
+        }
 
-            base_translation.y -= line_height;
+        //render cursor
+        if (!is_read_only())
+        {
+            bool should_show_cursor = ((_cursor.time_point - cursor_data_t::clock_type::now()).count() / (cursor_data_t::clock_type::period::den / 2)) % 2 == 0;
+
+            if (should_show_cursor)
+            {
+                gpu.buffers.push(gpu_t::buffer_target_e::array, _cursor_vertex_buffer);
+                gpu.buffers.push(gpu_t::buffer_target_e::element_array, _cursor_index_buffer);
+
+                auto cursor_world_matrix = world_matrix;
+
+                cursor_world_matrix *= glm::translate(_cursor.rectangle.x, _cursor.rectangle.y + static_cast<float32_t>(_bitmap_font->get_base() - _bitmap_font->get_line_height()), 0.0f);
+                cursor_world_matrix *= glm::scale(1.0f, static_cast<float32_t>(get_line_height()), 1.0f);
+
+                const auto& gpu_program = gpu_programs.get<basic_gpu_program_t>();
+
+                gpu.programs.push(gpu_program);
+
+                gpu_program->world_matrix(cursor_world_matrix);
+                gpu_program->view_projection_matrix(view_projection_matrix);
+
+                gpu.draw_elements(gpu_t::primitive_type_e::lines, 2, index_buffer_type::data_type, 0);
+
+                gpu.programs.pop();
+
+                gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
+                gpu.buffers.pop(gpu_t::buffer_target_e::array);
+            }
         }
 
         gui_node_t::render_override(world_matrix, view_projection_matrix);
@@ -549,7 +553,7 @@ namespace mandala
 
     void gui_label_t::on_input_event(input_event_t& input_event)
     {
-        std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
+        std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> wstring_convert;
 
         if (input_event.device_type == input_event_t::device_type_e::touch &&
             input_event.touch.type == input_event_t::touch_t::type_e::press)
@@ -576,19 +580,17 @@ namespace mandala
                             break;
                         }
 
-                        if (_cursor.begin != _cursor.end)
+                        if (_cursor.string_begin != _cursor.string_end)
                         {
-                            _cursor.begin = _string.erase(_cursor.begin, _cursor.end);
-                            _cursor.end = _cursor.begin;
-                            _cursor.time_point = cursor_data_t::clock_type::now();
+                            _cursor.string_begin = _string.erase(_cursor.string_begin, _cursor.string_end);
+                            _cursor.string_end = _cursor.string_begin;
 
                             dirty();
                         }
-                        else if (_cursor.begin > _string.begin())
+                        else if (_cursor.string_begin > _string.begin())
                         {
-                            _cursor.begin = _string.erase(_cursor.begin - 1);
-                            _cursor.end = _cursor.begin;
-                            _cursor.time_point = cursor_data_t::clock_type::now();
+                            _cursor.string_begin = _string.erase(_cursor.string_begin - 1);
+                            _cursor.string_end = _cursor.string_begin;
 
                             dirty();
                         }
@@ -600,9 +602,8 @@ namespace mandala
                     case input_event_t::keyboard_t::key_e::enter:
                     case input_event_t::keyboard_t::key_e::kp_enter:
                     {
-                        _cursor.begin = _string.insert(_cursor.begin, L'\n') + 1;
-                        _cursor.end = _cursor.begin;
-                        _cursor.time_point = cursor_data_t::clock_type::now();
+                        _cursor.string_begin = _string.insert(_cursor.string_begin, L'\n') + 1;
+                        _cursor.string_end = _cursor.string_begin;
 
                         dirty();
 
@@ -617,20 +618,20 @@ namespace mandala
                         //on during some sort of cleaning phase?
                         for (auto& line : _lines)
                         {
-                            if (_cursor.begin >= line.string_begin && _cursor.begin <= line.string_end)
+                            if (_cursor.string_begin >= line.string_begin && _cursor.string_begin <= line.string_end)
                             {
                                 if (input_event.keyboard.mod_flags == input_event_t::mod_flag_shift)
                                 {
-                                    _cursor.end = _cursor.begin;
-                                    _cursor.begin = line.string_begin;
+                                    _cursor.string_end = _cursor.string_begin;
+                                    _cursor.string_begin = line.string_begin;
                                 }
                                 else
                                 {
-                                    _cursor.begin = line.string_begin;
-                                    _cursor.end = _cursor.begin;
+                                    _cursor.string_begin = line.string_begin;
+                                    _cursor.string_end = _cursor.string_begin;
                                 }
 
-                                _cursor.time_point = cursor_data_t::clock_type::now();
+                                update_cursor();
 
                                 break;
                             }
@@ -645,19 +646,19 @@ namespace mandala
                         //on during some sort of cleaning phase?
                         for (auto& line : _lines)
                         {
-                            if (_cursor.begin >= line.string_begin && _cursor.begin <= line.string_end)
+                            if (_cursor.string_begin >= line.string_begin && _cursor.string_begin <= line.string_end)
                             {
                                 if (input_event.keyboard.mod_flags == input_event_t::mod_flag_shift)
                                 {
-                                    _cursor.end = line.string_end;
+                                    _cursor.string_end = line.string_end;
                                 }
                                 else
                                 {
-                                    _cursor.begin = line.string_end;
-                                    _cursor.end = _cursor.begin;
+                                    _cursor.string_begin = line.string_end;
+                                    _cursor.string_end = _cursor.string_begin;
                                 }
 
-                                _cursor.time_point = cursor_data_t::clock_type::now();
+                                update_cursor();
 
                                 break;
                             }
@@ -667,9 +668,16 @@ namespace mandala
                     }
                     case input_event_t::keyboard_t::key_e::del:
                     {
-                        _cursor.begin = _string.erase(_cursor.begin);
-                        _cursor.end = _cursor.begin;
-                        _cursor.time_point = cursor_data_t::clock_type::now();
+                        if (_cursor.string_begin != _cursor.string_end)
+                        {
+                            _cursor.string_begin = _string.erase(_cursor.string_begin, _cursor.string_end);
+                        }
+                        else
+                        {
+                            _cursor.string_begin = _string.erase(_cursor.string_begin);
+                        }
+
+                        _cursor.string_end = _cursor.string_begin;
 
                         dirty();
 
@@ -679,32 +687,32 @@ namespace mandala
                     }
                     case input_event_t::keyboard_t::key_e::left:
                     {
-                        if (_cursor.begin != _string.begin())
+                        if (_cursor.string_begin != _string.begin())
                         {
-                            --_cursor.begin;
+                            --_cursor.string_begin;
 
                             if (input_event.keyboard.mod_flags != input_event_t::mod_flag_shift)
                             {
-                                _cursor.end = _cursor.begin;
+                                _cursor.string_end = _cursor.string_begin;
                             }
 
-                            _cursor.time_point = cursor_data_t::clock_type::now();
+                            update_cursor();
                         }
 
                         break;
                     }
                     case input_event_t::keyboard_t::key_e::right:
                     {
-                        if (_cursor.begin < _string.end())
+                        if (_cursor.string_begin < _string.end())
                         {
-                            _cursor.end = _cursor.begin + 1;
+                            _cursor.string_end = _cursor.string_begin + 1;
 
                             if (input_event.keyboard.mod_flags != input_event_t::mod_flag_shift)
                             {
-                                _cursor.begin = _cursor.end;
+                                _cursor.string_begin = _cursor.string_end;
                             }
 
-                            _cursor.time_point = cursor_data_t::clock_type::now();
+                            update_cursor();
                         }
 
                         break;
@@ -724,11 +732,10 @@ namespace mandala
                     case input_event_t::keyboard_t::key_e::v:
                         if (input_event.keyboard.mod_flags == input_event_t::mod_flag_ctrl)
                         {
-                            const auto clipboard_string = converter.from_bytes(platform.get_clipboard_string().c_str());
+                            const auto clipboard_string = wstring_convert.from_bytes(platform.get_clipboard_string().c_str());
 
-                            _cursor.begin = _string.insert(_cursor.begin, clipboard_string.begin(), clipboard_string.end()) + clipboard_string.size();
-                            _cursor.end = _cursor.begin;
-                            _cursor.time_point = cursor_data_t::clock_type::now();
+                            _cursor.string_begin = _string.insert(_cursor.string_begin, clipboard_string.begin(), clipboard_string.end()) + clipboard_string.size();
+                            _cursor.string_end = _cursor.string_begin;
 
                             dirty();
 
@@ -738,8 +745,8 @@ namespace mandala
                     case input_event_t::keyboard_t::key_e::c:
                         if (input_event.keyboard.mod_flags == input_event_t::mod_flag_ctrl)
                         {
-                            string_type string = { _cursor.begin, _cursor.end };
-                            platform.set_clipboard_string(converter.to_bytes(string.c_str()));
+                            string_type string = { _cursor.string_begin, _cursor.string_end };
+                            platform.set_clipboard_string(wstring_convert.to_bytes(string.c_str()));
 
                             input_event.is_consumed = true;
                         }
@@ -748,12 +755,11 @@ namespace mandala
                     {
                         if (input_event.keyboard.mod_flags == input_event_t::mod_flag_ctrl)
                         {
-                            string_type string = { _cursor.begin, _cursor.end };
-                            platform.set_clipboard_string(converter.to_bytes(string.c_str()));
+                            string_type string = { _cursor.string_begin, _cursor.string_end };
+                            platform.set_clipboard_string(wstring_convert.to_bytes(string.c_str()));
 
-                            _cursor.begin = _string.erase(_cursor.begin, _cursor.end);
-                            _cursor.end = _cursor.begin;
-                            _cursor.time_point = cursor_data_t::clock_type::now();
+                            _cursor.string_begin = _string.erase(_cursor.string_begin, _cursor.string_end);
+                            _cursor.string_end = _cursor.string_begin;
 
                             dirty();
 
@@ -765,8 +771,10 @@ namespace mandala
                     {
                         if (input_event.keyboard.mod_flags == input_event_t::mod_flag_ctrl)
                         {
-                            _cursor.begin = _string.begin();
-                            _cursor.end = _string.end();
+                            _cursor.string_begin = _string.begin();
+                            _cursor.string_end = _string.end();
+
+                            update_cursor();
 
                             input_event.is_consumed = true;
                         }
@@ -778,20 +786,39 @@ namespace mandala
                 }
                 else if (input_event.keyboard.type == input_event_t::keyboard_t::type_e::character)
                 {
-                    if (_cursor.begin != _cursor.end)
+                    if (_cursor.string_begin != _cursor.string_end)
                     {
-                        _cursor.begin = _string.erase(_cursor.begin, _cursor.end);
+                        _cursor.string_begin = _string.erase(_cursor.string_begin, _cursor.string_end);
                     }
 
-                    _cursor.begin = _string.insert(_cursor.begin, input_event.keyboard.character);
-                    _cursor.end = ++_cursor.begin;
-                    _cursor.time_point = cursor_data_t::clock_type::now();
-
-                    input_event.is_consumed = true;
+                    _cursor.string_begin = _string.insert(_cursor.string_begin, input_event.keyboard.character);
+                    _cursor.string_end = ++_cursor.string_begin;
 
                     dirty();
+                    
+                    input_event.is_consumed = true;
                 }
             }
         }
+    }
+
+    void gui_label_t::update_cursor()
+    {
+        for (const auto& line : _lines)
+        {
+            bool a = (_cursor.string_begin >= line.string_begin);
+            bool b = (_cursor.string_begin <= line.string_end);
+            bool is_cursor_on_line = (a && b);
+
+            if (is_cursor_on_line)
+            {
+                _cursor.rectangle.x = line.rectangle.x + _bitmap_font->get_string_width({ line.string_begin, _cursor.string_begin });
+                _cursor.rectangle.y = line.rectangle.y;
+                _cursor.rectangle.height = _bitmap_font->get_line_height();
+                _cursor.rectangle.width = 1;
+            }
+        }
+
+        _cursor.time_point = cursor_data_t::clock_type::now();
     }
 }

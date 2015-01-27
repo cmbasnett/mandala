@@ -274,7 +274,7 @@ namespace mandala
             //culling
             auto culling_state = gpu.culling.get_state();
 
-            culling_state.is_enabled = !mesh->material->is_two_sided;
+            culling_state.is_enabled = !mesh->material->get_is_two_sided();
 
             gpu.culling.push_state(culling_state);
 
@@ -291,7 +291,7 @@ namespace mandala
             gpu_program->bone_matrices(bone_matrices);
             gpu_program->light_position(light_position);
             gpu_program->camera_position(camera_position);
-            gpu_program->is_lit(mesh->material->is_lit);
+            gpu_program->is_lit(mesh->material->get_is_lit());
 
             mesh->render(world_matrix, view_projection_matrix, bone_matrices);
 
@@ -321,7 +321,7 @@ namespace mandala
         if (material != nullptr)
         {
             //diffuse
-            const auto& diffuse = material->diffuse;
+            const auto& diffuse = material->get_diffuse();
 
             //texture
             gpu.textures.bind(diffuse_texture_index, diffuse.texture);
@@ -330,7 +330,7 @@ namespace mandala
             gpu_program->diffuse_color(diffuse.color);
 
             //normal
-            const auto& normal = material->normal;
+            const auto& normal = material->get_normal();
 
             //texture
             gpu.textures.bind(normal_texture_index, normal.texture);
@@ -338,7 +338,7 @@ namespace mandala
             gpu_program->normal_texture_index(normal_texture_index);
 
             //specular
-            auto& specular = material->specular;
+            auto& specular = material->get_specular();
 
             gpu.textures.bind(specular_texture_index, specular.texture);
 
@@ -347,7 +347,7 @@ namespace mandala
             gpu_program->specular_intensity(specular.intensity);
 
             //emissive
-            auto& emissive = material->emissive;
+            const auto& emissive = material->get_emissive();
 
             //texture
             gpu.textures.bind(emissive_texture_index, emissive.texture);
@@ -357,7 +357,7 @@ namespace mandala
             gpu_program->emissive_intensity(emissive.intensity);
         }
 
-        gpu.draw_elements(gpu_t::primitive_type_e::triangles, index_count, gpu_t::index_type_e::unsigned_short, 0);
+        gpu.draw_elements(gpu_t::primitive_type_e::triangles, index_count, index_buffer_type::data_type, 0);
 
         //unbind textures
         gpu.textures.unbind(emissive_texture_index);

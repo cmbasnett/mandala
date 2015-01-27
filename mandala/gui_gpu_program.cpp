@@ -63,8 +63,8 @@ void main()
 		gpu.enable_vertex_attribute_array(position_location);
 		gpu.enable_vertex_attribute_array(texcoord_location);
 
-		gpu.set_vertex_attrib_pointer(position_location, 2, gpu_t::data_type_e::float_, false, sizeof(vertex_type), position_offset);
-		gpu.set_vertex_attrib_pointer(texcoord_location, 2, gpu_t::data_type_e::float_, false, sizeof(vertex_type), texcoord_offset);
+		gpu.set_vertex_attrib_pointer(position_location, 2, gpu_data_type_e::float_, false, sizeof(vertex_type), position_offset);
+		gpu.set_vertex_attrib_pointer(texcoord_location, 2, gpu_data_type_e::float_, false, sizeof(vertex_type), texcoord_offset);
 
 		//uniforms
 	}

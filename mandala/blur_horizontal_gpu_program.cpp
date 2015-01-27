@@ -68,8 +68,8 @@ void main()
 		gpu.enable_vertex_attribute_array(position_location);
 		gpu.enable_vertex_attribute_array(texcoord_location);
 
-		gpu.set_vertex_attrib_pointer(position_location, 2, gpu_t::data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, position)));
-		gpu.set_vertex_attrib_pointer(texcoord_location, 2, gpu_t::data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, texcoord)));
+		gpu.set_vertex_attrib_pointer(position_location, 2, gpu_data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, position)));
+		gpu.set_vertex_attrib_pointer(texcoord_location, 2, gpu_data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, texcoord)));
 	}
 
 	void blur_horizontal_gpu_program_t::on_unbind()

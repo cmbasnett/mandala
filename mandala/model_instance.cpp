@@ -56,7 +56,7 @@ namespace mandala
 			//return;
 		//}
 
-		auto view_projection_matrix = camera.projection_matrix * camera.view_matrix;
+        auto view_projection_matrix = camera.get_projection_matrix() * camera.get_view_matrix();
 
 		model->render(camera.position, world_matrix, view_projection_matrix, bone_matrices, light_position);
 	}

@@ -48,12 +48,12 @@ namespace mandala
 
 	line3_t camera_t::get_ray(vec2_f64_t screen_location) const
 	{
-		//todo: swap screen_location.y before we get here?
-		screen_location.y = viewport.w - screen_location.y;
+		//TODO: where are we getting this viewport from?
+		//screen_location.y = viewport.w - screen_location.y;
 
 		line3_t ray;
-        ray.start = glm::unProject(vec3_t(screen_location, 0), view_matrix, projection_matrix, viewport);
-        ray.end = glm::unProject(vec3_t(screen_location, 1), view_matrix, projection_matrix, viewport);
+        //ray.start = glm::unProject(vec3_t(screen_location, 0), view_matrix, projection_matrix, viewport);
+        //ray.end = glm::unProject(vec3_t(screen_location, 1), view_matrix, projection_matrix, viewport);
 
 		return ray;
 	}

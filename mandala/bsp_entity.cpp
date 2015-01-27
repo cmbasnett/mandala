@@ -26,11 +26,11 @@ namespace mandala
 
 			if (key == "classname")
 			{
-				_classname = value;
+				classname = value;
 			}
 			else
 			{
-				_properties.insert(std::make_pair(key, value));
+				properties.insert(std::make_pair(key, value));
 			}
         }
     }

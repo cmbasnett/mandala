@@ -56,8 +56,8 @@ void main()
 		gpu.enable_vertex_attribute_array(position_location);
 		gpu.enable_vertex_attribute_array(color_location);
 
-		gpu.set_vertex_attrib_pointer(position_location, 3, gpu_t::data_type_e::float_, false, sizeof(vertex_type), position_offset);
-		gpu.set_vertex_attrib_pointer(color_location, 4, gpu_t::data_type_e::float_, false, sizeof(vertex_type), color_offset);
+		gpu.set_vertex_attrib_pointer(position_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), position_offset);
+		gpu.set_vertex_attrib_pointer(color_location, 4, gpu_data_type_e::float_, false, sizeof(vertex_type), color_offset);
 	}
 
 	void basic_gpu_program_t::on_unbind()

@@ -26,7 +26,7 @@ namespace mandala
         {
 			const auto& language = archive_language_string.first;
 			
-			auto language_strings_itr = language_strings.emplace_hint(language_strings.begin(), language, string_map_type());
+			auto language_strings_itr = language_strings.emplace_hint(language_strings.begin(), language, strings_type());
 
 			auto& strings = language_strings_itr->second;
 
@@ -52,6 +52,8 @@ namespace mandala
 
     string_mgr_t::string_type string_mgr_t::get(const hash_t& hash)
     {
+        static std::wstring_convert<std::codecvt_utf8<wchar_t>> wstring_convert;
+
         const auto strings_lock = std::unique_lock<std::mutex>(mutex);
         const auto resources_lock = std::unique_lock<std::recursive_mutex>(resources.mutex);
 
@@ -84,8 +86,6 @@ namespace mandala
 
 		std::string buffer;
 		std::getline(*stream, buffer, '\0');
-
-        static std::wstring_convert<std::codecvt_utf8<wchar_t>> wstring_convert;
 
         return wstring_convert.from_bytes(buffer.data());
     }

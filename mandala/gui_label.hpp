@@ -53,7 +53,7 @@ namespace mandala
 		size_t get_line_count() const;
 		const string_type& get_line(size_t index) const;
 
-		void set_string(const string_type& string) { _string = string; _cursor.begin = _string.begin(), _cursor.end = _string.begin(); _is_dirty = true; }
+		void set_string(const string_type& string) { _string = string; _cursor.string_begin = _string.begin(), _cursor.string_end = _string.begin(); _is_dirty = true; }
 		void set_bitmap_font(std::shared_ptr<bitmap_font_t> bitmap_font) { _bitmap_font = bitmap_font; _is_dirty = true; }
 		void set_justification(justification_e justification) { _justification = justification; _is_dirty = true; }
 		void set_vertical_alignment(vertical_alignment_e vertical_alignment) { _vertical_alignment = vertical_alignment; _is_dirty = true; }
@@ -76,8 +76,8 @@ namespace mandala
 
 			string_itr_type string_begin;
 			string_itr_type string_end;
-			string_type render_string;
-			width_type width = 0;
+			string_type render_string;  //TODO: have a central render string
+            rectangle_t rectangle;
 
 			std::vector<color_push_type> colors_pushes;
 			std::vector<size_t> color_pop_indices;
@@ -88,10 +88,13 @@ namespace mandala
 			typedef std::chrono::system_clock clock_type;
 			typedef clock_type::time_point time_point_type;
 
-			string_itr_type begin;
-			string_itr_type end;
+			string_itr_type string_begin;
+			string_itr_type string_end;
 			time_point_type time_point;
+            rectangle_t rectangle;
 		};
+
+        void update_cursor();
 
 		string_type _string;
 		std::shared_ptr<bitmap_font_t> _bitmap_font;
@@ -105,13 +108,14 @@ namespace mandala
 		cursor_data_t _cursor;
 		bool _is_read_only = true;
 		std::vector<line_t> _lines;
-		vec2_t _render_base_translation;	//TODO: if more precached render data is made, throw this back into a struct
 
 		//TODO: only have one of these, doesn't need to be constructed per instance (better yet, make a line renderer!)
+        typedef index_buffer_t<uint8_t> index_buffer_type;
+
 		std::shared_ptr<vertex_buffer_t<basic_gpu_vertex_t>> _cursor_vertex_buffer;
-		std::shared_ptr<index_buffer_t<uint8_t>> _cursor_index_buffer;
+		std::shared_ptr<index_buffer_type> _cursor_index_buffer;
 
         std::shared_ptr<vertex_buffer_t<basic_gpu_vertex_t>> _selection_vertex_buffer;
-        std::shared_ptr<index_buffer_t<uint8_t>> _selection_index_buffer;
+        std::shared_ptr<index_buffer_type> _selection_index_buffer;
 	};
 }

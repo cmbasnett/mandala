@@ -22,9 +22,9 @@ namespace mandala
 	{
 		sprite_set = resources.get<sprite_set_t>(sprite_set_hash);
 
-		auto regions_itr = sprite_set->regions.find(region_hash);
+		auto regions_itr = sprite_set->get_regions().find(region_hash);
 
-		if (regions_itr == sprite_set->regions.end())
+		if (regions_itr == sprite_set->get_regions().end())
 		{
 			throw std::exception("region does not exist in sprite set");
 		}
@@ -48,9 +48,9 @@ namespace mandala
 	{
 		sprite_set = resources.get<sprite_set_t>(rhs.sprite_set_hash);
 
-		auto regions_itr = sprite_set->regions.find(rhs.region_hash);
+		auto regions_itr = sprite_set->get_regions().find(rhs.region_hash);
 
-		if (regions_itr == sprite_set->regions.end())
+		if (regions_itr == sprite_set->get_regions().end())
 		{
 			throw std::exception("region does not exist in sprite set");
 		}
