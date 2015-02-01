@@ -36,8 +36,8 @@ namespace mandala
 
                 if (string_itr != string.end() && *string_itr != color_push_character<wchar_t>::value)
                 {
-                    //determine how many characters to erase (up to 6)
-                    auto erase_count = std::min(std::distance(string_itr, string.end()), 6);
+                    //determine how many characters to erase
+                    auto erase_count = std::min(std::distance(string_itr, string.end()), rgb_hex_string_length);
 
                     //erase color code from string
                     string_itr = string.erase(string_itr, string_itr + erase_count);
