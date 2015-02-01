@@ -11,6 +11,8 @@
 #include "window_event.hpp"
 #include "rectangle.hpp"
 
+struct GLFWwindow;
+
 namespace mandala
 {
     struct platform_win32_t : platform_t
@@ -86,7 +88,7 @@ namespace mandala
 		virtual std::string get_clipboard_string() const override;
 		virtual void set_clipboard_string(const std::string& clipboard) const override;
 
-        void* window_ptr = nullptr;
+        GLFWwindow* window_ptr = nullptr;
 		vec4_t viewport;
 		input_mgr_t input;
         window_mgr_t window;

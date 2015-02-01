@@ -6,8 +6,8 @@
 namespace mandala
 {
 	texture_t::texture_t(color_type_e color_type, size_value_type width, size_value_type height, const void* data) :
-        width(width),
-		height(height)
+        color_type(color_type),
+        size(width, height)
 	{
         id = gpu.create_texture(color_type, width, height, data);
 	}
@@ -36,5 +36,10 @@ namespace mandala
     texture_t::~texture_t()
     {
         gpu.destroy_texture(id);
+    }
+
+    void texture_t::set_size(const size_type & size)
+    {
+        gpu.resize_texture(shared_from_this(), size.x, size.y);
     }
 }

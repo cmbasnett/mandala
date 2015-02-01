@@ -181,7 +181,7 @@ namespace mandala
 						}
 						else
 						{
-							pitch_target -= static_cast<float32_t>(input_event.touch.position_delta.y) * sensitivity;
+							pitch_target += static_cast<float32_t>(input_event.touch.position_delta.y) * sensitivity;
 							yaw_target += static_cast<float32_t>(input_event.touch.position_delta.x) * sensitivity;
 						}
 

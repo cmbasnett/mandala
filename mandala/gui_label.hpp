@@ -37,31 +37,30 @@ namespace mandala
 
 		gui_label_t();
 
-		const string_type& get_string() const { return _string; }
+		const string_type& get_string() const { return string; }
 		string_type get_string_escaped() const;
 		string_type get_string_sanitized() const;
-		const std::shared_ptr<bitmap_font_t>& get_bitmap_font() const { return _bitmap_font; }
-		justification_e get_justification() const { return _justification; };
-		vertical_alignment_e get_vertical_alignment() const { return _vertical_alignment; }
-        line_height_type get_line_spacing() const { return _line_spacing; }
-		bool is_multiline() const { return _is_multiline; }
-		bool should_use_ellipses() const { return _should_use_ellipses; }
-		bool should_use_color_codes() const { return _should_use_color_codes; }
-		bool is_read_only() const { return _is_read_only; }
+		const std::shared_ptr<bitmap_font_t>& get_bitmap_font() const { return bitmap_font; }
+		justification_e get_justification() const { return justification; };
+		vertical_alignment_e get_vertical_alignment() const { return vertical_alignment; }
+        line_height_type get_line_spacing() const { return line_spacing; }
+		bool get_is_multiline() const { return is_multiline; }
+		bool get_should_use_ellipses() const { return should_use_ellipses; }
+		bool get_should_use_color_codes() const { return should_use_color_codes; }
+		bool get_is_read_only() const { return is_read_only; }
 
         line_height_type get_line_height() const;
 		size_t get_line_count() const;
-		const string_type& get_line(size_t index) const;
 
-		void set_string(const string_type& string) { _string = string; _cursor.string_begin = _string.begin(), _cursor.string_end = _string.begin(); _is_dirty = true; }
-		void set_bitmap_font(std::shared_ptr<bitmap_font_t> bitmap_font) { _bitmap_font = bitmap_font; _is_dirty = true; }
-		void set_justification(justification_e justification) { _justification = justification; _is_dirty = true; }
-		void set_vertical_alignment(vertical_alignment_e vertical_alignment) { _vertical_alignment = vertical_alignment; _is_dirty = true; }
-        void set_line_spacing(line_height_type line_spacing) { _line_spacing = line_spacing; _is_dirty = true; }
-		void set_is_multiline(bool is_multiline) { _is_multiline = is_multiline; _is_dirty = true; }
-		void set_should_use_ellipses(bool should_use_ellipses) { _should_use_ellipses = should_use_ellipses; _is_dirty = true; }
-		void set_should_use_color_codes(bool should_use_color_codes) { _should_use_color_codes = should_use_color_codes; _is_dirty = true; }
-		void set_is_read_only(bool is_read_only) { _is_read_only = is_read_only; _is_dirty = true; }	//TODO: might not need to dirty, putting this in to be safe
+		void set_string(const string_type& string) { this->string = string; cursor.string_begin = this->string.begin(), cursor.string_end = this->string.begin(); dirty(); }
+		void set_bitmap_font(std::shared_ptr<bitmap_font_t> bitmap_font) { this->bitmap_font = bitmap_font; dirty(); }
+		void set_justification(justification_e justification) { this->justification = justification; dirty(); }
+		void set_vertical_alignment(vertical_alignment_e vertical_alignment) { this->vertical_alignment = vertical_alignment; dirty(); }
+        void set_line_spacing(line_height_type line_spacing) { this->line_spacing = line_spacing; dirty(); }
+		void set_is_multiline(bool is_multiline) { this->is_multiline = is_multiline; dirty(); }
+		void set_should_use_ellipses(bool should_use_ellipses) { this->should_use_ellipses = should_use_ellipses; dirty(); }
+		void set_should_use_color_codes(bool should_use_color_codes) { this->should_use_color_codes = should_use_color_codes; dirty(); }
+		void set_is_read_only(bool is_read_only) { this->is_read_only = is_read_only; dirty(); }	//TODO: might not need to dirty, putting this in to be safe
 
         virtual void clean() override;
         virtual void render_override(mat4_t world_matrix, mat4_t view_projection_matrix) override;
@@ -96,18 +95,18 @@ namespace mandala
 
         void update_cursor();
 
-		string_type _string;
-		std::shared_ptr<bitmap_font_t> _bitmap_font;
-		justification_e _justification = justification_e::left;
-		vertical_alignment_e _vertical_alignment = vertical_alignment_e::top;
-        line_height_type _line_spacing = 0;
-		bool _is_multiline = true;
-		bool _is_uppercase = false;
-		bool _should_use_ellipses = true;
-		bool _should_use_color_codes = true;
-		cursor_data_t _cursor;
-		bool _is_read_only = true;
-		std::vector<line_t> _lines;
+		string_type string;
+		std::shared_ptr<bitmap_font_t> bitmap_font;
+		justification_e justification = justification_e::left;
+		vertical_alignment_e vertical_alignment = vertical_alignment_e::top;
+        line_height_type line_spacing = 0;
+		bool is_multiline = true;
+		bool is_uppercase = false;
+		bool should_use_ellipses = true;
+		bool should_use_color_codes = true;
+		cursor_data_t cursor;
+		bool is_read_only = true;
+		std::vector<line_t> lines;
 
 		//TODO: only have one of these, doesn't need to be constructed per instance (better yet, make a line renderer!)
         typedef index_buffer_t<uint8_t> index_buffer_type;

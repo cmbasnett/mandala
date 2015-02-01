@@ -10,6 +10,9 @@
 #include "rectangle.hpp"
 #include "aabb.hpp"
 
+//boost
+#include <boost/optional.hpp>
+
 namespace mandala
 {
 	struct texture_t;
@@ -38,6 +41,8 @@ namespace mandala
 
         const std::shared_ptr<texture_t>& get_texture() const { return texture; }
         const regions_type& get_regions() const { return regions; }
+
+        boost::optional<region_t> get_region(const hash_t& region_hash) const;
 
 	private:
         std::shared_ptr<texture_t> texture;

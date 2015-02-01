@@ -16,21 +16,69 @@
 
 namespace mandala
 {
-    gui_image_t::gui_image_t()
+    gui_image_t::gui_image_t() :
+        index_buffer(std::make_shared<index_buffer_type>()),
+        vertex_buffer(std::make_shared<vertex_buffer_type>())
     {
-		//index buffer
         std::initializer_list<index_buffer_type::index_type> indices = {
+            //non-rotated
             0, 1, 2, 
             0, 2, 3, 
             1, 2, 3, 
-            1, 3, 0 };
-
-        index_buffer = std::make_shared<index_buffer_type>();
+            1, 3, 0,
+            //rotated
+            4, 5, 6,
+            4, 6, 7,
+            5, 6, 7,
+            5, 7, 4
+        };
 		index_buffer->data(indices, gpu_t::buffer_usage_e::static_draw);
-
-		//vertex buffer
-        vertex_buffer = std::make_shared<vertex_buffer_type>();
 	}
+
+    void gui_image_t::set_sprite(boost::optional<sprite_t> sprite)
+    {
+        this->sprite = sprite;
+
+        if (sprite)
+        {
+            if (is_autosized_to_texture)
+            {
+                set_size(static_cast<gui_node_t::size_type>(sprite->get_region().source_size));
+            }
+
+            const auto& sprite_region = sprite->get_region();
+            auto sprite_size = static_cast<vec2_t>(sprite_region.rectangle.size());
+
+            std::array<vertex_type::position_type, vertex_count> vertex_positions = {
+                vertex_type::position_type(vec3_t(vec2_t(-0.5f, -0.5f) * sprite_size, 0.0f)),
+                vertex_type::position_type(vec3_t(vec2_t(0.5f, -0.5f) * sprite_size, 0.0f)),
+                vertex_type::position_type(vec3_t(vec2_t(0.5f,  0.5f) * sprite_size, 0.0f)),
+                vertex_type::position_type(vec3_t(vec2_t(-0.5f,  0.5f) * sprite_size, 0.0f))
+            };
+
+            auto vertices = {
+                //non-rotated
+                vertex_type(vertex_positions[0], vec2_t(sprite_region.uv.min.x, sprite_region.uv.min.y)),
+                vertex_type(vertex_positions[1], vec2_t(sprite_region.uv.max.x, sprite_region.uv.min.y)),
+                vertex_type(vertex_positions[2], vec2_t(sprite_region.uv.max.x, sprite_region.uv.max.y)),
+                vertex_type(vertex_positions[3], vec2_t(sprite_region.uv.min.x, sprite_region.uv.max.y)),
+                //rotated
+                vertex_type(vertex_positions[0], vec2_t(sprite_region.uv.min.x, sprite_region.uv.max.y)),
+                vertex_type(vertex_positions[1], vec2_t(sprite_region.uv.min.x, sprite_region.uv.min.y)),
+                vertex_type(vertex_positions[2], vec2_t(sprite_region.uv.max.x, sprite_region.uv.min.y)),
+                vertex_type(vertex_positions[3], vec2_t(sprite_region.uv.max.x, sprite_region.uv.max.y))
+            };
+
+            vertex_buffer->data(vertices, gpu_t::buffer_usage_e::static_draw);
+        }
+    }
+
+    void gui_image_t::set_is_autosized_to_texture(bool is_autosized_to_texture)
+    {
+        this->is_autosized_to_texture = is_autosized_to_texture;
+
+        set_sprite(sprite);
+    }
 
 	void gui_image_t::render_override(mat4_t world_matrix, mat4_t view_projection_matrix)
     {
@@ -50,7 +98,7 @@ namespace mandala
 		//program
 		gpu.programs.push(gpu_program);
 
-		const auto center = bounds().center();
+		const auto center = get_bounds().center();
 
 		world_matrix *= glm::translate(center.x, center.y, 0.0f);
 
@@ -59,26 +107,33 @@ namespace mandala
 		gpu_program->diffuse_texture_index(diffuse_texture_index);
 		gpu_program->world_matrix(world_matrix);
 		gpu_program->view_projection_matrix(view_projection_matrix);
-		gpu_program->color(color());
+		gpu_program->color(get_color());
 
-        gpu.textures.bind(diffuse_texture_index, sprite.get_sprite_set()->get_texture());
+        gpu.textures.bind(diffuse_texture_index, sprite->get_sprite_set()->get_texture());
+
+        size_t index_offset = 0;
+
+        if (sprite->get_region().is_rotated)
+        {
+            index_offset = 12;
+        }
 
         switch (triangle_mode)
         {
         case triangle_mode_e::bottom_right:
-            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 3, index_buffer_type::data_type, 0);
+            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 3, index_buffer_type::data_type, index_offset + 0);
             break;
         case triangle_mode_e::top_left:
-            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 3, index_buffer_type::data_type, 3);
+            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 3, index_buffer_type::data_type, index_offset + 3);
             break;
         case triangle_mode_e::top_right:
-            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 3, index_buffer_type::data_type, 6);
+            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 3, index_buffer_type::data_type, index_offset + 6);
             break;
         case triangle_mode_e::bottom_left:
-            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 3, index_buffer_type::data_type, 9);
+            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 3, index_buffer_type::data_type, index_offset + 9);
             break;
         case triangle_mode_e::both:
-            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 6, index_buffer_type::data_type, 0);
+            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 6, index_buffer_type::data_type, index_offset + 0);
             break;
         }
 
@@ -94,61 +149,12 @@ namespace mandala
         gui_node_t::render_override(world_matrix, view_projection_matrix);
 	}
 
-    void gui_image_t::clean()
-    {
-        const auto& sprite_region = sprite.get_region();
-        auto sprite_size = static_cast<vec2_t>(sprite_region.rectangle.size());
-
-		if (is_autosized_to_texture)
-		{
-			set_size(static_cast<vec2_t>(sprite_region.source_size));
-        }
-		else
-		{
-			set_size(bounds().size());
-
-			sprite_size = bounds().size();
-		}
-
-        std::array<vertex_type::position_type, vertex_count> vertex_positions = {
-            vertex_type::position_type(vec3_t(vec2_t(-0.5f, -0.5f) * sprite_size, 0.0f)),
-            vertex_type::position_type(vec3_t(vec2_t(0.5f, -0.5f) * sprite_size, 0.0f)),
-            vertex_type::position_type(vec3_t(vec2_t(0.5f, 0.5f) * sprite_size, 0.0f)),
-            vertex_type::position_type(vec3_t(vec2_t(-0.5f, 0.5f) * sprite_size, 0.0f))
-        };
-
-		if (sprite_region.is_rotated)
-        {
-            vertex_type vertices[vertex_count] = {
-                vertex_type(vertex_positions[0], vec2_t(sprite_region.uv.min.x, sprite_region.uv.max.y)),
-                vertex_type(vertex_positions[1], vec2_t(sprite_region.uv.min.x, sprite_region.uv.min.y)),
-                vertex_type(vertex_positions[2], vec2_t(sprite_region.uv.max.x, sprite_region.uv.min.y)),
-                vertex_type(vertex_positions[3], vec2_t(sprite_region.uv.max.x, sprite_region.uv.max.y))
-            };
-
-            vertex_buffer->data(vertices, vertex_count, gpu_t::buffer_usage_e::dynamic_draw);
-        }
-        else
-        {
-            vertex_type vertices[vertex_count] = {
-                vertex_type(vertex_positions[0], vec2_t(sprite_region.uv.min.x, sprite_region.uv.min.y)),
-                vertex_type(vertex_positions[1], vec2_t(sprite_region.uv.max.x, sprite_region.uv.min.y)),
-                vertex_type(vertex_positions[2], vec2_t(sprite_region.uv.max.x, sprite_region.uv.max.y)),
-                vertex_type(vertex_positions[3], vec2_t(sprite_region.uv.min.x, sprite_region.uv.max.y))
-            };
-
-			vertex_buffer->data(vertices, vertex_count, gpu_t::buffer_usage_e::dynamic_draw);
-        }
-		
-		gui_node_t::clean();
-    }
-
     void gui_image_t::on_input_event(input_event_t& input_event)
     {
         if (input_event.device_type == input_event_t::device_type_e::touch &&
             input_event.touch.type == input_event_t::touch_t::type_e::press)
         {
-            if (contains(bounds(), input_event.touch.position))
+            if (contains(get_bounds(), input_event.touch.position))
             {
             }
         }

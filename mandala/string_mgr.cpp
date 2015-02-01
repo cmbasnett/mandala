@@ -14,7 +14,7 @@ namespace mandala
 
     void string_mgr_t::mount(const std::string& file)
     {
-        const auto strings_lock = std::unique_lock<std::mutex>(mutex);
+        const auto strings_lock = std::unique_lock<std::recursive_mutex>(mutex);
         const auto resources_lock = std::unique_lock<std::recursive_mutex>(resources.mutex);
 
         auto stream = resources.extract(hash_t(file));
@@ -44,7 +44,7 @@ namespace mandala
 
     void string_mgr_t::purge()
     {
-        const auto strings_lock = std::unique_lock<std::mutex>(mutex);
+        const auto strings_lock = std::unique_lock<std::recursive_mutex>(mutex);
 
         streams.clear();
 		language_strings.clear();
@@ -52,9 +52,9 @@ namespace mandala
 
     string_mgr_t::string_type string_mgr_t::get(const hash_t& hash)
     {
-        static std::wstring_convert<std::codecvt_utf8<wchar_t>> wstring_convert;
+        std::wstring_convert<std::codecvt_utf8<wchar_t>> wstring_convert;
 
-        const auto strings_lock = std::unique_lock<std::mutex>(mutex);
+        const auto strings_lock = std::unique_lock<std::recursive_mutex>(mutex);
         const auto resources_lock = std::unique_lock<std::recursive_mutex>(resources.mutex);
 
 		auto language_strings_itr = language_strings.find(language);

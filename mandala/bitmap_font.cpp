@@ -426,7 +426,7 @@ namespace mandala
 
             if (characters_itr == characters.end())
             {
-                characters_itr = characters.find(L'?'); //TODO: get this from somewhere else
+                characters_itr = characters.find(L'?'); //TODO: get fallback character from somewhere else
             }
 
             width += characters_itr->second.advance_x;

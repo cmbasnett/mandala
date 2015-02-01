@@ -35,11 +35,14 @@ namespace mandala
         typedef index_type<index_count>::type index_type;
         typedef index_buffer_t<index_type> index_buffer_type;
 
+        virtual void render_override(mat4_t world_matrix, mat4_t view_projection_matrix) override;
+        virtual void clean() override;
+
+        const std::shared_ptr<frame_buffer_t>& get_frame_buffer() const { return frame_buffer; }
+
+    private:
         std::shared_ptr<frame_buffer_t> frame_buffer;
         std::shared_ptr<vertex_buffer_type> vertex_buffer;
         std::shared_ptr<index_buffer_type> index_buffer;
-
-        virtual void render_override(mat4_t world_matrix, mat4_t view_projection_matrix) override;
-        virtual void clean() override;
     };
 }

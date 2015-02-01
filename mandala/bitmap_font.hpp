@@ -68,9 +68,30 @@ namespace mandala
         void get_string_pages(std::vector<uint8_t>& pages, const string_type& string) const;
         int16_t get_string_width(const string_type& string) const;
 
+        int16_t get_size() const { return size; }
+        bool get_is_smooth() const { return is_smooth; }
+        bool get_is_unicode() const { return is_unicode; }
+        bool get_is_bold() const { return is_bold; }
+        bool get_is_fixed_height() const { return is_fixed_height; }
+        uint8_t get_char_set() const { return char_set; }
+        uint16_t get_stretch_height() const { return stretch_height; }
+        uint8_t get_antialiasing() const { return antialiasing; }
+        const padding_u8_t& get_padding() const { return padding; }
+        uint8_t get_spacing_horizontal() const { return spacing_horizontal; }
+        uint8_t get_spacing_vertical() const { return spacing_vertical; }
+        uint8_t get_outline() const { return outline; }
         uint16_t get_line_height() const { return line_height; }
         uint16_t get_base() const { return base; }
+        uint16_t get_width() const { return width; }
+        uint16_t get_height() const { return height; }
+        uint16_t get_page_count() const { return page_count; }
+        uint8_t get_flags_1() const { return flags_1; }
+        uint8_t get_alpha_channel() const { return alpha_channel; }
+        uint8_t get_red_channel() const { return red_channel; }
+        uint8_t get_green_channel() const { return green_channel; }
+        uint8_t get_blue_channel() const { return blue_channel; }
         const std::map<character_id_type, character_t>& get_characters() const { return characters; }
+        const std::vector<std::shared_ptr<texture_t>> get_page_textures() const { return page_textures; }
 
 	private:
         int16_t size = 0;

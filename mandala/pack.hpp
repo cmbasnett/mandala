@@ -23,16 +23,19 @@ namespace mandala
 			uint32_t crc32 = 0;
 		};
 
+        typedef std::map<const hash_t, file_t> files_type;
+
 		pack_t(const std::string& path);
 		pack_t(pack_t&& rhs);
 
-		std::string path;
-		std::map<hash_t, file_t> files;
-		boost::iostreams::mapped_file_source mapped_file_source;
+        std::string path;
+        files_type files;
+        boost::iostreams::mapped_file_source mapped_file_source;
 
 		pack_t& operator=(pack_t&& rhs);
 
 	private:
+
 		pack_t(const pack_t&) = delete;
 		pack_t& operator=(const pack_t&) = delete;
 	};

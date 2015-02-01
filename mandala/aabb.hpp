@@ -7,9 +7,6 @@
 #include "types.hpp"
 #include "plane.hpp"
 
-//boost
-#include <boost\range\any_range.hpp>
-
 namespace mandala
 {
 	namespace details
@@ -75,6 +72,7 @@ namespace mandala
 			type& operator-=(const vector_type& rhs)
 			{
 				*this = *this - rhs;
+
 				return *this;
 			}
 
@@ -86,6 +84,7 @@ namespace mandala
 			type& operator+=(const vector_type& rhs)
 			{
 				*this = *this + rhs;
+
 				return *this;
 			}
 
@@ -97,6 +96,7 @@ namespace mandala
             type& join(const type& rhs)
 			{
 				*this = join(*this, rhs);
+
 				return *this;
 			}
 
@@ -117,6 +117,7 @@ namespace mandala
 			{
 				min = static_cast<vector_type>(rhs.min);
 				max = static_cast<vector_type>(rhs.max);
+
 				return *this;
 			}
 
@@ -194,6 +195,7 @@ namespace mandala
 			type& operator-=(const vector_type& rhs)
 			{
 				*this = *this - t;
+
 				return *this;
 			}
 
@@ -205,6 +207,7 @@ namespace mandala
 			type& operator+=(const vector_type& rhs)
 			{
 				*this = *this + t;
+
 				return *this;
 			}
 
@@ -216,6 +219,7 @@ namespace mandala
 			type& join(const type& rhs)
 			{
 				*this = join(*this, rhs);
+
 				return *this;
 			}
 

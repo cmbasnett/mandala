@@ -25,7 +25,7 @@ namespace mandala
 	void gui_state_t::tick(float32_t dt)
 	{
 		//TODO: get child nodes to tell layout about cleanliness
-		if (layout->is_dirty())
+		if (layout->get_is_dirty())
 		{
 			layout->clean();
 		}
@@ -61,7 +61,6 @@ namespace mandala
         const auto screen_size = platform.get_screen_size();
 
         layout->set_bounds(gui_node_t::bounds_type(vec2_t(), vec2_t(static_cast<float32_t>(screen_size.x), static_cast<float32_t>(screen_size.y))));
-        layout->dirty();
     }
 #endif
 }

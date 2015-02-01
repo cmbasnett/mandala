@@ -116,7 +116,7 @@ xcopy "$(SolutionDir)ext\openal-soft-1.15.1-bin\lib\Win32\*.dll" "$(OutDir)" /y
 xcopy "$(SolutionDir)ext\lua-5.1.4_Win32_dll12_lib\*.dll" "$(OutDir)" /y
 xcopy "$(SolutionDir)ext\luabind-0.9.1\bin\msvc-12.0\debug\*.dll" "$(OutDir)" /y
 
-"$(SolutionDir)tools\pack\bin\pack.exe" "$(SolutionDir)resources\deploy\\" "$(OutDir)resources\armada.pack"</Command>
+"$(SolutionDir)tools\pack.py" --input "$(SolutionDir)resources\deploy" --output "$(OutDir)resources\armada.pack"</Command>
     </PostBuildEvent>
     <CustomBuildStep>
       <Command>
@@ -228,6 +228,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="armada\debug_state.hpp" />
     <ClInclude Include="armada\test_state.hpp" />
     <ClInclude Include="audio_context.hpp" />
+    <ClInclude Include="audio_defs.hpp" />
     <ClInclude Include="audio_device.hpp" />
     <ClInclude Include="audio_mgr.hpp" />
     <ClInclude Include="audio_source.hpp" />

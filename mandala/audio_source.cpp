@@ -1,106 +1,80 @@
-//openal
-#include "openal.hpp"
-
 //glm
 #include <glm\gtc\type_ptr.hpp>
 
 //mandala
 #include "audio_source.hpp"
 #include "sound.hpp"
+#include "audio_mgr.hpp"
 
 namespace mandala
 {
     audio_source_t::audio_source_t()
 	{
-		alGenSources(1, &_id); alCheckError();
+        id = audio.create_source();
 	}
 
     audio_source_t::~audio_source_t()
 	{
-		alDeleteSources(1, &_id); alCheckError();
+        audio.destroy_source(id);
 	}
 
-	audio_source_t::id_type audio_source_t::id() const
+    audio_source_state_e audio_source_t::get_state() const
 	{
-		return _id;
-	}
-
-	audio_source_t::state_t audio_source_t::state() const
-	{
-		ALint state;
-		alGetSourcei(_id, AL_SOURCE_STATE, &state); alCheckError();
-
-		switch (state)
-		{
-		case AL_INITIAL:
-			return state_t::initial;
-		case AL_PLAYING:
-			return state_t::playing;
-		case AL_PAUSED:
-			return state_t::paused;
-		case AL_STOPPED:
-			return state_t::stopped;
-		default:
-			throw std::exception();
-		}
+        return audio.get_source_state(id);
     }
 
-    void audio_source_t::position(const vec3_t& position)
+    void audio_source_t::set_position(const vec3_t& position)
     {
-		alSourcefv(_id, AL_POSITION, glm::value_ptr(position)); alCheckError();
+        audio.set_source_position(id, position);
     }
 
-    void audio_source_t::velocity(const vec3_t& velocity)
+    void audio_source_t::set_velocity(const vec3_t& velocity)
     {
-		alSourcefv(_id, AL_VELOCITY, glm::value_ptr(velocity)); alCheckError();
+        audio.set_source_velocity(id, velocity);
     }
 
-    void audio_source_t::gain(float32_t gain)
+    void audio_source_t::set_gain(float32_t gain)
     {
-		alSourcef(_id, AL_GAIN, gain); alCheckError();
+        audio.set_source_gain(id, gain);
     }
 
-    void audio_source_t::reference_distance(float32_t reference_distance)
+    void audio_source_t::set_reference_distance(float32_t reference_distance)
     {
-		alSourcef(_id, AL_REFERENCE_DISTANCE, reference_distance); alCheckError();
+        audio.set_source_reference_distance(id, reference_distance);
     }
 
-    void audio_source_t::max_distance(float32_t max_distance)
+    void audio_source_t::set_max_distance(float32_t max_distance)
     {
-		alSourcef(_id, AL_MAX_DISTANCE, max_distance); alCheckError();
+        audio.set_source_max_distance(id, max_distance);
     }
 
 	void audio_source_t::play()
 	{
-		alSourcePlay(_id); alCheckError();
+        audio.play_source(id);
 	}
 
 	void audio_source_t::pause()
 	{
-		alSourcePause(_id); alCheckError();
+        audio.pause_source(id);
 	}
 
 	void audio_source_t::rewind()
 	{
-		alSourceRewind(_id); alCheckError();
+        audio.rewind_source(id);
 	}
 
 	void audio_source_t::stop()
 	{
-		alSourceStop(_id); alCheckError();
+        audio.stop_source(id);
 	}
 
 	void audio_source_t::queue_sound(const std::shared_ptr<sound_t>& sound)
 	{
-        auto buffer_id = sound->get_buffer_id();
-
-		alSourceQueueBuffers(_id, 1, &buffer_id); alCheckError();
+        audio.source_queue_sound(id, sound);
 	}
 
     void audio_source_t::unqueue_sound(const std::shared_ptr<sound_t>& sound)
 	{
-        auto buffer_id = sound->get_buffer_id();
-
-		alSourceUnqueueBuffers(_id, 1, &buffer_id); alCheckError();
+        audio.source_unqueue_sound(id, sound);
 	}
 }

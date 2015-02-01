@@ -374,7 +374,7 @@ namespace mandala
 		{
 			color_texture = std::make_shared<texture_t>(color_type_e::rgb, width, height, nullptr);
 
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture->id, 0); glCheckError();
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture->get_id(), 0); glCheckError();
 		}
 		else
 		{
@@ -387,14 +387,14 @@ namespace mandala
 		{
 			depth_stencil_texture = std::make_shared<texture_t>(color_type_e::depth_stencil, width, height, nullptr);
 
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depth_stencil_texture->id, 0); glCheckError();
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depth_stencil_texture->get_id(), 0); glCheckError();
 		}
 		//depth
 		else if ((type_flags & gpu_frame_buffer_type_flag_depth) == gpu_frame_buffer_type_flag_depth)
 		{
 			depth_texture = std::make_shared<texture_t>(color_type_e::depth, width, height, nullptr);
 
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_texture->id, 0); glCheckError();
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_texture->get_id(), 0); glCheckError();
 		}
 
 		//restore previously bound frame buffer
@@ -433,6 +433,18 @@ namespace mandala
         glBindTexture(GL_TEXTURE_2D, 0); glCheckError();
 
         return id;
+    }
+
+    void gpu_t::resize_texture(const std::shared_ptr<texture_t>& texture, uint32_t width, uint32_t height)
+    {
+        texture_t::format_type internal_format, format;
+        texture_t::type_type type;
+
+        get_texture_formats(texture->get_color_type(), internal_format, format, type);
+
+        glBindTexture(GL_TEXTURE_2D, texture->get_id());
+        glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, format, type, nullptr);
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     void gpu_t::destroy_texture(gpu_id_t id)
@@ -675,7 +687,7 @@ namespace mandala
         }
 
         glActiveTexture(GL_TEXTURE0 + index); glCheckError();
-        glBindTexture(GL_TEXTURE_2D, texture != nullptr ? texture->id : 0); glCheckError();
+        glBindTexture(GL_TEXTURE_2D, texture != nullptr ? texture->get_id() : 0); glCheckError();
 
         textures[index] = texture;
 

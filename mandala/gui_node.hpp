@@ -41,47 +41,55 @@ namespace mandala
 	{
 	};
 
-	struct gui_node_t
-	{
-		typedef aabb2_t bounds_type;
-		typedef vec2_t size_type;
+    struct gui_node_t
+    {
+        typedef aabb2_t bounds_type;
+        typedef vec2_t size_type;
         typedef rgba_type color_type;
 
-		struct trace_args_t
-		{
-			circle_f32_t circle;
-		};
+        struct trace_args_t
+        {
+            circle_f32_t circle;
+        };
 
-		struct trace_result_t
-		{
-			bool did_hit = false;
-			float32_t distance = 0.0f;
+        struct trace_result_t
+        {
+            bool did_hit = false;
+            float32_t distance = 0.0f;
             std::vector<std::shared_ptr<gui_node_t>> nodes_hit;
-		};
+        };
 
-		const std::shared_ptr<gui_node_t>& parent() const { return _parent; }
-		gui_dock_mode_e dock_mode() const { return _dock_mode; }
-		gui_anchor_flags_type anchor_flags() const { return _anchor_flags; }
-		const vec2_t& anchor_offset() const { return _anchor_offset; }
-		const padding_t& padding() const { return _padding; }
-		const padding_t& margin() const { return _margin; }
-		const vec2_t& size() const { return _size; }
-        const color_type& color() const { return _color; }
-		const bounds_type& bounds() const { return _bounds; }
-		bool is_dirty() const;
-		bool is_hidden() const { return _is_hidden; }
-		const std::vector<std::shared_ptr<gui_node_t>>& children() const { return _children; }
+        enum class size_mode_e
+        {
+            absolute,
+            relative
+        };
 
-        void dirty() { _is_dirty = true; }	//TODO: cascade dirtyiness upwards if parent relies on this element for sizing
-		void set_dock_mode(gui_dock_mode_e dock_mode) { _dock_mode = dock_mode; _is_dirty = true; }
-		void set_anchor_flags(gui_anchor_flags_type anchor_flags) { _anchor_flags = anchor_flags; _is_dirty = true; }
-		void set_anchor_offset(const vec2_t& anchor_offset) { _anchor_offset = anchor_offset; _is_dirty = true; }
-		void set_padding(const padding_t& padding) { _padding = padding; _is_dirty = true; }
-		void set_margin(const padding_t& margin) { _margin = margin; _is_dirty = true; }
-		void set_size(const vec2_t& size) { _size = size; _is_dirty = true; }
-        void set_color(const color_type& color) { _color = color; _is_dirty = true; }
-		void set_bounds(const bounds_type& bounds) { _bounds = bounds; _is_dirty = true; }
-		void set_is_hidden(bool is_hidden) { _is_hidden = is_hidden; _is_dirty = true; }
+        const std::shared_ptr<gui_node_t>& get_parent() const { return parent; }
+        gui_dock_mode_e get_dock_mode() const { return dock_mode; }
+        gui_anchor_flags_type get_anchor_flags() const { return anchor_flags; }
+        const vec2_t& get_anchor_offset() const { return anchor_offset; }
+        const padding_t& get_padding() const { return padding; }
+        const padding_t& get_margin() const { return margin; }
+        const size_mode_e get_size_mode() const { return size_mode; }
+        const vec2_t& get_size() const { return size; }
+
+        const color_type& get_color() const { return color; }
+		const bounds_type& get_bounds() const { return bounds; }
+		bool get_is_dirty() const;
+		bool get_is_hidden() const { return is_hidden; }
+		const std::vector<std::shared_ptr<gui_node_t>>& get_children() const { return children; }
+
+        void dirty() { is_dirty = true; }	//TODO: cascade dirtyiness upwards if parent relies on this element for sizing
+		void set_dock_mode(gui_dock_mode_e dock_mode) { this->dock_mode = dock_mode; dirty(); }
+		void set_anchor_flags(gui_anchor_flags_type anchor_flags) { this->anchor_flags = anchor_flags; dirty(); }
+		void set_anchor_offset(const vec2_t& anchor_offset) { this->anchor_offset = anchor_offset; dirty(); }
+        void set_padding(const padding_t& padding) { this->padding = padding; dirty(); }
+		void set_margin(const padding_t& margin) { this->margin = margin; dirty(); }
+        void set_size(const vec2_t& size, size_mode_e size_mode = size_mode_e::absolute);
+        void set_color(const color_type& color) { this->color = color; dirty(); }
+        void set_bounds(const bounds_type& bounds) { this->bounds = bounds; dirty(); }
+        void set_is_hidden(bool is_hidden) { this->is_hidden = is_hidden; dirty(); }
 
 		//TODO: move trace logic into "layout" class
         static bool trace(std::shared_ptr<gui_node_t> node, trace_args_t args, trace_result_t& result);
@@ -93,28 +101,30 @@ namespace mandala
         virtual void tick(float32_t dt);
         virtual void on_input_event(input_event_t& input_event);
 
-        bool has_children() const { return !_children.empty(); }
-		bool has_parent() const { return _parent.get() != nullptr; }
+        bool has_children() const { return !children.empty(); }
+		bool has_parent() const { return parent.get() != nullptr; }
 
 		void orphan();
         void adopt(std::shared_ptr<gui_node_t> child);
 
     private:
-        std::shared_ptr<gui_node_t> _parent;
-        std::vector<std::shared_ptr<gui_node_t>> _children;
-        gui_dock_mode_e _dock_mode = gui_dock_mode_e::none;
-        gui_anchor_flags_type _anchor_flags = (gui_anchor_flag_top | gui_anchor_flag_left);
-        vec2_t _anchor_offset;
-        padding_t _padding;
-        padding_t _margin;
-        size_type _size;
-        color_type _color = color_type(1.0f);
-        bounds_type _bounds;
-        bool _is_hidden = false;
-        bool _should_clip = false;
-		bool _has_focus = false;
+        std::shared_ptr<gui_node_t> parent;
+        std::vector<std::shared_ptr<gui_node_t>> children;
+        gui_dock_mode_e dock_mode = gui_dock_mode_e::none;
+        gui_anchor_flags_type anchor_flags = (gui_anchor_flag_top | gui_anchor_flag_left);
+        vec2_t anchor_offset;
+        padding_t padding;
+        padding_t margin;
+        size_mode_e size_mode = size_mode_e::absolute;
+        size_type size;
+        size_type desired_size;
+        color_type color = color_type(1.0f);
+        bounds_type bounds;
+        bool is_hidden = false;
+        bool should_clip = false;
+		bool has_focus = false;
 
 	protected:
-		bool _is_dirty = true;
+		bool is_dirty = true;
 	};
 }

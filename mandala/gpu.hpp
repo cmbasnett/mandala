@@ -368,6 +368,7 @@ namespace mandala
 		void destroy_frame_buffer(gpu_id_t id);
 
         gpu_id_t create_texture(color_type_e color_type, uint32_t width, uint32_t height, const void* data);
+        void resize_texture(const std::shared_ptr<texture_t>& texture, uint32_t width, uint32_t height);
         void destroy_texture(gpu_id_t id);
 
 		gpu_location_t get_uniform_location(gpu_id_t program_id, const std::string& name);

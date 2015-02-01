@@ -1,6 +1,7 @@
 //mandala
 #include "gui_layout.hpp"
 #include "input_event.hpp"
+#include "platform.hpp"
 
 namespace mandala
 {
@@ -8,6 +9,8 @@ namespace mandala
     {
         if (input_event.device_type == input_event_t::device_type_e::touch)
         {
+            input_event.touch.position.y = platform.get_screen_size().y - input_event.touch.position.y;
+
             auto touch_nodes_itr = touch_nodes.find(input_event.touch.id);
 
             if (touch_nodes_itr != touch_nodes.end())

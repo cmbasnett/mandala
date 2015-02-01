@@ -10,18 +10,18 @@ namespace mandala
 {
     struct audio_device_t
     {
-		typedef ALCdevice* ptr_type;
+		typedef ALCdevice* pointer_type;
 
         audio_device_t();
         audio_device_t(const std::string& name);
 		~audio_device_t();
 
-		ptr_type ptr() const { return _ptr; }
+        operator pointer_type() const { return pointer; }
 
     private:
         audio_device_t(const audio_device_t&) = delete;
 		audio_device_t& operator=(const audio_device_t&) = delete;
 
-		ptr_type _ptr = nullptr;
+        pointer_type pointer = nullptr;
     };
 }

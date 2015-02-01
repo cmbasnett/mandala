@@ -32,22 +32,21 @@ namespace mandala
 
 		gui_image_t();
 
-		const sprite_t& get_sprite() const { return sprite; }
+		const boost::optional<sprite_t>& get_sprite() const { return sprite; }
 		bool get_is_autosized_to_texture() const { return is_autosized_to_texture; }
 
-		void set_sprite(const sprite_t& sprite) { this->sprite = sprite; _is_dirty = true; }
-		void set_is_autosized_to_texture(bool is_autosized_to_texture) { this->is_autosized_to_texture = is_autosized_to_texture; _is_dirty = true; }
-        void set_triangle_mode(triangle_mode_e triangle_mode) { this->triangle_mode = triangle_mode; _is_dirty = true; }
+        void set_sprite(boost::optional<sprite_t> sprite);
+        void set_is_autosized_to_texture(bool is_autosized_to_texture);
+        void set_triangle_mode(triangle_mode_e triangle_mode) { this->triangle_mode = triangle_mode; dirty(); }
 
 	private:
 		std::shared_ptr<vertex_buffer_type> vertex_buffer;
 		std::shared_ptr<index_buffer_type> index_buffer;
-		sprite_t sprite;
+		boost::optional<sprite_t> sprite;
 		bool is_autosized_to_texture = false;
         triangle_mode_e triangle_mode = triangle_mode_e::both;
 
 		virtual void render_override(mat4_t world_matrix, mat4_t view_projection_matrix) override;
-		virtual void clean() override;
         virtual void on_input_event(input_event_t& input_event);
     };
 }

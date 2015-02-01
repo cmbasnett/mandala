@@ -29,7 +29,7 @@ namespace mandala
         {
 			root_node = std::make_shared<gui_node_t>();
 			root_node->set_dock_mode(gui_dock_mode_e::top);
-			root_node->set_size(gui_node_t::size_type(0, layout->bounds().size().y / 2));   //HACK: we don't have proportial sizes yet
+            root_node->set_size(vec2_t(0.0, 0.5f), gui_node_t::size_mode_e::relative);
 
             auto output_root_node = std::make_shared<gui_node_t>();
             output_root_node->set_dock_mode(gui_dock_mode_e::fill);
@@ -91,6 +91,12 @@ namespace mandala
 
 		void console_state_t::on_input_event(input_event_t& input_event)
         {
+            if (input_event.device_type == input_event_t::device_type_e::touch &&
+                input_event.touch.type == input_event_t::touch_t::type_e::press)
+            {
+                std::cout << "asd" << std::endl;
+            }
+
             if (input_event.device_type == input_event_t::device_type_e::keyboard &&
                 input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press)
             {
@@ -138,8 +144,7 @@ namespace mandala
 
 						command_strings.push_front(input_label->get_string());
 
-						typedef std::codecvt_utf8<wchar_t> convert_type;
-						std::wstring_convert<convert_type, wchar_t> wstring_convert;
+                        std::wstring_convert<std::codecvt_utf8<wchar_t>> wstring_convert;
 
 						try
 						{

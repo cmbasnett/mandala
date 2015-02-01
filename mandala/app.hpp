@@ -38,8 +38,8 @@ namespace mandala
             fps_type fps = fps_type(0);
         };
 
-        std::shared_ptr<game_t> game;
-        performance_t performance;
+        const std::shared_ptr<game_t> get_game() const { return game; }
+        const performance_t& get_performance() const { return performance; }
 
         app_t();
 
@@ -50,6 +50,8 @@ namespace mandala
     private:
         bool is_exiting = false;
         bool is_resetting = false;
+        std::shared_ptr<game_t> game;
+        performance_t performance;
 
         app_t(const app_t&) = delete;
         app_t& operator=(const app_t&) = delete;

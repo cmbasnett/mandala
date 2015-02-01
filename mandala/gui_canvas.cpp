@@ -15,15 +15,24 @@ namespace mandala
         index_buffer->data({ 0, 1, 2, 3 }, gpu_t::buffer_usage_e::static_draw);
 
         vertex_buffer = std::make_shared<vertex_buffer_type>();
+        auto vertices =
+        {
+            vertex_type(vertex_type::position_type(0, 0), vertex_type::texcoord_type(0, 0)),
+            vertex_type(vertex_type::position_type(1, 0), vertex_type::texcoord_type(1, 0)),
+            vertex_type(vertex_type::position_type(1, 1), vertex_type::texcoord_type(1, 1)),
+            vertex_type(vertex_type::position_type(0, 1), vertex_type::texcoord_type(0, 1))
+        };
+        vertex_buffer->data(vertices, gpu_t::buffer_usage_e::static_draw);
     }
 
     void gui_canvas_t::render_override(mat4_t world_matrix, mat4_t view_projection_matrix)
     {
-		world_matrix *= glm::translate(bounds().min.x, bounds().min.y, 0.0f);
+		world_matrix *= glm::translate(get_bounds().min.x, get_bounds().min.y, 0.0f);
+        world_matrix *= glm::scale(get_size().x, get_size().y, 0.0f);   //TODO: verify correctness
 
 		gpu.frame_buffers.push(frame_buffer);
 
-        gpu.viewports.push(gpu_viewport_type(bounds()));
+        gpu.viewports.push(gpu_viewport_type(get_bounds()));
 
         gui_node_t::render(world_matrix, view_projection_matrix);
 
@@ -43,7 +52,7 @@ namespace mandala
 
         gpu.textures.bind(0, frame_buffer->get_color_texture());
 
-        gpu.draw_elements(gpu_t::primitive_type_e::quads, 4, index_buffer_type::data_type, 0);
+        gpu.draw_elements(gpu_t::primitive_type_e::triangle_fan, 4, index_buffer_type::data_type, 0);
 
         gpu.textures.unbind(0);
 
@@ -57,17 +66,6 @@ namespace mandala
     {
 		gui_node_t::clean();
 
-        static const auto vertex_count = 4;
-
-        frame_buffer = std::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::color_depth_stencil, static_cast<gpu_frame_buffer_size_type>(size()));
-
-        vertex_type vertices[vertex_count] =
-        {
-            vertex_type(vertex_type::position_type(0, 0), vertex_type::texcoord_type(0, 0)),
-            vertex_type(vertex_type::position_type(size().x, 0), vertex_type::texcoord_type(1, 0)),
-            vertex_type(vertex_type::position_type(size().x, size().y), vertex_type::texcoord_type(1, 1)),
-            vertex_type(vertex_type::position_type(0, size().y), vertex_type::texcoord_type(0, 1))
-        };
-        vertex_buffer->data(vertices, vertex_count, gpu_t::buffer_usage_e::static_draw);
+        frame_buffer->set_size(static_cast<gpu_frame_buffer_size_type>(get_size()));
     }
 }

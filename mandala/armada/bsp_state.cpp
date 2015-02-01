@@ -38,13 +38,10 @@ namespace mandala
 
         bsp_state_t::bsp_state_t()
         {
-            light_camera.position = vec3_t(30, 0, 30);
-            light_camera.target = vec3_t(0, 0, 0);
+            bsp_frame_buffer = std::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::color_depth, static_cast<gpu_frame_buffer_size_type>(layout->get_bounds().size()));
 
-            model_instance = std::make_shared<model_instance_t>(resources.get<model_t>(hash_t("boblampclean.md5m")));
-            //model_instance->animation = resources.get<model_animation_t>(hash_t("boblampclean.md5a"));
-
-            frame_buffer = std::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::color_depth, static_cast<gpu_frame_buffer_size_type>(layout->bounds().size()));
+            auto sprite_set = std::make_shared<sprite_set_t>(bsp_frame_buffer->get_color_texture());
+            sprite_t sprite(sprite_set, sprite_set->get_regions().begin()->second.hash);
 
             skybox.model_instance = std::make_shared<model_instance_t>(resources.get<model_t>(hash_t("skybox.md5m")));
             pause_state = std::make_shared<pause_state_t>();
@@ -65,43 +62,16 @@ namespace mandala
 
             crosshair_image = std::make_shared<gui_image_t>();
 			crosshair_image->set_is_autosized_to_texture(true);
-			crosshair_image->set_sprite(sprite_ref_t(hash_t("crosshairs.tpsb"), hash_t("crosshair2.png")));
+            crosshair_image->set_sprite(sprite_t(hash_t("white.tpsb"), hash_t("white.png")));
 			crosshair_image->set_anchor_flags(gui_anchor_flag_all);
 
 			bsp_render_image = std::make_shared<gui_image_t>();
 			bsp_render_image->set_dock_mode(gui_dock_mode_e::fill);
-
-			auto sprite_set = std::make_shared<sprite_set_t>(frame_buffer->get_color_texture());
-			resources.put<sprite_set_t>(sprite_set, hash_t("temp"));
-
-			sprite_t sprite(sprite_ref_t(sprite_set->hash, sprite_set->get_regions().begin()->second.hash));
-			bsp_render_image->set_sprite(sprite);
+            bsp_render_image->set_sprite(sprite);
 
 			layout->adopt(bsp_render_image);
-			//layout->adopt(debug_label);
 			layout->adopt(crosshair_image);
-
-			//const std::initializer_list<uint8_t> indices = {
-			//	frustum_corner_index_left_top_near, frustum_corner_index_right_top_near,
-			//	frustum_corner_index_right_top_near, frustum_corner_index_right_bottom_near,
-			//	frustum_corner_index_right_bottom_near, frustum_corner_index_left_bottom_near,
-			//	frustum_corner_index_left_bottom_near, frustum_corner_index_left_top_near,
-			//	frustum_corner_index_left_top_near, frustum_corner_index_left_top_far,
-			//	frustum_corner_index_right_top_near, frustum_corner_index_right_top_far,
-			//	frustum_corner_index_right_bottom_near, frustum_corner_index_right_bottom_far,
-			//	frustum_corner_index_left_bottom_near, frustum_corner_index_left_bottom_far,
-			//	frustum_corner_index_left_top_far, frustum_corner_index_right_top_far,
-			//	frustum_corner_index_right_top_far, frustum_corner_index_right_bottom_far,
-			//	frustum_corner_index_right_bottom_far, frustum_corner_index_left_bottom_far,
-			//	frustum_corner_index_left_bottom_far, frustum_corner_index_left_top_far,
-			//	};
-
-			//frustum_index_buffer = std::make_shared<index_buffer_t<uint8_t>>();
-			//frustum_index_buffer->data(indices, gpu_t::buffer_usage_e::static_draw);
-
-			//frustum_vertex_buffer = std::make_shared<vertex_buffer_t<basic_gpu_vertex_t>>();
-
-   //         static const auto bias_matrix = { 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f, 1.0f };
+            layout->adopt(debug_label);
         }
 
         bsp_state_t::~bsp_state_t()
@@ -111,7 +81,6 @@ namespace mandala
         void bsp_state_t::tick(float32_t dt)
         {
             camera.tick(dt);
-            light_camera.tick(dt);
 
             audio.doppler.factor = 0.0f;
             audio.listener.position = camera.position;
@@ -127,33 +96,6 @@ namespace mandala
 			oss << L"faces rendered: " << bsp->get_render_stats().face_count << std::endl;
 			debug_label->set_string(oss.str());
 
-			//if (should_update_camera_frustum)
-			//{
-   //             camera_frustum = camera.get_frustum();
-
-			//	const auto& corners = camera_frustum.corners();
-
-			//	std::initializer_list<basic_gpu_vertex_t> vertices =
-			//	{
-			//		basic_gpu_vertex_t(corners[frustum_corner_index_left_top_near], vec4_t(1)),
-			//		basic_gpu_vertex_t(corners[frustum_corner_index_left_top_far], vec4_t(1)),
-			//		basic_gpu_vertex_t(corners[frustum_corner_index_left_bottom_near], vec4_t(1)),
-			//		basic_gpu_vertex_t(corners[frustum_corner_index_left_bottom_far], vec4_t(1)),
-			//		basic_gpu_vertex_t(corners[frustum_corner_index_right_top_near], vec4_t(1)),
-			//		basic_gpu_vertex_t(corners[frustum_corner_index_right_top_far], vec4_t(1)),
-			//		basic_gpu_vertex_t(corners[frustum_corner_index_right_bottom_near], vec4_t(1)),
-			//		basic_gpu_vertex_t(corners[frustum_corner_index_right_bottom_far], vec4_t(1)),
-			//	};
-
-			//	frustum_vertex_buffer->data(vertices, gpu_t::buffer_usage_e::dynamic_draw);
-			//}
-			//else
-			//{
-			//	camera.frustum = camera_frustum;
-			//}
-
-            model_instance->tick(dt);
-
             gui_state_t::tick(dt);
         }
 
@@ -164,34 +106,14 @@ namespace mandala
                 gpu_viewport_type viewport;
                 viewport.x = 0;
                 viewport.y = 0;
-                viewport.width = frame_buffer->get_size().x;
-                viewport.height = frame_buffer->get_size().y;
+                viewport.width = bsp_frame_buffer->get_size().x;
+                viewport.height = bsp_frame_buffer->get_size().y;
 
                 gpu.viewports.push(viewport);
-                gpu.frame_buffers.push(frame_buffer);
+                gpu.frame_buffers.push(bsp_frame_buffer);
 
                 skybox.render(camera);
-
                 bsp->render(camera);
-
-                model_instance->render(camera, light_camera.position);
-
-				//gpu.buffers.push(gpu_t::buffer_target_e::array, frustum_vertex_buffer);
-				//gpu.buffers.push(gpu_t::buffer_target_e::element_array, frustum_index_buffer);
-
-				//const auto gpu_program = gpu_programs.get<basic_gpu_program_t>();
-
-				//gpu.programs.push(gpu_program);
-
-				//gpu_program->world_matrix(mat4_t());
-                //gpu_program->view_projection_matrix(camera.get_projection_matrix() * camera.get_view_matrix());
-
-				//gpu.draw_elements(gpu_t::primitive_type_e::lines, 24, frustum_index_buffer->data_type, 0);
-
-				//gpu.programs.pop();
-
-				//gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
-				//gpu.buffers.pop(gpu_t::buffer_target_e::array);
 
 				gpu.frame_buffers.pop();
 				gpu.viewports.pop();
@@ -215,17 +137,6 @@ namespace mandala
 				input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press)
 			{
 				states.push(console_state, state_flag_render_tick);
-
-				input_event.is_consumed = true;
-
-				return;
-			}
-
-			if (input_event.device_type == input_event_t::device_type_e::keyboard &&
-				input_event.keyboard.key == input_event_t::keyboard_t::key_e::f2 &&
-				input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press)
-			{
-				should_update_camera_frustum = !should_update_camera_frustum;
 
 				input_event.is_consumed = true;
 
@@ -309,12 +220,12 @@ namespace mandala
 					camera.pitch_target += pitch_target_delta;
 					camera.yaw_target += yaw_target_delta;
 
-                    auto& sound = resources.get<sound_t>(hash_t("garand_shoot.wav"));
+                    const auto& sound = resources.get<sound_t>(hash_t("garand_shoot.wav"));
 
-					auto source = audio.create_source();
-					source->position(camera.position);
-					source->max_distance(500.0f);
-					source->reference_distance(250.0f);
+                    auto source = std::make_shared<audio_source_t>();
+					source->set_position(camera.position);
+					source->set_max_distance(500.0f);
+					source->set_reference_distance(250.0f);
 					source->queue_sound(sound);
 					source->play();
 
@@ -351,19 +262,11 @@ namespace mandala
 
             if (window_event.type == window_event_t::type_e::resize)
             {
-                frame_buffer = std::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::color_depth, static_cast<gpu_frame_buffer_size_type>(layout->bounds().size()));
+                bsp_frame_buffer = std::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::color_depth, static_cast<gpu_frame_buffer_size_type>(layout->get_bounds().size()));
 
-                auto sprite_set = std::make_shared<sprite_set_t>(frame_buffer->get_color_texture());
-
-                //TODO: we should be able to lose reference of bsp_render_image's sprite 
-                std::stringstream ss;
-                ss << rand();
-                
-                resources.put<sprite_set_t>(sprite_set, hash_t(ss.str()));
-
-                sprite_t sprite(sprite_ref_t(sprite_set->hash, sprite_set->get_regions().begin()->second.hash));
+                auto sprite_set = std::make_shared<sprite_set_t>(bsp_frame_buffer->get_color_texture());
+                sprite_t sprite(sprite_set, sprite_set->get_regions().begin()->second.hash);
                 bsp_render_image->set_sprite(sprite);
-                bsp_render_image->dirty();
             }
         }
 #endif

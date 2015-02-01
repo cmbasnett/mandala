@@ -5,6 +5,7 @@
 
 //mandala
 #include "types.hpp"
+#include "audio_defs.hpp"
 
 namespace mandala
 {
@@ -14,24 +15,16 @@ namespace mandala
 	{
 		typedef uint32_t id_type;
 
-		enum class state_t
-		{
-			initial,
-			playing,
-			paused,
-			stopped
-		};
-
         audio_source_t();
         ~audio_source_t();
 
-		id_type id() const;
-        state_t state() const;
-        void position(const vec3_t& position);
-        void velocity(const vec3_t& velocity);
-        void gain(float32_t gain);
-        void reference_distance(float32_t reference_distance);
-        void max_distance(float32_t max_distance);
+        id_type get_id() const { return id; }
+        audio_source_state_e get_state() const;
+        void set_position(const vec3_t& position);
+        void set_velocity(const vec3_t& velocity);
+        void set_gain(float32_t gain);
+        void set_reference_distance(float32_t reference_distance);
+        void set_max_distance(float32_t max_distance);
 
         void play();
         void pause();
@@ -44,6 +37,6 @@ namespace mandala
         audio_source_t(const audio_source_t&) = delete;
         audio_source_t& operator=(const audio_source_t&) = delete;
 
-		id_type _id;
+		id_type id;
     };
 }

@@ -2,9 +2,7 @@
 #include <array>
 
 //al
-#include <AL\al.h>
-#include <AL\alc.h>
-#include <AL\alext.h>
+#include "openal.hpp"
 
 //glm
 #include <glm\ext.hpp>
@@ -23,11 +21,12 @@ namespace mandala
 	audio_mgr_t::audio_mgr_t()
 	{
 		auto device = std::make_shared<audio_device_t>();
+
         devices.push_back(device);
 
-		_context = std::make_shared<audio_context_t>(device);
+		context = std::make_shared<audio_context_t>(device);
 
-		if (alcMakeContextCurrent(_context->ptr()) == ALC_FALSE)
+		if (alcMakeContextCurrent(*context) == ALC_FALSE)
 		{
 			throw std::exception();
 		}
@@ -52,9 +51,9 @@ namespace mandala
 
 		while (sources_itr != sources.end())
 		{
-			const auto& source = *sources_itr;
+            const auto& source = sources_itr->second;
 
-			if (source.use_count() == 1 && source->state() == audio_source_t::state_t::stopped)
+			if (source.use_count() == 1 && source->get_state() == audio_source_state_e::stopped)
 			{
 				sources_itr = sources.erase(sources_itr);
 			}
@@ -65,12 +64,97 @@ namespace mandala
 		}
 	}
 
-	std::shared_ptr<audio_source_t> audio_mgr_t::create_source()
+	uint32_t audio_mgr_t::create_source()
 	{
-        auto source = std::make_shared<audio_source_t>();
+        uint32_t source_id;
 
-		sources.push_back(source);
+        alGenSources(1, &source_id); alCheckError();
 
-		return source;
+		return source_id;
 	}
+
+    void audio_mgr_t::destroy_source(uint32_t source_id)
+    {
+        alDeleteSources(1, &source_id); alCheckError();
+    }
+
+    audio_source_state_e audio_mgr_t::get_source_state(uint32_t source_id) const
+    {
+        ALint state;
+
+        alGetSourcei(source_id, AL_SOURCE_STATE, &state); alCheckError();
+
+        switch (state)
+        {
+        case AL_INITIAL:
+            return audio_source_state_e::initial;
+        case AL_PLAYING:
+            return audio_source_state_e::playing;
+        case AL_PAUSED:
+            return audio_source_state_e::paused;
+        case AL_STOPPED:
+            return audio_source_state_e::stopped;
+        default:
+            throw std::exception();
+        }
+    }
+
+    void audio_mgr_t::set_source_position(uint32_t source_id, const vec3_t & position) const
+    {
+        alSourcefv(source_id, AL_POSITION, glm::value_ptr(position)); alCheckError();
+    }
+
+    void audio_mgr_t::set_source_velocity(uint32_t source_id, const vec3_t & velocity) const
+    {
+        alSourcefv(source_id, AL_VELOCITY, glm::value_ptr(velocity)); alCheckError();
+    }
+
+    void audio_mgr_t::set_source_gain(uint32_t source_id, float32_t gain) const
+    {
+        alSourcef(source_id, AL_GAIN, gain); alCheckError();
+    }
+
+    void audio_mgr_t::set_source_reference_distance(uint32_t source_id, float32_t reference_distance) const
+    {
+        alSourcef(source_id, AL_REFERENCE_DISTANCE, reference_distance); alCheckError();
+    }
+
+    void audio_mgr_t::set_source_max_distance(uint32_t source_id, float32_t max_distance) const
+    {
+        alSourcef(source_id, AL_MAX_DISTANCE, max_distance); alCheckError();
+    }
+
+    void audio_mgr_t::play_source(uint32_t source_id) const
+    {
+        alSourcePlay(source_id); alCheckError();
+    }
+
+    void audio_mgr_t::pause_source(uint32_t source_id) const
+    {
+        alSourcePause(source_id); alCheckError();
+    }
+
+    void audio_mgr_t::rewind_source(uint32_t source_id) const
+    {
+        alSourceRewind(source_id); alCheckError();
+    }
+
+    void audio_mgr_t::stop_source(uint32_t source_id) const
+    {
+        alSourceStop(source_id); alCheckError();
+    }
+
+    void audio_mgr_t::source_queue_sound(uint32_t source_id, const std::shared_ptr<sound_t>& sound) const
+    {
+        auto buffer_id = sound->get_buffer_id();
+
+        alSourceQueueBuffers(source_id, 1, &buffer_id); alCheckError();
+    }
+
+    void audio_mgr_t::source_unqueue_sound(uint32_t source_id, const std::shared_ptr<sound_t>& sound) const
+    {
+        auto buffer_id = sound->get_buffer_id();
+
+        alSourceUnqueueBuffers(source_id, 1, &buffer_id); alCheckError();
+    }
 }

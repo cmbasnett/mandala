@@ -27,7 +27,7 @@ namespace mandala
 		{
 			static const std::type_index type_index = typeid(T);
 
-			const auto lock_guard = std::unique_lock<std::recursive_mutex>(mutex);
+			const auto lock = std::unique_lock<std::recursive_mutex>(mutex);
 
 			const auto type_resources_itr = type_resources.find(type_index);
 
@@ -44,7 +44,7 @@ namespace mandala
 		{
 			static const std::type_index type_index = typeid(T);
 
-			const auto lock_guard = std::unique_lock<std::recursive_mutex>(mutex);
+			const auto lock = std::unique_lock<std::recursive_mutex>(mutex);
 
 			const auto type_resources_itr = type_resources.find(type_index);
 
@@ -63,7 +63,7 @@ namespace mandala
 				//resource already exists
 				auto& resource = resources_itr->second;
 
-				resource->last_access_time = std::chrono::system_clock::now();
+                resource->last_access_time = resource_t::clock_type::now();
 
 				return std::static_pointer_cast<T, resource_t>(resource);
 			}
@@ -84,7 +84,7 @@ namespace mandala
 		{
 			static const std::type_index type_index = typeid(T);
 
-			const auto lock_guard = std::unique_lock<std::recursive_mutex>(mutex);
+			const auto lock = std::unique_lock<std::recursive_mutex>(mutex);
 
 			const auto type_resources_itr = type_resources.find(type_index);
 

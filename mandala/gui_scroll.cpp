@@ -38,10 +38,11 @@ namespace mandala
         switch (input_event.touch.type)
         {
         case input_event_t::touch_t::type_e::press:
-            if (contains(bounds(), input_event.touch.position))
+            if (contains(get_bounds(), input_event.touch.position))
             {
                 _is_scrolling = true;
                 _touch_id = input_event.touch.id;
+
 				input_event.is_consumed = true;
             }
             break;
@@ -50,6 +51,7 @@ namespace mandala
             {
                 _is_scrolling = false;
 				_touch_id = 0;
+
 				input_event.is_consumed = true;
             }
             break;
@@ -58,6 +60,7 @@ namespace mandala
             {
                 _scroll_position.x += static_cast<float32_t>(input_event.touch.position_delta.x);
 				_scroll_position.y -= static_cast<float32_t>(input_event.touch.position_delta.y);
+
 				input_event.is_consumed = true;
             }
             break;
@@ -76,7 +79,7 @@ namespace mandala
 		gui_node_t::clean();
 
 		//TODO: automatically size scroll extents based on children?
-		for (auto& child : children())
+		for (auto& child : get_children())
 		{
 		}
 	}

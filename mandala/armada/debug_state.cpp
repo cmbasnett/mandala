@@ -35,7 +35,7 @@ namespace mandala
 
 	void debug_state_t::tick(float32_t dt)
 	{
-		std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> wstring_convert;
+        std::wstring_convert<std::codecvt_utf8<wchar_t>> wstring_convert;
 
 		std::wostringstream oss;
 
@@ -45,16 +45,16 @@ namespace mandala
 		oss << wstring_convert.from_bytes(gpu.get_version()) << std::endl;
 		oss << std::endl;
 		oss << "[audio]" << std::endl;
-		oss << "sources: " << audio.sources.size() << std::endl;
+		oss << "sources: " << audio.get_sources().size() << std::endl;
 		oss << std::endl;
 		oss << "[performance]" << std::endl;
 		oss << "fps: ";
 
-		if (app.performance.fps >= 30)
+		if (app.get_performance().fps >= 30)
 		{
 			oss << color_push(color_green);
 		}
-		else if (app.performance.fps >= 25)
+		else if (app.get_performance().fps >= 25)
 		{
 			oss << color_push(color_yellow);
 		}
@@ -63,7 +63,7 @@ namespace mandala
 			oss << color_push(color_red);
 		}
 
-		oss << static_cast<int32_t>(app.performance.fps);
+		oss << static_cast<int32_t>(app.get_performance().fps);
 		oss << color_pop << std::endl;
 		oss << "[resources]" << std::endl;
 		oss << "bitmap fonts: " << resources.count<bitmap_font_t>() << std::endl;

@@ -1,6 +1,7 @@
 //mandala
 #include "string_archive.hpp"
 #include "exceptions.hpp"
+#include "io.hpp"
 
 #define MAGIC_LENGTH    (4)
 
@@ -19,9 +20,10 @@ namespace mandala
 		}
 
         //version
-		uint32_t expected_version = 1;
+		static const uint32_t expected_version = 1;
         uint32_t version = 0;
-        istream.read(reinterpret_cast<char*>(&version), sizeof(version));
+
+        read(istream, version);
 
 		if (version != expected_version)
         {
@@ -30,11 +32,11 @@ namespace mandala
 
 		//language count
 		uint32_t language_count = 0;
-		istream.read(reinterpret_cast<char*>(&language_count), sizeof(language_count));
+        read(istream, language_count);
 
 		//key count
 		uint32_t key_count = 0;
-		istream.read(reinterpret_cast<char*>(&key_count), sizeof(key_count));
+        read(istream, key_count);
 
 		std::vector<std::string> languages;
 
@@ -50,7 +52,7 @@ namespace mandala
 
         //strings
 		uint32_t strings_length = 0;
-		istream.read(reinterpret_cast<char*>(&strings_length), sizeof(strings_length));
+        read(istream, strings_length);
 		istream.seekg(strings_length, std::ios_base::cur);
 
 		for (uint32_t i = 0; i < key_count; ++i)
@@ -66,7 +68,7 @@ namespace mandala
 				auto& string = strings[i];
 				
 				string.hash = hash_t(key);
-				istream.read(reinterpret_cast<char*>(&string.offset), sizeof(string.offset));
+                read(istream, string.offset);
 			}
         }
     }

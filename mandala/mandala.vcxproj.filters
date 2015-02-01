@@ -19,9 +19,6 @@
     <ClInclude Include="app.hpp">
       <Filter>mandala\app</Filter>
     </ClInclude>
-    <ClInclude Include="audio_mgr.hpp">
-      <Filter>mandala\app</Filter>
-    </ClInclude>
     <ClInclude Include="game.hpp">
       <Filter>mandala\app</Filter>
     </ClInclude>
@@ -29,9 +26,6 @@
       <Filter>mandala\app</Filter>
     </ClInclude>
     <ClInclude Include="pack_mgr.hpp">
-      <Filter>mandala\app</Filter>
-    </ClInclude>
-    <ClInclude Include="resource_mgr.hpp">
       <Filter>mandala\app</Filter>
     </ClInclude>
     <ClInclude Include="state_mgr.hpp">
@@ -355,6 +349,17 @@
       <Filter>mandala\app</Filter>
     </ClInclude>
     <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="audio_mgr.hpp">
+      <Filter>mandala\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="resource_mgr.hpp">
+      <Filter>mandala\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="audio_defs.hpp">
+      <Filter>mandala\audio</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu_program_mgr.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -403,9 +408,6 @@
     <ClCompile Include="sprite_set.cpp">
       <Filter>mandala\resources\sprite</Filter>
     </ClCompile>
-    <ClCompile Include="resource_mgr.cpp">
-      <Filter>mandala\app</Filter>
-    </ClCompile>
     <ClCompile Include="armada\armada.cpp">
       <Filter>armada</Filter>
     </ClCompile>
@@ -438,9 +440,6 @@
     </ClCompile>
     <ClCompile Include="sound.cpp">
       <Filter>mandala\resources\sound</Filter>
-    </ClCompile>
-    <ClCompile Include="audio_mgr.cpp">
-      <Filter>mandala\app</Filter>
     </ClCompile>
     <ClCompile Include="audio_source.cpp">
       <Filter>mandala\audio</Filter>
@@ -555,6 +554,12 @@
     </ClCompile>
     <ClCompile Include="python_mgr.cpp">
       <Filter>mandala\app</Filter>
+    </ClCompile>
+    <ClCompile Include="audio_mgr.cpp">
+      <Filter>mandala\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="resource_mgr.cpp">
+      <Filter>mandala\resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

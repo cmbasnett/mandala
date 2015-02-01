@@ -57,4 +57,22 @@ namespace mandala
 
         //TODO: stencil mask
     }
+
+    void frame_buffer_t::set_size(const gpu_frame_buffer_size_type & size)
+    {
+        if (color_texture != nullptr)
+        {
+            color_texture->set_size(size);
+        }
+
+        if (depth_texture != nullptr)
+        {
+            depth_texture->set_size(size);
+        }
+
+        if (depth_stencil_texture != nullptr)
+        {
+            depth_texture->set_size(size);
+        }
+    }
 }

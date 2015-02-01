@@ -18,6 +18,9 @@ namespace mandala
 		virtual void app_render_start();
 		virtual void app_render_end();
 
+        const std::string& get_name() const { return name; }
+
+    private:
 		std::string name;
 	};
 }

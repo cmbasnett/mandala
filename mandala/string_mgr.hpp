@@ -34,7 +34,7 @@ namespace mandala
         string_type get(const hash_t& hash);
 
     private:
-        std::mutex mutex;
+        std::recursive_mutex mutex;
         std::vector<std::shared_ptr<std::istream>> streams;
 		std::map<language_type, strings_type> language_strings;
     };
