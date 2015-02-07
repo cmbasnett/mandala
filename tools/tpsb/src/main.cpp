@@ -63,7 +63,7 @@ int main(int argc, char** argv)
     if (boost::iequals(extension, ".json"))
     {
         filename.replace_extension("tpsb");
-        output_path += filename;
+        output_path /= filename;
 
         try
         {

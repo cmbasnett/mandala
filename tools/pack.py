@@ -15,7 +15,7 @@ def main():
 	# gather resources to be packed
 	for root, dirs, files in os.walk(args.input, topdown=False):
 	    for file in files:
-	    	if file == 'Thumbs.db':	#HACK: figure out a cross-platform way to check for hidden files
+	    	if file == 'Thumbs.db':	#HACK: figure out a cross-platform way to check for and omit hidden files
 	    		continue
 
 	    	resource = {}

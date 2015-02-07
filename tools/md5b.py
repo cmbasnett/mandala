@@ -134,6 +134,65 @@ class Animation:
                         for token in tokens:
                             self.frames[frame_index].data.append(float(token))
 
+    def write(self, path):
+        version = 1
+
+        with open(path, 'wb+') as f:
+            # todo: make this a function of model somehow
+
+            # header
+            s = struct.Struct('4s I I')
+            f.write(s.pack('MD5A',
+                           version,
+                           self.frames_per_second))
+
+            # bone count
+            s = struct.Struct('I')
+            f.write(s.pack(len(self.bones)))
+
+            # bones
+            for bone in self.bones:
+                f.write(bone.name + '\0')
+
+                s = struct.Struct('B B i')
+                f.write(s.pack(bone.parent_index,
+                               bone.flags,
+                               bone.frame_data_start_index))
+
+            # frame count
+            s = struct.Struct('I')
+            f.write(s.pack(len(self.frames)))
+
+            # frame bounds
+            for frame in self.frames:
+                s = struct.Struct('f f f f f f')
+                f.write(s.pack(frame.min.x,
+                               frame.min.y,
+                               frame.min.z,
+                               frame.max.x,
+                               frame.max.y,
+                               frame.max.z))
+
+            # base bone frames
+            for bone_frame in self.base_bone_frames:
+                s = struct.Struct('f f f f f f')
+                f.write(s.pack(bone_frame.position.x,
+                               bone_frame.position.y,
+                               bone_frame.position.z,
+                               bone_frame.orientation.x,
+                               bone_frame.orientation.y,
+                               bone_frame.orientation.z))
+
+            # frame data count
+            s = struct.Struct('I')
+            f.write(s.pack(self.frame_data_count))
+
+            # frame data
+            s = struct.Struct('f')
+            for frame in self.frames:
+                for data in frame.data:
+                    f.write(s.pack(data))
+
 
 class Model:
     class Bone:
@@ -228,47 +287,22 @@ class Model:
 
                             mesh.weights.append(weight)
 
-                    print mesh.material
-                    print len(mesh.vertices)
-                    print len(mesh.indices)
-                    print len(mesh.weights)
-
                     self.meshes.append(mesh)
 
-
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--input', dest='input', required=False, default=os.getcwd())
-    parser.add_argument('--output', dest='output', required=False, default=os.getcwd())
-    args = parser.parse_args()
-
-    #args.input = 'C:\Users\Colin Basnett\Documents\Visual Studio 2013\Projects\mandala\\resources\\raw\models\\boblampclean\\boblampclean.md5mesh'
-    #args.output = 'C:/Users/Colin Basnett/Desktop/model.md5b'
-    args.input = 'C:\Users\Colin Basnett\Documents\Visual Studio 2013\Projects\mandala\\resources\\raw\models\\boblampclean\\boblampclean.md5anim'
-    args.output = 'C:/Users/Colin Basnett/Desktop/animation.md5a'
-
-    if not os.path.isfile(args.input):
-        return 1
-
-    extension = args.input.split('.')[-1].lower()
-
-    if iequal(extension, 'md5mesh'):
-        model = Model(args.input)
+    def write(self, path):
         version = 1
 
-        with open(args.output, 'wb+') as f:
-            # todo: make this a function of model somehow
-
+        with open(path, 'wb+') as f:
             # header
             s = struct.Struct('4s I')
             f.write(s.pack('MD5M', version))
 
             # bone count
             s = struct.Struct('I')
-            f.write(s.pack(len(model.bones)))
+            f.write(s.pack(len(self.bones)))
 
             # bones
-            for bone in model.bones:
+            for bone in self.bones:
                 f.write(bone.name + '\0')
 
                 s = struct.Struct('B f f f f f f')
@@ -282,10 +316,10 @@ def main():
 
             # mesh count
             s = struct.Struct('I')
-            f.write(s.pack(len(model.meshes)))
+            f.write(s.pack(len(self.meshes)))
 
             # meshes
-            for mesh in model.meshes:
+            for mesh in self.meshes:
                 # material
                 f.write(mesh.material + '\0')
 
@@ -324,65 +358,30 @@ def main():
                                    weight.position.y,
                                    weight.position.z))
 
-    elif iequal(extension, 'md5anim'):
-        animation = Animation(args.input)
-        version = 1
 
-        with open(args.output, 'wb+') as f:
-            # todo: make this a function of model somehow
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--input_file', dest='input_file', required=True)
+    parser.add_argument('--output_dir', dest='output_dir', required=True)
+    args = parser.parse_args()
 
-            # header
-            s = struct.Struct('4s I I')
-            f.write(s.pack('MD5A',
-                           version,
-                           animation.frames_per_second))
+    if not os.path.isfile(args.input_file):
+        raise RuntimeError('input_file {} does not exist'.format(args.input_file))
 
-            # bone count
-            s = struct.Struct('I')
-            f.write(s.pack(len(animation.bones)))
+    #print args.input_file
 
-            # bones
-            for bone in animation.bones:
-                f.write(bone.name + '\0')
+    #TODO: verify beforehand that output_file will be created properly/create it here and pass it
+    output_file = os.path.join(args.output_dir, os.path.splitext(os.path.basename(args.input_file))[0])
+    extension = os.path.splitext(args.input_file)[1]
 
-                s = struct.Struct('B B i')
-                f.write(s.pack(bone.parent_index,
-                               bone.flags,
-                               bone.frame_data_start_index))
-
-            # frame count
-            s = struct.Struct('I')
-            f.write(s.pack(len(animation.frames)))
-
-            # frame bounds
-            for frame in animation.frames:
-                s = struct.Struct('f f f f f f')
-                f.write(s.pack(frame.min.x,
-                               frame.min.y,
-                               frame.min.z,
-                               frame.max.x,
-                               frame.max.y,
-                               frame.max.z))
-
-            # base bone frames
-            for bone_frame in animation.base_bone_frames:
-                s = struct.Struct('f f f f f f')
-                f.write(s.pack(bone_frame.position.x,
-                               bone_frame.position.y,
-                               bone_frame.position.z,
-                               bone_frame.orientation.x,
-                               bone_frame.orientation.y,
-                               bone_frame.orientation.z))
-
-            # frame data count
-            s = struct.Struct('I')
-            f.write(s.pack(animation.frame_data_count))
-
-            # frame data
-            s = struct.Struct('f')
-            for frame in animation.frames:
-                for data in frame.data:
-                    f.write(s.pack(data))
+    if iequal(extension, '.md5mesh'):
+        model = Model(args.input_file)
+        model.write(output_file + '.md5m')
+    elif iequal(extension, '.md5anim'):
+        animation = Animation(args.input_file)
+        animation.write(output_file + '.md5a')
+    else:
+        raise RuntimeError('invalid extension')
 
 
 if __name__ == '__main__':
