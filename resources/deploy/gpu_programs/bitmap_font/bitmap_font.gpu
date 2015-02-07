@@ -1,7 +1,0 @@
-{
-	"shaders":
-	[
-		"bitmap_font.vert",
-		"bitmap_font.frag"
-	]
-}

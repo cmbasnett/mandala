@@ -1,7 +1,0 @@
-{
-	"shaders":
-	[
-		"model.vert",
-		"model.frag"
-	]
-}

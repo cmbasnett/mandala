@@ -1,7 +1,0 @@
-{
-	"shaders":
-	[
-		"blur_h.vert",
-		"blur_h.frag"
-	]
-}

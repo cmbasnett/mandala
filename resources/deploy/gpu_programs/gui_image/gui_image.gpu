@@ -1,7 +1,0 @@
-{
-	"shaders":
-	[
-		"gui_image.vert",
-		"gui_image.frag"
-	]
-}
