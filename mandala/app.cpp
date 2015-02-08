@@ -12,9 +12,9 @@
 #include "bsp_gpu_program.hpp"
 #include "blur_horizontal_gpu_program.hpp"
 #include "basic_gpu_program.hpp"
-#include "gpu_program_mgr.hpp"
-
 #include "gui_gpu_program.hpp"
+
+#include "gpu_program_mgr.hpp"
 #include "resource_mgr.hpp"
 #include "string_mgr.hpp"
 #include "audio_mgr.hpp"
@@ -54,10 +54,9 @@ namespace mandala
             auto dt = static_cast<float32_t>(duration_cast<milliseconds>(high_resolution_clock::now() - frame_start_time).count()) / std::milli::den;
 
             performance.fps = 1.0f / dt;
-
             frame_start_time = high_resolution_clock::now();
-            handle_input_events();
 
+            handle_input_events();
             tick(dt);
 			render();
 
@@ -99,7 +98,6 @@ namespace mandala
 
 		game->app_tick_start();
 
-		//http.tick(dt);
 		states.tick(dt);
 		audio.tick(dt);
 
