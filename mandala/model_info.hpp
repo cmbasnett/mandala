@@ -52,6 +52,8 @@ namespace mandala
 
 		void render(const vec3_t& camera_position, const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices, const vec3_t& light_position) const;
 
+        boost::optional<size_t> get_bone_index(const hash_t& bone_hash) const;
+
 	private:
         struct mesh_info_t
         {

@@ -109,50 +109,50 @@ namespace mandala
 				const auto& bone = bones[j];
 				auto& skeleton_bone = skeleton.bones[j];
 				skeleton_bone.parent_index = bone.parent_index;
-				skeleton_bone.location = base_bone_frames[j].location;
-				skeleton_bone.rotation = base_bone_frames[j].rotation;
+				skeleton_bone.pose.location = base_bone_frames[j].location;
+				skeleton_bone.pose.rotation = base_bone_frames[j].rotation;
 
 				auto frame_data_start_index = (frame_data_count * i) + bone.data_start_index;
 
 				if (bone.flags & bone_t::flags_t::position_x)
 				{
-					skeleton_bone.location.x = frame_data[frame_data_start_index + k++];
+					skeleton_bone.pose.location.x = frame_data[frame_data_start_index + k++];
 				}
 
 				if(bone.flags & bone_t::flags_t::position_y)
 				{
-					skeleton_bone.location.z = -frame_data[frame_data_start_index + k++];
+					skeleton_bone.pose.location.z = -frame_data[frame_data_start_index + k++];
 				}
 
 				if(bone.flags & bone_t::flags_t::position_z)
 				{
-					skeleton_bone.location.y = frame_data[frame_data_start_index + k++];
+					skeleton_bone.pose.location.y = frame_data[frame_data_start_index + k++];
 				}
 
 				if(bone.flags & bone_t::flags_t::rotation_x)
 				{
-					skeleton_bone.rotation.x = frame_data[frame_data_start_index + k++];
+					skeleton_bone.pose.rotation.x = frame_data[frame_data_start_index + k++];
 				}
 
 				if(bone.flags & bone_t::flags_t::rotation_y)
 				{
-					skeleton_bone.rotation.z = -frame_data[frame_data_start_index + k++];
+					skeleton_bone.pose.rotation.z = -frame_data[frame_data_start_index + k++];
 				}
 
 				if(bone.flags & bone_t::flags_t::rotation_z)
 				{
-					skeleton_bone.rotation.y = frame_data[frame_data_start_index + k++];
+					skeleton_bone.pose.rotation.y = frame_data[frame_data_start_index + k++];
 				}
 
-				md5b::compute_quaternion_w(skeleton_bone.rotation);
+				md5b::compute_quaternion_w(skeleton_bone.pose.rotation);
 
 				if(skeleton_bone.parent_index != md5b::bone_null_index)
 				{
 					auto& parent_skeleton_bone = skeleton.bones[skeleton_bone.parent_index];
-					auto rotated_position = parent_skeleton_bone.rotation * skeleton_bone.location;
+					auto rotated_position = parent_skeleton_bone.pose.rotation * skeleton_bone.pose.location;
 
-					skeleton_bone.location = parent_skeleton_bone.location + rotated_position;
-					skeleton_bone.rotation = glm::normalize(parent_skeleton_bone.rotation * skeleton_bone.rotation);
+					skeleton_bone.pose.location = parent_skeleton_bone.pose.location + rotated_position;
+					skeleton_bone.pose.rotation = glm::normalize(parent_skeleton_bone.pose.rotation * skeleton_bone.pose.rotation);
 				}
 			}
 		}

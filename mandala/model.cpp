@@ -61,17 +61,16 @@ namespace mandala
 		model->render(camera.position, world_matrix, view_projection_matrix, bone_matrices, light_position);
 	}
 	
-	const void model_t::get_bone(const hash_t& bone_name_hash, vec3_t& location, quat_t& rotation) const
+	const pose3 model_t::get_bone_pose(const hash_t& bone_hash) const
 	{
-		if (model->bone_indices.find(bone_name_hash) == model->bone_indices.end())
-		{
-			throw std::exception();
-		}
+        pose3 pose;
 
-		auto bone_index = model->bone_indices.at(bone_name_hash);
-		const auto& bone = skeleton.bones[bone_index];
+		auto bone_index = model->get_bone_index(bone_hash);
+		const auto& bone = skeleton.bones[*bone_index];
 
-		location = bone.location;
-		rotation = bone.rotation;
+        pose.location = bone.pose.location;
+        pose.rotation = bone.pose.rotation;
+
+        return pose;
 	}
 }

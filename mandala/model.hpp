@@ -1,6 +1,7 @@
 #pragma once
 
 //mandala
+#include "pose.hpp"
 #include "model_skeleton.hpp"
 #include "model_animation_controller.hpp"
 #include "camera.hpp"
@@ -27,6 +28,6 @@ namespace mandala
 		model_skeleton_t skeleton;
 		model_animation_controller_t animation_controller;
 
-		const void get_bone(const hash_t& bone_name_hash, vec3_t& location, quat_t& rotation) const;
+		const pose3 get_bone_pose(const hash_t& bone_hash) const;
 	};
 }

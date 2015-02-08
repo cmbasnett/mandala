@@ -350,6 +350,9 @@
     <ClInclude Include="model.hpp">
       <Filter>mandala\resources\model</Filter>
     </ClInclude>
+    <ClInclude Include="pose.hpp">
+      <Filter>mandala\math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

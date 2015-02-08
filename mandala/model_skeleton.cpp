@@ -27,10 +27,10 @@ namespace mandala
 #endif
 
 			skeleton_bone.parent_index = bone_0.parent_index;
-			skeleton_bone.location = glm::mix(bone_0.location, bone_1.location, t);
-			skeleton_bone.rotation = glm::slerp(bone_0.rotation, bone_1.rotation, t);
+			skeleton_bone.pose.location = glm::mix(bone_0.pose.location, bone_1.pose.location, t);
+			skeleton_bone.pose.rotation = glm::slerp(bone_0.pose.rotation, bone_1.pose.rotation, t);
 
-			skeleton.bone_matrices[i] = glm::translate(skeleton_bone.location) * glm::toMat4(skeleton_bone.rotation);
+            skeleton.bone_matrices[i] = skeleton_bone.pose.to_matrix();
 		}
 
 		skeleton.aabb = aabb3_t::join(a.aabb, b.aabb);

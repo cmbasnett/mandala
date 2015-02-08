@@ -310,6 +310,20 @@ namespace mandala
         gpu.blend.pop_state();
     }
 
+    boost::optional<size_t> model_info_t::get_bone_index(const hash_t & bone_hash) const
+    {
+        boost::optional<size_t> bone_index = boost::none;
+
+        auto bone_indices_itr = bone_indices.find(bone_hash);
+
+        if (bone_indices_itr != bone_indices.end())
+        {
+            bone_index = bone_indices_itr->second;
+        }
+
+        return bone_index;
+    }
+
     void model_info_t::mesh_t::render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices) const
     {
         static const auto diffuse_texture_index = 0;
