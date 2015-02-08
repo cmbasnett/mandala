@@ -91,22 +91,22 @@ namespace mandala
             plane.plane.normal.z = -plane.plane.normal.z;
         }
 
-        //vertex_positions
+        //vertex_locations
 		const auto& vertices_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::vertices)];
         istream.seekg(vertices_chunk.offset, std::ios_base::beg);
 
-        std::vector<vec3_t> vertex_positions;
+        std::vector<vec3_t> vertex_locations;
 
-        auto vertex_position_count = vertices_chunk.length / sizeof(vec3_t);
-        vertex_positions.resize(vertex_position_count);
+        auto vertex_location_count = vertices_chunk.length / sizeof(vec3_t);
+        vertex_locations.resize(vertex_location_count);
 
-        for (auto& vertex_position : vertex_positions)
+        for (auto& vertex_location : vertex_locations)
         {
-            read(istream, vertex_position.x);
-            read(istream, vertex_position.z);
-            read(istream, vertex_position.y);
+            read(istream, vertex_location.x);
+            read(istream, vertex_location.z);
+            read(istream, vertex_location.y);
 
-            vertex_position.z = -vertex_position.z;
+            vertex_location.z = -vertex_location.z;
         }
 
         //edges
@@ -442,13 +442,13 @@ namespace mandala
 
                 if (edge_index > 0)
                 {
-                    vertex.location = vertex_positions[edges[edge_index].vertex_indices[0]];
+                    vertex.location = vertex_locations[edges[edge_index].vertex_indices[0]];
                 }
                 else
                 {
                     edge_index = -edge_index;
 
-                    vertex.location = vertex_positions[edges[edge_index].vertex_indices[1]];
+                    vertex.location = vertex_locations[edges[edge_index].vertex_indices[1]];
                 }
 
                 vertex.diffuse_texcoord.x = (glm::dot(vertex.location, texture_info.s.axis) + texture_info.s.offset) / bsp_texture.width;
@@ -486,23 +486,23 @@ namespace mandala
                 for (auto surface_edge_index = 0; surface_edge_index < face.surface_edge_count; ++surface_edge_index)
                 {
                     auto edge_index = surface_edges[face.surface_edge_start_index + surface_edge_index];
-                    vec3_t vertex_position;
+                    vec3_t vertex_location;
 
                     if (edge_index >= 0)
                     {
-                        vertex_position = vertex_positions[edges[edge_index].vertex_indices[0]];
+                        vertex_location = vertex_locations[edges[edge_index].vertex_indices[0]];
                     }
                     else
                     {
-                        vertex_position = vertex_positions[edges[-edge_index].vertex_indices[1]];
+                        vertex_location = vertex_locations[edges[-edge_index].vertex_indices[1]];
                     }
 
-                    auto u = glm::dot(texture_info.s.axis, vertex_position) + texture_info.s.offset;
+                    auto u = glm::dot(texture_info.s.axis, vertex_location) + texture_info.s.offset;
 
                     min_u = glm::min(u, min_u);
                     max_u = glm::max(u, max_u);
 
-                    auto v = glm::dot(texture_info.t.axis, vertex_position) + texture_info.t.offset;
+                    auto v = glm::dot(texture_info.t.axis, vertex_location) + texture_info.t.offset;
 
                     min_v = glm::min(v, min_v);
                     max_v = glm::max(v, max_v);
@@ -520,19 +520,19 @@ namespace mandala
                 {
                     auto edge_index = surface_edges[face.surface_edge_start_index + surface_edge_index];
 
-                    vec3_t vertex_position;
+                    vec3_t vertex_location;
 
                     if (edge_index >= 0)
                     {
-                        vertex_position = vertex_positions[edges[edge_index].vertex_indices[0]];
+                        vertex_location = vertex_locations[edges[edge_index].vertex_indices[0]];
                     }
                     else
                     {
-                        vertex_position = vertex_positions[edges[-edge_index].vertex_indices[1]];
+                        vertex_location = vertex_locations[edges[-edge_index].vertex_indices[1]];
                     }
 
-                    auto u = glm::dot(texture_info.s.axis, vertex_position) + texture_info.s.offset;
-                    auto v = glm::dot(texture_info.t.axis, vertex_position) + texture_info.t.offset;
+                    auto u = glm::dot(texture_info.s.axis, vertex_location) + texture_info.s.offset;
+                    auto v = glm::dot(texture_info.t.axis, vertex_location) + texture_info.t.offset;
 
                     auto lightmap_u = (texture_width / 2) + (u - ((min_u + max_u) / 2)) / 16;
                     auto lightmap_v = (texture_height / 2) + (v - ((min_v + max_v) / 2)) / 16;

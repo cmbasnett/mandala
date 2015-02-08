@@ -86,7 +86,7 @@ void main()
 
 	void bsp_gpu_program_t::on_bind()
 	{
-		static const auto position_offset = reinterpret_cast<void*>(offsetof(vertex_type, location));
+		static const auto location_offset = reinterpret_cast<void*>(offsetof(vertex_type, location));
 		static const auto diffuse_texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_type, diffuse_texcoord));
 		static const auto lightmap_texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_type, lightmap_texcoord));
 
@@ -94,7 +94,7 @@ void main()
 		gpu.enable_vertex_attribute_array(diffuse_texcoord_location);
 		gpu.enable_vertex_attribute_array(lightmap_texcoord_location);
 
-		gpu.set_vertex_attrib_pointer(location_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), position_offset);
+		gpu.set_vertex_attrib_pointer(location_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), location_offset);
 		gpu.set_vertex_attrib_pointer(diffuse_texcoord_location, 2, gpu_data_type_e::float_, false, sizeof(vertex_type), diffuse_texcoord_offset);
 		gpu.set_vertex_attrib_pointer(lightmap_texcoord_location, 2, gpu_data_type_e::float_, false, sizeof(vertex_type), lightmap_texcoord_offset);
 	}
