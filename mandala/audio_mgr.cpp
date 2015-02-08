@@ -99,9 +99,9 @@ namespace mandala
         }
     }
 
-    void audio_mgr_t::set_source_position(uint32_t source_id, const vec3_t & position) const
+    void audio_mgr_t::set_source_location(uint32_t source_id, const vec3_t & location) const
     {
-        alSourcefv(source_id, AL_POSITION, glm::value_ptr(position)); alCheckError();
+        alSourcefv(source_id, AL_POSITION, glm::value_ptr(location)); alCheckError();
     }
 
     void audio_mgr_t::set_source_velocity(uint32_t source_id, const vec3_t & velocity) const

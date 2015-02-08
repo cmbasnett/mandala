@@ -51,7 +51,7 @@ namespace mandala
         void destroy_source(uint32_t source_id);
 
         audio_source_state_e get_source_state(uint32_t source_id) const;
-        void set_source_position(uint32_t source_id, const vec3_t& velocity) const;
+        void set_source_location(uint32_t source_id, const vec3_t& velocity) const;
         void set_source_velocity(uint32_t source_id, const vec3_t& velocity) const;
         void set_source_gain(uint32_t source_id, float32_t gain) const;
         void set_source_reference_distance(uint32_t source_id, float32_t reference_distance) const;

@@ -223,7 +223,7 @@ namespace mandala
                     const auto& sound = resources.get<sound_t>(hash_t("garand_shoot.wav"));
 
                     auto source = std::make_shared<audio_source_t>();
-					source->set_position(camera.position);
+					source->set_location(camera.position);
 					source->set_max_distance(500.0f);
 					source->set_reference_distance(250.0f);
 					source->queue_sound(sound);

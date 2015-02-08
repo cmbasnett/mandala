@@ -23,9 +23,9 @@ namespace mandala
         return audio.get_source_state(id);
     }
 
-    void audio_source_t::set_position(const vec3_t& position)
+    void audio_source_t::set_location(const vec3_t& location)
     {
-        audio.set_source_position(id, position);
+        audio.set_source_location(id, location);
     }
 
     void audio_source_t::set_velocity(const vec3_t& velocity)

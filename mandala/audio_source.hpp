@@ -20,7 +20,7 @@ namespace mandala
 
         id_type get_id() const { return id; }
         audio_source_state_e get_state() const;
-        void set_position(const vec3_t& position);
+        void set_location(const vec3_t& location);
         void set_velocity(const vec3_t& velocity);
         void set_gain(float32_t gain);
         void set_reference_distance(float32_t reference_distance);
