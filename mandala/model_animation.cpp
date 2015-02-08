@@ -67,7 +67,7 @@ namespace mandala
         }
 
 		//base bone frames
-		std::vector<bone_frame_t> base_bone_frames;
+		std::vector<pose3> base_bone_frames;
 		base_bone_frames.resize(bone_count);
 
 		for(auto& base_bone_frame : base_bone_frames)

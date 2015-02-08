@@ -26,12 +26,6 @@ namespace mandala
 			uint8_t flags = 0;
 			int32_t data_start_index = 0;
 		};
-
-		struct bone_frame_t
-		{
-			vec3_t location;
-			quat_t rotation;
-		};
 		
 		model_animation_t(std::istream& istream);
 
