@@ -27,28 +27,14 @@ namespace mandala
         typedef vec2_t texcoord_type;
 
 		position_texcoord_vertex_t() = default;
-		position_texcoord_vertex_t(const location_type& position, const texcoord_type& texcoord) :
-			position(position),
+		position_texcoord_vertex_t(const location_type& location, const texcoord_type& texcoord) :
+            location(location),
 			texcoord(texcoord)
 		{
 		}
 
-		location_type position;
+		location_type location;
 		texcoord_type texcoord;
-	};
-
-	struct terrain_vertex_t
-	{
-		//TODO: layer weights
-		typedef vec3_t location_type;
-
-		terrain_vertex_t() = default;
-		terrain_vertex_t(const location_type& position) :
-			position(position)
-		{
-		}
-
-		location_type position;
 	};
 
 	struct model_vertex_t
@@ -59,7 +45,7 @@ namespace mandala
 		typedef vec4_i32_t bone_indices_type;
 		typedef vec4_t bone_weights_type;
 
-		location_type position;
+		location_type location;
 		normal_type normal;
 		normal_type tangent;
 		texcoord_type texcoord;
@@ -67,12 +53,5 @@ namespace mandala
 		bone_indices_type bone_indices_1;
 		bone_weights_type bone_weights_0;
 		bone_weights_type bone_weights_1;
-	};
-
-	struct voxel_vertex_t
-	{
-		typedef vec3_i32_t location_type;
-
-		location_type position;
 	};
 }

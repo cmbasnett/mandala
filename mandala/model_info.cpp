@@ -63,14 +63,14 @@ namespace mandala
             bone_indices.insert(std::make_pair(hash_t(bone_info.name), i));
 
             read(istream, bone_info.parent_index);
-            read(istream, bone_info.position.x);
-            read(istream, bone_info.position.y);
-            read(istream, bone_info.position.z);
-            read(istream, bone_info.orientation.x);
-            read(istream, bone_info.orientation.y);
-            read(istream, bone_info.orientation.z);
+            read(istream, bone_info.pose.location.x);
+            read(istream, bone_info.pose.location.y);
+            read(istream, bone_info.pose.location.z);
+            read(istream, bone_info.pose.rotation.x);
+            read(istream, bone_info.pose.rotation.y);
+            read(istream, bone_info.pose.rotation.z);
 
-            md5b::compute_quaternion_w(bone_info.orientation);
+            md5b::compute_quaternion_w(bone_info.pose.rotation);
         }
 
         //mesh count
@@ -119,9 +119,9 @@ namespace mandala
             {
                 read(istream, weight.bone_index);
                 read(istream, weight.bias);
-                read(istream, weight.position.x);
-                read(istream, weight.position.y);
-                read(istream, weight.position.z);
+                read(istream, weight.location.x);
+                read(istream, weight.location.y);
+                read(istream, weight.location.z);
             }
         }
 
@@ -169,8 +169,8 @@ namespace mandala
                         vertex.bone_indices_1[k % 4] = weight.bone_index;
                     }
 
-                    auto rotated_position = bone.orientation * weight.position;
-                    vertex.position += (bone.position + rotated_position) * weight.bias;
+                    auto rotated_location = bone.pose.rotation * weight.location;
+                    vertex.location += (bone.pose.location + rotated_location) * weight.bias;
                 }
             }
 
@@ -185,8 +185,8 @@ namespace mandala
                 auto& vertex_1 = vertices[mesh_info.indices[j++]];
                 auto& vertex_2 = vertices[mesh_info.indices[j++]];
 
-                auto v0 = vertex_1.position - vertex_0.position;
-                auto v1 = vertex_2.position - vertex_0.position;
+                auto v0 = vertex_1.location - vertex_0.location;
+                auto v1 = vertex_2.location - vertex_0.location;
 
                 //normal
                 auto normal = glm::cross(v0, v1);
@@ -250,12 +250,12 @@ namespace mandala
             const auto& bone_info = bone_infos[i];
             auto& bone = bones[i];
 
-            bone.bind_pose_matrix = glm::translate(bone_info.position) * glm::toMat4(bone_info.orientation);
+            bone.bind_pose_matrix = bone_info.pose.to_matrix();
             bone.inverse_bind_pose_matrix = glm::inverse(bone.bind_pose_matrix);
         }
     }
 
-    void model_info_t::render(const vec3_t& camera_position, const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices, const vec3_t& light_position) const
+    void model_info_t::render(const vec3_t& camera_location, const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices, const vec3_t& light_location) const
     {
         //blend
         auto blend_state = gpu.blend.get_state();
@@ -291,8 +291,8 @@ namespace mandala
             gpu_program->view_projection_matrix(view_projection_matrix);
             gpu_program->normal_matrix(glm::inverseTranspose(glm::mat3(world_matrix)));
             gpu_program->bone_matrices(bone_matrices);
-            gpu_program->light_position(light_position);
-            gpu_program->camera_position(camera_position);
+            gpu_program->light_location(light_location);
+            gpu_program->camera_location(camera_location);
             gpu_program->is_lit(mesh->material->get_is_lit());
 
             mesh->render(world_matrix, view_projection_matrix, bone_matrices);

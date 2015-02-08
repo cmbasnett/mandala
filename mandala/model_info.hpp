@@ -5,6 +5,7 @@
 #include <map>
 
 //mandala
+#include "pose.hpp"
 #include "resource.hpp"
 #include "vertex_buffer.hpp"
 #include "index_buffer.hpp"
@@ -50,7 +51,7 @@ namespace mandala
 		std::map<hash_t, uint8_t> bone_indices;
 		std::vector<bone_t> bones;
 
-		void render(const vec3_t& camera_position, const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices, const vec3_t& light_position) const;
+		void render(const vec3_t& camera_location, const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices, const vec3_t& light_location) const;
 
         boost::optional<size_t> get_bone_index(const hash_t& bone_hash) const;
 
@@ -68,7 +69,7 @@ namespace mandala
             {
                 uint8_t bone_index = 0;
                 float32_t bias = 0;
-                vec3_t position;
+                vec3_t location;
             };
 
             std::string shader;
@@ -81,8 +82,7 @@ namespace mandala
         {
             std::string name;
             uint8_t parent_index = 0;
-            vec3_t position;
-            quat_t orientation;
+            pose3 pose;
         };
 
 		model_info_t(const model_info_t&) = delete;

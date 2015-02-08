@@ -42,7 +42,7 @@ namespace mandala
 		}
 	}
 
-	void model_t::render(const camera_t& camera, const vec3_t& light_position) const
+	void model_t::render(const camera_t& camera, const vec3_t& light_location) const
 	{
 		if (model == nullptr)
 		{
@@ -58,7 +58,7 @@ namespace mandala
 
         auto view_projection_matrix = camera.get_projection_matrix() * camera.get_view_matrix();
 
-		model->render(camera.location, world_matrix, view_projection_matrix, bone_matrices, light_position);
+		model->render(camera.location, world_matrix, view_projection_matrix, bone_matrices, light_location);
 	}
 	
 	const pose3 model_t::get_bone_pose(const hash_t& bone_hash) const

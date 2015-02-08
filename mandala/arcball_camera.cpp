@@ -36,7 +36,7 @@ namespace mandala
 		auto m = glm::mat3_cast(glm::normalize(q));
 		auto forward = glm::row(m, 0);
 
-        //position
+        //location
 		location = target - (forward * distance);
 
 		camera_t::tick(dt);

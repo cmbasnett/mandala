@@ -46,7 +46,7 @@ namespace mandala
             typedef vec2_t location_type;
             typedef vec2_t texcoord_type;
 
-            location_type position;
+            location_type location;
             texcoord_type texcoord;
         };
 

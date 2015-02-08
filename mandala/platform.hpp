@@ -58,8 +58,8 @@ namespace mandala
 		virtual window_size_type get_window_size() const = 0;
 		virtual void set_window_size(const window_size_type& window_size) const = 0;
 
-		virtual window_size_type get_window_position() const = 0;
-		virtual void set_window_position(const window_size_type& window_position) const = 0;
+		virtual window_size_type get_window_location() const = 0;
+		virtual void set_window_location(const window_size_type& window_location) const = 0;
 
         //pop_window_event
         virtual bool pop_window_event(window_event_t& window_event) = 0;

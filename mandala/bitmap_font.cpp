@@ -182,20 +182,20 @@ namespace mandala
             auto character = characters.at(character_id);
 
             //location 0
-            vertices[j + 0].position.x = static_cast<float32_t>(character.offset.x);
-            vertices[j + 0].position.y = -static_cast<float32_t>(character.offset.y + character.rectangle.height - base);
+            vertices[j + 0].location.x = static_cast<float32_t>(character.offset.x);
+            vertices[j + 0].location.y = -static_cast<float32_t>(character.offset.y + character.rectangle.height - base);
 
             //location 1
-            vertices[j + 1].position.x = static_cast<float32_t>(character.offset.x + character.rectangle.width);
-            vertices[j + 1].position.y = -static_cast<float32_t>(character.offset.y + character.rectangle.height - base);
+            vertices[j + 1].location.x = static_cast<float32_t>(character.offset.x + character.rectangle.width);
+            vertices[j + 1].location.y = -static_cast<float32_t>(character.offset.y + character.rectangle.height - base);
 
             //location 2
-            vertices[j + 2].position.x = static_cast<float32_t>(character.offset.x + character.rectangle.width);
-            vertices[j + 2].position.y = -static_cast<float32_t>(character.offset.y - base);
+            vertices[j + 2].location.x = static_cast<float32_t>(character.offset.x + character.rectangle.width);
+            vertices[j + 2].location.y = -static_cast<float32_t>(character.offset.y - base);
 
             //location 3
-            vertices[j + 3].position.x = static_cast<float32_t>(character.offset.x);
-            vertices[j + 3].position.y = -static_cast<float32_t>(character.offset.y - base);
+            vertices[j + 3].location.x = static_cast<float32_t>(character.offset.x);
+            vertices[j + 3].location.y = -static_cast<float32_t>(character.offset.y - base);
 
             //texcoord 0
             vertices[j + 0].texcoord.x = static_cast<float32_t>(character.rectangle.x) / width;

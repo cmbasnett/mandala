@@ -21,7 +21,7 @@ uniform vec4 color_top;
 uniform vec4 color_bottom;
 uniform int should_invert_rgb;
 
-in vec2 position;
+in vec2 location;
 in vec2 texcoord;
 
 out vec2 out_texcoord;
@@ -29,11 +29,11 @@ out vec4 out_color;
 
 void main() 
 {
-	gl_Position = (view_projection_matrix) * (world_matrix * vec4(position, 0, 1));
+	gl_Position = (view_projection_matrix) * (world_matrix * vec4(location, 0, 1));
 	
 	out_texcoord = texcoord;
 	
-	float t = (position.y + (line_height - base)) / line_height;
+	float t = (location.y + (line_height - base)) / line_height;
 	out_color = mix(color_bottom, color_top, t);
 
     //TODO: convert to color modifier subroutine
@@ -63,7 +63,7 @@ void main()
 	bitmap_font_gpu_program_t::bitmap_font_gpu_program_t() :
 		gpu_program_t(vertex_shader_source, fragment_shader_source)
 	{
-		position_location = gpu.get_attribute_location(id(), "position");
+		location_location = gpu.get_attribute_location(id(), "location");
 		texcoord_location = gpu.get_attribute_location(id(), "texcoord");
 
 		world_matrix_location = gpu.get_uniform_location(id(), "world_matrix");
@@ -78,19 +78,19 @@ void main()
 
 	void bitmap_font_gpu_program_t::on_bind()
 	{
-		static const auto position_offset = reinterpret_cast<void*>(offsetof(vertex_type, position));
+		static const auto location_offset = reinterpret_cast<void*>(offsetof(vertex_type, location));
 		static const auto texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_type, texcoord));
 
-		gpu.enable_vertex_attribute_array(position_location);
+		gpu.enable_vertex_attribute_array(location_location);
 		gpu.enable_vertex_attribute_array(texcoord_location);
 
-		gpu.set_vertex_attrib_pointer(position_location, 2, gpu_data_type_e::float_, false, sizeof(vertex_type), position_offset);
+		gpu.set_vertex_attrib_pointer(location_location, 2, gpu_data_type_e::float_, false, sizeof(vertex_type), location_offset);
 		gpu.set_vertex_attrib_pointer(texcoord_location, 2, gpu_data_type_e::float_, false, sizeof(vertex_type), texcoord_offset);
 	}
 
 	void bitmap_font_gpu_program_t::on_unbind()
 	{
-		gpu.disable_vertex_attribute_array(position_location);
+		gpu.disable_vertex_attribute_array(location_location);
 		gpu.disable_vertex_attribute_array(texcoord_location);
 	}
 

@@ -380,9 +380,9 @@ namespace mandala
         return glfwGetInputMode(window_ptr, GLFW_CURSOR) == GLFW_CURSOR_HIDDEN;
 	}
 
-	void platform_win32_t::set_cursor_hidden(bool hide_position) const
+	void platform_win32_t::set_cursor_hidden(bool is_hidden) const
 	{
-        glfwSetInputMode(window_ptr, GLFW_CURSOR, hide_position ? GLFW_CURSOR_HIDDEN : GLFW_CURSOR_NORMAL);
+        glfwSetInputMode(window_ptr, GLFW_CURSOR, is_hidden ? GLFW_CURSOR_HIDDEN : GLFW_CURSOR_NORMAL);
 	}
 
 	platform_t::window_title_type platform_win32_t::get_window_title() const
@@ -410,18 +410,18 @@ namespace mandala
         glfwSetWindowSize(window_ptr, window_size.x, window_size.y);
 	}
 
-	platform_t::window_size_type platform_win32_t::get_window_position() const
+	platform_t::window_size_type platform_win32_t::get_window_location() const
 	{
-		vec2_i32_t window_position;
+		vec2_i32_t window_location;
 
-        glfwGetWindowPos(window_ptr, &window_position.x, &window_position.y);
+        glfwGetWindowPos(window_ptr, &window_location.x, &window_location.y);
 
-		return window_position;
+		return window_location;
 	}
 
-	void platform_win32_t::set_window_position(const window_size_type& window_position) const
+	void platform_win32_t::set_window_location(const window_size_type& window_location) const
 	{
-        glfwSetWindowPos(window_ptr, window_position.x, window_position.y);
+        glfwSetWindowPos(window_ptr, window_location.x, window_location.y);
 	}
 
 	std::string platform_win32_t::get_clipboard_string() const

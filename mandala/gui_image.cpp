@@ -49,7 +49,7 @@ namespace mandala
             const auto& sprite_region = sprite->get_region();
             auto sprite_size = static_cast<vec2_t>(sprite_region.rectangle.size());
 
-            std::array<vertex_type::location_type, vertex_count> vertex_positions = {
+            std::array<vertex_type::location_type, vertex_count> vertex_locations = {
                 vertex_type::location_type(vec3_t(vec2_t(-0.5f, -0.5f) * sprite_size, 0.0f)),
                 vertex_type::location_type(vec3_t(vec2_t(0.5f, -0.5f) * sprite_size, 0.0f)),
                 vertex_type::location_type(vec3_t(vec2_t(0.5f,  0.5f) * sprite_size, 0.0f)),
@@ -58,15 +58,15 @@ namespace mandala
 
             auto vertices = {
                 //non-rotated
-                vertex_type(vertex_positions[0], vec2_t(sprite_region.uv.min.x, sprite_region.uv.min.y)),
-                vertex_type(vertex_positions[1], vec2_t(sprite_region.uv.max.x, sprite_region.uv.min.y)),
-                vertex_type(vertex_positions[2], vec2_t(sprite_region.uv.max.x, sprite_region.uv.max.y)),
-                vertex_type(vertex_positions[3], vec2_t(sprite_region.uv.min.x, sprite_region.uv.max.y)),
+                vertex_type(vertex_locations[0], vec2_t(sprite_region.uv.min.x, sprite_region.uv.min.y)),
+                vertex_type(vertex_locations[1], vec2_t(sprite_region.uv.max.x, sprite_region.uv.min.y)),
+                vertex_type(vertex_locations[2], vec2_t(sprite_region.uv.max.x, sprite_region.uv.max.y)),
+                vertex_type(vertex_locations[3], vec2_t(sprite_region.uv.min.x, sprite_region.uv.max.y)),
                 //rotated
-                vertex_type(vertex_positions[0], vec2_t(sprite_region.uv.min.x, sprite_region.uv.max.y)),
-                vertex_type(vertex_positions[1], vec2_t(sprite_region.uv.min.x, sprite_region.uv.min.y)),
-                vertex_type(vertex_positions[2], vec2_t(sprite_region.uv.max.x, sprite_region.uv.min.y)),
-                vertex_type(vertex_positions[3], vec2_t(sprite_region.uv.max.x, sprite_region.uv.max.y))
+                vertex_type(vertex_locations[0], vec2_t(sprite_region.uv.min.x, sprite_region.uv.max.y)),
+                vertex_type(vertex_locations[1], vec2_t(sprite_region.uv.min.x, sprite_region.uv.min.y)),
+                vertex_type(vertex_locations[2], vec2_t(sprite_region.uv.max.x, sprite_region.uv.min.y)),
+                vertex_type(vertex_locations[3], vec2_t(sprite_region.uv.max.x, sprite_region.uv.max.y))
             };
 
             vertex_buffer->data(vertices, gpu_t::buffer_usage_e::static_draw);

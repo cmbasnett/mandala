@@ -19,7 +19,7 @@ namespace mandala
 		model_t(std::shared_ptr<model_info_t> model);
 
 		void tick(float32_t dt);
-		void render(const camera_t& camera, const vec3_t& light_position) const;
+		void render(const camera_t& camera, const vec3_t& light_location) const;
 
 		mat4_t world_matrix;
 		std::shared_ptr<model_info_t> model;

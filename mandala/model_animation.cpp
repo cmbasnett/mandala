@@ -114,17 +114,17 @@ namespace mandala
 
 				auto frame_data_start_index = (frame_data_count * i) + bone.data_start_index;
 
-				if (bone.flags & bone_t::flags_t::position_x)
+				if (bone.flags & bone_t::flags_t::location_x)
 				{
 					skeleton_bone.pose.location.x = frame_data[frame_data_start_index + k++];
 				}
 
-				if(bone.flags & bone_t::flags_t::position_y)
+				if(bone.flags & bone_t::flags_t::location_y)
 				{
 					skeleton_bone.pose.location.z = -frame_data[frame_data_start_index + k++];
 				}
 
-				if(bone.flags & bone_t::flags_t::position_z)
+				if(bone.flags & bone_t::flags_t::location_z)
 				{
 					skeleton_bone.pose.location.y = frame_data[frame_data_start_index + k++];
 				}
@@ -149,9 +149,9 @@ namespace mandala
 				if(skeleton_bone.parent_index != md5b::bone_null_index)
 				{
 					auto& parent_skeleton_bone = skeleton.bones[skeleton_bone.parent_index];
-					auto rotated_position = parent_skeleton_bone.pose.rotation * skeleton_bone.pose.location;
+					auto rotated_location = parent_skeleton_bone.pose.rotation * skeleton_bone.pose.location;
 
-					skeleton_bone.pose.location = parent_skeleton_bone.pose.location + rotated_position;
+					skeleton_bone.pose.location = parent_skeleton_bone.pose.location + rotated_location;
 					skeleton_bone.pose.rotation = glm::normalize(parent_skeleton_bone.pose.rotation * skeleton_bone.pose.rotation);
 				}
 			}

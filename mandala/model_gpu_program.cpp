@@ -15,10 +15,10 @@ uniform mat4 world_matrix;
 uniform mat3 normal_matrix;
 uniform mat4 view_projection_matrix;
 uniform mat4 bone_matrices[128];
-uniform vec3 light_position;
-uniform vec3 camera_position;
+uniform vec3 light_location;
+uniform vec3 camera_location;
 
-in vec3 position;
+in vec3 location;
 in vec3 normal;
 in vec3 tangent;
 in vec2 texcoord;
@@ -28,7 +28,7 @@ in vec4 bone_weights_0;
 in vec4 bone_weights_1;
 
 out vec2 out_texcoord;
-out vec3 out_position;
+out vec3 out_location;
 out vec3 out_light_vector;
 out vec3 out_normal;
 out vec3 out_view_direction;
@@ -55,9 +55,9 @@ void main()
 	
 	mat4 bone_transform = create_bone_transform();
 	
-	vec4 world_position = world_matrix * bone_transform * vec4(position, 1.0);
+	vec4 world_location = world_matrix * bone_transform * vec4(location, 1.0);
 	
-	out_position = world_position.xyz;
+	out_location = world_location.xyz;
 	
 	out_normal = normal;
 	
@@ -67,13 +67,13 @@ void main()
 	
 	mat3 tbn_matrix = mat3(world_tangent, world_binormal, world_normal);
 	
-	out_light_vector = (world_position.xyz - light_position) * tbn_matrix;
+	out_light_vector = (world_location.xyz - light_location) * tbn_matrix;
 	
-	vec4 final_position = view_projection_matrix * world_position;
+	vec4 final_location = view_projection_matrix * world_location;
 	
-	out_view_direction = normalize(camera_position - out_position);
+	out_view_direction = normalize(camera_location - out_location);
 	
-	gl_Position = final_position;	
+	gl_Position = final_location;	
 }
 )";
 
@@ -116,7 +116,7 @@ uniform specular_t specular;
 uniform emissive_t emissive;
 uniform light_t light;
 
-in vec3 out_position;
+in vec3 out_location;
 in vec2 out_texcoord;
 in vec3 out_light_vector;
 in vec3 out_normal;
@@ -166,7 +166,7 @@ void main()
 	model_gpu_program_t::model_gpu_program_t() :
 		gpu_program_t(vertex_shader_source, fragment_shader_source)
 	{
-		position_location = gpu.get_attribute_location(id(), "position");
+		location_location = gpu.get_attribute_location(id(), "location");
 		normal_location = gpu.get_attribute_location(id(), "normal");
 		tangent_location = gpu.get_attribute_location(id(), "tangent");
 		texcoord_location = gpu.get_attribute_location(id(), "texcoord");
@@ -179,8 +179,8 @@ void main()
 		normal_matrix_location = gpu.get_uniform_location(id(), "normal_matrix");
 		view_projection_matrix_location = gpu.get_uniform_location(id(), "view_projection_matrix");
 		bone_matrices_location = gpu.get_uniform_location(id(), "bone_matrices");
-		light_position_location = gpu.get_uniform_location(id(), "light_position");
-		camera_position_location = gpu.get_uniform_location(id(), "camera_position");
+		light_location_location = gpu.get_uniform_location(id(), "light_location");
+		camera_location_location = gpu.get_uniform_location(id(), "camera_location");
 		diffuse_texture_index_location = gpu.get_uniform_location(id(), "diffuse.texture");
 		diffuse_color_location = gpu.get_uniform_location(id(), "diffuse.color");
 		normal_texture_index_location = gpu.get_uniform_location(id(), "normal.texture");
@@ -197,7 +197,7 @@ void main()
 
 	void model_gpu_program_t::on_bind()
 	{
-		gpu.enable_vertex_attribute_array(position_location);
+		gpu.enable_vertex_attribute_array(location_location);
 		gpu.enable_vertex_attribute_array(normal_location);
 		gpu.enable_vertex_attribute_array(tangent_location);
 		gpu.enable_vertex_attribute_array(texcoord_location);
@@ -206,7 +206,7 @@ void main()
 		gpu.enable_vertex_attribute_array(bone_weights_0_location);
 		gpu.enable_vertex_attribute_array(bone_weights_1_location);
 
-		static const auto position_offset = reinterpret_cast<void*>(offsetof(vertex_type, position));
+		static const auto location_offset = reinterpret_cast<void*>(offsetof(vertex_type, location));
 		static const auto normal_offset = reinterpret_cast<void*>(offsetof(vertex_type, normal));
 		static const auto tangent_offset = reinterpret_cast<void*>(offsetof(vertex_type, tangent));
 		static const auto texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_type, texcoord));
@@ -215,7 +215,7 @@ void main()
 		static const auto bone_weights_0_offset = reinterpret_cast<void*>(offsetof(vertex_type, bone_weights_0));
 		static const auto bone_weights_1_offset = reinterpret_cast<void*>(offsetof(vertex_type, bone_weights_1));
 
-		gpu.set_vertex_attrib_pointer(position_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), position_offset);
+		gpu.set_vertex_attrib_pointer(location_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), location_offset);
 		gpu.set_vertex_attrib_pointer(normal_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), normal_offset);
 		gpu.set_vertex_attrib_pointer(tangent_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), tangent_offset);
 		gpu.set_vertex_attrib_pointer(texcoord_location, 2, gpu_data_type_e::float_, false, sizeof(vertex_type), texcoord_offset);
@@ -227,7 +227,7 @@ void main()
 
 	void model_gpu_program_t::on_unbind()
 	{
-		gpu.disable_vertex_attribute_array(position_location);
+		gpu.disable_vertex_attribute_array(location_location);
 		gpu.disable_vertex_attribute_array(normal_location);
 		gpu.disable_vertex_attribute_array(tangent_location);
 		gpu.disable_vertex_attribute_array(texcoord_location);
@@ -257,14 +257,14 @@ void main()
 		gpu.set_uniform(bone_matrices_location, bone_matrices, false);
 	}
 
-	void model_gpu_program_t::light_position(const vec3_t& light_position) const
+	void model_gpu_program_t::light_location(const vec3_t& light_location) const
 	{
-		gpu.set_uniform(light_position_location, light_position);
+		gpu.set_uniform(light_location_location, light_location);
 	}
 
-	void model_gpu_program_t::camera_position(const vec3_t& camera_position) const
+	void model_gpu_program_t::camera_location(const vec3_t& camera_location) const
 	{
-		gpu.set_uniform(camera_position_location, camera_position);
+		gpu.set_uniform(camera_location_location, camera_location);
 	}
 
 	void model_gpu_program_t::diffuse_texture_index(uint32_t diffuse_texture_index) const

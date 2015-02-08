@@ -27,7 +27,7 @@ namespace mandala
 		void blur_size(float32_t) const;
 
 	private:
-		gpu_location_t position_location;
+		gpu_location_t location_location;
 		gpu_location_t texcoord_location;
 		gpu_location_t world_matrix_location;
 		gpu_location_t view_projection_matrix_location;

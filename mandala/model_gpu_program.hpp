@@ -12,7 +12,7 @@ namespace mandala
 	{
 		struct vertex_t
 		{
-			vec3_t position;
+			vec3_t location;
 			vec3_t normal;
 			vec3_t tangent;
 			vec2_t texcoord;
@@ -36,8 +36,8 @@ namespace mandala
         void normal_matrix(const mat3_t&) const;
         void view_projection_matrix(const mat4_t&) const;
         void bone_matrices(const std::vector<mat4_t>&) const;
-        void light_position(const vec3_t&) const;
-        void camera_position(const vec3_t&) const;
+        void light_location(const vec3_t&) const;
+        void camera_location(const vec3_t&) const;
         void diffuse_texture_index(uint32_t) const;
         void diffuse_color(const vec4_t&) const;
         void normal_texture_index(uint32_t) const;
@@ -50,7 +50,7 @@ namespace mandala
         void is_lit(bool) const;
 
 	private:
-		gpu_location_t position_location;
+		gpu_location_t location_location;
 		gpu_location_t normal_location;
 		gpu_location_t tangent_location;
 		gpu_location_t texcoord_location;
@@ -62,8 +62,8 @@ namespace mandala
 		gpu_location_t normal_matrix_location;
 		gpu_location_t view_projection_matrix_location;
 		gpu_location_t bone_matrices_location;
-		gpu_location_t light_position_location;
-		gpu_location_t camera_position_location;
+		gpu_location_t light_location_location;
+		gpu_location_t camera_location_location;
 		gpu_location_t diffuse_texture_index_location;
 		gpu_location_t diffuse_color_location;
 		gpu_location_t normal_texture_index_location;

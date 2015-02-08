@@ -42,7 +42,7 @@ namespace mandala
         alDopplerFactor(doppler.factor);
         alDopplerVelocity(doppler.speed_of_sound);
 
-        alListenerfv(AL_POSITION, glm::value_ptr(listener.position));
+        alListenerfv(AL_POSITION, glm::value_ptr(listener.location));
         alListenerfv(AL_VELOCITY, glm::value_ptr(listener.velocity));
         std::array<float32_t, 6> orientation;
         alListenerfv(AL_ORIENTATION, orientation.data());

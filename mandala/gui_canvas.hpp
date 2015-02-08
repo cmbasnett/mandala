@@ -15,13 +15,13 @@ namespace mandala
             typedef vec2_t location_type;
             typedef vec2_t texcoord_type;
 
-            vertex_t(const location_type& position, const vec2_t& texcoord_type) :
-				position(position),
+            vertex_t(const location_type& location, const vec2_t& texcoord_type) :
+                location(location),
 				texcoord(texcoord)
 			{
 			}
 
-            location_type position;
+            location_type location;
             texcoord_type texcoord;
 		};
 

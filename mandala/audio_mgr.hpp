@@ -27,7 +27,7 @@ namespace mandala
 
         struct listener_t
         {
-            vec3_t position;
+            vec3_t location;
             vec3_t velocity;
         };
 

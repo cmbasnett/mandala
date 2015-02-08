@@ -70,7 +70,7 @@ namespace mandala
 
 		//is_cursor_hidden
 		virtual bool is_cursor_hidden() const override;
-		virtual void set_cursor_hidden(bool hide_cursor) const override;
+		virtual void set_cursor_hidden(bool is_hidden) const override;
 
 		//window_title
 		virtual window_title_type get_window_title() const override;
@@ -80,9 +80,9 @@ namespace mandala
 		virtual window_size_type get_window_size() const override;
 		virtual void set_window_size(const window_size_type& window_size) const override;
 
-		//window_position
-		virtual window_size_type get_window_position() const override;
-		virtual void set_window_position(const window_size_type& window_position) const override;
+		//window_location
+		virtual window_size_type get_window_location() const override;
+		virtual void set_window_location(const window_size_type& window_location) const override;
 
 		//clipboard
 		virtual std::string get_clipboard_string() const override;

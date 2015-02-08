@@ -13,9 +13,9 @@ namespace mandala
 		{
 			enum flags_t : uint8_t
 			{
-				position_x		= (1 << 0),
-				position_y		= (1 << 1),
-				position_z		= (1 << 2),
+				location_x		= (1 << 0),
+				location_y		= (1 << 1),
+				location_z		= (1 << 2),
 				rotation_x	= (1 << 3),
 				rotation_y	= (1 << 4),
 				rotation_z	= (1 << 5),
