@@ -173,11 +173,11 @@ namespace mandala
 
 		struct vertex_t
 		{
-			typedef vec3_t position_type;
+			typedef vec3_t location_type;
 			typedef vec3_t normal_type;
             typedef vec2_t texcoord_type;
 
-            position_type position;
+            location_type location;
             normal_type normal;
             texcoord_type diffuse_texcoord;
             texcoord_type lightmap_texcoord;
@@ -226,7 +226,7 @@ namespace mandala
 
         void render(const camera_t& camera);
 
-        int32_t get_leaf_index_from_position(const vec3_t& position) const;
+        int32_t get_leaf_index_from_location(const vec3_t& location) const;
 
         const render_stats_t& get_render_stats() const { return render_stats; }
 

@@ -58,7 +58,7 @@ namespace mandala
 
         auto view_projection_matrix = camera.get_projection_matrix() * camera.get_view_matrix();
 
-		model->render(camera.position, world_matrix, view_projection_matrix, bone_matrices, light_position);
+		model->render(camera.location, world_matrix, view_projection_matrix, bone_matrices, light_position);
 	}
 	
 	const pose3 model_t::get_bone_pose(const hash_t& bone_hash) const

@@ -83,13 +83,13 @@ namespace mandala
             camera.tick(dt);
 
             audio.doppler.factor = 0.0f;
-            audio.listener.position = camera.position;
+            audio.listener.position = camera.location;
             audio.listener.velocity = camera.velocity;
 
-            render_data.leaf_index = bsp->get_leaf_index_from_position(camera.position);
+            render_data.leaf_index = bsp->get_leaf_index_from_location(camera.location);
 
             std::wostringstream oss;
-            oss << L"position: [" << camera.position.x << ", " << camera.position.y << ", " << camera.position.z << "]" << std::endl;
+            oss << L"position: [" << camera.location.x << ", " << camera.location.y << ", " << camera.location.z << "]" << std::endl;
             oss << L"rotation: [pitch=" << camera.pitch << ", yaw=" << camera.yaw << "]" << std::endl;
             oss << L"leaf index: " << bsp->get_render_stats().leaf_index << std::endl;
             oss << L"leafs rendered: " << bsp->get_render_stats().leaf_count << std::endl;
@@ -223,7 +223,7 @@ namespace mandala
                     const auto& sound = resources.get<sound_t>(hash_t("garand_shoot.wav"));
 
                     auto source = std::make_shared<audio_source_t>();
-					source->set_location(camera.position);
+					source->set_location(camera.location);
 					source->set_max_distance(500.0f);
 					source->set_reference_distance(250.0f);
 					source->queue_sound(sound);

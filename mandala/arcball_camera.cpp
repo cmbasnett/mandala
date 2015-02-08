@@ -37,7 +37,7 @@ namespace mandala
 		auto forward = glm::row(m, 0);
 
         //position
-		position = target - (forward * distance);
+		location = target - (forward * distance);
 
 		camera_t::tick(dt);
 	}
@@ -86,7 +86,7 @@ namespace mandala
 					{
 						if(is_panning)
 						{
-							auto forward = target - position;
+							auto forward = target - location;
 							forward.y = 0;
 							forward = glm::normalize(forward);
 

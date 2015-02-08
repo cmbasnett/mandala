@@ -20,7 +20,7 @@ namespace mandala
 		float32_t aspect = 0.0f;
 		float32_t fov = 90.0f;
 		float32_t roll = 0.0f;
-        vec3_t position;
+        vec3_t location;
         vec3_t target;
         projection_type_e projection_type = projection_type_e::perspective;
 

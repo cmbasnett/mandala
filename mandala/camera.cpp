@@ -20,7 +20,7 @@ namespace mandala
 		const auto window_size = static_cast<vec2_t>(platform.get_window_size());
 		aspect = window_size.x / window_size.y;
 
-		const auto forward = glm::normalize(target - position);
+		const auto forward = glm::normalize(target - location);
 		const auto left = glm::normalize(glm::cross(vec3_t(0, 1, 0), forward));
         auto up = glm::normalize(glm::cross(forward, left));
 
@@ -41,9 +41,9 @@ namespace mandala
 		//rotate up matrix along forward axis
 		up = glm::rotate(glm::angleAxis(roll, forward), up);
 
-		view_matrix = glm::lookAt(position, target, up);
+		view_matrix = glm::lookAt(location, target, up);
 
-		frustum.set(position, left, up, forward, fov, near, far, aspect);
+		frustum.set(location, left, up, forward, fov, near, far, aspect);
 	}
 
 	line3_t camera_t::get_ray(vec2_f64_t screen_location) const

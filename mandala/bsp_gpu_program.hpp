@@ -30,7 +30,7 @@ namespace mandala
 		void should_test_alpha(bool) const;
 
 	private:
-		gpu_location_t position_location = -1;
+		gpu_location_t location_location = -1;
 		gpu_location_t diffuse_texcoord_location = -1;
 		gpu_location_t lightmap_texcoord_location = -1;
 		gpu_location_t world_matrix_location = -1;

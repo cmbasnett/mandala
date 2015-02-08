@@ -18,7 +18,7 @@ uniform mat4 view_projection_matrix;
 uniform sampler2D diffuse_texture;
 uniform sampler2D lightmap_texture;
 
-in vec3 position;
+in vec3 location;
 in vec2 diffuse_texcoord;
 in vec2 lightmap_texcoord;
 
@@ -27,7 +27,7 @@ out vec2 out_lightmap_texcoord;
 
 void main() 
 {
-	gl_Position = view_projection_matrix * (world_matrix * vec4(position, 1));
+	gl_Position = view_projection_matrix * (world_matrix * vec4(location, 1));
 	
 	//out_normal = normal;
 	out_diffuse_texcoord = diffuse_texcoord;
@@ -71,7 +71,7 @@ void main()
 	bsp_gpu_program_t::bsp_gpu_program_t() :
 		gpu_program_t(vertex_shader_source, fragment_shader_source)
 	{
-		position_location = gpu.get_attribute_location(id(), "position");
+		location_location = gpu.get_attribute_location(id(), "location");
 		diffuse_texcoord_location = gpu.get_attribute_location(id(), "diffuse_texcoord");
 		lightmap_texcoord_location = gpu.get_attribute_location(id(), "lightmap_texcoord");
 
@@ -86,22 +86,22 @@ void main()
 
 	void bsp_gpu_program_t::on_bind()
 	{
-		static const auto position_offset = reinterpret_cast<void*>(offsetof(vertex_type, position));
+		static const auto position_offset = reinterpret_cast<void*>(offsetof(vertex_type, location));
 		static const auto diffuse_texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_type, diffuse_texcoord));
 		static const auto lightmap_texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_type, lightmap_texcoord));
 
-		gpu.enable_vertex_attribute_array(position_location);
+		gpu.enable_vertex_attribute_array(location_location);
 		gpu.enable_vertex_attribute_array(diffuse_texcoord_location);
 		gpu.enable_vertex_attribute_array(lightmap_texcoord_location);
 
-		gpu.set_vertex_attrib_pointer(position_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), position_offset);
+		gpu.set_vertex_attrib_pointer(location_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), position_offset);
 		gpu.set_vertex_attrib_pointer(diffuse_texcoord_location, 2, gpu_data_type_e::float_, false, sizeof(vertex_type), diffuse_texcoord_offset);
 		gpu.set_vertex_attrib_pointer(lightmap_texcoord_location, 2, gpu_data_type_e::float_, false, sizeof(vertex_type), lightmap_texcoord_offset);
 	}
 
 	void bsp_gpu_program_t::on_unbind()
 	{
-		gpu.disable_vertex_attribute_array(position_location);
+		gpu.disable_vertex_attribute_array(location_location);
 		gpu.disable_vertex_attribute_array(diffuse_texcoord_location);
 		gpu.disable_vertex_attribute_array(lightmap_texcoord_location);
 	}

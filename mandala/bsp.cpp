@@ -442,17 +442,17 @@ namespace mandala
 
                 if (edge_index > 0)
                 {
-                    vertex.position = vertex_positions[edges[edge_index].vertex_indices[0]];
+                    vertex.location = vertex_positions[edges[edge_index].vertex_indices[0]];
                 }
                 else
                 {
                     edge_index = -edge_index;
 
-                    vertex.position = vertex_positions[edges[edge_index].vertex_indices[1]];
+                    vertex.location = vertex_positions[edges[edge_index].vertex_indices[1]];
                 }
 
-                vertex.diffuse_texcoord.x = (glm::dot(vertex.position, texture_info.s.axis) + texture_info.s.offset) / bsp_texture.width;
-                vertex.diffuse_texcoord.y = -(glm::dot(vertex.position, texture_info.t.axis) + texture_info.t.offset) / bsp_texture.height;
+                vertex.diffuse_texcoord.x = (glm::dot(vertex.location, texture_info.s.axis) + texture_info.s.offset) / bsp_texture.width;
+                vertex.diffuse_texcoord.y = -(glm::dot(vertex.location, texture_info.t.axis) + texture_info.t.offset) / bsp_texture.height;
 
                 vertices.push_back(vertex);
                 indices.push_back(static_cast<uint32_t>(indices.size()));
@@ -615,7 +615,7 @@ namespace mandala
 
         faces_rendered.reset();
 
-        auto camera_leaf_index = get_leaf_index_from_position(camera.position);
+        auto camera_leaf_index = get_leaf_index_from_location(camera.location);
 
         //culling
         auto culling_state = gpu.culling.get_state();
@@ -720,16 +720,16 @@ namespace mandala
             switch (plane.type)
             {
             case plane_t::type_e::x:
-                distance = camera.position.x - plane.plane.distance;
+                distance = camera.location.x - plane.plane.distance;
                 break;
             case plane_t::type_e::y:
-                distance = camera.position.y - plane.plane.distance;
+                distance = camera.location.y - plane.plane.distance;
                 break;
             case plane_t::type_e::z:
-                distance = camera.position.z - plane.plane.distance;
+                distance = camera.location.z - plane.plane.distance;
                 break;
             default:
-                distance = glm::dot(plane.plane.normal, camera.position) - plane.plane.distance;
+                distance = glm::dot(plane.plane.normal, camera.location) - plane.plane.distance;
             }
 
             if (distance > 0)
@@ -887,7 +887,7 @@ namespace mandala
         gpu.blend.pop_state();
     }
 
-    int32_t bsp_t::get_leaf_index_from_position(const vec3_t& position) const
+    int32_t bsp_t::get_leaf_index_from_location(const vec3_t& location) const
     {
         node_index_type node_index = 0;
 
@@ -896,7 +896,7 @@ namespace mandala
             const auto& node = nodes[node_index];
             const auto& plane = planes[node.plane_index].plane;
 
-            if (glm::dot(plane.normal, (position - plane.origin())) >= 0)
+            if (glm::dot(plane.normal, (location - plane.origin())) >= 0)
             {
                 node_index = node.child_indices[0];
             }

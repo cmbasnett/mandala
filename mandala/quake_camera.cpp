@@ -61,9 +61,9 @@ namespace mandala
         local_velocity += (local_velocity_target_tick - local_velocity) * movement_smoothing_value;
 
 		velocity = glm::inverse(rotation_matrix) * (local_velocity * speed_max);
-		position += velocity * dt;
+		location += velocity * dt;
 
-		target = position + forward;
+		target = location + forward;
 
 		camera_t::tick(dt);
 	}
