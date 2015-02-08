@@ -49,11 +49,11 @@ namespace mandala
             const auto& sprite_region = sprite->get_region();
             auto sprite_size = static_cast<vec2_t>(sprite_region.rectangle.size());
 
-            std::array<vertex_type::position_type, vertex_count> vertex_positions = {
-                vertex_type::position_type(vec3_t(vec2_t(-0.5f, -0.5f) * sprite_size, 0.0f)),
-                vertex_type::position_type(vec3_t(vec2_t(0.5f, -0.5f) * sprite_size, 0.0f)),
-                vertex_type::position_type(vec3_t(vec2_t(0.5f,  0.5f) * sprite_size, 0.0f)),
-                vertex_type::position_type(vec3_t(vec2_t(-0.5f,  0.5f) * sprite_size, 0.0f))
+            std::array<vertex_type::location_type, vertex_count> vertex_positions = {
+                vertex_type::location_type(vec3_t(vec2_t(-0.5f, -0.5f) * sprite_size, 0.0f)),
+                vertex_type::location_type(vec3_t(vec2_t(0.5f, -0.5f) * sprite_size, 0.0f)),
+                vertex_type::location_type(vec3_t(vec2_t(0.5f,  0.5f) * sprite_size, 0.0f)),
+                vertex_type::location_type(vec3_t(vec2_t(-0.5f,  0.5f) * sprite_size, 0.0f))
             };
 
             auto vertices = {

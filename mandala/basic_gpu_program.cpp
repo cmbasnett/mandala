@@ -41,7 +41,7 @@ void main()
 	basic_gpu_program_t::basic_gpu_program_t() :
 		gpu_program_t(vertex_shader_source, fragment_shader_source)
 	{
-		position_location = gpu.get_attribute_location(id(), "position");
+		location_location = gpu.get_attribute_location(id(), "location");
 		color_location = gpu.get_attribute_location(id(), "color");
 
 		world_matrix_location = gpu.get_uniform_location(id(), "world_matrix");
@@ -50,19 +50,19 @@ void main()
 
 	void basic_gpu_program_t::on_bind()
 	{
-		static const auto position_offset = reinterpret_cast<void*>(offsetof(vertex_type, position));
+		static const auto location_offset = reinterpret_cast<void*>(offsetof(vertex_type, location));
 		static const auto color_offset = reinterpret_cast<void*>(offsetof(vertex_type, color));
 
-		gpu.enable_vertex_attribute_array(position_location);
+		gpu.enable_vertex_attribute_array(location_location);
 		gpu.enable_vertex_attribute_array(color_location);
 
-		gpu.set_vertex_attrib_pointer(position_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), position_offset);
+		gpu.set_vertex_attrib_pointer(location_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), location_offset);
 		gpu.set_vertex_attrib_pointer(color_location, 4, gpu_data_type_e::float_, false, sizeof(vertex_type), color_offset);
 	}
 
 	void basic_gpu_program_t::on_unbind()
 	{
-		gpu.disable_vertex_attribute_array(position_location);
+		gpu.disable_vertex_attribute_array(location_location);
 		gpu.disable_vertex_attribute_array(color_location);
 	}
 

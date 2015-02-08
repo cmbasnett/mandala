@@ -43,10 +43,10 @@ namespace mandala
 
 		struct vertex_t
 		{
-            typedef vec2_t position_type;
+            typedef vec2_t location_type;
             typedef vec2_t texcoord_type;
 
-            position_type position;
+            location_type position;
             texcoord_type texcoord;
         };
 

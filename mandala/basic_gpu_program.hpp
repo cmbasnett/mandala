@@ -25,7 +25,7 @@ namespace mandala
 		void view_projection_matrix(const mat4_t&) const;
 
 	private:
-		gpu_location_t position_location;
+		gpu_location_t location_location;
 		gpu_location_t color_location;
 		gpu_location_t world_matrix_location;
 		gpu_location_t view_projection_matrix_location;

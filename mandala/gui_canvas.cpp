@@ -17,10 +17,10 @@ namespace mandala
         vertex_buffer = std::make_shared<vertex_buffer_type>();
         auto vertices =
         {
-            vertex_type(vertex_type::position_type(0, 0), vertex_type::texcoord_type(0, 0)),
-            vertex_type(vertex_type::position_type(1, 0), vertex_type::texcoord_type(1, 0)),
-            vertex_type(vertex_type::position_type(1, 1), vertex_type::texcoord_type(1, 1)),
-            vertex_type(vertex_type::position_type(0, 1), vertex_type::texcoord_type(0, 1))
+            vertex_type(vertex_type::location_type(0, 0), vertex_type::texcoord_type(0, 0)),
+            vertex_type(vertex_type::location_type(1, 0), vertex_type::texcoord_type(1, 0)),
+            vertex_type(vertex_type::location_type(1, 1), vertex_type::texcoord_type(1, 1)),
+            vertex_type(vertex_type::location_type(0, 1), vertex_type::texcoord_type(0, 1))
         };
         vertex_buffer->data(vertices, gpu_t::buffer_usage_e::static_draw);
     }
