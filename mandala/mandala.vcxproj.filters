@@ -647,4 +647,9 @@
       <UniqueIdentifier>{668639aa-ec9f-40a4-9016-25982341aad1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="literals.hpp">
+      <Filter>mandala\core</Filter>
+    </None>
+  </ItemGroup>
 </Project>

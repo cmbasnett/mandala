@@ -395,6 +395,9 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="string_mgr.cpp" />
     <ClCompile Include="texture.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="literals.hpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
