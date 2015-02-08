@@ -31,7 +31,7 @@ class Quaternion:
         self.y = 0.0
         self.z = 0.0
         self.w = 0.0
-
+        
 
 class Animation:
     class Bone:
@@ -141,7 +141,7 @@ class Animation:
             # todo: make this a function of model somehow
 
             # header
-            s = struct.Struct('4s I I')
+            s = struct.Struct('4sII')
             f.write(s.pack('MD5A',
                            version,
                            self.frames_per_second))
@@ -154,10 +154,12 @@ class Animation:
             for bone in self.bones:
                 f.write(bone.name + '\0')
 
-                s = struct.Struct('B B i')
-                f.write(s.pack(bone.parent_index,
-                               bone.flags,
-                               bone.frame_data_start_index))
+                s = struct.Struct('B')
+                f.write(s.pack(bone.parent_index))
+                f.write(s.pack(bone.flags))
+
+                s = struct.Struct('i')
+                f.write(s.pack(bone.frame_data_start_index))
 
             # frame count
             s = struct.Struct('I')
@@ -165,7 +167,7 @@ class Animation:
 
             # frame bounds
             for frame in self.frames:
-                s = struct.Struct('f f f f f f')
+                s = struct.Struct('ffffff')
                 f.write(s.pack(frame.min.x,
                                frame.min.y,
                                frame.min.z,
@@ -175,7 +177,7 @@ class Animation:
 
             # base bone frames
             for bone_frame in self.base_bone_frames:
-                s = struct.Struct('f f f f f f')
+                s = struct.Struct('ffffff')
                 f.write(s.pack(bone_frame.position.x,
                                bone_frame.position.y,
                                bone_frame.position.z,
@@ -253,6 +255,7 @@ class Model:
 
                         self.bones.append(bone)
                 elif tokens[0] == 'mesh':
+                    mesh = Model.Mesh()
                     while True:
                         tokens = next(lines).split()
 
@@ -260,8 +263,6 @@ class Model:
                             continue
                         elif tokens[0] == '}':
                             break
-
-                        mesh = Model.Mesh()
 
                         if tokens[0] == 'shader':
                             mesh.material = tokens[1].strip('"')
@@ -305,17 +306,18 @@ class Model:
             for bone in self.bones:
                 f.write(bone.name + '\0')
 
-                s = struct.Struct('B f f f f f f')
-                f.write(s.pack(bone.parent_index,
-                               bone.position.x,
+                s = struct.Struct('B')
+                f.write(s.pack(bone.parent_index))
+
+                s = struct.Struct('ffffff')
+                f.write(s.pack(bone.position.x,
                                bone.position.y,
                                bone.position.z,
                                bone.orientation.x,
                                bone.orientation.y,
                                bone.orientation.z))
 
-            # mesh count
-            s = struct.Struct('I')
+            s = struct.Struct('B')
             f.write(s.pack(len(self.meshes)))
 
             # meshes
@@ -329,7 +331,7 @@ class Model:
 
                 # vertices
                 for vertex in mesh.vertices:
-                    s = struct.Struct('f f H B')
+                    s = struct.Struct('ffHB')
                     f.write(s.pack(vertex.texcoord.x,
                                    vertex.texcoord.y,
                                    vertex.weight_index_start,
@@ -341,7 +343,7 @@ class Model:
 
                 # indices
                 for i in range(0, len(mesh.indices) / 3):
-                    s = struct.Struct('H H H')
+                    s = struct.Struct('HHH')
                     f.write(s.pack(mesh.indices[(i * 3) + 0],
                                    mesh.indices[(i * 3) + 1],
                                    mesh.indices[(i * 3) + 2]))
@@ -351,9 +353,10 @@ class Model:
                 f.write(s.pack(len(mesh.weights)))
 
                 for weight in mesh.weights:
-                    s = struct.Struct('B f f f f')
-                    f.write(s.pack(weight.bone_index,
-                                   weight.bias,
+                    s = struct.Struct('B')
+                    f.write(s.pack(weight.bone_index))
+                    s = struct.Struct('ffff')
+                    f.write(s.pack(weight.bias,
                                    weight.position.x,
                                    weight.position.y,
                                    weight.position.z))
@@ -361,14 +364,13 @@ class Model:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input_file', dest='input_file', required=True)
-    parser.add_argument('--output_dir', dest='output_dir', required=True)
+    parser.add_argument('-q', '--quiet', dest='quiet', action='store_true', help='no output')
+    parser.add_argument('input_file', help='path to [.md5anim] or [.md5mesh] file')
+    parser.add_argument('-o', dest='output_dir', help='path to directory where [.md5a] or [.md5m] file will be written', default=os.getcwd())
     args = parser.parse_args()
 
     if not os.path.isfile(args.input_file):
         raise RuntimeError('input_file {} does not exist'.format(args.input_file))
-
-    #print args.input_file
 
     #TODO: verify beforehand that output_file will be created properly/create it here and pass it
     output_file = os.path.join(args.output_dir, os.path.splitext(os.path.basename(args.input_file))[0])

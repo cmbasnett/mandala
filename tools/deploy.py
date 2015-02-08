@@ -33,7 +33,7 @@ def deploy_sprite_set(p):
 	#TODO: remove intermediate .json file (maybe?)
 
 def deploy_model(p):
-	process = subprocess.call(['python', md5b_path, '--input_file', p, '--output_dir', deploy_dir])
+	process = subprocess.call(['python', md5b_path, p, '-o', deploy_dir])
 
 def deploy_strings(p):
 	process = subprocess.call(['python', stringpack_path, '--input_file', p, '--output_dir', deploy_dir])
@@ -55,15 +55,16 @@ def main():
 	global ignore_patterns
 
 	parser = argparse.ArgumentParser()
-	parser.add_argument('--resources_dir', dest='resources_dir', required=True)
-	parser.add_argument('--clean', dest='clean', required=False, action='store_true')
+	parser.add_argument('resources_dir', help='directory to be deployed (can contain .deployignore)')
+	parser.add_argument('-f', '--force', dest='force', required=False, action='store_true', help='force redeploy of all resources')
+	parser.add_argument('-q', '--quiet', dest='quiet', required=False, action='store_true', help='no output')
 	args = parser.parse_args()
 
-	# ensure resources_dir is a valid direcotry
-	if not os.path.isdir(args.resources_dir):
-		raise RuntimeError('resources_dir is not a valid directory')
+	resources_dir = os.path.abspath(args.resources_dir)
 
-	resources_dir = args.resources_dir
+	# ensure resources_dir is a valid direcotry
+	if not os.path.isdir(resources_dir):
+		raise RuntimeError('resources_dir ' + resources_dir + ' is not a valid directory')
 
 	# read .deployignore
 	with open(os.path.join(resources_dir, '.deployignore')) as f:
@@ -72,7 +73,7 @@ def main():
 
 	deploy_dir = os.path.join(resources_dir, '.deploy')
 
-	if args.clean:
+	if args.force:
 		try:
 			shutil.rmtree(deploy_dir)
 		except OSError:

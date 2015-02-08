@@ -119,11 +119,12 @@ class Pack:
 
 def main():
 	parser = argparse.ArgumentParser()
-	parser.add_argument('input')
-	parser.add_argument('-output')
+	parser.add_argument('-q', '--quiet', dest='quiet', action='store_true', required=False, help='no output')
+	parser.add_argument('input_dir', help='directory to be processed')
+	parser.add_argument('-o', dest='output_file', help='path of file to be created')
 	args = parser.parse_args()
 
-	pack = Pack(args.input, args.output)
+	pack = Pack(args.input_dir, args.output_file)
 
 if __name__ == '__main__':
 	main()
