@@ -19,61 +19,61 @@ namespace mandala
             typedef hash_t<value_type> type;
 
             hash_t() :
-                value_(0)
+                value(0)
             {
             }
 
-            explicit hash_t(const string_type& string_) :
+            explicit hash_t(const string_type& string) :
 #if defined(DEBUG)
-                string_(string_),
+                string(string),
 #endif
-                value_(fnv::fnv1a<value_type>(reinterpret_cast<string_type::value_type*>(const_cast<string_type::value_type*>(string_.c_str())), string_.length()))
+                value(fnv::fnv1a<value_type>(reinterpret_cast<string_type::value_type*>(const_cast<string_type::value_type*>(string.c_str())), string.length()))
 			{
 			}
 
 			hash_t(type&& copy) :
 #if defined(DEBUG)
-				string_(std::move(copy.string_)),
+				string(std::move(copy.string)),
 #endif
-                value_(copy.value_)
+                value(copy.value)
 			{
 			}
 
 #if defined(DEBUG)
-            const string_type& string() const
+            const string_type& get_string() const
             {
-                return string_;
+                return string;
             }
 #endif
 
-            const value_type& value() const
+            const value_type& get_value() const
             {
-                return value_;
+                return value;
             }
 
 		private:
 #if defined(DEBUG)
-            string_type string_;
+            string_type string;
 #endif
-            value_type value_ = value_type(0);
+            value_type value = value_type(0);
 
 		public:
 			hash_t& operator=(const hash_t& rhs)
 			{
 #if defined(DEBUG)
-                string_ = rhs.string_;
+                string = rhs.string;
 #endif
-                value_ = rhs.value_;
+                value = rhs.value;
 
 				return *this;
 			}
 
-			type& operator=(string_type&& string__)
+			type& operator=(string_type&& string)
 			{
 #if defined(DEBUG)
-                string_ = string__;
+                this->string = string;
 #endif
-                value_(fnv::fnv1a<value_type>(reinterpret_cast<char*>(const_cast<char*>(string.c_str())), string.length()))
+                value(fnv::fnv1a<value_type>(reinterpret_cast<char*>(const_cast<char*>(string.c_str())), string.length()))
 
 				return *this;
 			}
@@ -81,19 +81,19 @@ namespace mandala
 			inline type& operator=(type&& copy)
 			{
 #if defined(DEBUG)
-				string_ = std::move(copy.string_);
+				string = std::move(copy.string);
 #endif
-				value_ = copy.value_;
+				value = copy.value;
 
 				return *this;
 			}
 
-			inline bool operator==(const type& rhs) const { return value_ == rhs.value_; }
-			inline bool operator!=(const type& rhs) const { return value_ != rhs.value_; }
-			inline bool operator>(const type& rhs) const { return value_ > rhs.value_; }
-			inline bool operator<(const type& rhs) const { return value_ < rhs.value_; }
-			inline bool operator>=(const type& rhs) const { return value_ >= rhs.value_; }
-			inline bool operator<=(const type& rhs) const { return value_ <= rhs.value_; }
+			inline bool operator==(const type& rhs) const { return value == rhs.value; }
+			inline bool operator!=(const type& rhs) const { return value != rhs.value; }
+			inline bool operator>(const type& rhs) const { return value > rhs.value; }
+			inline bool operator<(const type& rhs) const { return value < rhs.value; }
+			inline bool operator>=(const type& rhs) const { return value >= rhs.value; }
+			inline bool operator<=(const type& rhs) const { return value <= rhs.value; }
 		};
 	}
 
@@ -105,5 +105,5 @@ namespace mandala
 template<typename T>
 std::ostream& operator<<(std::ostream& ostream, const mandala::details::hash_t<T>& hash)
 {
-    return ostream << hash.value();
+    return ostream << hash.get_value();
 }
