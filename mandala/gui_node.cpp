@@ -199,6 +199,8 @@ namespace mandala
                 child->clean();
 
                 child->size = child->bounds.size();
+
+                child->on_cleaned();
             }
         }
 
@@ -233,7 +235,11 @@ namespace mandala
         }
     }
 
-        bool gui_node_t::get_is_dirty() const
+    void gui_node_t::on_cleaned()
+    {
+    }
+
+    bool gui_node_t::get_is_dirty() const
     {
         //TODO: this is naive and stupid, change eventually to have dirty status cascade to ancestors
         if (is_dirty)
@@ -336,12 +342,7 @@ namespace mandala
             //TODO: draw bounds to stencil buffer
         }
 
-        render_override(world_matrix, view_projection_matrix);
-
-        for (auto& child : children)
-        {
-            child->render(world_matrix, view_projection_matrix);
-        }
+        on_render(world_matrix, view_projection_matrix);
 
         if (should_clip)
         {
@@ -351,7 +352,15 @@ namespace mandala
         }
     }
 
-    void gui_node_t::render_override(mat4_t world_matrix, mat4_t view_projection_matrix)
+    void gui_node_t::on_render(mat4_t world_matrix, mat4_t view_projection_matrix)
     {
+        on_render_begin(world_matrix, view_projection_matrix);
+
+        for (auto& child : children)
+        {
+            child->render(world_matrix, view_projection_matrix);
+        }
+
+        on_render_end(world_matrix, view_projection_matrix);
     }
 }

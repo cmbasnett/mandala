@@ -80,7 +80,7 @@ namespace mandala
         set_sprite(sprite);
     }
 
-	void gui_image_t::render_override(mat4_t world_matrix, mat4_t view_projection_matrix)
+	void gui_image_t::on_render_begin(mat4_t world_matrix, mat4_t view_projection_matrix)
     {
 		auto blend_state = gpu.blend.get_state();
 		blend_state.is_enabled = true;
@@ -146,7 +146,7 @@ namespace mandala
 
 		gpu.blend.pop_state();
 
-        gui_node_t::render_override(world_matrix, view_projection_matrix);
+        gui_node_t::on_render_begin(world_matrix, view_projection_matrix);
 	}
 
     void gui_image_t::on_input_event(input_event_t& input_event)

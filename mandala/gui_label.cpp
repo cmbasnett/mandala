@@ -491,7 +491,7 @@ namespace mandala
         update_cursor();
     }
 
-    void gui_label_t::render_override(mat4_t world_matrix, mat4_t view_projection_matrix)
+    void gui_label_t::on_render_begin(mat4_t world_matrix, mat4_t view_projection_matrix)
     {
         if (bitmap_font == nullptr)
         {
@@ -539,7 +539,7 @@ namespace mandala
             }
         }
 
-        gui_node_t::render_override(world_matrix, view_projection_matrix);
+        gui_node_t::on_render_begin(world_matrix, view_projection_matrix);
     }
 
     void gui_label_t::on_input_event(input_event_t& input_event)

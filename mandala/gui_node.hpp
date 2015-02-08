@@ -96,10 +96,13 @@ namespace mandala
 
         virtual void render(mat4_t world_matrix, mat4_t view_projection_matrix);
 
-        virtual void render_override(mat4_t world_matrix, mat4_t view_projection_matrix);
+        virtual void on_render(mat4_t world_matrix, mat4_t view_projection_matrix);
+        virtual void on_render_begin(mat4_t world_matrix, mat4_t view_projection_matrix) { }
+        virtual void on_render_end(mat4_t world_matrix, mat4_t view_projection_matrix) { }
 		virtual void clean();
         virtual void tick(float32_t dt);
         virtual void on_input_event(input_event_t& input_event);
+        virtual void on_cleaned();
 
         bool has_children() const { return !children.empty(); }
 		bool has_parent() const { return parent.get() != nullptr; }

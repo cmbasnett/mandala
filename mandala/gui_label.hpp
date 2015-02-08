@@ -63,7 +63,7 @@ namespace mandala
 		void set_is_read_only(bool is_read_only) { this->is_read_only = is_read_only; dirty(); }	//TODO: might not need to dirty, putting this in to be safe
 
         virtual void clean() override;
-        virtual void render_override(mat4_t world_matrix, mat4_t view_projection_matrix) override;
+        virtual void on_render_begin(mat4_t world_matrix, mat4_t view_projection_matrix) override;
         virtual void on_input_event(input_event_t& input_event) override;
 
     private:

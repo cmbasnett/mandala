@@ -13,7 +13,7 @@ namespace mandala
 uniform mat4 world_matrix;
 uniform mat4 view_projection_matrix;
 
-attribute vec2 location;
+attribute vec3 location;
 attribute vec2 texcoord;
 
 out vec2 out_texcoords[5];
@@ -27,7 +27,7 @@ void main(void)
 	out_texcoords[3] = texcoord.xy + singleStepOffset * 3.294215;
 	out_texcoords[4] = texcoord.xy - singleStepOffset * 3.294215;
 
-	gl_Position = (view_projection_matrix) * (world_matrix * vec4(location, 0, 1));
+	gl_Position = (view_projection_matrix) * (world_matrix * vec4(location, 1));
 }
 )";
 
@@ -68,7 +68,7 @@ void main()
 		gpu.enable_vertex_attribute_array(location_location);
 		gpu.enable_vertex_attribute_array(texcoord_location);
 
-		gpu.set_vertex_attrib_pointer(location_location, 2, gpu_data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, location)));
+		gpu.set_vertex_attrib_pointer(location_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, location)));
 		gpu.set_vertex_attrib_pointer(texcoord_location, 2, gpu_data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, texcoord)));
 	}
 

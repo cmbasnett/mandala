@@ -20,6 +20,7 @@
 #include "../interpolation.hpp"
 #include "../basic_gpu_program.hpp"
 #include "../gpu_program_mgr.hpp"
+#include "../gui_canvas.hpp"
 
 #if defined(MANDALA_PC)
 #include "../window_event.hpp"
@@ -54,7 +55,7 @@ namespace mandala
 
             debug_label = std::make_shared<gui_label_t>();
             debug_label->set_bitmap_font(resources.get<bitmap_font_t>(hash_t("inconsolata_12.fnt")));
-            debug_label->set_color(vec4_t(1));
+            debug_label->set_color(rgba_type(1));
             debug_label->set_dock_mode(gui_dock_mode_e::fill);
             debug_label->set_vertical_alignment(gui_label_t::vertical_alignment_e::bottom);
             debug_label->set_justification(gui_label_t::justification_e::left);
@@ -62,16 +63,22 @@ namespace mandala
 
             crosshair_image = std::make_shared<gui_image_t>();
 			crosshair_image->set_is_autosized_to_texture(true);
-            crosshair_image->set_sprite(sprite_t(hash_t("white.tpsb"), hash_t("white.png")));
+            crosshair_image->set_sprite(sprite_t(hash_t("crosshairs.tpsb"), hash_t("crosshair6.png")));
 			crosshair_image->set_anchor_flags(gui_anchor_flag_all);
 
 			bsp_render_image = std::make_shared<gui_image_t>();
 			bsp_render_image->set_dock_mode(gui_dock_mode_e::fill);
             bsp_render_image->set_sprite(sprite);
 
-			layout->adopt(bsp_render_image);
+            bsp_canvas = std::make_shared<gui_canvas_t>();
+            bsp_canvas->set_dock_mode(gui_dock_mode_e::fill);
+            bsp_canvas->adopt(bsp_render_image);
+
+			layout->adopt(bsp_canvas);
 			layout->adopt(crosshair_image);
             layout->adopt(debug_label);
+
+
         }
 
         bsp_state_t::~bsp_state_t()
