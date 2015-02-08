@@ -13,6 +13,12 @@ inline void read(std::istream& istream, T& t)
 }
 
 template<typename T>
+inline void write(std::ostream& ostream, T& t)
+{
+    ostream.write(reinterpret_cast<char*>(&t), sizeof(T));
+}
+
+template<typename T>
 std::ostream& operator<<(std::ostream& ostream, const glm::detail::tvec2<T>& v)
 {
     return ostream << "[" << v.x << "," << v.y << "]";
