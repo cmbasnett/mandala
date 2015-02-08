@@ -67,8 +67,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <CustomBuildBeforeTargets>
-    </CustomBuildBeforeTargets>
+    <CustomBuildBeforeTargets>Run</CustomBuildBeforeTargets>
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)\bin\$(Configuration)_$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)\intermediate\$(Configuration)_$(PlatformTarget)\</IntDir>
@@ -113,15 +112,18 @@
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\lib-msvc110\*.dll" "$(OutDir)" /y
 xcopy "$(SolutionDir)ext\glew-1.10.0\bin\Release\Win32\*.dll" "$(OutDir)" /y
-xcopy "$(SolutionDir)ext\openal-soft-1.15.1-bin\lib\Win32\*.dll" "$(OutDir)" /y</Command>
+xcopy "$(SolutionDir)ext\openal-soft-1.15.1-bin\lib\Win32\*.dll" "$(OutDir)" /y
+
+python print 'balls'
+python "$(SolutionDir)tools\deploy.py" "$(SolutionDir)testapp\resources_src"
+python "$(SolutionDir)tools\pack.py" "$(SolutionDir)testapp\resources_src\.deploy" -o "$(SolutionDir)testapp\resources\testapp.pack"</Command>
     </PostBuildEvent>
     <CustomBuildStep>
-      <Command>
-      </Command>
+      <Command>$(SolutionDir)testapp/deploy.bat</Command>
     </CustomBuildStep>
     <CustomBuildStep>
-      <Message>
-      </Message>
+      <Message>deploy.bat</Message>
+      <TreatOutputAsContent>false</TreatOutputAsContent>
     </CustomBuildStep>
     <PreBuildEvent>
       <Command>
@@ -179,9 +181,9 @@ echo $(PlatformTarget)</Command>
 xcopy "$(SolutionDir)ext\glew-1.10.0\bin\Release\Win32\*.dll" "$(OutDir)" /y
 xcopy "$(SolutionDir)ext\openal-soft-1.15.1-bin\lib\Win32\*.dll" "$(OutDir)" /y
 
-"$(SolutionDir)tools\pack\bin\pack.exe" "$(SolutionDir)resources\deploy\\" "$(OutDir)resources\armada.pack"
-
-echo $(PlatformTarget)</Command>
+python print 'balls'
+python "$(SolutionDir)tools\deploy.py" "$(SolutionDir)testapp\resources_src"
+python "$(SolutionDir)tools\pack.py" "$(SolutionDir)testapp\resources_src\.deploy" -o "$(SolutionDir)testapp\resources\testapp.pack"</Command>
     </PostBuildEvent>
     <CustomBuildStep>
       <Command>"$(SolutionDir)tools\pack\bin\pack.exe" "$(SolutionDir)resources\deploy\\" "$(OutDir)resources\armada.pack"</Command>
@@ -315,8 +317,8 @@ echo $(PlatformTarget)</Command>
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="model_info.hpp" />
     <ClInclude Include="model.hpp" />
-    <ClInclude Include="model_instance.hpp" />
     <ClInclude Include="plane.hpp" />
     <ClInclude Include="pow.hpp" />
     <ClInclude Include="quake_camera.hpp" />
@@ -384,8 +386,8 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="state_mgr.cpp" />
     <ClCompile Include="image.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="model_info.cpp" />
     <ClCompile Include="model.cpp" />
-    <ClCompile Include="model_instance.cpp" />
     <ClCompile Include="quake_camera.cpp" />
     <ClCompile Include="resource.cpp" />
     <ClCompile Include="string_archive.cpp" />

@@ -9,8 +9,8 @@
 #include "../state_mgr.hpp"
 #include "../bsp.hpp"
 #include "../bitmap_font.hpp"
+#include "../model_info.hpp"
 #include "../model.hpp"
-#include "../model_instance.hpp"
 #include "../model_animation.hpp"
 #include "../gui_image.hpp"
 #include "../gui_label.hpp"
@@ -43,7 +43,7 @@ namespace mandala
             auto sprite_set = std::make_shared<sprite_set_t>(bsp_frame_buffer->get_color_texture());
             sprite_t sprite(sprite_set, sprite_set->get_regions().begin()->second.hash);
 
-            skybox.model_instance = std::make_shared<model_instance_t>(resources.get<model_t>(hash_t("skybox.md5m")));
+            skybox.model_instance = std::make_shared<model_t>(resources.get<model_info_t>(hash_t("skybox.md5m")));
             pause_state = std::make_shared<pause_state_t>();
             console_state = std::make_shared<console_state_t>();
 

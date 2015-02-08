@@ -109,12 +109,6 @@
     <ClInclude Include="md5b.hpp">
       <Filter>mandala\resources\model</Filter>
     </ClInclude>
-    <ClInclude Include="model.hpp">
-      <Filter>mandala\resources\model</Filter>
-    </ClInclude>
-    <ClInclude Include="model_instance.hpp">
-      <Filter>mandala\resources\model</Filter>
-    </ClInclude>
     <ClInclude Include="sound.hpp">
       <Filter>mandala\resources\sound</Filter>
     </ClInclude>
@@ -349,6 +343,13 @@
     </ClInclude>
     <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="model_info.hpp">
+      <Filter>mandala\resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="model.hpp">
+      <Filter>mandala\resources\model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -363,12 +364,6 @@
     </ClCompile>
     <ClCompile Include="image.cpp">
       <Filter>mandala\resources\image</Filter>
-    </ClCompile>
-    <ClCompile Include="model.cpp">
-      <Filter>mandala\resources\model</Filter>
-    </ClCompile>
-    <ClCompile Include="model_instance.cpp">
-      <Filter>mandala\resources\model</Filter>
     </ClCompile>
     <ClCompile Include="app.cpp">
       <Filter>mandala\app</Filter>
@@ -537,6 +532,12 @@
     </ClCompile>
     <ClCompile Include="resource_mgr.cpp">
       <Filter>mandala\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="model_info.cpp">
+      <Filter>mandala\resources\model</Filter>
+    </ClCompile>
+    <ClCompile Include="model.cpp">
+      <Filter>mandala\resources\model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

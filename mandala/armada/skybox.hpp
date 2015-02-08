@@ -8,13 +8,13 @@
 
 namespace mandala
 {
-	struct model_instance_t;
+	struct model_t;
 
 	namespace armada
 	{
 		struct skybox_t
 		{
-			std::shared_ptr<model_instance_t> model_instance;
+			std::shared_ptr<model_t> model_instance;
 
 			skybox_t();
 
