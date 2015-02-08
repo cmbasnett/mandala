@@ -442,9 +442,9 @@ namespace mandala
 
         get_texture_formats(texture->get_color_type(), internal_format, format, type);
 
-        glBindTexture(GL_TEXTURE_2D, texture->get_id());
-        glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, format, type, nullptr);
-        glBindTexture(GL_TEXTURE_2D, 0);
+        glBindTexture(GL_TEXTURE_2D, texture->get_id()); glCheckError();
+        glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, format, type, nullptr); glCheckError();
+        glBindTexture(GL_TEXTURE_2D, 0); glCheckError();
     }
 
     void gpu_t::destroy_texture(gpu_id_t id)
