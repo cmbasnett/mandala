@@ -40,13 +40,13 @@ namespace mandala
 		virtual void set_clipboard_string(const std::string& clipboard) const = 0;
 
 #if defined(MANDALA_PC)
-		typedef vec2_f64_t cursor_position_type;
+		typedef vec2_f64_t cursor_location_type;
 		typedef vec2_i32_t window_size_type;
 		typedef std::string window_title_type;
 
-		//cursor_position
-		virtual cursor_position_type get_cursor_position() const = 0;
-		virtual void set_cursor_position(const cursor_position_type& cursor_position) const = 0;
+		//cursor_location
+		virtual cursor_location_type get_cursor_location() const = 0;
+		virtual void set_cursor_location(const cursor_location_type& cursor_location) const = 0;
 
 		//is_cursor_hidden
 		virtual bool is_cursor_hidden() const = 0;

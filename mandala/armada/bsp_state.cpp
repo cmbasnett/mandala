@@ -191,7 +191,7 @@ namespace mandala
 				}
 				else if (input_event.touch.type == input_event_t::touch_t::type_e::scroll)
 				{
-					if (input_event.touch.position_delta.y > 0)
+					if (input_event.touch.location_delta.y > 0)
 					{
 						bsp->render_settings.lightmap_gamma += 0.1f;
 

@@ -198,7 +198,7 @@ namespace mandala
 		{
 			bool did_hit = false;
 			bool is_all_solid = false;
-			vec3_t position;
+			vec3_t location;
 			plane3_t plane;
 			float32_t ratio = 0.0f;
         };

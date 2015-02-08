@@ -92,8 +92,8 @@ namespace mandala
 
 							auto left = glm::cross(vec3_t(0, 1, 0), forward);
 
-							forward *= static_cast<float32_t>(input_event.touch.position_delta.y) * 0.1f;
-							left *= static_cast<float32_t>(input_event.touch.position_delta.x) * 0.1f;
+							forward *= static_cast<float32_t>(input_event.touch.location_delta.y) * 0.1f;
+							left *= static_cast<float32_t>(input_event.touch.location_delta.x) * 0.1f;
 
 							auto target_delta = forward + left;
 
@@ -105,7 +105,7 @@ namespace mandala
 					break;
 				case input_event_t::touch_t::type_e::scroll:
 					{
-						distance_target += static_cast<float32_t>(input_event.touch.position.y) * 10.0f;
+						distance_target += static_cast<float32_t>(input_event.touch.location.y) * 10.0f;
 
 						input_event.is_consumed = true;
 					}

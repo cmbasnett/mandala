@@ -64,9 +64,9 @@ namespace mandala
 
         virtual bool pop_window_event(window_event_t& window_event) override;
 
-		//cursor_position
-		virtual cursor_position_type get_cursor_position() const override;
-		virtual void set_cursor_position(const cursor_position_type& cursor_position) const override;
+		//cursor_location
+		virtual cursor_location_type get_cursor_location() const override;
+		virtual void set_cursor_location(const cursor_location_type& cursor_location) const override;
 
 		//is_cursor_hidden
 		virtual bool is_cursor_hidden() const override;
@@ -93,7 +93,7 @@ namespace mandala
 		input_mgr_t input;
         window_mgr_t window;
         bool is_cursor_centered = false;
-        cursor_position_type cursor_position;
+        cursor_location_type cursor_location;
 
 		platform_win32_t(const platform_win32_t&) = delete;
 		platform_win32_t& operator=(const platform_win32_t&) = delete;

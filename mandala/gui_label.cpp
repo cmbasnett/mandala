@@ -549,21 +549,21 @@ namespace mandala
         if (input_event.device_type == input_event_t::device_type_e::touch &&
             input_event.touch.type == input_event_t::touch_t::type_e::press)
         {
-            if (contains(get_bounds(), input_event.touch.position))
+            if (contains(get_bounds(), input_event.touch.location))
             {
                 for (auto& line : lines)
                 {
-                    if (input_event.touch.position.y >= line.rectangle.y &&
-                        input_event.touch.position.y <= (line.rectangle.y + line.rectangle.height))
+                    if (input_event.touch.location.y >= line.rectangle.y &&
+                        input_event.touch.location.y <= (line.rectangle.y + line.rectangle.height))
                     {
-                        if (input_event.touch.position.x <= line.rectangle.x)
+                        if (input_event.touch.location.x <= line.rectangle.x)
                         {
                             cursor.string_begin = line.string_begin;
                             cursor.string_end = cursor.string_begin;
 
                             update_cursor();
                         }
-                        else if (input_event.touch.position.x >= (line.rectangle.x + line.rectangle.width))
+                        else if (input_event.touch.location.x >= (line.rectangle.x + line.rectangle.width))
                         {
                             cursor.string_begin = line.string_end;
                             cursor.string_end = cursor.string_begin;
@@ -583,7 +583,7 @@ namespace mandala
                                     characters_itr = bitmap_font->get_characters().find(L'?'); //TODO: get fallback character from somewhere else
                                 }
 
-                                if (input_event.touch.position.x < x + (characters_itr->second.advance_x / 2))
+                                if (input_event.touch.location.x < x + (characters_itr->second.advance_x / 2))
                                 {
                                     cursor.string_begin = string_itr;
                                     cursor.string_end = cursor.string_begin;
@@ -592,7 +592,7 @@ namespace mandala
 
                                     break;
                                 }
-                                else if (input_event.touch.position.x < x + characters_itr->second.advance_x)
+                                else if (input_event.touch.location.x < x + characters_itr->second.advance_x)
                                 {
                                     cursor.string_begin = string_itr + 1;
                                     cursor.string_end = cursor.string_begin;

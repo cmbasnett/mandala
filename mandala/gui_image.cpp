@@ -154,7 +154,7 @@ namespace mandala
         if (input_event.device_type == input_event_t::device_type_e::touch &&
             input_event.touch.type == input_event_t::touch_t::type_e::press)
         {
-            if (contains(get_bounds(), input_event.touch.position))
+            if (contains(get_bounds(), input_event.touch.location))
             {
             }
         }

@@ -92,7 +92,7 @@ namespace mandala
             platform.input.touch_id = 0;    //TODO: replace with something better
         }
 
-        input_event.touch.position = platform.get_cursor_position();
+        input_event.touch.location = platform.get_cursor_location();
 
         platform.input.events.push_back(input_event);
     }
@@ -104,20 +104,20 @@ namespace mandala
 		input_event_t input_event;
 		input_event.device_type = input_event_t::device_type_e::touch;
 		input_event.touch.type = input_event_t::touch_t::type_e::move;
-		input_event.touch.position.x = x;
-		input_event.touch.position.y = screen_size.y - y;
-		input_event.touch.position_delta.x = x - platform.cursor_position.x;
-		input_event.touch.position_delta.y = screen_size.y - y - platform.cursor_position.y;
+		input_event.touch.location.x = x;
+		input_event.touch.location.y = screen_size.y - y;
+		input_event.touch.location_delta.x = x - platform.cursor_location.x;
+		input_event.touch.location_delta.y = screen_size.y - y - platform.cursor_location.y;
         input_event.touch.id = platform.input.touch_id;
 
 		if (platform.is_cursor_centered)
 		{
 			const auto screen_size = platform.get_screen_size();
 
-			platform.set_cursor_position(static_cast<vec2_f64_t>(screen_size) / 2.0);
+			platform.set_cursor_location(static_cast<vec2_f64_t>(screen_size) / 2.0);
 		}
 
-        platform.cursor_position = platform.get_cursor_position();
+        platform.cursor_location = platform.get_cursor_location();
 
         platform.input.events.push_back(input_event);
     }
@@ -129,9 +129,9 @@ namespace mandala
         input_event_t input_event;
         input_event.device_type = input_event_t::device_type_e::touch;
         input_event.touch.type = input_event_t::touch_t::type_e::scroll;
-        input_event.touch.position = platform.get_cursor_position();
-        input_event.touch.position_delta.x = x;
-        input_event.touch.position_delta.y = screen_size.y - y;
+        input_event.touch.location = platform.get_cursor_location();
+        input_event.touch.location_delta.x = x;
+        input_event.touch.location_delta.y = screen_size.y - y;
 
         platform.input.events.push_back(input_event);
     }
@@ -359,20 +359,20 @@ namespace mandala
         return true;
     }
 
-	platform_t::cursor_position_type platform_win32_t::get_cursor_position() const
+	platform_t::cursor_location_type platform_win32_t::get_cursor_location() const
 	{
-        cursor_position_type cursor_position;
+        cursor_location_type cursor_location;
 
-        glfwGetCursorPos(window_ptr, &cursor_position.x, &cursor_position.y);
+        glfwGetCursorPos(window_ptr, &cursor_location.x, &cursor_location.y);
 
-        //cursor_position.y = get_screen_size().y - cursor_position.y;
+        //cursor_location.y = get_screen_size().y - cursor_location.y;
 
-		return cursor_position;
+		return cursor_location;
 	}
 
-	void platform_win32_t::set_cursor_position(const cursor_position_type& cursor_position) const
+	void platform_win32_t::set_cursor_location(const cursor_location_type& cursor_location) const
 	{
-        glfwSetCursorPos(window_ptr, cursor_position.x, cursor_position.y);
+        glfwSetCursorPos(window_ptr, cursor_location.x, cursor_location.y);
 	}
 
 	bool platform_win32_t::is_cursor_hidden() const

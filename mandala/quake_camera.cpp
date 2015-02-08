@@ -177,12 +177,12 @@ namespace mandala
 					{
 						if (debug_is_rolling)
 						{
-							roll_target += static_cast<float32_t>(input_event.touch.position_delta.x) * sensitivity;
+							roll_target += static_cast<float32_t>(input_event.touch.location_delta.x) * sensitivity;
 						}
 						else
 						{
-							pitch_target += static_cast<float32_t>(input_event.touch.position_delta.y) * sensitivity;
-							yaw_target += static_cast<float32_t>(input_event.touch.position_delta.x) * sensitivity;
+							pitch_target += static_cast<float32_t>(input_event.touch.location_delta.y) * sensitivity;
+							yaw_target += static_cast<float32_t>(input_event.touch.location_delta.x) * sensitivity;
 						}
 
 						input_event.is_consumed = true;

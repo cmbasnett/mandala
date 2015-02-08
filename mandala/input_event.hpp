@@ -36,7 +36,7 @@ namespace mandala
 		struct touch_t
 		{
 			typedef size_t touch_id_type;
-			typedef vec2_f64_t position_type;
+			typedef vec2_f64_t location_type;
 
 			enum class type_e : int8_t
 			{
@@ -68,8 +68,8 @@ namespace mandala
 #if defined(MANDALA_PC)
 			button_e button = button_e::none;
 #endif
-			position_type position;
-			position_type position_delta;
+            location_type location;
+            location_type location_delta;
 			mod_flags_type mod_flags = 0;
 		};
 

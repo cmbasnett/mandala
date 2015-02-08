@@ -9,7 +9,7 @@ namespace mandala
     {
         if (input_event.device_type == input_event_t::device_type_e::touch)
         {
-            input_event.touch.position.y = platform.get_screen_size().y - input_event.touch.position.y;
+            input_event.touch.location.y = platform.get_screen_size().y - input_event.touch.location.y;
 
             auto touch_nodes_itr = touch_nodes.find(input_event.touch.id);
 
