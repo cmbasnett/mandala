@@ -72,7 +72,7 @@ namespace mandala
 
         if (depth_stencil_texture != nullptr)
         {
-            depth_texture->set_size(size);
+            depth_stencil_texture->set_size(size);
         }
     }
 }
