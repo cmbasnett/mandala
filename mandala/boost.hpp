@@ -37,7 +37,6 @@ namespace mandala
 
 		boost::optional<external_type> get_value(const internal_type& string)
 		{
-
 			if (string.empty())
 			{
 				return boost::optional<external_type>(boost::none);
