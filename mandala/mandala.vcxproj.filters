@@ -321,9 +321,6 @@
       <Filter>mandala\platform</Filter>
     </ClInclude>
     <ClInclude Include="gpu_program_mgr.hpp" />
-    <ClInclude Include="terrain.hpp">
-      <Filter>mandala\resources\terrain</Filter>
-    </ClInclude>
     <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="http_mgr.hpp">
@@ -332,15 +329,6 @@
     <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="gpu_program_mgr.hpp" />
-    <ClInclude Include="voxel.hpp">
-      <Filter>mandala\resources\voxel</Filter>
-    </ClInclude>
-    <ClInclude Include="voxel_map.hpp">
-      <Filter>mandala\resources\voxel</Filter>
-    </ClInclude>
-    <ClInclude Include="voxel_type.hpp">
-      <Filter>mandala\resources\voxel</Filter>
-    </ClInclude>
     <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="gpu_defs.hpp">
       <Filter>mandala\gpu</Filter>
@@ -359,6 +347,7 @@
     <ClInclude Include="audio_defs.hpp">
       <Filter>mandala\audio</Filter>
     </ClInclude>
+    <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="gpu_program_mgr.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -534,20 +523,8 @@
     <ClCompile Include="model_skeleton.cpp">
       <Filter>mandala\resources\model</Filter>
     </ClCompile>
-    <ClCompile Include="terrain.cpp">
-      <Filter>mandala\resources\terrain</Filter>
-    </ClCompile>
     <ClCompile Include="http_mgr.cpp">
       <Filter>mandala\app</Filter>
-    </ClCompile>
-    <ClCompile Include="voxel.cpp">
-      <Filter>mandala\resources\voxel</Filter>
-    </ClCompile>
-    <ClCompile Include="voxel_map.cpp">
-      <Filter>mandala\resources\voxel</Filter>
-    </ClCompile>
-    <ClCompile Include="voxel_type.cpp">
-      <Filter>mandala\resources\voxel</Filter>
     </ClCompile>
     <ClCompile Include="gpu_program_mgr.cpp">
       <Filter>mandala\gpu</Filter>

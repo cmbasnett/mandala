@@ -28,12 +28,11 @@ namespace mandala
             game_t::app_run_start();
 
             platform.set_window_title(get_name());
-            platform.set_window_size(vec2_i32_t(1024, 768));
+            platform.set_window_size(vec2_i32_t(1280, 720));
 
-            resources.mount("resources\\armada.pack");
+            resources.mount("resources/testapp.pack");
 
-			strings.mount("armada.strings");
-			strings.language = "es";
+			strings.mount("strings.strings");
 
             states.push(std::make_shared<bsp_state_t>(), state_flag_all);
             states.push(std::make_shared<debug_state_t>(), state_flag_all);

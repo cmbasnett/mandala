@@ -21,6 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FEE27E9B-79E9-4666-A0A4-88E089142538}</ProjectGuid>
     <RootNamespace>mandala</RootNamespace>
+    <ProjectName>client</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -112,11 +113,7 @@
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\lib-msvc110\*.dll" "$(OutDir)" /y
 xcopy "$(SolutionDir)ext\glew-1.10.0\bin\Release\Win32\*.dll" "$(OutDir)" /y
-xcopy "$(SolutionDir)ext\openal-soft-1.15.1-bin\lib\Win32\*.dll" "$(OutDir)" /y
-xcopy "$(SolutionDir)ext\lua-5.1.4_Win32_dll12_lib\*.dll" "$(OutDir)" /y
-xcopy "$(SolutionDir)ext\luabind-0.9.1\bin\msvc-12.0\debug\*.dll" "$(OutDir)" /y
-
-"$(SolutionDir)tools\pack.py" --input "$(SolutionDir)resources\deploy" --output "$(OutDir)resources\armada.pack"</Command>
+xcopy "$(SolutionDir)ext\openal-soft-1.15.1-bin\lib\Win32\*.dll" "$(OutDir)" /y</Command>
     </PostBuildEvent>
     <CustomBuildStep>
       <Command>
@@ -326,14 +323,10 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="resource.hpp" />
     <ClInclude Include="string_archive.hpp" />
     <ClInclude Include="string_mgr.hpp" />
-    <ClInclude Include="terrain.hpp" />
     <ClInclude Include="texture.hpp" />
     <ClInclude Include="triangle.hpp" />
     <ClInclude Include="types.hpp" />
     <ClInclude Include="gpu_vertices.hpp" />
-    <ClInclude Include="voxel.hpp" />
-    <ClInclude Include="voxel_map.hpp" />
-    <ClInclude Include="voxel_type.hpp" />
     <ClInclude Include="window_event.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -397,11 +390,7 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="resource.cpp" />
     <ClCompile Include="string_archive.cpp" />
     <ClCompile Include="string_mgr.cpp" />
-    <ClCompile Include="terrain.cpp" />
     <ClCompile Include="texture.cpp" />
-    <ClCompile Include="voxel.cpp" />
-    <ClCompile Include="voxel_map.cpp" />
-    <ClCompile Include="voxel_type.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
