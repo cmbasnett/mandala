@@ -7,23 +7,19 @@
 #include "sprite_set.hpp"
 #include "texture.hpp"
 
+#define TPSB_MAGIC_LENGTH   (4)
+#define TPSB_MAGIC          (std::array<char, 4> { 'T', 'P', 'S', 'B' })
+#define TPSB_VERSION        (1)
+
 namespace mandala
 {
-    namespace tpsb
-    {
-        static const auto magic_length = 4;
-        static const auto magic = "TPSB";
-        static const auto version = 1;
-    }
-
 	sprite_set_t::sprite_set_t(std::istream& istream)
     {
         //magic
-        char magic[tpsb::magic_length + 1];
-        memset(magic, '\0', tpsb::magic_length + 1);
-        istream.read(magic, tpsb::magic_length);
+        std::array<char, TPSB_MAGIC_LENGTH> magic;
+        read(istream, magic);
 
-        if (strcmp(tpsb::magic, magic) != 0)
+        if (magic != TPSB_MAGIC)
         {
             throw std::exception();
         }
@@ -32,7 +28,7 @@ namespace mandala
         int32_t version = 0;
 		read(istream, version);
 
-        if (version != tpsb::version)
+        if (version != TPSB_VERSION)
         {
             throw std::exception();
         }

@@ -22,16 +22,19 @@
 #include "model_gpu_program.hpp"
 #include "io.hpp"
 
+#define MD5M_MAGIC_LENGTH       (4)
+#define MD5M_MAGIC              (std::array<char, MD5M_MAGIC_LENGTH> { 'M', 'D', '5', 'M' })
+#define MD5M_VERSION            (1)
+
 namespace mandala
 {
     model_info_t::model_info_t(std::istream& istream)
     {
         //magic
-        char magic[md5b::magic_length + 1];
-        memset(magic, '\0', md5b::magic_length + 1);
-        istream.read(magic, md5b::magic_length);
+        std::array<char, MD5M_MAGIC_LENGTH> magic;
+        read(istream, magic);
 
-        if (strcmp(md5b::model_magic, magic) != 0)
+        if (magic != MD5M_MAGIC)
         {
             throw std::exception();
         }
@@ -40,7 +43,7 @@ namespace mandala
         int32_t version = 0;
         read(istream, version);
 
-        if (version != md5b::model_version)
+        if (version != MD5M_VERSION)
         {
             throw std::exception();
         }
@@ -103,10 +106,7 @@ namespace mandala
             //index count
             uint32_t index_count;
             read(istream, index_count);
-
-            //indices
-            mesh.indices.resize(index_count);
-            istream.read(reinterpret_cast<char*>(&mesh.indices[0]), sizeof(mesh.indices[0]) * mesh.indices.size());
+            read(istream, mesh.indices, index_count);
 
             //weight count
             uint32_t weight_count;

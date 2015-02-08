@@ -4,65 +4,74 @@
 
 //mandala
 #include "sound.hpp"
+#include "io.hpp"
+
+#define WAV_CHUNK_TAG_LENGTH    (4)
+#define WAV_CHUNK_TAG           (std::array<char, WAV_CHUNK_TAG_LENGTH> { 'R', 'I', 'F', 'F' })
+
+#define WAV_CHUNK_FORMAT_LENGTH (4)
+#define WAV_CHUNK_FORMAT        (std::array<char, WAV_CHUNK_FORMAT_LENGTH> { 'W', 'A', 'V', 'E' })
+
+#define WAV_SUBCHUNK_ID_LENGTH  (4)
+#define WAV_SUBCHUNK1_ID        (std::array<char, WAV_SUBCHUNK_ID_LENGTH> { 'f', 'm', 't', ' ' })
+#define WAV_SUBCHUNK2_ID        (std::array<char, WAV_SUBCHUNK_ID_LENGTH> { 'd', 'a', 't', 'a' })
 
 namespace mandala
 {
 	//https://ccrma.stanford.edu/courses/422/projects/WaveFormat/
 	sound_t::sound_t(std::istream& istream)
 	{
-		char chunk_tag[5] = { '\0' };
-		int32_t chunk_size = 0;
-		char chunk_format[5] = { '\0' };
+        std::array<char, WAV_CHUNK_TAG_LENGTH> chunk_tag;
+        read(istream, chunk_tag);
 
-		istream.read(chunk_tag, sizeof(char) * 4);
-
-		if (strcmp(chunk_tag, "RIFF") != 0)
+        if (chunk_tag != WAV_CHUNK_TAG)
 		{
 			throw std::exception();
 		}
 
-		istream.read(reinterpret_cast<char*>(&chunk_size), sizeof(chunk_size));
-		istream.read(reinterpret_cast<char*>(&chunk_format), sizeof(char)* 4);
+        int32_t chunk_size = 0;
+        read(istream, chunk_size);
+        
+        std::array<char, WAV_CHUNK_FORMAT_LENGTH> chunk_format;
+        read(istream, chunk_format);
 
-		if (strcmp(chunk_format, "WAVE") != 0)
+        if (chunk_format != WAV_CHUNK_FORMAT)
 		{
 			throw std::exception();
 		}
 
-		char subchunk1_id[5] = { '\0' };
+        std::array<char, WAV_SUBCHUNK_ID_LENGTH> subchunk1_id;
 		int32_t subchunk1_size = 0;
 		int16_t audio_format = 0;
 
-		istream.read(subchunk1_id, sizeof(char) * 4);
+        read(istream, subchunk1_id);
 
-		if (strcmp(subchunk1_id, "fmt ") != 0)
+        if (subchunk1_id != WAV_SUBCHUNK1_ID)
 		{
 			throw std::exception();
 		}
 
-		istream.read(reinterpret_cast<char*>(&subchunk1_size), sizeof(subchunk1_size));
-		istream.read(reinterpret_cast<char*>(&audio_format), sizeof(audio_format));
-		istream.read(reinterpret_cast<char*>(&channel_count), sizeof(channel_count));
-		istream.read(reinterpret_cast<char*>(&sample_rate), sizeof(sample_rate));
-		istream.read(reinterpret_cast<char*>(&byte_rate), sizeof(byte_rate));
-		istream.read(reinterpret_cast<char*>(&block_align), sizeof(block_align));
-		istream.read(reinterpret_cast<char*>(&bits_per_sample), sizeof(bits_per_sample));
+        read(istream, subchunk1_size);
+        read(istream, audio_format);
+        read(istream, channel_count);
+        read(istream, sample_rate);
+        read(istream, byte_rate);
+        read(istream, block_align);
+        read(istream, bits_per_sample);
 
-		char subchunk2_id[5] = { '\0' };
-		int32_t subchunk2_size = 0;
+        std::array<char, WAV_SUBCHUNK_ID_LENGTH> subchunk2_id;
+        read(istream, subchunk2_id);
 
-		istream.read(subchunk2_id, sizeof(char)* 4);
-
-		if (strcmp(subchunk2_id, "data") != 0)
+        if (subchunk2_id != WAV_SUBCHUNK2_ID)
 		{
 			throw std::exception();
 		}
 
-		istream.read(reinterpret_cast<char*>(&subchunk2_size), sizeof(subchunk2_size));
+        int32_t subchunk2_size = 0;
+        read(istream, subchunk2_size);
 
 		std::vector<uint8_t> data(subchunk2_size);
-
-		istream.read(reinterpret_cast<char*>(data.data()), subchunk2_size);
+        read(istream, data, subchunk2_size);
 
 		alGenBuffers(1, &buffer_id);
 

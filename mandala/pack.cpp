@@ -10,8 +10,8 @@
 #include <boost\iostreams\stream.hpp>
 #include <boost\filesystem.hpp>
 
-#define PACK_MAGIC			("PACK")
 #define PACK_MAGIC_LENGTH	(4)
+#define PACK_MAGIC			(std::array<char, PACK_MAGIC_LENGTH> { 'P', 'A', 'C', 'K' })
 #define PACK_VERSION		(1)
 
 namespace mandala
@@ -22,10 +22,10 @@ namespace mandala
 		auto istream = std::ifstream(path, std::ios_base::binary);
 
 		//magic
-        char magic[PACK_MAGIC_LENGTH + 1] = { '\0' };
-		istream.read(magic, PACK_MAGIC_LENGTH);
+        std::array<char, PACK_MAGIC_LENGTH> magic;
+        read(istream, magic);
 
-		if (strcmp(PACK_MAGIC, magic) != 0)
+		if (magic != PACK_MAGIC)
 		{
 			throw std::exception();
 		}

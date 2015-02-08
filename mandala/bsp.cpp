@@ -292,8 +292,7 @@ namespace mandala
             count_vis_leaves(0);
 
             std::vector<uint8_t> visibility_data;
-            visibility_data.resize(visibility_chunk.length, '\0');
-            istream.read(reinterpret_cast<char*>(visibility_data.data()), visibility_data.size());
+            read(istream, visibility_data, visibility_chunk.length);
 
             for (size_t i = 0; i < vis_leaf_count; ++i)
             {
@@ -359,8 +358,8 @@ namespace mandala
         {
             istream.seekg(textures_chunk.offset + texture_offsets[i], std::ios_base::beg);
 
-            char texture_name_bytes[16] = { '\0' };
-            istream.read(reinterpret_cast<char*>(texture_name_bytes), sizeof(texture_name_bytes));
+            char texture_name_bytes[16];
+            read(istream, texture_name_bytes);
 
             std::string texture_name = texture_name_bytes;
 
@@ -464,9 +463,7 @@ namespace mandala
         istream.seekg(lighting_chunk.offset, std::ios_base::beg);
 
         std::vector<uint8_t> lighting_data;
-        lighting_data.resize(lighting_chunk.length);
-
-        istream.read(reinterpret_cast<char*>(lighting_data.data()), lighting_data.size());
+        read(istream, lighting_data, lighting_chunk.length);
 
         face_lightmap_textures.resize(faces.size());
 
@@ -565,9 +562,7 @@ namespace mandala
         istream.seekg(entities_chunk.offset, std::ios_base::beg);
 
         std::vector<char> entities_buffer;
-        entities_buffer.resize(entities_chunk.length);
-
-        istream.read(reinterpret_cast<char*>(entities_buffer.data()), entities_chunk.length);
+        read(istream, entities_buffer, entities_chunk.length);
 
         std::string entities_string = entities_buffer.data();
         size_t end = -1;

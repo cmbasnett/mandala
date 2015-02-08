@@ -8,15 +8,20 @@
 #include "model_animation.hpp"
 #include "io.hpp"
 
+#define MD5A_MAGIC_LENGTH       (4)
+#define MD5A_MAGIC              (std::array<char, MD5A_MAGIC_LENGTH> { 'M', 'D', '5', 'A' })
+#define MD5A_VERSION            (1)
+#define MD5A_BONE_INDEX_NULL    (255)
+
 namespace mandala
 {
 	model_animation_t::model_animation_t(std::istream& istream)
 	{
 		//magic
-        char magic[md5b::magic_length + 1] = { '\0' };
-        istream.read(magic, md5b::magic_length);
+        std::array<char, 4> magic;
+        read(istream, magic);
 
-		if(strcmp(md5b::animation_magic, magic) != 0)
+		if(magic != MD5A_MAGIC)
 		{
 			throw std::exception();
 		}
@@ -25,7 +30,7 @@ namespace mandala
 		int32_t version = 0;
         read(istream, version);
 
-		if(version != md5b::animation_version)
+		if(version != MD5A_VERSION)
 		{
 			throw std::exception();
         }
@@ -90,8 +95,7 @@ namespace mandala
 
 		//frame data
 		std::vector<float32_t> frame_data;
-		frame_data.resize(frame_data_count * frame_count);
-        istream.read(reinterpret_cast<char*>(frame_data.data()), sizeof(frame_data[0]) * frame_data.size());
+        read(istream, frame_data, frame_data_count * frame_count);
 
 		//build frame skeletons
 		frame_skeletons.resize(frame_count);
@@ -147,9 +151,9 @@ namespace mandala
 
 				md5b::compute_quaternion_w(skeleton_bone.pose.rotation);
 
-				if(skeleton_bone.parent_index != md5b::bone_null_index)
+				if(skeleton_bone.parent_index != MD5A_BONE_INDEX_NULL)
 				{
-					auto& parent_skeleton_bone = skeleton.bones[skeleton_bone.parent_index];
+					const auto& parent_skeleton_bone = skeleton.bones[skeleton_bone.parent_index];
 					auto rotated_location = parent_skeleton_bone.pose.rotation * skeleton_bone.pose.location;
 
 					skeleton_bone.pose.location = parent_skeleton_bone.pose.location + rotated_location;

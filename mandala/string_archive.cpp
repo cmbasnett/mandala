@@ -3,18 +3,19 @@
 #include "exceptions.hpp"
 #include "io.hpp"
 
-#define MAGIC_LENGTH    (4)
+#define LANG_MAGIC_LENGTH    (4)
+#define LANG_MAGIC           (std::array<char, LANG_MAGIC_LENGTH> { 'L', 'A', 'N', 'G' })
 
 namespace mandala
 {
     string_archive_t::string_archive_t(std::istream& istream)
     {
         //magic
-        char magic[MAGIC_LENGTH + 1] = { '\0' };
+        std::array<char, LANG_MAGIC_LENGTH> magic;
         
-        istream.read(magic, MAGIC_LENGTH);
+        read(istream, magic);
 
-		if (strcmp(magic, "LANG") != 0)
+		if (magic != LANG_MAGIC)
 		{
 			throw std::exception();
 		}

@@ -15,8 +15,8 @@
 #include "bitmap_font_gpu_program.hpp"
 #include "io.hpp"
 
-#define BMF_MAGIC			("BMF")
 #define BMF_MAGIC_LENGTH	(3)
+#define BMF_MAGIC			(std::array<char, BMF_MAGIC_LENGTH> { 'B', 'M', 'F' })
 #define BMF_VERSION			(3)
 
 namespace mandala
@@ -24,17 +24,17 @@ namespace mandala
     bitmap_font_t::bitmap_font_t(std::istream& istream)
     {
         //magic
-        char magic[BMF_MAGIC_LENGTH + 1] = { '\0' };
-        istream.read(magic, BMF_MAGIC_LENGTH);
+        std::array<char, BMF_MAGIC_LENGTH> magic;
+        read(istream, magic);
 
-        if (strcmp(BMF_MAGIC, magic) != 0)
+        if (magic != BMF_MAGIC)
         {
             throw std::exception();
         }
 
         //version
         uint8_t version = 0;
-        istream.read(reinterpret_cast<char*>(&version), sizeof(version));
+        read(istream, version);
 
         if (version != BMF_VERSION)
         {

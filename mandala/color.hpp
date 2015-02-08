@@ -1,14 +1,14 @@
 ﻿#pragma once
 
-//mandala
-#include "types.hpp"
+//std
+#include <iomanip>
+#include <sstream>
 
 //glm
 #include <glm\ext.hpp>
 
-//std
-#include <iomanip>
-#include <sstream>
+//mandala
+#include "types.hpp"
 
 namespace mandala
 {
@@ -62,9 +62,9 @@ namespace mandala
 	static ptrdiff_t rgba_hex_string_length = 8;
 
     template<typename Char>
-    inline std::basic_string<Char, std::char_traits<Char>, std::allocator<Char>> rgb_to_hex(const rgb_type& rgb)
+    inline std::basic_string<Char> rgb_to_hex(const rgb_type& rgb)
 	{
-        std::basic_ostringstream<Char, std::char_traits<Char>, std::allocator<Char>> ostringstream;
+        std::basic_ostringstream<Char> ostringstream;
 		
 		ostringstream << std::hex << std::setw(6) << std::setfill<Char>('0') << rgb_to_uint(rgb);
 
@@ -72,9 +72,9 @@ namespace mandala
     }
 
     template<typename Char>
-    inline std::basic_string<Char, std::char_traits<Char>, std::allocator<Char>> rgba_to_hex(const rgba_type& rgba)
+    inline std::basic_string<Char> rgba_to_hex(const rgba_type& rgba)
     {
-        std::basic_ostringstream<Char, std::char_traits<Char>, std::allocator<Char>> ostringstream;
+        std::basic_ostringstream<Char> ostringstream;
 
         ostringstream << std::hex << std::setw(8) << std::setfill<Char>('0') << rgba_to_uint(rgb);
 
@@ -82,7 +82,7 @@ namespace mandala
     }
 
     template<typename Char>
-    inline rgb_type hex_to_rgb(const std::basic_string<Char, std::char_traits<Char>, std::allocator<Char>>& hex_string)
+    inline rgb_type hex_to_rgb(const std::basic_string<Char>& hex_string)
 	{
         rgb_type rgb;
 
@@ -96,7 +96,7 @@ namespace mandala
     }
 
     template<typename Char>
-    inline rgba_type hex_to_rgba(const std::basic_string<Char, std::char_traits<Char>, std::allocator<Char>>& hex_string)
+    inline rgba_type hex_to_rgba(const std::basic_string<Char>& hex_string)
     {
         rgba_type rgba;
 
@@ -197,7 +197,7 @@ namespace mandala
 }
 
 template<typename Char>
-std::basic_ostringstream<Char, std::char_traits<Char>, std::allocator<Char>>& operator<<(std::basic_ostringstream<Char, std::char_traits<Char>, std::allocator<Char>>& oss, const mandala::color_push& push)
+std::basic_ostringstream<Char>& operator<<(std::basic_ostringstream<Char>& oss, const mandala::color_push& push)
 {
 	oss << mandala::color_push_character<Char>::value << mandala::rgb_to_hex<Char>(push.color);
 
@@ -205,7 +205,7 @@ std::basic_ostringstream<Char, std::char_traits<Char>, std::allocator<Char>>& op
 }
 
 template<typename Char>
-std::basic_ostringstream<Char, std::char_traits<Char>, std::allocator<Char>>& operator<<(std::basic_ostringstream<Char, std::char_traits<Char>, std::allocator<Char>>& oss, const mandala::details::color_pop_t& pop)
+std::basic_ostringstream<Char>& operator<<(std::basic_ostringstream<Char>& oss, const mandala::details::color_pop_t& pop)
 {
 	oss << mandala::color_pop_character<Char>::value;
 
