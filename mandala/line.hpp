@@ -21,6 +21,14 @@ namespace mandala
             value_type start;
             value_type end;
 
+            line2_t() = default;
+
+            line2_t(const value_type& start, const value_type& end) :
+                start(start),
+                end(end)
+            {
+            }
+
 			real_type::value_type direction() const
 			{
 				return glm::normalize((real_type::value_type)end - (real_type::value_type)start);
@@ -73,6 +81,14 @@ namespace mandala
 
 			value_type start;
 			value_type end;
+
+            line3_t() = default;
+
+            line3_t(const value_type& start, const value_type& end) :
+                start(start),
+                end(end)
+            {
+            }
 
 			real_type::value_type direction() const
 			{
