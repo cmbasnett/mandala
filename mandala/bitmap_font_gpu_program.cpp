@@ -63,17 +63,17 @@ void main()
 	bitmap_font_gpu_program_t::bitmap_font_gpu_program_t() :
 		gpu_program_t(vertex_shader_source, fragment_shader_source)
 	{
-		location_location = gpu.get_attribute_location(id(), "location");
-		texcoord_location = gpu.get_attribute_location(id(), "texcoord");
+		location_location = gpu.get_attribute_location(get_id(), "location");
+		texcoord_location = gpu.get_attribute_location(get_id(), "texcoord");
 
-		world_matrix_location = gpu.get_uniform_location(id(), "world_matrix");
-		view_projection_matrix_location = gpu.get_uniform_location(id(), "view_projection_matrix");
-		font_line_height_location = gpu.get_uniform_location(id(), "line_height");
-		font_base_location = gpu.get_uniform_location(id(), "base");
-		font_color_top_location = gpu.get_uniform_location(id(), "color_top");
-		font_color_bottom_location = gpu.get_uniform_location(id(), "color_bottom");
-		diffuse_texture_index_location = gpu.get_uniform_location(id(), "diffuse_texture");
-        should_invert_rgb_location = gpu.get_uniform_location(id(), "should_invert_rgb");
+		world_matrix_location = gpu.get_uniform_location(get_id(), "world_matrix");
+		view_projection_matrix_location = gpu.get_uniform_location(get_id(), "view_projection_matrix");
+		font_line_height_location = gpu.get_uniform_location(get_id(), "line_height");
+		font_base_location = gpu.get_uniform_location(get_id(), "base");
+		font_color_top_location = gpu.get_uniform_location(get_id(), "color_top");
+		font_color_bottom_location = gpu.get_uniform_location(get_id(), "color_bottom");
+		diffuse_texture_index_location = gpu.get_uniform_location(get_id(), "diffuse_texture");
+        should_invert_rgb_location = gpu.get_uniform_location(get_id(), "should_invert_rgb");
 	}
 
 	void bitmap_font_gpu_program_t::on_bind()

@@ -71,17 +71,17 @@ void main()
 	bsp_gpu_program_t::bsp_gpu_program_t() :
 		gpu_program_t(vertex_shader_source, fragment_shader_source)
 	{
-		location_location = gpu.get_attribute_location(id(), "location");
-		diffuse_texcoord_location = gpu.get_attribute_location(id(), "diffuse_texcoord");
-		lightmap_texcoord_location = gpu.get_attribute_location(id(), "lightmap_texcoord");
+		location_location = gpu.get_attribute_location(get_id(), "location");
+		diffuse_texcoord_location = gpu.get_attribute_location(get_id(), "diffuse_texcoord");
+		lightmap_texcoord_location = gpu.get_attribute_location(get_id(), "lightmap_texcoord");
 
-		world_matrix_location = gpu.get_uniform_location(id(), "world_matrix");
-		view_projection_matrix_location = gpu.get_uniform_location(id(), "view_projection_matrix");
-		diffuse_texture_location = gpu.get_uniform_location(id(), "diffuse_texture");
-		lightmap_texture_location = gpu.get_uniform_location(id(), "lightmap_texture");
-		lightmap_gamma_location = gpu.get_uniform_location(id(), "lightmap_gamma");
-		alpha_location = gpu.get_uniform_location(id(), "alpha");
-		should_test_alpha_location = gpu.get_uniform_location(id(), "should_test_alpha");
+		world_matrix_location = gpu.get_uniform_location(get_id(), "world_matrix");
+		view_projection_matrix_location = gpu.get_uniform_location(get_id(), "view_projection_matrix");
+		diffuse_texture_location = gpu.get_uniform_location(get_id(), "diffuse_texture");
+		lightmap_texture_location = gpu.get_uniform_location(get_id(), "lightmap_texture");
+		lightmap_gamma_location = gpu.get_uniform_location(get_id(), "lightmap_gamma");
+		alpha_location = gpu.get_uniform_location(get_id(), "alpha");
+		should_test_alpha_location = gpu.get_uniform_location(get_id(), "should_test_alpha");
 	}
 
 	void bsp_gpu_program_t::on_bind()

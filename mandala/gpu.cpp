@@ -1,3 +1,7 @@
+//std
+#include <iostream>
+#include <fstream>
+
 //mandala
 #include "opengl.hpp"
 #include "gpu.hpp"
@@ -8,9 +12,6 @@
 
 //glm
 #include <glm\gtc\type_ptr.hpp>
-
-//std
-#include <iostream>
 
 namespace mandala
 {
@@ -580,7 +581,7 @@ namespace mandala
     {
         if (programs.empty() || program.lock() != programs.top().lock())
 		{
-            glUseProgram(program.lock()->id()); glCheckError();
+            glUseProgram(program.lock()->get_id()); glCheckError();
 		}
 
         programs.push(program);
@@ -609,7 +610,7 @@ namespace mandala
 		}
 		else
 		{
-            glUseProgram(programs.top().lock()->id()); glCheckError();
+            glUseProgram(programs.top().lock()->get_id()); glCheckError();
             
             return programs.top();
 		}
@@ -808,7 +809,8 @@ namespace mandala
     {
         glBufferData(get_buffer_target(target), size, data, get_buffer_usage(usage)); glCheckError();
     }
-
+    
+    //TODO: infer index_data_type from bound index buffer
     void gpu_t::draw_elements(primitive_type_e primitive_type, size_t count, gpu_data_type_e index_data_type, size_t offset) const
     {
         glDrawElements(get_primitive_type(primitive_type), count, get_data_type(index_data_type), reinterpret_cast<GLvoid*>(offset)); glCheckError();
@@ -894,6 +896,20 @@ namespace mandala
 
 		glDeleteShader(vertex_shader); glCheckError();
 		glDeleteShader(fragment_shader); glCheckError();
+
+        //save compiled program binary
+        GLsizei binary_length = 0;
+
+        glGetProgramiv(id, GL_PROGRAM_BINARY_LENGTH, &binary_length); glCheckError();
+
+        GLenum binary_format = 0;
+        std::vector<uint8_t> program_binary_data(binary_length);
+
+        glGetProgramBinary(id, binary_length, &binary_length, &binary_format, static_cast<GLvoid*>(program_binary_data.data())); glCheckError();
+
+        auto s = std::ofstream("program.cgp", std::ios::binary);
+        s.write(reinterpret_cast<char*>(program_binary_data.data()), program_binary_data.size());
+        s.close();
 
 		return id;
 	}

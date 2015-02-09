@@ -41,11 +41,11 @@ void main()
 	basic_gpu_program_t::basic_gpu_program_t() :
 		gpu_program_t(vertex_shader_source, fragment_shader_source)
 	{
-		location_location = gpu.get_attribute_location(id(), "location");
-		color_location = gpu.get_attribute_location(id(), "color");
+		location_location = gpu.get_attribute_location(get_id(), "location");
+		color_location = gpu.get_attribute_location(get_id(), "color");
 
-		world_matrix_location = gpu.get_uniform_location(id(), "world_matrix");
-		view_projection_matrix_location = gpu.get_uniform_location(id(), "view_projection_matrix");
+		world_matrix_location = gpu.get_uniform_location(get_id(), "world_matrix");
+		view_projection_matrix_location = gpu.get_uniform_location(get_id(), "view_projection_matrix");
 	}
 
 	void basic_gpu_program_t::on_bind()

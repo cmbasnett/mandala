@@ -166,33 +166,33 @@ void main()
 	model_gpu_program_t::model_gpu_program_t() :
 		gpu_program_t(vertex_shader_source, fragment_shader_source)
 	{
-		location_location = gpu.get_attribute_location(id(), "location");
-		normal_location = gpu.get_attribute_location(id(), "normal");
-		tangent_location = gpu.get_attribute_location(id(), "tangent");
-		texcoord_location = gpu.get_attribute_location(id(), "texcoord");
-		bone_indices_0_location = gpu.get_attribute_location(id(), "bone_indices_0");
-		bone_indices_1_location = gpu.get_attribute_location(id(), "bone_indices_1");
-		bone_weights_0_location = gpu.get_attribute_location(id(), "bone_weights_0");
-		bone_weights_1_location = gpu.get_attribute_location(id(), "bone_weights_1");
+		location_location = gpu.get_attribute_location(get_id(), "location");
+		normal_location = gpu.get_attribute_location(get_id(), "normal");
+		tangent_location = gpu.get_attribute_location(get_id(), "tangent");
+		texcoord_location = gpu.get_attribute_location(get_id(), "texcoord");
+		bone_indices_0_location = gpu.get_attribute_location(get_id(), "bone_indices_0");
+		bone_indices_1_location = gpu.get_attribute_location(get_id(), "bone_indices_1");
+		bone_weights_0_location = gpu.get_attribute_location(get_id(), "bone_weights_0");
+		bone_weights_1_location = gpu.get_attribute_location(get_id(), "bone_weights_1");
 
-		world_matrix_location = gpu.get_uniform_location(id(), "world_matrix");
-		normal_matrix_location = gpu.get_uniform_location(id(), "normal_matrix");
-		view_projection_matrix_location = gpu.get_uniform_location(id(), "view_projection_matrix");
-		bone_matrices_location = gpu.get_uniform_location(id(), "bone_matrices");
-		light_location_location = gpu.get_uniform_location(id(), "light_location");
-		camera_location_location = gpu.get_uniform_location(id(), "camera_location");
-		diffuse_texture_index_location = gpu.get_uniform_location(id(), "diffuse.texture");
-		diffuse_color_location = gpu.get_uniform_location(id(), "diffuse.color");
-		normal_texture_index_location = gpu.get_uniform_location(id(), "normal.texture");
-		specular_texture_index_location = gpu.get_uniform_location(id(), "specular.texture");
-		specular_color_location = gpu.get_uniform_location(id(), "specular.color");
-		specular_intensity_location = gpu.get_uniform_location(id(), "specular.intensity");
-		emissive_texture_index_location = gpu.get_uniform_location(id(), "emissive.texture");
-		emissive_color_location = gpu.get_uniform_location(id(), "emissive.color");
-		emissive_intensity_location = gpu.get_uniform_location(id(), "emissive.intensity");
-        calculate_lighting_function_location = gpu.get_subroutine_uniform_location(id(), gpu_t::shader_type_e::fragment, "calculate_lighting");
-        calculate_lighting_lit_subroutine_index = gpu.get_subroutine_index(id(), gpu_t::shader_type_e::fragment, "calculate_lighting_lit");
-        calculate_lighting_unlit_subroutine_index = gpu.get_subroutine_index(id(), gpu_t::shader_type_e::fragment, "calculate_lighting_unlit");
+		world_matrix_location = gpu.get_uniform_location(get_id(), "world_matrix");
+		normal_matrix_location = gpu.get_uniform_location(get_id(), "normal_matrix");
+		view_projection_matrix_location = gpu.get_uniform_location(get_id(), "view_projection_matrix");
+		bone_matrices_location = gpu.get_uniform_location(get_id(), "bone_matrices");
+		light_location_location = gpu.get_uniform_location(get_id(), "light_location");
+		camera_location_location = gpu.get_uniform_location(get_id(), "camera_location");
+		diffuse_texture_index_location = gpu.get_uniform_location(get_id(), "diffuse.texture");
+		diffuse_color_location = gpu.get_uniform_location(get_id(), "diffuse.color");
+		normal_texture_index_location = gpu.get_uniform_location(get_id(), "normal.texture");
+		specular_texture_index_location = gpu.get_uniform_location(get_id(), "specular.texture");
+		specular_color_location = gpu.get_uniform_location(get_id(), "specular.color");
+		specular_intensity_location = gpu.get_uniform_location(get_id(), "specular.intensity");
+		emissive_texture_index_location = gpu.get_uniform_location(get_id(), "emissive.texture");
+		emissive_color_location = gpu.get_uniform_location(get_id(), "emissive.color");
+		emissive_intensity_location = gpu.get_uniform_location(get_id(), "emissive.intensity");
+        calculate_lighting_function_location = gpu.get_subroutine_uniform_location(get_id(), gpu_t::shader_type_e::fragment, "calculate_lighting");
+        calculate_lighting_lit_subroutine_index = gpu.get_subroutine_index(get_id(), gpu_t::shader_type_e::fragment, "calculate_lighting_lit");
+        calculate_lighting_unlit_subroutine_index = gpu.get_subroutine_index(get_id(), gpu_t::shader_type_e::fragment, "calculate_lighting_unlit");
 	}
 
 	void model_gpu_program_t::on_bind()

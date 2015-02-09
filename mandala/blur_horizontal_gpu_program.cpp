@@ -6,61 +6,61 @@
 
 namespace mandala
 {
-	std::string blur_horizontal_gpu_program_t::vertex_shader_source = R"(
+    std::string blur_horizontal_gpu_program_t::vertex_shader_source = R"(
 #version 150
-
 
 uniform mat4 world_matrix;
 uniform mat4 view_projection_matrix;
 
-attribute vec3 location;
-attribute vec2 texcoord;
+in vec3 location;
+in vec2 texcoord;
 
-out vec2 out_texcoords[5];
+out vec2 out_texcoord;
 
 void main(void)
 {
-	vec2 singleStepOffset = vec2(0.005, 0.005);
-	out_texcoords[0] = texcoord.xy;
-	out_texcoords[1] = texcoord.xy + singleStepOffset * 1.407333;
-	out_texcoords[2] = texcoord.xy - singleStepOffset * 1.407333;
-	out_texcoords[3] = texcoord.xy + singleStepOffset * 3.294215;
-	out_texcoords[4] = texcoord.xy - singleStepOffset * 3.294215;
+    out_texcoord = texcoord;
 
 	gl_Position = (view_projection_matrix) * (world_matrix * vec4(location, 1));
 }
 )";
 
-	std::string blur_horizontal_gpu_program_t::fragment_shader_source = R"(
+    std::string blur_horizontal_gpu_program_t::fragment_shader_source = R"(
 #version 150
 
 uniform sampler2D diffuse_texture;
-uniform float blur_size;
+uniform vec2 texture_size;
+uniform float blur_size = 1.0 / 512.0;
 
-varying highp vec2 out_texcoords[5];
+in vec2 out_texcoord;
 
 out vec4 fragment;
 
-void main() 
+void main()
 {
-	fragment += texture2D(diffuse_texture, out_texcoords[0]) * 0.204164;
-	fragment += texture2D(diffuse_texture, out_texcoords[1]) * 0.304005;
-	fragment += texture2D(diffuse_texture, out_texcoords[2]) * 0.304005;
-	fragment += texture2D(diffuse_texture, out_texcoords[3]) * 0.093913;
-	fragment += texture2D(diffuse_texture, out_texcoords[4]) * 0.093913;
+    fragment += texture2D(diffuse_texture, vec2(out_texcoord.x - 4.0 * blur_size, out_texcoord.y)) * 0.05;
+    fragment += texture2D(diffuse_texture, vec2(out_texcoord.x - 3.0 * blur_size, out_texcoord.y)) * 0.09;
+    fragment += texture2D(diffuse_texture, vec2(out_texcoord.x - 2.0 * blur_size, out_texcoord.y)) * 0.12;
+    fragment += texture2D(diffuse_texture, vec2(out_texcoord.x - blur_size,       out_texcoord.y)) * 0.15;
+    fragment += texture2D(diffuse_texture, vec2(out_texcoord.x,                   out_texcoord.y)) * 0.16;
+    fragment += texture2D(diffuse_texture, vec2(out_texcoord.x + blur_size,       out_texcoord.y)) * 0.15;
+    fragment += texture2D(diffuse_texture, vec2(out_texcoord.x + 2.0 * blur_size, out_texcoord.y)) * 0.12;
+    fragment += texture2D(diffuse_texture, vec2(out_texcoord.x + 3.0 * blur_size, out_texcoord.y)) * 0.09;
+    fragment += texture2D(diffuse_texture, vec2(out_texcoord.x + 4.0 * blur_size, out_texcoord.y)) * 0.05;
+    fragment += noise4(out_texcoord.x + out_texcoord.y);
 }
 )";
 
 	blur_horizontal_gpu_program_t::blur_horizontal_gpu_program_t() :
 		gpu_program_t(vertex_shader_source, fragment_shader_source)
 	{
-		location_location = gpu.get_attribute_location(id(), "location");
-		texcoord_location = gpu.get_attribute_location(id(), "texcoord");
+		location_location = gpu.get_attribute_location(get_id(), "location");
+		texcoord_location = gpu.get_attribute_location(get_id(), "texcoord");
 
-		world_matrix_location = gpu.get_uniform_location(id(), "world_matrix");
-		view_projection_matrix_location = gpu.get_uniform_location(id(), "view_projection_matrix");
-		blur_size_location = gpu.get_uniform_location(id(), "blur_size");
-		diffuse_texture_index_location = gpu.get_uniform_location(id(), "diffuse_texture");
+		world_matrix_location = gpu.get_uniform_location(get_id(), "world_matrix");
+		view_projection_matrix_location = gpu.get_uniform_location(get_id(), "view_projection_matrix");
+		blur_size_location = gpu.get_uniform_location(get_id(), "blur_size");
+		diffuse_texture_index_location = gpu.get_uniform_location(get_id(), "diffuse_texture");
 	}
 
 	void blur_horizontal_gpu_program_t::on_bind()
