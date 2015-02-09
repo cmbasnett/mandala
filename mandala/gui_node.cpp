@@ -19,22 +19,22 @@ namespace mandala
     {
         if (parent.get() == nullptr)
         {
-            //cannot orphan a node with no parent
-            return;
+            throw std::exception("cannot orphan a node with no parent");
         }
 
         auto parent_children_itr = std::find(parent->children.begin(), parent->children.end(), parent);
 
         if (parent_children_itr == parent->children.end())
         {
-            //parent does not have this node as a child, fatal error
-            throw std::exception();
+            throw std::exception("parent does not have this node as a child");
         }
 
         //remove node from parent child list
         parent->children.erase(parent_children_itr);
 
-        //TODO: might be able to forego dirtying parent removing this node doesn't affect positioning of sibling elements
+        //TODO: might be able to forego dirtying parent removing this node doesn't
+        // affect positioning of sibling elements
+
         //mark parent as dirty
         parent->dirty();
 
@@ -42,7 +42,7 @@ namespace mandala
         parent = nullptr;
 
         //mark as dirty
-        is_dirty = true;
+        dirty();
     }
 
     void gui_node_t::adopt(std::shared_ptr<gui_node_t> node)
@@ -70,7 +70,7 @@ namespace mandala
         children.push_back(node);
 
         //mark as dirty
-        is_dirty = true;
+        dirty();
     }
 
     void gui_node_t::clean()
@@ -83,8 +83,9 @@ namespace mandala
             for (auto child : children)
             {
                 auto child_size = child->desired_size;
+                auto child_size_mode = child->get_size_mode(true);
 
-                switch (child->size_mode)
+                switch (child_size_mode)
                 {
                 case size_mode_e::relative:
                     child_size = padded_bounds.size() * child->desired_size;
@@ -219,7 +220,6 @@ namespace mandala
     {
         if (input_event.is_consumed)
         {
-            //input event already consumed
             return;
         }
 
@@ -229,14 +229,24 @@ namespace mandala
 
             if (input_event.is_consumed)
             {
-                //input event consumed by child
                 break;
             }
         }
     }
 
-    void gui_node_t::on_cleaned()
+    const gui_node_t::size_mode_e gui_node_t::get_size_mode(bool is_recursive = true) const
     {
+        if (is_recursive && size_mode == size_mode_e::inherit)
+        {
+            if (parent)
+            {
+                return parent->get_size_mode(is_recursive);
+            }
+
+            return size_mode_e::absolute;
+        }
+
+        return size_mode;
     }
 
     bool gui_node_t::get_is_dirty() const
@@ -264,30 +274,6 @@ namespace mandala
         this->size_mode = size_mode;
 
         dirty();
-    }
-
-    bool gui_node_t::trace(std::shared_ptr<gui_node_t> node, gui_node_t::trace_args_t args, gui_node_t::trace_result_t& result)
-    {
-        if (intersects(args.circle, node->bounds) != intersect_type_e::intersect)
-        {
-            return false;
-        }
-
-        result.nodes_hit.push_back(node);
-
-        std::vector<std::shared_ptr<gui_node_t>> _children_hit;
-
-        for (auto& child : node->children)
-        {
-            if (trace(child, args, result))
-            {
-                _children_hit.push_back(child);
-
-                result.nodes_hit.push_back(child);
-            }
-        }
-
-        return true;
     }
 
     void gui_node_t::render(mat4_t world_matrix, mat4_t view_projection_matrix)

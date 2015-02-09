@@ -8,6 +8,7 @@
 #include "aabb.hpp"
 #include "circle.hpp"
 #include "padding.hpp"
+#include "range.hpp"
 
 namespace mandala
 {
@@ -47,22 +48,11 @@ namespace mandala
         typedef vec2_t size_type;
         typedef rgba_type color_type;
 
-        struct trace_args_t
-        {
-            circle_f32_t circle;
-        };
-
-        struct trace_result_t
-        {
-            bool did_hit = false;
-            float32_t distance = 0.0f;
-            std::vector<std::shared_ptr<gui_node_t>> nodes_hit;
-        };
-
         enum class size_mode_e
         {
             absolute,
-            relative
+            relative,
+            inherit
         };
 
         const std::shared_ptr<gui_node_t>& get_parent() const { return parent; }
@@ -71,7 +61,7 @@ namespace mandala
         const vec2_t& get_anchor_offset() const { return anchor_offset; }
         const padding_t& get_padding() const { return padding; }
         const padding_t& get_margin() const { return margin; }
-        const size_mode_e get_size_mode() const { return size_mode; }
+        const size_mode_e get_size_mode(bool is_recursive) const;
         const vec2_t& get_size() const { return size; }
 
         const color_type& get_color() const { return color; }
@@ -91,9 +81,6 @@ namespace mandala
         void set_bounds(const bounds_type& bounds) { this->bounds = bounds; dirty(); }
         void set_is_hidden(bool is_hidden) { this->is_hidden = is_hidden; dirty(); }
 
-		//TODO: move trace logic into "layout" class
-        static bool trace(std::shared_ptr<gui_node_t> node, trace_args_t args, trace_result_t& result);
-
         virtual void render(mat4_t world_matrix, mat4_t view_projection_matrix);
 
         virtual void on_render(mat4_t world_matrix, mat4_t view_projection_matrix);
@@ -102,7 +89,7 @@ namespace mandala
 		virtual void clean();
         virtual void tick(float32_t dt);
         virtual void on_input_event(input_event_t& input_event);
-        virtual void on_cleaned();
+        virtual void on_cleaned() { }
 
         bool has_children() const { return !children.empty(); }
 		bool has_parent() const { return parent.get() != nullptr; }
@@ -121,6 +108,7 @@ namespace mandala
         size_mode_e size_mode = size_mode_e::absolute;
         size_type size;
         size_type desired_size;
+        range_<size_type> size_range;
         color_type color = color_type(1.0f);
         bounds_type bounds;
         bool is_hidden = false;
