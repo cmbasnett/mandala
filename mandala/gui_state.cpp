@@ -28,6 +28,7 @@ namespace mandala
 		if (layout->get_is_dirty())
 		{
 			layout->clean();
+            layout->on_cleaned();   //TODO: kind of a hack, figure out a nicer way to do this
 		}
 
         layout->tick(dt);
