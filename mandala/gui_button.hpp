@@ -19,15 +19,15 @@ namespace mandala
 
         virtual void on_input_event(input_event_t& input_event) override;
 
-        state_t state() const { return _state; }
+        state_t get_state() const { return state; }
 
 #if defined(MANDALA_PC)
-        std::function<void()> _hover_function;
-        std::function<void()> _unhover_function;
+        std::function<void()> on_hover_function;
+        std::function<void()> on_unhover_function;
 #endif
-        std::function<void()> _pressed_function;
+        std::function<void()> on_pressed_function;
     
     private:
-        state_t _state = state_t::idle;
+        state_t state = state_t::idle;
     };
 }

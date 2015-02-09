@@ -46,23 +46,22 @@ namespace mandala
             auto button = std::make_shared<gui_button_t>();
             button->set_size(vec2_t(100, 100));
             button->set_anchor_flags(gui_anchor_flag_all);
-            button->_hover_function = [&]()
+            button->on_hover_function = [&]()
             {
                 std::cout << "hover" << std::endl;
             };
 
-            button->_unhover_function = [&]()
+            button->on_unhover_function = [&]()
             {
                 std::cout << "unhover" << std::endl;
             };
 
-            button->_pressed_function = [&]()
+            button->on_pressed_function = [&]()
             {
                 std::cout << "pressed" << std::endl;
             };
 
             scroll->adopt(button);
-
 			scroll->adopt(scroll2);
             layout->adopt(scroll);
         }

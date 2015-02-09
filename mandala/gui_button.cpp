@@ -14,32 +14,32 @@ namespace mandala
             case input_event_t::touch_t::type_e::press:
                 if (contains(get_bounds(), input_event.touch.location))
                 {
-                    _state = state_t::pressed;
+                    state = state_t::pressed;
                 }
                 break;
             case input_event_t::touch_t::type_e::release:
-                if (_state == state_t::pressed && contains(get_bounds(), input_event.touch.location))
+                if (state == state_t::pressed && contains(get_bounds(), input_event.touch.location))
                 {
-                    _state = state_t::idle;
+                    state = state_t::idle;
 
-                    if (_pressed_function)
+                    if (on_pressed_function)
                     {
-                        _pressed_function();
+                        on_pressed_function();
                     }
                 }
                 break;
             case input_event_t::touch_t::type_e::move:
-                switch (_state)
+                switch (state)
                 {
                 case state_t::idle:
 #if defined(MANDALA_PC)
                     if (contains(get_bounds(), input_event.touch.location))
                     {
-                        _state = state_t::hover;
+                        state = state_t::hover;
                         
-                        if (_hover_function)
+                        if (on_hover_function)
                         {
-                            _hover_function();
+                            on_hover_function();
                         }
                     }
 #endif
@@ -48,11 +48,11 @@ namespace mandala
                 case state_t::hover:
                     if (!contains(get_bounds(), input_event.touch.location))
                     {
-                        _state = state_t::idle;
+                        state = state_t::idle;
 
-                        if (_unhover_function)
+                        if (on_unhover_function)
                         {
-                            _unhover_function();
+                            on_unhover_function();
                         }
                     }
                     break;
