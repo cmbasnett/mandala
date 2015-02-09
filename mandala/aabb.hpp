@@ -6,6 +6,7 @@
 //mandala
 #include "types.hpp"
 #include "plane.hpp"
+#include "range.hpp"
 
 namespace mandala
 {
@@ -15,26 +16,18 @@ namespace mandala
 		struct aabb2_t;
 
 		template<typename Scalar>
-		struct aabb2_t<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
+		struct aabb2_t<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type> : range_<glm::detail::tvec2<Scalar>>
 		{
 			typedef Scalar scalar_type;
 			typedef aabb2_t<scalar_type> type;
-			typedef glm::detail::tvec2<scalar_type> vector_type;
 
 			static const size_t corner_count = 4;
 
-			vector_type min;
-			vector_type max;
-
-			aabb2_t()
-			{
-			}
-
-			aabb2_t(const vector_type& min, const vector_type& max) :
-				min(min),
-				max(max)
-			{
-			}
+            aabb2_t() = default;
+            aabb2_t(const value_type& min, const value_type& max) :
+                range_(min, max)
+            {
+            }
 
 			inline scalar_type width() const
 			{
@@ -46,42 +39,42 @@ namespace mandala
 				return max.y - min.y;
 			}
 
-			inline vector_type size() const
+			inline value_type size() const
 			{
 				return max - min;
 			}
 
-			inline vector_type center() const
+			inline value_type center() const
 			{
 				return min + (size() / static_cast<scalar_type>(2));
 			}
 
-			std::array<vector_type, corner_count> get_corners() const
+			std::array<value_type, corner_count> get_corners() const
 			{
 				return { min,
-						 vector_type(min.x, max.y),
-						 vector_type(max.x, min.y),
+						 value_type(min.x, max.y),
+						 value_type(max.x, min.y),
 						 max };
 			}
 
-			type operator-(const vector_type& rhs) const
+			type operator-(const value_type& rhs) const
 			{
 				return type(min - t, max - t);
 			}
 
-			type& operator-=(const vector_type& rhs)
+			type& operator-=(const value_type& rhs)
 			{
 				*this = *this - rhs;
 
 				return *this;
 			}
 
-			type operator+(const vector_type& rhs) const
+			type operator+(const value_type& rhs) const
 			{
 				return type(min + rhs, max + rhs);
 			}
 
-			type& operator+=(const vector_type& rhs)
+			type& operator+=(const value_type& rhs)
 			{
 				*this = *this + rhs;
 
@@ -132,35 +125,27 @@ namespace mandala
 		struct aabb3_t;
 
 		template<typename Scalar>
-		struct aabb3_t<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
+		struct aabb3_t<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type> : range_<glm::detail::tvec3<Scalar>>
 		{
 			typedef Scalar scalar_type;
 			typedef aabb3_t<scalar_type> type;
-			typedef glm::detail::tvec3<scalar_type> vector_type;
 			typedef plane3_t<float32_t> plane_type;
 
 			static const size_t corner_count = 8;
 			static const size_t plane_count = 6;
 
-			vector_type min;
-			vector_type max;
+            aabb3_t() = default;
+            aabb3_t(const value_type& min, const value_type& max) :
+                range_(min, max)
+            {
+            }
 
-			aabb3_t()
-			{
-			}
-
-			aabb3_t(const vector_type& min, const vector_type& max) :
-				min(min),
-				max(max)
-			{
-			}
-
-			vector_type size() const
+			value_type size() const
 			{
 				return max - min;
 			}
 
-			vector_type center() const
+            value_type center() const
 			{
 				return min + ((max - min) / scalar_type(2));
 			}
@@ -175,36 +160,36 @@ namespace mandala
 						 { max, VEC3_FORWARD } };
 			}
 
-			std::array<vector_type, corner_count> get_corners() const
+			std::array<value_type, corner_count> get_corners() const
 			{
 				return{ min,
-						vector_type(min.x, min.y, max.z),
-						vector_type(min.x, max.y, min.z),
-						vector_type(min.x, max.y, max.z),
-						vector_type(max.x, min.y, min.z),
-						vector_type(max.x, min.y, max.z),
-						vector_type(max.x, max.y, min.z),
+						value_type(min.x, min.y, max.z),
+                        value_type(min.x, max.y, min.z),
+                        value_type(min.x, max.y, max.z),
+                        value_type(max.x, min.y, min.z),
+                        value_type(max.x, min.y, max.z),
+                        value_type(max.x, max.y, min.z),
 						max };
 			}
 
-			type operator-(const vector_type& rhs) const
+			type operator-(const value_type& rhs) const
 			{
 				return type(min - t, max - t);
 			}
 
-			type& operator-=(const vector_type& rhs)
+			type& operator-=(const value_type& rhs)
 			{
 				*this = *this - t;
 
 				return *this;
 			}
 
-			type operator+(const vector_type& rhs) const
+			type operator+(const value_type& rhs) const
 			{
 				return type(min + t, max + t);
 			}
 
-			type& operator+=(const vector_type& rhs)
+			type& operator+=(const value_type& rhs)
 			{
 				*this = *this + t;
 
@@ -223,11 +208,11 @@ namespace mandala
 				return *this;
 			}
 
-			template<typename U>
-			bool operator==(const aabb3_t<U>& rhs) const
-			{
-				return min == rhs.min && max == rhs.max;
-			}
+            template<typename U>
+            bool operator==(const aabb3_t<U>& rhs) const
+            {
+                return min == rhs.min && max == rhs.max;
+            }
 
 			template<typename U>
 			bool operator!=(const aabb3_t<U>& rhs) const
@@ -238,16 +223,16 @@ namespace mandala
 			template<typename U>
 			type& operator=(const aabb3_t<U>& rhs)
 			{
-				min = static_cast<vector_type>(rhs.min);
-				max = static_cast<vector_type>(rhs.max);
+				min = static_cast<value_type>(rhs.min);
+				max = static_cast<value_type>(rhs.max);
 				return *this;
 			}
 
 			template<typename PointScalar, size_t N>
 			type& operator=(const std::array<glm::detail::tvec3<PointScalar>, N>& points)
 			{
-				min = vector_type(std::numeric_limits<scalar_type>::max());
-				max = vector_type(-std::numeric_limits<scalar_type>::max());
+				min = value_type(std::numeric_limits<scalar_type>::max());
+				max = value_type(-std::numeric_limits<scalar_type>::max());
 
 				for (const auto& point : points)
 				{
