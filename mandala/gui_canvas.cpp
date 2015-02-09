@@ -44,6 +44,8 @@ namespace mandala
 
         gpu.frame_buffers.pop();
 
+        //TODO: for each render pass, push/pop frame buffer, do gpu program etc.
+
         gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
         gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
 
@@ -79,7 +81,7 @@ namespace mandala
         {
             frame_buffer = std::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::color_depth_stencil, frame_buffer_size);
         }
-        else
+        else if(frame_buffer_size != frame_buffer->get_size())
         {
             frame_buffer->set_size(frame_buffer_size);
         }

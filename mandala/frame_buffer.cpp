@@ -60,6 +60,11 @@ namespace mandala
 
     void frame_buffer_t::set_size(const gpu_frame_buffer_size_type & size)
     {
+        if (size == get_size())
+        {
+            return;
+        }
+
         if (color_texture != nullptr)
         {
             color_texture->set_size(size);

@@ -40,6 +40,11 @@ namespace mandala
 
     void texture_t::set_size(const size_type & size)
     {
+        if (size == get_size())
+        {
+            return;
+        }
+        
         gpu.resize_texture(shared_from_this(), size.x, size.y);
     }
 }
