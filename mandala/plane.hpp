@@ -87,9 +87,9 @@ namespace mandala
 			}
 
 			plane3_t(const vector_type& origin, const vector_type& normal) :
-				normal(normal)
+				normal(normal),
+                distance(glm::dot(normal, origin))
 			{
-				distance = glm::dot(normal, origin);
 			}
 
 			plane3_t(const vector_type& v0, const vector_type& v1, const vector_type& v2)

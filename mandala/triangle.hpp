@@ -17,17 +17,16 @@ namespace mandala
 		template<typename T>
 		struct triangle3_t<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
 		{
+            static const size_t point_count = 3;
+
 			typedef glm::detail::tvec2<T> point_type;
+            typedef std::array<point_type, 3> points_type;
 			typedef glm::detail::tvec2<float32_t> normal_type;
 			typedef triangle3_t<T> type;
 
-			static const size_t point_count = 3;
+            triangle3_t() = default;
 
-			triangle3_t()
-			{
-			}
-
-			triangle3_t(const std::array<point_type, point_count>& points) :
+			triangle3_t(const points_type& points) :
 				points(points)
 			{
 			}
@@ -39,7 +38,7 @@ namespace mandala
 				points[2] = point2;
 			}
 
-			point_type& operator[](size_t index)
+			point_type& operator[](size_t index) const
 			{
 				return points[index];
 			}
@@ -50,7 +49,7 @@ namespace mandala
 			}
 
 		private:
-			std::array<point_type, point_count> points;
+            points_type points;
 		};
 
 		template<typename T, typename Enable = void>
@@ -59,16 +58,15 @@ namespace mandala
 		template<typename T>
 		struct triangle2_t<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
 		{
+            static const size_t point_count = 3;
+
 			typedef glm::detail::tvec2<T> point_type;
+            typedef std::array<point_type, 3> points_type;
 			typedef triangle2_t<T> type;
 
-			static const size_t point_count = 3;
+            triangle2_t() = default;
 
-			triangle2_t()
-			{
-			}
-
-			triangle2_t(const std::array<point_type, point_count>& points) :
+			triangle2_t(const points_type& points) :
 				points(points)
 			{
 			}
@@ -91,7 +89,7 @@ namespace mandala
 			}
 
 		private:
-			std::array<point_type, point_count> points;
+            points_type points;
 		};
 	}
 

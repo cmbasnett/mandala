@@ -18,14 +18,12 @@ namespace mandala
 			typedef glm::detail::tvec2<scalar_type> vector_type;
 			typedef rectangle_t<scalar_type> type;
 
-			scalar_type x = scalar_type(0);
-			scalar_type y = scalar_type(0);
-			scalar_type width = scalar_type(0);
-			scalar_type height = scalar_type(0);
+            scalar_type x = 0;
+            scalar_type y = 0;
+            scalar_type width = 0;
+            scalar_type height = 0;
 
-            rectangle_t()
-            {
-            }
+            rectangle_t() = default;
 
             rectangle_t(scalar_type x, scalar_type y, scalar_type width, scalar_type height) :
                 x(x),

@@ -20,6 +20,13 @@ namespace mandala
 			origin_type origin;
 			radius_type radius = 0;
 
+            sphere_t() = default;
+            sphere_t(const origin_type& origin, radius_type radius) :
+                origin(origin),
+                radius(radius)
+            {
+            }
+
 			radius_type area() const
 			{
 				return 4.0f * glm::pi<radius_type>() * glm::pow2(radius);

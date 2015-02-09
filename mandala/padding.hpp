@@ -25,10 +25,7 @@ namespace mandala
 			scalar_type top = 0;
 			scalar_type right = 0;
 
-			padding_t()
-			{
-			}
-
+            padding_t() = default;
 			padding_t(scalar_type bottom, scalar_type left, scalar_type top, scalar_type right) :
 				bottom(bottom),
 				left(left),
@@ -118,13 +115,13 @@ namespace mandala
 	typedef padding_f32_t padding_t;
 
 	template<typename T, typename U>
-	mandala::details::aabb2_t<T> operator-(const mandala::details::aabb2_t<T>& aabb, const details::padding_t<U>& padding)
+	details::aabb2_t<T> operator-(const details::aabb2_t<T>& aabb, const details::padding_t<U>& padding)
 	{
-		return mandala::details::aabb2_t<T>(glm::detail::tvec2<T>(aabb.min.x + padding.left, aabb.min.y + padding.bottom), glm::detail::tvec2<T>(aabb.max.x - padding.right, aabb.max.y - padding.top));
+		return details::aabb2_t<T>(glm::detail::tvec2<T>(aabb.min.x + padding.left, aabb.min.y + padding.bottom), glm::detail::tvec2<T>(aabb.max.x - padding.right, aabb.max.y - padding.top));
 	}
 
 	template<typename T, typename U>
-	void operator-=(mandala::details::aabb2_t<T>& aabb, const details::padding_t<U>& padding)
+	void operator-=(details::aabb2_t<T>& aabb, const details::padding_t<U>& padding)
 	{
 		aabb.min.x += padding.left;
 		aabb.min.y += padding.bottom;
@@ -133,13 +130,13 @@ namespace mandala
 	}
 
 	template<typename T, typename U>
-	mandala::details::aabb2_t<T> operator+(const mandala::details::aabb2_t<T>& aabb, const details::padding_t<U>& padding)
+	details::aabb2_t<T> operator+(const details::aabb2_t<T>& aabb, const details::padding_t<U>& padding)
 	{
-		return mandala::details::aabb2_t<T>({ aabb.min.x - padding.left, aabb.min.y - padding.bottom }, { aabb.max.x + padding.right, aabb.max.y + padding.top });
+		return details::aabb2_t<T>({ aabb.min.x - padding.left, aabb.min.y - padding.bottom }, { aabb.max.x + padding.right, aabb.max.y + padding.top });
 	}
 
 	template<typename T, typename U>
-	void operator+=(mandala::details::aabb2_t<T>& aabb, const details::padding_t<U>& padding)
+	void operator+=(details::aabb2_t<T>& aabb, const details::padding_t<U>& padding)
 	{
 		aabb.min.x -= padding.left;
 		aabb.min.y -= padding.bottom;
