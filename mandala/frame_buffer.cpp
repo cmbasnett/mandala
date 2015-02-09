@@ -6,15 +6,10 @@
 namespace mandala
 {
     frame_buffer_t::frame_buffer_t(gpu_frame_buffer_type_e type, const gpu_frame_buffer_size_type& size) :
-        frame_buffer_t(type, size.x, size.y)
-    {
-	}
-
-    frame_buffer_t::frame_buffer_t(gpu_frame_buffer_type_e type, gpu_frame_buffer_size_type::value_type width, gpu_frame_buffer_size_type::value_type height) :
         type(type),
-		size(width, height)
+        size(size)
     {
-		id = gpu.create_frame_buffer(type, width, height, color_texture, depth_stencil_texture, depth_texture);
+		id = gpu.create_frame_buffer(type, size, color_texture, depth_stencil_texture, depth_texture);
 	}
 
     frame_buffer_t::~frame_buffer_t()

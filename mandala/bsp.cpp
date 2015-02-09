@@ -510,8 +510,9 @@ namespace mandala
                 auto texture_max_u = glm::ceil(max_u / 16);
                 auto texture_max_v = glm::ceil(max_v / 16);
 
-                auto texture_width = texture_max_u - texture_min_u + 1;
-                auto texture_height = texture_max_v - texture_min_v + 1;
+                vec2_t texture_size;
+                texture_size.x = texture_max_u - texture_min_u + 1;
+                texture_size.y = texture_max_v - texture_min_v + 1;
 
                 for (auto surface_edge_index = 0; surface_edge_index < face.surface_edge_count; ++surface_edge_index)
                 {
@@ -531,21 +532,20 @@ namespace mandala
                     auto u = glm::dot(texture_info.s.axis, vertex_location) + texture_info.s.offset;
                     auto v = glm::dot(texture_info.t.axis, vertex_location) + texture_info.t.offset;
 
-                    auto lightmap_u = (texture_width / 2) + (u - ((min_u + max_u) / 2)) / 16;
-                    auto lightmap_v = (texture_height / 2) + (v - ((min_v + max_v) / 2)) / 16;
+                    auto lightmap_u = (texture_size.x / 2) + (u - ((min_u + max_u) / 2)) / 16;
+                    auto lightmap_v = (texture_size.y / 2) + (v - ((min_v + max_v) / 2)) / 16;
 
                     auto& lightmap_texcoord = vertices[face_start_indices[face_index] + surface_edge_index].lightmap_texcoord;
-                    lightmap_texcoord.x = lightmap_u / texture_width;
-                    lightmap_texcoord.y = lightmap_v / texture_height;
+                    lightmap_texcoord.x = lightmap_u / texture_size.x;
+                    lightmap_texcoord.y = lightmap_v / texture_size.y;
                 }
 
-                auto lighting_data_length = 3 * static_cast<int32_t>(texture_width) * static_cast<int32_t>(texture_height);
+                auto lighting_data_length = 3 * static_cast<int32_t>(texture_size.x) * static_cast<int32_t>(texture_size.y);
                 auto lighting_data_begin = lighting_data.begin() + face.lightmap_offset;
                 auto lighting_data_end = lighting_data_begin + lighting_data_length;
 
                 auto image = std::make_shared<image_t>(
-                    static_cast<image_t::size_value_type>(texture_width),
-                    static_cast<image_t::size_value_type>(texture_height),
+                    static_cast<image_t::size_type>(texture_size),
                     8,
                     color_type_e::rgb,
                     lighting_data_begin,

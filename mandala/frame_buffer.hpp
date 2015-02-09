@@ -25,7 +25,6 @@ namespace mandala
         void set_size(const gpu_frame_buffer_size_type& size);
 
         frame_buffer_t(gpu_frame_buffer_type_e type, const gpu_frame_buffer_size_type& size);
-        frame_buffer_t(gpu_frame_buffer_type_e type, gpu_frame_buffer_size_type::value_type width, gpu_frame_buffer_size_type::value_type height);
         ~frame_buffer_t();
 
         void on_bind() const;

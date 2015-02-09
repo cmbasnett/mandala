@@ -364,11 +364,11 @@ namespace mandala
 		gpu_id_t create_buffer();
 		void destroy_buffer(gpu_id_t id);
 
-		gpu_id_t create_frame_buffer(gpu_frame_buffer_type_e type, gpu_frame_buffer_size_type::value_type width, gpu_frame_buffer_size_type::value_type height, std::shared_ptr<texture_t>& color_texture, std::shared_ptr<texture_t>& depth_stencil_texture, std::shared_ptr<texture_t>& depth_texture);
+		gpu_id_t create_frame_buffer(gpu_frame_buffer_type_e type, const gpu_frame_buffer_size_type& size, std::shared_ptr<texture_t>& color_texture, std::shared_ptr<texture_t>& depth_stencil_texture, std::shared_ptr<texture_t>& depth_texture);
 		void destroy_frame_buffer(gpu_id_t id);
 
-        gpu_id_t create_texture(color_type_e color_type, uint32_t width, uint32_t height, const void* data);
-        void resize_texture(const std::shared_ptr<texture_t>& texture, uint32_t width, uint32_t height);
+        gpu_id_t create_texture(color_type_e color_type, const vec2_u32_t& size, const void* data);
+        void resize_texture(const std::shared_ptr<texture_t>& texture, const vec2_u32_t& size);
         void destroy_texture(gpu_id_t id);
 
 		gpu_location_t get_uniform_location(gpu_id_t program_id, const std::string& name);

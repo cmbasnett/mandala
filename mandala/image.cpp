@@ -50,7 +50,7 @@ namespace mandala
         int png_color_type;
         png_int_32 interlace_method;
 
-        png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &png_color_type, &interlace_method, nullptr, nullptr);
+        png_get_IHDR(png_ptr, info_ptr, &size.x, &size.y, &bit_depth, &png_color_type, &interlace_method, nullptr, nullptr);
 
 		switch (png_color_type)
 		{
@@ -74,23 +74,22 @@ namespace mandala
 		}
 
 		auto row_bytes = png_get_rowbytes(png_ptr, info_ptr);
-		auto data_length = row_bytes * height;
+		auto data_length = row_bytes * size.y;
 
 		data.reserve(data_length);
 
 		auto row_pointers = png_get_rows(png_ptr, info_ptr);
 
-		for (uint32_t i = 0; i < height; ++i)
+		for (uint32_t i = 0; i < size.y; ++i)
 		{
-			memcpy(data.data() + (row_bytes * (height - 1 - i)), row_pointers[i], row_bytes);
+			memcpy(data.data() + (row_bytes * (size.y - 1 - i)), row_pointers[i], row_bytes);
 		}
 
 		png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
 	}
 
-    image_t::image_t(size_value_type width, size_value_type height, bit_depth_type bit_depth, color_type_e color_type, const data_type::iterator& data_begin, const data_type::iterator& data_end) :
-        width(width),
-        height(height),
+    image_t::image_t(const size_type& size, bit_depth_type bit_depth, color_type_e color_type, const data_type::iterator& data_begin, const data_type::iterator& data_end) :
+        size(size),
         bit_depth(bit_depth),
         color_type(color_type)
     {

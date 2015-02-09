@@ -5,25 +5,16 @@
 
 namespace mandala
 {
-	texture_t::texture_t(color_type_e color_type, size_value_type width, size_value_type height, const void* data) :
+    texture_t::texture_t(color_type_e color_type, const size_type& size, const void* data) :
         color_type(color_type),
-        size(width, height)
+        size(size)
 	{
-        id = gpu.create_texture(color_type, width, height, data);
-	}
-
-    texture_t::texture_t(color_type_e color_type, size_type size, const void* data) :
-		texture_t(color_type,
-                  size.x,
-                  size.y,
-                  data)
-	{
+        id = gpu.create_texture(color_type, size, data);
 	}
 
     texture_t::texture_t(const std::shared_ptr<image_t>& image) :
         texture_t(image->get_color_type(),
-                  image->get_width(),
-                  image->get_height(),
+                  image->get_size(),
                   image->get_data().data())
     {
     }
@@ -45,6 +36,6 @@ namespace mandala
             return;
         }
         
-        gpu.resize_texture(shared_from_this(), size.x, size.y);
+        gpu.resize_texture(shared_from_this(), size);
     }
 }
