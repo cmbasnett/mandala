@@ -40,6 +40,7 @@ namespace mandala
 
         const std::shared_ptr<game_t> get_game() const { return game; }
         const performance_t& get_performance() const { return performance; }
+        std::chrono::system_clock::duration get_frame_duration() const { return frame_duration; }
 
         app_t();
 
@@ -47,11 +48,15 @@ namespace mandala
         void exit();
         void reset();
 
+        std::chrono::system_clock::duration get_uptime() const;
+
     private:
         bool is_exiting = false;
         bool is_resetting = false;
         std::shared_ptr<game_t> game;
         performance_t performance;
+        std::chrono::system_clock::time_point run_time_point;
+        std::chrono::milliseconds frame_duration;
 
         app_t(const app_t&) = delete;
         app_t& operator=(const app_t&) = delete;

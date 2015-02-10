@@ -48,14 +48,14 @@ namespace mandala
             quake_camera_t camera;
             std::shared_ptr<gui_label_t> debug_label;
             std::shared_ptr<gui_image_t> crosshair_image;
-            std::shared_ptr<gui_image_t> bsp_render_image;
+            std::shared_ptr<gui_image_t> bsp_image;
+            std::shared_ptr<gui_canvas_t> bsp_canvas;
             skybox_t skybox;
             render_data_t render_data;
             bsp_t::render_stats_t render_stats;
             std::shared_ptr<pause_state_t> pause_state;
             std::shared_ptr<console_state_t> console_state;
             std::shared_ptr<frame_buffer_t> bsp_frame_buffer;
-            std::shared_ptr<gui_canvas_t> bsp_canvas;
 
 			bsp_state_t(const bsp_state_t&) = delete;
             bsp_state_t& operator=(const bsp_state_t&) = delete;

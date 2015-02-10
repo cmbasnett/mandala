@@ -34,6 +34,8 @@ namespace mandala
 		begin:
 		using namespace std::chrono;
 
+        run_time_point = system_clock::now();
+
 		game = game_;
 
 		platform.app_run_start();
@@ -51,7 +53,9 @@ namespace mandala
 
         while (should_keep_running())
         {
-            auto dt = static_cast<float32_t>(duration_cast<milliseconds>(high_resolution_clock::now() - frame_start_time).count()) / std::milli::den;
+            frame_duration = duration_cast<milliseconds>(high_resolution_clock::now() - frame_start_time);
+
+            auto dt = static_cast<float32_t>(frame_duration.count()) / std::milli::den;
 
             performance.fps = 1.0f / dt;
             frame_start_time = high_resolution_clock::now();
@@ -91,6 +95,11 @@ namespace mandala
 	{
 		is_resetting = true;
 	}
+
+    std::chrono::system_clock::duration app_t::get_uptime() const
+    {
+        return std::chrono::system_clock::now() - run_time_point;
+    }
 
 	void app_t::tick(float32_t dt)
     {

@@ -66,19 +66,17 @@ namespace mandala
             crosshair_image->set_sprite(sprite_t(hash_t("crosshairs.tpsb"), hash_t("crosshair6.png")));
 			crosshair_image->set_anchor_flags(gui_anchor_flag_all);
 
-			bsp_render_image = std::make_shared<gui_image_t>();
-			bsp_render_image->set_dock_mode(gui_dock_mode_e::fill);
-            bsp_render_image->set_sprite(sprite);
+			bsp_image = std::make_shared<gui_image_t>();
+			bsp_image->set_dock_mode(gui_dock_mode_e::fill);
+            bsp_image->set_sprite(sprite);
 
             bsp_canvas = std::make_shared<gui_canvas_t>();
             bsp_canvas->set_dock_mode(gui_dock_mode_e::fill);
-            bsp_canvas->adopt(bsp_render_image);
+            bsp_canvas->adopt(bsp_image);
+            bsp_canvas->adopt(crosshair_image);
 
 			layout->adopt(bsp_canvas);
-			layout->adopt(crosshair_image);
             layout->adopt(debug_label);
-
-
         }
 
         bsp_state_t::~bsp_state_t()
@@ -118,6 +116,8 @@ namespace mandala
 
                 gpu.viewports.push(viewport);
                 gpu.frame_buffers.push(bsp_frame_buffer);
+
+                gpu.clear(gpu_t::clear_flag_color | gpu_t::clear_flag_depth);
 
                 skybox.render(camera);
                 bsp->render(camera);
@@ -273,7 +273,7 @@ namespace mandala
 
                 auto sprite_set = std::make_shared<sprite_set_t>(bsp_frame_buffer->get_color_texture());
                 sprite_t sprite(sprite_set, sprite_set->get_regions().begin()->second.hash);
-                bsp_render_image->set_sprite(sprite);
+                bsp_image->set_sprite(sprite);
             }
         }
 #endif
