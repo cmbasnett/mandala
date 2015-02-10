@@ -298,8 +298,6 @@ namespace mandala
 
 	void platform_win32_t::app_render_start()
 	{
-		gpu.set_clear_color(rgba_type(0));
-
         gpu.clear(gpu_t::clear_flag_color | gpu_t::clear_flag_depth);
 	}
 
@@ -315,7 +313,7 @@ namespace mandala
 
     platform_t::screen_size_type platform_win32_t::get_screen_size() const
     {
-        platform_t::screen_size_type screen_size;
+        screen_size_type screen_size;
 
         glfwGetWindowSize(window_ptr, &screen_size.x, &screen_size.y);
 
