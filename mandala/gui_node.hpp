@@ -81,11 +81,10 @@ namespace mandala
         void set_bounds(const bounds_type& bounds) { this->bounds = bounds; dirty(); }
         void set_is_hidden(bool is_hidden) { this->is_hidden = is_hidden; dirty(); }
 
-        virtual void render(mat4_t world_matrix, mat4_t view_projection_matrix);
-
-        virtual void on_render(mat4_t world_matrix, mat4_t view_projection_matrix);
-        virtual void on_render_begin(mat4_t world_matrix, mat4_t view_projection_matrix) { }
-        virtual void on_render_end(mat4_t world_matrix, mat4_t view_projection_matrix) { }
+        virtual void render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix);
+        virtual void on_render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix);
+        virtual void on_render_begin(const mat4_t& world_matrix, const mat4_t& view_projection_matrix) { }
+        virtual void on_render_end(const mat4_t& world_matrix, const mat4_t& view_projection_matrix) { }
 		virtual void clean();
         virtual void tick(float32_t dt);
         virtual void on_input_event(input_event_t& input_event);

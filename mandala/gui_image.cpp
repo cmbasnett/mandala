@@ -80,7 +80,7 @@ namespace mandala
         set_sprite(sprite);
     }
 
-	void gui_image_t::on_render_begin(mat4_t world_matrix, mat4_t view_projection_matrix)
+	void gui_image_t::on_render_begin(const mat4_t& world_matrix, const mat4_t& view_projection_matrix)
     {
 		auto blend_state = gpu.blend.get_state();
 		blend_state.is_enabled = true;
@@ -100,12 +100,10 @@ namespace mandala
 
 		const auto center = get_bounds().center();
 
-		world_matrix *= glm::translate(center.x, center.y, 0.0f);
-
 		static const auto diffuse_texture_index = 0;
 
 		gpu_program->diffuse_texture_index(diffuse_texture_index);
-		gpu_program->world_matrix(world_matrix);
+		gpu_program->world_matrix(world_matrix * glm::translate(center.x, center.y, 0.0f));
 		gpu_program->view_projection_matrix(view_projection_matrix);
 		gpu_program->color(get_color());
 

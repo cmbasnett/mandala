@@ -29,7 +29,7 @@ namespace mandala
             throw std::exception("parent does not have this node as a child");
         }
 
-        //remove node from parent child list
+        //remove node from parent's child list
         parent->children.erase(parent_children_itr);
 
         //TODO: might be able to forego dirtying parent removing this node doesn't
@@ -83,7 +83,7 @@ namespace mandala
             for (auto child : children)
             {
                 auto child_size = child->desired_size;
-                auto child_size_mode = child->get_size_mode(true);
+                const auto child_size_mode = child->get_size_mode(true);
 
                 switch (child_size_mode)
                 {
@@ -276,7 +276,7 @@ namespace mandala
         dirty();
     }
 
-    void gui_node_t::render(mat4_t world_matrix, mat4_t view_projection_matrix)
+    void gui_node_t::render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix)
     {
         if (get_is_hidden())
         {
@@ -332,13 +332,13 @@ namespace mandala
 
         if (should_clip)
         {
-            gpu.depth.pop_state();
-            gpu.color.pop_state();
             gpu.stencil.pop_state();
+            gpu.color.pop_state();
+            gpu.depth.pop_state();
         }
     }
 
-    void gui_node_t::on_render(mat4_t world_matrix, mat4_t view_projection_matrix)
+    void gui_node_t::on_render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix)
     {
         on_render_begin(world_matrix, view_projection_matrix);
 

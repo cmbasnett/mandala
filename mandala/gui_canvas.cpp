@@ -1,9 +1,13 @@
+//std
+#include <chrono>
+
 //mandala
 #include "gui_canvas.hpp"
 #include "gpu.hpp"
 #include "gpu_program_mgr.hpp"
 #include "gui_gpu_program.hpp"
 #include "blur_horizontal_gpu_program.hpp"
+#include "app.hpp"
 
 //glm
 #include <glm\ext.hpp>
@@ -26,7 +30,7 @@ namespace mandala
         vertex_buffer->data(vertices, gpu_t::buffer_usage_e::static_draw);
     }
 
-    void gui_canvas_t::on_render_begin(mat4_t world_matrix, mat4_t view_projection_matrix)
+    void gui_canvas_t::on_render_begin(const mat4_t& world_matrix, const mat4_t& view_projection_matrix)
     {
 		gpu.frame_buffers.push(frame_buffer);
 
@@ -35,11 +39,8 @@ namespace mandala
         gui_node_t::on_render_begin(world_matrix, view_projection_matrix);
     }
 
-    void gui_canvas_t::on_render_end(mat4_t world_matrix, mat4_t view_projection_matrix)
+    void gui_canvas_t::on_render_end(const mat4_t& world_matrix, const mat4_t& view_projection_matrix)
     {
-        world_matrix *= glm::translate(get_bounds().min.x, get_bounds().min.y, 0.0f);
-        world_matrix *= glm::scale(get_size().x, get_size().y, 1.0f);   //TODO: verify correctness
-
         gpu.viewports.pop();
 
         gpu.frame_buffers.pop();
@@ -55,9 +56,18 @@ namespace mandala
 
         static const size_t diffuse_texture_index = 0;
 
-        gpu_program->world_matrix(world_matrix);
+        static auto t = 0.0f;
+
+        t += 0.001f;
+
+        auto gpu_world_matrix = world_matrix;
+        gpu_world_matrix *= glm::translate(get_bounds().min.x, get_bounds().min.y, 0.0f);
+        gpu_world_matrix *= glm::scale(get_size().x, get_size().y, 1.0f);   //TODO: verify correctness
+
+        gpu_program->world_matrix(gpu_world_matrix);
         gpu_program->view_projection_matrix(view_projection_matrix);
         gpu_program->diffuse_texture_index(diffuse_texture_index);
+        gpu_program->t(t);
 
         gpu.textures.bind(diffuse_texture_index, frame_buffer->get_color_texture());
 

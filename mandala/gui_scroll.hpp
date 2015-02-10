@@ -13,7 +13,7 @@ namespace mandala
 
         virtual void on_input_event(input_event_t& input_event) override;
         virtual void tick(float32_t dt) override;
-        virtual void render(mat4_t world_matrix, mat4_t view_projection_matrix) override;
+        virtual void render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix) override;
 		virtual void clean() override;
 
         inline const scroll_location_type get_scroll_location() const { return scroll_location; }

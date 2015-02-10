@@ -8,11 +8,9 @@
 
 namespace mandala
 {
-    void gui_scroll_t::render(mat4_t world_matrix, mat4_t view_projection_matrix)
+    void gui_scroll_t::render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix)
     {
-        world_matrix *= glm::translate(world_matrix, vec3_t(scroll_location, 0));
-
-        gui_node_t::render(world_matrix, view_projection_matrix);
+        gui_node_t::render(glm::translate(world_matrix, vec3_t(scroll_location, 0)), view_projection_matrix);
     }
 
     void gui_scroll_t::on_input_event(input_event_t& input_event)
