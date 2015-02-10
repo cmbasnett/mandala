@@ -22,7 +22,7 @@ namespace mandala
 		pitch_target(pitch),
 		yaw_target(yaw),
 		roll_target(roll),
-		smoothing_strength(0.8f),
+		smoothing_strength(0.5f),
 		speed_max(25),
 		pitch_speed(0),
 		yaw_speed(0),
