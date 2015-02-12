@@ -10,28 +10,26 @@ namespace mandala
 
 	struct quake_camera_t : camera_t
 	{
-		float32_t pitch_max;
-		float32_t pitch_min;
-		float32_t pitch;
-		float32_t yaw;
-		float32_t pitch_target;
-		float32_t yaw_target;
-		float32_t roll_target;
-		float32_t smoothing_strength;
-		vec3_t local_velocity_target;
+        float32_t pitch_max = 89.9f;
+        float32_t pitch_min = -89.9f;
+        float32_t pitch = 0;
+        float32_t yaw = 0;
+        float32_t pitch_target = 0;
+        float32_t yaw_target = 0;
+        float32_t roll_target = 0;
+        float32_t smoothing_strength = 0.5f;
+        vec3_t local_velocity_target;
 		vec3_t local_velocity;
         vec3_t velocity;
-		float32_t pitch_speed;
-		float32_t yaw_speed;
-		float32_t roll_speed;
-		float32_t speed_max;
+        float32_t pitch_speed = 0;
+        float32_t yaw_speed = 0;
+        float32_t roll_speed = 0;
+        float32_t speed_max = 512;
 		float32_t sensitivity = 0.1f;	//TODO: read sensitivity from configuration file?
 		bool debug_is_rolling = false;
-
-		quake_camera_t();
 		
-		virtual void tick(float32_t dt);
+        virtual void tick(float32_t dt) override;
 
-		void on_input_event(input_event_t& input_event);
+        void on_input_event(input_event_t& input_event);
 	};
 }

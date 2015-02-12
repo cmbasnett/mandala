@@ -14,22 +14,6 @@
 
 namespace mandala
 {
-	quake_camera_t::quake_camera_t() :
-		pitch_max(89.9f),
-		pitch_min(-89.9f),
-		pitch(0),
-		yaw(0),
-		pitch_target(pitch),
-		yaw_target(yaw),
-		roll_target(roll),
-		smoothing_strength(0.5f),
-		speed_max(25),
-		pitch_speed(0),
-		yaw_speed(0),
-		roll_speed(0)
-	{
-	}
-
 	void quake_camera_t::tick(float32_t dt)
 	{
 		const auto rotation_smoothing_value = glm::min(dt * (QUAKE_CAMERA_SMOOTHING_CONSTANT * smoothing_strength), 1.0f);
