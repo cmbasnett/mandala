@@ -23,18 +23,18 @@
 
 namespace mandala
 {
-    std::wstring& sanitize_string(std::wstring& string)
+    gui_label_t::string_type& sanitize_string(gui_label_t::string_type& string)
     {
         auto string_itr = string.begin();
 
         while (string_itr != string.end())
         {
-            if (*string_itr == color_push_character<wchar_t>::value)
+            if (*string_itr == color_push_character<gui_label_t::string_type::value_type>::value)
             {
                 //encountered color push character
                 string_itr = string.erase(string_itr);
 
-                if (string_itr != string.end() && *string_itr != color_push_character<wchar_t>::value)
+                if (string_itr != string.end() && *string_itr != color_push_character<gui_label_t::string_type::value_type>::value)
                 {
                     //determine how many characters to erase
                     auto erase_count = std::min(std::distance(string_itr, string.end()), rgb_hex_string_length);
@@ -45,7 +45,7 @@ namespace mandala
                     continue;
                 }
             }
-            else if (*string_itr == color_pop_character<wchar_t>::value)
+            else if (*string_itr == color_pop_character<gui_label_t::string_type::value_type>::value)
             {
                 //encountered color pop character
                 string_itr = string.erase(string_itr);
@@ -62,19 +62,19 @@ namespace mandala
         return string;
     }
 
-    std::wstring& escape_string(std::wstring& string)
+    gui_label_t::string_type& escape_string(gui_label_t::string_type& string)
     {
         auto string_itr = string.begin();
 
         while (string_itr != string.end())
         {
-            if (*string_itr == color_push_character<wchar_t>::value)
+            if (*string_itr == color_push_character<gui_label_t::string_type::value_type>::value)
             {
-                string_itr = string.insert(string_itr, color_push_character<wchar_t>::value) + 1;
+                string_itr = string.insert(string_itr, color_push_character<gui_label_t::string_type::value_type>::value) + 1;
             }
-            else if (*string_itr == color_pop_character<wchar_t>::value)
+            else if (*string_itr == color_pop_character<gui_label_t::string_type::value_type>::value)
             {
-                string_itr = string.insert(string_itr, color_pop_character<wchar_t>::value) + 1;
+                string_itr = string.insert(string_itr, color_pop_character<gui_label_t::string_type::value_type>::value) + 1;
             }
 
             if (string_itr != string.end())
