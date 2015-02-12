@@ -45,6 +45,7 @@ namespace mandala
         triangle_mode_e triangle_mode = triangle_mode_e::both;
 
 		virtual void on_render_begin(const mat4_t& world_matrix, const mat4_t& view_projection_matrix) override;
-        virtual void on_input_event(input_event_t& input_event);
+        virtual void on_input_event(input_event_t& input_event) override;
+        virtual void on_cleaned() override;
     };
 }

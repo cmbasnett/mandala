@@ -35,41 +35,44 @@ namespace mandala
 		index_buffer->data(indices, gpu_t::buffer_usage_e::static_draw);
 	}
 
+    void gui_image_t::on_cleaned()
+    {
+        const auto& sprite_region = sprite->get_region();
+        auto scale = static_cast<vec2_t>(sprite_region.frame_rectangle.size()) / static_cast<vec2_t>(sprite_region.source_size);
+        auto sprite_size = get_size() * scale;
+
+        //TODO: might have to flip the scaling if the thing is rotated
+
+        std::array<vertex_type::location_type, vertex_count> vertex_locations = {
+            vertex_type::location_type(vec3_t(vec2_t(-0.5f, -0.5f) * sprite_size, 0.0f)),
+            vertex_type::location_type(vec3_t(vec2_t( 0.5f, -0.5f) * sprite_size, 0.0f)),
+            vertex_type::location_type(vec3_t(vec2_t( 0.5f,  0.5f) * sprite_size, 0.0f)),
+            vertex_type::location_type(vec3_t(vec2_t(-0.5f,  0.5f) * sprite_size, 0.0f))
+        };
+
+        auto vertices = {
+            //non-rotated
+            vertex_type(vertex_locations[0], vec2_t(sprite_region.uv.min.x, sprite_region.uv.min.y)),
+            vertex_type(vertex_locations[1], vec2_t(sprite_region.uv.max.x, sprite_region.uv.min.y)),
+            vertex_type(vertex_locations[2], vec2_t(sprite_region.uv.max.x, sprite_region.uv.max.y)),
+            vertex_type(vertex_locations[3], vec2_t(sprite_region.uv.min.x, sprite_region.uv.max.y)),
+            //rotated
+            vertex_type(vertex_locations[0], vec2_t(sprite_region.uv.min.x, sprite_region.uv.max.y)),
+            vertex_type(vertex_locations[1], vec2_t(sprite_region.uv.min.x, sprite_region.uv.min.y)),
+            vertex_type(vertex_locations[2], vec2_t(sprite_region.uv.max.x, sprite_region.uv.min.y)),
+            vertex_type(vertex_locations[3], vec2_t(sprite_region.uv.max.x, sprite_region.uv.max.y))
+        };
+
+        vertex_buffer->data(vertices, gpu_t::buffer_usage_e::static_draw);
+    }
+
     void gui_image_t::set_sprite(boost::optional<sprite_t> sprite)
     {
         this->sprite = sprite;
 
-        if (sprite)
+        if (sprite && is_autosized_to_texture)
         {
-            if (is_autosized_to_texture)
-            {
-                set_size(static_cast<gui_node_t::size_type>(sprite->get_region().source_size));
-            }
-
-            const auto& sprite_region = sprite->get_region();
-            auto sprite_size = static_cast<vec2_t>(sprite_region.rectangle.size());
-
-            std::array<vertex_type::location_type, vertex_count> vertex_locations = {
-                vertex_type::location_type(vec3_t(vec2_t(-0.5f, -0.5f) * sprite_size, 0.0f)),
-                vertex_type::location_type(vec3_t(vec2_t(0.5f, -0.5f) * sprite_size, 0.0f)),
-                vertex_type::location_type(vec3_t(vec2_t(0.5f,  0.5f) * sprite_size, 0.0f)),
-                vertex_type::location_type(vec3_t(vec2_t(-0.5f,  0.5f) * sprite_size, 0.0f))
-            };
-
-            auto vertices = {
-                //non-rotated
-                vertex_type(vertex_locations[0], vec2_t(sprite_region.uv.min.x, sprite_region.uv.min.y)),
-                vertex_type(vertex_locations[1], vec2_t(sprite_region.uv.max.x, sprite_region.uv.min.y)),
-                vertex_type(vertex_locations[2], vec2_t(sprite_region.uv.max.x, sprite_region.uv.max.y)),
-                vertex_type(vertex_locations[3], vec2_t(sprite_region.uv.min.x, sprite_region.uv.max.y)),
-                //rotated
-                vertex_type(vertex_locations[0], vec2_t(sprite_region.uv.min.x, sprite_region.uv.max.y)),
-                vertex_type(vertex_locations[1], vec2_t(sprite_region.uv.min.x, sprite_region.uv.min.y)),
-                vertex_type(vertex_locations[2], vec2_t(sprite_region.uv.max.x, sprite_region.uv.min.y)),
-                vertex_type(vertex_locations[3], vec2_t(sprite_region.uv.max.x, sprite_region.uv.max.y))
-            };
-
-            vertex_buffer->data(vertices, gpu_t::buffer_usage_e::static_draw);
+            set_size(static_cast<gui_node_t::size_type>(sprite->get_region().source_size));
         }
     }
 
