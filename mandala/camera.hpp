@@ -32,8 +32,6 @@ namespace mandala
         const mat4_t& get_projection_matrix() const { return projection_matrix; }
         const frustum_t& get_frustum() const { return frustum; }
 
-		camera_t();
-
     private:
         mat4_t view_matrix;
         mat4_t projection_matrix;

@@ -9,10 +9,6 @@
 
 namespace mandala
 {
-	camera_t::camera_t()
-	{
-	}
-
 	void camera_t::tick(float32_t dt)
 	{
         auto& viewport = gpu.viewports.top();
