@@ -39,6 +39,12 @@ namespace mandala
     {
         const auto& sprite_region = sprite->get_region();
         auto scale = static_cast<vec2_t>(sprite_region.frame_rectangle.size()) / static_cast<vec2_t>(sprite_region.source_size);
+
+        if (sprite_region.is_rotated)
+        {
+            std::swap(scale.x, scale.y);
+        }
+
         auto sprite_size = get_size() * scale;
 
         //TODO: might have to flip the scaling if the thing is rotated
