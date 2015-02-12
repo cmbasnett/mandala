@@ -19,17 +19,28 @@ namespace mandala
 
 		layout = std::make_shared<gui_layout_t>();
 		layout->set_dock_mode(gui_dock_mode_e::fill);
-		layout->set_bounds(gui_node_t::bounds_type(vec2_t(), vec2_t(static_cast<float32_t>(screen_size.x), static_cast<float32_t>(screen_size.y))));
+        layout->set_bounds(gui_node_t::bounds_type(vec2_t(), static_cast<vec2_t>(screen_size)));
     }
 
 	void gui_state_t::tick(float32_t dt)
 	{
-		//TODO: get child nodes to tell layout about cleanliness
-		if (layout->get_is_dirty())
-		{
-			layout->clean();
-            layout->on_cleaned();   //TODO: kind of a hack, figure out a nicer way to do this
-		}
+		//TODO: get child nodes to tell layout about cleanliness, recursing every tick is expensive!
+        std::function<void(const std::shared_ptr<gui_node_t>&)> lazy_clean = [&](const std::shared_ptr<gui_node_t>& node)
+        {
+            if (node->get_is_dirty())
+            {
+                node->clean();
+
+                return;
+            }
+
+            for (auto& child : node->get_children())
+            {
+                lazy_clean(child);
+            }
+        };
+
+        lazy_clean(layout);
 
         layout->tick(dt);
 	}
@@ -59,9 +70,7 @@ namespace mandala
 #if defined(MANDALA_PC)
     void gui_state_t::on_window_event(window_event_t& window_event)
     {
-        const auto screen_size = platform.get_screen_size();
-
-        layout->set_bounds(gui_node_t::bounds_type(vec2_t(), vec2_t(static_cast<float32_t>(screen_size.x), static_cast<float32_t>(screen_size.y))));
+        layout->set_bounds(gui_node_t::bounds_type(vec2_t(), static_cast<vec2_t>(platform.get_screen_size())));
     }
 #endif
 }

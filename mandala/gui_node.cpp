@@ -45,7 +45,7 @@ namespace mandala
         dirty();
     }
 
-    void gui_node_t::adopt(std::shared_ptr<gui_node_t> node)
+    void gui_node_t::adopt(const std::shared_ptr<gui_node_t>& node)
     {
         if (node == nullptr || node.get() == this)
         {
@@ -87,7 +87,7 @@ namespace mandala
 
                 switch (child_size_mode)
                 {
-                case size_mode_e::relative:
+                case gui_size_mode_e::relative:
                     child_size = padded_bounds.size() * child->desired_size;
                     break;
                 }
@@ -234,41 +234,37 @@ namespace mandala
         }
     }
 
-    const gui_node_t::size_mode_e gui_node_t::get_size_mode(bool is_recursive = true) const
+    const gui_size_mode_e gui_node_t::get_size_mode(bool is_recursive = true) const
     {
-        if (is_recursive && size_mode == size_mode_e::inherit)
+        if (is_recursive && size_mode == gui_size_mode_e::inherit)
         {
             if (parent)
             {
                 return parent->get_size_mode(is_recursive);
             }
 
-            return size_mode_e::absolute;
+            return gui_size_mode_e::absolute;
         }
 
         return size_mode;
     }
 
-    bool gui_node_t::get_is_dirty() const
+    void gui_node_t::dirty()
     {
-        //TODO: this is naive and stupid, change eventually to have dirty status cascade to ancestors
         if (is_dirty)
         {
-            return true;
+            return;
         }
 
-        for (auto& child : children)
+        is_dirty = true;
+        
+        if (parent)
         {
-            if (child->get_is_dirty())
-            {
-                return true;
-            }
+            //TODO: cascade dirtyiness upwards if parent relies on this element for sizing, placement etc.
         }
-
-        return false;
     }
 
-    void gui_node_t::set_size(const vec2_t & size, size_mode_e size_mode)
+    void gui_node_t::set_size(const vec2_t & size, gui_size_mode_e size_mode)
     {
         desired_size = size;
         this->size_mode = size_mode;

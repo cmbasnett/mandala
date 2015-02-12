@@ -74,9 +74,9 @@ namespace mandala
             bsp_canvas->set_dock_mode(gui_dock_mode_e::fill);
             bsp_canvas->adopt(bsp_image);
             bsp_canvas->adopt(crosshair_image);
+            bsp_canvas->adopt(debug_label);
 
 			layout->adopt(bsp_canvas);
-            layout->adopt(debug_label);
         }
 
         bsp_state_t::~bsp_state_t()
@@ -117,7 +117,7 @@ namespace mandala
                 gpu.viewports.push(viewport);
                 gpu.frame_buffers.push(bsp_frame_buffer);
 
-                gpu.clear(gpu_t::clear_flag_color | gpu_t::clear_flag_depth);
+                gpu.clear(gpu_t::clear_flag_color | gpu_t::clear_flag_depth | gpu_t::clear_flag_stencil);
 
                 skybox.render(camera);
                 bsp->render(camera);
