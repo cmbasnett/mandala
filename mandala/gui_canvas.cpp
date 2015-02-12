@@ -14,12 +14,13 @@
 
 namespace mandala
 {
-    gui_canvas_t::gui_canvas_t()
+    gui_canvas_t::gui_canvas_t() :
+        index_buffer(std::make_shared<index_buffer_type>()),
+        vertex_buffer(std::make_shared<vertex_buffer_type>())
     {
-        index_buffer = std::make_shared<index_buffer_type>();
-        index_buffer->data({ 0, 1, 2, 3 }, gpu_t::buffer_usage_e::static_draw);
+        std::initializer_list<index_type> indices = { 0, 1, 2, 3 };
+        index_buffer->data(indices, gpu_t::buffer_usage_e::static_draw);
 
-        vertex_buffer = std::make_shared<vertex_buffer_type>();
         auto vertices =
         {
             vertex_type(vertex_type::location_type(0, 0, 0), vertex_type::texcoord_type(0, 0)),
@@ -34,7 +35,7 @@ namespace mandala
     {
 		gpu.frame_buffers.push(frame_buffer);
 
-        gpu.viewports.push(gpu_viewport_type(get_bounds()));
+        gpu.viewports.push(static_cast<gpu_viewport_type>(get_bounds()));
 
         gui_node_t::on_render_begin(world_matrix, view_projection_matrix);
     }
