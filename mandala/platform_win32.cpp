@@ -131,7 +131,7 @@ namespace mandala
         input_event.touch.type = input_event_t::touch_t::type_e::scroll;
         input_event.touch.location = platform.get_cursor_location();
         input_event.touch.location_delta.x = x;
-        input_event.touch.location_delta.y = screen_size.y - y;
+        input_event.touch.location_delta.y = y;
 
         platform.input.events.push_back(input_event);
     }
