@@ -19,7 +19,7 @@ namespace mandala
 	{
 		typedef std::wstring string_type;
 		typedef string_type::iterator string_itr_type;
-        typedef uint16_t line_height_type;  //TODO: have this type based on typedef in bitmap_font
+        typedef uint16_t line_height_type;
 
 		enum class justification_e
 		{
