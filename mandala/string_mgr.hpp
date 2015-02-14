@@ -30,6 +30,7 @@ namespace mandala
         void mount(const std::string& file);
         void purge();
 
+        //TODO: template this function to allow returning of string or wstring
         string_type get(const hash_t& hash);
 
         language_type language; //TODO: language should be determined elsewhere (needs to be shared for other asset swapping)

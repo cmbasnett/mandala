@@ -43,7 +43,7 @@ namespace mandala
 
     void string_mgr_t::purge()
     {
-        const auto strings_lock = std::unique_lock<std::recursive_mutex>(mutex);
+        std::lock_guard<std::recursive_mutex> lock(mutex);
 
         streams.clear();
 		language_strings.clear();
@@ -53,7 +53,7 @@ namespace mandala
     {
         std::wstring_convert<std::codecvt_utf8<wchar_t>> wstring_convert;
 
-        const auto strings_lock = std::unique_lock<std::recursive_mutex>(mutex);
+        std::lock_guard<std::recursive_mutex> lock(mutex);
 
 		auto language_strings_itr = language_strings.find(language);
 
@@ -115,8 +115,8 @@ namespace mandala
             }
             catch (std::out_of_range&)
             {
-                beg = end;
                 //TODO: warn that string expansion failed
+                beg = end;
             }
         }
 
