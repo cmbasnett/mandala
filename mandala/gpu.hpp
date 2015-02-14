@@ -402,7 +402,7 @@ namespace mandala
         const std::string& get_shading_language_version() const;
         const std::string& get_extensions() const;
 
-        std::shared_ptr<image_t> get_tex_image(const std::shared_ptr<texture_t>& texture);
+        void get_texture_data(const std::shared_ptr<texture_t>& texture, std::vector<uint8_t>& data, int32_t level = 0);
 	};
 
     extern gpu_t gpu;

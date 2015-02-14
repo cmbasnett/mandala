@@ -2,6 +2,7 @@
 #include <sstream>
 #include <random>
 #include <fstream>
+#include <thread>
 
 //mandala
 #include "../platform.hpp"
@@ -37,6 +38,7 @@ namespace mandala
 {
     namespace armada
     {
+        std::thread screenshot_thread;
         std::mt19937 mt19937;
 
         bsp_state_t::bsp_state_t()
@@ -166,9 +168,14 @@ namespace mandala
                 input_event.keyboard.key == input_event_t::keyboard_t::key_e::f11 &&
                 input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press)
             {
+                auto texture = bsp_canvas->get_frame_buffer()->get_color_texture();
+
+                std::vector<uint8_t> data;
+                gpu.get_texture_data(texture, data);
+
                 std::ofstream ostream = std::ofstream("screenshot.png", std::ios::binary);
-                auto screenshot_image = gpu.get_tex_image(bsp_canvas->get_frame_buffer()->get_color_texture());
-                ostream << *screenshot_image;
+                auto image = std::make_shared<image_t>(texture->get_size(), 8, texture->get_color_type(), data.data(), data.size());
+                ostream << *image;
 
                 input_event.is_consumed = true;
 

@@ -1190,25 +1190,20 @@ namespace mandala
         return extensions;
     }
 
-    std::shared_ptr<image_t> gpu_t::get_tex_image(const std::shared_ptr<texture_t>& texture)
+    void gpu_t::get_texture_data(const std::shared_ptr<texture_t>& texture, std::vector<uint8_t>& data, int32_t level)
     {
         int32_t internal_format, format, type;
 
         get_texture_formats(texture->get_color_type(), internal_format, format, type);
 
         const auto bytes_per_pixel = get_bytes_per_pixel(texture->get_color_type());
-        std::vector<uint8_t> pixels(texture->get_size().x * texture->get_size().y * bytes_per_pixel);
+
+        data.resize(texture->get_size().x * texture->get_size().y * bytes_per_pixel);
 
         textures.bind(0, texture);
 
-        //TODO: add support for multiple mip levels
-        glGetTexImage(GL_TEXTURE_2D, 0, format, type, pixels.data());
+        glGetTexImage(GL_TEXTURE_2D, level, format, type, data.data());
 
         textures.unbind(0);
-
-        //TODO: determine bit depth from texture formats
-        const auto bit_depth = 8;
-
-        return std::make_shared<image_t>(texture->get_size(), bit_depth, texture->get_color_type(), pixels.begin(), pixels.end());
     }
 }
