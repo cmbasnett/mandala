@@ -14,15 +14,14 @@ namespace mandala
 
     void string_mgr_t::mount(const std::string& file)
     {
-        const auto strings_lock = std::unique_lock<std::recursive_mutex>(mutex);
-        const auto resources_lock = std::unique_lock<std::recursive_mutex>(resources.mutex);
+        std::lock_guard<std::recursive_mutex> lock(mutex);
 
         auto stream = resources.extract(hash_t(file));
         const auto archive = string_archive_t(*stream);
 
         streams.push_back(stream);
 
-        for (auto& archive_language_string : archive.language_strings)
+        for (const auto& archive_language_string : archive.language_strings)
         {
 			const auto& language = archive_language_string.first;
 			
@@ -84,6 +83,7 @@ namespace mandala
 		std::string buffer;
 		std::getline(*stream, buffer, '\0');
 
+        //string expansion
         auto beg = 0;
         auto end = std::string::npos;
 
@@ -107,15 +107,17 @@ namespace mandala
 
             try
             {
-                auto s = wstring_convert.to_bytes(get(hash_t(key)));
+                auto string = wstring_convert.to_bytes(get(hash_t(key)));
 
-                buffer.replace(beg, end - beg + 1, s);
+                buffer.replace(beg, end - beg + 1, string);
+
+                beg += string.length();
             }
             catch (std::out_of_range&)
             {
+                beg = end;
+                //TODO: warn that string expansion failed
             }
-
-            beg = end;
         }
 
         return wstring_convert.from_bytes(buffer.data());

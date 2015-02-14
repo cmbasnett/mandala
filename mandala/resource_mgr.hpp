@@ -18,8 +18,6 @@ namespace mandala
 	{
 		typedef std::map<hash_t, std::shared_ptr<resource_t>> resource_map_type;
 
-		std::recursive_mutex mutex;
-
 		size_t count() const;
 
 		template<typename T = std::enable_if<is_resource<T>::value, T>::type>
@@ -27,7 +25,7 @@ namespace mandala
 		{
 			static const std::type_index type_index = typeid(T);
 
-			const auto lock = std::unique_lock<std::recursive_mutex>(mutex);
+            std::lock_guard<std::recursive_mutex> lock(mutex);
 
 			const auto type_resources_itr = type_resources.find(type_index);
 
@@ -44,7 +42,7 @@ namespace mandala
 		{
 			static const std::type_index type_index = typeid(T);
 
-			const auto lock = std::unique_lock<std::recursive_mutex>(mutex);
+            std::lock_guard<std::recursive_mutex> lock(mutex);
 
 			const auto type_resources_itr = type_resources.find(type_index);
 
@@ -84,7 +82,7 @@ namespace mandala
 		{
 			static const std::type_index type_index = typeid(T);
 
-			const auto lock = std::unique_lock<std::recursive_mutex>(mutex);
+			std::lock_guard<std::recursive_mutex> lock(mutex);
 
 			const auto type_resources_itr = type_resources.find(type_index);
 
@@ -120,6 +118,7 @@ namespace mandala
 		void purge();
 
     private:
+        std::recursive_mutex mutex;
         std::map<std::type_index, resource_map_type> type_resources;
 	};
 

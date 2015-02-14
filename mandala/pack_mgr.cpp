@@ -13,6 +13,8 @@ namespace mandala
 {
 	void pack_mgr_t::mount(const std::string& path)
 	{
+        std::lock_guard<std::recursive_mutex> lock(mutex);
+
         const auto pack_string = boost::filesystem::path(path).filename().string();
         const auto pack_hash = hash_t(pack_string);
 
@@ -40,12 +42,16 @@ namespace mandala
 
 	void pack_mgr_t::unmount_all()
 	{
+        std::lock_guard<std::recursive_mutex> lock(mutex);
+
 		files.clear();
 		packs.clear();
 	}
 
-	std::shared_ptr<std::istream> pack_mgr_t::extract(const hash_t& hash) const
+	std::shared_ptr<std::istream> pack_mgr_t::extract(const hash_t& hash)
 	{
+        std::lock_guard<std::recursive_mutex> lock(mutex);
+
 		auto files_itr = files.find(hash);
 
 		if (files_itr == files.end())
