@@ -55,7 +55,6 @@ namespace mandala
         std::wstring_convert<std::codecvt_utf8<wchar_t>> wstring_convert;
 
         const auto strings_lock = std::unique_lock<std::recursive_mutex>(mutex);
-        const auto resources_lock = std::unique_lock<std::recursive_mutex>(resources.mutex);
 
 		auto language_strings_itr = language_strings.find(language);
 
@@ -63,7 +62,6 @@ namespace mandala
 		{
 			std::ostringstream oss;
 			oss << "no strings mounted for language \"" << language << "\"";
-
 			throw std::out_of_range(oss.str());
 		}
 
@@ -75,7 +73,6 @@ namespace mandala
         {
 			std::ostringstream oss;
 			oss << "no string \"" << hash << "\" for language \"" << language << "\"";
-
 			throw std::out_of_range(oss.str());
         }
 
@@ -86,6 +83,40 @@ namespace mandala
 
 		std::string buffer;
 		std::getline(*stream, buffer, '\0');
+
+        auto beg = 0;
+        auto end = std::string::npos;
+
+        for (;;)
+        {
+            beg = buffer.find("{$", beg);
+
+            if (beg == std::string::npos)
+            {
+                break;
+            }
+
+            end = buffer.find('}', beg);
+
+            if (end == std::string::npos)
+            {
+                break;
+            }
+
+            auto key = buffer.substr(beg + 2, end - beg - 2);
+
+            try
+            {
+                auto s = wstring_convert.to_bytes(get(hash_t(key)));
+
+                buffer.replace(beg, end - beg + 1, s);
+            }
+            catch (std::out_of_range&)
+            {
+            }
+
+            beg = end;
+        }
 
         return wstring_convert.from_bytes(buffer.data());
     }

@@ -26,12 +26,13 @@ namespace mandala
 		};
 
 		typedef std::map<const hash_t, string_t> strings_type;
-
-        std::string language = "en";
-
+        
         void mount(const std::string& file);
         void purge();
+
         string_type get(const hash_t& hash);
+
+        language_type language; //TODO: language should be determined elsewhere (needs to be shared for other asset swapping)
 
     private:
         std::recursive_mutex mutex;

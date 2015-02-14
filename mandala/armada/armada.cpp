@@ -33,6 +33,7 @@ namespace mandala
             resources.mount("resources/testapp.pack");
 
 			strings.mount("strings.strings");
+            strings.language = "en";
 
             states.push(std::make_shared<bsp_state_t>(), state_flag_all);
             states.push(std::make_shared<debug_state_t>(), state_flag_all);
