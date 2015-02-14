@@ -158,7 +158,6 @@ std::ostream& operator<<(std::ostream& ostream, mandala::image_t& image)
         PNG_COMPRESSION_TYPE_DEFAULT,
         PNG_FILTER_TYPE_DEFAULT);
 
-    //lock image data
     std::unique_lock<std::mutex> image_data_lock(image.get_data_mutex());
     auto data_ptr = image.get_data().data();
 
@@ -177,6 +176,8 @@ std::ostream& operator<<(std::ostream& ostream, mandala::image_t& image)
 
         rows[image.get_size().y - y - 1] = row;
     }
+
+    image_data_lock.unlock();
 
     png_set_rows(png_ptr, info_ptr, rows);
     png_set_write_fn(png_ptr, static_cast<png_voidp>(&ostream), [](png_structp png_ptr, png_bytep data, png_size_t size)
