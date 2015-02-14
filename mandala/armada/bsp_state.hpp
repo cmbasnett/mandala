@@ -32,7 +32,6 @@ namespace mandala
 			};
 
 			bsp_state_t();
-			virtual ~bsp_state_t();
 
 			virtual void tick(float32_t dt) override;
 			virtual void render() override;

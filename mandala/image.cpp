@@ -8,18 +8,15 @@ namespace mandala
 {
 	image_t::image_t(std::istream& istream)
 	{
-		png_structp png_ptr;
-
-		png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+        //TODO: determine what the stream actually contains (don't assume PNG!)
+		auto png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 
 		if (png_ptr == nullptr)
 		{
 			throw std::exception();
 		}
 
-        png_infop info_ptr;
-
-		info_ptr = png_create_info_struct(png_ptr);
+        auto info_ptr = png_create_info_struct(png_ptr);
 
 		if (info_ptr == nullptr)
 		{
@@ -52,26 +49,26 @@ namespace mandala
 
         png_get_IHDR(png_ptr, info_ptr, &size.x, &size.y, &bit_depth, &png_color_type, &interlace_method, nullptr, nullptr);
 
-		switch (png_color_type)
-		{
-			case 0:
-				color_type = color_type_e::g;
-				break;
-			case 2:
-				color_type = color_type_e::rgb;
-				break;
-			case 3:
-				color_type = color_type_e::palette;
-				break;
-			case 4:
-				color_type = color_type_e::ga;
-				break;
-			case 6:
-				color_type = color_type_e::rgba;
-				break;
-			default:
-				throw std::exception();
-		}
+        auto get_color_type = [](int png_color_type) -> color_type_e
+        {
+            switch (png_color_type)
+            {
+            case PNG_COLOR_TYPE_GRAY:
+                return color_type_e::g;
+            case PNG_COLOR_TYPE_RGB:
+				return color_type_e::rgb;
+            case PNG_COLOR_TYPE_PALETTE:
+                return color_type_e::palette;
+            case PNG_COLOR_TYPE_GA:
+                return color_type_e::ga;
+            case PNG_COLOR_TYPE_RGBA:
+                return color_type_e::rgba;
+            default:
+                throw std::exception();
+            }
+        };
+
+        color_type = get_color_type(png_color_type);
 
 		auto row_bytes = png_get_rowbytes(png_ptr, info_ptr);
 		auto data_length = row_bytes * size.y;
@@ -93,8 +90,102 @@ namespace mandala
         bit_depth(bit_depth),
         color_type(color_type)
     {
+#if defined(DEBUG)
+        //TODO: ensure data length matches with image dimensions etc.
+#endif
         data.reserve(std::distance(data_begin, data_end));
 
         std::copy(data_begin, data_end, std::back_inserter(data));
     }
+}
+
+std::ostream& operator<<(std::ostream& ostream, mandala::image_t& image)
+{
+    using namespace mandala;
+
+    auto png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+
+    if (png_ptr == nullptr)
+    {
+        throw std::exception();
+    }
+
+    auto info_ptr = png_create_info_struct(png_ptr);
+
+    if (!info_ptr)
+    {
+        png_destroy_write_struct(&png_ptr, nullptr);
+
+        throw std::exception();
+    }
+
+    if (setjmp(png_jmpbuf(png_ptr)))
+    {
+        throw std::exception();
+    }
+
+    //TODO: get this thing working with different color types other than rgb
+    const auto pixel_size = 3;
+
+    auto get_png_color_type = [](color_type_e color_type) -> int
+    {
+        switch (color_type)
+        {
+        case color_type_e::g:
+            return PNG_COLOR_TYPE_GRAY;
+        case color_type_e::rgb:
+            return PNG_COLOR_TYPE_RGB;
+        case color_type_e::palette:
+            return PNG_COLOR_TYPE_PALETTE;
+        case color_type_e::ga:
+            return PNG_COLOR_TYPE_GA;
+        case color_type_e::rgba:
+            return PNG_COLOR_TYPE_RGBA;
+        case color_type_e::depth_stencil:
+            return PNG_COLOR_TYPE_RGBA;
+        default:
+            throw std::exception();
+        }
+    };
+
+    auto png_color_type = get_png_color_type(image.get_color_type());
+
+    png_set_IHDR(png_ptr,
+        info_ptr,
+        image.get_size().x,
+        image.get_size().y,
+        image.get_bit_depth(),
+        png_color_type,
+        PNG_INTERLACE_NONE,
+        PNG_COMPRESSION_TYPE_DEFAULT,
+        PNG_FILTER_TYPE_DEFAULT);
+
+    //lock image data
+    std::unique_lock<std::mutex> image_data_lock(image.get_data_mutex());
+    auto data_ptr = image.get_data().data();
+
+    png_bytepp rows = static_cast<png_bytepp>(png_malloc(png_ptr, image.get_size().y * sizeof(png_bytep)));
+
+    const auto row_size = image.get_size().x * pixel_size;
+
+    for (unsigned int y = 0; y < image.get_size().y; ++y)
+    {
+        auto row = static_cast<png_bytep>(png_malloc(png_ptr, row_size));
+
+        for (unsigned int x = 0; x < image.get_size().x; ++x)
+        {
+            memcpy_s(row, row_size, data_ptr + (row_size * y), row_size);
+        }
+
+        rows[image.get_size().y - y - 1] = row;
+    }
+
+    png_set_rows(png_ptr, info_ptr, rows);
+    png_set_write_fn(png_ptr, static_cast<png_voidp>(&ostream), [](png_structp png_ptr, png_bytep data, png_size_t size)
+    {
+        static_cast<std::ostream*>(png_get_io_ptr(png_ptr))->write(reinterpret_cast<char*>(data), size);
+    }, nullptr);
+    png_write_png(png_ptr, info_ptr, PNG_TRANSFORM_IDENTITY, nullptr);
+
+    return ostream;
 }

@@ -22,6 +22,7 @@ namespace mandala
     struct gpu_buffer_t;
 	struct gpu_program_t;
 	struct texture_t;
+    struct image_t;
 
     struct gpu_t
 	{
@@ -400,6 +401,8 @@ namespace mandala
         const std::string& get_version() const;
         const std::string& get_shading_language_version() const;
         const std::string& get_extensions() const;
+
+        std::shared_ptr<image_t> get_tex_image(const std::shared_ptr<texture_t>& texture);
 	};
 
     extern gpu_t gpu;

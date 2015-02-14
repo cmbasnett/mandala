@@ -9,6 +9,7 @@
 #include "frame_buffer.hpp"
 #include "texture.hpp"
 #include "gpu_buffer.hpp"
+#include "image.hpp"
 
 //glm
 #include <glm\gtc\type_ptr.hpp>
@@ -322,6 +323,27 @@ namespace mandala
             internal_format = GL_DEPTH24_STENCIL8;
             type = GL_UNSIGNED_INT_24_8;
             break;
+        default:
+            throw std::exception();
+        }
+    }
+
+    size_t get_bytes_per_pixel(color_type_e color_type)
+    {
+        switch (color_type)
+        {
+        case color_type_e::g:
+            return 1;
+        case color_type_e::rgb:
+            return 3;
+        case color_type_e::rgba:
+            return 4;
+        case color_type_e::ga:
+            return 2;
+        case color_type_e::depth:
+            return 1;
+        case color_type_e::depth_stencil:
+            return 4;
         default:
             throw std::exception();
         }
@@ -1166,5 +1188,27 @@ namespace mandala
         static const std::string extensions = reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS));
 
         return extensions;
+    }
+
+    std::shared_ptr<image_t> gpu_t::get_tex_image(const std::shared_ptr<texture_t>& texture)
+    {
+        int32_t internal_format, format, type;
+
+        get_texture_formats(texture->get_color_type(), internal_format, format, type);
+
+        const auto bytes_per_pixel = get_bytes_per_pixel(texture->get_color_type());
+        std::vector<uint8_t> pixels(texture->get_size().x * texture->get_size().y * bytes_per_pixel);
+
+        textures.bind(0, texture);
+
+        //TODO: add support for multiple mip levels
+        glGetTexImage(GL_TEXTURE_2D, 0, format, type, pixels.data());
+
+        textures.unbind(0);
+
+        //TODO: determine bit depth from texture formats
+        const auto bit_depth = 8;
+
+        return std::make_shared<image_t>(texture->get_size(), bit_depth, texture->get_color_type(), pixels.begin(), pixels.end());
     }
 }

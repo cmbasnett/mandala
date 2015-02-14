@@ -1,6 +1,7 @@
 //std
 #include <sstream>
 #include <random>
+#include <fstream>
 
 //mandala
 #include "../platform.hpp"
@@ -21,6 +22,7 @@
 #include "../basic_gpu_program.hpp"
 #include "../gpu_program_mgr.hpp"
 #include "../gui_canvas.hpp"
+#include "../image.hpp"
 
 #if defined(MANDALA_PC)
 #include "../window_event.hpp"
@@ -63,7 +65,7 @@ namespace mandala
 
             crosshair_image = std::make_shared<gui_image_t>();
 			crosshair_image->set_is_autosized_to_texture(true);
-            crosshair_image->set_sprite(sprite_t(hash_t("crosshairs.tpsb"), hash_t("crosshair6.png")));
+            crosshair_image->set_sprite(sprite_t(hash_t("crosshairs.tpsb"), hash_t("crosshair5.png")));
 			crosshair_image->set_anchor_flags(gui_anchor_flag_all);
 
 			bsp_image = std::make_shared<gui_image_t>();
@@ -77,10 +79,6 @@ namespace mandala
             bsp_canvas->adopt(debug_label);
 
 			layout->adopt(bsp_canvas);
-        }
-
-        bsp_state_t::~bsp_state_t()
-        {
         }
 
         void bsp_state_t::tick(float32_t dt)
@@ -163,6 +161,19 @@ namespace mandala
 
 				return;
 			}
+
+            if (input_event.device_type == input_event_t::device_type_e::keyboard &&
+                input_event.keyboard.key == input_event_t::keyboard_t::key_e::f11 &&
+                input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press)
+            {
+                std::ofstream ostream = std::ofstream("screenshot.png", std::ios::binary);
+                auto screenshot_image = gpu.get_tex_image(bsp_canvas->get_frame_buffer()->get_color_texture());
+                ostream << *screenshot_image;
+
+                input_event.is_consumed = true;
+
+                return;
+            }
 #endif
 
 			camera.on_input_event(input_event);
