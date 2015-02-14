@@ -18,6 +18,7 @@ namespace mandala
     struct index_buffer_t<T, typename std::enable_if<std::is_integral<T>::value>::type> : gpu_buffer_t
     {
         typedef T index_type;
+
         static const auto data_type = gpu_data_type_<index_type>::value;
 
         void data(const index_type* indices, size_t count, gpu_t::buffer_usage_e usage)

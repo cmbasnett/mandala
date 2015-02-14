@@ -540,16 +540,14 @@ namespace mandala
                     lightmap_texcoord.y = lightmap_v / texture_size.y;
                 }
 
-                auto lighting_data_length = 3 * static_cast<int32_t>(texture_size.x) * static_cast<int32_t>(texture_size.y);
-                auto lighting_data_begin = lighting_data.begin() + face.lightmap_offset;
-                auto lighting_data_end = lighting_data_begin + lighting_data_length;
+                auto lighting_data_size = 3 * static_cast<int32_t>(texture_size.x) * static_cast<int32_t>(texture_size.y);
 
                 auto image = std::make_shared<image_t>(
                     static_cast<image_t::size_type>(texture_size),
                     8,
                     color_type_e::rgb,
-                    lighting_data_begin,
-                    lighting_data_end);
+                    lighting_data.data() + face.lightmap_offset,
+                    lighting_data_size);
 
                 auto lightmap_texture = std::make_shared<texture_t>(image);
 

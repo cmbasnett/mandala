@@ -1,5 +1,6 @@
 //libpng
 #include <png.h>
+#include <iostream>
 
 //mandala
 #include "image.hpp"
@@ -85,17 +86,14 @@ namespace mandala
 		png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
 	}
 
-    image_t::image_t(const size_type& size, bit_depth_type bit_depth, color_type_e color_type, const data_type::iterator& data_begin, const data_type::iterator& data_end) :
+    image_t::image_t(const size_type& size, bit_depth_type bit_depth, color_type_e color_type, const data_type::value_type* data_ptr, size_t data_size) :
         size(size),
         bit_depth(bit_depth),
         color_type(color_type)
     {
-#if defined(DEBUG)
-        //TODO: ensure data length matches with image dimensions etc.
-#endif
-        data.reserve(std::distance(data_begin, data_end));
+        data.resize(data_size);
 
-        std::copy(data_begin, data_end, std::back_inserter(data));
+        memcpy_s(data.data(), data.size(), data_ptr, data_size);
     }
 }
 

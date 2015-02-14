@@ -86,7 +86,6 @@ namespace mandala
         return string;
     }
 
-
     std::shared_ptr<vertex_buffer_t<basic_gpu_vertex_t>> _selection_vertex_buffer;
     std::shared_ptr<index_buffer_t<uint8_t>> _selection_index_buffer;
 
@@ -866,6 +865,8 @@ namespace mandala
                 cursor.rectangle.y = line.rectangle.y;
                 cursor.rectangle.height = bitmap_font->get_line_height();
                 cursor.rectangle.width = 1;
+
+                break;
             }
         }
 

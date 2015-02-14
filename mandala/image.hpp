@@ -18,10 +18,9 @@ namespace mandala
         typedef int32_t bit_depth_type;
         typedef glm::detail::tvec2<uint32_t> size_type;
 
-
 		image_t() = default;
 		image_t(std::istream& istream);
-        image_t(const size_type& size, bit_depth_type bit_depth, color_type_e color_type, const data_type::iterator& data_begin, const data_type::iterator& data_end);
+        image_t(const size_type& size, bit_depth_type bit_depth, color_type_e color_type, const data_type::value_type* data_ptr, size_t data_size);
 
         bit_depth_type get_bit_depth() const { return bit_depth; }
         color_type_e get_color_type() const { return color_type; }
