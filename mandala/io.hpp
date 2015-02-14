@@ -45,7 +45,7 @@ inline void read(std::istream& istream, std::vector<T>& data, size_t count)
 template<typename T, size_t N>
 inline void read(std::istream& istream, T data[N])
 {
-    istream.read(reinterpret_cast<char*>(data), _countof(data) * sizeof(T))
+    istream.read(reinterpret_cast<char*>(data), _countof(data) * sizeof(T)) //TODO: same as sizeof(data)?
 }
 
 template<typename T>
