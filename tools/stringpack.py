@@ -29,21 +29,26 @@ def main():
 	with open(args.input_file) as f:
 		reader = csv.DictReader(f)
 
-		languages = reader.fieldnames[1:] # omit first column, should be empty
+		# omit first column, should be empty
+		languages = reader.fieldnames[1:]
 
+		# traverse all keys
 		for row in reader:
 			string_indices = []
 
+			# for each language
 			for language in languages:
 				strings_index = -1
 
-				# get string index
 				try:
+					# attempt to find identical string
 					strings_index = strings.index(row[language])
 				except:
+					# string is unique, append to strings list
 					strings_index = len(strings)
 					strings.append(row[language] + '\0')
 
+				# append string index to indices list
 				string_indices.append(strings_index)
 
 			keys[row['']] = string_indices
