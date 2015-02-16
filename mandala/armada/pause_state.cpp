@@ -34,8 +34,8 @@ namespace mandala
 			scroll2->set_size(vec2_t(512, 0));
 
             paused_label = std::make_shared<gui_label_t>();
-            paused_label->set_bitmap_font(resources.get<bitmap_font_t>(hash_t("terminal_16.fnt")));
-			paused_label->set_string(strings.get(hash_t("paused")));
+            paused_label->set_bitmap_font(resources.get<bitmap_font_t>(hash_t("unifont_14.fnt")));
+			paused_label->set_string(strings.get(hash_t("replace_test")));
             paused_label->set_vertical_alignment(gui_label_t::vertical_alignment_e::middle);
             paused_label->set_justification(gui_label_t::justification_e::center);
             paused_label->set_dock_mode(gui_dock_mode_e::fill);

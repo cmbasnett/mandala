@@ -353,6 +353,9 @@
     <ClInclude Include="pose.hpp">
       <Filter>mandala\math</Filter>
     </ClInclude>
+    <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="gpu_program_mgr.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -633,9 +636,6 @@
     </Filter>
     <Filter Include="mandala\resources\sprite">
       <UniqueIdentifier>{1ce79b84-b9e4-4689-a458-ac57e0a0a69d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="mandala\resources\terrain">
-      <UniqueIdentifier>{0ac685a3-3357-4eb0-941b-97225c027151}</UniqueIdentifier>
     </Filter>
     <Filter Include="mandala\resources\voxel">
       <UniqueIdentifier>{54c94754-76cf-40bb-b97e-fe67ba8ae45b}</UniqueIdentifier>

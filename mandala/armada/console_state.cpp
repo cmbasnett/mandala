@@ -40,7 +40,7 @@ namespace mandala
             root_background_image->set_sprite(sprite_t(sprite_ref_t(hash_t("white.tpsb"), hash_t("white.png"))));
 
             output_label = std::make_shared<gui_label_t>();
-            output_label->set_bitmap_font(resources.get<bitmap_font_t>(hash_t("inconsolata_12.fnt")));
+            output_label->set_bitmap_font(resources.get<bitmap_font_t>(hash_t("unifont_14.fnt")));
             output_label->set_dock_mode(gui_dock_mode_e::fill);
             output_label->set_justification(gui_label_t::justification_e::left);
             output_label->set_margin(padding_t(8));
@@ -52,21 +52,22 @@ namespace mandala
 
             auto input_root_node = std::make_shared<gui_node_t>();
             input_root_node->set_dock_mode(gui_dock_mode_e::bottom);
-            input_root_node->set_size(vec2_t(0, resources.get<bitmap_font_t>(hash_t("inconsolata_12.fnt"))->get_line_height() + 16)); //HACK: we don't have parent resizing yet
+            input_root_node->set_size(vec2_t(0, resources.get<bitmap_font_t>(hash_t("unifont_14.fnt"))->get_line_height() + 16)); //HACK: we don't have parent resizing yet
 
             auto input_background_image = std::make_shared<gui_image_t>();
-            input_background_image->set_color(rgba_type(rgb_type(0), 0.5f));
+            input_background_image->set_color(rgba_type(0, 0, 0, 1));
             input_background_image->set_dock_mode(gui_dock_mode_e::fill);
             input_background_image->set_sprite(sprite_t(sprite_ref_t(hash_t("white.tpsb"), hash_t("white.png"))));
 
             input_label = std::make_shared<gui_label_t>();
-			input_label->set_bitmap_font(resources.get<bitmap_font_t>(hash_t("inconsolata_12.fnt")));
+			input_label->set_bitmap_font(resources.get<bitmap_font_t>(hash_t("unifont_14.fnt")));
 			input_label->set_dock_mode(gui_dock_mode_e::fill);
 			input_label->set_should_use_color_codes(false);
 			input_label->set_should_use_ellipses(false);
 			input_label->set_is_read_only(false);
             input_label->set_margin(padding_t(0, 8, 0, 8));
             input_label->set_vertical_alignment(gui_label_t::vertical_alignment_e::middle);
+            input_label->set_color(rgba_type(1));
 
             input_root_node->adopt(input_background_image);
             input_root_node->adopt(input_label);

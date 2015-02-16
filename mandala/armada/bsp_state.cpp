@@ -58,7 +58,7 @@ namespace mandala
             bsp = resources.get<bsp_t>(hash_t("dod_flash.bsp"));
 
             debug_label = std::make_shared<gui_label_t>();
-            debug_label->set_bitmap_font(resources.get<bitmap_font_t>(hash_t("inconsolata_12.fnt")));
+            debug_label->set_bitmap_font(resources.get<bitmap_font_t>(hash_t("unifont_14.fnt")));
             debug_label->set_color(rgba_type(1));
             debug_label->set_dock_mode(gui_dock_mode_e::fill);
             debug_label->set_vertical_alignment(gui_label_t::vertical_alignment_e::bottom);
@@ -170,12 +170,18 @@ namespace mandala
             {
                 auto texture = bsp_canvas->get_frame_buffer()->get_color_texture();
 
+                auto begin = std::chrono::system_clock::now();
+
                 std::vector<uint8_t> data;
                 gpu.get_texture_data(texture, data);
 
                 std::ofstream ostream = std::ofstream("screenshot.png", std::ios::binary);
                 auto image = std::make_shared<image_t>(texture->get_size(), 8, texture->get_color_type(), data.data(), data.size());
                 ostream << *image;
+
+                auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - begin);
+
+                std::cout << static_cast<float32_t>(duration.count()) / decltype(duration)::period::den << std::endl;
 
                 input_event.is_consumed = true;
 
