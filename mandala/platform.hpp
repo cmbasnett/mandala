@@ -1,16 +1,43 @@
 #pragma once
 
+//std
+#include <deque>
+
 //mandala
 #include "types.hpp"
 #include "platform_defs.hpp"
+#include "input_event.hpp"
+#include "window_event.hpp"
 
 namespace mandala
 {
-    struct input_event_t;
-    struct window_event_t;
-
 	struct platform_t
 	{
+        struct input_mgr_t
+        {
+#if defined(MANDALA_PC)
+            struct gamepad_state_t
+            {
+                std::array<float32_t, 16> axes;
+                std::array<int32_t, 16> buttons;
+            };
+
+            std::array<gamepad_state_t, 4> gamepad_states;
+#endif
+
+            std::deque<input_event_t> events;
+            input_event_t::id_type event_id = 0;
+            input_event_t::touch_t::touch_id_type touch_id = 1;
+        } input;
+
+#if defined(MANDALA_PC)
+        struct window_mgr_t
+        {
+            std::deque<window_event_t> events;
+            rectangle_i32_t rectangle;
+        } window;
+#endif
+
         typedef vec2_i32_t screen_size_type;
 
 		//run
@@ -63,6 +90,9 @@ namespace mandala
 
         //pop_window_event
         virtual bool pop_window_event(window_event_t& window_event) = 0;
+
+        bool is_cursor_centered = false;
+        cursor_location_type cursor_location;
 #endif
 	};
 }

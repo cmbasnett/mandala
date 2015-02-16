@@ -1,15 +1,7 @@
 #pragma once
 
-//std
-#include <array>
-#include <deque>
-#include <vector>
-
 //mandala
 #include "platform.hpp"
-#include "input_event.hpp"
-#include "window_event.hpp"
-#include "rectangle.hpp"
 
 struct GLFWwindow;
 
@@ -17,26 +9,6 @@ namespace mandala
 {
     struct platform_win32_t : platform_t
     {
-        struct input_mgr_t
-        {
-            struct gamepad_state_t
-            {
-                std::array<float32_t, 16> axes;
-                std::array<int32_t, 16> buttons;
-            };
-
-            std::deque<input_event_t> events;
-            input_event_t::id_type event_id = 0;
-            input_event_t::touch_t::touch_id_type touch_id = 1;
-            std::array<gamepad_state_t, 4> gamepad_states;
-        };
-
-        struct window_mgr_t
-        {
-            std::deque<window_event_t> events;
-            rectangle_i32_t rectangle;
-        };
-
         platform_win32_t();
         virtual ~platform_win32_t();
 
@@ -89,11 +61,6 @@ namespace mandala
 		virtual void set_clipboard_string(const std::string& clipboard) const override;
 
         GLFWwindow* window_ptr = nullptr;
-		vec4_t viewport;
-		input_mgr_t input;
-        window_mgr_t window;
-        bool is_cursor_centered = false;
-        cursor_location_type cursor_location;
 
 		platform_win32_t(const platform_win32_t&) = delete;
 		platform_win32_t& operator=(const platform_win32_t&) = delete;
