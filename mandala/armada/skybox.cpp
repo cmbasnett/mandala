@@ -18,16 +18,13 @@ namespace mandala
 	{
 		skybox_t::skybox_t()
 		{
-			const auto model = resources.get<model_info_t>(hash_t("skybox.md5m"));
-
-			model_instance = std::make_shared<model_t>(model);
+			model = std::make_shared<model_t>(hash_t("skybox.md5m"));
 		}
 		
 		void skybox_t::render(const camera_t& camera)
 		{
-			model_instance->world_matrix = glm::translate(camera.location);
-
-			model_instance->render(camera, vec3_t(0));
+            model->pose.location = camera.location;
+            model->render(camera, vec3_t(0));
 
             gpu.clear(gpu_t::clear_flag_depth);
 		}

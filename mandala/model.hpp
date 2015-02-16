@@ -17,17 +17,20 @@ namespace mandala
 	struct model_t
 	{
 		model_t(std::shared_ptr<model_info_t> model);
+        model_t(const hash_t& model_hash);
+
+        pose3 pose;
+		const std::shared_ptr<model_info_t> model;
 
 		void tick(float32_t dt);
 		void render(const camera_t& camera, const vec3_t& light_location) const;
 
-		mat4_t world_matrix;
-		std::shared_ptr<model_info_t> model;
-		float32_t t = 0.0f;
-		std::vector<mat4_t> bone_matrices;
+		const pose3 get_bone_pose(const hash_t& bone_hash) const;
+
+    private:
+        float32_t t = 0.0f;
+        std::vector<mat4_t> bone_matrices;
 		model_skeleton_t skeleton;
 		model_animation_controller_t animation_controller;
-
-		const pose3 get_bone_pose(const hash_t& bone_hash) const;
 	};
 }

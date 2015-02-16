@@ -1,16 +1,20 @@
+//std
+#include <sstream>
+
 //mandala
 #include "model.hpp"
 #include "model_info.hpp"
 #include "model_animation.hpp"
 #include "collision.hpp"
+#include "resource_mgr.hpp"
 
 //glm
 #include <glm\glm.hpp>
 
 namespace mandala
 {
-	model_t::model_t(std::shared_ptr<model_info_t> model_) :
-		model(model_)
+	model_t::model_t(std::shared_ptr<model_info_t> model) :
+		model(model)
 	{
 		//TODO: kind of ham-fisted, find a better way to do this?
 		skeleton.bones.resize(model->bones.size());
@@ -27,20 +31,25 @@ namespace mandala
 		{
 			bone_matrices[i] = skeleton.bone_matrices[i] * model->bones[i].inverse_bind_pose_matrix;
 		}
-	}
+    }
 
-	void model_t::tick(float32_t dt)
-	{
-		animation_controller.tick(dt);
+    model_t::model_t(const hash_t& model_hash) :
+        model_t(resources.get<model_info_t>(model_hash))
+    {
+    }
 
-		//TODO: figure out where to put this
-		bone_matrices.resize(skeleton.bones.size());
+    void model_t::tick(float32_t dt)
+    {
+        animation_controller.tick(dt);
 
-		for(size_t i = 0; i < skeleton.bones.size(); ++i)
-		{
-			bone_matrices[i] = skeleton.bone_matrices[i] * model->bones[i].inverse_bind_pose_matrix;
-		}
-	}
+        //TODO: figure out where to put this
+        bone_matrices.resize(skeleton.bones.size());
+
+        for (size_t i = 0; i < skeleton.bones.size(); ++i)
+        {
+            bone_matrices[i] = skeleton.bone_matrices[i] * model->bones[i].inverse_bind_pose_matrix;
+        }
+    }
 
 	void model_t::render(const camera_t& camera, const vec3_t& light_location) const
 	{
@@ -58,19 +67,20 @@ namespace mandala
 
         auto view_projection_matrix = camera.get_projection_matrix() * camera.get_view_matrix();
 
-		model->render(camera.location, world_matrix, view_projection_matrix, bone_matrices, light_location);
+		model->render(camera.location, pose.to_matrix(), view_projection_matrix, bone_matrices, light_location);
 	}
 	
 	const pose3 model_t::get_bone_pose(const hash_t& bone_hash) const
 	{
-        pose3 pose;
-
 		auto bone_index = model->get_bone_index(bone_hash);
-		const auto& bone = skeleton.bones[*bone_index];
 
-        pose.location = bone.pose.location;
-        pose.rotation = bone.pose.rotation;
+        if (!bone_index)
+        {
+            std::ostringstream oss;
+            oss << "model contains no bone " << bone_hash.get_value();
+            throw std::invalid_argument(oss.str().c_str());
+        }
 
-        return pose;
+        return skeleton.bones[*bone_index].pose;
 	}
 }

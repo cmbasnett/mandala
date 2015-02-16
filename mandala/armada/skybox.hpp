@@ -14,7 +14,7 @@ namespace mandala
 	{
 		struct skybox_t
 		{
-			std::shared_ptr<model_t> model_instance;
+			std::shared_ptr<model_t> model;
 
 			skybox_t();
 
