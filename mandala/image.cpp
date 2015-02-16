@@ -80,7 +80,7 @@ namespace mandala
 
 		for (uint32_t i = 0; i < size.y; ++i)
 		{
-			memcpy(data.data() + (row_bytes * (size.y - 1 - i)), row_pointers[i], row_bytes);
+			memcpy_s(data.data() + (row_bytes * (size.y - 1 - i)), row_bytes, row_pointers[i], row_bytes);
 		}
 
 		png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
