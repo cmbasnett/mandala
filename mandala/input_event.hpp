@@ -26,8 +26,8 @@ namespace mandala
 		{
 			none = -1,
 			touch,
-#if defined(MANDALA_PC)
 			keyboard,
+#if defined(MANDALA_PC)
 			gamepad,
 #endif
 			count
@@ -73,7 +73,6 @@ namespace mandala
 			mod_flags_type mod_flags = 0;
 		};
 
-#if defined(MANDALA_PC)
 		struct keyboard_t
 		{
 			enum class type_e : int8_t
@@ -216,6 +215,7 @@ namespace mandala
 			wchar_t character = L'\0';
 		};
 
+#if defined(MANDALA_PC)
 		struct gamepad_t
 		{
 			typedef uint8_t index_type;
@@ -241,8 +241,8 @@ namespace mandala
 		id_type id = 0;
 		device_type_e device_type = device_type_e::none;
 		touch_t touch;
-#if defined(MANDALA_PC)
 		keyboard_t keyboard;
+#if defined(MANDALA_PC)
 		gamepad_t gamepad;
 #endif
 		bool is_consumed = false;
