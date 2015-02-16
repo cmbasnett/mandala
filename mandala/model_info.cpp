@@ -135,14 +135,10 @@ namespace mandala
             //index count
             mesh->index_count = mesh_info.indices.size();
 
-            boost::filesystem::path shader_path(mesh_info.shader);
-
-            auto material_name = shader_path.filename().replace_extension(".material");
-
             //material
-            mesh->material = resources.get<material_t>(hash_t(material_name.string()));	//TODO: don't resort to string concat
+            mesh->material = resources.get<material_t>(hash_t(mesh_info.shader));
 
-                                                                                        //vertices
+            //vertices
             std::vector<mesh_t::vertex_type> vertices;
             vertices.resize(mesh_info.vertices.size());
 

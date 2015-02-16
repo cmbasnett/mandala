@@ -266,6 +266,7 @@ class Model:
 
                         if tokens[0] == 'shader':
                             mesh.material = tokens[1].strip('"')
+                            mesh.material = os.path.splitext(mesh.material)[0] + '.material'
                         elif tokens[0] == 'vert':
                             vertex = Model.Mesh.Vertex()
                             vertex.texcoord.x = float(tokens[3])
