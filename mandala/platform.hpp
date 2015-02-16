@@ -7,7 +7,10 @@
 #include "types.hpp"
 #include "platform_defs.hpp"
 #include "input_event.hpp"
+
+#if defined (MANDALA_PC)
 #include "window_event.hpp"
+#endif
 
 namespace mandala
 {
@@ -99,4 +102,6 @@ namespace mandala
 
 #if defined(MANDALA_WINDOWS)
 #include "platform_win32.hpp"
+#elif defined(MANDALA_OSX)
+#include "platform_osx.hpp"
 #endif
