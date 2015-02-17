@@ -266,7 +266,7 @@ class Model:
 
                         if tokens[0] == 'shader':
                             mesh.material = tokens[1].strip('"')
-                            mesh.material = os.path.splitext(mesh.material)[0] + '.material'
+                            mesh.material = os.path.splitext(os.path.basename(mesh.material))[0] + '.material'
                         elif tokens[0] == 'vert':
                             vertex = Model.Mesh.Vertex()
                             vertex.texcoord.x = float(tokens[3])
@@ -312,11 +312,11 @@ class Model:
 
                 s = struct.Struct('ffffff')
                 f.write(s.pack(bone.position.x,
-                               bone.position.y,
                                bone.position.z,
+                               -bone.position.y,
                                bone.orientation.x,
-                               bone.orientation.y,
-                               bone.orientation.z))
+                               bone.orientation.z,
+                               -bone.orientation.y))
 
             s = struct.Struct('B')
             f.write(s.pack(len(self.meshes)))
@@ -345,9 +345,9 @@ class Model:
                 # indices
                 for i in range(0, len(mesh.indices) / 3):
                     s = struct.Struct('HHH')
-                    f.write(s.pack(mesh.indices[(i * 3) + 0],
+                    f.write(s.pack(mesh.indices[(i * 3) + 2],
                                    mesh.indices[(i * 3) + 1],
-                                   mesh.indices[(i * 3) + 2]))
+                                   mesh.indices[(i * 3) + 0]))
 
                 # weight count
                 s = struct.Struct('I')
@@ -359,8 +359,8 @@ class Model:
                     s = struct.Struct('ffff')
                     f.write(s.pack(weight.bias,
                                    weight.position.x,
-                                   weight.position.y,
-                                   weight.position.z))
+                                   weight.position.z,
+                                   -weight.position.y))
 
 
 def main():
