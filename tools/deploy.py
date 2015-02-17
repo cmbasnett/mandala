@@ -62,7 +62,7 @@ def main():
 
 	resources_dir = os.path.abspath(args.resources_dir)
 
-	# ensure resources_dir is a valid direcotry
+	# ensure resources_dir is a valid directory
 	if not os.path.isdir(resources_dir):
 		raise RuntimeError('resources_dir ' + resources_dir + ' is not a valid directory')
 
