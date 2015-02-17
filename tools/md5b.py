@@ -334,7 +334,7 @@ class Model:
                 for vertex in mesh.vertices:
                     s = struct.Struct('ffHB')
                     f.write(s.pack(vertex.texcoord.x,
-                                   vertex.texcoord.y,
+                                   -vertex.texcoord.y,
                                    vertex.weight_index_start,
                                    vertex.weight_count))
 
