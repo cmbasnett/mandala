@@ -11,34 +11,34 @@
 
 namespace mandala
 {
-	void pack_mgr_t::mount(const std::string& path)
-	{
+    void pack_mgr_t::mount(const std::string& path)
+    {
         std::lock_guard<std::recursive_mutex> lock(mutex);
 
         const auto pack_string = boost::filesystem::path(path).filename().string();
         const auto pack_hash = hash_t(pack_string);
 
-		packs.erase(pack_hash);
-		
-		auto packs_itr = packs.insert(std::make_pair(pack_hash, pack_t(path)));
+        packs.erase(pack_hash);
 
-		if (!packs_itr.second)
-		{
+        auto packs_itr = packs.insert(std::make_pair(pack_hash, pack_t(path)));
+
+        if (!packs_itr.second)
+        {
             std::ostringstream ostringstream;
             ostringstream << "pack \"" << pack_string << "\" already mounted";
 
             throw std::exception(ostringstream.str().c_str());
-		}
+        }
 
-		auto& pack = packs_itr.first->second;
+        auto& pack = packs_itr.first->second;
 
-		for (auto& file : pack.files)
-		{
-			file.second.pack_hash = pack_hash;
+        for (auto& file : pack.files)
+        {
+            file.second.pack_hash = pack_hash;
 
-			files[file.first] = file.second;
-		}
-	}
+            files[file.first] = file.second;
+        }
+    }
 
 	void pack_mgr_t::unmount_all()
 	{

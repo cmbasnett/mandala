@@ -273,7 +273,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="interpolation.hpp" />
     <ClInclude Include="io.hpp" />
     <ClInclude Include="mandala.hpp" />
-    <ClInclude Include="model_animation_controller.hpp" />
+    <ClInclude Include="model_animation.hpp" />
     <ClInclude Include="model_gpu_program.hpp" />
     <ClInclude Include="model_skeleton.hpp" />
     <ClInclude Include="openal.hpp" />
@@ -370,7 +370,6 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="gui_state.cpp" />
     <ClCompile Include="http_mgr.cpp" />
     <ClCompile Include="model_animation.cpp" />
-    <ClCompile Include="model_animation_controller.cpp" />
     <ClCompile Include="model_gpu_program.cpp" />
     <ClCompile Include="model_skeleton.cpp" />
     <ClCompile Include="python_mgr.cpp" />

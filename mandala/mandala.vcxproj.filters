@@ -301,9 +301,6 @@
       <Filter>mandala\core</Filter>
     </ClInclude>
     <ClInclude Include="gpu_program_mgr.hpp" />
-    <ClInclude Include="model_animation_controller.hpp">
-      <Filter>mandala\resources\model</Filter>
-    </ClInclude>
     <ClInclude Include="model_skeleton.hpp">
       <Filter>mandala\resources\model</Filter>
     </ClInclude>
@@ -356,6 +353,10 @@
     <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="model_animation.hpp">
+      <Filter>mandala\resources\model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -518,9 +519,6 @@
     <ClCompile Include="model_animation.cpp">
       <Filter>mandala\resources\model</Filter>
     </ClCompile>
-    <ClCompile Include="model_animation_controller.cpp">
-      <Filter>mandala\resources\model</Filter>
-    </ClCompile>
     <ClCompile Include="model_skeleton.cpp">
       <Filter>mandala\resources\model</Filter>
     </ClCompile>
@@ -559,9 +557,6 @@
     <Filter Include="mandala\app">
       <UniqueIdentifier>{58d05419-ee09-429e-9c91-18f40eaf1cd5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="mandala\resources">
-      <UniqueIdentifier>{3c5d273c-ad79-45c7-af1d-4f870782d1d3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="mandala\type_traits">
       <UniqueIdentifier>{2448499b-87ed-4a70-8303-448d2fcbddf7}</UniqueIdentifier>
     </Filter>
@@ -592,11 +587,38 @@
     <Filter Include="mandala\core">
       <UniqueIdentifier>{84748bc8-3ec3-4656-a43a-9c82f8da8903}</UniqueIdentifier>
     </Filter>
-    <Filter Include="mandala\resources\bsp">
-      <UniqueIdentifier>{21b0a62c-6884-4714-98f6-ec1cf8d86fa1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="armada\states\bsp">
       <UniqueIdentifier>{146e2849-934f-4a54-ab59-4dc6123072e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\utils">
+      <UniqueIdentifier>{b2c38d69-a87d-4af8-9258-e676aafc8240}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="armada\states\test">
+      <UniqueIdentifier>{d24f4658-49e7-4841-b07c-833fb4f59807}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\audio">
+      <UniqueIdentifier>{57b39ba2-1844-4414-a8f6-45581375ee49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="armada\states\debug">
+      <UniqueIdentifier>{6da3830c-56d2-47e0-8a15-feb63af739c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="armada\states\console">
+      <UniqueIdentifier>{50ed985f-caf5-497c-b76c-122feb3d7c07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\io">
+      <UniqueIdentifier>{30f8257e-cfc0-472d-9b90-7750f64673fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\gpu">
+      <UniqueIdentifier>{fcc9abfa-e288-478a-974f-74d68eb048f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\gpu\programs">
+      <UniqueIdentifier>{668639aa-ec9f-40a4-9016-25982341aad1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\resources">
+      <UniqueIdentifier>{3c5d273c-ad79-45c7-af1d-4f870782d1d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\resources\bsp">
+      <UniqueIdentifier>{21b0a62c-6884-4714-98f6-ec1cf8d86fa1}</UniqueIdentifier>
     </Filter>
     <Filter Include="mandala\resources\bitmap_font">
       <UniqueIdentifier>{e14915e5-fb06-4ae2-8bf0-816a9ef249ad}</UniqueIdentifier>
@@ -613,38 +635,14 @@
     <Filter Include="mandala\resources\texture">
       <UniqueIdentifier>{239dcc50-2a4a-4231-9bc3-8d2c133d0ec8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="mandala\utils">
-      <UniqueIdentifier>{b2c38d69-a87d-4af8-9258-e676aafc8240}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="armada\states\test">
-      <UniqueIdentifier>{d24f4658-49e7-4841-b07c-833fb4f59807}</UniqueIdentifier>
-    </Filter>
     <Filter Include="mandala\resources\sound">
       <UniqueIdentifier>{449a7afe-0d1d-4749-bd7c-b414a5c16e37}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="mandala\audio">
-      <UniqueIdentifier>{57b39ba2-1844-4414-a8f6-45581375ee49}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="armada\states\debug">
-      <UniqueIdentifier>{6da3830c-56d2-47e0-8a15-feb63af739c1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="armada\states\console">
-      <UniqueIdentifier>{50ed985f-caf5-497c-b76c-122feb3d7c07}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="mandala\io">
-      <UniqueIdentifier>{30f8257e-cfc0-472d-9b90-7750f64673fc}</UniqueIdentifier>
     </Filter>
     <Filter Include="mandala\resources\sprite">
       <UniqueIdentifier>{1ce79b84-b9e4-4689-a458-ac57e0a0a69d}</UniqueIdentifier>
     </Filter>
     <Filter Include="mandala\resources\voxel">
       <UniqueIdentifier>{54c94754-76cf-40bb-b97e-fe67ba8ae45b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="mandala\gpu">
-      <UniqueIdentifier>{fcc9abfa-e288-478a-974f-74d68eb048f5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="mandala\gpu\programs">
-      <UniqueIdentifier>{668639aa-ec9f-40a4-9016-25982341aad1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -44,6 +44,7 @@ namespace mandala
 
 		private:
             std::shared_ptr<bsp_t> bsp;
+            std::shared_ptr<model_t> model;
             quake_camera_t camera;
             std::shared_ptr<gui_label_t> debug_label;
             std::shared_ptr<gui_image_t> crosshair_image;

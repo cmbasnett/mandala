@@ -6,7 +6,7 @@
 
 namespace mandala
 {
-	std::string model_gpu_program_t::vertex_shader_source = R"(
+    std::string model_gpu_program_t::vertex_shader_source = R"(
 #version 400
 
 precision highp float;
@@ -35,7 +35,7 @@ out vec3 out_view_direction;
 
 mat4 create_bone_transform()
 {
-	mat4 bone_transform;
+	mat4 bone_transform = mat4(0.0);
 	
 	bone_transform += bone_matrices[bone_indices_0[0]] * bone_weights_0[0];
 	bone_transform += bone_matrices[bone_indices_0[1]] * bone_weights_0[1];
@@ -49,11 +49,11 @@ mat4 create_bone_transform()
 	return bone_transform;
 }
 
-void main() 
+void main()
 {
 	out_texcoord = texcoord;
-	
-	mat4 bone_transform = create_bone_transform();
+
+    mat4 bone_transform = create_bone_transform();
 	
 	vec4 world_location = world_matrix * bone_transform * vec4(location, 1.0);
 	

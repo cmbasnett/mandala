@@ -141,13 +141,13 @@ class Animation:
             # todo: make this a function of model somehow
 
             # header
-            s = struct.Struct('4sII')
+            s = struct.Struct('4sIB')
             f.write(s.pack('MD5A',
                            version,
                            self.frames_per_second))
 
             # bone count
-            s = struct.Struct('I')
+            s = struct.Struct('B')
             f.write(s.pack(len(self.bones)))
 
             # bones
@@ -162,32 +162,34 @@ class Animation:
                 f.write(s.pack(bone.frame_data_start_index))
 
             # frame count
-            s = struct.Struct('I')
+            s = struct.Struct('H')
             f.write(s.pack(len(self.frames)))
 
             # frame bounds
             for frame in self.frames:
                 s = struct.Struct('ffffff')
                 f.write(s.pack(frame.min.x,
-                               frame.min.y,
                                frame.min.z,
+                               -frame.min.y,
                                frame.max.x,
-                               frame.max.y,
-                               frame.max.z))
+                               frame.max.z,
+                               -frame.max.y))
 
             # base bone frames
             for bone_frame in self.base_bone_frames:
                 s = struct.Struct('ffffff')
                 f.write(s.pack(bone_frame.position.x,
-                               bone_frame.position.y,
                                bone_frame.position.z,
+                               -bone_frame.position.y,
                                bone_frame.orientation.x,
-                               bone_frame.orientation.y,
-                               bone_frame.orientation.z))
+                               bone_frame.orientation.z,
+                               -bone_frame.orientation.y))
 
             # frame data count
             s = struct.Struct('I')
             f.write(s.pack(self.frame_data_count))
+
+            print self.frame_data_count
 
             # frame data
             s = struct.Struct('f')

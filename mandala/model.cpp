@@ -40,9 +40,22 @@ namespace mandala
 
     void model_t::tick(float32_t dt)
     {
-        animation_controller.tick(dt);
+        if (animation != nullptr)
+        {
+            t += dt;
 
-        //TODO: figure out where to put this
+            auto frame_count = static_cast<float32_t>(animation->frame_count);
+            auto seconds_per_frame = 1.0f / animation->frames_per_second;
+            auto frame_0_index = static_cast<size_t>(glm::floor(glm::mod(t / seconds_per_frame, frame_count)));
+            auto frame_1_index = (frame_0_index + 1) % animation->frame_count;
+            auto interpolate_t = glm::mod(t, seconds_per_frame) / seconds_per_frame;
+            auto& frame_skeleton_0 = animation->frame_skeletons[frame_0_index];
+            auto& frame_skeleton_1 = animation->frame_skeletons[frame_1_index];
+
+            model_skeleton_t::interpolate(skeleton, frame_skeleton_0, frame_skeleton_1, interpolate_t);
+        }
+
+        //TODO: this shouldn't be necessary?
         bone_matrices.resize(skeleton.bones.size());
 
         for (size_t i = 0; i < skeleton.bones.size(); ++i)
@@ -83,4 +96,9 @@ namespace mandala
 
         return skeleton.bones[*bone_index].pose;
 	}
+
+    void model_t::play(const hash_t& animation_hash)
+    {
+        animation = resources.get<model_animation_t>(animation_hash);
+    }
 }

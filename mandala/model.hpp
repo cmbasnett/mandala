@@ -3,7 +3,6 @@
 //mandala
 #include "pose.hpp"
 #include "model_skeleton.hpp"
-#include "model_animation_controller.hpp"
 #include "camera.hpp"
 
 //std
@@ -25,12 +24,14 @@ namespace mandala
 		void tick(float32_t dt);
 		void render(const camera_t& camera, const vec3_t& light_location) const;
 
+        void play(const hash_t& animation_hash);
+
 		const pose3 get_bone_pose(const hash_t& bone_hash) const;
 
     private:
         float32_t t = 0.0f;
         std::vector<mat4_t> bone_matrices;
 		model_skeleton_t skeleton;
-		model_animation_controller_t animation_controller;
+        std::shared_ptr<model_animation_t> animation;
 	};
 }

@@ -66,10 +66,6 @@ namespace mandala
             layout->adopt(scroll);
         }
 
-        pause_state_t::~pause_state_t()
-        {
-        }
-
 		void pause_state_t::on_active()
 		{
 		}

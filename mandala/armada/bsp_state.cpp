@@ -41,21 +41,16 @@ namespace mandala
         std::thread screenshot_thread;
         std::mt19937 mt19937;
 
-        bsp_state_t::bsp_state_t()
+        bsp_state_t::bsp_state_t() :
+            pause_state(std::make_shared<pause_state_t>()),
+            console_state(std::make_shared<console_state_t>()),
+            bsp(resources.get<bsp_t>(hash_t("dod_flash.bsp"))),
+            model(std::make_shared<model_t>(hash_t("boblampclean.md5m")))
         {
-            bsp_frame_buffer = std::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::color_depth, static_cast<gpu_frame_buffer_size_type>(layout->get_bounds().size()));
-
-            auto sprite_set = std::make_shared<sprite_set_t>(bsp_frame_buffer->get_color_texture());
-            sprite_t sprite(sprite_set, sprite_set->get_regions().begin()->second.hash);
-
-            skybox.model_instance = std::make_shared<model_t>(resources.get<model_info_t>(hash_t("skybox.md5m")));
-            pause_state = std::make_shared<pause_state_t>();
-            console_state = std::make_shared<console_state_t>();
+            model->play(hash_t("boblampclean.md5a"));
 
 			camera.speed_max = 512;
 			camera.far = 8192;
-
-            bsp = resources.get<bsp_t>(hash_t("dod_flash.bsp"));
 
             debug_label = std::make_shared<gui_label_t>();
             debug_label->set_bitmap_font(resources.get<bitmap_font_t>(hash_t("unifont_14.fnt")));
@@ -69,6 +64,10 @@ namespace mandala
 			crosshair_image->set_is_autosized_to_texture(true);
             crosshair_image->set_sprite(sprite_t(hash_t("crosshairs.tpsb"), hash_t("crosshair5.png")));
 			crosshair_image->set_anchor_flags(gui_anchor_flag_all);
+
+            bsp_frame_buffer = std::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::color_depth, static_cast<gpu_frame_buffer_size_type>(layout->get_bounds().size()));
+            auto sprite_set = std::make_shared<sprite_set_t>(bsp_frame_buffer->get_color_texture());
+            sprite_t sprite(sprite_set, sprite_set->get_regions().begin()->second.hash);
 
 			bsp_image = std::make_shared<gui_image_t>();
 			bsp_image->set_dock_mode(gui_dock_mode_e::fill);
@@ -85,6 +84,7 @@ namespace mandala
 
         void bsp_state_t::tick(float32_t dt)
         {
+            model->tick(dt);
             camera.tick(dt);
 
             audio.doppler.factor = 0.0f;
@@ -121,6 +121,7 @@ namespace mandala
 
                 skybox.render(camera);
                 bsp->render(camera);
+                model->render(camera, vec3_t(0));
 
 				gpu.frame_buffers.pop();
 				gpu.viewports.pop();
@@ -293,7 +294,7 @@ namespace mandala
 
             if (window_event.type == window_event_t::type_e::resize)
             {
-                bsp_frame_buffer = std::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::color_depth, static_cast<gpu_frame_buffer_size_type>(layout->get_bounds().size()));
+                bsp_frame_buffer->set_size(static_cast<gpu_frame_buffer_size_type>(layout->get_bounds().size()));
 
                 auto sprite_set = std::make_shared<sprite_set_t>(bsp_frame_buffer->get_color_texture());
                 sprite_t sprite(sprite_set, sprite_set->get_regions().begin()->second.hash);
