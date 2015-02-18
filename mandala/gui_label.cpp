@@ -21,6 +21,10 @@
 #include "gpu_program_mgr.hpp"
 #include "basic_gpu_program.hpp"
 
+#if defined(DEBUG)
+#include "line_renderer.hpp"
+#endif
+
 namespace mandala
 {
     gui_label_t::string_type& sanitize_string(gui_label_t::string_type& string)
@@ -90,10 +94,10 @@ namespace mandala
     std::shared_ptr<index_buffer_t<uint8_t>> _selection_index_buffer;
 
     gui_label_t::gui_label_t() :
-        _cursor_vertex_buffer(std::make_shared<vertex_buffer_t<basic_gpu_vertex_t>>()),
-        _cursor_index_buffer(std::make_shared<index_buffer_t<uint8_t>>()),
-        _selection_vertex_buffer(std::make_shared<vertex_buffer_t<basic_gpu_vertex_t>>()),
-        _selection_index_buffer(std::make_shared<index_buffer_t<uint8_t>>())
+        _cursor_vertex_buffer(gpu_buffers.make<vertex_buffer_t<basic_gpu_vertex_t>>()),
+        _cursor_index_buffer(gpu_buffers.make<index_buffer_t<uint8_t>>()),
+        _selection_vertex_buffer(gpu_buffers.make<vertex_buffer_t<basic_gpu_vertex_t>>()),
+        _selection_index_buffer(gpu_buffers.make<index_buffer_t<uint8_t>>())
     {
         //cursor
         {

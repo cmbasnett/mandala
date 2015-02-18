@@ -10,6 +10,7 @@
 #include "bsp_gpu_program.hpp"
 #include "resource_mgr.hpp"
 #include "gpu_program_mgr.hpp"
+#include "gpu_buffer_mgr.hpp"
 #include "io.hpp"
 
 //boost
@@ -595,10 +596,10 @@ namespace mandala
             entities.emplace_back(std::move(entity));
         }
 
-        vertex_buffer = std::make_shared<vertex_buffer_type>();
+        vertex_buffer = gpu_buffers.make<vertex_buffer_type>().lock();
         vertex_buffer->data(vertices, gpu_t::buffer_usage_e::static_draw);
 
-        index_buffer = std::make_shared<index_buffer_type>();
+        index_buffer = gpu_buffers.make<index_buffer_type>().lock();
         index_buffer->data(indices, gpu_t::buffer_usage_e::static_draw);
     }
 

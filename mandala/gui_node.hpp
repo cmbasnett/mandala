@@ -75,10 +75,11 @@ namespace mandala
         void set_color(const color_type& color) { this->color = color; dirty(); }
         void set_bounds(const bounds_type& bounds) { this->bounds = bounds; dirty(); }
         void set_is_hidden(bool is_hidden) { this->is_hidden = is_hidden; dirty(); }
+        void set_should_clip(bool should_clip) { this->should_clip = should_clip; }
 
         virtual void render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix);
         virtual void on_render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix);
-        virtual void on_render_begin(const mat4_t& world_matrix, const mat4_t& view_projection_matrix) { }
+        virtual void on_render_begin(const mat4_t& world_matrix, const mat4_t& view_projection_matrix);
         virtual void on_render_end(const mat4_t& world_matrix, const mat4_t& view_projection_matrix) { }
 		virtual void clean();
         virtual void tick(float32_t dt);

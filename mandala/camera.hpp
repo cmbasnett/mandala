@@ -26,7 +26,7 @@ namespace mandala
 
 		virtual void tick(float32_t dt);
 
-		line3_t get_ray(vec2_f64_t screen_location) const;
+		line3_t get_ray(const vec2_f64_t& screen_location) const;
 
         const mat4_t& get_view_matrix() const { return view_matrix; }
         const mat4_t& get_projection_matrix() const { return projection_matrix; }

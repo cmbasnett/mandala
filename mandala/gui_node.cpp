@@ -13,6 +13,10 @@
 #include "gui_node.hpp"
 #include "gpu.hpp"
 
+#if defined(DEBUG)
+#include "line_renderer.hpp"
+#endif
+
 namespace mandala
 {
     void gui_node_t::orphan()
@@ -192,7 +196,7 @@ namespace mandala
                         }
                     }
 
-                    child->bounds += anchor_location + anchor_translation + child->anchor_offset;
+                    child->bounds += children_bounds.min + anchor_location + anchor_translation + child->anchor_offset;
 
                     break;
                 }
@@ -321,7 +325,10 @@ namespace mandala
 
             gpu.clear(gpu_t::clear_flag_stencil);
 
-            //TODO: draw bounds to stencil buffer
+            render_rectangle(world_matrix, view_projection_matrix, rectangle_t(bounds), false);
+
+            gpu.depth.pop_state();
+            gpu.color.pop_state();
         }
 
         on_render(world_matrix, view_projection_matrix);
@@ -329,8 +336,6 @@ namespace mandala
         if (should_clip)
         {
             gpu.stencil.pop_state();
-            gpu.color.pop_state();
-            gpu.depth.pop_state();
         }
     }
 
@@ -344,5 +349,12 @@ namespace mandala
         }
 
         on_render_end(world_matrix, view_projection_matrix);
+    }
+
+    void gui_node_t::on_render_begin(const mat4_t& world_matrix, const mat4_t& view_projection_matrix)
+    {
+#if defined(DEBUG)
+        render_rectangle(world_matrix, view_projection_matrix, rectangle_t(get_bounds()));
+#endif
     }
 }

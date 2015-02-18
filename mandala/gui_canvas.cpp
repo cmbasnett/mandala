@@ -5,6 +5,7 @@
 #include "gui_canvas.hpp"
 #include "gpu.hpp"
 #include "gpu_program_mgr.hpp"
+#include "gpu_buffer_mgr.hpp"
 #include "gui_gpu_program.hpp"
 #include "blur_horizontal_gpu_program.hpp"
 #include "app.hpp"
@@ -15,8 +16,8 @@
 namespace mandala
 {
     gui_canvas_t::gui_canvas_t() :
-        index_buffer(std::make_shared<index_buffer_type>()),
-        vertex_buffer(std::make_shared<vertex_buffer_type>())
+        index_buffer(gpu_buffers.make<index_buffer_type>()),
+        vertex_buffer(gpu_buffers.make<vertex_buffer_type>())
     {
         std::initializer_list<index_type> indices = { 0, 1, 2, 3 };
         index_buffer->data(indices, gpu_t::buffer_usage_e::static_draw);

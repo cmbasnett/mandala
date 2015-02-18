@@ -6,6 +6,7 @@
 #include <array>
 #include <vector>
 #include <map>
+#include <set>
 
 //mandala
 #include "rectangle.hpp"
@@ -58,8 +59,8 @@ namespace mandala
         {
             points,
             lines,
-            line_strip,
             line_loop,
+            line_strip,
             triangles,
             triangle_strip,
             triangle_fan,
@@ -229,6 +230,8 @@ namespace mandala
         {
             typedef std::shared_ptr<gpu_buffer_t> buffer_type;
 
+            void put(buffer_type& buffer);
+            void erase(buffer_type& buffer);
             void push(buffer_target_e target, buffer_type buffer);
             buffer_type pop(buffer_target_e target);
             buffer_type top(buffer_target_e target) const;
@@ -236,6 +239,7 @@ namespace mandala
 
         private:
             std::map<buffer_target_e, std::stack<buffer_type>> target_buffers;
+            std::set<buffer_type> buffers;
         } buffers;
 
 		//blend

@@ -7,9 +7,7 @@
 namespace mandala
 {
 	std::string gui_gpu_program_t::vertex_shader_source = R"(
-#version 150
-
-precision lowp float;
+#version 400
 
 uniform mat4 world_matrix;
 uniform mat4 view_projection_matrix;
@@ -28,7 +26,7 @@ void main()
 )";
 
 	std::string gui_gpu_program_t::fragment_shader_source = R"(
-#version 150
+#version 400
 
 uniform sampler2D diffuse_texture;
 uniform vec4 color;

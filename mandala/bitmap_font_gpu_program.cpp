@@ -7,9 +7,7 @@
 namespace mandala
 {
     std::string bitmap_font_gpu_program_t::vertex_shader_source = R"(
-#version 150
-#extension GL_ARB_explicit_attrib_location : enable
-#extension GL_ARB_explicit_uniform_location : enable
+#version 400
 
 precision lowp float;
 
@@ -45,9 +43,7 @@ void main()
 )";
 
 	std::string bitmap_font_gpu_program_t::fragment_shader_source = R"(
-#version 150
-#extension GL_ARB_explicit_attrib_location : enable
-#extension GL_ARB_explicit_uniform_location : enable
+#version 400
 
 uniform sampler2D diffuse_texture;
 

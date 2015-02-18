@@ -20,6 +20,7 @@
 #include "audio_mgr.hpp"
 #include "http_mgr.hpp"
 #include "state_mgr.hpp"
+#include "gpu_buffer_mgr.hpp"
 
 namespace mandala
 {
@@ -75,6 +76,7 @@ namespace mandala
 		resources.purge();
 		strings.purge();
 		gpu_programs.purge();
+        gpu_buffers.purge();
 
 		platform.app_run_end();
 
@@ -117,6 +119,10 @@ namespace mandala
 
 	void app_t::render()
 	{
+        const auto screen_size = platform.get_screen_size();
+
+        gpu.viewports.push(gpu_viewport_type(0, 0, screen_size.x, screen_size.y));
+
 		platform.app_render_start();
 
 		game->app_render_start();
@@ -126,6 +132,8 @@ namespace mandala
 		game->app_render_end();
 
         platform.app_render_end();
+
+        gpu.viewports.pop();
     }
 
     void app_t::handle_input_events()

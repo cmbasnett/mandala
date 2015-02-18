@@ -14,12 +14,15 @@ namespace mandala
     template<typename T, typename Enable = void>
     struct index_buffer_t;
 
+    //TODO: is_integral is not actually restrictive enough, since int64s can't be translated to a GL type
     template<typename T>
     struct index_buffer_t<T, typename std::enable_if<std::is_integral<T>::value>::type> : gpu_buffer_t
     {
         typedef T index_type;
 
         static const auto data_type = gpu_data_type_<index_type>::value;
+
+        index_buffer_t() = default;
 
         void data(const index_type* indices, size_t count, gpu_t::buffer_usage_e usage)
         {
@@ -37,5 +40,9 @@ namespace mandala
         {
             data(indices.data(), indices.size(), usage);
         }
+
+    private:
+        index_buffer_t(const index_buffer_t&) = delete;
+        index_buffer_t& operator=(const index_buffer_t&) = delete;
     };
 }

@@ -7,12 +7,6 @@
     <ClInclude Include="armada\pause_state.hpp">
       <Filter>armada\states\pause</Filter>
     </ClInclude>
-    <ClInclude Include="armada\test_state.hpp">
-      <Filter>armada\states\test</Filter>
-    </ClInclude>
-    <ClInclude Include="armada\skybox.hpp">
-      <Filter>armada\states\world</Filter>
-    </ClInclude>
     <ClInclude Include="armada\armada.hpp">
       <Filter>armada</Filter>
     </ClInclude>
@@ -357,6 +351,21 @@
     <ClInclude Include="model_animation.hpp">
       <Filter>mandala\resources\model</Filter>
     </ClInclude>
+    <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="armada\skybox.hpp">
+      <Filter>armada\states\bsp</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="line_renderer.hpp">
+      <Filter>mandala\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="gpu_buffer_mgr.hpp">
+      <Filter>mandala\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="vertex_buffer.hpp">
+      <Filter>mandala\gpu</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -402,9 +411,6 @@
     <ClCompile Include="armada\armada.cpp">
       <Filter>armada</Filter>
     </ClCompile>
-    <ClCompile Include="armada\skybox.cpp">
-      <Filter>armada\states\world</Filter>
-    </ClCompile>
     <ClCompile Include="armada\pause_state.cpp">
       <Filter>armada\states\pause</Filter>
     </ClCompile>
@@ -425,9 +431,6 @@
     </ClCompile>
     <ClCompile Include="camera.cpp">
       <Filter>mandala\cameras</Filter>
-    </ClCompile>
-    <ClCompile Include="armada\test_state.cpp">
-      <Filter>armada\states\test</Filter>
     </ClCompile>
     <ClCompile Include="sound.cpp">
       <Filter>mandala\resources\sound</Filter>
@@ -543,6 +546,12 @@
     <ClCompile Include="model.cpp">
       <Filter>mandala\resources\model</Filter>
     </ClCompile>
+    <ClCompile Include="armada\skybox.cpp">
+      <Filter>armada\states\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="gpu_buffer_mgr.cpp">
+      <Filter>mandala\gpu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="mandala">
@@ -572,9 +581,6 @@
     <Filter Include="armada\states\pause">
       <UniqueIdentifier>{e1cc996e-2ef0-443f-a221-6a8d037fc9e3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="armada\states\world">
-      <UniqueIdentifier>{abc5bff3-5c90-4fc9-ad4d-979d30270fe3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="mandala\gui">
       <UniqueIdentifier>{1c2b7179-f16d-40ce-817d-65c4a687ce79}</UniqueIdentifier>
     </Filter>
@@ -592,9 +598,6 @@
     </Filter>
     <Filter Include="mandala\utils">
       <UniqueIdentifier>{b2c38d69-a87d-4af8-9258-e676aafc8240}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="armada\states\test">
-      <UniqueIdentifier>{d24f4658-49e7-4841-b07c-833fb4f59807}</UniqueIdentifier>
     </Filter>
     <Filter Include="mandala\audio">
       <UniqueIdentifier>{57b39ba2-1844-4414-a8f6-45581375ee49}</UniqueIdentifier>

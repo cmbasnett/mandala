@@ -225,7 +225,6 @@ echo $(PlatformTarget)</Command>
   <ItemGroup>
     <ClInclude Include="armada\console_state.hpp" />
     <ClInclude Include="armada\debug_state.hpp" />
-    <ClInclude Include="armada\test_state.hpp" />
     <ClInclude Include="audio_context.hpp" />
     <ClInclude Include="audio_defs.hpp" />
     <ClInclude Include="audio_device.hpp" />
@@ -255,6 +254,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="glm.hpp" />
     <ClInclude Include="gpu_buffer.hpp" />
     <ClInclude Include="gpu.hpp" />
+    <ClInclude Include="gpu_buffer_mgr.hpp" />
     <ClInclude Include="gpu_defs.hpp" />
     <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="gpu_program_mgr.hpp" />
@@ -272,6 +272,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="index_type.hpp" />
     <ClInclude Include="interpolation.hpp" />
     <ClInclude Include="io.hpp" />
+    <ClInclude Include="line_renderer.hpp" />
     <ClInclude Include="mandala.hpp" />
     <ClInclude Include="model_animation.hpp" />
     <ClInclude Include="model_gpu_program.hpp" />
@@ -330,12 +331,12 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="triangle.hpp" />
     <ClInclude Include="types.hpp" />
     <ClInclude Include="gpu_vertices.hpp" />
+    <ClInclude Include="vertex_buffer.hpp" />
     <ClInclude Include="window_event.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="armada\console_state.cpp" />
     <ClCompile Include="armada\debug_state.cpp" />
-    <ClCompile Include="armada\test_state.cpp" />
     <ClCompile Include="audio_context.cpp" />
     <ClCompile Include="audio_device.cpp" />
     <ClCompile Include="audio_mgr.cpp" />
@@ -358,6 +359,7 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="app.cpp" />
     <ClCompile Include="gpu_buffer.cpp" />
     <ClCompile Include="gpu.cpp" />
+    <ClCompile Include="gpu_buffer_mgr.cpp" />
     <ClCompile Include="gpu_program_mgr.cpp" />
     <ClCompile Include="gui_button.cpp" />
     <ClCompile Include="gui_canvas.cpp" />

@@ -53,7 +53,7 @@ namespace mandala
 		{
             const auto& source = sources_itr->second;
 
-			if (source.use_count() == 1 && source->get_state() == audio_source_state_e::stopped)
+			if (source.unique() && source->get_state() == audio_source_state_e::stopped)
 			{
 				sources_itr = sources.erase(sources_itr);
 			}

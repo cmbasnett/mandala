@@ -20,4 +20,14 @@ namespace mandala
     private:
         gpu_id_t id;
     };
+
+    template<typename T, typename Enable = void>
+    struct is_gpu_buffer : std::false_type
+    {
+    };
+
+    template<typename T>
+    struct is_gpu_buffer<T, typename std::enable_if<std::is_base_of<gpu_buffer_t, T>::value>::type> : std::true_type
+    {
+    };
 }

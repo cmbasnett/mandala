@@ -11,6 +11,7 @@
 #include "texture.hpp"
 #include "gpu_program.hpp"
 #include "gpu_program_mgr.hpp"
+#include "gpu_buffer_mgr.hpp"
 #include "gpu.hpp"
 #include "bitmap_font_gpu_program.hpp"
 #include "io.hpp"
@@ -178,7 +179,6 @@ namespace mandala
         for (size_t i = 0; i < character_ids.size(); ++i)
         {
             auto character_id = character_ids[i];
-
             auto character = characters.at(character_id);
 
             //location 0
@@ -216,7 +216,7 @@ namespace mandala
             j += 4;
         }
 
-        vertex_buffer = std::make_shared<vertex_buffer_type>();
+        vertex_buffer = gpu_buffers.make<vertex_buffer_type>().lock();
         vertex_buffer->data(vertices, gpu_t::buffer_usage_e::static_draw);
 
         //index buffer
@@ -233,7 +233,7 @@ namespace mandala
             }
         }
 
-        index_buffer = std::make_shared<index_buffer_type>();
+        index_buffer = gpu_buffers.make<index_buffer_type>().lock();
         index_buffer->data(indices, gpu_t::buffer_usage_e::static_draw);
     }
 

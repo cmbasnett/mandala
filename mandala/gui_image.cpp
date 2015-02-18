@@ -3,6 +3,7 @@
 
 //mandala
 #include "gpu_program_mgr.hpp"
+#include "gpu_buffer_mgr.hpp"
 #include "gpu_program.hpp"
 #include "texture.hpp"
 #include "sprite_set.hpp"
@@ -14,11 +15,13 @@
 #include "collision.hpp"
 #include "input_event.hpp"
 
+#include "line_renderer.hpp"
+
 namespace mandala
 {
     gui_image_t::gui_image_t() :
-        index_buffer(std::make_shared<index_buffer_type>()),
-        vertex_buffer(std::make_shared<vertex_buffer_type>())
+        index_buffer(gpu_buffers.make<index_buffer_type>()),
+        vertex_buffer(gpu_buffers.make<vertex_buffer_type>())
     {
         std::initializer_list<index_buffer_type::index_type> indices = {
             //non-rotated

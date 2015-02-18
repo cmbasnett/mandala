@@ -7,7 +7,7 @@
 namespace mandala
 {
 	std::string basic_gpu_program_t::vertex_shader_source = R"(
-#version 150
+#version 400
 
 uniform mat4 world_matrix;
 uniform mat4 view_projection_matrix;
@@ -25,9 +25,7 @@ void main()
 })";
 
 	std::string basic_gpu_program_t::fragment_shader_source = R"(
-#version 150
-#extension GL_ARB_explicit_attrib_location : enable
-#extension GL_ARB_explicit_uniform_location : enable
+#version 400
 
 in vec4 out_color;
 

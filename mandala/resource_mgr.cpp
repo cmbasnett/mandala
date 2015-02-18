@@ -27,7 +27,7 @@ namespace mandala
 
 			while (resources_itr != resources.end())
 			{
-				if (resources_itr->second.use_count() == 1)
+				if (resources_itr->second.unique())
 				{
 					resources_itr = resources.erase(resources_itr);
 				}

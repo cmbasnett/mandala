@@ -39,10 +39,7 @@ namespace mandala
             return std::static_pointer_cast<T, gpu_program_t>(gpu_programs_itr->second);
 		}
 
-        void purge()
-        {
-            gpu_programs.clear();
-        }
+        void purge();
 
 	private:
 		std::map<std::type_index, std::shared_ptr<gpu_program_t>> gpu_programs;

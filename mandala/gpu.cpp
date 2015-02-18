@@ -84,6 +84,8 @@ namespace mandala
             return GL_POINTS;
         case gpu_t::primitive_type_e::lines:
             return GL_LINES;
+        case gpu_t::primitive_type_e::line_loop:
+            return GL_LINE_LOOP;
         case gpu_t::primitive_type_e::line_strip:
             return GL_LINE_STRIP;
         case gpu_t::primitive_type_e::triangles:
@@ -772,6 +774,16 @@ namespace mandala
 		return previous_viewport;
     }
 
+    void gpu_t::buffer_mgr_t::put(buffer_type & buffer)
+    {
+        buffers.insert(buffer);
+    }
+
+    void gpu_t::buffer_mgr_t::erase(buffer_type & buffer)
+    {
+        buffers.erase(buffer);
+    }
+    
     void gpu_t::buffer_mgr_t::push(buffer_target_e target, buffer_type buffer)
     {
         if (target_buffers.find(target) == target_buffers.end())

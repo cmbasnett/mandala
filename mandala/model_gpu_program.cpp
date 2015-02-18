@@ -9,8 +9,6 @@ namespace mandala
     std::string model_gpu_program_t::vertex_shader_source = R"(
 #version 400
 
-precision highp float;
-
 uniform mat4 world_matrix;
 uniform mat3 normal_matrix;
 uniform mat4 view_projection_matrix;

@@ -25,11 +25,21 @@ namespace mandala
 
             rectangle_t() = default;
 
-            rectangle_t(scalar_type x, scalar_type y, scalar_type width, scalar_type height) :
-                x(x),
-                y(y),
-                width(width),
-                height(height)
+            template<typename Scalar>
+            rectangle_t(Scalar x, Scalar y, Scalar width, Scalar height) :
+                x(static_cast<scalar_type>(x)),
+                y(static_cast<scalar_type>(y)),
+                width(static_cast<scalar_type>(width)),
+                height(static_cast<scalar_type>(height))
+            {
+            }
+            
+            template<typename Scalar>
+            rectangle_t(const glm::detail::tvec4<Scalar>& v) :
+                            x(static_cast<scalar_type>(v.x)),
+                            y(static_cast<scalar_type>(v.y)),
+                            width(static_cast<scalar_type>(v.z)),
+                            height(static_cast<scalar_type>(v.w))
             {
             }
 
@@ -65,6 +75,12 @@ namespace mandala
 			vector_type max() const
 			{
 				return vector_type(x + width, y + height);
+            }
+
+            template<typename Scalar>
+            operator glm::detail::tvec4<Scalar>() const
+            {
+                return glm::detail::tvec4<Scalar>(static_cast<Scalar>(x), static_cast<Scalar>(y), static_cast<Scalar>(width), static_cast<Scalar>(height));
             }
 		};
 	}
