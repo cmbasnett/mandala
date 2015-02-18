@@ -19,26 +19,26 @@ namespace mandala
         typedef vertex_buffer_t<basic_gpu_vertex_t> vertex_buffer_type;
         typedef index_buffer_t<uint8_t> index_buffer_type;
 
-        static auto vertex_buffer = gpu_buffers.make<vertex_buffer_type>();
-        static auto index_buffer = gpu_buffers.make<index_buffer_type>();
-        static bool is_initialized = false;
+        static std::weak_ptr<vertex_buffer_type> vertex_buffer;
+        static std::weak_ptr<index_buffer_type> index_buffer;
 
-        if (!is_initialized)
+        if (vertex_buffer.expired())
         {
-            std::initializer_list<uint8_t> indices = { 0, 1, 2, 3 };
-            index_buffer.lock()->data(indices, gpu_t::buffer_usage_e::static_draw);
+            vertex_buffer = gpu_buffers.make<vertex_buffer_type>();
+            auto vertices = {
+                basic_gpu_vertex_t(vec3_t(0, 0, 0), rgba_type(1)),
+                basic_gpu_vertex_t(vec3_t(1, 0, 0), rgba_type(1)),
+                basic_gpu_vertex_t(vec3_t(1, 1, 0), rgba_type(1)),
+                basic_gpu_vertex_t(vec3_t(0, 1, 0), rgba_type(1))
+            };
+            vertex_buffer.lock()->data(vertices, gpu_t::buffer_usage_e::static_draw);
         }
 
-        auto min = static_cast<vec2_t>(rectangle.min());
-        auto max = static_cast<vec2_t>(rectangle.max());
-
-        auto vertices = {
-            basic_gpu_vertex_t(vec3_t(min, 0.0f), rgba_type(1)),
-            basic_gpu_vertex_t(vec3_t(max.x, min.y, 0.0f), rgba_type(1)),
-            basic_gpu_vertex_t(vec3_t(max, 0.0f), rgba_type(1)),
-            basic_gpu_vertex_t(vec3_t(min.x, max.y, 0.0f), rgba_type(1))
-        };
-        vertex_buffer.lock()->data(vertices, gpu_t::buffer_usage_e::dynamic_draw);
+        if (index_buffer.expired())
+        {
+            index_buffer = gpu_buffers.make<index_buffer_type>();
+            index_buffer.lock()->data({ 0, 1, 2, 3 }, gpu_t::buffer_usage_e::static_draw);
+        }
 
         gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer.lock());
         gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer.lock());
@@ -47,7 +47,7 @@ namespace mandala
 
         gpu.programs.push(gpu_program);
 
-        gpu_program->world_matrix(world_matrix);
+        gpu_program->world_matrix(world_matrix * glm::translate(rectangle.x, rectangle.y, T(0)) * glm::scale(rectangle.width, rectangle.height, T(0)));
         gpu_program->view_projection_matrix(view_projection_matrix);
 
         gpu.draw_elements(is_filled ? gpu_t::primitive_type_e::triangle_fan : gpu_t::primitive_type_e::line_loop, 4, index_buffer_type::data_type, 0);
