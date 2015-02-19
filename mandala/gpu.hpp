@@ -148,6 +148,7 @@ namespace mandala
             lequal,
             greater,
             gequal,
+            equal,
             notequal,
             always
         };
@@ -360,11 +361,11 @@ namespace mandala
             void apply_state(const state_t& state);
         } color;
 
+        void clear(const gpu_clear_flag_type clear_flags) const;
 		void draw_elements(primitive_type_e primitive_type, size_t count, gpu_data_type_e index_data_type, size_t offset) const;
 
 		gpu_id_t create_program(const std::string& vertex_shader_source, const std::string& fragment_shader_source) const;
 		void destroy_program(gpu_id_t id);
-        void clear(const gpu_clear_flag_type clear_flags) const;
 
 		gpu_id_t create_buffer();
 		void destroy_buffer(gpu_id_t id);

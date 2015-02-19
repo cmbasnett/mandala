@@ -24,22 +24,14 @@ namespace mandala
     {
 		pause_state_t::pause_state_t()
         {
-            auto button = std::make_shared<gui_button_t>();
+            auto scroll = std::make_shared<gui_scroll_t>();
+            scroll->set_dock_mode(gui_dock_mode_e::fill);
+            scroll->set_scroll_extents(aabb2_t(vec2_t(-512, 0), vec2_t(512, 0)));
+
+            auto button = std::make_shared<gui_node_t>();
             button->set_size(vec2_t(100));
             button->set_anchor_flags(gui_anchor_flag_all);
             button->set_should_clip(true);
-            button->on_hover_function = [&]()
-            {
-                std::cout << "hover" << std::endl;
-            };
-            button->on_unhover_function = [&]()
-            {
-                std::cout << "unhover" << std::endl;
-            };
-            button->on_pressed_function = [&]()
-            {
-                std::cout << "pressed" << std::endl;
-            };
 
             paused_label = std::make_shared<gui_label_t>();
             paused_label->set_bitmap_font(resources.get<bitmap_font_t>(hash_t("unifont_14.fnt")));
@@ -50,7 +42,8 @@ namespace mandala
             paused_label->set_size(vec2_t(200));
             paused_label->set_anchor_flags(gui_anchor_flag_all);
 
-            button->adopt(paused_label);
+            button->adopt(scroll);
+            scroll->adopt(paused_label);
             layout->adopt(button);
         }
 

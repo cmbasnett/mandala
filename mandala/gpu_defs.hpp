@@ -14,8 +14,6 @@ namespace mandala
 			typedef Value value_type;
 			typedef value_wrapper_<Value, Default> type;
 
-			value_type value = Default;
-
 			value_wrapper_() = default;
 			value_wrapper_(const value_type& value) :
 				value(value)
@@ -38,6 +36,9 @@ namespace mandala
 			{
 				return &value;
 			}
+
+        private:
+            value_type value = Default;
 		};
 	}
 

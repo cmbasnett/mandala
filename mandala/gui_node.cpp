@@ -323,12 +323,20 @@ namespace mandala
 
             gpu.depth.push_state(gpu_depth_state);
 
-            gpu.clear(gpu_t::clear_flag_stencil);
+            gpu.clear(gpu_t::clear_flag_depth | gpu_t::clear_flag_stencil);
 
-            render_rectangle(world_matrix, view_projection_matrix, rectangle_t(bounds), false);
+            render_rectangle(world_matrix, view_projection_matrix, rectangle_t(bounds), true);
 
-            gpu.depth.pop_state();
             gpu.color.pop_state();
+            gpu.depth.pop_state();
+
+            gpu_stencil_state.mask = 0;
+            gpu_stencil_state.function.func = gpu_t::stencil_function_e::notequal;
+            gpu_stencil_state.function.ref = 0;
+            gpu_stencil_state.function.mask = 0xFF;
+
+            gpu.stencil.pop_state();
+            gpu.stencil.push_state(gpu_stencil_state);
         }
 
         on_render(world_matrix, view_projection_matrix);
@@ -354,7 +362,7 @@ namespace mandala
     void gui_node_t::on_render_begin(const mat4_t& world_matrix, const mat4_t& view_projection_matrix)
     {
 #if defined(DEBUG)
-        render_rectangle(world_matrix, view_projection_matrix, rectangle_t(get_bounds()));
+        //render_rectangle(world_matrix, view_projection_matrix, rectangle_t(get_bounds()));
 #endif
     }
 }

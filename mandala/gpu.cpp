@@ -211,6 +211,8 @@ namespace mandala
         {
         case gpu_t::stencil_function_e::always:
             return GL_ALWAYS;
+        case gpu_t::stencil_function_e::equal:
+            return GL_EQUAL;
         case gpu_t::stencil_function_e::gequal:
             return GL_GEQUAL;
         case gpu_t::stencil_function_e::greater:
@@ -932,18 +934,18 @@ namespace mandala
 		glDeleteShader(fragment_shader); glCheckError();
 
         //save compiled program binary
-        GLsizei binary_length = 0;
+        //GLsizei binary_length = 0;
 
-        glGetProgramiv(id, GL_PROGRAM_BINARY_LENGTH, &binary_length); glCheckError();
+        //glGetProgramiv(id, GL_PROGRAM_BINARY_LENGTH, &binary_length); glCheckError();
 
-        GLenum binary_format = 0;
-        std::vector<uint8_t> program_binary_data(binary_length);
+        //GLenum binary_format = 0;
+        //std::vector<uint8_t> program_binary_data(binary_length);
 
-        glGetProgramBinary(id, binary_length, &binary_length, &binary_format, static_cast<GLvoid*>(program_binary_data.data())); glCheckError();
+        //glGetProgramBinary(id, binary_length, &binary_length, &binary_format, static_cast<GLvoid*>(program_binary_data.data())); glCheckError();
 
-        auto s = std::ofstream("program.cgp", std::ios::binary);
-        s.write(reinterpret_cast<char*>(program_binary_data.data()), program_binary_data.size());
-        s.close();
+        //auto s = std::ofstream("program.cgp", std::ios::binary);
+        //s.write(reinterpret_cast<char*>(program_binary_data.data()), program_binary_data.size());
+        //s.close();
 
 		return id;
 	}
@@ -1129,7 +1131,7 @@ namespace mandala
             glDisable(GL_STENCIL_TEST); glCheckError();
         }
 
-        glStencilFunc(get_stencil_function(state.function.func), state.function.mask, state.function.ref); glCheckError();
+        glStencilFunc(get_stencil_function(state.function.func), state.function.ref, state.function.mask); glCheckError();
         glStencilOp(get_stencil_operation(state.operations.fail), get_stencil_operation(state.operations.zfail), get_stencil_operation(state.operations.zpass)); glCheckError();
         glStencilMask(state.mask); glCheckError();
     }
