@@ -90,45 +90,8 @@ namespace mandala
         return string;
     }
 
-    std::shared_ptr<vertex_buffer_t<basic_gpu_vertex_t>> _selection_vertex_buffer;
-    std::shared_ptr<index_buffer_t<uint8_t>> _selection_index_buffer;
-
-    gui_label_t::gui_label_t() :
-        _cursor_vertex_buffer(gpu_buffers.make<vertex_buffer_t<basic_gpu_vertex_t>>()),
-        _cursor_index_buffer(gpu_buffers.make<index_buffer_t<uint8_t>>()),
-        _selection_vertex_buffer(gpu_buffers.make<vertex_buffer_t<basic_gpu_vertex_t>>()),
-        _selection_index_buffer(gpu_buffers.make<index_buffer_t<uint8_t>>())
+    gui_label_t::gui_label_t()
     {
-        //cursor
-        {
-            //index buffer
-            _cursor_index_buffer->data({ 0, 1 }, gpu_t::buffer_usage_e::static_draw);
-
-            //vertex buffer
-            std::initializer_list<basic_gpu_vertex_t> vertices =
-            {
-                basic_gpu_vertex_t(vec3_t(0, 0, 0), rgba_type(1)),
-                basic_gpu_vertex_t(vec3_t(0, 1, 0), rgba_type(1)),
-            };
-            _cursor_vertex_buffer->data(vertices, gpu_t::buffer_usage_e::static_draw);
-        }
-
-        //selection
-        {
-            //index buffer
-            _selection_index_buffer->data({ 0, 1, 2, 3 }, gpu_t::buffer_usage_e::static_draw);
-
-            //vertex buffer
-            std::initializer_list<basic_gpu_vertex_t> vertices =
-            {
-                basic_gpu_vertex_t(vec3_t(0, 0, 0), rgba_type(1)),
-                basic_gpu_vertex_t(vec3_t(0, 1, 0), rgba_type(1)),
-                basic_gpu_vertex_t(vec3_t(1, 1, 0), rgba_type(1)),
-                basic_gpu_vertex_t(vec3_t(1, 0, 0), rgba_type(1)),
-            };
-            _selection_vertex_buffer->data(vertices, gpu_t::buffer_usage_e::static_draw);
-        }
-
         cursor.string_begin = string.begin();
         cursor.string_end = string.end();
         cursor.time_point = cursor_data_t::clock_type::now();
@@ -518,27 +481,7 @@ namespace mandala
 
             if (should_show_cursor)
             {
-                gpu.buffers.push(gpu_t::buffer_target_e::array, _cursor_vertex_buffer);
-                gpu.buffers.push(gpu_t::buffer_target_e::element_array, _cursor_index_buffer);
-
-                auto cursor_world_matrix = world_matrix;
-
-                cursor_world_matrix *= glm::translate(cursor.rectangle.x, cursor.rectangle.y + static_cast<float32_t>(bitmap_font->get_base() - bitmap_font->get_line_height()), 0.0f);
-                cursor_world_matrix *= glm::scale(1.0f, static_cast<float32_t>(get_line_height()), 1.0f);
-
-                const auto& gpu_program = gpu_programs.get<basic_gpu_program_t>();
-
-                gpu.programs.push(gpu_program);
-
-                gpu_program->world_matrix(cursor_world_matrix);
-                gpu_program->view_projection_matrix(view_projection_matrix);
-
-                gpu.draw_elements(gpu_t::primitive_type_e::lines, 2, index_buffer_type::data_type, 0);
-
-                gpu.programs.pop();
-
-                gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
-                gpu.buffers.pop(gpu_t::buffer_target_e::array);
+                render_rectangle(world_matrix, view_projection_matrix, cursor.rectangle, true);
             }
         }
 

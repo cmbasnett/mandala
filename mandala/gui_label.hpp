@@ -107,14 +107,5 @@ namespace mandala
 		cursor_data_t cursor;
 		bool is_read_only = true;
 		std::vector<line_t> lines;
-
-		//TODO: only have one of these, doesn't need to be constructed per instance (better yet, make a line renderer!)
-        typedef index_buffer_t<uint8_t> index_buffer_type;
-
-		std::shared_ptr<vertex_buffer_t<basic_gpu_vertex_t>> _cursor_vertex_buffer;
-		std::shared_ptr<index_buffer_type> _cursor_index_buffer;
-
-        std::shared_ptr<vertex_buffer_t<basic_gpu_vertex_t>> _selection_vertex_buffer;
-        std::shared_ptr<index_buffer_type> _selection_index_buffer;
 	};
 }
