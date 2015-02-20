@@ -9,8 +9,7 @@ namespace mandala
 {
     struct platform_win32_t : platform_t
     {
-        platform_win32_t();
-        virtual ~platform_win32_t();
+        platform_win32_t() = default;
 
         //run
 		virtual void app_run_start() override;

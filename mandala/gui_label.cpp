@@ -148,36 +148,39 @@ namespace mandala
         {
             bool will_overflow = (lines.size() + 1) * line_height > padded_size.y;
 
-            if (will_overflow || (!is_multiline && !lines.empty()))
+            if (will_overflow || !is_multiline)
             {
-                //adding another line would exceed maximum height or line count
-                auto& line_string = lines.back().render_string;
-
-                if (should_use_ellipses && !lines.empty() && !line_string.empty())
+                if (!lines.empty())
                 {
-                    //attempt to add ellipses to the end of the last line
-                    const auto ellipse_width = bitmap_font->get_characters().at(ellipse_character).advance_x;
-                    const auto ellipse_count = glm::min(static_cast<decltype(ellipse_width)>(padded_size.x) / ellipse_width, ellipses_max);
-                    auto width = 0;
+                    //adding another line would exceed maximum height or line count
+                    auto& line_string = lines.back().render_string;
 
-                    auto string_reverse_itr = line_string.rbegin() + 1;
-
-                    //travel backwards from the end and calculate what part of the string will be replaced with ellipses
-                    while (string_reverse_itr != line_string.rend())
+                    if (should_use_ellipses && !line_string.empty())
                     {
-                        width += bitmap_font->get_characters().at(*string_reverse_itr).advance_x;
+                        //attempt to add ellipses to the end of the last line
+                        const auto ellipse_width = bitmap_font->get_characters().at(ellipse_character).advance_x;
+                        const auto ellipse_count = glm::min(static_cast<decltype(ellipse_width)>(padded_size.x) / ellipse_width, ellipses_max);
+                        auto width = 0;
 
-                        if (width >= (ellipse_count * ellipse_width))
+                        auto string_reverse_itr = line_string.rbegin() + 1;
+
+                        //travel backwards from the end and calculate what part of the string will be replaced with ellipses
+                        while (string_reverse_itr != line_string.rend())
                         {
-                            break;
+                            width += bitmap_font->get_characters().at(*string_reverse_itr).advance_x;
+
+                            if (width >= (ellipse_count * ellipse_width))
+                            {
+                                break;
+                            }
+
+                            ++string_reverse_itr;
                         }
 
-                        ++string_reverse_itr;
+                        //TODO: this has an undesired effect on cursor, will need to be fixed
+                        line_string.erase(string_reverse_itr.base() + 1, line_string.end());
+                        line_string.append(ellipse_count, ellipse_character);
                     }
-
-                    //TODO: this has an undesired effect on cursor, will need to be fixed
-                    line_string.erase(string_reverse_itr.base() + 1, line_string.end());
-                    line_string.append(ellipse_count, ellipse_character);
                 }
 
                 break;

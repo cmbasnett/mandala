@@ -356,15 +356,18 @@
       <Filter>armada\states\bsp</Filter>
     </ClInclude>
     <ClInclude Include="gpu_program_mgr.hpp" />
-    <ClInclude Include="line_renderer.hpp">
-      <Filter>mandala\gpu</Filter>
-    </ClInclude>
     <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="gpu_buffer_mgr.hpp">
       <Filter>mandala\gpu</Filter>
     </ClInclude>
     <ClInclude Include="vertex_buffer.hpp">
       <Filter>mandala\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="line_renderer.hpp">
+      <Filter>mandala\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="gui_element.hpp">
+      <Filter>armada\states\element</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -552,6 +555,9 @@
     <ClCompile Include="gpu_buffer_mgr.cpp">
       <Filter>mandala\gpu</Filter>
     </ClCompile>
+    <ClCompile Include="gui_element.cpp">
+      <Filter>armada\states\element</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="mandala">
@@ -646,6 +652,9 @@
     </Filter>
     <Filter Include="mandala\resources\voxel">
       <UniqueIdentifier>{54c94754-76cf-40bb-b97e-fe67ba8ae45b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="armada\states\element">
+      <UniqueIdentifier>{0af623d2-7a4a-41f6-aa83-45816826892c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

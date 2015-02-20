@@ -11,7 +11,7 @@ namespace mandala
 {
 	struct gui_gpu_program_t : gpu_program_t
 	{
-		typedef position_texcoord_vertex_t vertex_type;
+		typedef basic_gpu_vertex_t vertex_type;
 
 		static std::string vertex_shader_source;
 		static std::string fragment_shader_source;

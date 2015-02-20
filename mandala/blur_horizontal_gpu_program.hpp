@@ -14,7 +14,7 @@ namespace mandala
 		static std::string vertex_shader_source;
 		static std::string fragment_shader_source;
 
-		typedef position_texcoord_vertex_t vertex_type;
+		typedef basic_gpu_vertex_t vertex_type;
 
 		blur_horizontal_gpu_program_t();
 

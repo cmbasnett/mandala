@@ -26,12 +26,12 @@ namespace mandala
         {
             vertex_buffer = gpu_buffers.make<vertex_buffer_type>();
             auto vertices = {
-                basic_gpu_vertex_t(vec3_t(0, 0, 0), rgba_type(1)),
-                basic_gpu_vertex_t(vec3_t(1, 0, 0), rgba_type(1)),
-                basic_gpu_vertex_t(vec3_t(1, 1, 0), rgba_type(1)),
-                basic_gpu_vertex_t(vec3_t(0, 1, 0), rgba_type(1))
+                basic_gpu_vertex_t(basic_gpu_vertex_t::location_type(0, 0, 0), basic_gpu_vertex_t::color_type(1), basic_gpu_vertex_t::texcoord_type()),
+                basic_gpu_vertex_t(basic_gpu_vertex_t::location_type(1, 0, 0), basic_gpu_vertex_t::color_type(1), basic_gpu_vertex_t::texcoord_type()),
+                basic_gpu_vertex_t(basic_gpu_vertex_t::location_type(1, 1, 0), basic_gpu_vertex_t::color_type(1), basic_gpu_vertex_t::texcoord_type()),
+                basic_gpu_vertex_t(basic_gpu_vertex_t::location_type(0, 1, 0), basic_gpu_vertex_t::color_type(1), basic_gpu_vertex_t::texcoord_type())
             };
-            vertex_buffer.lock()->data(vertices, gpu_t::buffer_usage_e::static_draw);
+            vertex_buffer.lock()->data(vertices, gpu_t::buffer_usage_e::dynamic_draw);
         }
 
         if (index_buffer.expired())

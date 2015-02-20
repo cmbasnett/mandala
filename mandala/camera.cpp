@@ -14,7 +14,7 @@ namespace mandala
         auto& viewport = gpu.viewports.top();
 		
 		const auto window_size = static_cast<vec2_t>(platform.get_window_size());
-		aspect = window_size.x / window_size.y;
+        aspect = window_size.x / glm::max(window_size.y, 1.0f);
 
 		const auto forward = glm::normalize(target - location);
 		const auto left = glm::normalize(glm::cross(vec3_t(0, 1, 0), forward));

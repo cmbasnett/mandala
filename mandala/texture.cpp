@@ -37,5 +37,7 @@ namespace mandala
         }
         
         gpu.resize_texture(shared_from_this(), size);
+
+        this->size = size;
     }
 }

@@ -107,14 +107,17 @@ namespace mandala
 		input_event.touch.location.x = x;
 		input_event.touch.location.y = screen_size.y - y;
 		input_event.touch.location_delta.x = x - platform.cursor_location.x;
-		input_event.touch.location_delta.y = screen_size.y - y - platform.cursor_location.y;
+        input_event.touch.location_delta.y = -(y - platform.cursor_location.y);
+
         input_event.touch.id = platform.input.touch_id;
 
 		if (platform.is_cursor_centered)
 		{
 			const auto screen_size = platform.get_screen_size();
 
-			platform.set_cursor_location(static_cast<vec2_f64_t>(screen_size) / 2.0);
+            auto cursor_location = glm::floor(static_cast<vec2_f64_t>(screen_size) / 2.0);
+
+			platform.set_cursor_location(cursor_location);
 		}
 
         platform.cursor_location = platform.get_cursor_location();
@@ -194,14 +197,6 @@ namespace mandala
     {
         throw std::exception();
     }
-
-    platform_win32_t::platform_win32_t()
-    {
-    }
-
-	platform_win32_t::~platform_win32_t()
-	{
-	}
 
 	void platform_win32_t::app_run_start()
 	{
@@ -362,8 +357,6 @@ namespace mandala
         cursor_location_type cursor_location;
 
         glfwGetCursorPos(window_ptr, &cursor_location.x, &cursor_location.y);
-
-        //cursor_location.y = get_screen_size().y - cursor_location.y;
 
 		return cursor_location;
 	}

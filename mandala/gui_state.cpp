@@ -15,17 +15,14 @@ namespace mandala
 {
 	gui_state_t::gui_state_t()
 	{
-		const auto screen_size = platform.get_screen_size();
-
 		layout = std::make_shared<gui_layout_t>();
 		layout->set_dock_mode(gui_dock_mode_e::fill);
-        layout->set_bounds(gui_node_t::bounds_type(vec2_t(), static_cast<vec2_t>(screen_size)));
     }
 
 	void gui_state_t::tick(float32_t dt)
 	{
 		//TODO: get child nodes to tell layout about cleanliness, recursing every tick is expensive!
-        std::function<void(const std::shared_ptr<gui_node_t>&)> lazy_clean = [&](const std::shared_ptr<gui_node_t>& node)
+        std::function<void(const std::shared_ptr<gui_node_t>&)> recursive_clean = [&](const std::shared_ptr<gui_node_t>& node)
         {
             if (node->get_is_dirty())
             {
@@ -36,11 +33,11 @@ namespace mandala
 
             for (auto& child : node->get_children())
             {
-                lazy_clean(child);
+                recursive_clean(child);
             }
         };
 
-        lazy_clean(layout);
+        recursive_clean(layout);
 
         layout->tick(dt);
 	}
@@ -49,7 +46,6 @@ namespace mandala
 	{
 		const auto screen_size = platform.get_screen_size();
 
-		auto world_matrix = mat4_t();
 		auto view_projection_matrix = glm::ortho(0.0f, static_cast<float32_t>(screen_size.x), 0.0f, static_cast<float32_t>(screen_size.y));
 
         auto depth_state = gpu.depth.get_state();
@@ -57,7 +53,7 @@ namespace mandala
 
         gpu.depth.push_state(depth_state);
 
-		layout->render(world_matrix, view_projection_matrix);
+		layout->render(mat4_t(), view_projection_matrix);
 
 		gpu.depth.pop_state();
 	}
@@ -67,10 +63,19 @@ namespace mandala
         layout->on_input_event(input_event);
     }
 
+    void gui_state_t::on_enter()
+    {
+        layout->set_bounds(gui_node_t::bounds_type(vec2_t(), static_cast<vec2_t>(platform.get_screen_size())));
+    }
+
 #if defined(MANDALA_PC)
     void gui_state_t::on_window_event(window_event_t& window_event)
     {
-        layout->set_bounds(gui_node_t::bounds_type(vec2_t(), static_cast<vec2_t>(platform.get_screen_size())));
+        if (window_event.type == window_event_t::type_e::resize)
+        {
+            layout->set_bounds(gui_node_t::bounds_type(vec2_t(), static_cast<vec2_t>(window_event.rectangle.size())));
+            layout->clean();
+        }
     }
 #endif
 }

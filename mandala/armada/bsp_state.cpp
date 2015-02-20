@@ -53,7 +53,7 @@ namespace mandala
 			camera.far = 8192;
 
             debug_label = std::make_shared<gui_label_t>();
-            debug_label->set_bitmap_font(resources.get<bitmap_font_t>(hash_t("unifont_14.fnt")));
+            debug_label->set_bitmap_font(resources.get<bitmap_font_t>(hash_t("unifont_16.fnt")));
             debug_label->set_color(rgba_type(1));
             debug_label->set_dock_mode(gui_dock_mode_e::fill);
             debug_label->set_vertical_alignment(gui_label_t::vertical_alignment_e::bottom);
@@ -65,13 +65,8 @@ namespace mandala
             crosshair_image->set_sprite(sprite_t(hash_t("crosshairs.tpsb"), hash_t("crosshair5.png")));
 			crosshair_image->set_anchor_flags(gui_anchor_flag_all);
 
-            bsp_frame_buffer = std::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::color_depth, static_cast<gpu_frame_buffer_size_type>(layout->get_bounds().size()));
-            auto sprite_set = std::make_shared<sprite_set_t>(bsp_frame_buffer->get_color_texture());
-            sprite_t sprite(sprite_set, sprite_set->get_regions().begin()->second.hash);
-
 			bsp_image = std::make_shared<gui_image_t>();
 			bsp_image->set_dock_mode(gui_dock_mode_e::fill);
-            bsp_image->set_sprite(sprite);
 
             bsp_canvas = std::make_shared<gui_canvas_t>();
             bsp_canvas->set_dock_mode(gui_dock_mode_e::fill);
@@ -132,13 +127,6 @@ namespace mandala
 
         void bsp_state_t::on_input_event(input_event_t& input_event)
 		{
-			gui_state_t::on_input_event(input_event);
-
-			if (input_event.is_consumed)
-			{
-				return;
-			}
-
 #if defined(MANDALA_PC)
 			if (input_event.device_type == input_event_t::device_type_e::keyboard &&
 				input_event.keyboard.key == input_event_t::keyboard_t::key_e::grave_accent &&
@@ -181,8 +169,6 @@ namespace mandala
                 ostream << *image;
 
                 auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - begin);
-
-                std::cout << static_cast<float32_t>(duration.count()) / decltype(duration)::period::den << std::endl;
 
                 input_event.is_consumed = true;
 
@@ -267,8 +253,6 @@ namespace mandala
 				}
 			}
 #endif
-
-			gui_state_t::on_input_event(input_event);
         }
 
         void bsp_state_t::on_stop_input()
@@ -287,12 +271,22 @@ namespace mandala
             platform.set_cursor_hidden(true);
         }
 
+        void bsp_state_t::on_enter()
+        {
+            gui_state_t::on_enter();
+
+            bsp_frame_buffer = std::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::color_depth, static_cast<gpu_frame_buffer_size_type>(layout->get_bounds().size()));
+            auto sprite_set = std::make_shared<sprite_set_t>(bsp_frame_buffer->get_color_texture());
+            sprite_t sprite(sprite_set, sprite_set->get_regions().begin()->second.hash);
+            bsp_image->set_sprite(sprite);
+        }
+
 #if defined(MANDALA_PC)
         void bsp_state_t::on_window_event(window_event_t& window_event)
         {
             gui_state_t::on_window_event(window_event);
 
-            if (window_event.type == window_event_t::type_e::resize)
+            if (window_event.type == window_event_t::type_e::resize && bsp_frame_buffer)
             {
                 bsp_frame_buffer->set_size(static_cast<gpu_frame_buffer_size_type>(layout->get_bounds().size()));
 

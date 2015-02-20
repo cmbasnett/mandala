@@ -437,8 +437,10 @@ namespace mandala
 		glDeleteFramebuffers(1, &id);
 	}
 
-    gpu_id_t gpu_t::create_texture(color_type_e color_type, const vec2_u32_t& size, const void* data)
+    gpu_id_t gpu_t::create_texture(color_type_e color_type, vec2_u32_t size, const void* data)
     {
+        size = glm::max(vec2_u32_t(1), size);
+
         gpu_id_t id;
 
         glGenTextures(1, &id); glCheckError();
@@ -462,10 +464,12 @@ namespace mandala
         return id;
     }
 
-    void gpu_t::resize_texture(const std::shared_ptr<texture_t>& texture, const vec2_u32_t& size)
+    void gpu_t::resize_texture(const std::shared_ptr<texture_t>& texture, vec2_u32_t size)
     {
         texture_t::format_type internal_format, format;
         texture_t::type_type type;
+
+        size = glm::max(vec2_u32_t(1), size);
 
         get_texture_formats(texture->get_color_type(), internal_format, format, type);
 

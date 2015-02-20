@@ -14,6 +14,7 @@
 #include "../bitmap_font.hpp"
 #include "../string_mgr.hpp"
 #include "../state_mgr.hpp"
+#include "../gui_element.hpp"
 
 //armada
 #include "pause_state.hpp"
@@ -28,23 +29,14 @@ namespace mandala
             scroll->set_dock_mode(gui_dock_mode_e::fill);
             scroll->set_scroll_extents(aabb2_t(vec2_t(-512, 0), vec2_t(512, 0)));
 
-            auto button = std::make_shared<gui_node_t>();
-            button->set_size(vec2_t(100));
-            button->set_anchor_flags(gui_anchor_flag_all);
-            button->set_should_clip(true);
+            //for (auto i = 0; i < 8; ++i)
+            //{
+            //    auto e = std::make_shared<gui_element_t>();
 
-            paused_label = std::make_shared<gui_label_t>();
-            paused_label->set_bitmap_font(resources.get<bitmap_font_t>(hash_t("unifont_14.fnt")));
-            paused_label->set_string(strings.get(hash_t("replace_test")));
-            paused_label->set_vertical_alignment(gui_label_t::vertical_alignment_e::middle);
-            paused_label->set_justification(gui_label_t::justification_e::center);
-            paused_label->set_is_read_only(false);
-            paused_label->set_size(vec2_t(200));
-            paused_label->set_anchor_flags(gui_anchor_flag_all);
+            //    scroll->adopt(e);
+            //}
 
-            button->adopt(scroll);
-            scroll->adopt(paused_label);
-            layout->adopt(button);
+            layout->adopt(scroll);
         }
 
 		void pause_state_t::on_active()

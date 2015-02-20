@@ -74,5 +74,7 @@ namespace mandala
         {
             depth_stencil_texture->set_size(size);
         }
+
+        this->size = size;
     }
 }

@@ -41,6 +41,7 @@ namespace mandala
 #endif
 			virtual void on_stop_input() override;
 			virtual void on_start_input() override;
+            virtual void on_enter() override;
 
 		private:
             std::shared_ptr<bsp_t> bsp;

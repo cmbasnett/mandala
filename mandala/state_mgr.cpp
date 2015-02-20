@@ -182,16 +182,16 @@ namespace mandala
 
 	void state_mgr_t::on_input_event(input_event_t& input_event)
 	{
-		for (auto nodes_reverse_itr = nodes.rbegin(); nodes_reverse_itr != nodes.rend(); ++nodes_reverse_itr)
+		for (auto nodes_itr = nodes.rbegin(); nodes_itr != nodes.rend(); ++nodes_itr)
 		{
-            if ((nodes_reverse_itr->flags & state_flag_input) != state_flag_input ||
-                (nodes_reverse_itr->flags & state_flag_popping) == state_flag_popping)
+            if ((nodes_itr->flags & state_flag_input) != state_flag_input ||
+                (nodes_itr->flags & state_flag_popping) == state_flag_popping)
             {
                 //state not handling input or is being popped, return
                 return;
             }
 
-			nodes_reverse_itr->state->on_input_event(input_event);
+            nodes_itr->state->on_input_event(input_event);
 
 			if (input_event.is_consumed)
 			{
@@ -242,8 +242,7 @@ namespace mandala
 
         if (nodes_itr == nodes.end())
         {
-            //state does not exist on stack
-            throw std::out_of_range("");
+            throw std::out_of_range("cannot pop a state that does not exist on stack");
         }
 
 		operation_t operation;

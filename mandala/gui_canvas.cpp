@@ -24,10 +24,10 @@ namespace mandala
 
         auto vertices =
         {
-            vertex_type(vertex_type::location_type(0, 0, 0), vertex_type::texcoord_type(0, 0)),
-            vertex_type(vertex_type::location_type(1, 0, 0), vertex_type::texcoord_type(1, 0)),
-            vertex_type(vertex_type::location_type(1, 1, 0), vertex_type::texcoord_type(1, 1)),
-            vertex_type(vertex_type::location_type(0, 1, 0), vertex_type::texcoord_type(0, 1))
+            vertex_type(vertex_type::location_type(0, 0, 0), vertex_type::color_type(1), vertex_type::texcoord_type(0, 0)),
+            vertex_type(vertex_type::location_type(1, 0, 0), vertex_type::color_type(1), vertex_type::texcoord_type(1, 0)),
+            vertex_type(vertex_type::location_type(1, 1, 0), vertex_type::color_type(1), vertex_type::texcoord_type(1, 1)),
+            vertex_type(vertex_type::location_type(0, 1, 0), vertex_type::color_type(1), vertex_type::texcoord_type(0, 1))
         };
         vertex_buffer->data(vertices, gpu_t::buffer_usage_e::static_draw);
     }
@@ -35,8 +35,7 @@ namespace mandala
     void gui_canvas_t::on_render_begin(const mat4_t& world_matrix, const mat4_t& view_projection_matrix)
     {
 		gpu.frame_buffers.push(frame_buffer);
-
-        gpu.viewports.push(static_cast<gpu_viewport_type>(get_bounds()));
+        gpu.viewports.push(get_bounds());
 
         gui_node_t::on_render_begin(world_matrix, view_projection_matrix);
     }
@@ -44,7 +43,6 @@ namespace mandala
     void gui_canvas_t::on_render_end(const mat4_t& world_matrix, const mat4_t& view_projection_matrix)
     {
         gpu.viewports.pop();
-
         gpu.frame_buffers.pop();
 
         //TODO: for each render pass, push/pop frame buffer, do gpu program etc.

@@ -15,7 +15,7 @@ namespace mandala
 
         static const auto index_count = 4;
 
-        typedef position_texcoord_vertex_t vertex_type;
+        typedef basic_gpu_vertex_t vertex_type;
         typedef vertex_buffer_t<vertex_type> vertex_buffer_type;
 
         typedef index_type<index_count>::type index_type;
