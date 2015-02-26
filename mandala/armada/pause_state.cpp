@@ -29,12 +29,12 @@ namespace mandala
             scroll->set_dock_mode(gui_dock_mode_e::fill);
             scroll->set_scroll_extents(aabb2_t(vec2_t(-512, 0), vec2_t(512, 0)));
 
-            //for (auto i = 0; i < 8; ++i)
-            //{
-            //    auto e = std::make_shared<gui_element_t>();
+            for (auto i = 0; i < 2; ++i)
+            {
+                auto e = std::make_shared<gui_element_t>();
 
-            //    scroll->adopt(e);
-            //}
+                scroll->adopt(e);
+            }
 
             layout->adopt(scroll);
         }

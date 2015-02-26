@@ -12,7 +12,7 @@
 #include "bsp_gpu_program.hpp"
 #include "blur_horizontal_gpu_program.hpp"
 #include "basic_gpu_program.hpp"
-#include "gui_gpu_program.hpp"
+#include "gui_image_gpu_program.hpp"
 
 #include "gpu_program_mgr.hpp"
 #include "resource_mgr.hpp"
@@ -35,13 +35,11 @@ namespace mandala
 		begin:
 		using namespace std::chrono;
 
-        run_time_point = system_clock::now();
-
 		game = game_;
 
 		platform.app_run_start();
 
-        gpu_programs.make<gui_gpu_program_t>();
+        gpu_programs.make<gui_image_gpu_program_t>();
         gpu_programs.make<model_gpu_program_t>();
         gpu_programs.make<bitmap_font_gpu_program_t>();
         gpu_programs.make<bsp_gpu_program_t>();
@@ -50,24 +48,33 @@ namespace mandala
 
 		game->app_run_start();
 
-		auto frame_start_time = high_resolution_clock::now();
+        auto simulation_time = high_resolution_clock::now();
 
         while (should_keep_running())
         {
-            frame_duration = duration_cast<milliseconds>(high_resolution_clock::now() - frame_start_time);
-
-            auto dt = static_cast<float32_t>(frame_duration.count()) / std::milli::den;
-
-            performance.fps = 1.0f / dt;
-            frame_start_time = high_resolution_clock::now();
+            auto real_time = high_resolution_clock::now();
 
             handle_input_events();
-            tick(dt);
+#if defined(MANDALA_PC)
+            handle_window_events();
+#endif
+
+            while (simulation_time < real_time)
+            {
+                static const auto simulation_interval_duration = milliseconds(16);
+                static const auto dt = static_cast<float32_t>(simulation_interval_duration.count()) / std::milli::den;
+
+                simulation_time += simulation_interval_duration;
+
+                tick(dt);
+            }
+
 			render();
 
-#if defined(MANDALA_PC)
-			handle_window_events();
-#endif
+            auto b = high_resolution_clock::now() - real_time;
+            auto c = b.count();
+
+            performance.fps = 1.0f / (static_cast<float32_t>(c) / high_resolution_clock::duration::period::den);
 		}
 
 		game->app_run_end();

@@ -214,9 +214,6 @@
     <ClInclude Include="model_gpu_program.hpp">
       <Filter>mandala\gpu\programs</Filter>
     </ClInclude>
-    <ClInclude Include="gui_gpu_program.hpp">
-      <Filter>mandala\gpu\programs</Filter>
-    </ClInclude>
     <ClInclude Include="armada\debug_state.hpp">
       <Filter>armada\states\debug</Filter>
     </ClInclude>
@@ -369,6 +366,10 @@
     <ClInclude Include="gui_element.hpp">
       <Filter>armada\states\element</Filter>
     </ClInclude>
+    <ClInclude Include="gpu_program_mgr.hpp" />
+    <ClInclude Include="gui_image_gpu_program.hpp">
+      <Filter>mandala\gpu\programs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -486,9 +487,6 @@
     <ClCompile Include="model_gpu_program.cpp">
       <Filter>mandala\gpu\programs</Filter>
     </ClCompile>
-    <ClCompile Include="gui_gpu_program.cpp">
-      <Filter>mandala\gpu\programs</Filter>
-    </ClCompile>
     <ClCompile Include="armada\debug_state.cpp">
       <Filter>armada\states\debug</Filter>
     </ClCompile>
@@ -557,6 +555,9 @@
     </ClCompile>
     <ClCompile Include="gui_element.cpp">
       <Filter>armada\states\element</Filter>
+    </ClCompile>
+    <ClCompile Include="gui_image_gpu_program.cpp">
+      <Filter>mandala\gpu\programs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

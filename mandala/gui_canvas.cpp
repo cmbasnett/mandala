@@ -6,7 +6,7 @@
 #include "gpu.hpp"
 #include "gpu_program_mgr.hpp"
 #include "gpu_buffer_mgr.hpp"
-#include "gui_gpu_program.hpp"
+#include "gui_image_gpu_program.hpp"
 #include "blur_horizontal_gpu_program.hpp"
 #include "app.hpp"
 

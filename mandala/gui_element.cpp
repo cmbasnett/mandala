@@ -12,7 +12,7 @@ namespace mandala
 
         auto image = std::make_shared<gui_image_t>();
         image->set_dock_mode(gui_dock_mode_e::fill);
-        image->set_sprite(sprite_t(hash_t("testcube.tpsb"), hash_t("testcube.png")));
+        image->set_sprite(sprite_t(hash_t("crono.tpsb"), hash_t("chrono_08.gif")));
         image->set_is_autosized_to_texture(true);
 
         adopt(image);

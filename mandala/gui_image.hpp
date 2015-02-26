@@ -20,6 +20,12 @@ namespace mandala
             both
         };
 
+        enum class texcoord_mode_e
+        {
+            stretch_to_fit,
+            repeat
+        };
+
 		static const size_t vertex_count = 4;
 		static const size_t index_count = 4;
         
@@ -35,7 +41,7 @@ namespace mandala
 
         void set_sprite(boost::optional<sprite_t> sprite);
         void set_is_autosized_to_texture(bool is_autosized_to_texture);
-        void set_triangle_mode(triangle_mode_e triangle_mode) { this->triangle_mode = triangle_mode; dirty(); }
+        void set_triangle_mode(triangle_mode_e triangle_mode) { this->triangle_mode = triangle_mode; }
 
 	private:
 		std::shared_ptr<vertex_buffer_type> vertex_buffer;

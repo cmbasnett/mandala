@@ -10,7 +10,7 @@
 #include "sprite.hpp"
 #include "gui_image.hpp"
 #include "gpu.hpp"
-#include "gui_gpu_program.hpp"
+#include "gui_image_gpu_program.hpp"
 #include "blur_horizontal_gpu_program.hpp"
 #include "collision.hpp"
 #include "input_event.hpp"
@@ -30,10 +30,10 @@ namespace mandala
             1, 2, 3, 
             1, 3, 0,
             //rotated
-            4, 5, 6,
-            4, 6, 7,
-            5, 6, 7,
-            5, 7, 4
+            //4, 5, 6,
+            //4, 6, 7,
+            //5, 6, 7,
+            //5, 7, 4
         };
 		index_buffer->data(indices, gpu_t::buffer_usage_e::static_draw);
 	}
@@ -58,16 +58,20 @@ namespace mandala
         };
 
         auto vertices = {
+            vertex_type(vertex_locations[0], rgba_type(1), vec2_t(0, 0)),
+            vertex_type(vertex_locations[1], rgba_type(1), vec2_t(1, 0)),
+            vertex_type(vertex_locations[2], rgba_type(1), vec2_t(1, 1)),
+            vertex_type(vertex_locations[3], rgba_type(1), vec2_t(0, 1))
             //non-rotated
-            vertex_type(vertex_locations[0], rgba_type(1), vec2_t(sprite_region.uv.min.x, sprite_region.uv.min.y)),
-            vertex_type(vertex_locations[1], rgba_type(1), vec2_t(sprite_region.uv.max.x, sprite_region.uv.min.y)),
-            vertex_type(vertex_locations[2], rgba_type(1), vec2_t(sprite_region.uv.max.x, sprite_region.uv.max.y)),
-            vertex_type(vertex_locations[3], rgba_type(1), vec2_t(sprite_region.uv.min.x, sprite_region.uv.max.y)),
-            //rotated
-            vertex_type(vertex_locations[0], rgba_type(1), vec2_t(sprite_region.uv.min.x, sprite_region.uv.max.y)),
-            vertex_type(vertex_locations[1], rgba_type(1), vec2_t(sprite_region.uv.min.x, sprite_region.uv.min.y)),
-            vertex_type(vertex_locations[2], rgba_type(1), vec2_t(sprite_region.uv.max.x, sprite_region.uv.min.y)),
-            vertex_type(vertex_locations[3], rgba_type(1), vec2_t(sprite_region.uv.max.x, sprite_region.uv.max.y))
+            //vertex_type(vertex_locations[0], rgba_type(1), vec2_t(sprite_region.uv.min.x, sprite_region.uv.min.y)),
+            //vertex_type(vertex_locations[1], rgba_type(1), vec2_t(sprite_region.uv.max.x, sprite_region.uv.min.y)),
+            //vertex_type(vertex_locations[2], rgba_type(1), vec2_t(sprite_region.uv.max.x, sprite_region.uv.max.y)),
+            //vertex_type(vertex_locations[3], rgba_type(1), vec2_t(sprite_region.uv.min.x, sprite_region.uv.max.y)),
+            ////rotated
+            //vertex_type(vertex_locations[0], rgba_type(1), vec2_t(sprite_region.uv.min.x, sprite_region.uv.max.y)),
+            //vertex_type(vertex_locations[1], rgba_type(1), vec2_t(sprite_region.uv.min.x, sprite_region.uv.min.y)),
+            //vertex_type(vertex_locations[2], rgba_type(1), vec2_t(sprite_region.uv.max.x, sprite_region.uv.min.y)),
+            //vertex_type(vertex_locations[3], rgba_type(1), vec2_t(sprite_region.uv.max.x, sprite_region.uv.max.y))
         };
 
         vertex_buffer->data(vertices, gpu_t::buffer_usage_e::static_draw);
@@ -103,7 +107,7 @@ namespace mandala
         gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
         gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
 
-        const auto& gpu_program = gpu_programs.get<gui_gpu_program_t>();
+        const auto& gpu_program = gpu_programs.get<gui_image_gpu_program_t>();
 
 		//program
 		gpu.programs.push(gpu_program);
@@ -116,15 +120,17 @@ namespace mandala
 		gpu_program->world_matrix(world_matrix * glm::translate(center.x, center.y, 0.0f));
 		gpu_program->view_projection_matrix(view_projection_matrix);
 		gpu_program->color(get_color());
+        gpu_program->region_min(sprite->get_region().uv.min);
+        gpu_program->region_size(sprite->get_region().uv.size());
 
         gpu.textures.bind(diffuse_texture_index, sprite->get_sprite_set()->get_texture());
 
         size_t index_offset = 0;
 
-        if (sprite->get_region().is_rotated)
-        {
-            index_offset = 12;
-        }
+        //if (sprite->get_region().is_rotated)
+        //{
+        //    index_offset = 12;
+        //}
 
         switch (triangle_mode)
         {
