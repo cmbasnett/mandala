@@ -32,21 +32,6 @@ namespace mandala
 		void on_bind() override;
 		void on_unbind() override;
 
-        void world_matrix(const mat4_t&) const;
-        void normal_matrix(const mat3_t&) const;
-        void view_projection_matrix(const mat4_t&) const;
-        void bone_matrices(const std::vector<mat4_t>&) const;
-        void light_location(const vec3_t&) const;
-        void camera_location(const vec3_t&) const;
-        void diffuse_texture_index(uint32_t) const;
-        void diffuse_color(const vec4_t&) const;
-        void normal_texture_index(uint32_t) const;
-        void specular_texture_index(uint32_t) const;
-        void specular_color(const vec4_t&) const;
-        void specular_intensity(float32_t) const;
-        void emissive_texture_index(uint32_t) const;
-        void emissive_color(const vec4_t&) const;
-        void emissive_intensity(float32_t) const;
         void is_lit(bool) const;
 
 	private:
@@ -58,21 +43,7 @@ namespace mandala
 		gpu_location_t bone_indices_1_location;
 		gpu_location_t bone_weights_0_location;
 		gpu_location_t bone_weights_1_location;
-		gpu_location_t world_matrix_location;
-		gpu_location_t normal_matrix_location;
-		gpu_location_t view_projection_matrix_location;
-		gpu_location_t bone_matrices_location;
-		gpu_location_t light_location_location;
-		gpu_location_t camera_location_location;
-		gpu_location_t diffuse_texture_index_location;
-		gpu_location_t diffuse_color_location;
-		gpu_location_t normal_texture_index_location;
-		gpu_location_t specular_texture_index_location;
-		gpu_location_t specular_color_location;
-		gpu_location_t specular_intensity_location;
-		gpu_location_t emissive_texture_index_location;
-		gpu_location_t emissive_color_location;
-		gpu_location_t emissive_intensity_location;
+
 		gpu_location_t calculate_lighting_function_location;
 		gpu_index_t calculate_lighting_lit_subroutine_index;
 		gpu_index_t calculate_lighting_unlit_subroutine_index;

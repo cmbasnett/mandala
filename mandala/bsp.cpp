@@ -636,11 +636,11 @@ namespace mandala
 
         gpu.programs.push(gpu_program);
 
-        gpu_program->world_matrix(mat4_t());
-        gpu_program->view_projection_matrix(camera.get_projection_matrix() * camera.get_view_matrix());
-        gpu_program->diffuse_texture_index(diffuse_texture_index);
-        gpu_program->lightmap_texture_index(lightmap_texture_index);
-        gpu_program->lightmap_gamma(render_settings.lightmap_gamma);
+        gpu.set_uniform("world_matrix", mat4_t());
+        gpu.set_uniform("view_projection_matrix", camera.get_projection_matrix() * camera.get_view_matrix());
+        gpu.set_uniform("diffuse_texture", diffuse_texture_index);
+        gpu.set_uniform("lightmap_texture", lightmap_texture_index);
+        gpu.set_uniform("lightmap_gamma", render_settings.lightmap_gamma);
 
         auto render_face = [&](int32_t face_index)
         {
@@ -806,16 +806,16 @@ namespace mandala
             switch (render_mode)
             {
             case render_mode_e::texture:
-                gpu_program->alpha(0.0f);
+                gpu.set_uniform("alpha", 0.0f);
 				blend_state.is_enabled = true;
 				blend_state.src_factor = gpu_t::blend_factor_e::src_alpha;
 				blend_state.dst_factor = gpu_t::blend_factor_e::one;
                 break;
             case render_mode_e::solid:
-                gpu_program->should_test_alpha(true);
+                gpu.set_uniform("should_test_alpha", 1);
                 break;
             case render_mode_e::additive:
-                gpu_program->alpha(alpha);
+                gpu.set_uniform("alpha", alpha);
 				blend_state.is_enabled = true;
 				blend_state.src_factor = gpu_t::blend_factor_e::one;
 				blend_state.dst_factor = gpu_t::blend_factor_e::one;
@@ -833,7 +833,7 @@ namespace mandala
             auto world_matrix = glm::translate(model.origin);
             world_matrix *= glm::translate(origin);
 
-            gpu_program->world_matrix(world_matrix);
+            gpu.set_uniform("world_matrix", world_matrix);
 
             render_node(model.head_node_indices[0], -1);
 
@@ -841,10 +841,10 @@ namespace mandala
             {
             case render_mode_e::texture:
             case render_mode_e::additive:
-                gpu_program->alpha(1.0f);
+                gpu.set_uniform("alpha", 1.0f);
                 break;
             case render_mode_e::solid:
-                gpu_program->should_test_alpha(false);
+                gpu.set_uniform("should_test_alpha", 0);
                 break;
             default:
                 break;

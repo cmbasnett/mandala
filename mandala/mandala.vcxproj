@@ -256,8 +256,6 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="gpu.hpp" />
     <ClInclude Include="gpu_buffer_mgr.hpp" />
     <ClInclude Include="gpu_defs.hpp" />
-    <ClInclude Include="gpu_program_mgr.hpp" />
-    <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="gui_button.hpp" />
     <ClInclude Include="gui_canvas.hpp" />
     <ClInclude Include="gui_element.hpp" />

@@ -116,12 +116,12 @@ namespace mandala
 
 		static const auto diffuse_texture_index = 0;
 
-		gpu_program->diffuse_texture_index(diffuse_texture_index);
-		gpu_program->world_matrix(world_matrix * glm::translate(center.x, center.y, 0.0f));
-		gpu_program->view_projection_matrix(view_projection_matrix);
-		gpu_program->color(get_color());
-        gpu_program->region_min(sprite->get_region().uv.min);
-        gpu_program->region_size(sprite->get_region().uv.size());
+        gpu.set_uniform("diffuse_texture", diffuse_texture_index);
+        gpu.set_uniform("world_matrix", world_matrix * glm::translate(center.x, center.y, 0.0f));
+        gpu.set_uniform("view_projection_matrix", view_projection_matrix);
+        gpu.set_uniform("color", get_color());
+        gpu.set_uniform("region_min", sprite->get_region().uv.min);
+        gpu.set_uniform("region_size", sprite->get_region().uv.size());
 
         gpu.textures.bind(diffuse_texture_index, sprite->get_sprite_set()->get_texture());
 

@@ -47,8 +47,8 @@ namespace mandala
 
         gpu.programs.push(gpu_program);
 
-        gpu_program->world_matrix(world_matrix * glm::translate(rectangle.x, rectangle.y, T(0)) * glm::scale(rectangle.width, rectangle.height, T(0)));
-        gpu_program->view_projection_matrix(view_projection_matrix);
+        gpu.set_uniform("world_matrix", world_matrix * glm::translate(rectangle.x, rectangle.y, T(0)) * glm::scale(rectangle.width, rectangle.height, T(0)));
+        gpu.set_uniform("view_projection_matrix", view_projection_matrix);
 
         gpu.draw_elements(is_filled ? gpu_t::primitive_type_e::triangle_fan : gpu_t::primitive_type_e::line_loop, 4, index_buffer_type::data_type, 0);
 

@@ -41,36 +41,20 @@ void main()
 	{
 		location_location = gpu.get_attribute_location(get_id(), "location");
 		color_location = gpu.get_attribute_location(get_id(), "color");
-
-		world_matrix_location = gpu.get_uniform_location(get_id(), "world_matrix");
-		view_projection_matrix_location = gpu.get_uniform_location(get_id(), "view_projection_matrix");
 	}
 
 	void basic_gpu_program_t::on_bind()
 	{
-		static const auto location_offset = reinterpret_cast<void*>(offsetof(vertex_type, location));
-		static const auto color_offset = reinterpret_cast<void*>(offsetof(vertex_type, color));
-
 		gpu.enable_vertex_attribute_array(location_location);
 		gpu.enable_vertex_attribute_array(color_location);
 
-		gpu.set_vertex_attrib_pointer(location_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), location_offset);
-		gpu.set_vertex_attrib_pointer(color_location, 4, gpu_data_type_e::float_, false, sizeof(vertex_type), color_offset);
+		gpu.set_vertex_attrib_pointer(location_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, location)));
+		gpu.set_vertex_attrib_pointer(color_location, 4, gpu_data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, color)));
 	}
 
 	void basic_gpu_program_t::on_unbind()
 	{
 		gpu.disable_vertex_attribute_array(location_location);
 		gpu.disable_vertex_attribute_array(color_location);
-	}
-
-	void basic_gpu_program_t::world_matrix(const mat4_t& world_matrix) const
-	{
-		gpu.set_uniform(world_matrix_location, world_matrix, false);
-	}
-
-	void basic_gpu_program_t::view_projection_matrix(const mat4_t& view_projection_matrix) const
-	{
-		gpu.set_uniform(view_projection_matrix_location, view_projection_matrix, false);
 	}
 }

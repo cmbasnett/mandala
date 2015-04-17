@@ -377,22 +377,22 @@ namespace mandala
         void resize_texture(const std::shared_ptr<texture_t>& texture, vec2_u32_t size);
         void destroy_texture(gpu_id_t id);
 
-		gpu_location_t get_uniform_location(gpu_id_t program_id, const std::string& name);
-		gpu_location_t get_attribute_location(gpu_id_t program_id, const std::string& name);
+        gpu_location_t get_uniform_location(gpu_id_t program_id, const char* name) const;
+        gpu_location_t get_attribute_location(gpu_id_t program_id, const char* name) const;
 
 		void enable_vertex_attribute_array(gpu_location_t location);
 		void disable_vertex_attribute_array(gpu_location_t location);
 		void set_vertex_attrib_pointer(gpu_location_t location, int32_t size, gpu_data_type_e data_type, bool is_normalized, int32_t stride, const void* pointer);
 		void set_vertex_attrib_pointer(gpu_location_t location, int32_t size, gpu_data_type_e data_type, int32_t stride, const void* pointer);
-		void set_uniform(gpu_location_t location, const mat3_t& value, bool should_tranpose);
-		void set_uniform(gpu_location_t location, const mat4_t& value, bool should_tranpose);
-		void set_uniform(gpu_location_t location, int32_t value);
-		void set_uniform(gpu_location_t location, uint32_t value);
-		void set_uniform(gpu_location_t location, float32_t value);
-		void set_uniform(gpu_location_t location, const vec2_t& value);
-		void set_uniform(gpu_location_t location, const vec3_t& value);
-		void set_uniform(gpu_location_t location, const vec4_t& value);
-		void set_uniform(gpu_location_t location, const std::vector<mat4_t>& value, bool should_transpose);
+        void set_uniform(const char* name, const mat3_t& value, bool should_tranpose = false) const;
+        void set_uniform(const char* name, const mat4_t& value, bool should_tranpose = false) const;
+        void set_uniform(const char* name, int32_t value) const;
+        void set_uniform(const char* name, uint32_t value) const;
+        void set_uniform(const char* name, float32_t value) const;
+        void set_uniform(const char* name, const vec2_t& value) const;
+        void set_uniform(const char* name, const vec3_t& value) const;
+        void set_uniform(const char* name, const vec4_t& value) const;
+        void set_uniform(const char* name, const std::vector<mat4_t>& value, bool should_transpose = false) const;
 		void set_uniform_subroutine(shader_type_e shader_type, gpu_index_t index);
 
 		void set_clear_color(rgba_type& color);

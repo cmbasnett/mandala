@@ -173,21 +173,6 @@ void main()
 		bone_weights_0_location = gpu.get_attribute_location(get_id(), "bone_weights_0");
 		bone_weights_1_location = gpu.get_attribute_location(get_id(), "bone_weights_1");
 
-		world_matrix_location = gpu.get_uniform_location(get_id(), "world_matrix");
-		normal_matrix_location = gpu.get_uniform_location(get_id(), "normal_matrix");
-		view_projection_matrix_location = gpu.get_uniform_location(get_id(), "view_projection_matrix");
-		bone_matrices_location = gpu.get_uniform_location(get_id(), "bone_matrices");
-		light_location_location = gpu.get_uniform_location(get_id(), "light_location");
-		camera_location_location = gpu.get_uniform_location(get_id(), "camera_location");
-		diffuse_texture_index_location = gpu.get_uniform_location(get_id(), "diffuse.texture");
-		diffuse_color_location = gpu.get_uniform_location(get_id(), "diffuse.color");
-		normal_texture_index_location = gpu.get_uniform_location(get_id(), "normal.texture");
-		specular_texture_index_location = gpu.get_uniform_location(get_id(), "specular.texture");
-		specular_color_location = gpu.get_uniform_location(get_id(), "specular.color");
-		specular_intensity_location = gpu.get_uniform_location(get_id(), "specular.intensity");
-		emissive_texture_index_location = gpu.get_uniform_location(get_id(), "emissive.texture");
-		emissive_color_location = gpu.get_uniform_location(get_id(), "emissive.color");
-		emissive_intensity_location = gpu.get_uniform_location(get_id(), "emissive.intensity");
         calculate_lighting_function_location = gpu.get_subroutine_uniform_location(get_id(), gpu_t::shader_type_e::fragment, "calculate_lighting");
         calculate_lighting_lit_subroutine_index = gpu.get_subroutine_index(get_id(), gpu_t::shader_type_e::fragment, "calculate_lighting_lit");
         calculate_lighting_unlit_subroutine_index = gpu.get_subroutine_index(get_id(), gpu_t::shader_type_e::fragment, "calculate_lighting_unlit");
@@ -204,23 +189,14 @@ void main()
 		gpu.enable_vertex_attribute_array(bone_weights_0_location);
 		gpu.enable_vertex_attribute_array(bone_weights_1_location);
 
-		static const auto location_offset = reinterpret_cast<void*>(offsetof(vertex_type, location));
-		static const auto normal_offset = reinterpret_cast<void*>(offsetof(vertex_type, normal));
-		static const auto tangent_offset = reinterpret_cast<void*>(offsetof(vertex_type, tangent));
-		static const auto texcoord_offset = reinterpret_cast<void*>(offsetof(vertex_type, texcoord));
-		static const auto bone_indices_0_offset = reinterpret_cast<void*>(offsetof(vertex_type, bone_indices_0));
-		static const auto bone_indices_1_offset = reinterpret_cast<void*>(offsetof(vertex_type, bone_indices_1));
-		static const auto bone_weights_0_offset = reinterpret_cast<void*>(offsetof(vertex_type, bone_weights_0));
-		static const auto bone_weights_1_offset = reinterpret_cast<void*>(offsetof(vertex_type, bone_weights_1));
-
-		gpu.set_vertex_attrib_pointer(location_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), location_offset);
-		gpu.set_vertex_attrib_pointer(normal_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), normal_offset);
-		gpu.set_vertex_attrib_pointer(tangent_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), tangent_offset);
-		gpu.set_vertex_attrib_pointer(texcoord_location, 2, gpu_data_type_e::float_, false, sizeof(vertex_type), texcoord_offset);
-		gpu.set_vertex_attrib_pointer(bone_indices_0_location, 4, gpu_data_type_e::int_, sizeof(vertex_type), bone_indices_0_offset);
-		gpu.set_vertex_attrib_pointer(bone_indices_1_location, 4, gpu_data_type_e::int_, sizeof(vertex_type), bone_indices_1_offset);
-		gpu.set_vertex_attrib_pointer(bone_weights_0_location, 4, gpu_data_type_e::float_, false, sizeof(vertex_type), bone_weights_0_offset);
-		gpu.set_vertex_attrib_pointer(bone_weights_1_location, 4, gpu_data_type_e::float_, false, sizeof(vertex_type), bone_weights_1_offset);
+		gpu.set_vertex_attrib_pointer(location_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, location)));
+		gpu.set_vertex_attrib_pointer(normal_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, normal)));
+		gpu.set_vertex_attrib_pointer(tangent_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, tangent)));
+		gpu.set_vertex_attrib_pointer(texcoord_location, 2, gpu_data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, texcoord)));
+		gpu.set_vertex_attrib_pointer(bone_indices_0_location, 4, gpu_data_type_e::int_, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, bone_indices_0)));
+		gpu.set_vertex_attrib_pointer(bone_indices_1_location, 4, gpu_data_type_e::int_, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, bone_indices_1)));
+		gpu.set_vertex_attrib_pointer(bone_weights_0_location, 4, gpu_data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, bone_weights_0)));
+		gpu.set_vertex_attrib_pointer(bone_weights_1_location, 4, gpu_data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, bone_weights_1)));
 	}
 
 	void model_gpu_program_t::on_unbind()
@@ -233,81 +209,6 @@ void main()
 		gpu.disable_vertex_attribute_array(bone_indices_1_location);
 		gpu.disable_vertex_attribute_array(bone_weights_0_location);
 		gpu.disable_vertex_attribute_array(bone_weights_1_location);
-	}
-
-	void model_gpu_program_t::world_matrix(const mat4_t& world_matrix) const
-	{
-		gpu.set_uniform(world_matrix_location, world_matrix, false);
-	}
-
-	void model_gpu_program_t::normal_matrix(const mat3_t& normal_matrix) const
-	{
-		gpu.set_uniform(normal_matrix_location, normal_matrix, false);
-	}
-
-	void model_gpu_program_t::view_projection_matrix(const mat4_t& view_projection_matrix) const
-	{
-		gpu.set_uniform(view_projection_matrix_location, view_projection_matrix, false);
-	}
-
-	void model_gpu_program_t::bone_matrices(const std::vector<mat4_t>& bone_matrices) const
-	{
-		gpu.set_uniform(bone_matrices_location, bone_matrices, false);
-	}
-
-	void model_gpu_program_t::light_location(const vec3_t& light_location) const
-	{
-		gpu.set_uniform(light_location_location, light_location);
-	}
-
-	void model_gpu_program_t::camera_location(const vec3_t& camera_location) const
-	{
-		gpu.set_uniform(camera_location_location, camera_location);
-	}
-
-	void model_gpu_program_t::diffuse_texture_index(uint32_t diffuse_texture_index) const
-	{
-		gpu.set_uniform(diffuse_texture_index_location, diffuse_texture_index);
-	}
-
-	void model_gpu_program_t::diffuse_color(const vec4_t& diffuse_color) const
-	{
-		gpu.set_uniform(diffuse_color_location, diffuse_color);
-	}
-
-	void model_gpu_program_t::normal_texture_index(uint32_t normal_texture_index) const
-	{
-		gpu.set_uniform(normal_texture_index_location, normal_texture_index);
-	}
-
-	void model_gpu_program_t::specular_texture_index(uint32_t specular_texture_index) const
-	{
-		gpu.set_uniform(specular_texture_index_location, specular_texture_index);
-	}
-
-	void model_gpu_program_t::specular_color(const vec4_t& specular_color) const
-	{
-		gpu.set_uniform(specular_color_location, specular_color);
-	}
-
-	void model_gpu_program_t::specular_intensity(float32_t specular_intensity) const
-	{
-		gpu.set_uniform(specular_intensity_location, specular_intensity);
-	}
-
-	void model_gpu_program_t::emissive_texture_index(uint32_t emissive_texture_index) const
-	{
-		gpu.set_uniform(emissive_texture_index_location, emissive_texture_index);
-	}
-
-	void model_gpu_program_t::emissive_color(const vec4_t& emissive_color) const
-	{
-		gpu.set_uniform(emissive_color_location, emissive_color);
-	}
-
-	void model_gpu_program_t::emissive_intensity(float32_t emissive_intensity) const
-	{
-		gpu.set_uniform(emissive_intensity_location, emissive_intensity);
 	}
 
     void model_gpu_program_t::is_lit(bool is_lit) const

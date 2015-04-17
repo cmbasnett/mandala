@@ -281,14 +281,14 @@ namespace mandala
         gpu.depth.push_state(depth_state);
 
         //view projection matrix
-        gpu_program->view_projection_matrix(view_projection_matrix);
-        gpu_program->font_line_height(line_height);
-        gpu_program->font_base(base);
+        gpu.set_uniform("view_projection_matrix", view_projection_matrix);
+        gpu.set_uniform("line_height", static_cast<float32_t>(line_height));
+        gpu.set_uniform("base", static_cast<float32_t>(base));
 
         auto start_color = color_stack.empty() ? base_color : color_stack.top();
 
-        gpu_program->font_color_top(start_color);
-        gpu_program->font_color_bottom(start_color);
+        gpu.set_uniform("color_top", start_color);
+        gpu.set_uniform("color_bottom", start_color);
 
         //textures
         std::vector<uint8_t> page_indices;
@@ -307,7 +307,7 @@ namespace mandala
 
         for (auto c = string.begin(); c != string.end(); ++c)
         {
-            gpu_program->world_matrix(world_matrix);
+            gpu.set_uniform("world_matrix", world_matrix);
 
             const auto character = characters.at(*c);
 
@@ -315,7 +315,7 @@ namespace mandala
             {
                 character_texture_index = character.texture_index;
 
-                gpu_program->font_diffuse_texture_index(character_texture_index);
+                gpu.set_uniform("diffuse_texture", character_texture_index);
             }
 
             auto x = static_cast<float32_t>(character.advance_x);
@@ -349,8 +349,8 @@ namespace mandala
             {
                 const auto& color = color_stack.empty() ? base_color : color_stack.top();
 
-                gpu_program->font_color_top(color);
-                gpu_program->font_color_bottom(color);
+                gpu.set_uniform("color_top", color);
+                gpu.set_uniform("color_bottom", color);
             }
 
             gpu.draw_elements(gpu_t::primitive_type_e::triangles, indices_per_character, index_buffer_type::data_type, character_index * character_index_stride);

@@ -483,16 +483,16 @@ namespace mandala
         glDeleteTextures(1, &id); glCheckError();
     }
 
-	gpu_location_t gpu_t::get_uniform_location(gpu_id_t program_id, const std::string & name)
+	gpu_location_t gpu_t::get_uniform_location(gpu_id_t program_id, const char* name) const
 	{
-		auto uniform_location = glGetUniformLocation(program_id, name.c_str()); glCheckError();
+		auto uniform_location = glGetUniformLocation(program_id, name); glCheckError();
 
 		return uniform_location;
 	}
 
-	gpu_location_t gpu_t::get_attribute_location(gpu_id_t program_id, const std::string & name)
+	gpu_location_t gpu_t::get_attribute_location(gpu_id_t program_id, const char* name) const
 	{
-		auto attribute_location = glGetAttribLocation(program_id, name.c_str()); glCheckError();
+		auto attribute_location = glGetAttribLocation(program_id, name); glCheckError();
 
 		return attribute_location;
 	}
@@ -517,49 +517,49 @@ namespace mandala
 		glVertexAttribIPointer(location, size, get_data_type(data_type), stride, pointer); glCheckError();
 	}
 
-	void gpu_t::set_uniform(gpu_location_t location, const mat3_t& value, bool should_transpose)
+    void gpu_t::set_uniform(const char* name, const mat3_t& value, bool should_transpose) const
 	{
-		glUniformMatrix3fv(location, 1, should_transpose, glm::value_ptr(value)); glCheckError();
+		glUniformMatrix3fv(get_uniform_location(programs.top()->lock()->get_id(), name), 1, should_transpose, glm::value_ptr(value)); glCheckError();
 	}
 
-	void gpu_t::set_uniform(gpu_location_t location, const mat4_t& value, bool should_transpose)
+	void gpu_t::set_uniform(const char* name, const mat4_t& value, bool should_transpose) const
 	{
-		glUniformMatrix4fv(location, 1, should_transpose, glm::value_ptr(value)); glCheckError();
+		glUniformMatrix4fv(get_uniform_location(programs.top()->lock()->get_id(), name), 1, should_transpose, glm::value_ptr(value)); glCheckError();
 	}
 
-	void gpu_t::set_uniform(gpu_location_t location, int32_t value)
+	void gpu_t::set_uniform(const char* name, int32_t value) const
 	{
-		glUniform1i(location, value); glCheckError();
+		glUniform1i(get_uniform_location(programs.top()->lock()->get_id(), name), value); glCheckError();
 	}
 
-	void gpu_t::set_uniform(gpu_location_t location, uint32_t value)
+	void gpu_t::set_uniform(const char* name, uint32_t value) const
 	{
-		glUniform1i(location, value); glCheckError();
+		glUniform1i(get_uniform_location(programs.top()->lock()->get_id(), name), value); glCheckError();
 	}
 
-	void gpu_t::set_uniform(gpu_location_t location, float32_t value)
+	void gpu_t::set_uniform(const char* name, float32_t value) const
 	{
-		glUniform1f(location, value); glCheckError();
+		glUniform1f(get_uniform_location(programs.top()->lock()->get_id(), name), value); glCheckError();
 	}
 
-	void gpu_t::set_uniform(gpu_location_t location, const vec2_t& value)
+	void gpu_t::set_uniform(const char* name, const vec2_t& value) const
 	{
-		glUniform2fv(location, 1, glm::value_ptr(value)); glCheckError();
+		glUniform2fv(get_uniform_location(programs.top()->lock()->get_id(), name), 1, glm::value_ptr(value)); glCheckError();
 	}
 
-	void gpu_t::set_uniform(gpu_location_t location, const vec3_t& value)
+	void gpu_t::set_uniform(const char* name, const vec3_t& value) const
 	{
-		glUniform3fv(location, 1, glm::value_ptr(value)); glCheckError();
+		glUniform3fv(get_uniform_location(programs.top()->lock()->get_id(), name), 1, glm::value_ptr(value)); glCheckError();
 	}
 
-	void gpu_t::set_uniform(gpu_location_t location, const vec4_t& value)
+	void gpu_t::set_uniform(const char* name, const vec4_t& value) const
 	{
-		glUniform4fv(location, 1, glm::value_ptr(value)); glCheckError();
+		glUniform4fv(get_uniform_location(programs.top()->lock()->get_id(), name), 1, glm::value_ptr(value)); glCheckError();
 	}
 
-	void gpu_t::set_uniform(gpu_location_t location, const std::vector<mat4_t>& matrices, bool should_transpose)
+	void gpu_t::set_uniform(const char* name, const std::vector<mat4_t>& matrices, bool should_transpose) const
 	{
-		glUniformMatrix4fv(location, static_cast<GLsizei>(matrices.size()), false, reinterpret_cast<const float*>(matrices.data())); glCheckError();
+		glUniformMatrix4fv(get_uniform_location(programs.top()->lock()->get_id(), name), static_cast<GLsizei>(matrices.size()), false, reinterpret_cast<const float*>(matrices.data())); glCheckError();
 	}
 
 	void gpu_t::set_uniform_subroutine(shader_type_e shader_type, gpu_index_t index)

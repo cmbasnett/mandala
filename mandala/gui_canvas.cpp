@@ -64,10 +64,10 @@ namespace mandala
         gpu_world_matrix *= glm::translate(get_bounds().min.x, get_bounds().min.y, 0.0f);
         gpu_world_matrix *= glm::scale(get_size().x, get_size().y, 1.0f);   //TODO: verify correctness
 
-        gpu_program->world_matrix(gpu_world_matrix);
-        gpu_program->view_projection_matrix(view_projection_matrix);
-        gpu_program->diffuse_texture_index(diffuse_texture_index);
-        gpu_program->t(t);
+        gpu.set_uniform("world_matrix", gpu_world_matrix);
+        gpu.set_uniform("view_projection_matrix", view_projection_matrix);
+        gpu.set_uniform("diffuse_texture", diffuse_texture_index);
+        gpu.set_uniform("t", t);
 
         gpu.textures.bind(diffuse_texture_index, frame_buffer->get_color_texture());
 

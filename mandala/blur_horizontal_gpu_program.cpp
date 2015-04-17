@@ -169,12 +169,6 @@ void main()
 	{
 		location_location = gpu.get_attribute_location(get_id(), "location");
 		texcoord_location = gpu.get_attribute_location(get_id(), "texcoord");
-
-		world_matrix_location = gpu.get_uniform_location(get_id(), "world_matrix");
-		view_projection_matrix_location = gpu.get_uniform_location(get_id(), "view_projection_matrix");
-		blur_size_location = gpu.get_uniform_location(get_id(), "blur_size");
-		diffuse_texture_index_location = gpu.get_uniform_location(get_id(), "diffuse_texture");
-		t_location = gpu.get_uniform_location(get_id(), "t");
 	}
 
 	void blur_horizontal_gpu_program_t::on_bind()
@@ -191,29 +185,4 @@ void main()
 		gpu.disable_vertex_attribute_array(location_location);
 		gpu.disable_vertex_attribute_array(texcoord_location);
 	}
-
-	void blur_horizontal_gpu_program_t::world_matrix(const mat4_t& world_matrix) const
-	{
-		gpu.set_uniform(world_matrix_location, world_matrix, false);
-	}
-
-	void blur_horizontal_gpu_program_t::view_projection_matrix(const mat4_t& view_projection_matrix) const
-	{
-		gpu.set_uniform(view_projection_matrix_location, view_projection_matrix, false);
-	}
-
-	void blur_horizontal_gpu_program_t::diffuse_texture_index(uint32_t diffuse_texture_index) const
-	{
-		gpu.set_uniform(diffuse_texture_index_location, diffuse_texture_index);
-	}
-
-	void blur_horizontal_gpu_program_t::blur_size(float32_t blur_size) const
-	{
-		gpu.set_uniform(blur_size_location, blur_size);
-	}
-
-    void blur_horizontal_gpu_program_t::t(float32_t t) const
-    {
-        gpu.set_uniform(t_location, t);
-    }
 }
