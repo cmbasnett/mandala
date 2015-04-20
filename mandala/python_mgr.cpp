@@ -5,6 +5,9 @@
 //boost
 #include <boost\python.hpp>
 
+//TODO: remove later, only needed for building python modules
+#include <iostream> 
+
 using namespace boost;
 using namespace boost::python;
 
@@ -27,8 +30,11 @@ namespace mandala
 
 		Py_Initialize();
 
-		main_module = object((handle<>(borrowed(PyImport_AddModule("__main__")))));
+		main_module = object(handle<>(borrowed(PyImport_AddModule("__main__"))));
 		main_namespace = main_module.attr("__dict__");
+
+        auto hello_module = object(handle<>(borrowed(PyImport_ImportModule("hello"))));
+        main_namespace["hello"] = hello_module;
 	}
 
 	void python_mgr_t::exec(const std::string& string)
