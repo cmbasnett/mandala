@@ -19,14 +19,14 @@ namespace mandala
 		}
 
 		std::vector<state_type> pushed_states;
-		std::vector<state_type> popped_states;
+		std::vector<std::pair<state_type, mandala::state_flags_type>> popped_states;
 
 		//process stack operations
 		while (!operations.empty())
 		{
 			const auto& operation = operations.front();
 
-			const auto nodes_itr = std::find_if(nodes.begin(), nodes.end(), [&](const node_t& node)
+			auto nodes_itr = std::find_if(nodes.begin(), nodes.end(), [&](const node_t& node)
 			{
 				return node.state == operation.state;
 			});
@@ -40,7 +40,7 @@ namespace mandala
 				    throw std::exception("state does not exist on stack, cannot pop");
 			    }
 
-			    popped_states.push_back(nodes_itr->state);
+			    popped_states.push_back(std::make_pair(nodes_itr->state, nodes_itr->flags));
 
 			    //remove state from stack
                 nodes.erase(nodes_itr);
@@ -77,7 +77,16 @@ namespace mandala
                 nodes_itr->flags &= ~state_flag_changing_link_flags;
 			}
 				break;
-			}
+            case operation_t::type_e::purge:
+                while (!nodes.empty())
+                {
+                    popped_states.push_back(std::make_pair(nodes.back().state, nodes.back().flags));
+
+                    nodes.pop_back();
+                }
+
+                break;
+            }
 
 			operations.pop();
 		}
@@ -91,14 +100,29 @@ namespace mandala
         //call on_exit on popped states
         for (auto& state : popped_states)
         {
-            state->on_exit();
+            if ((state.second & state_flag_input) == state_flag_input)
+            {
+                state.first->on_stop_input();
+            }
+
+            if ((state.second & state_flag_render) == state_flag_render)
+            {
+                state.first->on_stop_render();
+            }
+
+            if ((state.second & state_flag_tick) == state_flag_tick)
+            {
+                state.first->on_stop_tick();
+            }
+
+            state.first->on_exit();
         }
 
 		//check if stack was modified
 		if (did_nodes_change)
 		{
 			//check if top state changed
-			if (previous_top_state != nodes.rbegin()->state)
+			if (!nodes.empty() && previous_top_state != nodes.rbegin()->state)
 			{
 				//call on_passive on previous top state
 				if (previous_top_state != nullptr)
@@ -286,7 +310,10 @@ namespace mandala
 
 	void state_mgr_t::purge()
 	{
-		nodes.clear();
+        operation_t operation;
+        operation.type = operation_t::type_e::purge;
+
+        operations.push(operation);
 	}
 
 	size_t state_mgr_t::count() const

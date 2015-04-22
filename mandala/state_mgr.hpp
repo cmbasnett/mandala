@@ -51,7 +51,8 @@ namespace mandala
 			{
 				push,
 				pop,
-				change_link_flags
+				change_link_flags,
+                purge
 			};
 
             type_e type = type_e::push;
