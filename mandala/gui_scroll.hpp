@@ -20,10 +20,11 @@ namespace mandala
         inline const scroll_extents_type& get_scroll_extents() const { return scroll_extents; }
         inline bool get_is_scrolling() const { return is_scrolling; }
 
-        inline void set_scroll_location(const scroll_location_type& scroll_location) { this->scroll_location = scroll_location; dirty(); }
+        inline void set_scroll_location(const scroll_location_type& scroll_location, bool should_interpolate = true);
         inline void set_scroll_extents(const scroll_extents_type& scroll_extents) { this->scroll_extents = scroll_extents; dirty(); }
 
     private:
+        scroll_location_type scroll_location_target;
         scroll_location_type scroll_location;
         scroll_extents_type scroll_extents;
         bool is_scrolling = false;

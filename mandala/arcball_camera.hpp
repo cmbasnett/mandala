@@ -4,16 +4,6 @@
 #include "camera.hpp"
 #include "input_event.hpp"
 
-#define ARCBALL_CAMERA_DEFAULT_PITCH_MAX			(0.0f)
-#define ARCBALL_CAMERA_DEFAULT_PITCH_MIN			(60.0f)
-#define ARCBALL_CAMERA_DEFAULT_YAW					(45.0f)
-#define ARCBALL_CAMERA_DEFAULT_DISTANCE_MIN			(8.0f)
-#define ARCBALL_CAMERA_DEFAULT_DISTANCE_MAX			(32.0f)
-#define ARCBALL_CAMERA_DEFAULT_DISTANCE				(16.0f)
-#define ARCBALL_CAMERA_FOV_MIN						(70.0f)
-#define ARCBALL_CAMERA_FOV_MAX						(40.0f)
-#define ARCBALL_CAMERA_DEFAULT_ROLL_TARGET			(0.0f)
-
 namespace mandala
 {
 	struct arcball_camera_t : camera_t
@@ -21,19 +11,19 @@ namespace mandala
 		virtual void tick(float32_t dt);
 		void on_input_event(input_event_t& input_event);
 
-		float32_t fov_min = ARCBALL_CAMERA_FOV_MIN;
-		float32_t fov_max = ARCBALL_CAMERA_FOV_MAX;
-		float32_t pitch_max = ARCBALL_CAMERA_DEFAULT_PITCH_MAX;
-		float32_t pitch_min = ARCBALL_CAMERA_DEFAULT_PITCH_MIN;
-		float32_t pitch = ARCBALL_CAMERA_DEFAULT_PITCH_MIN;
-		float32_t pitch_target = ARCBALL_CAMERA_DEFAULT_PITCH_MIN;
-		float32_t yaw = ARCBALL_CAMERA_DEFAULT_YAW;
-		float32_t yaw_target = ARCBALL_CAMERA_DEFAULT_YAW;
-		float32_t roll_target = ARCBALL_CAMERA_DEFAULT_ROLL_TARGET;
-		float32_t distance_min = ARCBALL_CAMERA_DEFAULT_DISTANCE_MIN;
-		float32_t distance_max = ARCBALL_CAMERA_DEFAULT_DISTANCE_MAX;
-		float32_t distance = ARCBALL_CAMERA_DEFAULT_DISTANCE;
-		float32_t distance_target = ARCBALL_CAMERA_DEFAULT_DISTANCE;
+        float32_t fov_min = 70.0f;
+        float32_t fov_max = 40.0f;
+		float32_t pitch_max = 0.0f;
+		float32_t pitch_min = 60.0f;
+		float32_t pitch = 60.0f;
+		float32_t pitch_target = 60.0f;
+		float32_t yaw = 45.0f;
+		float32_t yaw_target = 45.0f;
+		float32_t roll_target = 0.0f;
+		float32_t distance_min = 8.0f;
+		float32_t distance_max = 32.0f;
+		float32_t distance = 16.0f;
+		float32_t distance_target = 16.0f;
 		vec3_t location_target;
         vec3_t target_target;
 		bool is_panning = false;

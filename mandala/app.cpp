@@ -129,6 +129,7 @@ namespace mandala
         const auto screen_size = platform.get_screen_size();
 
         gpu.viewports.push(gpu_viewport_type(0, 0, screen_size.x, screen_size.y));
+        gpu.clear(gpu_t::clear_flag_color | gpu_t::clear_flag_depth);
 
 		platform.app_render_start();
 

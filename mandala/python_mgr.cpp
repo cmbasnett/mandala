@@ -33,8 +33,12 @@ namespace mandala
 		main_module = object(handle<>(borrowed(PyImport_AddModule("__main__"))));
 		main_namespace = main_module.attr("__dict__");
 
-        auto hello_module = object(handle<>(borrowed(PyImport_ImportModule("hello"))));
-        main_namespace["hello"] = hello_module;
+        PyErr_Clear();
+        auto b = PyImport_ImportModule("mandala");
+        PyErr_Print();
+
+        auto mandala_module = object(handle<>(borrowed(b)));
+        main_namespace["mandala"] = mandala_module;
 	}
 
 	void python_mgr_t::exec(const std::string& string)

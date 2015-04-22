@@ -81,12 +81,6 @@ namespace mandala
 
 		void console_state_t::on_input_event(input_event_t& input_event)
         {
-            if (input_event.device_type == input_event_t::device_type_e::touch &&
-                input_event.touch.type == input_event_t::touch_t::type_e::press)
-            {
-                std::cout << "asd" << std::endl;
-            }
-
             if (input_event.device_type == input_event_t::device_type_e::keyboard &&
                 input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press)
             {

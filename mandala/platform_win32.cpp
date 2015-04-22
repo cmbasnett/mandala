@@ -5,7 +5,6 @@
 
 //mandala
 #include "platform_win32.hpp"
-#include "gpu.hpp"
 
 //glew
 #include <GL\glew.h>
@@ -13,6 +12,13 @@
 //glfw
 #include <GLFW\glfw3.h>
 
+//boost
+#include <boost\python.hpp>
+    BOOST_PYTHON_MODULE(platform)
+    {
+        boost::python::class_<mandala::platform_win32_t, boost::noncopyable>("platform", boost::python::no_init)
+            .def("get_window_title", &mandala::platform_win32_t::get_window_title);
+    }
 
 namespace mandala
 {
@@ -75,7 +81,7 @@ namespace mandala
         input_event_t input_event;
         input_event.device_type = input_event_t::device_type_e::touch;
         input_event.touch.button = static_cast<input_event_t::touch_t::button_e>(button);
-		input_event.touch.mod_flags = mods;
+        input_event.touch.mod_flags = mods;
 
         bool is_press = (action == GLFW_PRESS);
 
@@ -293,7 +299,6 @@ namespace mandala
 
 	void platform_win32_t::app_render_start()
 	{
-        gpu.clear(gpu_t::clear_flag_color | gpu_t::clear_flag_depth);
 	}
 
 	void platform_win32_t::app_render_end()

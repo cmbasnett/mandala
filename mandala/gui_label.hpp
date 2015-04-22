@@ -75,7 +75,7 @@ namespace mandala
 
 			string_itr_type string_begin;
 			string_itr_type string_end;
-			string_type render_string;  //TODO: have a central render string
+			string_type render_string;
             rectangle_t rectangle;
 
 			std::vector<color_push_type> colors_pushes;

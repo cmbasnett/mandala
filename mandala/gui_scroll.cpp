@@ -56,8 +56,8 @@ namespace mandala
         case input_event_t::touch_t::type_e::move:
             if (is_scrolling && touch_id == input_event.touch.id)
             {
-                scroll_location.x += static_cast<float32_t>(input_event.touch.location_delta.x);
-				scroll_location.y -= static_cast<float32_t>(input_event.touch.location_delta.y);
+                scroll_location_target.x += static_cast<float32_t>(input_event.touch.location_delta.x);
+                scroll_location_target.y -= static_cast<float32_t>(input_event.touch.location_delta.y);
 
 				input_event.is_consumed = true;
             }
@@ -67,6 +67,9 @@ namespace mandala
 
     void gui_scroll_t::tick(float32_t dt)
     {
+        //TODO: figure out a proper algorithm for this smoothing
+        scroll_location += (scroll_location_target - scroll_location) * dt * 30.0f;
+
         scroll_location = glm::clamp(scroll_location, scroll_extents.min, scroll_extents.max);
 
         gui_node_t::tick(dt);
@@ -81,4 +84,13 @@ namespace mandala
 		{
 		}
 	}
+    inline void gui_scroll_t::set_scroll_location(const scroll_location_type & scroll_location, bool should_interpolate)
+    {
+        scroll_location_target = scroll_location;
+
+        if (!should_interpolate)
+        {
+            this->scroll_location = scroll_location;
+        }
+    }
 }
