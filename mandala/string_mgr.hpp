@@ -29,6 +29,7 @@ namespace mandala
         
         void mount(const std::string& file);
         void purge();
+        size_t count() const;
 
         //TODO: template this function to allow returning of string or wstring
         string_type get(const hash_t& hash);

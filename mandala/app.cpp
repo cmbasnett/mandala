@@ -80,6 +80,7 @@ namespace mandala
 		game->app_run_end();
 
 		states.purge();
+        states.tick(0); //TODO: hack to avoid exceptions throwing on close due to unreleased state objects, find a better solution later
 		resources.purge();
 		strings.purge();
 		gpu_programs.purge();

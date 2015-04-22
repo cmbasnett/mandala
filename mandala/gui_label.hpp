@@ -52,7 +52,7 @@ namespace mandala
         line_height_type get_line_height() const;
 		size_t get_line_count() const;
 
-		void set_string(const string_type& string) { this->string = string; cursor.string_begin = this->string.begin(), cursor.string_end = this->string.begin(); dirty(); }
+		void set_string(const string_type& string) { this->string = string; cursor.string_begin = this->string.begin() + this->string.length(), cursor.string_end = this->string.begin() + this->string.length(); dirty(); }
 		void set_bitmap_font(std::shared_ptr<bitmap_font_t> bitmap_font) { this->bitmap_font = bitmap_font; dirty(); }
 		void set_justification(justification_e justification) { this->justification = justification; dirty(); }
 		void set_vertical_alignment(vertical_alignment_e vertical_alignment) { this->vertical_alignment = vertical_alignment; dirty(); }

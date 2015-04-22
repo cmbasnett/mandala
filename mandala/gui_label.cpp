@@ -726,7 +726,7 @@ namespace mandala
 
                         break;
                     }
-                    case input_event_t::keyboard_t::key_e::v:
+                    case input_event_t::keyboard_t::key_e::v:   //PASTE
                         if (input_event.keyboard.mod_flags == input_event_t::mod_flag_ctrl)
                         {
                             const auto clipboard_string = wstring_convert.from_bytes(platform.get_clipboard_string().c_str());
@@ -739,7 +739,7 @@ namespace mandala
                             input_event.is_consumed = true;
                         }
                         break;
-                    case input_event_t::keyboard_t::key_e::c:
+                    case input_event_t::keyboard_t::key_e::c:   //COPY
                         if (input_event.keyboard.mod_flags == input_event_t::mod_flag_ctrl)
                         {
                             string_type string = { cursor.string_begin, cursor.string_end };
@@ -750,7 +750,7 @@ namespace mandala
                             input_event.is_consumed = true;
                         }
                         break;
-                    case input_event_t::keyboard_t::key_e::x:
+                    case input_event_t::keyboard_t::key_e::x:   //CUT
                     {
                         if (input_event.keyboard.mod_flags == input_event_t::mod_flag_ctrl)
                         {
@@ -766,7 +766,7 @@ namespace mandala
                         }
                         break;
                     }
-                    case input_event_t::keyboard_t::key_e::a:
+                    case input_event_t::keyboard_t::key_e::a:   //SELECT ALL
                     {
                         if (input_event.keyboard.mod_flags == input_event_t::mod_flag_ctrl)
                         {

@@ -100,6 +100,8 @@ namespace mandala
                         ++command_strings_itr;
                     }
 
+                    //set cursor to end of line
+
                     input_event.is_consumed = true;
 
                     return;

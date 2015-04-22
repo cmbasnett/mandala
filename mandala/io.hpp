@@ -54,20 +54,26 @@ inline void write(std::ostream& ostream, T& t)
     ostream.write(reinterpret_cast<char*>(&t), sizeof(T));
 }
 
-template<typename T>
-std::ostream& operator<<(std::ostream& ostream, const glm::detail::tvec2<T>& v)
+namespace glm
 {
-    return ostream << "[" << v.x << "," << v.y << "]";
+    namespace detail
+    {
+        template<typename T>
+        std::ostream& operator<<(std::ostream& ostream, const tvec2<T>& v)
+        {
+            return ostream << "(" << v.x << "," << v.y << ")";
+        }
+    }
 }
 
 template<typename T>
 std::ostream& operator<<(std::ostream& ostream, const glm::detail::tvec3<T>& v)
 {
-    return ostream << "[" << v.x << "," << v.y << "," << v.z << "]";
+    return ostream << "(" << v.x << "," << v.y << "," << v.z << ")";
 }
 
 template<typename T>
 std::ostream& operator<<(std::ostream& ostream, const glm::detail::tvec4<T>& v)
 {
-    return ostream << "[" << v.x << "," << v.y << "," << v.z << "," << v.w << "]";
+    return ostream << "(" << v.x << "," << v.y << "," << v.z << "," << v.w << ")";
 }

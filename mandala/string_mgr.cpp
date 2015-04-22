@@ -49,6 +49,18 @@ namespace mandala
 		language_strings.clear();
     }
 
+    size_t string_mgr_t::count() const
+    {
+        auto language_strings_itr = language_strings.find(language);
+
+        if (language_strings_itr == language_strings.end())
+        {
+            return 0;
+        }
+
+        return language_strings_itr->second.size();
+    }
+
     string_mgr_t::string_type string_mgr_t::get(const hash_t& hash)
     {
         std::wstring_convert<std::codecvt_utf8<wchar_t>> wstring_convert;
