@@ -123,20 +123,3 @@ namespace mandala
         return wstring_convert.from_bytes(buffer.data());
     }
 }
-
-//boost.python
-#include <boost\python.hpp>
-
-using namespace boost;
-using namespace boost::python;
-using namespace mandala;
-
-BOOST_PYTHON_MODULE(mandala)
-{
-    class_<string_mgr_t, string_mgr_t*, noncopyable>("strings", no_init)
-        .def("mount", &string_mgr_t::mount)
-        .def("get", &string_mgr_t::get)
-        .def("purge", &string_mgr_t::purge);
-
-    scope().attr("strings") = boost::ref(strings);
-}
