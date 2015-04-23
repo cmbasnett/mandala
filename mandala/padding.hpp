@@ -1,6 +1,7 @@
 #pragma once
 
 //std
+#include <iostream>
 
 //mandala
 #include "types.hpp"
@@ -104,6 +105,12 @@ namespace mandala
 				return bottom != rhs.bottom || left != rhs.left || right != rhs.right || top != rhs.top;
 			}
 		};
+
+        template<typename T>
+        std::ostream& operator<<(std::ostream& ostream, const padding_t<T>& p)
+        {
+            return ostream << "(" << p.bottom << "," << p.left << "," << p.top << "," << p.right << ")";
+        }
 	}
 
 	typedef details::padding_t<uint8_t>		padding_u8_t;

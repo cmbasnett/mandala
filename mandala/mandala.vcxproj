@@ -280,6 +280,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="padding.hpp" />
     <ClInclude Include="platform_defs.hpp" />
     <ClInclude Include="pose.hpp" />
+    <ClInclude Include="python_defs.hpp" />
     <ClInclude Include="python_mgr.hpp" />
     <ClInclude Include="range.hpp" />
     <ClInclude Include="sound.hpp" />

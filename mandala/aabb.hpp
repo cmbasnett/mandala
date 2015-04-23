@@ -11,13 +11,13 @@
 namespace mandala
 {
 	namespace details
-	{
+    {
 		template<typename Scalar, typename Enable = void>
 		struct aabb2_t;
 
 		template<typename Scalar>
 		struct aabb2_t<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type> : range_<glm::detail::tvec2<Scalar>>
-		{
+        {
 			typedef Scalar scalar_type;
 			typedef aabb2_t<scalar_type> type;
 

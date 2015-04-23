@@ -205,9 +205,6 @@
     <ClInclude Include="bsp_gpu_program.hpp">
       <Filter>mandala\gpu\programs</Filter>
     </ClInclude>
-    <ClInclude Include="gpu_program_mgr.hpp">
-      <Filter>mandala\gpu</Filter>
-    </ClInclude>
     <ClInclude Include="bitmap_font_gpu_program.hpp">
       <Filter>mandala\gpu\programs</Filter>
     </ClInclude>
@@ -369,6 +366,9 @@
     <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="gui_image_gpu_program.hpp">
       <Filter>mandala\gpu\programs</Filter>
+    </ClInclude>
+    <ClInclude Include="python_defs.hpp">
+      <Filter>mandala\python</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -656,6 +656,9 @@
     </Filter>
     <Filter Include="armada\states\element">
       <UniqueIdentifier>{0af623d2-7a4a-41f6-aa83-45816826892c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mandala\python">
+      <UniqueIdentifier>{110fa48b-6117-4696-b8ee-ea9f832943c1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
