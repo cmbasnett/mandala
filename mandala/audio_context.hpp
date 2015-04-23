@@ -1,7 +1,7 @@
 #pragma once
 
-//std
-#include <memory>
+//boost
+#include <boost\shared_ptr.hpp>
 
 //openal
 #include <AL\alc.h>
@@ -14,7 +14,7 @@ namespace mandala
     {
 		typedef ALCcontext* pointer_type;
 
-        audio_context_t(const std::shared_ptr<audio_device_t>& device);
+        audio_context_t(const boost::shared_ptr<audio_device_t>& device);
         ~audio_context_t();
 
 		operator pointer_type() const { return pointer; }

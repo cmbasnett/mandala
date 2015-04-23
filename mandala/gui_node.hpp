@@ -2,7 +2,10 @@
 
 //std
 #include <vector>
-#include <memory>
+
+//boost
+#include <boost\shared_ptr.hpp>
+#include <boost\enable_shared_from_this.hpp>
 
 //mandala
 #include "aabb.hpp"
@@ -45,13 +48,13 @@ namespace mandala
         inherit
     };
 
-    struct gui_node_t
+    struct gui_node_t : public boost::enable_shared_from_this<gui_node_t>
     {
         typedef aabb2_t bounds_type;
         typedef vec2_t size_type;
         typedef rgba_type color_type;
 
-        const std::shared_ptr<gui_node_t>& get_parent() const { return parent; }
+        const boost::shared_ptr<gui_node_t>& get_parent() const { return parent; }
         gui_dock_mode_e get_dock_mode() const { return dock_mode; }
         gui_anchor_flags_type get_anchor_flags() const { return anchor_flags; }
         const vec2_t& get_anchor_offset() const { return anchor_offset; }
@@ -64,10 +67,13 @@ namespace mandala
 		const bounds_type& get_bounds() const { return bounds; }
         bool get_is_dirty() const { return is_dirty; }
 		bool get_is_hidden() const { return is_hidden; }
-		const std::vector<std::shared_ptr<gui_node_t>>& get_children() const { return children; }
+		const std::vector<boost::shared_ptr<gui_node_t>>& get_children() const { return children; }
 
 		void set_dock_mode(gui_dock_mode_e dock_mode) { this->dock_mode = dock_mode; dirty(); }
-		void set_anchor_flags(gui_anchor_flags_type anchor_flags) { this->anchor_flags = anchor_flags; dirty(); }
+		void set_anchor_flags(gui_anchor_flags_type anchor_flags)
+        {
+            this->anchor_flags = anchor_flags; dirty();
+        }
 		void set_anchor_offset(const vec2_t& anchor_offset) { this->anchor_offset = anchor_offset; dirty(); }
         void set_padding(const padding_t& padding) { this->padding = padding; dirty(); }
 		void set_margin(const padding_t& margin) { this->margin = margin; dirty(); }
@@ -91,11 +97,11 @@ namespace mandala
 
         void dirty();
 		void orphan();
-        void adopt(const std::shared_ptr<gui_node_t>& child);
+        void adopt(const boost::shared_ptr<gui_node_t>& child);
 
     private:
-        std::shared_ptr<gui_node_t> parent;
-        std::vector<std::shared_ptr<gui_node_t>> children;
+        boost::shared_ptr<gui_node_t> parent;
+        std::vector<boost::shared_ptr<gui_node_t>> children;
         gui_dock_mode_e dock_mode = gui_dock_mode_e::none;
         gui_anchor_flags_type anchor_flags = (gui_anchor_flag_top | gui_anchor_flag_left);
         vec2_t anchor_offset;

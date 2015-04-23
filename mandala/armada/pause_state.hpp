@@ -10,7 +10,7 @@ namespace mandala
 	{
 		struct pause_state_t : gui_state_t
 		{
-			std::shared_ptr<gui_label_t> paused_label;
+			boost::shared_ptr<gui_label_t> paused_label;
 
 			pause_state_t();
 

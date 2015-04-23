@@ -18,7 +18,7 @@ namespace mandala
 	{
 		skybox_t::skybox_t()
 		{
-			model = std::make_shared<model_t>(hash_t("skybox.md5m"));
+			model = boost::make_shared<model_t>(hash_t("skybox.md5m"));
 		}
 		
 		void skybox_t::render(const camera_t& camera)

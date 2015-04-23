@@ -1,3 +1,6 @@
+//boost
+#include <boost/make_shared.hpp>
+
 //glm
 #include "glm\ext.hpp"
 
@@ -15,14 +18,14 @@ namespace mandala
 {
 	gui_state_t::gui_state_t()
 	{
-		layout = std::make_shared<gui_layout_t>();
+		layout = boost::make_shared<gui_layout_t>();
 		layout->set_dock_mode(gui_dock_mode_e::fill);
     }
 
 	void gui_state_t::tick(float32_t dt)
 	{
 		//TODO: get child nodes to tell layout about cleanliness, recursing every tick is expensive!
-        std::function<void(const std::shared_ptr<gui_node_t>&)> recursive_clean = [&](const std::shared_ptr<gui_node_t>& node)
+        std::function<void(const boost::shared_ptr<gui_node_t>&)> recursive_clean = [&](const boost::shared_ptr<gui_node_t>& node)
         {
             if (node->get_is_dirty())
             {

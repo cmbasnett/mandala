@@ -370,6 +370,9 @@
     <ClInclude Include="python_defs.hpp">
       <Filter>mandala\python</Filter>
     </ClInclude>
+    <ClInclude Include="python_optional.hpp">
+      <Filter>mandala\python</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

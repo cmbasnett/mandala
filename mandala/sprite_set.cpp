@@ -97,7 +97,7 @@ namespace mandala
         }
 	}
 
-	sprite_set_t::sprite_set_t(const std::shared_ptr<texture_t>& texture) :
+	sprite_set_t::sprite_set_t(const boost::shared_ptr<texture_t>& texture) :
 		texture(texture)
 	{
         if (texture == nullptr)

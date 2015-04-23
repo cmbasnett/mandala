@@ -1,9 +1,9 @@
 #pragma once
 
-//std
-#include <memory>
+//boost
+#include <boost\shared_ptr.hpp>
 
-//memory
+//mandala
 #include "../camera.hpp"
 
 namespace mandala
@@ -14,7 +14,7 @@ namespace mandala
 	{
 		struct skybox_t
 		{
-			std::shared_ptr<model_t> model;
+			boost::shared_ptr<model_t> model;
 
 			skybox_t();
 

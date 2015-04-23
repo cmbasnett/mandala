@@ -10,7 +10,7 @@ namespace mandala
 	{
 		debug_state_t();
 
-		std::shared_ptr<gui_label_t> label;
+		boost::shared_ptr<gui_label_t> label;
 
 		virtual void tick(float32_t dt) override;
 	};

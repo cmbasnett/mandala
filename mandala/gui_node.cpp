@@ -49,7 +49,7 @@ namespace mandala
         dirty();
     }
 
-    void gui_node_t::adopt(const std::shared_ptr<gui_node_t>& node)
+    void gui_node_t::adopt(const boost::shared_ptr<gui_node_t>& node)
     {
         if (node == nullptr || node.get() == this)
         {
@@ -264,7 +264,7 @@ namespace mandala
         
         if (parent)
         {
-            //TODO: cascade dirtyiness upwards if parent relies on this element for sizing, placement etc.
+            parent->dirty();
         }
     }
 
@@ -362,7 +362,7 @@ namespace mandala
     void gui_node_t::on_render_begin(const mat4_t& world_matrix, const mat4_t& view_projection_matrix)
     {
 #if defined(DEBUG)
-        //render_rectangle(world_matrix, view_projection_matrix, rectangle_t(get_bounds()));
+        render_rectangle(world_matrix, view_projection_matrix, rectangle_t(get_bounds()));
 #endif
     }
 }

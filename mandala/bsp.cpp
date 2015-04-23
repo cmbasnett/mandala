@@ -374,7 +374,7 @@ namespace mandala
 
             texture_name.append(".png");
 
-            std::shared_ptr<texture_t> texture;
+            boost::shared_ptr<texture_t> texture;
 
             try
             {
@@ -543,14 +543,14 @@ namespace mandala
 
                 auto lighting_data_size = 3 * static_cast<int32_t>(texture_size.x) * static_cast<int32_t>(texture_size.y);
 
-                auto image = std::make_shared<image_t>(
+                auto image = boost::make_shared<image_t>(
                     static_cast<image_t::size_type>(texture_size),
                     8,
                     color_type_e::rgb,
                     lighting_data.data() + face.lightmap_offset,
                     lighting_data_size);
 
-                auto lightmap_texture = std::make_shared<texture_t>(image);
+                auto lightmap_texture = boost::make_shared<texture_t>(image);
 
                 face_lightmap_textures[face_index] = lightmap_texture;
             }

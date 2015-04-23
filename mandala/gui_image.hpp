@@ -37,17 +37,18 @@ namespace mandala
 		gui_image_t();
 
 		const boost::optional<sprite_t>& get_sprite() const { return sprite; }
-		bool get_is_autosized_to_texture() const { return is_autosized_to_texture; }
+		bool get_is_autosized_to_sprite() const { return is_autosized_to_sprite; }
+        triangle_mode_e get_triangle_mode() const { return triangle_mode; }
 
         void set_sprite(boost::optional<sprite_t> sprite);
-        void set_is_autosized_to_texture(bool is_autosized_to_texture);
+        void set_is_autosized_to_sprite(bool is_autosized_to_sprite);
         void set_triangle_mode(triangle_mode_e triangle_mode) { this->triangle_mode = triangle_mode; }
 
 	private:
-		std::shared_ptr<vertex_buffer_type> vertex_buffer;
-		std::shared_ptr<index_buffer_type> index_buffer;
+		boost::shared_ptr<vertex_buffer_type> vertex_buffer;
+		boost::shared_ptr<index_buffer_type> index_buffer;
 		boost::optional<sprite_t> sprite;
-		bool is_autosized_to_texture = false;
+		bool is_autosized_to_sprite = false;
         triangle_mode_e triangle_mode = triangle_mode_e::both;
 
 		virtual void on_render_begin(const mat4_t& world_matrix, const mat4_t& view_projection_matrix) override;

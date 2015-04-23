@@ -1,7 +1,7 @@
 #pragma once
 
-//std
-#include <memory>
+//boost
+#include <boost\shared_ptr.hpp>
 
 //mandala
 #include "types.hpp"
@@ -30,8 +30,8 @@ namespace mandala
         void pause();
         void rewind();
         void stop();
-        void queue_sound(const std::shared_ptr<sound_t>& sound);
-        void unqueue_sound(const std::shared_ptr<sound_t>& sound);
+        void queue_sound(const boost::shared_ptr<sound_t>& sound);
+        void unqueue_sound(const boost::shared_ptr<sound_t>& sound);
 
     private:
         audio_source_t(const audio_source_t&) = delete;

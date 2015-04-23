@@ -8,6 +8,7 @@
 
 //boost
 #include <boost\filesystem\path.hpp>
+#include <boost\make_shared.hpp>
 
 namespace mandala
 {
@@ -48,7 +49,7 @@ namespace mandala
 		packs.clear();
 	}
 
-	std::shared_ptr<std::istream> pack_mgr_t::extract(const hash_t& hash)
+	boost::shared_ptr<std::istream> pack_mgr_t::extract(const hash_t& hash)
 	{
         std::lock_guard<std::recursive_mutex> lock(mutex);
 
@@ -65,6 +66,6 @@ namespace mandala
 		const auto& file = files_itr->second;
 		const auto& pack = packs.at(file.pack_hash);
 
-		return std::make_shared<std::istrstream>(pack.mapped_file_source.data() + file.offset, file.length);
+		return boost::make_shared<std::istrstream>(pack.mapped_file_source.data() + file.offset, file.length);
 	}
 }

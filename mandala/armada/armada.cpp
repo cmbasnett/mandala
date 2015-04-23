@@ -17,7 +17,7 @@ namespace mandala
 {
 	namespace armada
 	{
-        std::shared_ptr<armada_game_t> game = std::make_shared<armada_game_t>();
+        boost::shared_ptr<armada_game_t> game = boost::make_shared<armada_game_t>();
 
         armada_game_t::armada_game_t() :
 			game_t("armada")
@@ -36,8 +36,8 @@ namespace mandala
 			strings.mount("strings.strings");
             strings.language = "en";
 
-            states.push(std::make_shared<bsp_state_t>(), state_flag_all);
-            states.push(std::make_shared<debug_state_t>(), state_flag_all);
+            states.push(boost::make_shared<bsp_state_t>(), state_flag_all);
+            states.push(boost::make_shared<debug_state_t>(), state_flag_all);
         }
 
         void armada_game_t::app_run_end()

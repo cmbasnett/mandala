@@ -1,13 +1,14 @@
 //std
 #include <array>
 
-//al
-#include "openal.hpp"
+//boost
+#include <boost\make_shared.hpp>
 
 //glm
 #include <glm\ext.hpp>
 
 //mandala
+#include "openal.hpp"
 #include "audio_source.hpp"
 #include "audio_device.hpp"
 #include "audio_context.hpp"
@@ -20,11 +21,11 @@ namespace mandala
 
 	audio_mgr_t::audio_mgr_t()
 	{
-		auto device = std::make_shared<audio_device_t>();
+		auto device = boost::make_shared<audio_device_t>();
 
         devices.push_back(device);
 
-		context = std::make_shared<audio_context_t>(device);
+		context = boost::make_shared<audio_context_t>(device);
 
 		if (alcMakeContextCurrent(*context) == ALC_FALSE)
 		{
@@ -144,14 +145,14 @@ namespace mandala
         alSourceStop(source_id); alCheckError();
     }
 
-    void audio_mgr_t::source_queue_sound(uint32_t source_id, const std::shared_ptr<sound_t>& sound) const
+    void audio_mgr_t::source_queue_sound(uint32_t source_id, const boost::shared_ptr<sound_t>& sound) const
     {
         auto buffer_id = sound->get_buffer_id();
 
         alSourceQueueBuffers(source_id, 1, &buffer_id); alCheckError();
     }
 
-    void audio_mgr_t::source_unqueue_sound(uint32_t source_id, const std::shared_ptr<sound_t>& sound) const
+    void audio_mgr_t::source_unqueue_sound(uint32_t source_id, const boost::shared_ptr<sound_t>& sound) const
     {
         auto buffer_id = sound->get_buffer_id();
 

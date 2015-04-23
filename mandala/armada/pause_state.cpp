@@ -25,13 +25,13 @@ namespace mandala
     {
 		pause_state_t::pause_state_t()
         {
-            auto scroll = std::make_shared<gui_scroll_t>();
+            auto scroll = boost::make_shared<gui_scroll_t>();
             scroll->set_dock_mode(gui_dock_mode_e::fill);
             scroll->set_scroll_extents(aabb2_t(vec2_t(-512, 0), vec2_t(512, 0)));
 
             for (auto i = 0; i < 2; ++i)
             {
-                auto e = std::make_shared<gui_element_t>();
+                auto e = boost::make_shared<gui_element_t>();
 
                 scroll->adopt(e);
             }

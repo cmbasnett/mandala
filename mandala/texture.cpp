@@ -3,6 +3,9 @@
 #include "image.hpp"
 #include "gpu.hpp"
 
+//mandala
+#include <boost\make_shared.hpp>
+
 namespace mandala
 {
     texture_t::texture_t(color_type_e color_type, const size_type& size, const void* data) :
@@ -12,7 +15,7 @@ namespace mandala
         id = gpu.create_texture(color_type, size, data);
 	}
 
-    texture_t::texture_t(const std::shared_ptr<image_t>& image) :
+    texture_t::texture_t(const boost::shared_ptr<image_t>& image) :
         texture_t(image->get_color_type(),
                   image->get_size(),
                   image->get_data().data())
@@ -20,7 +23,7 @@ namespace mandala
     }
 
     texture_t::texture_t(std::istream& istream) :
-        texture_t(std::make_shared<image_t>(istream))
+        texture_t(boost::make_shared<image_t>(istream))
     {
     }
 

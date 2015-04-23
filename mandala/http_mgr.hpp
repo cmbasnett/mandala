@@ -26,7 +26,7 @@ namespace mandala
 
 		http_mgr_t() = default;
 
-		std::list<std::shared_ptr<request_t>> requests;
+		std::list<boost::shared_ptr<request_t>> requests;
 
 		void get(const std::string& url);
 	};

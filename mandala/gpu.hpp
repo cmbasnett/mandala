@@ -2,7 +2,6 @@
 
 //std
 #include <stack>
-#include <memory>
 #include <array>
 #include <vector>
 #include <map>
@@ -16,6 +15,8 @@
 
 //boost
 #include <boost\optional.hpp>
+#include <boost\shared_ptr.hpp>
+#include <boost\weak_ptr.hpp>
 
 namespace mandala
 {
@@ -174,7 +175,7 @@ namespace mandala
 		//programs
         struct program_mgr_t
         {
-            typedef std::weak_ptr<gpu_program_t> weak_type;
+            typedef boost::weak_ptr<gpu_program_t> weak_type;
 
             boost::optional<weak_type> top() const;
             void push(const weak_type& data);
@@ -187,8 +188,8 @@ namespace mandala
 		//frame buffers
         struct frame_buffer_mgr_t
         {
-            typedef std::weak_ptr<frame_buffer_t> weak_type;
-            typedef std::shared_ptr<frame_buffer_t> shared_type;
+            typedef boost::weak_ptr<frame_buffer_t> weak_type;
+            typedef boost::shared_ptr<frame_buffer_t> shared_type;
 
             boost::optional<weak_type> top() const;
             void push(const shared_type& frame_buffer);
@@ -203,8 +204,8 @@ namespace mandala
         {
             const static auto texture_count = 32;
 
-            typedef std::weak_ptr<texture_t> weak_type;
-            typedef std::shared_ptr<texture_t> shared_type;
+            typedef boost::weak_ptr<texture_t> weak_type;
+            typedef boost::shared_ptr<texture_t> shared_type;
             typedef index_type<texture_count>::type index_type;
 
             weak_type get(index_type index) const;
@@ -229,7 +230,7 @@ namespace mandala
 		//buffers
         struct buffer_mgr_t
         {
-            typedef std::shared_ptr<gpu_buffer_t> buffer_type;
+            typedef boost::shared_ptr<gpu_buffer_t> buffer_type;
 
             void put(buffer_type& buffer);
             void erase(buffer_type& buffer);
@@ -370,11 +371,11 @@ namespace mandala
 		gpu_id_t create_buffer();
 		void destroy_buffer(gpu_id_t id);
 
-		gpu_id_t create_frame_buffer(gpu_frame_buffer_type_e type, const gpu_frame_buffer_size_type& size, std::shared_ptr<texture_t>& color_texture, std::shared_ptr<texture_t>& depth_stencil_texture, std::shared_ptr<texture_t>& depth_texture);
+		gpu_id_t create_frame_buffer(gpu_frame_buffer_type_e type, const gpu_frame_buffer_size_type& size, boost::shared_ptr<texture_t>& color_texture, boost::shared_ptr<texture_t>& depth_stencil_texture, boost::shared_ptr<texture_t>& depth_texture);
 		void destroy_frame_buffer(gpu_id_t id);
 
         gpu_id_t create_texture(color_type_e color_type, vec2_u32_t size, const void* data);
-        void resize_texture(const std::shared_ptr<texture_t>& texture, vec2_u32_t size);
+        void resize_texture(const boost::shared_ptr<texture_t>& texture, vec2_u32_t size);
         void destroy_texture(gpu_id_t id);
 
         gpu_location_t get_uniform_location(gpu_id_t program_id, const char* name) const;
@@ -407,7 +408,7 @@ namespace mandala
         const std::string& get_shading_language_version() const;
         const std::string& get_extensions() const;
 
-        void get_texture_data(const std::shared_ptr<texture_t>& texture, std::vector<uint8_t>& data, int32_t level = 0);
+        void get_texture_data(const boost::shared_ptr<texture_t>& texture, std::vector<uint8_t>& data, int32_t level = 0);
 	};
 
     extern gpu_t gpu;

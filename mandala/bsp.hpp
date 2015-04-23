@@ -1,7 +1,6 @@
 #pragma once
 
 //std
-#include <memory>
 #include <vector>
 #include <map>
 
@@ -16,6 +15,7 @@
 #include "bsp_entity.hpp"
 
 //boost
+#include <boost\shared_ptr.hpp>
 #include <boost\dynamic_bitset.hpp>
 #include <boost\lexical_cast.hpp>
 #include <boost\optional.hpp>
@@ -241,7 +241,7 @@ namespace mandala
         std::vector<leaf_t> leafs;
         std::vector<uint16_t> mark_surfaces;
         std::vector<texture_info_t> texture_infos;
-        std::vector<std::shared_ptr<texture_t>> face_lightmap_textures;
+        std::vector<boost::shared_ptr<texture_t>> face_lightmap_textures;
         std::vector<clip_node_t> clip_nodes;
         std::vector<model_t> models;
         std::vector<bsp_entity_t> entities;
@@ -249,10 +249,10 @@ namespace mandala
         std::map<size_t, boost::dynamic_bitset<>> leaf_pvs_map;
         std::vector<size_t> face_start_indices;
         size_t vis_leaf_count = 0;
-        std::vector<std::shared_ptr<texture_t>> textures;
+        std::vector<boost::shared_ptr<texture_t>> textures;
         render_stats_t render_stats;
-        std::shared_ptr<vertex_buffer_type> vertex_buffer;
-        std::shared_ptr<index_buffer_type> index_buffer;
+        boost::shared_ptr<vertex_buffer_type> vertex_buffer;
+        boost::shared_ptr<index_buffer_type> index_buffer;
 
         bsp_t(const bsp_t&) = delete;
         bsp_t& operator=(const bsp_t&) = delete;

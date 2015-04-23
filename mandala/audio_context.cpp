@@ -7,7 +7,7 @@
 
 namespace mandala
 {
-    audio_context_t::audio_context_t(const std::shared_ptr<audio_device_t>& device)
+    audio_context_t::audio_context_t(const boost::shared_ptr<audio_device_t>& device)
     {
         if (device == nullptr)
         {

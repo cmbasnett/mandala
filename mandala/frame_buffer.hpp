@@ -1,8 +1,10 @@
 #pragma once
 
 //std
-#include <memory>
 #include <map>
+
+//boost
+#include <boost\shared_ptr.hpp>
 
 //mandala
 #include "types.hpp"
@@ -16,9 +18,9 @@ namespace mandala
     {
     public:
         gpu_id_t get_id() const { return id; }
-        const std::shared_ptr<texture_t>& get_color_texture() const { return color_texture; }
-        const std::shared_ptr<texture_t>& get_depth_texture() const { return depth_texture; }
-        const std::shared_ptr<texture_t>& get_depth_stencil_texture() const { return depth_stencil_texture; }
+        const boost::shared_ptr<texture_t>& get_color_texture() const { return color_texture; }
+        const boost::shared_ptr<texture_t>& get_depth_texture() const { return depth_texture; }
+        const boost::shared_ptr<texture_t>& get_depth_stencil_texture() const { return depth_stencil_texture; }
         const gpu_frame_buffer_size_type& get_size() const { return size; }
         gpu_frame_buffer_type_e get_type() const { return type; }
 
@@ -31,9 +33,9 @@ namespace mandala
 
     private:
         gpu_id_t id;
-        std::shared_ptr<texture_t> color_texture;
-        std::shared_ptr<texture_t> depth_texture;
-        std::shared_ptr<texture_t> depth_stencil_texture;
+        boost::shared_ptr<texture_t> color_texture;
+        boost::shared_ptr<texture_t> depth_texture;
+        boost::shared_ptr<texture_t> depth_stencil_texture;
         gpu_frame_buffer_size_type size;
         gpu_frame_buffer_type_e type;
 

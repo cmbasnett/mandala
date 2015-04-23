@@ -18,9 +18,9 @@ namespace mandala
 
 			virtual void on_input_event(input_event_t& input_event) override;
 
-			std::shared_ptr<gui_node_t> root_node;
-			std::shared_ptr<gui_label_t> output_label;
-            std::shared_ptr<gui_label_t> input_label;
+			boost::shared_ptr<gui_node_t> root_node;
+			boost::shared_ptr<gui_label_t> output_label;
+            boost::shared_ptr<gui_label_t> input_label;
 
             static rgb_type echo_color;
 			static rgb_type warning_color;

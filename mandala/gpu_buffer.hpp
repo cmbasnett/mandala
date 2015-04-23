@@ -1,14 +1,14 @@
 #pragma once
 
-//std
-#include <memory>
+//boost
+#include <boost/enable_shared_from_this.hpp>
 
 //mandala
 #include "gpu_defs.hpp"
 
 namespace mandala
 {
-    struct gpu_buffer_t : std::enable_shared_from_this<gpu_buffer_t>
+    struct gpu_buffer_t : boost::enable_shared_from_this<gpu_buffer_t>
     {
         gpu_id_t get_id() const { return id; }
 

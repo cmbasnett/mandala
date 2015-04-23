@@ -59,7 +59,7 @@ namespace mandala
 
 	void http_mgr_t::get(const std::string& url)
 	{
-		auto request = std::make_shared<request_t>(url, [](const std::string& response)
+		auto request = boost::make_shared<request_t>(url, [](const std::string& response)
 		{
 			std::cout << response;
 		});

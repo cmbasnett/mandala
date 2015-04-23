@@ -2,6 +2,9 @@
 #include <iostream>
 #include <fstream>
 
+//boost
+#include <boost\make_shared.hpp>
+
 //mandala
 #include "opengl.hpp"
 #include "gpu.hpp"
@@ -387,7 +390,7 @@ namespace mandala
 		glDeleteBuffers(1, &id); glCheckError();
 	}
 
-	gpu_id_t gpu_t::create_frame_buffer(gpu_frame_buffer_type_e type, const gpu_frame_buffer_size_type& size, std::shared_ptr<texture_t>& color_texture, std::shared_ptr<texture_t>& depth_stencil_texture, std::shared_ptr<texture_t>& depth_texture)
+	gpu_id_t gpu_t::create_frame_buffer(gpu_frame_buffer_type_e type, const gpu_frame_buffer_size_type& size, boost::shared_ptr<texture_t>& color_texture, boost::shared_ptr<texture_t>& depth_stencil_texture, boost::shared_ptr<texture_t>& depth_texture)
 	{
 		gpu_id_t id;
 
@@ -399,7 +402,7 @@ namespace mandala
 		//color
 		if ((type_flags & gpu_frame_buffer_type_flag_color) == gpu_frame_buffer_type_flag_color)
 		{
-			color_texture = std::make_shared<texture_t>(color_type_e::rgb, size, nullptr);
+			color_texture = boost::make_shared<texture_t>(color_type_e::rgb, size, nullptr);
 
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture->get_id(), 0); glCheckError();
 		}
@@ -412,14 +415,14 @@ namespace mandala
 		//depth & stencil
 		if ((type_flags & (gpu_frame_buffer_type_flag_depth | gpu_frame_buffer_type_flag_stencil)) == (gpu_frame_buffer_type_flag_depth | gpu_frame_buffer_type_flag_stencil))
 		{
-			depth_stencil_texture = std::make_shared<texture_t>(color_type_e::depth_stencil, size, nullptr);
+			depth_stencil_texture = boost::make_shared<texture_t>(color_type_e::depth_stencil, size, nullptr);
 
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depth_stencil_texture->get_id(), 0); glCheckError();
 		}
 		//depth
 		else if ((type_flags & gpu_frame_buffer_type_flag_depth) == gpu_frame_buffer_type_flag_depth)
 		{
-			depth_texture = std::make_shared<texture_t>(color_type_e::depth, size, nullptr);
+			depth_texture = boost::make_shared<texture_t>(color_type_e::depth, size, nullptr);
 
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_texture->get_id(), 0); glCheckError();
 		}
@@ -464,7 +467,7 @@ namespace mandala
         return id;
     }
 
-    void gpu_t::resize_texture(const std::shared_ptr<texture_t>& texture, vec2_u32_t size)
+    void gpu_t::resize_texture(const boost::shared_ptr<texture_t>& texture, vec2_u32_t size)
     {
         texture_t::format_type internal_format, format;
         texture_t::type_type type;
@@ -1208,7 +1211,7 @@ namespace mandala
         return extensions;
     }
 
-    void gpu_t::get_texture_data(const std::shared_ptr<texture_t>& texture, std::vector<uint8_t>& data, int32_t level)
+    void gpu_t::get_texture_data(const boost::shared_ptr<texture_t>& texture, std::vector<uint8_t>& data, int32_t level)
     {
         int32_t internal_format, format, type;
 

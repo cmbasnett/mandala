@@ -9,10 +9,12 @@
 
 //std
 #include <vector>
-#include <memory>
 #include <map>
 #include <set>
 #include <vector>
+
+//boost
+#include <boost\shared_ptr.hpp>
 
 namespace mandala
 {
@@ -91,7 +93,7 @@ namespace mandala
         uint8_t get_green_channel() const { return green_channel; }
         uint8_t get_blue_channel() const { return blue_channel; }
         const std::map<character_id_type, character_t>& get_characters() const { return characters; }
-        const std::vector<std::shared_ptr<texture_t>> get_page_textures() const { return page_textures; }
+        const std::vector<boost::shared_ptr<texture_t>> get_page_textures() const { return page_textures; }
 
 	private:
         int16_t size = 0;
@@ -121,9 +123,9 @@ namespace mandala
         std::map<character_id_type, size_t> character_indices;
         std::map<character_id_type, character_t> characters;
         std::vector<kerning_pair_t> kerning_pairs;
-        std::shared_ptr<vertex_buffer_type> vertex_buffer;
-        std::shared_ptr<index_buffer_type> index_buffer;
-        std::vector<std::shared_ptr<texture_t>> page_textures;
+        boost::shared_ptr<vertex_buffer_type> vertex_buffer;
+        boost::shared_ptr<index_buffer_type> index_buffer;
+        std::vector<boost::shared_ptr<texture_t>> page_textures;
 
         int16_t get_kerning_amount(char_type lhs, char_type rhs) const;
 

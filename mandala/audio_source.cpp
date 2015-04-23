@@ -68,12 +68,12 @@ namespace mandala
         audio.stop_source(id);
 	}
 
-	void audio_source_t::queue_sound(const std::shared_ptr<sound_t>& sound)
+	void audio_source_t::queue_sound(const boost::shared_ptr<sound_t>& sound)
 	{
         audio.source_queue_sound(id, sound);
 	}
 
-    void audio_source_t::unqueue_sound(const std::shared_ptr<sound_t>& sound)
+    void audio_source_t::unqueue_sound(const boost::shared_ptr<sound_t>& sound)
 	{
         audio.source_unqueue_sound(id, sound);
 	}

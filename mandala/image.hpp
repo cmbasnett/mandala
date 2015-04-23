@@ -3,8 +3,10 @@
 //std
 #include <istream>
 #include <vector>
-#include <memory>
 #include <mutex>
+
+//boost
+#include <boost\shared_ptr.hpp>
 
 //mandala
 #include "resource.hpp"

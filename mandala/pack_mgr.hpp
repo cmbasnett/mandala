@@ -14,7 +14,7 @@ namespace mandala
 		void mount(const std::string& path);
 		void unmount_all();
 
-		std::shared_ptr<std::istream> extract(const hash_t& hash);
+		boost::shared_ptr<std::istream> extract(const hash_t& hash);
 
 	private:
         std::recursive_mutex mutex;

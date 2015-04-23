@@ -4,7 +4,9 @@
 #include <chrono>
 #include <array>
 #include <deque>
-#include <memory>
+
+//boost
+#include <boost\shared_ptr.hpp>
 
 //mandala
 #include "platform.hpp"
@@ -38,13 +40,13 @@ namespace mandala
             fps_type fps = fps_type(0);
         };
 
-        const std::shared_ptr<game_t> get_game() const { return game; }
+        const boost::shared_ptr<game_t> get_game() const { return game; }
         const performance_t& get_performance() const { return performance; }
         std::chrono::system_clock::duration get_frame_duration() const { return frame_duration; }
 
         app_t();
 
-        void run(std::shared_ptr<game_t> game);
+        void run(boost::shared_ptr<game_t> game);
         void exit();
         void reset();
 
@@ -53,7 +55,7 @@ namespace mandala
     private:
         bool is_exiting = false;
         bool is_resetting = false;
-        std::shared_ptr<game_t> game;
+        boost::shared_ptr<game_t> game;
         performance_t performance;
         std::chrono::system_clock::time_point run_time_point;
         std::chrono::milliseconds frame_duration;

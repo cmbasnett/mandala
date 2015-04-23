@@ -1,7 +1,7 @@
 #pragma once
 
-//std
-#include <memory>
+//boost
+#include <boost\enable_shared_from_this.hpp>
 
 //mandala
 #include "types.hpp"
@@ -9,7 +9,7 @@
 
 namespace mandala
 {
-	struct gpu_program_t : std::enable_shared_from_this<gpu_program_t>
+	struct gpu_program_t : boost::enable_shared_from_this<gpu_program_t>
 	{
 		virtual ~gpu_program_t();
 

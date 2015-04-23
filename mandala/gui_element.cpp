@@ -1,3 +1,6 @@
+//boost
+#include <boost\make_shared.hpp>
+
 //mandala
 #include "gui_element.hpp"
 #include "gui_image.hpp"
@@ -10,10 +13,10 @@ namespace mandala
         set_padding(padding_t(8));
         set_dock_mode(gui_dock_mode_e::left);
 
-        auto image = std::make_shared<gui_image_t>();
+        auto image = boost::make_shared<gui_image_t>();
         image->set_dock_mode(gui_dock_mode_e::fill);
         image->set_sprite(sprite_t(hash_t("crono.tpsb"), hash_t("chrono_08.gif")));
-        image->set_is_autosized_to_texture(true);
+        image->set_is_autosized_to_sprite(true);
 
         adopt(image);
     }

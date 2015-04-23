@@ -13,7 +13,7 @@
 
 namespace mandala
 {
-	model_t::model_t(std::shared_ptr<model_info_t> model) :
+	model_t::model_t(boost::shared_ptr<model_info_t> model) :
 		model(model)
 	{
 		//TODO: kind of ham-fisted, find a better way to do this?

@@ -23,7 +23,7 @@ namespace mandala
 {
 	debug_state_t::debug_state_t()
 	{
-		label = std::make_shared<gui_label_t>();
+		label = boost::make_shared<gui_label_t>();
 		label->set_bitmap_font(resources.get<bitmap_font_t>(hash_t("unifont_16.fnt")));
 		label->set_dock_mode(gui_dock_mode_e::fill);
 		label->set_vertical_alignment(gui_label_t::vertical_alignment_e::bottom);

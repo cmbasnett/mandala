@@ -1,6 +1,9 @@
 //std
 #include <chrono>
 
+//boost
+#include <boost\make_shared.hpp>
+
 //mandala
 #include "gui_canvas.hpp"
 #include "gpu.hpp"
@@ -89,7 +92,7 @@ namespace mandala
 
         if (!frame_buffer)
         {
-            frame_buffer = std::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::color_depth_stencil, frame_buffer_size);
+            frame_buffer = boost::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::color_depth_stencil, frame_buffer_size);
         }
         else if(frame_buffer_size != frame_buffer->get_size())
         {

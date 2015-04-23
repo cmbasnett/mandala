@@ -5,9 +5,11 @@
 
 //std
 #include <vector>
-#include <memory>
 #include <queue>
 #include <list>
+
+//boost
+#include <boost\shared_ptr.hpp>
 
 namespace mandala
 {
@@ -36,7 +38,7 @@ namespace mandala
 
 	struct state_mgr_t
 	{
-		typedef std::shared_ptr<state_t> state_type;
+		typedef boost::shared_ptr<state_t> state_type;
 
 		struct node_t
 		{

@@ -3,7 +3,10 @@
 //std
 #include <typeindex>
 #include <map>
-#include <memory>
+
+//boost
+#include <boost\shared_ptr.hpp>
+#include <boost\make_shared.hpp>
 
 //mandala
 #include "gpu_program.hpp"
@@ -13,11 +16,11 @@ namespace mandala
 	struct gpu_program_mgr_t
 	{
 		template<typename T = std::enable_if<is_gpu_program<T>::value, T>::type>
-        std::shared_ptr<T> make()
+        boost::shared_ptr<T> make()
 		{
 			static const std::type_index type_index = typeid(T);
 
-            const auto gpu_program = std::make_shared<T>();
+            const auto gpu_program = boost::make_shared<T>();
 
 			gpu_programs.insert(std::make_pair(type_index, gpu_program));
 
@@ -25,7 +28,7 @@ namespace mandala
 		}
 
         template<typename T = std::enable_if<is_gpu_program<T>::value, T>::type>
-        std::shared_ptr<T> get()
+        boost::shared_ptr<T> get()
 		{
 			static const std::type_index type_index = typeid(T);
 
@@ -36,13 +39,13 @@ namespace mandala
                 throw std::out_of_range("");
 			}
 
-            return std::static_pointer_cast<T, gpu_program_t>(gpu_programs_itr->second);
+            return boost::static_pointer_cast<T, gpu_program_t>(gpu_programs_itr->second);
 		}
 
         void purge();
 
 	private:
-		std::map<std::type_index, std::shared_ptr<gpu_program_t>> gpu_programs;
+		std::map<std::type_index, boost::shared_ptr<gpu_program_t>> gpu_programs;
 	};
 
 	extern gpu_program_mgr_t gpu_programs;

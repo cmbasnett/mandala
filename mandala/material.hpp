@@ -15,25 +15,25 @@ namespace mandala
 	{
 		struct diffuse_t
 		{
-			std::shared_ptr<texture_t> texture;
+			boost::shared_ptr<texture_t> texture;
 			vec4_t color = vec4_t(1.0f);
 		};
 
 		struct normal_t
 		{
-			std::shared_ptr<texture_t> texture;
+			boost::shared_ptr<texture_t> texture;
 		};
 
 		struct specular_t
 		{
-			std::shared_ptr<texture_t> texture;
+			boost::shared_ptr<texture_t> texture;
 			rgba_type color = rgba_type(1);
 			float32_t intensity = 1.0f;
 		};
 
 		struct emissive_t
 		{
-			std::shared_ptr<texture_t> texture;
+			boost::shared_ptr<texture_t> texture;
 			rgba_type color = rgba_type(1);
 			float32_t intensity = 1.0f;
 		};

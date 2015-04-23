@@ -1,7 +1,7 @@
 #pragma once
 
-//std
-#include <memory>
+//boost
+#include <boost\shared_ptr.hpp>
 
 //mandala
 #include "gpu_program.hpp"

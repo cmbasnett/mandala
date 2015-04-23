@@ -3,9 +3,12 @@
 //std
 #include <fstream>
 #include <map>
-#include <memory>
 #include <mutex>
 #include <typeindex>
+
+//boost
+#include <boost\shared_ptr.hpp>
+#include <boost\make_shared.hpp>
 
 //mandala
 #include "hash.hpp"
@@ -16,7 +19,7 @@ namespace mandala
 {
 	struct resource_mgr_t : public pack_mgr_t
 	{
-		typedef std::map<hash_t, std::shared_ptr<resource_t>> resource_map_type;
+		typedef std::map<hash_t, boost::shared_ptr<resource_t>> resource_map_type;
 
 		size_t count() const;
 
@@ -38,7 +41,7 @@ namespace mandala
 		}
 
 		template<typename T = std::enable_if<is_resource<T>::value, T>::type>
-		std::shared_ptr<T> get(const hash_t& hash)
+		boost::shared_ptr<T> get(const hash_t& hash)
 		{
 			static const std::type_index type_index = typeid(T);
 
@@ -63,12 +66,12 @@ namespace mandala
 
                 resource->last_access_time = resource_t::clock_type::now();
 
-				return std::static_pointer_cast<T, resource_t>(resource);
+				return boost::static_pointer_cast<T, resource_t>(resource);
 			}
 
 			auto istream = extract(hash);
 
-			auto resource = std::make_shared<T>(*istream);
+			auto resource = boost::make_shared<T>(*istream);
 
 			resource->hash = hash;
 
@@ -78,7 +81,7 @@ namespace mandala
 		}
 
 		template<typename T = std::enable_if<is_resource<T>::value, T>::type>
-		void put(std::shared_ptr<T> resource, const hash_t& hash)
+		void put(boost::shared_ptr<T> resource, const hash_t& hash)
 		{
 			static const std::type_index type_index = typeid(T);
 
@@ -94,7 +97,7 @@ namespace mandala
 
 			auto& resources = type_resources[type_index];
 
-			const auto resources_itr = std::find_if(resources.begin(), resources.end(), [&](const std::pair<hash_t, std::shared_ptr<resource_t>>& pair)
+			const auto resources_itr = std::find_if(resources.begin(), resources.end(), [&](const std::pair<hash_t, boost::shared_ptr<resource_t>>& pair)
 			{
 				return resource == pair.second;
 			});

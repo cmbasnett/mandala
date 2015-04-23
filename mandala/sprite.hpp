@@ -1,5 +1,8 @@
 #pragma once
 
+//boost
+#include <boost\shared_ptr.hpp>
+
 //mandala
 #include "sprite_set.hpp"
 
@@ -19,7 +22,7 @@ namespace mandala
 	struct sprite_t
 	{
 		typedef sprite_set_t::region_t region_type;
-		typedef std::shared_ptr<sprite_set_t> sprite_set_type;
+		typedef boost::shared_ptr<sprite_set_t> sprite_set_type;
 
 		sprite_t(const hash_t& sprite_set_hash, const hash_t& region_hash);
 		sprite_t(const sprite_ref_t& sprite_def);

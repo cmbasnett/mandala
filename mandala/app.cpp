@@ -21,6 +21,7 @@
 #include "http_mgr.hpp"
 #include "state_mgr.hpp"
 #include "gpu_buffer_mgr.hpp"
+#include "python_mgr.hpp"
 
 namespace mandala
 {
@@ -30,7 +31,7 @@ namespace mandala
     {
     }
 
-	void app_t::run(std::shared_ptr<game_t> game_)
+	void app_t::run(boost::shared_ptr<game_t> game_)
 	{
 		begin:
 		using namespace std::chrono;
@@ -79,6 +80,7 @@ namespace mandala
 
 		game->app_run_end();
 
+        python.purge();
 		states.purge();
         states.tick(0); //TODO: hack to avoid exceptions throwing on close due to unreleased state objects, find a better solution later
 		resources.purge();

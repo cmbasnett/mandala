@@ -3,13 +3,15 @@
 //std
 #include <map>
 #include <vector>
-#include <memory>
 #include <string>
 #include <mutex>
 
 //mandala
 #include "types.hpp"
 #include "hash.hpp"
+
+//boost
+#include <boost\shared_ptr.hpp>
 
 namespace mandala
 {
@@ -38,7 +40,7 @@ namespace mandala
 
     private:
         std::recursive_mutex mutex;
-        std::vector<std::shared_ptr<std::istream>> streams;
+        std::vector<boost::shared_ptr<std::istream>> streams;
 		std::map<language_type, strings_type> language_strings;
     };
 

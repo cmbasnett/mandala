@@ -42,17 +42,17 @@ namespace mandala
         std::mt19937 mt19937;
 
         bsp_state_t::bsp_state_t() :
-            pause_state(std::make_shared<pause_state_t>()),
-            console_state(std::make_shared<console_state_t>()),
+            pause_state(boost::make_shared<pause_state_t>()),
+            console_state(boost::make_shared<console_state_t>()),
             bsp(resources.get<bsp_t>(hash_t("dod_flash.bsp"))),
-            model(std::make_shared<model_t>(hash_t("boblampclean.md5m")))
+            model(boost::make_shared<model_t>(hash_t("boblampclean.md5m")))
         {
             model->play(hash_t("boblampclean.md5a"));
 
 			camera.speed_max = 512;
 			camera.far = 8192;
 
-            debug_label = std::make_shared<gui_label_t>();
+            debug_label = boost::make_shared<gui_label_t>();
             debug_label->set_bitmap_font(resources.get<bitmap_font_t>(hash_t("unifont_16.fnt")));
             debug_label->set_color(rgba_type(1));
             debug_label->set_dock_mode(gui_dock_mode_e::fill);
@@ -60,15 +60,15 @@ namespace mandala
             debug_label->set_justification(gui_label_t::justification_e::left);
             debug_label->set_padding(padding_t(16));
 
-            crosshair_image = std::make_shared<gui_image_t>();
-			crosshair_image->set_is_autosized_to_texture(true);
+            crosshair_image = boost::make_shared<gui_image_t>();
+			crosshair_image->set_is_autosized_to_sprite(true);
             crosshair_image->set_sprite(sprite_t(hash_t("crosshairs.tpsb"), hash_t("crosshair5.png")));
 			crosshair_image->set_anchor_flags(gui_anchor_flag_all);
 
-			bsp_image = std::make_shared<gui_image_t>();
+			bsp_image = boost::make_shared<gui_image_t>();
 			bsp_image->set_dock_mode(gui_dock_mode_e::fill);
 
-            bsp_canvas = std::make_shared<gui_canvas_t>();
+            bsp_canvas = boost::make_shared<gui_canvas_t>();
             bsp_canvas->set_dock_mode(gui_dock_mode_e::fill);
             bsp_canvas->adopt(bsp_image);
             bsp_canvas->adopt(crosshair_image);
@@ -165,7 +165,7 @@ namespace mandala
                 gpu.get_texture_data(texture, data);
 
                 std::ofstream ostream = std::ofstream("screenshot.png", std::ios::binary);
-                auto image = std::make_shared<image_t>(texture->get_size(), 8, texture->get_color_type(), data.data(), data.size());
+                auto image = boost::make_shared<image_t>(texture->get_size(), 8, texture->get_color_type(), data.data(), data.size());
                 ostream << *image;
 
                 auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - begin);
@@ -240,7 +240,7 @@ namespace mandala
 
                     const auto& sound = resources.get<sound_t>(hash_t("garand_shoot.wav"));
 
-                    auto source = std::make_shared<audio_source_t>();
+                    auto source = boost::make_shared<audio_source_t>();
 					source->set_location(camera.location);
 					source->set_max_distance(500.0f);
 					source->set_reference_distance(250.0f);
@@ -275,8 +275,8 @@ namespace mandala
         {
             gui_state_t::on_enter();
 
-            bsp_frame_buffer = std::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::color_depth, static_cast<gpu_frame_buffer_size_type>(layout->get_bounds().size()));
-            auto sprite_set = std::make_shared<sprite_set_t>(bsp_frame_buffer->get_color_texture());
+            bsp_frame_buffer = boost::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::color_depth, static_cast<gpu_frame_buffer_size_type>(layout->get_bounds().size()));
+            auto sprite_set = boost::make_shared<sprite_set_t>(bsp_frame_buffer->get_color_texture());
             sprite_t sprite(sprite_set, sprite_set->get_regions().begin()->second.hash);
             bsp_image->set_sprite(sprite);
         }
@@ -290,7 +290,7 @@ namespace mandala
             {
                 bsp_frame_buffer->set_size(static_cast<gpu_frame_buffer_size_type>(layout->get_bounds().size()));
 
-                auto sprite_set = std::make_shared<sprite_set_t>(bsp_frame_buffer->get_color_texture());
+                auto sprite_set = boost::make_shared<sprite_set_t>(bsp_frame_buffer->get_color_texture());
                 sprite_t sprite(sprite_set, sprite_set->get_regions().begin()->second.hash);
                 bsp_image->set_sprite(sprite);
             }

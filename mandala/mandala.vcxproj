@@ -282,6 +282,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="pose.hpp" />
     <ClInclude Include="python_defs.hpp" />
     <ClInclude Include="python_mgr.hpp" />
+    <ClInclude Include="python_optional.hpp" />
     <ClInclude Include="range.hpp" />
     <ClInclude Include="sound.hpp" />
     <ClInclude Include="sphere.hpp" />

@@ -19,8 +19,8 @@ namespace mandala
         typedef vertex_buffer_t<basic_gpu_vertex_t> vertex_buffer_type;
         typedef index_buffer_t<uint8_t> index_buffer_type;
 
-        static std::weak_ptr<vertex_buffer_type> vertex_buffer;
-        static std::weak_ptr<index_buffer_type> index_buffer;
+        static boost::weak_ptr<vertex_buffer_type> vertex_buffer;
+        static boost::weak_ptr<index_buffer_type> index_buffer;
 
         if (vertex_buffer.expired())
         {

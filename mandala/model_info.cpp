@@ -130,7 +130,7 @@ namespace mandala
 
         for (auto& mesh_info : mesh_infos)
         {
-            auto mesh = std::make_shared<mesh_t>();
+            auto mesh = boost::make_shared<mesh_t>();
 
             //index count
             mesh->index_count = mesh_info.indices.size();
@@ -229,10 +229,10 @@ namespace mandala
                 }
             }
 
-            mesh->vertex_buffer = std::make_shared<mesh_t::vertex_buffer_type>();
+            mesh->vertex_buffer = boost::make_shared<mesh_t::vertex_buffer_type>();
             mesh->vertex_buffer->data(vertices, gpu_t::buffer_usage_e::static_draw);
 
-            mesh->index_buffer = std::make_shared<mesh_t::index_buffer_type>();
+            mesh->index_buffer = boost::make_shared<mesh_t::index_buffer_type>();
             mesh->index_buffer->data(mesh_info.indices, gpu_t::buffer_usage_e::static_draw);
 
             meshes.push_back(mesh);

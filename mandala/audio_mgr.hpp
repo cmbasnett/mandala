@@ -1,10 +1,12 @@
 #pragma once
 
 //std
-#include <memory>
 #include <map>
 #include <vector>
 #include <array>
+
+//boost
+#include <boost\shared_ptr.hpp>
 
 //mandala
 #include "index_type.hpp"
@@ -38,7 +40,7 @@ namespace mandala
 		static const int channel_count = 16;
 
 		typedef index_type<channel_count>::type channel_index_type;
-        typedef std::map<uint32_t, std::shared_ptr<audio_source_t>> sources_type;
+        typedef std::map<uint32_t, boost::shared_ptr<audio_source_t>> sources_type;
 
 		audio_mgr_t();
 
@@ -62,15 +64,15 @@ namespace mandala
         void rewind_source(uint32_t source_id) const;
         void stop_source(uint32_t source_id) const;
 
-        void source_queue_sound(uint32_t source_id, const std::shared_ptr<sound_t>& sound) const;
-        void source_unqueue_sound(uint32_t source_id, const std::shared_ptr<sound_t>& sound) const;
+        void source_queue_sound(uint32_t source_id, const boost::shared_ptr<sound_t>& sound) const;
+        void source_unqueue_sound(uint32_t source_id, const boost::shared_ptr<sound_t>& sound) const;
 
         const sources_type& get_sources() const { return sources; }
 
 	private:
-		std::shared_ptr<audio_context_t> context;
+		boost::shared_ptr<audio_context_t> context;
         sources_type sources;
-        std::vector<std::shared_ptr<audio_device_t>> devices;
+        std::vector<boost::shared_ptr<audio_device_t>> devices;
 	};
 
 	extern audio_mgr_t audio;

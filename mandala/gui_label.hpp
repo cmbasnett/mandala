@@ -2,8 +2,10 @@
 
 //std
 #include <string>
-#include <memory>
 #include <vector>
+
+//boost
+#include <boost\shared_ptr.hpp>
 
 //mandala
 #include "gui_node.hpp"
@@ -40,7 +42,7 @@ namespace mandala
 		const string_type& get_string() const { return string; }
 		string_type get_string_escaped() const;
 		string_type get_string_sanitized() const;
-		const std::shared_ptr<bitmap_font_t>& get_bitmap_font() const { return bitmap_font; }
+		const boost::shared_ptr<bitmap_font_t>& get_bitmap_font() const { return bitmap_font; }
 		justification_e get_justification() const { return justification; };
 		vertical_alignment_e get_vertical_alignment() const { return vertical_alignment; }
         line_height_type get_line_spacing() const { return line_spacing; }
@@ -53,7 +55,7 @@ namespace mandala
 		size_t get_line_count() const;
 
 		void set_string(const string_type& string) { this->string = string; cursor.string_begin = this->string.begin() + this->string.length(), cursor.string_end = this->string.begin() + this->string.length(); dirty(); }
-		void set_bitmap_font(std::shared_ptr<bitmap_font_t> bitmap_font) { this->bitmap_font = bitmap_font; dirty(); }
+		void set_bitmap_font(boost::shared_ptr<bitmap_font_t> bitmap_font) { this->bitmap_font = bitmap_font; dirty(); }
 		void set_justification(justification_e justification) { this->justification = justification; dirty(); }
 		void set_vertical_alignment(vertical_alignment_e vertical_alignment) { this->vertical_alignment = vertical_alignment; dirty(); }
         void set_line_spacing(line_height_type line_spacing) { this->line_spacing = line_spacing; dirty(); }
@@ -96,7 +98,7 @@ namespace mandala
         void update_cursor();
 
 		string_type string;
-		std::shared_ptr<bitmap_font_t> bitmap_font;
+		boost::shared_ptr<bitmap_font_t> bitmap_font;
 		justification_e justification = justification_e::left;
 		vertical_alignment_e vertical_alignment = vertical_alignment_e::top;
         line_height_type line_spacing = 0;

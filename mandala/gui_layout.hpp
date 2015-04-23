@@ -1,20 +1,24 @@
 #pragma once
 
+//std
+#include <typeindex>
+#include <map>
+
+//boost
+#include <boost\shared_ptr.hpp>
+#include <boost\weak_ptr.hpp>
+
 //mandala
 #include "gui_node.hpp"
 #include "hash.hpp"
 #include "input_event.hpp"
-
-//std
-#include <typeindex>
-#include <map>
 
 namespace mandala
 {
 	struct gui_layout_t : gui_node_t
 	{
 		template<typename T = std::enable_if<std::is_base_of<gui_node_t, T>::value>::type>
-		void put(const hash_t& hash, std::shared_ptr<T> node)
+		void put(const hash_t& hash, boost::shared_ptr<T> node)
 		{
 			static const std::type_index type_index = typeid(T);
 
@@ -22,7 +26,7 @@ namespace mandala
 
 			if (type_nodes_itr == type_nodes.end())
 			{
-				type_nodes.insert(type_nodes.begin(), std::make_pair(type_index, std::map<const hash_t, std::shared_ptr<gui_node_t>>()));
+				type_nodes.insert(type_nodes.begin(), std::make_pair(type_index, std::map<const hash_t, boost::shared_ptr<gui_node_t>>()));
 			}
 
 			auto& nodes = type_nodes.at(type_index);
@@ -36,7 +40,7 @@ namespace mandala
 		}
 
 		template<typename T = std::enable_if<std::is_base_of<gui_node_t, T>::value>::type>
-		std::shared_ptr<T> get(const hash_t& hash)
+		boost::shared_ptr<T> get(const hash_t& hash)
 		{
 			static const std::type_index type_index = typeid(T);
 
@@ -60,7 +64,7 @@ namespace mandala
         virtual void on_input_event(input_event_t& input_event) override;
 
 	private:
-		std::map<std::type_index, std::map<const hash_t, std::shared_ptr<gui_node_t>>> type_nodes;
-        std::map<input_event_t::touch_t::touch_id_type, std::weak_ptr<gui_node_t>> touch_nodes;
+		std::map<std::type_index, std::map<const hash_t, boost::shared_ptr<gui_node_t>>> type_nodes;
+        std::map<input_event_t::touch_t::touch_id_type, boost::weak_ptr<gui_node_t>> touch_nodes;
 	};
 }

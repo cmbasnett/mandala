@@ -5,8 +5,8 @@
 #include "model_skeleton.hpp"
 #include "camera.hpp"
 
-//std
-#include <memory>
+//boost
+#include <boost\shared_ptr.hpp>
 
 namespace mandala
 {
@@ -15,11 +15,11 @@ namespace mandala
 
 	struct model_t
 	{
-		model_t(std::shared_ptr<model_info_t> model);
+		model_t(boost::shared_ptr<model_info_t> model);
         model_t(const hash_t& model_hash);
 
         pose3 pose;
-		const std::shared_ptr<model_info_t> model;
+		const boost::shared_ptr<model_info_t> model;
 
 		void tick(float32_t dt);
 		void render(const camera_t& camera, const vec3_t& light_location) const;
@@ -32,6 +32,6 @@ namespace mandala
         float32_t t = 0.0f;
         std::vector<mat4_t> bone_matrices;
 		model_skeleton_t skeleton;
-        std::shared_ptr<model_animation_t> animation;
+        boost::shared_ptr<model_animation_t> animation;
 	};
 }

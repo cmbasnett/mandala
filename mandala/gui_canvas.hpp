@@ -25,11 +25,11 @@ namespace mandala
         virtual void on_render_end(const mat4_t& world_matrix, const mat4_t& view_projection_matrix) override;
         virtual void on_cleaned() override;
 
-        const std::shared_ptr<frame_buffer_t>& get_frame_buffer() const { return frame_buffer; }
+        const boost::shared_ptr<frame_buffer_t>& get_frame_buffer() const { return frame_buffer; }
 
     private:
-        std::shared_ptr<frame_buffer_t> frame_buffer;
-        std::shared_ptr<vertex_buffer_type> vertex_buffer;
-        std::shared_ptr<index_buffer_type> index_buffer;
+        boost::shared_ptr<frame_buffer_t> frame_buffer;
+        boost::shared_ptr<vertex_buffer_type> vertex_buffer;
+        boost::shared_ptr<index_buffer_type> index_buffer;
     };
 }

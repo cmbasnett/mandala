@@ -1,7 +1,7 @@
 #pragma once
 
-//std
-#include <memory>
+//boost
+#include <boost\shared_ptr.hpp>
 
 //mandala
 #include "../game.hpp"
@@ -24,6 +24,6 @@ namespace mandala
 			virtual void app_render_end();
 		};
 
-        extern std::shared_ptr<armada_game_t> game;
+        extern boost::shared_ptr<armada_game_t> game;
 	};
 };

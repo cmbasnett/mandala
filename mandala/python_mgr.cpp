@@ -43,4 +43,9 @@ namespace mandala
 			throw std::exception(error_string);
 		}
 	}
+
+    void python_mgr_t::purge()
+    {
+        Py_Finalize();
+    }
 }

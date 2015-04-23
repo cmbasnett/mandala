@@ -81,15 +81,15 @@ namespace mandala
     {
         this->sprite = sprite;
 
-        if (sprite && is_autosized_to_texture)
+        if (sprite && is_autosized_to_sprite)
         {
             set_size(static_cast<gui_node_t::size_type>(sprite->get_region().source_size));
         }
     }
 
-    void gui_image_t::set_is_autosized_to_texture(bool is_autosized_to_texture)
+    void gui_image_t::set_is_autosized_to_sprite(bool is_autosized_to_sprite)
     {
-        this->is_autosized_to_texture = is_autosized_to_texture;
+        this->is_autosized_to_sprite = is_autosized_to_sprite;
 
         set_sprite(sprite);
     }

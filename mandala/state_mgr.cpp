@@ -1,7 +1,6 @@
 //mandala
 #include "state_mgr.hpp"
 #include "state.hpp"
-#include "gpu.hpp"
 
 namespace mandala
 {

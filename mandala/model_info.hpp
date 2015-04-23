@@ -32,9 +32,9 @@ namespace mandala
             typedef index_buffer_t<index_type> index_buffer_type;
 
 			size_t index_count = 0;
-            std::shared_ptr<vertex_buffer_type> vertex_buffer;
-            std::shared_ptr<index_buffer_type> index_buffer;
-			std::shared_ptr<material_t> material;
+            boost::shared_ptr<vertex_buffer_type> vertex_buffer;
+            boost::shared_ptr<index_buffer_type> index_buffer;
+			boost::shared_ptr<material_t> material;
 
 			mesh_t() = default;
 
@@ -47,7 +47,7 @@ namespace mandala
 
 		model_info_t(std::istream& istream);
 
-		std::vector<std::shared_ptr<mesh_t>> meshes;
+		std::vector<boost::shared_ptr<mesh_t>> meshes;
 		std::map<hash_t, uint8_t> bone_indices;
 		std::vector<bone_t> bones;
 

@@ -14,6 +14,8 @@ namespace mandala
 
 		void exec(const std::string&);
 
+        void purge();
+
 		boost::python::object main_namespace;
 		boost::python::object main_module;
 	};

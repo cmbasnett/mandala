@@ -8,15 +8,15 @@
 #include "window_event.hpp"
 #endif
 
-//std
-#include <memory>
+//boost
+#include <boost\enable_shared_from_this.hpp>
 
 namespace mandala
 {
 	struct input_event_t;
 	struct state_mgr_t;
 
-	struct state_t : public std::enable_shared_from_this<state_t>
+	struct state_t : public boost::enable_shared_from_this<state_t>
 	{
 		virtual void tick(float32_t dt) { }
 		virtual void render() { }
