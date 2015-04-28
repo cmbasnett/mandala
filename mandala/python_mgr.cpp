@@ -9,18 +9,10 @@ namespace mandala
 {
 	python_mgr_t python;
 
-	python_mgr_t::python_mgr_t()
-	{
-        using namespace boost;
-        using namespace boost::python;
-
+    python_mgr_t::python_mgr_t()
+    {
         PyImport_AppendInittab("mandala", &initmandala);
-
-		Py_Initialize();
-
-		main_module = object(handle<>(borrowed(PyImport_AddModule("__main__"))));
-		main_namespace = main_module.attr("__dict__");
-	}
+    }
 
 	void python_mgr_t::exec(const std::string& string)
 	{
@@ -36,15 +28,33 @@ namespace mandala
 
 			PyErr_Fetch(&type, &value, &traceback);
 
-			auto error_string = PyString_AsString(value);
+            std::string error_string;
+            
+            auto value_as_string = PyString_AsString(value);
+
+            if (value_as_string)
+            {
+                error_string = value_as_string;
+            }
 
 			PyErr_Clear();
 
-			throw std::exception(error_string);
+			throw std::exception(error_string.c_str());
 		}
 	}
 
-    void python_mgr_t::purge()
+    void python_mgr_t::initialize()
+    {
+        using namespace boost;
+        using namespace boost::python;
+
+        Py_Initialize();
+
+        main_module = object(handle<>(borrowed(PyImport_AddModule("__main__"))));
+        main_namespace = main_module.attr("__dict__");
+    }
+
+    void python_mgr_t::finalize()
     {
         Py_Finalize();
     }

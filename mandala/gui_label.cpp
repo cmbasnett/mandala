@@ -125,7 +125,34 @@ namespace mandala
         return lines.size();
     }
 
-    void gui_label_t::clean()
+    void gui_label_t::set_string(const string_type& string)
+    {
+        if (max_length)
+        {
+            this->string = { string.begin(), string.begin() + glm::min(max_length.get(), string.length()) };
+        }
+        else
+        {
+            this->string = string;
+        }
+        
+        cursor.string_begin = this->string.begin() + this->string.length();
+        cursor.string_end = this->string.begin() + this->string.length();
+        
+        dirty();
+    }
+
+    void gui_label_t::set_max_length(const boost::optional<size_t>& max_length)
+    {
+        this->max_length = max_length;
+
+        if (max_length && string.length() > max_length.get())
+        {
+            set_string(get_string());
+        }
+    }
+
+        void gui_label_t::clean()
     {
         static const auto fallback_character = L'?';
         static const auto ellipse_character = L'.';
@@ -148,7 +175,7 @@ namespace mandala
         {
             bool will_overflow = (lines.size() + 1) * line_height > padded_size.y;
 
-            if (will_overflow || !is_multiline)
+            if (will_overflow && !is_multiline)
             {
                 if (!lines.empty())
                 {
@@ -309,7 +336,7 @@ namespace mandala
 
             while (string_itr != string.end())
             {
-                if (*string_itr == L'\n')
+                if (*string_itr == L'\n' && is_multiline)
                 {
                     add_line(string_begin, string_itr);
 
@@ -383,7 +410,7 @@ namespace mandala
 
                 character_width = bitmap_font->get_characters().at(character).advance_x;
 
-                if (line_width + character_width > padded_size.x)
+                if (is_multiline && line_width + character_width > padded_size.x)
                 {
                     if (string_space_itr != string.end())
                     {
@@ -599,10 +626,17 @@ namespace mandala
                     case input_event_t::keyboard_t::key_e::enter:
                     case input_event_t::keyboard_t::key_e::kp_enter:
                     {
-                        cursor.string_begin = string.insert(cursor.string_begin, L'\n') + 1;
-                        cursor.string_end = cursor.string_begin;
+                        if (on_enter_function && (input_event.keyboard.mod_flags & input_event_t::mod_flag_shift) == 0)
+                        {
+                            on_enter_function();
+                        }
+                        else
+                        {
+                            cursor.string_begin = string.insert(cursor.string_begin, L'\n') + 1;
+                            cursor.string_end = cursor.string_begin;
 
-                        dirty();
+                            dirty();
+                        }
 
                         input_event.is_consumed = true;
 
@@ -730,8 +764,14 @@ namespace mandala
                         if (input_event.keyboard.mod_flags == input_event_t::mod_flag_ctrl)
                         {
                             const auto clipboard_string = wstring_convert.from_bytes(platform.get_clipboard_string().c_str());
+                            auto paste_length = clipboard_string.length();
 
-                            cursor.string_begin = string.insert(cursor.string_begin, clipboard_string.begin(), clipboard_string.end()) + clipboard_string.size();
+                            if (max_length)
+                            {
+                                paste_length = std::min(paste_length, max_length.get() - string.length());
+                            }
+
+                            cursor.string_begin = string.insert(cursor.string_begin, clipboard_string.begin(), clipboard_string.begin() + paste_length) + paste_length;
                             cursor.string_end = cursor.string_begin;
 
                             dirty();
@@ -785,15 +825,18 @@ namespace mandala
                 }
                 else if (input_event.keyboard.type == input_event_t::keyboard_t::type_e::character)
                 {
-                    if (cursor.string_begin != cursor.string_end)
+                    if (!max_length || max_length.get() > string.length())
                     {
-                        cursor.string_begin = string.erase(cursor.string_begin, cursor.string_end);
+                        if (cursor.string_begin != cursor.string_end)
+                        {
+                            cursor.string_begin = string.erase(cursor.string_begin, cursor.string_end);
+                        }
+
+                        cursor.string_begin = string.insert(cursor.string_begin, input_event.keyboard.character);
+                        cursor.string_end = ++cursor.string_begin;
+
+                        dirty();
                     }
-
-                    cursor.string_begin = string.insert(cursor.string_begin, input_event.keyboard.character);
-                    cursor.string_end = ++cursor.string_begin;
-
-                    dirty();
                     
                     input_event.is_consumed = true;
                 }

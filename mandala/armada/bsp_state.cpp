@@ -24,6 +24,7 @@
 #include "../gpu_program_mgr.hpp"
 #include "../gui_canvas.hpp"
 #include "../image.hpp"
+#include "../python_mgr.hpp"
 
 #if defined(MANDALA_PC)
 #include "../window_event.hpp"
@@ -31,7 +32,6 @@
 
 //armada
 #include "bsp_state.hpp"
-#include "pause_state.hpp"
 #include "console_state.hpp"
 
 namespace mandala
@@ -42,7 +42,6 @@ namespace mandala
         std::mt19937 mt19937;
 
         bsp_state_t::bsp_state_t() :
-            pause_state(boost::make_shared<pause_state_t>()),
             console_state(boost::make_shared<console_state_t>()),
             bsp(resources.get<bsp_t>(hash_t("dod_flash.bsp"))),
             model(boost::make_shared<model_t>(hash_t("boblampclean.md5m")))
@@ -146,7 +145,14 @@ namespace mandala
 				input_event.gamepad.type == input_event_t::gamepad_t::type_e::release &&
 				input_event.gamepad.button_index == 0))
 			{
-				states.push(pause_state, state_flag_render);
+                try
+                {
+                    python.exec("states.push(PauseState(), STATE_FLAG_ALL)");
+                }
+                catch (std::exception& e)
+                {
+                    std::cout << e.what() << std::endl;
+                }
 
 				input_event.is_consumed = true;
 

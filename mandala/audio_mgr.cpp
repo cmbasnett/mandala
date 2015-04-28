@@ -21,21 +21,26 @@ namespace mandala
 
 	audio_mgr_t::audio_mgr_t()
 	{
-		auto device = boost::make_shared<audio_device_t>();
+        try
+        {
+            auto device = boost::make_shared<audio_device_t>();
+            devices.push_back(device);
 
-        devices.push_back(device);
+		    context = boost::make_shared<audio_context_t>(device);
 
-		context = boost::make_shared<audio_context_t>(device);
+            if (alcMakeContextCurrent(*context) == ALC_FALSE)
+            {
+                throw std::exception();
+            }
 
-		if (alcMakeContextCurrent(*context) == ALC_FALSE)
-		{
-			throw std::exception();
-		}
-
-		if (alGetError() != ALC_NO_ERROR)
-		{
-			throw std::exception();
-		}
+            if (alGetError() != ALC_NO_ERROR)
+            {
+                throw std::exception();
+            }
+        }
+        catch (std::exception&)
+        {
+        }
     }
 
 	void audio_mgr_t::tick(float32_t dt)

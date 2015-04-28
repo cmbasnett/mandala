@@ -17,7 +17,7 @@ namespace mandala
     struct frame_buffer_t
     {
     public:
-        gpu_id_t get_id() const { return id; }
+        size_t get_id() const { return id; }
         const boost::shared_ptr<texture_t>& get_color_texture() const { return color_texture; }
         const boost::shared_ptr<texture_t>& get_depth_texture() const { return depth_texture; }
         const boost::shared_ptr<texture_t>& get_depth_stencil_texture() const { return depth_stencil_texture; }

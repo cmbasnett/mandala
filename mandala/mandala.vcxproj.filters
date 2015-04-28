@@ -4,9 +4,6 @@
     <ClInclude Include="armada\bsp_state.hpp">
       <Filter>armada\states\bsp</Filter>
     </ClInclude>
-    <ClInclude Include="armada\pause_state.hpp">
-      <Filter>armada\states\pause</Filter>
-    </ClInclude>
     <ClInclude Include="armada\armada.hpp">
       <Filter>armada</Filter>
     </ClInclude>
@@ -223,9 +220,6 @@
     <ClInclude Include="openal.hpp">
       <Filter>mandala\audio</Filter>
     </ClInclude>
-    <ClInclude Include="gpu_program_mgr.hpp">
-      <Filter>mandala\app</Filter>
-    </ClInclude>
     <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="string_archive.hpp">
       <Filter>mandala\app</Filter>
@@ -360,9 +354,6 @@
     <ClInclude Include="line_renderer.hpp">
       <Filter>mandala\gpu</Filter>
     </ClInclude>
-    <ClInclude Include="gui_element.hpp">
-      <Filter>armada\states\element</Filter>
-    </ClInclude>
     <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="gui_image_gpu_program.hpp">
       <Filter>mandala\gpu\programs</Filter>
@@ -417,9 +408,6 @@
     </ClCompile>
     <ClCompile Include="armada\armada.cpp">
       <Filter>armada</Filter>
-    </ClCompile>
-    <ClCompile Include="armada\pause_state.cpp">
-      <Filter>armada\states\pause</Filter>
     </ClCompile>
     <ClCompile Include="bsp.cpp">
       <Filter>mandala\resources\bsp</Filter>
@@ -556,9 +544,6 @@
     <ClCompile Include="gpu_buffer_mgr.cpp">
       <Filter>mandala\gpu</Filter>
     </ClCompile>
-    <ClCompile Include="gui_element.cpp">
-      <Filter>armada\states\element</Filter>
-    </ClCompile>
     <ClCompile Include="gui_image_gpu_program.cpp">
       <Filter>mandala\gpu\programs</Filter>
     </ClCompile>
@@ -587,9 +572,6 @@
     </Filter>
     <Filter Include="armada\states">
       <UniqueIdentifier>{743efed0-4482-400c-917d-176e72d1c534}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="armada\states\pause">
-      <UniqueIdentifier>{e1cc996e-2ef0-443f-a221-6a8d037fc9e3}</UniqueIdentifier>
     </Filter>
     <Filter Include="mandala\gui">
       <UniqueIdentifier>{1c2b7179-f16d-40ce-817d-65c4a687ce79}</UniqueIdentifier>
@@ -656,9 +638,6 @@
     </Filter>
     <Filter Include="mandala\resources\voxel">
       <UniqueIdentifier>{54c94754-76cf-40bb-b97e-fe67ba8ae45b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="armada\states\element">
-      <UniqueIdentifier>{0af623d2-7a4a-41f6-aa83-45816826892c}</UniqueIdentifier>
     </Filter>
     <Filter Include="mandala\python">
       <UniqueIdentifier>{110fa48b-6117-4696-b8ee-ea9f832943c1}</UniqueIdentifier>

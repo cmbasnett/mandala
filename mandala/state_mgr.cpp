@@ -96,27 +96,6 @@ namespace mandala
 			state->on_enter();
         }
 
-        //call on_exit on popped states
-        for (auto& state : popped_states)
-        {
-            if ((state.second & state_flag_input) == state_flag_input)
-            {
-                state.first->on_stop_input();
-            }
-
-            if ((state.second & state_flag_render) == state_flag_render)
-            {
-                state.first->on_stop_render();
-            }
-
-            if ((state.second & state_flag_tick) == state_flag_tick)
-            {
-                state.first->on_stop_tick();
-            }
-
-            state.first->on_exit();
-        }
-
 		//check if stack was modified
 		if (did_nodes_change)
 		{
@@ -179,6 +158,27 @@ namespace mandala
 			}
 		}
 
+        //call on_exit on popped states
+        for (auto& state : popped_states)
+        {
+            if ((state.second & state_flag_render) == state_flag_render)
+            {
+                state.first->on_stop_render();
+            }
+
+            if ((state.second & state_flag_input) == state_flag_input)
+            {
+                state.first->on_stop_input();
+            }
+
+            if ((state.second & state_flag_tick) == state_flag_tick)
+            {
+                state.first->on_stop_tick();
+            }
+
+            state.first->on_exit();
+        }
+
 		//tick states
 		for (auto nodes_reverse_itr = nodes.rbegin(); nodes_reverse_itr != nodes.rend(); ++nodes_reverse_itr)
 		{
@@ -239,7 +239,7 @@ namespace mandala
 	{
 		if (state == nullptr)
 		{
-			throw std::exception();
+			throw std::invalid_argument("state cannot be null");
 		}
 
         operation_t operation;
@@ -255,7 +255,7 @@ namespace mandala
     {
         if (state == nullptr)
         {
-            throw std::invalid_argument("");
+            throw std::invalid_argument("state cannot be null");
         }
 
         const auto nodes_itr = std::find_if(nodes.begin(), nodes.end(), [&](const node_t& node)

@@ -50,11 +50,12 @@ namespace mandala
 		bool get_should_use_ellipses() const { return should_use_ellipses; }
 		bool get_should_use_color_codes() const { return should_use_color_codes; }
 		bool get_is_read_only() const { return is_read_only; }
+        boost::optional<size_t> get_max_length() const { return max_length; }
 
         line_height_type get_line_height() const;
 		size_t get_line_count() const;
 
-		void set_string(const string_type& string) { this->string = string; cursor.string_begin = this->string.begin() + this->string.length(), cursor.string_end = this->string.begin() + this->string.length(); dirty(); }
+        void set_string(const string_type& string);
 		void set_bitmap_font(boost::shared_ptr<bitmap_font_t> bitmap_font) { this->bitmap_font = bitmap_font; dirty(); }
 		void set_justification(justification_e justification) { this->justification = justification; dirty(); }
 		void set_vertical_alignment(vertical_alignment_e vertical_alignment) { this->vertical_alignment = vertical_alignment; dirty(); }
@@ -63,6 +64,7 @@ namespace mandala
 		void set_should_use_ellipses(bool should_use_ellipses) { this->should_use_ellipses = should_use_ellipses; dirty(); }
 		void set_should_use_color_codes(bool should_use_color_codes) { this->should_use_color_codes = should_use_color_codes; dirty(); }
 		void set_is_read_only(bool is_read_only) { this->is_read_only = is_read_only; dirty(); }	//TODO: might not need to dirty, putting this in to be safe
+        void set_max_length(const boost::optional<size_t>& max_size);
 
         virtual void clean() override;
         virtual void on_render_begin(const mat4_t& world_matrix, const mat4_t& view_projection_matrix) override;
@@ -109,5 +111,7 @@ namespace mandala
 		cursor_data_t cursor;
 		bool is_read_only = true;
 		std::vector<line_t> lines;
+        boost::optional<size_t> max_length;
+        std::function<void()> on_enter_function;
 	};
 }

@@ -11,7 +11,6 @@
 #include "armada.hpp"
 #include "bsp_state.hpp"
 #include "debug_state.hpp"
-#include "pause_state.hpp"
 
 namespace mandala
 {

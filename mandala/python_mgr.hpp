@@ -10,11 +10,13 @@ namespace mandala
 {
 	struct python_mgr_t
 	{
-		python_mgr_t();
+        python_mgr_t();
 
 		void exec(const std::string&);
 
-        void purge();
+        //TODO: breaks RAII, figure out a way around this
+        void initialize();
+        void finalize();
 
 		boost::python::object main_namespace;
 		boost::python::object main_module;
