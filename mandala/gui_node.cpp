@@ -81,7 +81,7 @@ namespace mandala
     {
         std::function<void(boost::shared_ptr<gui_node_t>&, aabb2_t&)> clean_function = [&clean_function](boost::shared_ptr<gui_node_t>& node, aabb2_t& sibling_bounds)
         {
-            node->on_clean_begin();   //gives opportunity for custom resizing based on content etc.
+            node->on_clean_begin();
 
             auto absolute_size = node->desired_size;
 
@@ -225,19 +225,9 @@ namespace mandala
 
     void gui_node_t::on_input_event(input_event_t& input_event)
     {
-        if (input_event.is_consumed)
+        for (auto children_itr = children.begin(); !input_event.is_consumed && children_itr != children.end(); ++children_itr)
         {
-            return;
-        }
-
-        for (auto& child : children)
-        {
-            child->on_input_event(input_event);
-
-            if (input_event.is_consumed)
-            {
-                break;
-            }
+            (*children_itr)->on_input_event(input_event);
         }
     }
 
