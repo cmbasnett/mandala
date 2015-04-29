@@ -83,7 +83,6 @@ namespace mandala
         if (window_event.type == window_event_t::type_e::resize)
         {
             layout->set_bounds(gui_node_t::bounds_type(vec2_t(), static_cast<vec2_t>(window_event.rectangle.size())));
-            layout->clean();
         }
     }
 #endif
