@@ -40,6 +40,7 @@ namespace mandala
 
             auto output_scroll = boost::make_shared<gui_scroll_t>();
             output_scroll->set_dock_mode(gui_dock_mode_e::fill);
+            output_scroll->set_margin(padding_t(8));
 
             auto root_background_image = boost::make_shared<gui_image_t>();
             root_background_image->set_color(rgba_type(rgb_type(0), 0.75f));
@@ -49,7 +50,6 @@ namespace mandala
             output_label = boost::make_shared<gui_label_t>();
             output_label->set_bitmap_font(bitmap_font);
             output_label->set_justification(gui_label_t::justification_e::left);
-            output_label->set_margin(padding_t(8));
             output_label->set_should_use_ellipses(false);
             output_label->set_should_use_color_codes(true);
             output_label->set_vertical_alignment(gui_label_t::vertical_alignment_e::bottom);
