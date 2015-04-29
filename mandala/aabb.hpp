@@ -119,6 +119,16 @@ namespace mandala
 			{
 				return aabb2_t<T>(static_cast<aabb2_t<T>::vector_type>(min), static_cast<aabb2_t<T>::vector_type>(max));
 			}
+
+            type operator<<(const type& rhs) const
+            {
+                return join(*this, rhs);
+            }
+
+            type& operator<<=(const type& rhs)
+            {
+                return this->join(rhs);
+            }
 		};
 
 		template<typename T, typename Enable = void>
@@ -242,6 +252,16 @@ namespace mandala
 
 				return *this;
 			}
+
+            type operator<<(const type& rhs) const
+            {
+                return join(*this, rhs);
+            }
+
+            type& operator<<=(const type& rhs)
+            {
+                return this->join(rhs);
+            }
 		};
 	}
 
