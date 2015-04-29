@@ -77,132 +77,126 @@ namespace mandala
         dirty();
     }
 
-    void gui_node_t::clean_internal(aabb2_t& sibling_bounds)
-    {
-        auto absolute_size = desired_size;
-        auto parent_margin = padding_t();
-
-        switch (get_size_mode())
-        {
-        case gui_size_mode_e::relative:
-            if (has_parent())   //TODO: doesn't work yet; parents not being set for some reason
-            {
-                absolute_size *= parent->bounds.size();
-            }
-            else
-            {
-                absolute_size *= sibling_bounds.size();
-            }
-
-            break;
-        }
-
-        switch (dock_mode)
-        {
-        case gui_dock_mode_e::bottom:
-            bounds.min = sibling_bounds.min;
-            bounds.max.x = sibling_bounds.max.x;
-            bounds.max.y = sibling_bounds.min.y + absolute_size.y + padding.vertical();
-
-            bounds -= margin;
-
-            sibling_bounds.min.y += bounds.height() + margin.vertical();
-
-            break;
-        case gui_dock_mode_e::fill:
-            bounds = sibling_bounds - margin;
-
-            break;
-        case gui_dock_mode_e::left:
-            bounds.min = sibling_bounds.min;
-            bounds.max.x = sibling_bounds.min.x + absolute_size.x + padding.horizontal();
-            bounds.max.y = sibling_bounds.max.y;
-
-            bounds -= margin;
-
-            sibling_bounds.min.x += bounds.width() + margin.horizontal();
-
-            break;
-        case gui_dock_mode_e::right:
-            bounds.min.x = sibling_bounds.max.x - absolute_size.x - padding.horizontal();
-            bounds.min.y = sibling_bounds.min.y;
-            bounds.max = sibling_bounds.max;
-
-            bounds -= margin;
-
-            sibling_bounds.max.x -= bounds.width() + margin.horizontal();
-
-            break;
-        case gui_dock_mode_e::top:
-            bounds.min.x = sibling_bounds.min.x;
-            bounds.min.y = sibling_bounds.max.y - absolute_size.y - padding.vertical();
-            bounds.max = sibling_bounds.max;
-
-            bounds -= margin;
-
-            sibling_bounds.max.y -= bounds.height() + margin.vertical();
-
-            break;
-        default:
-            bounds.min = vec2_t(0);
-            bounds.max = absolute_size;
-
-            vec2_t anchor_location;
-            vec2_t anchor_translation;
-
-            if ((anchor_flags & gui_anchor_flag_horizontal) == gui_anchor_flag_horizontal)
-            {
-                anchor_location.x = (sibling_bounds.max.x - sibling_bounds.min.x) / 2;
-                anchor_translation.x = -((absolute_size.x / 2) + ((margin.right - margin.left) / 2));
-            }
-            else
-            {
-                if ((anchor_flags & gui_anchor_flag_left) == gui_anchor_flag_left)
-                {
-                    anchor_location.x = sibling_bounds.min.x;
-                    anchor_translation.x = margin.left;
-                }
-                else if ((anchor_flags & gui_anchor_flag_right) == gui_anchor_flag_right)
-                {
-                    anchor_location.x = sibling_bounds.max.x;
-                    anchor_translation.x = -(absolute_size.x + margin.right);
-                }
-            }
-
-            if ((anchor_flags & gui_anchor_flag_vertical) == gui_anchor_flag_vertical)
-            {
-                anchor_location.y = (sibling_bounds.max.y - sibling_bounds.min.y) / 2;
-                anchor_translation.y = -((absolute_size.y / 2) + ((margin.top - margin.bottom) / 2));
-            }
-            else
-            {
-                if ((anchor_flags & gui_anchor_flag_bottom) == gui_anchor_flag_bottom)
-                {
-                    anchor_location.y = sibling_bounds.min.y;
-                    anchor_translation.y = margin.bottom;
-                }
-                else if ((anchor_flags & gui_anchor_flag_top) == gui_anchor_flag_top)
-                {
-                    anchor_location.y = sibling_bounds.max.y;
-                    anchor_translation.y = -(absolute_size.y + margin.top);
-                }
-            }
-
-            bounds += sibling_bounds.min + anchor_location + anchor_translation + anchor_offset;
-
-            break;
-        }
-
-        size = bounds.size();
-    }
-
     void gui_node_t::clean()
     {
-        std::function<void(boost::shared_ptr<gui_node_t>&, aabb2_t&)> clean_function = [&](boost::shared_ptr<gui_node_t>& node, aabb2_t& parent_bounds)
+        std::function<void(boost::shared_ptr<gui_node_t>&, aabb2_t&)> clean_function = [&clean_function](boost::shared_ptr<gui_node_t>& node, aabb2_t& sibling_bounds)
         {
             node->on_clean_begin();   //gives opportunity for custom resizing based on content etc.
 
-            node->clean_internal(parent_bounds);
+            auto absolute_size = node->desired_size;
+
+            switch (node->get_size_mode())
+            {
+            case gui_size_mode_e::relative:
+                if (node->has_parent())   //TODO: doesn't work yet; parents not being set for some reason
+                {
+                    absolute_size *= node->parent->bounds.size();
+                }
+                else
+                {
+                    absolute_size *= sibling_bounds.size();
+                }
+
+                break;
+            }
+
+            switch (node->dock_mode)
+            {
+            case gui_dock_mode_e::bottom:
+                node->bounds.min = sibling_bounds.min;
+                node->bounds.max.x = sibling_bounds.max.x;
+                node->bounds.max.y = sibling_bounds.min.y + absolute_size.y + node->padding.vertical();
+
+                node->bounds -= node->margin;
+
+                sibling_bounds.min.y += node->bounds.height() + node->margin.vertical();
+
+                break;
+            case gui_dock_mode_e::fill:
+                node->bounds = sibling_bounds - node->margin;
+
+                break;
+            case gui_dock_mode_e::left:
+                node->bounds.min = sibling_bounds.min;
+                node->bounds.max.x = sibling_bounds.min.x + absolute_size.x + node->padding.horizontal();
+                node->bounds.max.y = sibling_bounds.max.y;
+
+                node->bounds -= node->margin;
+
+                sibling_bounds.min.x += node->bounds.width() + node->margin.horizontal();
+
+                break;
+            case gui_dock_mode_e::right:
+                node->bounds.min.x = sibling_bounds.max.x - absolute_size.x - node->padding.horizontal();
+                node->bounds.min.y = sibling_bounds.min.y;
+                node->bounds.max = sibling_bounds.max;
+
+                node->bounds -= node->margin;
+
+                sibling_bounds.max.x -= node->bounds.width() + node->margin.horizontal();
+
+                break;
+            case gui_dock_mode_e::top:
+                node->bounds.min.x = sibling_bounds.min.x;
+                node->bounds.min.y = sibling_bounds.max.y - absolute_size.y - node->padding.vertical();
+                node->bounds.max = sibling_bounds.max;
+
+                node->bounds -= node->margin;
+
+                sibling_bounds.max.y -= node->bounds.height() + node->margin.vertical();
+
+                break;
+            default:
+                node->bounds.min = vec2_t(0);
+                node->bounds.max = absolute_size;
+
+                vec2_t anchor_location;
+                vec2_t anchor_translation;
+
+                if ((node->anchor_flags & gui_anchor_flag_horizontal) == gui_anchor_flag_horizontal)
+                {
+                    anchor_location.x = (sibling_bounds.max.x - sibling_bounds.min.x) / 2;
+                    anchor_translation.x = -((absolute_size.x / 2) + ((node->margin.right - node->margin.left) / 2));
+                }
+                else
+                {
+                    if ((node->anchor_flags & gui_anchor_flag_left) == gui_anchor_flag_left)
+                    {
+                        anchor_location.x = sibling_bounds.min.x;
+                        anchor_translation.x = node->margin.left;
+                    }
+                    else if ((node->anchor_flags & gui_anchor_flag_right) == gui_anchor_flag_right)
+                    {
+                        anchor_location.x = sibling_bounds.max.x;
+                        anchor_translation.x = -(absolute_size.x + node->margin.right);
+                    }
+                }
+
+                if ((node->anchor_flags & gui_anchor_flag_vertical) == gui_anchor_flag_vertical)
+                {
+                    anchor_location.y = (sibling_bounds.max.y - sibling_bounds.min.y) / 2;
+                    anchor_translation.y = -((absolute_size.y / 2) + ((node->margin.top - node->margin.bottom) / 2));
+                }
+                else
+                {
+                    if ((node->anchor_flags & gui_anchor_flag_bottom) == gui_anchor_flag_bottom)
+                    {
+                        anchor_location.y = sibling_bounds.min.y;
+                        anchor_translation.y = node->margin.bottom;
+                    }
+                    else if ((node->anchor_flags & gui_anchor_flag_top) == gui_anchor_flag_top)
+                    {
+                        anchor_location.y = sibling_bounds.max.y;
+                        anchor_translation.y = -(absolute_size.y + node->margin.top);
+                    }
+                }
+
+                node->bounds += sibling_bounds.min + anchor_location + anchor_translation + node->anchor_offset;
+
+                break;
+            }
+
+            node->size = node->bounds.size();
 
             auto children_bounds = node->bounds - node->padding;
 

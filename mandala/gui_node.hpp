@@ -93,7 +93,6 @@ namespace mandala
         virtual void on_input_event(input_event_t& input_event);
 
         void clean();
-        void clean_internal(aabb2_t& children_bounds);
 
         bool has_children() const { return !children.empty(); }
 		bool has_parent() const { return parent.get() != nullptr; }
