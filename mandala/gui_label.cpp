@@ -177,6 +177,52 @@ namespace mandala
         {
             update_lines();
         }
+
+        const auto padded_size = (get_bounds() - get_padding()).size();
+        const auto line_height = get_line_height();
+
+        //calculate base translation
+        auto base_translation = get_bounds().min;
+        base_translation.x += get_padding().left;
+        base_translation.y += get_padding().bottom;
+
+        switch (vertical_alignment)
+        {
+        case vertical_alignment_e::top:
+            base_translation.y += padded_size.y - bitmap_font->get_base();
+            break;
+        case vertical_alignment_e::middle:
+            base_translation.y += (padded_size.y / 2) - (bitmap_font->get_base() / 2) + ((line_height * (lines.size() - 1)) / 2);
+            break;
+        case vertical_alignment_e::bottom:
+            base_translation.y += (line_height * lines.size()) - bitmap_font->get_base();
+            break;
+        default:
+            break;
+        }
+
+        switch (justification)
+        {
+        case justification_e::center:
+            base_translation.x += padded_size.x / 2;
+            break;
+        case justification_e::right:
+            base_translation.x += padded_size.x;
+            break;
+        default:
+            break;
+        }
+
+        base_translation = glm::round(base_translation);
+
+        //add base translation to all line rectangles
+        for (auto& line : lines)
+        {
+            line.rectangle.x += base_translation.x;
+            line.rectangle.y += base_translation.y;
+        }
+
+        update_cursor();
     }
 
     void gui_label_t::on_render_begin(const mat4_t& world_matrix, const mat4_t& view_projection_matrix)
@@ -188,9 +234,16 @@ namespace mandala
 
         std::stack<rgba_type> color_stack;
 
+        //round translation component of world_matrix (otherwise text can appear blurry)
+        //TODO: figure out a nicer way to write this
+        auto rounded_world_matrix = world_matrix;
+        rounded_world_matrix[3][0] = glm::round(rounded_world_matrix[3][0]);
+        rounded_world_matrix[3][1] = glm::round(rounded_world_matrix[3][1]);
+        rounded_world_matrix[3][2] = glm::round(rounded_world_matrix[3][2]);
+
         for (const auto& line : lines)
         {
-            const auto line_world_matrix = world_matrix * glm::translate(line.rectangle.x, line.rectangle.y, 0.0f);
+            const auto line_world_matrix = rounded_world_matrix * glm::translate(line.rectangle.x, line.rectangle.y, 0.0f);
 
             bitmap_font->render_string(line.render_string, line_world_matrix, view_projection_matrix, get_color(), color_stack, line.colors_pushes, line.color_pop_indices);
         }
@@ -198,7 +251,6 @@ namespace mandala
         //render cursor
         if (!is_read_only)
         {
-            //TODO: have variable cursor flash timing
             bool should_show_cursor = ((cursor.time_point - cursor_data_t::clock_type::now()).count() / (cursor_data_t::clock_type::period::den / 2)) % 2 == 0;
 
             if (should_show_cursor)
@@ -571,7 +623,6 @@ namespace mandala
 
         auto string_itr = string.begin();
         const auto padded_size = (get_bounds() - get_padding()).size();
-        const auto line_height = get_line_height();
 
         lines.clear();
 
@@ -579,7 +630,7 @@ namespace mandala
         {
             if (!is_multiline && !is_autosized_to_text)
             {
-                bool will_overflow = (lines.size() + 1) * line_height > padded_size.y;
+                bool will_overflow = (lines.size() + 1) * get_line_height() > padded_size.y;
 
                 if (!lines.empty())
                 {
@@ -849,46 +900,5 @@ namespace mandala
 
             lines.emplace_back(line);
         }
-
-        //calculate base translation
-        auto base_translation = get_bounds().min;
-        base_translation.x += get_padding().left;
-        base_translation.y += get_padding().bottom;
-
-        switch (vertical_alignment)
-        {
-        case vertical_alignment_e::top:
-            base_translation.y += padded_size.y - bitmap_font->get_base();
-            break;
-        case vertical_alignment_e::middle:
-            base_translation.y += (padded_size.y / 2) - (bitmap_font->get_base() / 2) + ((line_height * (lines.size() - 1)) / 2);
-            break;
-        case vertical_alignment_e::bottom:
-            base_translation.y += (line_height * lines.size()) - bitmap_font->get_base();
-            break;
-        default:
-            break;
-        }
-
-        switch (justification)
-        {
-        case justification_e::center:
-            base_translation.x += padded_size.x / 2;
-            break;
-        case justification_e::right:
-            base_translation.x += padded_size.x;
-            break;
-        default:
-            break;
-        }
-
-        //add base translation to all line rectangles
-        for (auto& line : lines)
-        {
-            line.rectangle.x += base_translation.x;
-            line.rectangle.y += base_translation.y;
-        }
-
-        update_cursor();
     }
 }
