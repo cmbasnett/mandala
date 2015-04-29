@@ -83,16 +83,17 @@ namespace mandala
         void set_is_hidden(bool is_hidden) { this->is_hidden = is_hidden; dirty(); }
         void set_should_clip(bool should_clip) { this->should_clip = should_clip; }
 
-        virtual void render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix);
-        virtual void on_render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix);
-        virtual void on_render_begin(const mat4_t& world_matrix, const mat4_t& view_projection_matrix);
-        virtual void on_render_end(const mat4_t& world_matrix, const mat4_t& view_projection_matrix) { }
         virtual void on_clean_begin() { }
         virtual void on_clean_end() { }
-        virtual void tick(float32_t dt);
+        virtual void on_render_begin(mat4_t& world_matrix, mat4_t& view_projection_matrix) { }
+        virtual void on_render_end(mat4_t& world_matrix, mat4_t& view_projection_matrix) { }
+        virtual void on_tick_begin(float32_t dt) { }
+        virtual void on_tick_end(float32_t dt) { }
         virtual void on_input_event(input_event_t& input_event);
 
         void clean();
+        void tick(float32_t dt);
+        void render(mat4_t world_matrix, mat4_t view_projection_matrix);
 
         bool has_children() const { return !children.empty(); }
 		bool has_parent() const { return parent.get() != nullptr; }

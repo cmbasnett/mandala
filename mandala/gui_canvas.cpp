@@ -35,15 +35,13 @@ namespace mandala
         vertex_buffer->data(vertices, gpu_t::buffer_usage_e::static_draw);
     }
 
-    void gui_canvas_t::on_render_begin(const mat4_t& world_matrix, const mat4_t& view_projection_matrix)
+    void gui_canvas_t::on_render_begin(mat4_t& world_matrix, mat4_t& view_projection_matrix)
     {
 		gpu.frame_buffers.push(frame_buffer);
         gpu.viewports.push(get_bounds());
-
-        gui_node_t::on_render_begin(world_matrix, view_projection_matrix);
     }
 
-    void gui_canvas_t::on_render_end(const mat4_t& world_matrix, const mat4_t& view_projection_matrix)
+    void gui_canvas_t::on_render_end(mat4_t& world_matrix, mat4_t& view_projection_matrix)
     {
         gpu.viewports.pop();
         gpu.frame_buffers.pop();
@@ -82,8 +80,6 @@ namespace mandala
         gpu.buffers.pop(gpu_t::buffer_target_e::array);
 
         gpu.programs.pop();
-
-        gui_node_t::on_render_end(world_matrix, view_projection_matrix);
     }
 
     void gui_canvas_t::on_clean_end()

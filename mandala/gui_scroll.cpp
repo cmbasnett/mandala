@@ -8,9 +8,9 @@
 
 namespace mandala
 {
-    void gui_scroll_t::render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix)
+    void gui_scroll_t::on_render_begin(mat4_t& world_matrix, mat4_t& view_projection_matrix)
     {
-        gui_node_t::render(glm::translate(world_matrix, vec3_t(scroll_location, 0)), view_projection_matrix);
+        world_matrix = glm::translate(world_matrix, vec3_t(scroll_location, 0));
     }
 
     void gui_scroll_t::on_input_event(input_event_t& input_event)
@@ -66,14 +66,12 @@ namespace mandala
 		}
     }
 
-    void gui_scroll_t::tick(float32_t dt)
+    void gui_scroll_t::on_tick_end(float32_t dt)
     {
         //TODO: figure out a proper algorithm for this smoothing
         scroll_location += (scroll_location_target - scroll_location) * dt * 30.0f;
 
         scroll_location = glm::clamp(scroll_location, scroll_extents.min, scroll_extents.max);
-
-        gui_node_t::tick(dt);
     }
 
     void gui_scroll_t::set_scroll_location(const scroll_location_type & scroll_location, bool should_interpolate)

@@ -57,7 +57,7 @@ namespace mandala
 		size_t get_line_count() const;
 
         void set_string(const string_type& string);
-		void set_bitmap_font(boost::shared_ptr<bitmap_font_t> bitmap_font) { this->bitmap_font = bitmap_font; dirty(); }
+		void set_bitmap_font(const boost::shared_ptr<bitmap_font_t>& bitmap_font) { this->bitmap_font = bitmap_font; dirty(); }
 		void set_justification(justification_e justification) { this->justification = justification; dirty(); }
 		void set_vertical_alignment(vertical_alignment_e vertical_alignment) { this->vertical_alignment = vertical_alignment; dirty(); }
         void set_line_spacing(line_height_type line_spacing) { this->line_spacing = line_spacing; dirty(); }
@@ -70,7 +70,7 @@ namespace mandala
 
         virtual void on_clean_begin() override;
         virtual void on_clean_end() override;
-        virtual void on_render_begin(const mat4_t& world_matrix, const mat4_t& view_projection_matrix) override;
+        virtual void on_render_begin(mat4_t& world_matrix, mat4_t& view_projection_matrix) override;
         virtual void on_input_event(input_event_t& input_event) override;
 
     private:

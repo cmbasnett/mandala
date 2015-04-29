@@ -79,7 +79,7 @@ namespace mandala
 
     void gui_node_t::clean()
     {
-        std::function<void(boost::shared_ptr<gui_node_t>&, aabb2_t&)> clean_function = [&clean_function](boost::shared_ptr<gui_node_t>& node, aabb2_t& sibling_bounds)
+        std::function<void(boost::shared_ptr<gui_node_t>&, aabb2_t&)> clean_node = [&clean_node](boost::shared_ptr<gui_node_t>& node, aabb2_t& sibling_bounds)
         {
             node->on_clean_begin();
 
@@ -202,7 +202,7 @@ namespace mandala
 
             for (auto child : node->children)
             {
-                clean_function(child, children_bounds);
+                clean_node(child, children_bounds);
             }
 
             node->is_dirty = false;
@@ -212,15 +212,19 @@ namespace mandala
 
         auto padded_bounds = bounds - padding;
 
-        clean_function(shared_from_this(), padded_bounds);
+        clean_node(shared_from_this(), padded_bounds);
     }
 
     void gui_node_t::tick(float32_t dt)
     {
+        on_tick_begin(dt);
+
         for (auto child : children)
         {
             child->tick(dt);
         }
+
+        on_tick_end(dt);
     }
 
     void gui_node_t::on_input_event(input_event_t& input_event)
@@ -255,7 +259,7 @@ namespace mandala
 
         is_dirty = true;
         
-        if (parent)
+        if (parent) //TODO: this won't work until parents are correctly set
         {
             parent->dirty();
         }
@@ -269,7 +273,7 @@ namespace mandala
         dirty();
     }
 
-    void gui_node_t::render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix)
+    void gui_node_t::render(mat4_t world_matrix, mat4_t view_projection_matrix)
     {
         if (is_hidden)
         {
@@ -332,16 +336,10 @@ namespace mandala
             gpu.stencil.push_state(gpu_stencil_state);
         }
 
-        on_render(world_matrix, view_projection_matrix);
+#if defined(DEBUG)
+        //render_rectangle(world_matrix, view_projection_matrix, rectangle_t(bounds));
+#endif
 
-        if (should_clip)
-        {
-            gpu.stencil.pop_state();
-        }
-    }
-
-    void gui_node_t::on_render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix)
-    {
         on_render_begin(world_matrix, view_projection_matrix);
 
         for (auto& child : children)
@@ -350,12 +348,10 @@ namespace mandala
         }
 
         on_render_end(world_matrix, view_projection_matrix);
-    }
 
-    void gui_node_t::on_render_begin(const mat4_t& world_matrix, const mat4_t& view_projection_matrix)
-    {
-#if defined(DEBUG)
-        render_rectangle(world_matrix, view_projection_matrix, rectangle_t(get_bounds()));
-#endif
+        if (should_clip)
+        {
+            gpu.stencil.pop_state();
+        }
     }
 }

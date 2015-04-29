@@ -94,7 +94,7 @@ namespace mandala
         set_sprite(sprite);
     }
 
-	void gui_image_t::on_render_begin(const mat4_t& world_matrix, const mat4_t& view_projection_matrix)
+	void gui_image_t::on_render_begin(mat4_t& world_matrix, mat4_t& view_projection_matrix)
     {
 		auto blend_state = gpu.blend.get_state();
 		blend_state.is_enabled = true;

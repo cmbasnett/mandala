@@ -166,7 +166,7 @@ namespace mandala
             {
                 text_size.x = std::max(text_size.x, line.rectangle.width);
             }
-            
+
             set_size(text_size, gui_size_mode_e::absolute);
         }
     }
@@ -225,7 +225,7 @@ namespace mandala
         update_cursor();
     }
 
-    void gui_label_t::on_render_begin(const mat4_t& world_matrix, const mat4_t& view_projection_matrix)
+    void gui_label_t::on_render_begin(mat4_t& world_matrix, mat4_t& view_projection_matrix)
     {
         if (bitmap_font == nullptr)
         {

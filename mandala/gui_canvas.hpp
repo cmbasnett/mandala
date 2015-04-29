@@ -21,8 +21,8 @@ namespace mandala
         typedef index_type<index_count>::type index_type;
         typedef index_buffer_t<index_type> index_buffer_type;
 
-        virtual void on_render_begin(const mat4_t& world_matrix, const mat4_t& view_projection_matrix) override;
-        virtual void on_render_end(const mat4_t& world_matrix, const mat4_t& view_projection_matrix) override;
+        virtual void on_render_begin(mat4_t& world_matrix, mat4_t& view_projection_matrix) override;
+        virtual void on_render_end(mat4_t& world_matrix, mat4_t& view_projection_matrix) override;
         virtual void on_clean_end() override;
 
         const boost::shared_ptr<frame_buffer_t>& get_frame_buffer() const { return frame_buffer; }
