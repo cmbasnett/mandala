@@ -100,9 +100,10 @@ namespace mandala
         }
 
         //HACK: figure out more elegant way to do this
-        std::swap(scroll_extents.min.y, scroll_extents.max.y);
-        scroll_extents.min.y *= -1;
-        scroll_extents.max.y *= -1;
+        std::swap(scroll_extents.min, scroll_extents.max);
+
+        scroll_extents.min *= -1;
+        scroll_extents.max *= -1;
 
         set_scroll_extents(scroll_extents);
     }
