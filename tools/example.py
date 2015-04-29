@@ -5,5 +5,12 @@ class PauseState(State):
 	def __init__(self):
 		State.__init__(self)
 
-for i in range(0, 1000):
-	states.push(PauseState(), STATE_FLAG_ALL)
+	def tick(self, dt):
+		print dt
+
+s = PauseState()
+
+states.push(s, STATE_FLAG_ALL)
+states.pop(s)
+
+print states.index_of(s)

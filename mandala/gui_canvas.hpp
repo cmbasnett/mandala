@@ -23,7 +23,7 @@ namespace mandala
 
         virtual void on_render_begin(const mat4_t& world_matrix, const mat4_t& view_projection_matrix) override;
         virtual void on_render_end(const mat4_t& world_matrix, const mat4_t& view_projection_matrix) override;
-        virtual void on_cleaned() override;
+        virtual void on_clean_end() override;
 
         const boost::shared_ptr<frame_buffer_t>& get_frame_buffer() const { return frame_buffer; }
 

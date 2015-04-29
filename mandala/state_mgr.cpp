@@ -1,3 +1,6 @@
+//std
+#include <sstream>
+
 //mandala
 #include "state_mgr.hpp"
 #include "state.hpp"
@@ -87,7 +90,7 @@ namespace mandala
                 break;
             }
 
-			operations.pop();
+            operations.pop_front();
 		}
 
 		//call on_enter on pushed states
@@ -247,7 +250,7 @@ namespace mandala
         operation.state = state;
         operation.link_flags = link_flags;
 
-		operations.push(operation);
+		operations.push_back(operation);
 	}
 
 	//pop a specific state off of the stack
@@ -265,17 +268,34 @@ namespace mandala
 
         if (nodes_itr == nodes.end())
         {
-            throw std::out_of_range("cannot pop a state that does not exist on stack");
+            //state to be popped does not exist on the stack
+            //check operation queue to see if state is about to be pushed
+            const auto operations_itr = std::find_if(operations.begin(), operations.end(), [&](const operation_t& operation)
+            {
+                return operation.state == state && operation.type == operation_t::type_e::push;
+            });
+
+            if (operations_itr != operations.end())
+            {
+                //state is in operation queue to be pushed, erase that operation (effectively a no-op)
+                operations.erase(operations_itr);
+
+                return;
+            }
+            else
+            {
+                throw std::exception("state cannot be popped if it is not on the stack or in queue to be pushed");
+            }
         }
+
+        //add popping flag to node flags
+        nodes_itr->flags |= state_flag_popping;
 
 		operation_t operation;
 		operation.type = operation_t::type_e::pop;
 		operation.state = state;
 
-		operations.push(operation);
-
-        //add popping flag to node flags
-        nodes_itr->flags |= state_flag_popping;
+		operations.push_back(operation);
 	}
 
 	void state_mgr_t::change_link_flags(const state_type& state, state_flags_type link_flags)
@@ -301,7 +321,7 @@ namespace mandala
 		operation.state = state;
 		operation.link_flags = link_flags;
 
-        operations.push(operation);
+        operations.push_back(operation);
 
         //add changing link flags flag to node flags
         nodes_itr->flags |= state_flag_changing_link_flags;
@@ -312,7 +332,7 @@ namespace mandala
         operation_t operation;
         operation.type = operation_t::type_e::purge;
 
-        operations.push(operation);
+        operations.push_back(operation);
 	}
 
 	size_t state_mgr_t::count() const
@@ -324,7 +344,10 @@ namespace mandala
 	{
 		if (index >= nodes.size())
 		{
-			throw std::out_of_range("");
+            std::ostringstream oss;
+            oss << "no state at index " << index;
+
+			throw std::out_of_range(oss.str());
 		}
 
 		auto nodes_reverse_itr = nodes.rbegin();
@@ -339,14 +362,21 @@ namespace mandala
 		return nodes_reverse_itr->state;
 	}
 
-	size_t state_mgr_t::index_of(const state_type& state) const
+	boost::optional<size_t> state_mgr_t::index_of(const state_type& state) const
 	{
-		const auto nodes_itr = std::find_if(nodes.begin(), nodes.end(), [&](const node_t& node)
+        boost::optional<size_t> index;
+
+		const auto nodes_reverse_itr = std::find_if(nodes.rbegin(), nodes.rend(), [&](const node_t& node)
 		{
 			return node.state == state;
 		});
 
-		return std::distance(nodes_itr, nodes.end()) - 1;
+        if (nodes_reverse_itr != nodes.rend())
+        {
+            index = std::distance(nodes.rbegin(), nodes_reverse_itr);
+        }
+
+        return index;
 	}
 
 	state_flags_type state_mgr_t::get_link_flags(const state_type& state) const

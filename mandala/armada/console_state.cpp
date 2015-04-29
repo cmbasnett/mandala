@@ -5,6 +5,7 @@
 #include "../bitmap_font.hpp"
 #include "../gui_label.hpp"
 #include "../gui_image.hpp"
+#include "../gui_scroll.hpp"
 #include "../color.hpp"
 
 //armada
@@ -17,8 +18,6 @@
 //std
 #include <codecvt>
 
-
-
 namespace mandala
 {
 	namespace armada
@@ -29,30 +28,36 @@ namespace mandala
 
 		console_state_t::console_state_t()
         {
-            const auto bitmap_font = resources.get<bitmap_font_t>(hash_t("inconsolata_16.fnt"));
+            const auto bitmap_font = resources.get<bitmap_font_t>(hash_t("unifont_16.fnt"));
 
 			root_node = boost::make_shared<gui_node_t>();
 			root_node->set_dock_mode(gui_dock_mode_e::top);
-            root_node->set_size(vec2_t(0.0, 1.0f), gui_size_mode_e::relative);
+            root_node->set_size(vec2_t(0.5, 0.5f), gui_size_mode_e::relative);
 
             auto output_root_node = boost::make_shared<gui_node_t>();
             output_root_node->set_dock_mode(gui_dock_mode_e::fill);
+            output_root_node->set_should_clip(true);
+
+            auto output_scroll = boost::make_shared<gui_scroll_t>();
+            output_scroll->set_dock_mode(gui_dock_mode_e::fill);
 
             auto root_background_image = boost::make_shared<gui_image_t>();
-            root_background_image->set_color(rgba_type(rgb_type(0), 0.95f));
+            root_background_image->set_color(rgba_type(rgb_type(0), 0.75f));
             root_background_image->set_dock_mode(gui_dock_mode_e::fill);
             root_background_image->set_sprite(sprite_t(sprite_ref_t(hash_t("white.tpsb"), hash_t("white.png"))));
 
             output_label = boost::make_shared<gui_label_t>();
             output_label->set_bitmap_font(bitmap_font);
-            output_label->set_dock_mode(gui_dock_mode_e::fill);
             output_label->set_justification(gui_label_t::justification_e::left);
             output_label->set_margin(padding_t(8));
             output_label->set_should_use_ellipses(false);
             output_label->set_should_use_color_codes(true);
             output_label->set_vertical_alignment(gui_label_t::vertical_alignment_e::bottom);
+            output_label->set_is_autosized_to_text(true);
+            output_label->set_dock_mode(gui_dock_mode_e::bottom);
 
-            output_root_node->adopt(output_label);
+            output_scroll->adopt(output_label);
+            output_root_node->adopt(output_scroll);
 
             auto input_root_node = boost::make_shared<gui_node_t>();
             input_root_node->set_dock_mode(gui_dock_mode_e::bottom);
@@ -72,7 +77,7 @@ namespace mandala
             input_label->set_margin(padding_t(0, 8, 0, 8));
             input_label->set_vertical_alignment(gui_label_t::vertical_alignment_e::middle);
             input_label->set_color(rgba_type(0, 1, 0, 1));
-            input_label->set_is_multiline(false);
+            //input_label->set_is_multiline(false);
 
             input_root_node->adopt(input_background_image);
             input_root_node->adopt(input_label);
@@ -141,7 +146,7 @@ namespace mandala
 						{
 							const auto command = wstring_convert.to_bytes(input_label->get_string());
 
-							python.exec(command);
+							py.exec(command);
 						}
 						catch (const std::exception& exception)
 						{

@@ -152,339 +152,31 @@ namespace mandala
         }
     }
 
-        void gui_label_t::clean()
+    void gui_label_t::on_clean_begin()
     {
-        static const auto fallback_character = L'?';
-        static const auto ellipse_character = L'.';
-        static const auto ellipses_max = 3;
-
-        gui_node_t::clean();
-
-        if (bitmap_font == nullptr)
+        if (is_autosized_to_text)
         {
-            throw std::exception();
-        }
+            update_lines();
 
-        auto string_itr = string.begin();
-        const auto padded_size = (get_bounds() - get_padding()).size();
-        const auto line_height = get_line_height();
+            size_type text_size;
 
-        lines.clear();
+            text_size.y = static_cast<float32_t>(lines.size() * get_line_height());
 
-        while (string_itr != string.end())
-        {
-            bool will_overflow = (lines.size() + 1) * line_height > padded_size.y;
-
-            if (will_overflow && !is_multiline)
+            for (auto& line : lines)
             {
-                if (!lines.empty())
-                {
-                    //adding another line would exceed maximum height or line count
-                    auto& line_string = lines.back().render_string;
-
-                    if (should_use_ellipses && !line_string.empty())
-                    {
-                        //attempt to add ellipses to the end of the last line
-                        const auto ellipse_width = bitmap_font->get_characters().at(ellipse_character).advance_x;
-                        const auto ellipse_count = glm::min(static_cast<decltype(ellipse_width)>(padded_size.x) / ellipse_width, ellipses_max);
-                        auto width = 0;
-
-                        auto string_reverse_itr = line_string.rbegin() + 1;
-
-                        //travel backwards from the end and calculate what part of the string will be replaced with ellipses
-                        while (string_reverse_itr != line_string.rend())
-                        {
-                            width += bitmap_font->get_characters().at(*string_reverse_itr).advance_x;
-
-                            if (width >= (ellipse_count * ellipse_width))
-                            {
-                                break;
-                            }
-
-                            ++string_reverse_itr;
-                        }
-
-                        //TODO: this has an undesired effect on cursor, will need to be fixed
-                        line_string.erase(string_reverse_itr.base() + 1, line_string.end());
-                        line_string.append(ellipse_count, ellipse_character);
-                    }
-                }
-
-                break;
+                text_size.x = std::max(text_size.x, line.rectangle.width);
             }
-
-            line_t::width_type line_width = 0;
-            auto string_begin = string_itr;
-            auto string_end = string_itr;
-            auto was_line_added = false;
-            auto string_space_itr = string.end();
-
-            auto parse_color_codes = [&](string_type& string, std::vector<std::pair<size_t, vec4_t>>& color_pushes, std::vector<size_t>& color_pops)
-            {
-                auto string_itr = string.begin();
-
-                while (string_itr != string.end())
-                {
-                    if (*string_itr == color_push_character<string_type::value_type>::value)
-                    {
-                        //encountered color push character
-                        string_itr = string.erase(string_itr);
-
-                        if (string_itr != string.end() && *string_itr != color_push_character<string_type::value_type>::value)
-                        {
-                            //determine how many characters to erase
-                            auto erase_count = std::min(std::distance(string_itr, string.end()), rgb_hex_string_length);
-
-                            if (erase_count == rgb_hex_string_length)
-                            {
-                                //try to parse a hex color from string
-                                string_type hex_string = { string_itr, string_itr + rgb_hex_string_length };
-
-                                try
-                                {
-                                    auto color = rgba_type(hex_to_rgb(hex_string), 1);
-
-                                    color_pushes.push_back(std::make_pair(std::distance(string.begin(), string_itr), color));
-                                }
-                                catch (...)
-                                {
-                                    //conversion failed
-                                }
-                            }
-
-                            //erase color code from string
-                            string_itr = string.erase(string_itr, string_itr + erase_count);
-
-                            continue;
-                        }
-                    }
-                    else if (*string_itr == color_pop_character<string_type::value_type>::value)
-                    {
-                        //encountered color pop character
-                        string_itr = string.erase(string_itr);
-
-                        if (string_itr == string.end() || *string_itr != color_pop_character<string_type::value_type>::value)
-                        {
-                            color_pops.push_back(std::distance(string.begin(), string_itr));
-
-                            continue;
-                        }
-                    }
-
-                    if (string_itr != string.end())
-                    {
-                        ++string_itr;
-                    }
-                }
-            };
-
-            auto replace_unrecognized_characters = [&](string_type& string)
-            {
-                auto string_itr = string.begin();
-
-                while (string_itr != string.end())
-                {
-                    if (bitmap_font->get_characters().find(*string_itr) == bitmap_font->get_characters().end())
-                    {
-                        string.replace(string_itr, string_itr + 1, 1, fallback_character);
-                    }
-
-                    ++string_itr;
-                }
-            };
-
-            auto add_line = [&](string_itr_type string_begin, string_itr_type string_end)
-            {
-                line_t line;
-                line.string_begin = string_begin;
-                line.string_end = string_end;
-
-                string_type render_string = { string_begin, string_end };
-
-                //strip color codes from string
-                if (should_use_color_codes)
-                {
-                    parse_color_codes(render_string, line.colors_pushes, line.color_pop_indices);
-                }
-
-                replace_unrecognized_characters(render_string);
-
-                auto render_string_width = bitmap_font->get_string_width(render_string);
-
-                line.render_string = render_string;
-                line.rectangle.width = render_string_width;
-                line.rectangle.height = bitmap_font->get_line_height();
-                line.rectangle.x = 0;
-                line.rectangle.y = static_cast<float32_t>(lines.size()) * -get_line_height();
-
-                switch (justification)
-                {
-                case justification_e::center:
-                    line.rectangle.x -= render_string_width / 2;
-                    break;
-                case justification_e::right:
-                    line.rectangle.x -= render_string_width;
-                    break;
-                default:
-                    break;
-                }
-
-                lines.emplace_back(line);
-
-                was_line_added = true;
-            };
-
-            while (string_itr != string.end())
-            {
-                if (*string_itr == L'\n' && is_multiline)
-                {
-                    add_line(string_begin, string_itr);
-
-                    ++string_itr;
-
-                    if (string_itr == string.end())
-                    {
-                        //add empty line
-                        add_line(string_itr, string_itr);
-                    }
-
-                    break;
-                }
-                else if (*string_itr == L' ' || *string_itr == L'-')
-                {
-                    string_space_itr = string_itr;
-                }
-
-                int16_t character_width = 0;
-
-                if (should_use_color_codes)
-                {
-                    if (*string_itr == color_push_character<string_type::value_type>::value)
-                    {
-                        //encountered color push character
-
-                        //skip to next character
-                        ++string_itr;
-
-                        if (string_itr == string.end())
-                        {
-                            break;
-                        }
-                        else if (*string_itr != color_push_character<string_type::value_type>::value)
-                        {
-                            string_itr += std::min(std::distance(string_itr, string.end()), rgb_hex_string_length);
-
-                            continue;
-                        }
-                    }
-                    else if (*string_itr == color_pop_character<string_type::value_type>::value)
-                    {
-                        //encountered color pop character
-                        ++string_itr;
-
-                        if (string_itr == string.end())
-                        {
-                            break;
-                        }
-                        else if (*string_itr != color_pop_character<string_type::value_type>::value)
-                        {
-                            continue;
-                        }
-                    }
-                }
-
-                uint16_t character_id = *string_itr;
-
-                auto characters_itr = bitmap_font->get_characters().find(character_id);
-
-                string_type::value_type character;
-
-                if (characters_itr == bitmap_font->get_characters().end())
-                {
-                    character = fallback_character;
-                }
-                else
-                {
-                    character = *string_itr;
-                }
-
-                character_width = bitmap_font->get_characters().at(character).advance_x;
-
-                if (is_multiline && line_width + character_width > padded_size.x)
-                {
-                    if (string_space_itr != string.end())
-                    {
-                        add_line(string_begin, string_space_itr);
-
-                        string_itr = string_space_itr + 1;
-                    }
-
-                    break;
-                }
-
-                line_width += character_width;
-
-                ++string_itr;
-            }
-
-            if (!was_line_added)
-            {
-                add_line(string_begin, string_itr);
-            }
+            
+            set_size(text_size, gui_size_mode_e::absolute);
         }
+    }
 
-        if (lines.empty())
+    void gui_label_t::on_clean_end()
+    {
+        if (!is_autosized_to_text)
         {
-            //HACK: if no lines, add one in so that the cursor can draw on empty lines
-            //TODO: consolidate this with the normal add_line function
-            line_t line;
-            line.string_begin = string.begin();
-            line.string_end = string.end();
-            line.rectangle.height = bitmap_font->get_line_height();
-
-            lines.emplace_back(line);
+            update_lines();
         }
-
-        //calculate base translation
-        auto base_translation = get_bounds().min;
-        base_translation.x += get_padding().left;
-        base_translation.y += get_padding().bottom;
-
-        switch (vertical_alignment)
-        {
-        case vertical_alignment_e::top:
-            base_translation.y += padded_size.y - bitmap_font->get_base();
-            break;
-        case vertical_alignment_e::middle:
-            base_translation.y += (padded_size.y / 2) - (bitmap_font->get_base() / 2) + ((line_height * (lines.size() - 1)) / 2);
-            break;
-        case vertical_alignment_e::bottom:
-            base_translation.y += (line_height * lines.size()) - bitmap_font->get_base();
-            break;
-        default:
-            break;
-        }
-
-        switch (justification)
-        {
-        case justification_e::center:
-            base_translation.x += padded_size.x / 2;
-            break;
-        case justification_e::right:
-            base_translation.x += padded_size.x;
-            break;
-        default:
-            break;
-        }
-
-        //add base translation to all line rectangles
-        for (auto& line : lines)
-        {
-            line.rectangle.x += base_translation.x;
-            line.rectangle.y += base_translation.y;
-        }
-
-        update_cursor();
     }
 
     void gui_label_t::on_render_begin(const mat4_t& world_matrix, const mat4_t& view_projection_matrix)
@@ -864,5 +556,339 @@ namespace mandala
         }
 
         cursor.time_point = cursor_data_t::clock_type::now();
+    }
+
+    void gui_label_t::update_lines()
+    {
+        static const auto fallback_character = L'?';
+        static const auto ellipse_character = L'.';
+        static const auto ellipses_max = 3;
+
+        if (bitmap_font == nullptr)
+        {
+            throw std::exception();
+        }
+
+        auto string_itr = string.begin();
+        const auto padded_size = (get_bounds() - get_padding()).size();
+        const auto line_height = get_line_height();
+
+        lines.clear();
+
+        while (string_itr != string.end())
+        {
+            if (!is_multiline && !is_autosized_to_text)
+            {
+                bool will_overflow = (lines.size() + 1) * line_height > padded_size.y;
+
+                if (!lines.empty())
+                {
+                    //adding another line would exceed maximum height or line count
+                    auto& line_string = lines.back().render_string;
+
+                    if (should_use_ellipses && !line_string.empty())
+                    {
+                        //attempt to add ellipses to the end of the last line
+                        const auto ellipse_width = bitmap_font->get_characters().at(ellipse_character).advance_x;
+                        const auto ellipse_count = glm::min(static_cast<decltype(ellipse_width)>(padded_size.x) / ellipse_width, ellipses_max);
+                        auto width = 0;
+
+                        auto string_reverse_itr = line_string.rbegin() + 1;
+
+                        //travel backwards from the end and calculate what part of the string will be replaced with ellipses
+                        while (string_reverse_itr != line_string.rend())
+                        {
+                            width += bitmap_font->get_characters().at(*string_reverse_itr).advance_x;
+
+                            if (width >= (ellipse_count * ellipse_width))
+                            {
+                                break;
+                            }
+
+                            ++string_reverse_itr;
+                        }
+
+                        //TODO: this has an undesired effect on cursor, will need to be fixed
+                        line_string.erase(string_reverse_itr.base() + 1, line_string.end());
+                        line_string.append(ellipse_count, ellipse_character);
+                    }
+                }
+
+                break;
+            }
+
+            line_t::width_type line_width = 0;
+            auto string_begin = string_itr;
+            auto string_end = string_itr;
+            auto was_line_added = false;
+            auto string_space_itr = string.end();
+
+            auto parse_color_codes = [&](string_type& string, std::vector<std::pair<size_t, vec4_t>>& color_pushes, std::vector<size_t>& color_pops)
+            {
+                auto string_itr = string.begin();
+
+                while (string_itr != string.end())
+                {
+                    if (*string_itr == color_push_character<string_type::value_type>::value)
+                    {
+                        //encountered color push character
+                        string_itr = string.erase(string_itr);
+
+                        if (string_itr != string.end() && *string_itr != color_push_character<string_type::value_type>::value)
+                        {
+                            //determine how many characters to erase
+                            auto erase_count = std::min(std::distance(string_itr, string.end()), rgb_hex_string_length);
+
+                            if (erase_count == rgb_hex_string_length)
+                            {
+                                //try to parse a hex color from string
+                                string_type hex_string = { string_itr, string_itr + rgb_hex_string_length };
+
+                                try
+                                {
+                                    auto color = rgba_type(hex_to_rgb(hex_string), 1);
+
+                                    color_pushes.push_back(std::make_pair(std::distance(string.begin(), string_itr), color));
+                                }
+                                catch (...)
+                                {
+                                    //conversion failed
+                                }
+                            }
+
+                            //erase color code from string
+                            string_itr = string.erase(string_itr, string_itr + erase_count);
+
+                            continue;
+                        }
+                    }
+                    else if (*string_itr == color_pop_character<string_type::value_type>::value)
+                    {
+                        //encountered color pop character
+                        string_itr = string.erase(string_itr);
+
+                        if (string_itr == string.end() || *string_itr != color_pop_character<string_type::value_type>::value)
+                        {
+                            color_pops.push_back(std::distance(string.begin(), string_itr));
+
+                            continue;
+                        }
+                    }
+
+                    if (string_itr != string.end())
+                    {
+                        ++string_itr;
+                    }
+                }
+            };
+
+            auto replace_unrecognized_characters = [&](string_type& string)
+            {
+                auto string_itr = string.begin();
+
+                while (string_itr != string.end())
+                {
+                    if (bitmap_font->get_characters().find(*string_itr) == bitmap_font->get_characters().end())
+                    {
+                        string.replace(string_itr, string_itr + 1, 1, fallback_character);
+                    }
+
+                    ++string_itr;
+                }
+            };
+
+            auto add_line = [&](string_itr_type string_begin, string_itr_type string_end)
+            {
+                line_t line;
+                line.string_begin = string_begin;
+                line.string_end = string_end;
+
+                string_type render_string = { string_begin, string_end };
+
+                //strip color codes from string
+                if (should_use_color_codes)
+                {
+                    parse_color_codes(render_string, line.colors_pushes, line.color_pop_indices);
+                }
+
+                replace_unrecognized_characters(render_string);
+
+                auto render_string_width = bitmap_font->get_string_width(render_string);
+
+                line.render_string = render_string;
+                line.rectangle.width = render_string_width;
+                line.rectangle.height = bitmap_font->get_line_height();
+                line.rectangle.x = 0;
+                line.rectangle.y = static_cast<float32_t>(lines.size()) * -get_line_height();
+
+                switch (justification)
+                {
+                case justification_e::center:
+                    line.rectangle.x -= render_string_width / 2;
+                    break;
+                case justification_e::right:
+                    line.rectangle.x -= render_string_width;
+                    break;
+                default:
+                    break;
+                }
+
+                lines.emplace_back(line);
+
+                was_line_added = true;
+            };
+
+            while (string_itr != string.end())
+            {
+                if (*string_itr == L'\n' && is_multiline)
+                {
+                    add_line(string_begin, string_itr);
+
+                    ++string_itr;
+
+                    if (string_itr == string.end())
+                    {
+                        //add empty line
+                        add_line(string_itr, string_itr);
+                    }
+
+                    break;
+                }
+                else if (*string_itr == L' ' || *string_itr == L'-')
+                {
+                    string_space_itr = string_itr;
+                }
+
+                int16_t character_width = 0;
+
+                if (should_use_color_codes)
+                {
+                    if (*string_itr == color_push_character<string_type::value_type>::value)
+                    {
+                        //encountered color push character
+
+                        //skip to next character
+                        ++string_itr;
+
+                        if (string_itr == string.end())
+                        {
+                            break;
+                        }
+                        else if (*string_itr != color_push_character<string_type::value_type>::value)
+                        {
+                            string_itr += std::min(std::distance(string_itr, string.end()), rgb_hex_string_length);
+
+                            continue;
+                        }
+                    }
+                    else if (*string_itr == color_pop_character<string_type::value_type>::value)
+                    {
+                        //encountered color pop character
+                        ++string_itr;
+
+                        if (string_itr == string.end())
+                        {
+                            break;
+                        }
+                        else if (*string_itr != color_pop_character<string_type::value_type>::value)
+                        {
+                            continue;
+                        }
+                    }
+                }
+
+                uint16_t character_id = *string_itr;
+
+                auto characters_itr = bitmap_font->get_characters().find(character_id);
+
+                string_type::value_type character;
+
+                if (characters_itr == bitmap_font->get_characters().end())
+                {
+                    character = fallback_character;
+                }
+                else
+                {
+                    character = *string_itr;
+                }
+
+                character_width = bitmap_font->get_characters().at(character).advance_x;
+
+                if (!is_autosized_to_text && is_multiline && line_width + character_width > padded_size.x)
+                {
+                    if (string_space_itr != string.end())
+                    {
+                        //text will overrun the width limit, end the line here and start a new one
+                        add_line(string_begin, string_space_itr);
+
+                        string_itr = string_space_itr + 1;
+                    }
+
+                    break;
+                }
+
+                line_width += character_width;
+
+                ++string_itr;
+            }
+
+            if (!was_line_added)
+            {
+                add_line(string_begin, string_itr);
+            }
+        }
+
+        if (lines.empty())
+        {
+            //HACK: if no lines, add one in so that the cursor can draw on empty lines
+            //TODO: consolidate this with the normal add_line function
+            line_t line;
+            line.string_begin = string.begin();
+            line.string_end = string.end();
+            line.rectangle.height = bitmap_font->get_line_height();
+
+            lines.emplace_back(line);
+        }
+
+        //calculate base translation
+        auto base_translation = get_bounds().min;
+        base_translation.x += get_padding().left;
+        base_translation.y += get_padding().bottom;
+
+        switch (vertical_alignment)
+        {
+        case vertical_alignment_e::top:
+            base_translation.y += padded_size.y - bitmap_font->get_base();
+            break;
+        case vertical_alignment_e::middle:
+            base_translation.y += (padded_size.y / 2) - (bitmap_font->get_base() / 2) + ((line_height * (lines.size() - 1)) / 2);
+            break;
+        case vertical_alignment_e::bottom:
+            base_translation.y += (line_height * lines.size()) - bitmap_font->get_base();
+            break;
+        default:
+            break;
+        }
+
+        switch (justification)
+        {
+        case justification_e::center:
+            base_translation.x += padded_size.x / 2;
+            break;
+        case justification_e::right:
+            base_translation.x += padded_size.x;
+            break;
+        default:
+            break;
+        }
+
+        //add base translation to all line rectangles
+        for (auto& line : lines)
+        {
+            line.rectangle.x += base_translation.x;
+            line.rectangle.y += base_translation.y;
+        }
+
+        update_cursor();
     }
 }

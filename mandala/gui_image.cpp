@@ -38,7 +38,7 @@ namespace mandala
 		index_buffer->data(indices, gpu_t::buffer_usage_e::static_draw);
 	}
 
-    void gui_image_t::on_cleaned()
+    void gui_image_t::on_clean_end()
     {
         const auto& sprite_region = sprite->get_region();
         auto scale = static_cast<vec2_t>(sprite_region.frame_rectangle.size()) / static_cast<vec2_t>(sprite_region.source_size);

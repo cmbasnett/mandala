@@ -142,6 +142,7 @@ class_<glm::detail::tvec4<value_type>>(name, init<value_type, value_type, value_
 BOOST_PYTHON_MODULE(mandala)
 {
     python_optional<sprite_t>();
+    python_optional<size_t>();
 
     class_<hash_t>("Hash", init<std::string>());
 
@@ -405,7 +406,9 @@ BOOST_PYTHON_MODULE(mandala)
             .add_property("is_multiline", &gui_label_t::get_is_multiline, &gui_label_t::set_is_multiline)
             .add_property("should_use_ellipses", &gui_label_t::get_should_use_ellipses, &gui_label_t::set_should_use_ellipses)
             .add_property("should_use_color_codes", &gui_label_t::get_should_use_color_codes, &gui_label_t::set_should_use_color_codes)
-            .add_property("is_read_only", &gui_label_t::get_is_read_only, &gui_label_t::set_is_read_only);
+            .add_property("is_read_only", &gui_label_t::get_is_read_only, &gui_label_t::set_is_read_only)
+            .add_property("max_length", &gui_label_t::get_max_length, &gui_label_t::set_max_length)
+            .add_property("is_autosized_to_text", &gui_label_t::get_is_autosized_to_text, &gui_label_t::set_is_autosized_to_text);
 
         enum_<gui_label_t::justification_e>("Justification")
             .value("LEFT", gui_label_t::justification_e::left)

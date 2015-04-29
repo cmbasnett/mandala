@@ -14,14 +14,14 @@ namespace mandala
         virtual void on_input_event(input_event_t& input_event) override;
         virtual void tick(float32_t dt) override;
         virtual void render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix) override;
-		virtual void clean() override;
+        virtual void on_clean_end() override;
 
         inline const scroll_location_type get_scroll_location() const { return scroll_location; }
         inline const scroll_extents_type& get_scroll_extents() const { return scroll_extents; }
         inline bool get_is_scrolling() const { return is_scrolling; }
 
         inline void set_scroll_location(const scroll_location_type& scroll_location, bool should_interpolate = true);
-        inline void set_scroll_extents(const scroll_extents_type& scroll_extents) { this->scroll_extents = scroll_extents; dirty(); }
+        inline void set_scroll_extents(const scroll_extents_type& scroll_extents) { this->scroll_extents = scroll_extents; }
 
     private:
         scroll_location_type scroll_location_target;

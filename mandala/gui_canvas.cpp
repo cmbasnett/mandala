@@ -86,7 +86,7 @@ namespace mandala
         gui_node_t::on_render_end(world_matrix, view_projection_matrix);
     }
 
-    void gui_canvas_t::on_cleaned()
+    void gui_canvas_t::on_clean_end()
     {
         const auto frame_buffer_size = static_cast<gpu_frame_buffer_size_type>(get_size());
 

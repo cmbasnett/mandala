@@ -47,7 +47,7 @@ namespace mandala
         gpu_programs.make<blur_horizontal_gpu_program_t>();
         gpu_programs.make<basic_gpu_program_t>();
 
-        python.initialize();
+        py.initialize();
 
 		game->app_run_start();
 
@@ -82,7 +82,7 @@ namespace mandala
 
 		game->app_run_end();
 
-        python.finalize();
+        py.finalize();
 		states.purge();
         states.tick(0); //TODO: hack to avoid exceptions throwing on close due to unreleased state objects, find a better solution later
 		resources.purge();

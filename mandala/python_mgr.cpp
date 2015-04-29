@@ -7,7 +7,7 @@
 
 namespace mandala
 {
-	python_mgr_t python;
+	python_mgr_t py;
 
     python_mgr_t::python_mgr_t()
     {

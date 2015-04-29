@@ -56,8 +56,9 @@ namespace mandala
         case input_event_t::touch_t::type_e::move:
             if (is_scrolling && touch_id == input_event.touch.id)
             {
-                scroll_location_target.x += static_cast<float32_t>(input_event.touch.location_delta.x);
-                scroll_location_target.y -= static_cast<float32_t>(input_event.touch.location_delta.y);
+                scroll_location_target += input_event.touch.location_delta;
+
+                scroll_location_target = glm::clamp(scroll_location_target, scroll_extents.min, scroll_extents.max);
 
 				input_event.is_consumed = true;
             }
@@ -75,16 +76,7 @@ namespace mandala
         gui_node_t::tick(dt);
     }
 
-	void gui_scroll_t::clean()
-	{
-		gui_node_t::clean();
-
-		//TODO: automatically size scroll extents based on children?
-		for (auto& child : get_children())
-		{
-		}
-	}
-    inline void gui_scroll_t::set_scroll_location(const scroll_location_type & scroll_location, bool should_interpolate)
+    void gui_scroll_t::set_scroll_location(const scroll_location_type & scroll_location, bool should_interpolate)
     {
         scroll_location_target = scroll_location;
 
@@ -92,5 +84,26 @@ namespace mandala
         {
             this->scroll_location = scroll_location;
         }
+    }
+
+    void gui_scroll_t::on_clean_end()
+    {
+        aabb2_t scroll_extents;
+        const auto bounds = get_bounds();
+
+        for (const auto& child : get_children())
+        {
+            const auto child_bounds = child->get_bounds();
+
+            scroll_extents.min = glm::min(scroll_extents.min, child_bounds.min - bounds.min);
+            scroll_extents.max = glm::max(scroll_extents.max, child_bounds.max - bounds.max);
+        }
+
+        //HACK: figure out more elegant way to do this
+        std::swap(scroll_extents.min.y, scroll_extents.max.y);
+        scroll_extents.min.y *= -1;
+        scroll_extents.max.y *= -1;
+
+        set_scroll_extents(scroll_extents);
     }
 }

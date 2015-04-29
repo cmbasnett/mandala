@@ -60,8 +60,8 @@ namespace mandala
         const vec2_t& get_anchor_offset() const { return anchor_offset; }
         const padding_t& get_padding() const { return padding; }
         const padding_t& get_margin() const { return margin; }
-        const gui_size_mode_e get_size_mode(bool is_recursive) const;
-        const vec2_t& get_size() const { return size; }
+        const gui_size_mode_e get_size_mode(bool is_recursive = true) const;
+        const size_type& get_size() const { return size; }
 
         const color_type& get_color() const { return color; }
 		const bounds_type& get_bounds() const { return bounds; }
@@ -87,10 +87,13 @@ namespace mandala
         virtual void on_render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix);
         virtual void on_render_begin(const mat4_t& world_matrix, const mat4_t& view_projection_matrix);
         virtual void on_render_end(const mat4_t& world_matrix, const mat4_t& view_projection_matrix) { }
-		virtual void clean();
+        virtual void on_clean_begin() { }
+        virtual void on_clean_end() { }
         virtual void tick(float32_t dt);
         virtual void on_input_event(input_event_t& input_event);
-        virtual void on_cleaned() { }
+
+        void clean();
+        void clean_internal(aabb2_t& children_bounds);
 
         bool has_children() const { return !children.empty(); }
 		bool has_parent() const { return parent.get() != nullptr; }

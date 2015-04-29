@@ -5,10 +5,11 @@
 
 //std
 #include <vector>
-#include <queue>
+#include <deque>
 #include <list>
 
 //boost
+#include <boost\optional.hpp>
 #include <boost\shared_ptr.hpp>
 
 namespace mandala
@@ -81,7 +82,7 @@ namespace mandala
         state_flags_type get_link_flags(const state_type& state) const;
         size_t count() const;
         state_type at(size_t node_index) const;
-        size_t index_of(const state_type& state) const;
+        boost::optional<size_t> index_of(const state_type& state) const;
         bool is_state_rendering(const state_type& state) const;
         bool is_state_ticking(const state_type& state) const;
         bool is_state_handling_input(const state_type& state) const;
@@ -93,7 +94,7 @@ namespace mandala
 		state_mgr_t& operator=(const state_mgr_t&) = delete;
 
 		std::list<node_t> nodes;
-		std::queue<operation_t> operations;
+		std::deque<operation_t> operations;
 	};
 
 	extern state_mgr_t states;

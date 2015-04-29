@@ -51,6 +51,7 @@ namespace mandala
 		bool get_should_use_color_codes() const { return should_use_color_codes; }
 		bool get_is_read_only() const { return is_read_only; }
         boost::optional<size_t> get_max_length() const { return max_length; }
+        bool get_is_autosized_to_text() const { return is_autosized_to_text; }
 
         line_height_type get_line_height() const;
 		size_t get_line_count() const;
@@ -65,8 +66,10 @@ namespace mandala
 		void set_should_use_color_codes(bool should_use_color_codes) { this->should_use_color_codes = should_use_color_codes; dirty(); }
 		void set_is_read_only(bool is_read_only) { this->is_read_only = is_read_only; dirty(); }	//TODO: might not need to dirty, putting this in to be safe
         void set_max_length(const boost::optional<size_t>& max_size);
+        void set_is_autosized_to_text(bool is_autosized_to_text) { this->is_autosized_to_text = true; dirty(); }
 
-        virtual void clean() override;
+        virtual void on_clean_begin() override;
+        virtual void on_clean_end() override;
         virtual void on_render_begin(const mat4_t& world_matrix, const mat4_t& view_projection_matrix) override;
         virtual void on_input_event(input_event_t& input_event) override;
 
@@ -98,6 +101,7 @@ namespace mandala
 		};
 
         void update_cursor();
+        void update_lines();
 
 		string_type string;
 		boost::shared_ptr<bitmap_font_t> bitmap_font;
@@ -113,5 +117,6 @@ namespace mandala
 		std::vector<line_t> lines;
         boost::optional<size_t> max_length;
         std::function<void()> on_enter_function;
+        bool is_autosized_to_text = false;
 	};
 }

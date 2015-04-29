@@ -22,5 +22,5 @@ namespace mandala
 		boost::python::object main_module;
 	};
 
-	extern python_mgr_t python;
+	extern python_mgr_t py;
 }
