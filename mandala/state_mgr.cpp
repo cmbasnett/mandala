@@ -268,7 +268,7 @@ namespace mandala
 
         if (nodes_itr == nodes.end())
         {
-            //state to be popped does not exist on the stack
+            //state does not exist on the stack
             //check operation queue to see if state is about to be pushed
             const auto operations_itr = std::find_if(operations.begin(), operations.end(), [&](const operation_t& operation)
             {
@@ -284,7 +284,7 @@ namespace mandala
             }
             else
             {
-                throw std::exception("state cannot be popped if it is not on the stack or in queue to be pushed");
+                throw std::exception("state is not on the stack nor in queue to be pushed");
             }
         }
 
@@ -302,7 +302,7 @@ namespace mandala
 	{
 		if (state == nullptr)
 		{
-			throw std::exception();
+            throw std::invalid_argument("state cannot be null");
         }
 
         const auto nodes_itr = std::find_if(nodes.begin(), nodes.end(), [&](const node_t& node)
@@ -312,8 +312,24 @@ namespace mandala
 
         if (nodes_itr == nodes.end())
         {
-            //state does not exist on stack
-            throw std::out_of_range("");
+            //state does not exist on the stack
+            //check operation queue to see if state is about to be pushed
+            const auto operations_itr = std::find_if(operations.begin(), operations.end(), [&](const operation_t& operation)
+            {
+                return operation.state == state && operation.type == operation_t::type_e::push;
+            });
+
+            if (operations_itr != operations.end())
+            {
+                //state is in operation queue to be pushed, change operations' link flags
+                operations_itr->link_flags = link_flags;
+
+                return;
+            }
+            else
+            {
+                throw std::exception("state is not on the stack nor in queue to be pushed");
+            }
         }
 
 		operation_t operation;
@@ -350,13 +366,11 @@ namespace mandala
 			throw std::out_of_range(oss.str());
 		}
 
-		auto nodes_reverse_itr = nodes.rbegin();
+        auto nodes_reverse_itr = nodes.rbegin();
 
-		while (index > 0)
+		while (index-- > 0)
 		{
 			++nodes_reverse_itr;
-
-			--index;
 		}
 
 		return nodes_reverse_itr->state;
@@ -388,7 +402,7 @@ namespace mandala
 
 		if (nodes_itr == nodes.end())
 		{
-			throw std::out_of_range("");
+			throw std::out_of_range("state is not on the stack");
 		}
 
 		return nodes_itr->link_flags;
@@ -403,7 +417,7 @@ namespace mandala
 
 		if (nodes_itr == nodes.end())
 		{
-			throw std::out_of_range("");
+			throw std::out_of_range("state is not on the stack");
 		}
 
 		return nodes_itr->flags;
