@@ -130,10 +130,11 @@ namespace mandala
 	template<typename T, typename U>
 	void operator-=(details::aabb2_t<T>& aabb, const details::padding_t<U>& padding)
 	{
-		aabb.min.x += padding.left;
-		aabb.min.y += padding.bottom;
-		aabb.max.x -= padding.right;
-		aabb.max.y -= padding.top;
+        //TODO: verify correctness
+        aabb.min.x += std::min(padding.left, aabb.width());
+        aabb.min.y += std::min(padding.bottom, aabb.height());
+        aabb.max.x -= std::min(padding.right, aabb.width());
+        aabb.max.y -= std::min(padding.top, aabb.height());
 	}
 
 	template<typename T, typename U>
