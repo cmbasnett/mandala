@@ -12,7 +12,8 @@ namespace mandala
 	{
         python_mgr_t();
 
-		void exec(const std::string&);
+		void exec(const std::string& string);
+        void exec_file(const std::string& file);
 
         //TODO: breaks RAII, figure out a way around this
         void initialize();

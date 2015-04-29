@@ -45,7 +45,19 @@ namespace mandala
     {
         absolute,
         relative,
+        axis_scale,
         inherit
+    };
+
+    struct gui_size_t : vec2_t
+    {
+        vec2_t value;
+        
+        struct
+        {
+            gui_size_mode_e x;
+            gui_size_mode_e y;
+        } axis_modes;
     };
 
     struct gui_node_t : public boost::enable_shared_from_this<gui_node_t>
@@ -70,10 +82,7 @@ namespace mandala
 		const std::vector<boost::shared_ptr<gui_node_t>>& get_children() const { return children; }
 
 		void set_dock_mode(gui_dock_mode_e dock_mode) { this->dock_mode = dock_mode; dirty(); }
-		void set_anchor_flags(gui_anchor_flags_type anchor_flags)
-        {
-            this->anchor_flags = anchor_flags; dirty();
-        }
+		void set_anchor_flags(gui_anchor_flags_type anchor_flags) { this->anchor_flags = anchor_flags; dirty(); }
 		void set_anchor_offset(const vec2_t& anchor_offset) { this->anchor_offset = anchor_offset; dirty(); }
         void set_padding(const padding_t& padding) { this->padding = padding; dirty(); }
 		void set_margin(const padding_t& margin) { this->margin = margin; dirty(); }
@@ -107,13 +116,12 @@ namespace mandala
         std::vector<boost::shared_ptr<gui_node_t>> children;
         gui_dock_mode_e dock_mode = gui_dock_mode_e::none;
         gui_anchor_flags_type anchor_flags = (gui_anchor_flag_top | gui_anchor_flag_left);
-        vec2_t anchor_offset;
+        size_type anchor_offset;
         padding_t padding;
         padding_t margin;
         gui_size_mode_e size_mode = gui_size_mode_e::absolute;
         size_type size;
         size_type desired_size;
-        range_<size_type> size_range;
         color_type color = color_type(1.0f);
         bounds_type bounds;
         bool is_hidden = false;

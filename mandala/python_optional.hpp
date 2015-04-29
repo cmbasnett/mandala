@@ -18,7 +18,7 @@ struct python_optional : private boost::noncopyable
 
     static void* convertible(PyObject *obj)
     {
-        return obj == Py_None || extract<T>(obj).check() ? obj : NULL;
+        return obj == Py_None || extract<T>(obj).check() ? obj : nullptr;
     }
 
     static void constructor(PyObject *obj, boost::python::converter::rvalue_from_python_stage1_data *data)

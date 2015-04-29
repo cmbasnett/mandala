@@ -237,7 +237,6 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="camera.hpp" />
     <ClInclude Include="color.hpp" />
     <ClInclude Include="arcball_camera.hpp" />
-    <ClInclude Include="armada\armada.hpp" />
     <ClInclude Include="armada\bsp_state.hpp" />
     <ClInclude Include="armada\skybox.hpp" />
     <ClInclude Include="bitmap_font.hpp" />
@@ -255,6 +254,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="gpu.hpp" />
     <ClInclude Include="gpu_buffer_mgr.hpp" />
     <ClInclude Include="gpu_defs.hpp" />
+    <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="gui_button.hpp" />
     <ClInclude Include="gui_canvas.hpp" />
     <ClInclude Include="gui_image_gpu_program.hpp" />
@@ -347,9 +347,7 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="bsp_gpu_program.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="frame_buffer.cpp" />
-    <ClCompile Include="game.cpp" />
     <ClCompile Include="arcball_camera.cpp" />
-    <ClCompile Include="armada\armada.cpp" />
     <ClCompile Include="armada\bsp_state.cpp" />
     <ClCompile Include="armada\skybox.cpp" />
     <ClCompile Include="bitmap_font.cpp" />

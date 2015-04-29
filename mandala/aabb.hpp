@@ -59,7 +59,7 @@ namespace mandala
 
 			type operator-(const value_type& rhs) const
 			{
-				return type(min - t, max - t);
+				return type(min - rhs, max - rhs);
 			}
 
 			type& operator-=(const value_type& rhs)
@@ -150,6 +150,21 @@ namespace mandala
             {
             }
 
+            inline scalar_type width() const
+            {
+                return max.x - min.x;
+            }
+
+            inline scalar_type height() const
+            {
+                return max.y - min.y;
+            }
+
+            inline scalar_type depth() const
+            {
+                return max.z - min.z;
+            }
+
 			value_type size() const
 			{
 				return max - min;
@@ -184,24 +199,24 @@ namespace mandala
 
 			type operator-(const value_type& rhs) const
 			{
-				return type(min - t, max - t);
+				return type(min - rhs, max - rhs);
 			}
 
 			type& operator-=(const value_type& rhs)
 			{
-				*this = *this - t;
+				*this = *this - rhs;
 
 				return *this;
 			}
 
 			type operator+(const value_type& rhs) const
 			{
-				return type(min + t, max + t);
+				return type(min + rhs, max + rhs);
 			}
 
 			type& operator+=(const value_type& rhs)
 			{
-				*this = *this + t;
+				*this = *this + rhs;
 
 				return *this;
 			}

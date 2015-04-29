@@ -1,12 +1,14 @@
 //mandala
-#include "app.hpp"
-
-//armada
-#include "armada/armada.hpp"
+#include "python_mgr.hpp"
 
 using namespace mandala;
 
 int main()
 {
-    app.run(armada::game);
+    py.initialize();
+
+    //load app.py
+    py.exec_file("app.py");
+
+    py.finalize();
 }

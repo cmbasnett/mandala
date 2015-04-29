@@ -147,7 +147,7 @@ namespace mandala
 			{
                 try
                 {
-                    py.exec("states.push(PauseState(), STATE_FLAG_ALL)");
+                    py.exec("states.push(TestState(), STATE_FLAG_RENDER)");
                 }
                 catch (std::exception& e)
                 {

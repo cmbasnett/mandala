@@ -7,20 +7,15 @@ namespace mandala
 {
 	struct game_t
 	{
-		game_t(const std::string& name);
+        virtual void app_run_start() { }
+        virtual void app_run_end() { }
 
-		virtual void app_run_start();
-		virtual void app_run_end();
+        virtual void app_tick_start() { }
+        virtual void app_tick_end() { }
 
-		virtual void app_tick_start();
-		virtual void app_tick_end();
+        virtual void app_render_start() { }
+        virtual void app_render_end() { }
 
-		virtual void app_render_start();
-		virtual void app_render_end();
-
-        const std::string& get_name() const { return name; }
-
-    private:
-		std::string name;
+        virtual std::string get_name() const { return "mandala"; }
 	};
 }

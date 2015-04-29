@@ -77,3 +77,15 @@ namespace glm
         }
     }
 }
+
+//mandala
+#include "range.hpp"
+
+namespace mandala
+{
+    template<typename T>
+    std::ostream& operator<<(std::ostream& ostream, const range_<T>& aabb)
+    {
+        return ostream << "(min=" << aabb.min << ",max=" << aabb.max << ")";
+    }
+}

@@ -47,8 +47,6 @@ namespace mandala
         gpu_programs.make<blur_horizontal_gpu_program_t>();
         gpu_programs.make<basic_gpu_program_t>();
 
-        py.initialize();
-
 		game->app_run_start();
 
         auto simulation_time = high_resolution_clock::now();
@@ -82,7 +80,6 @@ namespace mandala
 
 		game->app_run_end();
 
-        py.finalize();
 		states.purge();
         states.tick(0); //TODO: hack to avoid exceptions throwing on close due to unreleased state objects, find a better solution later
 		resources.purge();

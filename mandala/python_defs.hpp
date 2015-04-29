@@ -29,10 +29,16 @@
 #include "model_info.hpp"   //TODO: ditch "info", convert to model & instance naming
 #include "frame_buffer.hpp"
 #include "gui_canvas.hpp"
+#include "game.hpp"
+
+//TODO: remove this
+#include "armada\bsp_state.hpp"
 
 using namespace boost;
 using namespace boost::python;
 using namespace mandala;
+
+#define MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(name) struct name##_wrapper_t : name##_t, wrapper<name##_t>
 
 #define MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(return_type, name, ...)\
 return_type name(__VA_ARGS__) override\
@@ -49,7 +55,17 @@ return_type name(__VA_ARGS__) override\
     }\
 }\
 
-struct state_wrapper_t : state_t, wrapper<state_t>
+MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(game)
+{
+    MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, app_run_start)
+    MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, app_run_end)
+    MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, app_tick_start)
+    MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, app_tick_end)
+    MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, app_render_start)
+    MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, app_render_end)
+};
+
+MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(state)
 {
     void tick(float32_t dt) override
     {
@@ -139,34 +155,70 @@ class_<glm::detail::tvec4<value_type>>(name, init<value_type, value_type, value_
     .def(self_ns::self -= self_ns::self)\
     .def(self_ns::str(self_ns::self));\
 
+#define MANDALA_PYTHON_DEFINE_AABB2(name, scalar_type)\
+class_<mandala::details::aabb2_t<scalar_type>>(name, init<>())\
+.def_readwrite("min", &mandala::details::aabb2_t<scalar_type>::min)\
+.def_readwrite("max", &mandala::details::aabb2_t<scalar_type>::max)\
+.add_property("width", &mandala::details::aabb2_t<scalar_type>::width)\
+.add_property("height", &mandala::details::aabb2_t<scalar_type>::height)\
+.add_property("size", make_function(&mandala::details::aabb2_t<scalar_type>::size, return_value_policy<return_by_value>()))\
+.add_property("center", make_function(&mandala::details::aabb2_t<scalar_type>::center, return_value_policy<return_by_value>()))\
+.def(self_ns::self + other<mandala::details::aabb2_t<scalar_type>::value_type>())\
+.def(self_ns::self += other<mandala::details::aabb2_t<scalar_type>::value_type>())\
+.def(self_ns::self - other<mandala::details::aabb2_t<scalar_type>::value_type>())\
+.def(self_ns::self -= other<mandala::details::aabb2_t<scalar_type>::value_type>())\
+.def(self_ns::str(self_ns::self));\
+
+#define MANDALA_PYTHON_DEFINE_AABB3(name, scalar_type)\
+class_<mandala::details::aabb3_t<scalar_type>>(name, init<>())\
+.def_readwrite("min", &mandala::details::aabb3_t<scalar_type>::min)\
+.def_readwrite("max", &mandala::details::aabb3_t<scalar_type>::max)\
+.add_property("width", &mandala::details::aabb3_t<scalar_type>::width)\
+.add_property("height", &mandala::details::aabb3_t<scalar_type>::height)\
+.add_property("depth", &mandala::details::aabb3_t<scalar_type>::depth)\
+.add_property("size", make_function(&mandala::details::aabb3_t<scalar_type>::size, return_value_policy<return_by_value>()))\
+.add_property("center", make_function(&mandala::details::aabb3_t<scalar_type>::center, return_value_policy<return_by_value>()))\
+.def(self_ns::self + other<mandala::details::aabb3_t<scalar_type>::value_type>())\
+.def(self_ns::self += other<mandala::details::aabb3_t<scalar_type>::value_type>())\
+.def(self_ns::self - other<mandala::details::aabb3_t<scalar_type>::value_type>())\
+.def(self_ns::self -= other<mandala::details::aabb3_t<scalar_type>::value_type>());\
+
+#define MANDALA_PYTHON_DEFINE_RECTANGLE(name, scalar_type)\
+class_<mandala::details::rectangle_t<scalar_type>>(name, init<>())\
+.def_readwrite("x", &mandala::details::rectangle_t<scalar_type>::x)\
+.def_readwrite("y", &mandala::details::rectangle_t<scalar_type>::y)\
+.def_readwrite("width", &mandala::details::rectangle_t<scalar_type>::width)\
+.def_readwrite("height", &mandala::details::rectangle_t<scalar_type>::height);\
+
 BOOST_PYTHON_MODULE(mandala)
 {
     python_optional<sprite_t>();
     python_optional<size_t>();
 
+    class_<game_wrapper_t, boost::shared_ptr<game_wrapper_t>, noncopyable>("Game", init<>())
+        .add_property("name", make_function(&game_wrapper_t::get_name, return_value_policy<return_by_value>()));
+
     class_<hash_t>("Hash", init<std::string>());
 
-    class_<aabb2_t>("AABB2")
-        .def_readwrite("min", &aabb2_t::min)
-        .def_readwrite("max", &aabb2_t::max)
-        .add_property("width", &aabb2_t::width)
-        .add_property("height", &aabb2_t::height)
-        .add_property("size", &aabb2_t::size)
-        .add_property("center", &aabb2_t::center);
+    //MATH
+    MANDALA_PYTHON_DEFINE_AABB2("AABB2I", int);
+    MANDALA_PYTHON_DEFINE_AABB2("AABB2F", float);
+
+    MANDALA_PYTHON_DEFINE_AABB3("AABB3I", int);
+    MANDALA_PYTHON_DEFINE_AABB3("AABB3F", float);
 
     //move to GLM module?
-    MANDALA_PYTHON_DEFINE_VEC2("Vec2f", float);
-    MANDALA_PYTHON_DEFINE_VEC2("Vec2i", int);
-    MANDALA_PYTHON_DEFINE_VEC2("Vec2u", unsigned int);
-    MANDALA_PYTHON_DEFINE_VEC2("Vec2d", double);
+    MANDALA_PYTHON_DEFINE_VEC2("Vec2I", int);
+    MANDALA_PYTHON_DEFINE_VEC2("Vec2F", float);
 
-    MANDALA_PYTHON_DEFINE_VEC3("Vec3f", float);
-    MANDALA_PYTHON_DEFINE_VEC3("Vec3i", int);
-    MANDALA_PYTHON_DEFINE_VEC3("Vec3f", double);
+    MANDALA_PYTHON_DEFINE_VEC3("Vec3I", int);
+    MANDALA_PYTHON_DEFINE_VEC3("Vec3F", float);
 
-    MANDALA_PYTHON_DEFINE_VEC4("Vec4f", float);
-    MANDALA_PYTHON_DEFINE_VEC4("Vec4i", int);
-    MANDALA_PYTHON_DEFINE_VEC4("Vec4d", double);
+    MANDALA_PYTHON_DEFINE_VEC4("Vec4I", int);
+    MANDALA_PYTHON_DEFINE_VEC4("Vec4F", float);
+
+    MANDALA_PYTHON_DEFINE_RECTANGLE("RectangleI", int);
+    MANDALA_PYTHON_DEFINE_RECTANGLE("RectangleF", float);
 
     class_<padding_f32_t>("Padding", init<float, float, float, float>())
         .def_readwrite("bottom", &padding_t::bottom)
@@ -193,11 +245,13 @@ BOOST_PYTHON_MODULE(mandala)
         .add_property("screen_size", &platform_t::get_screen_size, &platform_t::set_screen_size)
 #if defined(MANDALA_PC)
         .add_property("cursor_location", &platform_t::get_cursor_location, &platform_t::set_cursor_location)
+        .add_property("window_size", &platform_t::get_window_size, &platform_t::set_window_size)
+        .add_property("window_location", &platform_t::get_window_location, &platform_t::set_window_location)
 #endif
         ;
 
     {
-        scope input_event_scope = class_<input_event_t, noncopyable>("InputEvent", no_init)
+        scope input_event_scope = class_<input_event_t>("InputEvent", no_init)
             .add_property("id", &input_event_t::id)
             .add_property("device_type", &input_event_t::device_type)
             .add_property("touch", &input_event_t::touch)
@@ -261,7 +315,7 @@ BOOST_PYTHON_MODULE(mandala)
         {
             scope keyboard_scope = class_<input_event_t::keyboard_t, noncopyable>("Keyboard", no_init)
                 .def_readonly("type", &input_event_t::keyboard_t::type)
-                //.def_readonly("key", &input_event_t::keyboard_t::key) //TODO: do this later
+                .def_readonly("key", &input_event_t::keyboard_t::key)
                 .def_readonly("mod_flags", &input_event_t::keyboard_t::mod_flags)
                 .def_readonly("character", &input_event_t::keyboard_t::character);
 
@@ -272,6 +326,130 @@ BOOST_PYTHON_MODULE(mandala)
                 .value("KEY_REPEAT", input_event_t::keyboard_t::type_e::key_repeat)
                 .value("CHARACTER", input_event_t::keyboard_t::type_e::character)
                 .export_values();
+
+            enum_<input_event_t::keyboard_t::key_e>("Key")
+                .value("NONE", input_event_t::keyboard_t::key_e::none)
+                .value("SPACE", input_event_t::keyboard_t::key_e::space)
+                .value("APOSTROPHE", input_event_t::keyboard_t::key_e::apostrophe)
+                .value("COMMA", input_event_t::keyboard_t::key_e::comma)
+                .value("MINUS", input_event_t::keyboard_t::key_e::minus)
+                .value("PERIOD", input_event_t::keyboard_t::key_e::period)
+                .value("SLASH", input_event_t::keyboard_t::key_e::slash)
+                .value("NR_0", input_event_t::keyboard_t::key_e::nr_0)
+                .value("NR_1", input_event_t::keyboard_t::key_e::nr_1)
+                .value("NR_2", input_event_t::keyboard_t::key_e::nr_2)
+                .value("NR_3", input_event_t::keyboard_t::key_e::nr_3)
+                .value("NR_4", input_event_t::keyboard_t::key_e::nr_4)
+                .value("NR_5", input_event_t::keyboard_t::key_e::nr_5)
+                .value("NR_6", input_event_t::keyboard_t::key_e::nr_6)
+                .value("NR_7", input_event_t::keyboard_t::key_e::nr_7)
+                .value("NR_8", input_event_t::keyboard_t::key_e::nr_8)
+                .value("NR_9", input_event_t::keyboard_t::key_e::nr_9)
+                .value("SEMICOLON", input_event_t::keyboard_t::key_e::semicolon)
+                .value("EQUAL", input_event_t::keyboard_t::key_e::equal)
+                .value("A", input_event_t::keyboard_t::key_e::a)
+                .value("B", input_event_t::keyboard_t::key_e::b)
+                .value("C", input_event_t::keyboard_t::key_e::c)
+                .value("D", input_event_t::keyboard_t::key_e::d)
+                .value("E", input_event_t::keyboard_t::key_e::e)
+                .value("F", input_event_t::keyboard_t::key_e::f)
+                .value("G", input_event_t::keyboard_t::key_e::g)
+                .value("H", input_event_t::keyboard_t::key_e::h)
+                .value("I", input_event_t::keyboard_t::key_e::i)
+                .value("J", input_event_t::keyboard_t::key_e::j)
+                .value("K", input_event_t::keyboard_t::key_e::k)
+                .value("L", input_event_t::keyboard_t::key_e::l)
+                .value("M", input_event_t::keyboard_t::key_e::m)
+                .value("N", input_event_t::keyboard_t::key_e::n)
+                .value("O", input_event_t::keyboard_t::key_e::o)
+                .value("P", input_event_t::keyboard_t::key_e::p)
+                .value("Q", input_event_t::keyboard_t::key_e::q)
+                .value("R", input_event_t::keyboard_t::key_e::r)
+                .value("S", input_event_t::keyboard_t::key_e::s)
+                .value("T", input_event_t::keyboard_t::key_e::t)
+                .value("U", input_event_t::keyboard_t::key_e::u)
+                .value("V", input_event_t::keyboard_t::key_e::v)
+                .value("W", input_event_t::keyboard_t::key_e::w)
+                .value("X", input_event_t::keyboard_t::key_e::x)
+                .value("Y", input_event_t::keyboard_t::key_e::y)
+                .value("Z", input_event_t::keyboard_t::key_e::z)
+                .value("LEFT_BRACKET", input_event_t::keyboard_t::key_e::left_bracket)
+                .value("BACKSLASH", input_event_t::keyboard_t::key_e::backslash)
+                .value("RIGHT_BRACKET", input_event_t::keyboard_t::key_e::right_bracket)
+                .value("GRAVE_ACCENT", input_event_t::keyboard_t::key_e::grave_accent)
+                .value("WORLD_1", input_event_t::keyboard_t::key_e::world_1)
+                .value("WORLD_2", input_event_t::keyboard_t::key_e::world_2)
+                .value("ESCAPE", input_event_t::keyboard_t::key_e::escape)
+                .value("ENTER", input_event_t::keyboard_t::key_e::enter)
+                .value("TAB", input_event_t::keyboard_t::key_e::tab)
+                .value("BACKSPACE", input_event_t::keyboard_t::key_e::backspace)
+                .value("INSERT", input_event_t::keyboard_t::key_e::insert)
+                .value("DEL", input_event_t::keyboard_t::key_e::del)
+                .value("RIGHT", input_event_t::keyboard_t::key_e::right)
+                .value("LEFT", input_event_t::keyboard_t::key_e::left)
+                .value("DOWN", input_event_t::keyboard_t::key_e::down)
+                .value("UP", input_event_t::keyboard_t::key_e::up)
+                .value("PAGE_UP", input_event_t::keyboard_t::key_e::page_up)
+                .value("PAGE_DOWN", input_event_t::keyboard_t::key_e::page_down)
+                .value("HOME", input_event_t::keyboard_t::key_e::home)
+                .value("END", input_event_t::keyboard_t::key_e::end)
+                .value("CAPS_LOCK", input_event_t::keyboard_t::key_e::caps_lock)
+                .value("SCROLL_LOCK", input_event_t::keyboard_t::key_e::scroll_lock)
+                .value("NUM_LOCK", input_event_t::keyboard_t::key_e::num_lock)
+                .value("PRINT_SCREEN", input_event_t::keyboard_t::key_e::print_screen)
+                .value("PAUSE", input_event_t::keyboard_t::key_e::pause)
+                .value("F1", input_event_t::keyboard_t::key_e::f1)
+                .value("F2", input_event_t::keyboard_t::key_e::f2)
+                .value("F3", input_event_t::keyboard_t::key_e::f3)
+                .value("F4", input_event_t::keyboard_t::key_e::f4)
+                .value("F5", input_event_t::keyboard_t::key_e::f5)
+                .value("F6", input_event_t::keyboard_t::key_e::f6)
+                .value("F7", input_event_t::keyboard_t::key_e::f7)
+                .value("F8", input_event_t::keyboard_t::key_e::f8)
+                .value("F9", input_event_t::keyboard_t::key_e::f9)
+                .value("F10", input_event_t::keyboard_t::key_e::f10)
+                .value("F11", input_event_t::keyboard_t::key_e::f11)
+                .value("F12", input_event_t::keyboard_t::key_e::f12)
+                .value("F13", input_event_t::keyboard_t::key_e::f13)
+                .value("F14", input_event_t::keyboard_t::key_e::f14)
+                .value("F15", input_event_t::keyboard_t::key_e::f15)
+                .value("F16", input_event_t::keyboard_t::key_e::f16)
+                .value("F17", input_event_t::keyboard_t::key_e::f17)
+                .value("F18", input_event_t::keyboard_t::key_e::f18)
+                .value("F19", input_event_t::keyboard_t::key_e::f19)
+                .value("F20", input_event_t::keyboard_t::key_e::f20)
+                .value("F21", input_event_t::keyboard_t::key_e::f21)
+                .value("F22", input_event_t::keyboard_t::key_e::f22)
+                .value("F23", input_event_t::keyboard_t::key_e::f23)
+                .value("F24", input_event_t::keyboard_t::key_e::f24)
+                .value("F25", input_event_t::keyboard_t::key_e::f25)
+                .value("KP_0", input_event_t::keyboard_t::key_e::kp_0)
+                .value("KP_1", input_event_t::keyboard_t::key_e::kp_1)
+                .value("KP_2", input_event_t::keyboard_t::key_e::kp_2)
+                .value("KP_3", input_event_t::keyboard_t::key_e::kp_3)
+                .value("KP_4", input_event_t::keyboard_t::key_e::kp_4)
+                .value("KP_5", input_event_t::keyboard_t::key_e::kp_5)
+                .value("KP_6", input_event_t::keyboard_t::key_e::kp_6)
+                .value("KP_7", input_event_t::keyboard_t::key_e::kp_7)
+                .value("KP_8", input_event_t::keyboard_t::key_e::kp_8)
+                .value("KP_9", input_event_t::keyboard_t::key_e::kp_9)
+                .value("KP_DECIMAL", input_event_t::keyboard_t::key_e::kp_decimal)
+                .value("KP_DIVIDE", input_event_t::keyboard_t::key_e::kp_divide)
+                .value("KP_MULTIPLY", input_event_t::keyboard_t::key_e::kp_multiply)
+                .value("KP_SUBTRACT", input_event_t::keyboard_t::key_e::kp_subtract)
+                .value("KP_ADD", input_event_t::keyboard_t::key_e::kp_add)
+                .value("KP_ENTER", input_event_t::keyboard_t::key_e::kp_enter)
+                .value("KP_EQUAL", input_event_t::keyboard_t::key_e::kp_equal)
+                .value("LEFT_SHIFT", input_event_t::keyboard_t::key_e::left_shift)
+                .value("LEFT_CONTROL", input_event_t::keyboard_t::key_e::left_control)
+                .value("LEFT_ALT", input_event_t::keyboard_t::key_e::left_alt)
+                .value("LEFT_SUPER", input_event_t::keyboard_t::key_e::left_super)
+                .value("RIGHT_SHIFT", input_event_t::keyboard_t::key_e::right_shift)
+                .value("RIGHT_CONTROL", input_event_t::keyboard_t::key_e::right_control)
+                .value("RIGHT_ALT", input_event_t::keyboard_t::key_e::right_alt)
+                .value("RIGHT_SUPER", input_event_t::keyboard_t::key_e::right_super)
+                .value("MENU", input_event_t::keyboard_t::key_e::menu)
+                .export_values();
         }
 #endif
     }
@@ -280,7 +458,8 @@ BOOST_PYTHON_MODULE(mandala)
     //APP
     class_<app_t, noncopyable>("App", no_init)
         .def("exit", &app_t::exit)
-        .def("reset", &app_t::reset);
+        .def("reset", &app_t::reset)
+        .def("run", &app_t::run);
 
     scope().attr("app") = boost::ref(app);
 
@@ -422,12 +601,20 @@ BOOST_PYTHON_MODULE(mandala)
             .value("BOTTOM", gui_label_t::vertical_alignment_e::bottom)
             .export_values();
     }
+    
+    {
+        scope gui_image_scope = class_<gui_image_t, bases<gui_node_t>, boost::shared_ptr<gui_image_t>, noncopyable>("GuiImage", init<>())
+            .add_property("sprite", make_function(&gui_image_t::get_sprite, return_value_policy<copy_const_reference>()), &gui_image_t::set_sprite)
+            .add_property("is_autosized_to_sprite", &gui_image_t::get_is_autosized_to_sprite, &gui_image_t::set_is_autosized_to_sprite)
+            .add_property("triangle_mode", &gui_image_t::get_triangle_mode, &gui_image_t::set_triangle_mode);
 
-    class_<rectangle_i16_t>("Rectangle", init<>())
-        .def_readwrite("x", &rectangle_i16_t::x)
-        .def_readwrite("y", &rectangle_i16_t::y)
-        .def_readwrite("width", &rectangle_i16_t::width)
-        .def_readwrite("height", &rectangle_i16_t::height);
+        enum_<gui_image_t::triangle_mode_e>("TriangleMode")
+            .value("BOTTOM_RIGHT", gui_image_t::triangle_mode_e::bottom_right)
+            .value("TOP_LEFT", gui_image_t::triangle_mode_e::top_left)
+            .value("TOP_RIGHT", gui_image_t::triangle_mode_e::top_right)
+            .value("BOTTOM_LEFT", gui_image_t::triangle_mode_e::bottom_left)
+            .value("BOTH", gui_image_t::triangle_mode_e::both);
+    }
 
     //STATES
     class_<state_t, boost::shared_ptr<state_t>, noncopyable>("StateBase", no_init);
@@ -451,6 +638,8 @@ BOOST_PYTHON_MODULE(mandala)
         ;
 
     class_<gui_layout_t, bases<gui_node_t>, boost::shared_ptr<gui_layout_t>, noncopyable>("GuiLayout", no_init);
+
+    class_<armada::bsp_state_t, bases<state_t>, boost::shared_ptr<armada::bsp_state_t>, noncopyable>("BspState", init<>());
 
     //RESOURCES
     class_<resource_t, boost::shared_ptr<resource_t>, noncopyable>("Resource", no_init);
@@ -492,19 +681,16 @@ BOOST_PYTHON_MODULE(mandala)
         .add_property("region", make_function(&sprite_t::get_region, return_value_policy<copy_const_reference>()))
         .add_property("sprite_set", make_function(&sprite_t::get_sprite_set, return_value_policy<copy_const_reference>()));
 
-    {
-        scope gui_image_scope = class_<gui_image_t, bases<gui_node_t>, boost::shared_ptr<gui_image_t>, noncopyable>("GuiImage", init<>())
-            .add_property("sprite", make_function(&gui_image_t::get_sprite, return_value_policy<copy_const_reference>()), &gui_image_t::set_sprite)
-            .add_property("is_autosized_to_sprite", &gui_image_t::get_is_autosized_to_sprite, &gui_image_t::set_is_autosized_to_sprite)
-            .add_property("triangle_mode", &gui_image_t::get_triangle_mode, &gui_image_t::set_triangle_mode);
+    //GPU
+    class_<gpu_t, noncopyable>("Gpu", no_init)
+        .add_property("vendor", make_function(&gpu_t::get_vendor, return_value_policy<copy_const_reference>()))
+        .add_property("renderer", make_function(&gpu_t::get_renderer, return_value_policy<copy_const_reference>()))
+        .add_property("shading_language_version", make_function(&gpu_t::get_shading_language_version, return_value_policy<copy_const_reference>()))
+        .add_property("version", make_function(&gpu_t::get_version, return_value_policy<copy_const_reference>()))
+        .add_property("extensions", make_function(&gpu_t::get_extensions, return_value_policy<copy_const_reference>()))
+        .add_property("clear_color", make_function(&gpu_t::get_clear_color, return_value_policy<return_by_value>()), &gpu_t::set_clear_color);
 
-        enum_<gui_image_t::triangle_mode_e>("TriangleMode")
-            .value("BOTTOM_RIGHT", gui_image_t::triangle_mode_e::bottom_right)
-            .value("TOP_LEFT", gui_image_t::triangle_mode_e::top_left)
-            .value("TOP_RIGHT", gui_image_t::triangle_mode_e::top_right)
-            .value("BOTTOM_LEFT", gui_image_t::triangle_mode_e::bottom_left)
-            .value("BOTH", gui_image_t::triangle_mode_e::both);
-    }
+    scope().attr("gpu") = boost::ref(gpu);
 
     enum_<gpu_frame_buffer_type_e>("GpuFrameBufferType")
         .value("COLOR", gpu_frame_buffer_type_e::color)
@@ -520,6 +706,6 @@ BOOST_PYTHON_MODULE(mandala)
         .add_property("depth_texture", make_function(&frame_buffer_t::get_depth_texture, return_value_policy<copy_const_reference>()))
         .add_property("depth_stencil_texture", make_function(&frame_buffer_t::get_depth_stencil_texture, return_value_policy<copy_const_reference>()))
         .add_property("size", make_function(&frame_buffer_t::get_size, return_value_policy<copy_const_reference>()), &frame_buffer_t::set_size)
-        //.def_readonly("type", &frame_buffer_t::get_type)
+        .add_property("type", &frame_buffer_t::get_type)
         ;
 }

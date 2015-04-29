@@ -20,12 +20,6 @@ namespace glm
 	}
 
 	template<typename T>
-	inline std::ostream& operator<<(std::ostream& ostream, detail::tvec2<T> const& v)
-	{
-		return ostream << v.x << " " << v.y;
-	}
-
-	template<typename T>
 	inline std::istream& operator>>(std::istream& istream, detail::tvec2<T> const& v)
 	{
 		istream >> v.x;
