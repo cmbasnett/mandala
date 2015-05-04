@@ -49,6 +49,11 @@ namespace mandala
 				return min + (size() / static_cast<scalar_type>(2));
 			}
 
+            inline value_type extents() const
+            {
+                return (max - min) / scalar_type(2);
+            }
+
 			std::array<value_type, corner_count> get_corners() const
 			{
 				return { min,
@@ -174,6 +179,11 @@ namespace mandala
 			{
 				return min + ((max - min) / scalar_type(2));
 			}
+
+            value_type extents() const
+            {
+                return (max - min) / scalar_type(2);
+            }
 
 			std::array<plane_type, plane_count> get_planes() const
 			{
