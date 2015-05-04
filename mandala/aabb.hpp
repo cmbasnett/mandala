@@ -221,10 +221,22 @@ namespace mandala
 				return *this;
 			}
 
+            static type join(const type& lhs, const value_type& rhs)
+            {
+                return type(glm::min(lhs.min, rhs), glm::max(lhs.max, rhs));
+            }
+
 			static type join(const type& lhs, const type& rhs)
 			{
 				return type(glm::min(lhs.min, rhs.min), glm::max(lhs.max, rhs.max));
 			};
+
+            type& join(const value_type& rhs)
+            {
+                *this = join(*this, rhs);
+
+                return *this;
+            }
 
 			type& join(const type& rhs)
 			{
@@ -261,8 +273,7 @@ namespace mandala
 
 				for (const auto& point : points)
 				{
-					min = glm::min(min, point);
-					max = glm::max(max, point);
+                    *this <<= point;
 				}
 
 				return *this;
@@ -273,9 +284,43 @@ namespace mandala
                 return join(*this, rhs);
             }
 
+            type operator<<(const value_type& rhs) const
+            {
+                return join(*this, rhs);
+            }
+
+            type& operator<<=(const value_type& rhs)
+            {
+                return this->join(rhs);
+            }
+
             type& operator<<=(const type& rhs)
             {
                 return this->join(rhs);
+            }
+
+            type operator<<(const glm::detail::tmat4x4<scalar_type>& rhs) const
+            {
+                type aabb;
+                aabb.min = value_type(std::numeric_limits<scalar_type>::max());
+                aabb.max = value_type(-std::numeric_limits<scalar_type>::max());
+
+                for (const auto& corner : get_corners())
+                {
+                    auto corner_transformed = glm::detail::tvec4<scalar_type>(corner, scalar_type(0));
+                    corner_transformed = rhs * corner_transformed;
+
+                    aabb <<= value_type(corner_transformed.x, corner_transformed.y, corner_transformed.z);
+                }
+
+                return aabb;
+            }
+
+            type& operator<<=(const glm::detail::tmat4x4<scalar_type>& rhs)
+            {
+                *this = *this << rhs;
+
+                return *this;
             }
 		};
 	}
