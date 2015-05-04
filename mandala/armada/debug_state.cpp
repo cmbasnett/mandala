@@ -70,7 +70,7 @@ namespace mandala
 		oss << "textures: " << resources.count<texture_t>() << std::endl;
 		oss << "sounds: " << resources.count<sound_t>() << std::endl;
 		oss << "images: " << resources.count<image_t>() << std::endl;
-		oss << "models: " << resources.count<model_info_t>() << std::endl;
+		oss << "models: " << resources.count<model_t>() << std::endl;
 		oss << "sprite sets: " << resources.count<sprite_set_t>() << std::endl;
 		oss << "materials: " << resources.count<material_t>() << std::endl;
 		oss << "total: " << resources.count() << std::endl;

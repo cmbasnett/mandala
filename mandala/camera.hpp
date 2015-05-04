@@ -15,7 +15,7 @@ namespace mandala
 			perspective
 		};
 
-		float32_t near = 0.5f;
+        float32_t near = 0.25f;
 		float32_t far = 1024.0f;
 		float32_t aspect = 0.0f;
 		float32_t fov = 90.0f;

@@ -11,8 +11,8 @@
 #include "../state_mgr.hpp"
 #include "../bsp.hpp"
 #include "../bitmap_font.hpp"
-#include "../model_info.hpp"
 #include "../model.hpp"
+#include "../model_instance.hpp"
 #include "../model_animation.hpp"
 #include "../gui_image.hpp"
 #include "../gui_label.hpp"
@@ -44,7 +44,7 @@ namespace mandala
         bsp_state_t::bsp_state_t() :
             console_state(boost::make_shared<console_state_t>()),
             bsp(resources.get<bsp_t>(hash_t("dod_flash.bsp"))),
-            model(boost::make_shared<model_t>(hash_t("boblampclean.md5m")))
+            model(boost::make_shared<model_instance_t>(hash_t("boblampclean.md5m")))
         {
             model->play(hash_t("boblampclean.md5a"));
 

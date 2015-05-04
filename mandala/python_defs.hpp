@@ -26,7 +26,7 @@
 #include "sprite_set.hpp"
 #include "sound.hpp"
 #include "image.hpp"
-#include "model_info.hpp"   //TODO: ditch "info", convert to model & instance naming
+#include "model.hpp"
 #include "frame_buffer.hpp"
 #include "gui_canvas.hpp"
 #include "game.hpp"
@@ -117,7 +117,7 @@ MANDALA_DEFINE_RESOURCE_GET_FUNCTION(bitmap_font)
 MANDALA_DEFINE_RESOURCE_GET_FUNCTION(bsp)
 MANDALA_DEFINE_RESOURCE_GET_FUNCTION(image)
 MANDALA_DEFINE_RESOURCE_GET_FUNCTION(material)
-MANDALA_DEFINE_RESOURCE_GET_FUNCTION(model_info)
+MANDALA_DEFINE_RESOURCE_GET_FUNCTION(model)
 MANDALA_DEFINE_RESOURCE_GET_FUNCTION(sound)
 MANDALA_DEFINE_RESOURCE_GET_FUNCTION(sprite_set)
 MANDALA_DEFINE_RESOURCE_GET_FUNCTION(texture)
@@ -508,7 +508,7 @@ BOOST_PYTHON_MODULE(mandala)
         .def("get_bsp", &resources_get_bsp)
         .def("get_image", &resources_get_image)
         .def("get_material", &resources_get_material)
-        .def("get_model", &resources_get_model_info)
+        .def("get_model", &resources_get_model)
         .def("get_sound", &resources_get_sound)
         .def("get_sprite_set", &resources_get_sprite_set)
         .def("get_texture", &resources_get_texture)
@@ -680,6 +680,8 @@ BOOST_PYTHON_MODULE(mandala)
     class_<sprite_t, noncopyable>("Sprite", init<const hash_t&, const hash_t&>())
         .add_property("region", make_function(&sprite_t::get_region, return_value_policy<copy_const_reference>()))
         .add_property("sprite_set", make_function(&sprite_t::get_sprite_set, return_value_policy<copy_const_reference>()));
+
+    class_<model_t, bases<resource_t>, boost::shared_ptr<model_t>, noncopyable>("Model", no_init);
 
     //GPU
     class_<gpu_t, noncopyable>("Gpu", no_init)

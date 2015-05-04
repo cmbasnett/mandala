@@ -45,7 +45,7 @@ namespace mandala
 
 		private:
             boost::shared_ptr<bsp_t> bsp;
-            boost::shared_ptr<model_t> model;
+            boost::shared_ptr<model_instance_t> model;
             quake_camera_t camera;
             boost::shared_ptr<gui_label_t> debug_label;
             boost::shared_ptr<gui_image_t> crosshair_image;

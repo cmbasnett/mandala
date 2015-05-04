@@ -13,7 +13,7 @@ namespace mandala
 		assert(skeleton.bone_matrices.size() == b.bone_matrices.size());
 		assert(skeleton.bones.size() == a.bones.size());
 		assert(skeleton.bones.size() == b.bones.size());
-		assert(t >= 0.0f && t < 1.0f);
+		assert(t >= 0.0f && t <= 1.0f);
 #endif
 
 		for(size_t i = 0; i < skeleton.bones.size(); ++i)

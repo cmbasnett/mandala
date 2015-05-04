@@ -220,7 +220,6 @@
     <ClInclude Include="string_archive.hpp">
       <Filter>mandala\app</Filter>
     </ClInclude>
-    <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="blur_horizontal_gpu_program.hpp">
       <Filter>mandala\gpu\programs</Filter>
     </ClInclude>
@@ -319,12 +318,6 @@
     <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="gpu_program_mgr.hpp" />
-    <ClInclude Include="model_info.hpp">
-      <Filter>mandala\resources\model</Filter>
-    </ClInclude>
-    <ClInclude Include="model.hpp">
-      <Filter>mandala\resources\model</Filter>
-    </ClInclude>
     <ClInclude Include="pose.hpp">
       <Filter>mandala\math</Filter>
     </ClInclude>
@@ -362,6 +355,18 @@
     </ClInclude>
     <ClInclude Include="gpu_program_mgr.hpp">
       <Filter>mandala\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu_program_mgr.hpp">
+      <Filter>mandala\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="model_instance.hpp">
+      <Filter>mandala\resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="model.hpp">
+      <Filter>mandala\resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="material_instance.hpp">
+      <Filter>mandala\resources\material</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -525,12 +530,6 @@
     <ClCompile Include="resource_mgr.cpp">
       <Filter>mandala\resources</Filter>
     </ClCompile>
-    <ClCompile Include="model_info.cpp">
-      <Filter>mandala\resources\model</Filter>
-    </ClCompile>
-    <ClCompile Include="model.cpp">
-      <Filter>mandala\resources\model</Filter>
-    </ClCompile>
     <ClCompile Include="armada\skybox.cpp">
       <Filter>armada\states\bsp</Filter>
     </ClCompile>
@@ -539,6 +538,15 @@
     </ClCompile>
     <ClCompile Include="gui_image_gpu_program.cpp">
       <Filter>mandala\gpu\programs</Filter>
+    </ClCompile>
+    <ClCompile Include="model_instance.cpp">
+      <Filter>mandala\resources\model</Filter>
+    </ClCompile>
+    <ClCompile Include="model.cpp">
+      <Filter>mandala\resources\model</Filter>
+    </ClCompile>
+    <ClCompile Include="material_instance.cpp">
+      <Filter>mandala\resources\material</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

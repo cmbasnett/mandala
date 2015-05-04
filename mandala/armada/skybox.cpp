@@ -7,7 +7,7 @@
 #include "../resource_mgr.hpp"
 #include "../camera.hpp"
 #include "../model.hpp"
-#include "../model_info.hpp"
+#include "../model_instance.hpp"
 
 //armada
 #include "skybox.hpp"
@@ -18,7 +18,7 @@ namespace mandala
 	{
 		skybox_t::skybox_t()
 		{
-			model = boost::make_shared<model_t>(hash_t("skybox.md5m"));
+			model = boost::make_shared<model_instance_t>(hash_t("skybox.md5m"));
 		}
 		
 		void skybox_t::render(const camera_t& camera)

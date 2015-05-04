@@ -271,6 +271,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="io.hpp" />
     <ClInclude Include="line_renderer.hpp" />
     <ClInclude Include="mandala.hpp" />
+    <ClInclude Include="material_instance.hpp" />
     <ClInclude Include="model_animation.hpp" />
     <ClInclude Include="model_gpu_program.hpp" />
     <ClInclude Include="model_skeleton.hpp" />
@@ -318,8 +319,8 @@ echo $(PlatformTarget)</Command>
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="model_info.hpp" />
     <ClInclude Include="model.hpp" />
+    <ClInclude Include="model_instance.hpp" />
     <ClInclude Include="plane.hpp" />
     <ClInclude Include="pow.hpp" />
     <ClInclude Include="quake_camera.hpp" />
@@ -367,6 +368,7 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="gui_scroll.cpp" />
     <ClCompile Include="gui_state.cpp" />
     <ClCompile Include="http_mgr.cpp" />
+    <ClCompile Include="material_instance.cpp" />
     <ClCompile Include="model_animation.cpp" />
     <ClCompile Include="model_gpu_program.cpp" />
     <ClCompile Include="model_skeleton.cpp" />
@@ -384,8 +386,8 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="state_mgr.cpp" />
     <ClCompile Include="image.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="model_info.cpp" />
     <ClCompile Include="model.cpp" />
+    <ClCompile Include="model_instance.cpp" />
     <ClCompile Include="quake_camera.cpp" />
     <ClCompile Include="resource.cpp" />
     <ClCompile Include="string_archive.cpp" />
