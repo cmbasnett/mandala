@@ -1,3 +1,11 @@
+#if defined(DEBUG)
+//std
+#include <vector>
+
+//boost
+#include <boost\weak_ptr.hpp>
+#endif
+
 //mandala
 #include "resource_mgr.hpp"
 
@@ -41,6 +49,25 @@ namespace mandala
 
 	void resource_mgr_t::purge()
 	{
+#if defined(DEBUG)
+        std::vector<boost::weak_ptr<resource_t>> resources;
+
+        for (auto& type_resource : type_resources)
+        {
+            for (auto& resource : type_resource.second)
+            {
+                resources.push_back(resource.second);
+            }
+        }
+#endif
+
 		type_resources.clear();
+
+#if defined(DEBUG)
+        for (auto& resource : resources)
+        {
+            assert(resource.expired());
+        }
+#endif
 	}
 }
