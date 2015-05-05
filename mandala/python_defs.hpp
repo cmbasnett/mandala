@@ -610,7 +610,8 @@ BOOST_PYTHON_MODULE(mandala)
             .add_property("should_use_color_codes", &gui_label_t::get_should_use_color_codes, &gui_label_t::set_should_use_color_codes)
             .add_property("is_read_only", &gui_label_t::get_is_read_only, &gui_label_t::set_is_read_only)
             .add_property("max_length", &gui_label_t::get_max_length, &gui_label_t::set_max_length)
-            .add_property("is_autosized_to_text", &gui_label_t::get_is_autosized_to_text, &gui_label_t::set_is_autosized_to_text);
+            .add_property("is_autosized_to_text", &gui_label_t::get_is_autosized_to_text, &gui_label_t::set_is_autosized_to_text)
+            .add_property("is_obscured", &gui_label_t::get_is_obscured, &gui_label_t::set_is_obscured);
 
         enum_<gui_label_t::justification_e>("Justification")
             .value("LEFT", gui_label_t::justification_e::left)

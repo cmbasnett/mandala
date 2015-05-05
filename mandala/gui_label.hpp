@@ -52,6 +52,7 @@ namespace mandala
 		bool get_is_read_only() const { return is_read_only; }
         boost::optional<size_t> get_max_length() const { return max_length; }
         bool get_is_autosized_to_text() const { return is_autosized_to_text; }
+        bool get_is_obscured() const { return is_obscured; }
 
         line_height_type get_line_height() const;
 		size_t get_line_count() const;
@@ -66,7 +67,8 @@ namespace mandala
 		void set_should_use_color_codes(bool should_use_color_codes) { this->should_use_color_codes = should_use_color_codes; dirty(); }
 		void set_is_read_only(bool is_read_only) { this->is_read_only = is_read_only; dirty(); }	//TODO: might not need to dirty, putting this in to be safe
         void set_max_length(const boost::optional<size_t>& max_size);
-        void set_is_autosized_to_text(bool is_autosized_to_text) { this->is_autosized_to_text = true; dirty(); }
+        void set_is_autosized_to_text(bool is_autosized_to_text) { this->is_autosized_to_text = is_autosized_to_text; dirty(); }
+        void set_is_obscured(bool is_obscured) { this->is_obscured = is_obscured; dirty(); }
 
         virtual void on_clean_begin() override;
         virtual void on_clean_end() override;
@@ -118,5 +120,6 @@ namespace mandala
         boost::optional<size_t> max_length;
         std::function<void()> on_enter_function;
         bool is_autosized_to_text = false;
+        bool is_obscured = false;
 	};
 }

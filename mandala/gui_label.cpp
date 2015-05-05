@@ -612,9 +612,10 @@ namespace mandala
 
     void gui_label_t::update_lines()
     {
-        static const auto fallback_character = L'?';
-        static const auto ellipse_character = L'.';
-        static const auto ellipses_max = 3;
+        static const auto OBSCURE_CHARACTER = L'•';
+        static const auto FALLBACK_CHARACTER = L'?';
+        static const auto ELLIPSE_CHARACTER = L'.';
+        static const auto ELLIPSES_MAX = 3;
 
         if (bitmap_font == nullptr)
         {
@@ -640,8 +641,8 @@ namespace mandala
                     if (should_use_ellipses && !line_string.empty())
                     {
                         //attempt to add ellipses to the end of the last line
-                        const auto ellipse_width = bitmap_font->get_characters().at(ellipse_character).advance_x;
-                        const auto ellipse_count = glm::min(static_cast<decltype(ellipse_width)>(padded_size.x) / ellipse_width, ellipses_max);
+                        const auto ellipse_width = bitmap_font->get_characters().at(ELLIPSE_CHARACTER).advance_x;
+                        const auto ellipse_count = std::min(static_cast<decltype(ellipse_width)>(padded_size.x) / ellipse_width, ELLIPSES_MAX);
                         auto width = 0;
 
                         auto string_reverse_itr = line_string.rbegin() + 1;
@@ -661,7 +662,7 @@ namespace mandala
 
                         //TODO: this has an undesired effect on cursor, will need to be fixed
                         line_string.erase(string_reverse_itr.base() + 1, line_string.end());
-                        line_string.append(ellipse_count, ellipse_character);
+                        line_string.append(ellipse_count, ELLIPSE_CHARACTER);
                     }
                 }
 
@@ -741,7 +742,7 @@ namespace mandala
                 {
                     if (bitmap_font->get_characters().find(*string_itr) == bitmap_font->get_characters().end())
                     {
-                        string.replace(string_itr, string_itr + 1, 1, fallback_character);
+                        string.replace(string_itr, string_itr + 1, 1, FALLBACK_CHARACTER);
                     }
 
                     ++string_itr;
@@ -763,6 +764,11 @@ namespace mandala
                 }
 
                 replace_unrecognized_characters(render_string);
+
+                if (is_obscured)
+                {
+                    render_string.replace(render_string.begin(), render_string.end(), render_string.size(), OBSCURE_CHARACTER);
+                }
 
                 auto render_string_width = bitmap_font->get_string_width(render_string);
 
@@ -852,13 +858,13 @@ namespace mandala
 
                 auto characters_itr = bitmap_font->get_characters().find(character_id);
 
-                string_type::value_type character;
+                auto character = FALLBACK_CHARACTER;
 
-                if (characters_itr == bitmap_font->get_characters().end())
+                if (is_obscured)
                 {
-                    character = fallback_character;
+                    character = OBSCURE_CHARACTER;
                 }
-                else
+                else if (characters_itr != bitmap_font->get_characters().end())
                 {
                     character = *string_itr;
                 }
