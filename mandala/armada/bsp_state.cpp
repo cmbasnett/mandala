@@ -32,17 +32,14 @@
 
 //armada
 #include "bsp_state.hpp"
-#include "console_state.hpp"
 
 namespace mandala
 {
     namespace armada
     {
-        std::thread screenshot_thread;
         std::mt19937 mt19937;
 
         bsp_state_t::bsp_state_t() :
-            console_state(boost::make_shared<console_state_t>()),
             bsp(resources.get<bsp_t>(hash_t("dod_flash.bsp"))),
             model(boost::make_shared<model_instance_t>(hash_t("boblampclean.md5m")))
         {
@@ -51,29 +48,14 @@ namespace mandala
 			camera.speed_max = 512;
 			camera.far = 8192;
 
-            debug_label = boost::make_shared<gui_label_t>();
-            debug_label->set_bitmap_font(resources.get<bitmap_font_t>(hash_t("unifont_16.fnt")));
-            debug_label->set_color(rgba_type(1));
-            debug_label->set_dock_mode(gui_dock_mode_e::fill);
-            debug_label->set_vertical_alignment(gui_label_t::vertical_alignment_e::bottom);
-            debug_label->set_justification(gui_label_t::justification_e::left);
-            debug_label->set_padding(padding_t(16));
-
-            crosshair_image = boost::make_shared<gui_image_t>();
-			crosshair_image->set_is_autosized_to_sprite(true);
-            crosshair_image->set_sprite(sprite_t(hash_t("crosshairs.tpsb"), hash_t("crosshair5.png")));
-			crosshair_image->set_anchor_flags(gui_anchor_flag_all);
-
 			bsp_image = boost::make_shared<gui_image_t>();
 			bsp_image->set_dock_mode(gui_dock_mode_e::fill);
 
             bsp_canvas = boost::make_shared<gui_canvas_t>();
             bsp_canvas->set_dock_mode(gui_dock_mode_e::fill);
             bsp_canvas->adopt(bsp_image);
-            bsp_canvas->adopt(crosshair_image);
-            bsp_canvas->adopt(debug_label);
 
-			layout->adopt(bsp_canvas);
+			get_layout()->adopt(bsp_canvas);
         }
 
         void bsp_state_t::tick(float32_t dt)
@@ -86,14 +68,6 @@ namespace mandala
             audio.listener.velocity = camera.velocity;
 
             render_data.leaf_index = bsp->get_leaf_index_from_location(camera.location);
-
-            std::wostringstream oss;
-            oss << L"location: [" << camera.location.x << ", " << camera.location.y << ", " << camera.location.z << "]" << std::endl;
-            oss << L"rotation: [pitch=" << camera.pitch << ", yaw=" << camera.yaw << "]" << std::endl;
-            oss << L"leaf index: " << bsp->get_render_stats().leaf_index << std::endl;
-            oss << L"leafs rendered: " << bsp->get_render_stats().leaf_count << std::endl;
-			oss << L"faces rendered: " << bsp->get_render_stats().face_count << std::endl;
-			debug_label->set_string(oss.str());
 
             gui_state_t::tick(dt);
         }
@@ -113,6 +87,7 @@ namespace mandala
 
                 gpu.clear(gpu_t::clear_flag_color | gpu_t::clear_flag_depth | gpu_t::clear_flag_stencil);
 
+                //TODO: need to create a proper level thing here! scene graph and whatever
                 skybox.render(camera);
                 bsp->render(camera);
                 model->render(camera, vec3_t(0));
@@ -127,56 +102,26 @@ namespace mandala
         void bsp_state_t::on_input_event(input_event_t& input_event)
 		{
 #if defined(MANDALA_PC)
-			if (input_event.device_type == input_event_t::device_type_e::keyboard &&
-				input_event.keyboard.key == input_event_t::keyboard_t::key_e::grave_accent &&
-				input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press)
-			{
-				states.push(console_state, state_flag_render_tick);
-
-				input_event.is_consumed = true;
-
-				return;
-			}
-
-			if ((input_event.device_type == input_event_t::device_type_e::keyboard &&
-				input_event.keyboard.key == input_event_t::keyboard_t::key_e::escape &&
-				input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press) ||
-				(input_event.device_type == input_event_t::device_type_e::gamepad &&
-				input_event.gamepad.type == input_event_t::gamepad_t::type_e::release &&
-				input_event.gamepad.button_index == 0))
-			{
-                try
-                {
-                    py.exec("states.push(TestState(), STATE_FLAG_RENDER)");
-                }
-                catch (std::exception& e)
-                {
-                    std::cout << e.what() << std::endl;
-                }
-
-				input_event.is_consumed = true;
-
-				return;
-			}
-
             if (input_event.device_type == input_event_t::device_type_e::keyboard &&
-                input_event.keyboard.key == input_event_t::keyboard_t::key_e::f11 &&
+                input_event.keyboard.key == input_event_t::keyboard_t::key_e::escape &&
                 input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press)
             {
-                auto texture = bsp_canvas->get_frame_buffer()->get_color_texture();
+                py.exec("states.push(PopupState(), STATE_FLAG_RENDER | STATE_FLAG_TICK)");
 
-                auto begin = std::chrono::system_clock::now();
+                //auto texture = bsp_canvas->get_frame_buffer()->get_color_texture();
 
-                std::vector<uint8_t> data;
-                gpu.get_texture_data(texture, data);
+                //auto begin = std::chrono::system_clock::now();
 
-                std::ofstream ostream = std::ofstream("screenshot.png", std::ios::binary);
-                auto image = boost::make_shared<image_t>(texture->get_size(), 8, texture->get_color_type(), data.data(), data.size());
-                ostream << *image;
+                //std::vector<uint8_t> data;
+                //gpu.get_texture_data(texture, data);
 
-                auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - begin);
+                //std::ofstream ostream = std::ofstream("screenshot.png", std::ios::binary);
+                //auto image = boost::make_shared<image_t>(texture->get_size(), 8, texture->get_color_type(), data.data(), data.size());
+                //ostream << *image;
 
-                input_event.is_consumed = true;
+                //auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - begin);
+
+                //input_event.is_consumed = true;
 
                 return;
             }
@@ -281,7 +226,7 @@ namespace mandala
         {
             gui_state_t::on_enter();
 
-            bsp_frame_buffer = boost::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::color_depth, static_cast<gpu_frame_buffer_size_type>(layout->get_bounds().size()));
+            bsp_frame_buffer = boost::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::color_depth, static_cast<gpu_frame_buffer_size_type>(get_layout()->get_bounds().size()));
             auto sprite_set = boost::make_shared<sprite_set_t>(bsp_frame_buffer->get_color_texture());
             sprite_t sprite(sprite_set, sprite_set->get_regions().begin()->second.hash);
             bsp_image->set_sprite(sprite);
@@ -294,7 +239,7 @@ namespace mandala
 
             if (window_event.type == window_event_t::type_e::resize && bsp_frame_buffer)
             {
-                bsp_frame_buffer->set_size(static_cast<gpu_frame_buffer_size_type>(layout->get_bounds().size()));
+                bsp_frame_buffer->set_size(static_cast<gpu_frame_buffer_size_type>(get_layout()->get_bounds().size()));
 
                 auto sprite_set = boost::make_shared<sprite_set_t>(bsp_frame_buffer->get_color_texture());
                 sprite_t sprite(sprite_set, sprite_set->get_regions().begin()->second.hash);

@@ -56,7 +56,7 @@ namespace mandala
 			}
 
 			template<typename U>
-			type operator+(padding_t<U>& rhs) const
+			type operator+(const padding_t<U>& rhs) const
 			{
 				auto sum = *this;
 				sum += rhs;
@@ -64,7 +64,7 @@ namespace mandala
 			}
 
 			template<typename U>
-			type& operator+=(padding_t<U>& rhs)
+			type& operator+=(const padding_t<U>& rhs)
 			{
 				bottom += rhs.bottom;
 				left += rhs.left;
@@ -75,7 +75,7 @@ namespace mandala
 			}
 
 			template<typename U>
-			type operator-(padding_t<U>& rhs) const
+			type operator-(const padding_t<U>& rhs) const
 			{
 				auto sum = *this;
 				sum -= rhs;
@@ -83,7 +83,7 @@ namespace mandala
 			}
 
 			template<typename U>
-			type& operator-=(padding_t<U>& rhs)
+			type& operator-=(const padding_t<U>& rhs)
 			{
 				bottom -= rhs.bottom;
 				left -= rhs.left;

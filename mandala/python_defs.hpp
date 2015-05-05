@@ -63,13 +63,27 @@ MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(game)
     MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, app_tick_end)
     MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, app_render_start)
     MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, app_render_end)
+
+    void on_input_event(input_event_t& input_event) override
+    {
+        auto override_ = get_override("on_input_event");
+
+        if (override_)
+        {
+            override_(input_event);
+        }
+        else
+        {
+            game_t::on_input_event(input_event);
+        }
+    }
 };
 
-MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(state)
+MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(gui_state)
 {
-    void tick(float32_t dt) override
+    void on_tick(float32_t dt) override
     {
-        auto override_ = get_override("tick");
+        auto override_ = get_override("on_tick");
 
         if (override_)
         {
@@ -77,8 +91,7 @@ MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(state)
         }
         else
         {
-
-            state_t::tick(dt);
+            gui_state_t::on_tick(dt);
         }
     }
 
@@ -92,7 +105,7 @@ MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(state)
         }
         else
         {
-            state_t::on_input_event(input_event);
+            gui_state_t::on_input_event(input_event);
         }
     }
 
@@ -190,6 +203,21 @@ class_<mandala::details::rectangle_t<scalar_type>>(name, init<>())\
 .def_readwrite("width", &mandala::details::rectangle_t<scalar_type>::width)\
 .def_readwrite("height", &mandala::details::rectangle_t<scalar_type>::height);\
 
+#define MANDALA_PYTHON_DEFINE_PADDING(name, scalar_type)\
+class_<mandala::details::padding_t<scalar_type>>(name, init<scalar_type, scalar_type, scalar_type, scalar_type>())\
+.def_readwrite("bottom", &mandala::details::padding_t<scalar_type>::bottom)\
+.def_readwrite("left", &mandala::details::padding_t<scalar_type>::left)\
+.def_readonly("top", &mandala::details::padding_t<scalar_type>::top)\
+.def_readonly("right", &mandala::details::padding_t<scalar_type>::right)\
+.add_property("vertical", &mandala::details::padding_t<scalar_type>::vertical)\
+.add_property("horizontal", &mandala::details::padding_t<scalar_type>::horizontal)\
+.add_property("size", &mandala::details::padding_t<scalar_type>::size)\
+.def(self_ns::self + self_ns::self)\
+.def(self_ns::self += self_ns::self)\
+.def(self_ns::self - self_ns::self)\
+.def(self_ns::self -= self_ns::self)\
+.def(self_ns::str(self_ns::self));\
+
 BOOST_PYTHON_MODULE(mandala)
 {
     python_optional<sprite_t>();
@@ -220,20 +248,8 @@ BOOST_PYTHON_MODULE(mandala)
     MANDALA_PYTHON_DEFINE_RECTANGLE("RectangleI", int);
     MANDALA_PYTHON_DEFINE_RECTANGLE("RectangleF", float);
 
-    class_<padding_f32_t>("Padding", init<float, float, float, float>())
-        .def_readwrite("bottom", &padding_t::bottom)
-        .def_readwrite("left", &padding_t::left)
-        .def_readonly("top", &padding_t::top)
-        .def_readonly("right", &padding_t::right)
-        .add_property("vertical", &padding_t::vertical)
-        .add_property("horizontal", &padding_t::horizontal)
-        .add_property("size", &padding_t::size)
-        //TODO: these don't compile for some reason
-        //.def(self_ns::self + other<padding_f32_t>())
-        //.def(self_ns::self += self_ns::self)
-        //.def(self_ns::self - self_ns::self)
-        //.def(self_ns::self -= self_ns::self)
-        .def(self_ns::str(self_ns::self));
+    MANDALA_PYTHON_DEFINE_PADDING("PaddingI", int);
+    MANDALA_PYTHON_DEFINE_PADDING("PaddingF", float);
 
     //PLATFORM
     //TODO: remove specialized platform structs, have only 1 platform_t per platform
@@ -453,13 +469,20 @@ BOOST_PYTHON_MODULE(mandala)
         }
 #endif
     }
+
     scope().attr("platform") = boost::ref(platform);
 
     //APP
-    class_<app_t, noncopyable>("App", no_init)
-        .def("exit", &app_t::exit)
-        .def("reset", &app_t::reset)
-        .def("run", &app_t::run);
+    {
+        scope app_scope = class_<app_t, noncopyable>("App", no_init)
+            .def("exit", &app_t::exit)
+            .def("reset", &app_t::reset)
+            .def("run", &app_t::run)
+            .add_property("performance", make_function(&app_t::get_performance, return_value_policy<copy_const_reference>()));
+
+        class_<app_t::performance_t>("Performance", no_init)
+            .def_readonly("fps", &app_t::performance_t::fps);
+    }
 
     scope().attr("app") = boost::ref(app);
 
@@ -616,28 +639,31 @@ BOOST_PYTHON_MODULE(mandala)
             .value("BOTH", gui_image_t::triangle_mode_e::both);
     }
 
+    class_<gui_layout_t, bases<gui_node_t>, boost::shared_ptr<gui_layout_t>, noncopyable>("GuiLayout", no_init);
+
     //STATES
     class_<state_t, boost::shared_ptr<state_t>, noncopyable>("StateBase", no_init);
 
-    class_<state_wrapper_t, boost::shared_ptr<state_wrapper_t>, noncopyable>("State", init<>())
-        .def("tick", &state_wrapper_t::tick)
-        .def("on_input_event", &state_wrapper_t::on_input_event)
-#if defined(MANDALA_PC)
-        .def("on_window_event", &state_wrapper_t::on_window_event)
-#endif
-        .def("on_active", &state_wrapper_t::on_active)
-        .def("on_passive", &state_wrapper_t::on_passive)
-        .def("on_enter", &state_wrapper_t::on_enter)
-        .def("on_exit", &state_wrapper_t::on_exit)
-        .def("on_stop_tick", &state_wrapper_t::on_stop_tick)
-        .def("on_start_tick", &state_wrapper_t::on_start_tick)
-        .def("on_stop_render", &state_wrapper_t::on_stop_render)
-        .def("on_start_render", &state_wrapper_t::on_start_render)
-        .def("on_stop_input", &state_wrapper_t::on_stop_input)
-        .def("on_start_input", &state_wrapper_t::on_start_input)
-        ;
+    class_<gui_state_t, bases<state_t>, boost::shared_ptr<gui_state_t>, noncopyable>("GuiStateBase", no_init);
 
-    class_<gui_layout_t, bases<gui_node_t>, boost::shared_ptr<gui_layout_t>, noncopyable>("GuiLayout", no_init);
+    class_<gui_state_wrapper_t, boost::shared_ptr<gui_state_wrapper_t>, noncopyable>("GuiState", init<>())
+        .def("tick", &gui_state_wrapper_t::tick)
+        .def("on_input_event", &gui_state_wrapper_t::on_input_event)
+#if defined(MANDALA_PC)
+        .def("on_window_event", &gui_state_wrapper_t::on_window_event)
+#endif
+        .def("on_active", &gui_state_wrapper_t::on_active)
+        .def("on_passive", &gui_state_wrapper_t::on_passive)
+        .def("on_enter", &gui_state_wrapper_t::on_enter)
+        .def("on_exit", &gui_state_wrapper_t::on_exit)
+        .def("on_stop_tick", &gui_state_wrapper_t::on_stop_tick)
+        .def("on_start_tick", &gui_state_wrapper_t::on_start_tick)
+        .def("on_stop_render", &gui_state_wrapper_t::on_stop_render)
+        .def("on_start_render", &gui_state_wrapper_t::on_start_render)
+        .def("on_stop_input", &gui_state_wrapper_t::on_stop_input)
+        .def("on_start_input", &gui_state_wrapper_t::on_start_input)
+        .add_property("layout", make_function(&gui_state_wrapper_t::get_layout, return_value_policy<copy_const_reference>()))
+        ;
 
     class_<armada::bsp_state_t, bases<state_t>, boost::shared_ptr<armada::bsp_state_t>, noncopyable>("BspState", init<>());
 

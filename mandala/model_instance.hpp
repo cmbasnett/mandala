@@ -27,7 +27,9 @@ namespace mandala
 
         void play(const hash_t& animation_hash);
 
-		const pose3 get_bone_pose(const hash_t& bone_hash) const;
+		const pose3& get_bone_pose(const hash_t& bone_hash) const;
+        const aabb3_t& get_aabb() const { return aabb; }
+        const sphere_t& get_sphere() const { return sphere; }
 
     private:
         float32_t t = 0.0f;
@@ -36,5 +38,6 @@ namespace mandala
         boost::shared_ptr<model_animation_t> animation;
         std::vector<boost::shared_ptr<material_instance_t>> mesh_materials;
         aabb3_t aabb;
+        sphere_t sphere;
 	};
 }

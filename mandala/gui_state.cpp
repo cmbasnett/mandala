@@ -24,8 +24,10 @@ namespace mandala
 
 	void gui_state_t::tick(float32_t dt)
 	{
+        state_t::tick(dt);
+
 		//TODO: get child nodes to tell layout about cleanliness, recursing every tick is expensive!
-        std::function<bool(const boost::shared_ptr<gui_node_t>&)> recursive_is_dirty = [&](const boost::shared_ptr<gui_node_t>& node)
+        std::function<bool(const boost::shared_ptr<gui_node_t>&)> is_dirty = [&](const boost::shared_ptr<gui_node_t>& node)
         {
             if (node->get_is_dirty())
             {
@@ -34,7 +36,7 @@ namespace mandala
 
             for (auto& child : node->get_children())
             {
-                if (recursive_is_dirty(child))
+                if (is_dirty(child))
                 {
                     return true;
                 }
@@ -43,7 +45,7 @@ namespace mandala
             return false;
         };
 
-        if (recursive_is_dirty(layout))
+        if (is_dirty(layout))
         {
             layout->clean();
         }

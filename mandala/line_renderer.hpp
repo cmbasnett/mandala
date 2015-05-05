@@ -126,6 +126,7 @@ namespace mandala
             std::vector<basic_gpu_vertex_t> vertices;
             vertices.reserve(SPHERE_SIDES);
 
+            //TODO: this is lame, write this better
             for (auto i = 0; i < SPHERE_SIDES; ++i)
             {
                 auto sigma = static_cast<float32_t>(i) / SPHERE_SIDES * glm::pi<float32_t>() * 2;

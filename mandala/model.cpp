@@ -92,6 +92,8 @@ namespace mandala
 
             std::getline(istream, bone_info.name, '\0');
 
+            bone_names.push_back(bone_info.name);
+
             bone_indices.insert(std::make_pair(hash_t(bone_info.name), i));
 
             read(istream, bone_info.parent_index);

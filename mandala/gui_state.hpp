@@ -24,6 +24,9 @@ namespace mandala
         virtual void on_window_event(window_event_t& window_event) override;
 #endif
 
+        const boost::shared_ptr<gui_layout_t>& get_layout() const { return layout; }
+
+    private:
 		boost::shared_ptr<gui_layout_t> layout;
 	};
 }

@@ -205,14 +205,8 @@
     <ClInclude Include="model_gpu_program.hpp">
       <Filter>mandala\gpu\programs</Filter>
     </ClInclude>
-    <ClInclude Include="armada\debug_state.hpp">
-      <Filter>armada\states\debug</Filter>
-    </ClInclude>
     <ClInclude Include="glm.hpp">
       <Filter>mandala\math</Filter>
-    </ClInclude>
-    <ClInclude Include="armada\console_state.hpp">
-      <Filter>armada\states\console</Filter>
     </ClInclude>
     <ClInclude Include="openal.hpp">
       <Filter>mandala\audio</Filter>
@@ -476,12 +470,6 @@
     <ClCompile Include="model_gpu_program.cpp">
       <Filter>mandala\gpu\programs</Filter>
     </ClCompile>
-    <ClCompile Include="armada\debug_state.cpp">
-      <Filter>armada\states\debug</Filter>
-    </ClCompile>
-    <ClCompile Include="armada\console_state.cpp">
-      <Filter>armada\states\console</Filter>
-    </ClCompile>
     <ClCompile Include="string_archive.cpp">
       <Filter>mandala\app</Filter>
     </ClCompile>
@@ -595,12 +583,6 @@
     <Filter Include="mandala\audio">
       <UniqueIdentifier>{57b39ba2-1844-4414-a8f6-45581375ee49}</UniqueIdentifier>
     </Filter>
-    <Filter Include="armada\states\debug">
-      <UniqueIdentifier>{6da3830c-56d2-47e0-8a15-feb63af739c1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="armada\states\console">
-      <UniqueIdentifier>{50ed985f-caf5-497c-b76c-122feb3d7c07}</UniqueIdentifier>
-    </Filter>
     <Filter Include="mandala\io">
       <UniqueIdentifier>{30f8257e-cfc0-472d-9b90-7750f64673fc}</UniqueIdentifier>
     </Filter>
@@ -636,9 +618,6 @@
     </Filter>
     <Filter Include="mandala\resources\sprite">
       <UniqueIdentifier>{1ce79b84-b9e4-4689-a458-ac57e0a0a69d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="mandala\resources\voxel">
-      <UniqueIdentifier>{54c94754-76cf-40bb-b97e-fe67ba8ae45b}</UniqueIdentifier>
     </Filter>
     <Filter Include="mandala\python">
       <UniqueIdentifier>{110fa48b-6117-4696-b8ee-ea9f832943c1}</UniqueIdentifier>

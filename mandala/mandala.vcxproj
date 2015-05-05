@@ -223,8 +223,6 @@ echo $(PlatformTarget)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="armada\console_state.hpp" />
-    <ClInclude Include="armada\debug_state.hpp" />
     <ClInclude Include="audio_context.hpp" />
     <ClInclude Include="audio_defs.hpp" />
     <ClInclude Include="audio_device.hpp" />
@@ -335,8 +333,6 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="window_event.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="armada\console_state.cpp" />
-    <ClCompile Include="armada\debug_state.cpp" />
     <ClCompile Include="audio_context.cpp" />
     <ClCompile Include="audio_device.cpp" />
     <ClCompile Include="audio_mgr.cpp" />

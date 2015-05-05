@@ -158,7 +158,12 @@ namespace mandala
 
     void app_t::on_input_event(input_event_t& input_event)
 	{
-		states.on_input_event(input_event);
+        game->on_input_event(input_event);
+
+        if (!input_event.is_consumed)
+        {
+            states.on_input_event(input_event);
+        }
     }
 
 #if defined(MANDALA_PC)

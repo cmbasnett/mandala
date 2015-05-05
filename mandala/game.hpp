@@ -16,6 +16,8 @@ namespace mandala
         virtual void app_render_start() { }
         virtual void app_render_end() { }
 
+        virtual void on_input_event(input_event_t& input_event) { }
+
         virtual std::string get_name() const { return "mandala"; }
 	};
 }

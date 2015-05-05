@@ -51,11 +51,15 @@ namespace mandala
 
         boost::optional<size_t> get_bone_index(const hash_t& bone_hash) const;
 
-        std::vector<boost::shared_ptr<mesh_t>> meshes;
-        std::map<hash_t, uint8_t> bone_indices;
-        std::vector<bone_t> bones;
+        const std::vector<boost::shared_ptr<const mesh_t>> get_meshes() const { return meshes; }
+        const std::vector<const bone_t>& get_bones() const { return bones; }
 
 	private:
+        std::vector<boost::shared_ptr<const mesh_t>> meshes;
+        std::map<const hash_t, const uint8_t> bone_indices;
+        std::vector<const bone_t> bones;
+        std::vector<const std::string> bone_names;
+
 		model_t(const model_t&) = delete;
 		model_t& operator=(const model_t&) = delete;
 	};

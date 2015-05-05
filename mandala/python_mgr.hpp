@@ -21,6 +21,9 @@ namespace mandala
 
 		boost::python::object main_namespace;
 		boost::python::object main_module;
+
+    private:
+        std::string handle_pyerr();
 	};
 
 	extern python_mgr_t py;

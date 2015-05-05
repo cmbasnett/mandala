@@ -120,10 +120,14 @@ namespace mandala
         gpu.set_uniform("world_matrix", world_matrix * glm::translate(center.x, center.y, 0.0f));
         gpu.set_uniform("view_projection_matrix", view_projection_matrix);
         gpu.set_uniform("color", get_color());
-        gpu.set_uniform("region_min", sprite->get_region().uv.min);
-        gpu.set_uniform("region_size", sprite->get_region().uv.size());
 
-        gpu.textures.bind(diffuse_texture_index, sprite->get_sprite_set()->get_texture());
+        //TODO: what to do if sprite is null?
+        if (sprite)
+        {
+            gpu.set_uniform("region_min", sprite->get_region().uv.min);
+            gpu.set_uniform("region_size", sprite->get_region().uv.size());
+            gpu.textures.bind(diffuse_texture_index, sprite->get_sprite_set()->get_texture());
+        }
 
         size_t index_offset = 0;
 
@@ -147,7 +151,7 @@ namespace mandala
             gpu.draw_elements(gpu_t::primitive_type_e::triangles, 3, index_buffer_type::data_type, index_offset + 9);
             break;
         case triangle_mode_e::both:
-            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 6, index_buffer_type::data_type, index_offset + 0);
+            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 6, index_buffer_type::data_type, index_offset + 0);   //<-- CRASH HERE
             break;
         }
 

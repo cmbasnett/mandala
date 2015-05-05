@@ -51,24 +51,20 @@ namespace mandala
         }
         catch (boost::python::error_already_set const&)
         {
-            PyObject* type = nullptr;
-            PyObject* value = nullptr;
-            PyObject* traceback = nullptr;
+            std::string message;
 
-            PyErr_Fetch(&type, &value, &traceback);
-
-            std::string error_string;
-
-            auto value_as_string = PyString_AsString(value);
-
-            if (value_as_string)
+            if (PyErr_Occurred())
             {
-                error_string = value_as_string;
+                message = handle_pyerr();
+
+                std::cout << message;
             }
+
+            boost::python::handle_exception();
 
             PyErr_Clear();
 
-            throw std::exception(error_string.c_str());
+            throw std::exception(message.c_str());
         }
     }
 
@@ -86,5 +82,32 @@ namespace mandala
     void python_mgr_t::finalize()
     {
         Py_Finalize();
+    }
+
+    std::string python_mgr_t::handle_pyerr()
+    {
+        using namespace boost::python;
+        using namespace boost;
+
+        PyObject *exc, *val, *tb;
+        object formatted_list, formatted;
+        PyErr_Fetch(&exc, &val, &tb);
+        handle<> hexc(exc), hval(allow_null(val)), htb(allow_null(tb));
+        object traceback(import("traceback"));
+
+        if (!tb)
+        {
+            object format_exception_only(traceback.attr("format_exception_only"));
+            formatted_list = format_exception_only(hexc, hval);
+        }
+        else
+        {
+            object format_exception(traceback.attr("format_exception"));
+            formatted_list = format_exception(hexc, hval, htb);
+        }
+
+        formatted = str("\n").join(formatted_list);
+
+        return extract<std::string>(formatted);
     }
 }

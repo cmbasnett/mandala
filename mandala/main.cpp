@@ -7,7 +7,6 @@ int main()
 {
     py.initialize();
 
-    //load app.py
     py.exec_file("app.py");
 
     py.finalize();

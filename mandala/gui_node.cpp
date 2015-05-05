@@ -51,9 +51,14 @@ namespace mandala
 
     void gui_node_t::adopt(const boost::shared_ptr<gui_node_t>& node)
     {
-        if (node == nullptr || node.get() == this)
+        if (node == nullptr)
         {
-            throw std::invalid_argument("");
+            throw std::invalid_argument("node cannot be null");
+        }
+
+        if (node.get() == this)
+        {
+            throw std::invalid_argument("nodes cannot adopt themselves");
         }
 
         if (node->has_parent())
@@ -66,12 +71,14 @@ namespace mandala
 
         if (children_itr != children.end())
         {
-            //node is already a child
-            throw std::exception();
+            throw std::exception("node is already a child");
         }
 
         //add node to child list
         children.push_back(node);
+
+        //set node's new parent
+        node->parent = shared_from_this();
 
         //mark as dirty
         dirty();
@@ -81,20 +88,25 @@ namespace mandala
     {
         std::function<void(boost::shared_ptr<gui_node_t>&, aabb2_t&)> clean_node = [&clean_node](boost::shared_ptr<gui_node_t>& node, aabb2_t& sibling_bounds)
         {
+            if (node->get_padding() != padding_t())
+            {
+                std::cout << "asd";
+            }
+
             node->on_clean_begin();
 
-            auto absolute_size = node->desired_size;
+            auto absolute_desired_size = node->desired_size;
 
             switch (node->get_size_mode())
             {
             case gui_size_mode_e::relative:
-                if (node->has_parent())   //TODO: doesn't work yet; parents not being set for some reason
+                if (node->has_parent())   //TODO: doesn't work yet; parents not being set properly
                 {
-                    absolute_size *= node->parent->bounds.size();
+                    absolute_desired_size *= node->parent->bounds.size();
                 }
                 else
                 {
-                    absolute_size *= sibling_bounds.size();
+                    absolute_desired_size *= sibling_bounds.size();
                 }
 
                 break;
@@ -105,7 +117,7 @@ namespace mandala
             case gui_dock_mode_e::bottom:
                 node->bounds.min = sibling_bounds.min;
                 node->bounds.max.x = sibling_bounds.max.x;
-                node->bounds.max.y = sibling_bounds.min.y + absolute_size.y + node->padding.vertical();
+                node->bounds.max.y = sibling_bounds.min.y + absolute_desired_size.y + node->padding.vertical();
 
                 node->bounds -= node->margin;
 
@@ -118,7 +130,7 @@ namespace mandala
                 break;
             case gui_dock_mode_e::left:
                 node->bounds.min = sibling_bounds.min;
-                node->bounds.max.x = sibling_bounds.min.x + absolute_size.x + node->padding.horizontal();
+                node->bounds.max.x = sibling_bounds.min.x + absolute_desired_size.x + node->padding.horizontal();
                 node->bounds.max.y = sibling_bounds.max.y;
 
                 node->bounds -= node->margin;
@@ -127,7 +139,7 @@ namespace mandala
 
                 break;
             case gui_dock_mode_e::right:
-                node->bounds.min.x = sibling_bounds.max.x - absolute_size.x - node->padding.horizontal();
+                node->bounds.min.x = sibling_bounds.max.x - absolute_desired_size.x - node->padding.horizontal();
                 node->bounds.min.y = sibling_bounds.min.y;
                 node->bounds.max = sibling_bounds.max;
 
@@ -138,7 +150,7 @@ namespace mandala
                 break;
             case gui_dock_mode_e::top:
                 node->bounds.min.x = sibling_bounds.min.x;
-                node->bounds.min.y = sibling_bounds.max.y - absolute_size.y - node->padding.vertical();
+                node->bounds.min.y = sibling_bounds.max.y - absolute_desired_size.y - node->padding.vertical();
                 node->bounds.max = sibling_bounds.max;
 
                 node->bounds -= node->margin;
@@ -148,7 +160,7 @@ namespace mandala
                 break;
             default:
                 node->bounds.min = vec2_t(0);
-                node->bounds.max = absolute_size;
+                node->bounds.max = absolute_desired_size;
 
                 vec2_t anchor_location;
                 vec2_t anchor_translation;
@@ -156,7 +168,7 @@ namespace mandala
                 if ((node->anchor_flags & gui_anchor_flag_horizontal) == gui_anchor_flag_horizontal)
                 {
                     anchor_location.x = (sibling_bounds.max.x - sibling_bounds.min.x) / 2;
-                    anchor_translation.x = -((absolute_size.x / 2) + ((node->margin.right - node->margin.left) / 2));
+                    anchor_translation.x = -((absolute_desired_size.x / 2) + ((node->margin.right - node->margin.left) / 2));
                 }
                 else
                 {
@@ -168,14 +180,14 @@ namespace mandala
                     else if ((node->anchor_flags & gui_anchor_flag_right) == gui_anchor_flag_right)
                     {
                         anchor_location.x = sibling_bounds.max.x;
-                        anchor_translation.x = -(absolute_size.x + node->margin.right);
+                        anchor_translation.x = -(absolute_desired_size.x + node->margin.right);
                     }
                 }
 
                 if ((node->anchor_flags & gui_anchor_flag_vertical) == gui_anchor_flag_vertical)
                 {
                     anchor_location.y = (sibling_bounds.max.y - sibling_bounds.min.y) / 2;
-                    anchor_translation.y = -((absolute_size.y / 2) + ((node->margin.top - node->margin.bottom) / 2));
+                    anchor_translation.y = -((absolute_desired_size.y / 2) + ((node->margin.top - node->margin.bottom) / 2));
                 }
                 else
                 {
@@ -187,7 +199,7 @@ namespace mandala
                     else if ((node->anchor_flags & gui_anchor_flag_top) == gui_anchor_flag_top)
                     {
                         anchor_location.y = sibling_bounds.max.y;
-                        anchor_translation.y = -(absolute_size.y + node->margin.top);
+                        anchor_translation.y = -(absolute_desired_size.y + node->margin.top);
                     }
                 }
 
@@ -209,6 +221,11 @@ namespace mandala
 
             node->on_clean_end();
         };
+
+        if (padding != padding_t())
+        {
+            std::cout << "qwerty";
+        }
 
         auto padded_bounds = bounds - padding;
 
@@ -336,6 +353,7 @@ namespace mandala
             gpu.stencil.push_state(gpu_stencil_state);
         }
 
+        //TODO: configure this to be enable-able in-game
 #if defined(DEBUG)
         //render_rectangle(world_matrix, view_projection_matrix, rectangle_t(bounds));
 #endif

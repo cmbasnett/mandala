@@ -19,22 +19,22 @@ namespace mandala
         model(model)
     {
         //TODO: kind of ham-fisted, find a better way to do this?
-        skeleton.bones.resize(model->bones.size());
-        skeleton.bone_matrices.resize(model->bones.size());
+        skeleton.bones.resize(model->get_bones().size());
+        skeleton.bone_matrices.resize(model->get_bones().size());
 
         for (size_t i = 0; i < skeleton.bones.size(); ++i)
         {
-            skeleton.bone_matrices[i] = model->bones[i].bind_pose_matrix;
+            skeleton.bone_matrices[i] = model->get_bones()[i].bind_pose_matrix;
         }
 
         bone_matrices.resize(skeleton.bones.size());
 
         for (size_t i = 0; i < skeleton.bones.size(); ++i)
         {
-            bone_matrices[i] = skeleton.bone_matrices[i] * model->bones[i].inverse_bind_pose_matrix;
+            bone_matrices[i] = skeleton.bone_matrices[i] * model->get_bones()[i].inverse_bind_pose_matrix;
         }
 
-        for (const auto& mesh : model->meshes)
+        for (const auto& mesh : model->get_meshes())
         {
             mesh_materials.push_back(boost::make_shared<material_instance_t>(mesh->material));
         }
@@ -47,8 +47,6 @@ namespace mandala
 
     void model_instance_t::tick(float32_t dt)
     {
-        pose.rotation = glm::toQuat(glm::rotate(t * 10.0f, 0.0f, 1.0f, 0.0f));
-
         if (animation != nullptr)
         {
             t += dt;
@@ -66,10 +64,13 @@ namespace mandala
 
         for (size_t i = 0; i < skeleton.bones.size(); ++i)
         {
-            bone_matrices[i] = skeleton.bone_matrices[i] * model->bones[i].inverse_bind_pose_matrix;
+            bone_matrices[i] = skeleton.bone_matrices[i] * model->get_bones()[i].inverse_bind_pose_matrix;
         }
 
         aabb = skeleton.aabb << pose.to_matrix();
+
+        sphere.origin = aabb.center();
+        sphere.radius = glm::length(aabb.extents());
     }
 
 	void model_instance_t::render(const camera_t& camera, const vec3_t& light_location) const
@@ -79,7 +80,8 @@ namespace mandala
 			throw std::exception();
 		}
 
-		if(intersects(camera.get_frustum(), aabb) == intersect_type_e::disjoint)
+        if (intersects(camera.get_frustum(), sphere) == intersect_type_e::disjoint ||
+            intersects(camera.get_frustum(), aabb) == intersect_type_e::disjoint)
 		{
 			//skeleton aabb does not intersect camera frustum
 			return;
@@ -89,11 +91,14 @@ namespace mandala
 
 		model->render(camera.location, pose.to_matrix(), view_projection_matrix, bone_matrices, light_location);
 
+#if defined (DEBUG)
         render_aabb(pose.to_matrix(), view_projection_matrix, skeleton.aabb);
         render_aabb(mat4_t(), view_projection_matrix, aabb);
+        render_sphere(mat4_t(), view_projection_matrix, sphere);
+#endif
 	}
 	
-	const pose3 model_instance_t::get_bone_pose(const hash_t& bone_hash) const
+	const pose3& model_instance_t::get_bone_pose(const hash_t& bone_hash) const
 	{
 		auto bone_index = model->get_bone_index(bone_hash);
 

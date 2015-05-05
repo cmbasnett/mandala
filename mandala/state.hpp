@@ -18,7 +18,7 @@ namespace mandala
 
 	struct state_t : public boost::enable_shared_from_this<state_t>
 	{
-		virtual void tick(float32_t dt) { }
+        virtual void tick(float32_t dt) { on_tick(dt); }
 		virtual void render() { }
         virtual void on_input_event(input_event_t& input_event) { }
 #if defined(MANDALA_PC)
@@ -34,5 +34,6 @@ namespace mandala
 		virtual void on_start_render() { }
 		virtual void on_stop_input() { }
 		virtual void on_start_input() { }
+        virtual void on_tick(float32_t dt) { }
 	};
 }
