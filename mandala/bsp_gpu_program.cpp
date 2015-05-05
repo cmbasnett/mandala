@@ -78,9 +78,9 @@ void main()
 		gpu.enable_vertex_attribute_array(diffuse_texcoord_location);
 		gpu.enable_vertex_attribute_array(lightmap_texcoord_location);
 
-		gpu.set_vertex_attrib_pointer(location_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, location)));
-		gpu.set_vertex_attrib_pointer(diffuse_texcoord_location, 2, gpu_data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, diffuse_texcoord)));
-		gpu.set_vertex_attrib_pointer(lightmap_texcoord_location, 2, gpu_data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, lightmap_texcoord)));
+		gpu.set_vertex_attrib_pointer(location_location, 3, gpu_data_type_e::FLOAT, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, location)));
+		gpu.set_vertex_attrib_pointer(diffuse_texcoord_location, 2, gpu_data_type_e::FLOAT, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, diffuse_texcoord)));
+		gpu.set_vertex_attrib_pointer(lightmap_texcoord_location, 2, gpu_data_type_e::FLOAT, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, lightmap_texcoord)));
 	}
 
 	void bsp_gpu_program_t::on_unbind()

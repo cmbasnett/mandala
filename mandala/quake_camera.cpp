@@ -56,21 +56,21 @@ namespace mandala
 	{
 		switch (input_event.device_type)
 		{
-		case input_event_t::device_type_e::keyboard:
+		case input_event_t::device_type_e::KEYBOARD:
 			{
 				switch (input_event.keyboard.key)
 				{
-				case input_event_t::keyboard_t::key_e::w:
+				case input_event_t::keyboard_t::key_e::W:
 					{
 						switch(input_event.keyboard.type)
 						{
-						case input_event_t::keyboard_t::type_e::key_press:
+						case input_event_t::keyboard_t::type_e::KEY_PRESS:
 							{
 								local_velocity_target.z = 1.0f;
 								input_event.is_consumed = true;
 							}
 							break;
-						case input_event_t::keyboard_t::type_e::key_release:
+						case input_event_t::keyboard_t::type_e::KEY_RELEASE:
 							{
 								local_velocity_target.z = 0.0f;
 								input_event.is_consumed = true;
@@ -79,17 +79,17 @@ namespace mandala
 						}
 					}
 					break;
-				case input_event_t::keyboard_t::key_e::a:
+				case input_event_t::keyboard_t::key_e::A:
 					{
 						switch(input_event.keyboard.type)
 						{
-						case input_event_t::keyboard_t::type_e::key_press:
+						case input_event_t::keyboard_t::type_e::KEY_PRESS:
 							{
 								local_velocity_target.x = 1.0f;
 								input_event.is_consumed = true;
 							}
 							break;
-						case input_event_t::keyboard_t::type_e::key_release:
+						case input_event_t::keyboard_t::type_e::KEY_RELEASE:
 							{
 								local_velocity_target.x = 0.0f;
 								input_event.is_consumed = true;
@@ -98,17 +98,17 @@ namespace mandala
 						}
 					}
 					break;
-				case input_event_t::keyboard_t::key_e::s:
+				case input_event_t::keyboard_t::key_e::S:
 					{
 						switch(input_event.keyboard.type)
 						{
-						case input_event_t::keyboard_t::type_e::key_press:
+						case input_event_t::keyboard_t::type_e::KEY_PRESS:
 							{
 								local_velocity_target.z = -1.0f;
 								input_event.is_consumed = true;
 							}
 							break;
-						case input_event_t::keyboard_t::type_e::key_release:
+						case input_event_t::keyboard_t::type_e::KEY_RELEASE:
 							{
 								local_velocity_target.z = 0.0f;
 								input_event.is_consumed = true;
@@ -117,17 +117,17 @@ namespace mandala
 						}
 					}
 					break;
-				case input_event_t::keyboard_t::key_e::d:
+				case input_event_t::keyboard_t::key_e::D:
 					{
 						switch(input_event.keyboard.type)
 						{
-						case input_event_t::keyboard_t::type_e::key_press:
+						case input_event_t::keyboard_t::type_e::KEY_PRESS:
 							{
 								local_velocity_target.x = -1.0f;
 								input_event.is_consumed = true;
 							}
 							break;
-						case input_event_t::keyboard_t::type_e::key_release:
+						case input_event_t::keyboard_t::type_e::KEY_RELEASE:
 							{
 								local_velocity_target.x = 0.0f;
 								input_event.is_consumed = true;
@@ -136,14 +136,14 @@ namespace mandala
 						}
 					}
 					break;
-				case input_event_t::keyboard_t::key_e::r:
+				case input_event_t::keyboard_t::key_e::R:
 					switch (input_event.keyboard.type)
 					{
-					case input_event_t::keyboard_t::type_e::key_press:
+					case input_event_t::keyboard_t::type_e::KEY_PRESS:
 						debug_is_rolling = true;
 						input_event.is_consumed = true;
 						break;
-					case input_event_t::keyboard_t::type_e::key_release:
+					case input_event_t::keyboard_t::type_e::KEY_RELEASE:
 						debug_is_rolling = false;
 						input_event.is_consumed = true;
 						break;
@@ -153,11 +153,11 @@ namespace mandala
 				}
 			}
 			break;
-		case input_event_t::device_type_e::touch:
+		case input_event_t::device_type_e::TOUCH:
 			{
 				switch (input_event.touch.type)
 				{
-				case input_event_t::touch_t::type_e::move:
+				case input_event_t::touch_t::type_e::MOVE:
 					{
 						if (debug_is_rolling)
 						{
@@ -177,11 +177,11 @@ namespace mandala
 				}
 			}
 			break;
-		case input_event_t::device_type_e::gamepad:
+		case input_event_t::device_type_e::GAMEPAD:
 		{
 			switch (input_event.gamepad.type)
 			{
-            case input_event_t::gamepad_t::type_e::axis_move:
+            case input_event_t::gamepad_t::type_e::AXIS_MOVE:
 				{
 					auto axis_value = glm::percent_rank(glm::abs(input_event.gamepad.axis_value), 0.125f, 1.0f);
 					axis_value = glm::clamp(1.0f * -glm::log(-axis_value + 1), 0.0f, 1.0f);

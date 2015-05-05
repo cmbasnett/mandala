@@ -173,9 +173,9 @@ void main()
 		bone_weights_0_location = gpu.get_attribute_location(get_id(), "bone_weights_0");
 		bone_weights_1_location = gpu.get_attribute_location(get_id(), "bone_weights_1");
 
-        calculate_lighting_function_location = gpu.get_subroutine_uniform_location(get_id(), gpu_t::shader_type_e::fragment, "calculate_lighting");
-        calculate_lighting_lit_subroutine_index = gpu.get_subroutine_index(get_id(), gpu_t::shader_type_e::fragment, "calculate_lighting_lit");
-        calculate_lighting_unlit_subroutine_index = gpu.get_subroutine_index(get_id(), gpu_t::shader_type_e::fragment, "calculate_lighting_unlit");
+        calculate_lighting_function_location = gpu.get_subroutine_uniform_location(get_id(), gpu_t::shader_type_e::FRAGMENT, "calculate_lighting");
+        calculate_lighting_lit_subroutine_index = gpu.get_subroutine_index(get_id(), gpu_t::shader_type_e::FRAGMENT, "calculate_lighting_lit");
+        calculate_lighting_unlit_subroutine_index = gpu.get_subroutine_index(get_id(), gpu_t::shader_type_e::FRAGMENT, "calculate_lighting_unlit");
 	}
 
 	void model_gpu_program_t::on_bind()
@@ -189,14 +189,14 @@ void main()
 		gpu.enable_vertex_attribute_array(bone_weights_0_location);
 		gpu.enable_vertex_attribute_array(bone_weights_1_location);
 
-		gpu.set_vertex_attrib_pointer(location_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, location)));
-		gpu.set_vertex_attrib_pointer(normal_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, normal)));
-		gpu.set_vertex_attrib_pointer(tangent_location, 3, gpu_data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, tangent)));
-		gpu.set_vertex_attrib_pointer(texcoord_location, 2, gpu_data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, texcoord)));
-		gpu.set_vertex_attrib_pointer(bone_indices_0_location, 4, gpu_data_type_e::int_, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, bone_indices_0)));
-		gpu.set_vertex_attrib_pointer(bone_indices_1_location, 4, gpu_data_type_e::int_, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, bone_indices_1)));
-		gpu.set_vertex_attrib_pointer(bone_weights_0_location, 4, gpu_data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, bone_weights_0)));
-		gpu.set_vertex_attrib_pointer(bone_weights_1_location, 4, gpu_data_type_e::float_, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, bone_weights_1)));
+		gpu.set_vertex_attrib_pointer(location_location, 3, gpu_data_type_e::FLOAT, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, location)));
+		gpu.set_vertex_attrib_pointer(normal_location, 3, gpu_data_type_e::FLOAT, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, normal)));
+		gpu.set_vertex_attrib_pointer(tangent_location, 3, gpu_data_type_e::FLOAT, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, tangent)));
+		gpu.set_vertex_attrib_pointer(texcoord_location, 2, gpu_data_type_e::FLOAT, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, texcoord)));
+		gpu.set_vertex_attrib_pointer(bone_indices_0_location, 4, gpu_data_type_e::INT, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, bone_indices_0)));
+		gpu.set_vertex_attrib_pointer(bone_indices_1_location, 4, gpu_data_type_e::INT, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, bone_indices_1)));
+		gpu.set_vertex_attrib_pointer(bone_weights_0_location, 4, gpu_data_type_e::FLOAT, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, bone_weights_0)));
+		gpu.set_vertex_attrib_pointer(bone_weights_1_location, 4, gpu_data_type_e::FLOAT, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, bone_weights_1)));
 	}
 
 	void model_gpu_program_t::on_unbind()
@@ -215,11 +215,11 @@ void main()
     {
         if (is_lit)
         {
-            gpu.set_uniform_subroutine(gpu_t::shader_type_e::fragment, calculate_lighting_lit_subroutine_index);
+            gpu.set_uniform_subroutine(gpu_t::shader_type_e::FRAGMENT, calculate_lighting_lit_subroutine_index);
         }
         else
         {
-			gpu.set_uniform_subroutine(gpu_t::shader_type_e::fragment, calculate_lighting_unlit_subroutine_index);
+			gpu.set_uniform_subroutine(gpu_t::shader_type_e::FRAGMENT, calculate_lighting_unlit_subroutine_index);
         }
     }
 }

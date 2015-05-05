@@ -37,9 +37,9 @@ namespace mandala
 		{
 		};
 
-		static const int channel_count = 16;
+		static const int CHANNEL_COUNT = 16;
 
-		typedef index_type<channel_count>::type channel_index_type;
+		typedef index_type<CHANNEL_COUNT>::type channel_index_type;
         typedef std::map<uint32_t, boost::shared_ptr<audio_source_t>> sources_type;
 
 		audio_mgr_t();

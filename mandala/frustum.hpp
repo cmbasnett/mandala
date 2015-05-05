@@ -16,28 +16,28 @@ namespace mandala
 {
 	enum
 	{
-		frustum_corner_index_left_top_near,
-		frustum_corner_index_left_top_far,
-		frustum_corner_index_left_bottom_near,
-		frustum_corner_index_left_bottom_far,
-		frustum_corner_index_right_top_near,
-		frustum_corner_index_right_top_far,
-		frustum_corner_index_right_bottom_near,
-		frustum_corner_index_right_bottom_far
+		FRUSTUM_CORNER_INDEX_LEFT_TOP_NEAR,
+		FRUSTUM_CORNER_INDEX_LEFT_TOP_FAR,
+		FRUSTUM_CORNER_INDEX_LEFT_BOTTOM_NEAR,
+		FRUSTUM_CORNER_INDEX_LEFT_BOTTOM_FAR,
+		FRUSTUM_CORNER_INDEX_RIGHT_TOP_NEAR,
+		FRUSTUM_CORNER_INDEX_RIGHT_TOP_FAR,
+		FRUSTUM_CORNER_INDEX_RIGHT_BOTTOM_NEAR,
+		FRUSTUM_CORNER_INDEX_RIGHT_BOTTOM_FAR
 	};
 
 	enum
 	{
-		frustum_plane_index_left,
-		frustum_plane_index_right,
-		frustum_plane_index_top,
-		frustum_plane_index_bottom,
-		frustum_plane_index_near,
-		frustum_plane_index_far
+		FRUSTUM_PLANE_INDEX_LEFT,
+		FRUSTUM_PLANE_INDEX_RIGHT,
+		FRUSTUM_PLANE_INDEX_TOP,
+		FRUSTUM_PLANE_INDEX_BOTTOM,
+		FRUSTUM_PLANE_INDEX_NEAR,
+		FRUSTUM_PLANE_INDEX_FAR
 	};
 
-	static const size_t frustum_plane_count = 6;
-	static const size_t frustum_corner_count = 8;
+	static const size_t FRUSTUM_PLANE_COUNT = 6;
+	static const size_t FRUSTUM_CORNER_COUNT = 8;
 
 	namespace details
 	{
@@ -52,8 +52,8 @@ namespace mandala
 			typedef frustum_t<scalar_type> type;
 			typedef details::plane3_t<scalar_type> plane_type;
 			typedef glm::detail::tmat4x4<scalar_type> matrix_type;
-			typedef std::array<plane_type, frustum_plane_count> planes_type;
-			typedef std::array<vector_type, frustum_corner_count> corners_type;
+			typedef std::array<plane_type, FRUSTUM_PLANE_COUNT> planes_type;
+			typedef std::array<vector_type, FRUSTUM_CORNER_COUNT> corners_type;
 			typedef details::aabb3_t<scalar_type> aabb_type;
 			typedef details::sphere_t<scalar_type> sphere_type;
 
@@ -79,17 +79,17 @@ namespace mandala
 				const auto near_plane_center = origin + (forward * near);
 
 				//corners
-				_corners[frustum_corner_index_left_top_near] = near_plane_center + (left * near_plane_half_width) + (up * near_plane_half_height);
-				_corners[frustum_corner_index_left_top_far] = far_plane_center + (left * far_plane_half_width) + (up * far_plane_half_height);
-				_corners[frustum_corner_index_left_bottom_near] = near_plane_center + (left * near_plane_half_width) - (up * near_plane_half_height);
-				_corners[frustum_corner_index_left_bottom_far] = far_plane_center + (left * far_plane_half_width) - (up * far_plane_half_height);
-				_corners[frustum_corner_index_right_top_near] = near_plane_center - (left * near_plane_half_width) + (up * near_plane_half_height);
-				_corners[frustum_corner_index_right_top_far] = far_plane_center - (left * far_plane_half_width) + (up * far_plane_half_height);
-				_corners[frustum_corner_index_right_bottom_near] = near_plane_center - (left * near_plane_half_width) - (up * near_plane_half_height);
-				_corners[frustum_corner_index_right_bottom_far] = far_plane_center - (left * far_plane_half_width) - (up * far_plane_half_height);
+                corners[FRUSTUM_CORNER_INDEX_LEFT_TOP_NEAR] = near_plane_center + (left * near_plane_half_width) + (up * near_plane_half_height);
+                corners[FRUSTUM_CORNER_INDEX_LEFT_TOP_FAR] = far_plane_center + (left * far_plane_half_width) + (up * far_plane_half_height);
+                corners[FRUSTUM_CORNER_INDEX_LEFT_BOTTOM_NEAR] = near_plane_center + (left * near_plane_half_width) - (up * near_plane_half_height);
+                corners[FRUSTUM_CORNER_INDEX_LEFT_BOTTOM_FAR] = far_plane_center + (left * far_plane_half_width) - (up * far_plane_half_height);
+                corners[FRUSTUM_CORNER_INDEX_RIGHT_TOP_NEAR] = near_plane_center - (left * near_plane_half_width) + (up * near_plane_half_height);
+                corners[FRUSTUM_CORNER_INDEX_RIGHT_TOP_FAR] = far_plane_center - (left * far_plane_half_width) + (up * far_plane_half_height);
+                corners[FRUSTUM_CORNER_INDEX_RIGHT_BOTTOM_NEAR] = near_plane_center - (left * near_plane_half_width) - (up * near_plane_half_height);
+                corners[FRUSTUM_CORNER_INDEX_RIGHT_BOTTOM_FAR] = far_plane_center - (left * far_plane_half_width) - (up * far_plane_half_height);
 
 				//aabb
-				_aabb = _corners;
+				aabb = corners;
 
 				//planes
 				const auto a = glm::normalize(far_plane_right - origin);
@@ -102,12 +102,12 @@ namespace mandala
 				const auto top_plane_normal = -glm::cross(c, left);
 				const auto bottom_plane_normal = -glm::cross(left, d);
 
-				_planes[frustum_plane_index_left] = plane_type(origin, left_plane_normal);
-				_planes[frustum_plane_index_right] = plane_type(origin, right_plane_normal);
-				_planes[frustum_plane_index_top] = plane_type(origin, top_plane_normal);
-				_planes[frustum_plane_index_bottom] = plane_type(origin, bottom_plane_normal);
-				_planes[frustum_plane_index_near] = plane_type(near_plane_center, forward);
-				_planes[frustum_plane_index_far] = plane_type(far_plane_center, -forward);
+                planes[FRUSTUM_PLANE_INDEX_LEFT] = plane_type(origin, left_plane_normal);
+                planes[FRUSTUM_PLANE_INDEX_RIGHT] = plane_type(origin, right_plane_normal);
+                planes[FRUSTUM_PLANE_INDEX_TOP] = plane_type(origin, top_plane_normal);
+                planes[FRUSTUM_PLANE_INDEX_BOTTOM] = plane_type(origin, bottom_plane_normal);
+                planes[FRUSTUM_PLANE_INDEX_NEAR] = plane_type(near_plane_center, forward);
+                planes[FRUSTUM_PLANE_INDEX_FAR] = plane_type(far_plane_center, -forward);
 
 				//TODO: verify correctness
 				//sphere
@@ -120,20 +120,20 @@ namespace mandala
 				auto q = vector_type(far_width, far_height, view_length);
 				auto r = q - p;
 
-				_sphere.radius = glm::length(r);
-				_sphere.origin = origin + (forward * (view_length / 2) + near);
+				sphere.radius = glm::length(r);
+				sphere.origin = origin + (forward * (view_length / 2) + near);
 			}
 
-			const planes_type& planes() const { return _planes; }
-			const corners_type& corners() const { return _corners; }
-			const aabb_type& aabb() const { return _aabb; }
-			const sphere_type& sphere() const { return _sphere; }
+			const planes_type& get_planes() const { return planes; }
+			const corners_type& get_corners() const { return corners; }
+			const aabb_type& get_aabb() const { return aabb; }
+			const sphere_type& get_sphere() const { return sphere; }
 
 		private:
-			planes_type _planes;
-			corners_type _corners;
-			aabb_type _aabb;
-			sphere_type _sphere;
+			planes_type planes;
+			corners_type corners;
+			aabb_type aabb;
+			sphere_type sphere;
 		};
 	}
 

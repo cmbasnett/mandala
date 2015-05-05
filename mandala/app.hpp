@@ -22,7 +22,7 @@ namespace mandala
         {
             typedef float32_t fps_type;
 
-            static const auto frame_count = 256;
+            static const auto FRAME_COUNT = 256;
 
             struct frame_t
             {

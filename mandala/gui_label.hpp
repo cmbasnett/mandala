@@ -25,16 +25,16 @@ namespace mandala
 
 		enum class justification_e
 		{
-			left,
-			center,
-			right
+			LEFT,
+			CENTER,
+			RIGHT
 		};
 
         enum class vertical_alignment_e
         {
-            top,
-            middle,
-            bottom
+            TOP,
+            MIDDLE,
+            BOTTOM
         };
 
 		gui_label_t();
@@ -107,8 +107,8 @@ namespace mandala
 
 		string_type string;
 		boost::shared_ptr<bitmap_font_t> bitmap_font;
-		justification_e justification = justification_e::left;
-		vertical_alignment_e vertical_alignment = vertical_alignment_e::top;
+		justification_e justification = justification_e::LEFT;
+		vertical_alignment_e vertical_alignment = vertical_alignment_e::TOP;
         line_height_type line_spacing = 0;
 		bool is_multiline = true;
 		bool is_uppercase = false;

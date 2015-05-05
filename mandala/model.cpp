@@ -261,10 +261,10 @@ namespace mandala
             }
 
             mesh->vertex_buffer = boost::make_shared<mesh_t::vertex_buffer_type>();
-            mesh->vertex_buffer->data(vertices, gpu_t::buffer_usage_e::static_draw);
+            mesh->vertex_buffer->data(vertices, gpu_t::buffer_usage_e::STATIC_DRAW);
 
             mesh->index_buffer = boost::make_shared<mesh_t::index_buffer_type>();
-            mesh->index_buffer->data(mesh_info.indices, gpu_t::buffer_usage_e::static_draw);
+            mesh->index_buffer->data(mesh_info.indices, gpu_t::buffer_usage_e::STATIC_DRAW);
 
             meshes.push_back(mesh);
         }
@@ -287,8 +287,8 @@ namespace mandala
         //blend
         auto blend_state = gpu.blend.get_state();
         blend_state.is_enabled = true;
-        blend_state.src_factor = gpu_t::blend_factor_e::src_alpha;
-        blend_state.dst_factor = gpu_t::blend_factor_e::one_minus_src_alpha;
+        blend_state.src_factor = gpu_t::blend_factor_e::SRC_ALPHA;
+        blend_state.dst_factor = gpu_t::blend_factor_e::ONE_MINUS_SRC_ALPHA;
 
         gpu.blend.push_state(blend_state);
 
@@ -307,8 +307,8 @@ namespace mandala
 
             gpu.culling.push_state(culling_state);
 
-            gpu.buffers.push(gpu_t::buffer_target_e::array, mesh->vertex_buffer);
-            gpu.buffers.push(gpu_t::buffer_target_e::element_array, mesh->index_buffer);
+            gpu.buffers.push(gpu_t::buffer_target_e::ARRAY, mesh->vertex_buffer);
+            gpu.buffers.push(gpu_t::buffer_target_e::ELEMENT_ARRAY, mesh->index_buffer);
 
             const auto gpu_program = gpu_programs.get<model_gpu_program_t>();
 
@@ -327,8 +327,8 @@ namespace mandala
 
             gpu.programs.pop();
 
-            gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
-            gpu.buffers.pop(gpu_t::buffer_target_e::array);
+            gpu.buffers.pop(gpu_t::buffer_target_e::ELEMENT_ARRAY);
+            gpu.buffers.pop(gpu_t::buffer_target_e::ARRAY);
 
             gpu.culling.pop_state();
         }
@@ -354,10 +354,10 @@ namespace mandala
 
     void model_t::mesh_t::render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices) const
     {
-        static const auto diffuse_texture_index = 0;
-        static const auto normal_texture_index = 1;
-        static const auto specular_texture_index = 2;
-        static const auto emissive_texture_index = 3;
+        static const auto DIFFUSE_TEXTURE_INDEX = 0;
+        static const auto NORMAL_TEXTURE_INDEX = 1;
+        static const auto SPECULAR_TEXTURE_INDEX = 2;
+        static const auto EMISSIVE_TEXTURE_INDEX = 3;
 
         const auto gpu_program = gpu_programs.get<model_gpu_program_t>();
 
@@ -368,25 +368,25 @@ namespace mandala
             const auto& diffuse = material->get_diffuse();
 
             //texture
-            gpu.textures.bind(diffuse_texture_index, diffuse.texture);
+            gpu.textures.bind(DIFFUSE_TEXTURE_INDEX, diffuse.texture);
 
-            gpu.set_uniform("diffuse.texture", diffuse_texture_index);
+            gpu.set_uniform("diffuse.texture", DIFFUSE_TEXTURE_INDEX);
             gpu.set_uniform("diffuse.color", diffuse.color);
 
             //normal
             const auto& normal = material->get_normal();
 
             //texture
-            gpu.textures.bind(normal_texture_index, normal.texture);
+            gpu.textures.bind(NORMAL_TEXTURE_INDEX, normal.texture);
 
-            gpu.set_uniform("normal.texture", normal_texture_index);
+            gpu.set_uniform("normal.texture", NORMAL_TEXTURE_INDEX);
 
             //specular
             auto& specular = material->get_specular();
 
-            gpu.textures.bind(specular_texture_index, specular.texture);
+            gpu.textures.bind(SPECULAR_TEXTURE_INDEX, specular.texture);
 
-            gpu.set_uniform("specular.texture", specular_texture_index);
+            gpu.set_uniform("specular.texture", SPECULAR_TEXTURE_INDEX);
             gpu.set_uniform("specular.color", specular.color);
             gpu.set_uniform("specular.intensity", specular.intensity);
 
@@ -394,19 +394,19 @@ namespace mandala
             const auto& emissive = material->get_emissive();
 
             //texture
-            gpu.textures.bind(emissive_texture_index, emissive.texture);
+            gpu.textures.bind(EMISSIVE_TEXTURE_INDEX, emissive.texture);
 
-            gpu.set_uniform("emissive.texture", emissive_texture_index);
+            gpu.set_uniform("emissive.texture", EMISSIVE_TEXTURE_INDEX);
             gpu.set_uniform("emissive.color", emissive.color);
             gpu.set_uniform("emissive.intensity", emissive.intensity);
         }
 
-        gpu.draw_elements(gpu_t::primitive_type_e::triangles, index_count, index_buffer_type::data_type, 0);
+        gpu.draw_elements(gpu_t::primitive_type_e::TRIANGLES, index_count, index_buffer_type::DATA_TYPE, 0);
 
         //unbind textures
-        gpu.textures.unbind(emissive_texture_index);
-        gpu.textures.unbind(specular_texture_index);
-        gpu.textures.unbind(normal_texture_index);
-        gpu.textures.unbind(diffuse_texture_index);
+        gpu.textures.unbind(EMISSIVE_TEXTURE_INDEX);
+        gpu.textures.unbind(SPECULAR_TEXTURE_INDEX);
+        gpu.textures.unbind(NORMAL_TEXTURE_INDEX);
+        gpu.textures.unbind(DIFFUSE_TEXTURE_INDEX);
     }
 }

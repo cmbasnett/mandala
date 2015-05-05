@@ -22,22 +22,22 @@ namespace mandala
 	{
 		enum class type_e : uint8_t
 		{
-            entities,
-            planes,
-            textures,
-            vertices,
-            visibliity,
-            nodes,
-            texture_info,
-            faces,
-            lighting,
-            clip_nodes,
-            leaves,
-            mark_surfaces,
-            edges,
-            surface_edges,
-            models,
-            count
+            ENTITIES,
+            PLANES,
+            TEXTURES,
+            VERTICES,
+            VISIBLIITY,
+            NODES,
+            TEXTURE_INFO,
+            FACES,
+            LIGHTING,
+            CLIP_NODES,
+            LEAVES,
+            MARK_SURFACES,
+            EDGES,
+            SURFACE_EDGES,
+            MODELS,
+            COUNT
         };
 
         uint32_t offset = 0;
@@ -56,9 +56,9 @@ namespace mandala
 
         read(istream, version);
 
-        static const auto bsp_version = 30;
+        static const auto BSP_VERSION = 30;
 
-        if (version != bsp_version)
+        if (version != BSP_VERSION)
         {
             throw std::exception();
         }
@@ -66,7 +66,7 @@ namespace mandala
         //chunks
         std::vector<bsp_chunk_t> chunks;
 
-		chunks.resize(static_cast<size_t>(bsp_chunk_t::type_e::count));
+		chunks.resize(static_cast<size_t>(bsp_chunk_t::type_e::COUNT));
 
         for (auto& chunk : chunks)
         {
@@ -75,7 +75,7 @@ namespace mandala
         }
 
         //planes
-		const auto& plane_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::planes)];
+		const auto& plane_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::PLANES)];
         istream.seekg(plane_chunk.offset, std::ios_base::beg);
 
         auto plane_count = plane_chunk.length / sizeof(plane_t);
@@ -93,7 +93,7 @@ namespace mandala
         }
 
         //vertex_locations
-		const auto& vertices_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::vertices)];
+		const auto& vertices_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::VERTICES)];
         istream.seekg(vertices_chunk.offset, std::ios_base::beg);
 
         std::vector<vec3_t> vertex_locations;
@@ -111,7 +111,7 @@ namespace mandala
         }
 
         //edges
-		const auto& edges_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::edges)];
+		const auto& edges_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::EDGES)];
         istream.seekg(edges_chunk.offset, std::ios_base::beg);
 
         auto edge_count = edges_chunk.length / sizeof(edge_t);
@@ -124,7 +124,7 @@ namespace mandala
         }
 
         //surface_edges
-		const auto& surface_edges_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::surface_edges)];
+		const auto& surface_edges_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::SURFACE_EDGES)];
         istream.seekg(surface_edges_chunk.offset, std::ios_base::beg);
 
         auto surface_edge_count = surface_edges_chunk.length / sizeof(int32_t);
@@ -136,7 +136,7 @@ namespace mandala
         }
 
         //faces
-		const auto& faces_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::faces)];
+		const auto& faces_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::FACES)];
         istream.seekg(faces_chunk.offset, std::ios_base::beg);
 
         auto face_count = faces_chunk.length / sizeof(face_t);
@@ -157,7 +157,7 @@ namespace mandala
         }
 
         //nodes
-		const auto& nodes_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::nodes)];
+		const auto& nodes_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::NODES)];
         istream.seekg(nodes_chunk.offset, std::ios_base::beg);
 
         auto node_count = nodes_chunk.length / sizeof(node_t);
@@ -182,7 +182,7 @@ namespace mandala
         }
 
         //leaves
-		const auto& leaves_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::leaves)];
+		const auto& leaves_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::LEAVES)];
         istream.seekg(leaves_chunk.offset, std::ios_base::beg);
 
         auto leaf_count = leaves_chunk.length / sizeof(leaf_t);
@@ -210,7 +210,7 @@ namespace mandala
         }
 
         //mark_surfaces
-		const auto& mark_surfaces_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::mark_surfaces)];
+		const auto& mark_surfaces_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::MARK_SURFACES)];
         istream.seekg(mark_surfaces_chunk.offset, std::ios_base::beg);
 
         auto mark_surface_count = mark_surfaces_chunk.length / sizeof(uint16_t);
@@ -222,7 +222,7 @@ namespace mandala
         }
 
         //clip_nodes
-		const auto& clip_nodes_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::clip_nodes)];
+		const auto& clip_nodes_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::CLIP_NODES)];
         istream.seekg(clip_nodes_chunk.offset, std::ios_base::beg);
 
         auto clip_node_count = clip_nodes_chunk.length / sizeof(clip_node_t);
@@ -236,7 +236,7 @@ namespace mandala
         }
 
         //models
-		const auto& models_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::models)];
+		const auto& models_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::MODELS)];
         istream.seekg(models_chunk.offset, std::ios_base::beg);
 
         auto model_count = models_chunk.length / sizeof(model_t);
@@ -267,7 +267,7 @@ namespace mandala
         }
 
         //visibility
-		const auto& visibility_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::visibliity)];
+		const auto& visibility_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::VISIBLIITY)];
         istream.seekg(visibility_chunk.offset, std::ios_base::beg);
 
         if (visibility_chunk.length > 0)
@@ -276,7 +276,7 @@ namespace mandala
             {
                 if (node_index < 0)
                 {
-                    if (node_index == -1 || leafs[~node_index].content_type == content_type_e::solid)
+                    if (node_index == -1 || leafs[~node_index].content_type == content_type_e::SOLID)
                     {
                         return;
                     }
@@ -338,7 +338,7 @@ namespace mandala
         }
 
         //textures
-		const auto& textures_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::textures)];
+		const auto& textures_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::TEXTURES)];
         istream.seekg(textures_chunk.offset, std::ios_base::beg);
 
         uint32_t texture_count;
@@ -389,7 +389,7 @@ namespace mandala
         }
 
         //texture_info
-		const auto& texture_info_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::texture_info)];
+		const auto& texture_info_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::TEXTURE_INFO)];
         istream.seekg(texture_info_chunk.offset, std::ios_base::beg);
 
         auto texture_info_count = texture_info_chunk.length / sizeof(texture_info_t);
@@ -460,7 +460,7 @@ namespace mandala
         }
 
         //lighting
-		const auto& lighting_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::lighting)];
+		const auto& lighting_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::LIGHTING)];
         istream.seekg(lighting_chunk.offset, std::ios_base::beg);
 
         std::vector<uint8_t> lighting_data;
@@ -557,7 +557,7 @@ namespace mandala
         }
 
         //entities
-		const auto& entities_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::entities)];
+		const auto& entities_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::ENTITIES)];
         istream.seekg(entities_chunk.offset, std::ios_base::beg);
 
         std::vector<char> entities_buffer;
@@ -597,10 +597,10 @@ namespace mandala
         }
 
         vertex_buffer = gpu_buffers.make<vertex_buffer_type>().lock();
-        vertex_buffer->data(vertices, gpu_t::buffer_usage_e::static_draw);
+        vertex_buffer->data(vertices, gpu_t::buffer_usage_e::STATIC_DRAW);
 
         index_buffer = gpu_buffers.make<index_buffer_type>().lock();
-        index_buffer->data(indices, gpu_t::buffer_usage_e::static_draw);
+        index_buffer->data(indices, gpu_t::buffer_usage_e::STATIC_DRAW);
     }
 
     void bsp_t::render(const camera_t& camera)
@@ -614,7 +614,7 @@ namespace mandala
         //culling
         auto culling_state = gpu.culling.get_state();
         culling_state.is_enabled = true;
-        culling_state.mode = gpu_t::culling_mode_e::front;
+        culling_state.mode = gpu_t::culling_mode_e::FRONT;
 
         gpu.culling.push_state(culling_state);
 
@@ -624,12 +624,12 @@ namespace mandala
 
         gpu.blend.push_state(blend_state);
 
-		static const auto diffuse_texture_index = 0;
-		static const auto lightmap_texture_index = 1;
+		static const auto DIFFUSE_TEXTURE_INDEX = 0;
+		static const auto LIGHTMAP_TEXTURE_INDEX = 1;
 
         //bind buffers
-        gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
-		gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
+        gpu.buffers.push(gpu_t::buffer_target_e::ARRAY, vertex_buffer);
+		gpu.buffers.push(gpu_t::buffer_target_e::ELEMENT_ARRAY, index_buffer);
 
 		//bind program
         const auto gpu_program = gpu_programs.get<bsp_gpu_program_t>();
@@ -638,8 +638,8 @@ namespace mandala
 
         gpu.set_uniform("world_matrix", mat4_t());
         gpu.set_uniform("view_projection_matrix", camera.get_projection_matrix() * camera.get_view_matrix());
-        gpu.set_uniform("diffuse_texture", diffuse_texture_index);
-        gpu.set_uniform("lightmap_texture", lightmap_texture_index);
+        gpu.set_uniform("diffuse_texture", DIFFUSE_TEXTURE_INDEX);
+        gpu.set_uniform("lightmap_texture", LIGHTMAP_TEXTURE_INDEX);
         gpu.set_uniform("lightmap_gamma", render_settings.lightmap_gamma);
 
         auto render_face = [&](int32_t face_index)
@@ -651,7 +651,7 @@ namespace mandala
 
             const auto& face = faces[face_index];
 
-            if (face.lighting_styles[0] == face_t::lighting_style_none)
+            if (face.lighting_styles[0] == face_t::LIGHTING_STYLE_NONE)
             {
                 return;
             }
@@ -659,12 +659,12 @@ namespace mandala
             const auto& diffuse_texture = textures[texture_infos[face.texture_info_index].texture_index];
             const auto& lightmap_texture = face_lightmap_textures[face_index];
 
-            gpu.textures.bind(diffuse_texture_index, diffuse_texture);
-            gpu.textures.bind(lightmap_texture_index, lightmap_texture);
+            gpu.textures.bind(DIFFUSE_TEXTURE_INDEX, diffuse_texture);
+            gpu.textures.bind(LIGHTMAP_TEXTURE_INDEX, lightmap_texture);
 
-            gpu.draw_elements(gpu_t::primitive_type_e::triangle_fan,
+            gpu.draw_elements(gpu_t::primitive_type_e::TRIANGLE_FAN,
                 face.surface_edge_count,
-                index_buffer_type::data_type,
+                index_buffer_type::DATA_TYPE,
                 face_start_indices[face_index] * sizeof(index_type));
 
             faces_rendered[face_index] = true;
@@ -749,7 +749,7 @@ namespace mandala
             //render mode
             auto render_mode_optional = entity.get_optional<int32_t>("rendermode");
 
-            render_mode_e render_mode = render_mode_e::normal;
+            render_mode_e render_mode = render_mode_e::NORMAL;
 
             if (render_mode_optional)
             {
@@ -805,20 +805,20 @@ namespace mandala
 
             switch (render_mode)
             {
-            case render_mode_e::texture:
+            case render_mode_e::TEXTURE:
                 gpu.set_uniform("alpha", 0.0f);
 				blend_state.is_enabled = true;
-				blend_state.src_factor = gpu_t::blend_factor_e::src_alpha;
-				blend_state.dst_factor = gpu_t::blend_factor_e::one;
+				blend_state.src_factor = gpu_t::blend_factor_e::SRC_ALPHA;
+				blend_state.dst_factor = gpu_t::blend_factor_e::ONE;
                 break;
-            case render_mode_e::solid:
+            case render_mode_e::SOLID:
                 gpu.set_uniform("should_test_alpha", 1);
                 break;
-            case render_mode_e::additive:
+            case render_mode_e::ADDITIVE:
                 gpu.set_uniform("alpha", alpha);
 				blend_state.is_enabled = true;
-				blend_state.src_factor = gpu_t::blend_factor_e::one;
-				blend_state.dst_factor = gpu_t::blend_factor_e::one;
+				blend_state.src_factor = gpu_t::blend_factor_e::ONE;
+				blend_state.dst_factor = gpu_t::blend_factor_e::ONE;
 				depth_state.should_write_mask = false;
                 break;
             default:
@@ -839,11 +839,11 @@ namespace mandala
 
             switch (render_mode)
             {
-            case render_mode_e::texture:
-            case render_mode_e::additive:
+            case render_mode_e::TEXTURE:
+            case render_mode_e::ADDITIVE:
                 gpu.set_uniform("alpha", 1.0f);
                 break;
-            case render_mode_e::solid:
+            case render_mode_e::SOLID:
                 gpu.set_uniform("should_test_alpha", 0);
                 break;
             default:
@@ -873,8 +873,8 @@ namespace mandala
 
 		gpu.programs.pop();
 
-        gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
-        gpu.buffers.pop(gpu_t::buffer_target_e::array);
+        gpu.buffers.pop(gpu_t::buffer_target_e::ELEMENT_ARRAY);
+        gpu.buffers.pop(gpu_t::buffer_target_e::ARRAY);
 
         gpu.culling.pop_state();
 

@@ -285,9 +285,6 @@
     <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="gpu_program_mgr.hpp" />
-    <ClInclude Include="http_mgr.hpp">
-      <Filter>mandala\app</Filter>
-    </ClInclude>
     <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="gpu_program_mgr.hpp" />
     <ClInclude Include="gpu_program_mgr.hpp" />
@@ -502,9 +499,6 @@
     </ClCompile>
     <ClCompile Include="model_skeleton.cpp">
       <Filter>mandala\resources\model</Filter>
-    </ClCompile>
-    <ClCompile Include="http_mgr.cpp">
-      <Filter>mandala\app</Filter>
     </ClCompile>
     <ClCompile Include="gpu_program_mgr.cpp">
       <Filter>mandala\gpu</Filter>

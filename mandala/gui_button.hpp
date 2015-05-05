@@ -10,11 +10,11 @@ namespace mandala
     {
         enum class state_t
         {
-            idle,
+            IDLE,
 #if defined(MANDALA_PC)
-            hover,
+            HOVER,
 #endif
-            pressed
+            PRESSED
         };
 
         virtual void on_input_event(input_event_t& input_event) override;
@@ -28,6 +28,6 @@ namespace mandala
         std::function<void()> on_pressed_function;
     
     private:
-        state_t state = state_t::idle;
+        state_t state = state_t::IDLE;
     };
 }

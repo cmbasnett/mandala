@@ -15,22 +15,22 @@ namespace mandala
 
 		enum : mod_flags_type
 		{
-			mod_flag_shift = (1 << 0),
-			mod_flag_ctrl = (1 << 1),
-			mod_flag_alt = (1 << 2),
-			mod_flag_super = (1 << 3)
+			MOD_FLAG_SHIFT = (1 << 0),
+			MOD_FLAG_CTRL = (1 << 1),
+			MOD_FLAG_ALT = (1 << 2),
+			MOD_FLAG_SUPER = (1 << 3)
 		};
 #endif
 
 		enum class device_type_e : int8_t
 		{
-			none = -1,
-			touch,
-			keyboard,
+			NONE = -1,
+			TOUCH,
+			KEYBOARD,
 #if defined(MANDALA_PC)
-			gamepad,
+			GAMEPAD,
 #endif
-			count
+			COUNT
 		};
 
 		struct touch_t
@@ -40,33 +40,33 @@ namespace mandala
 
 			enum class type_e : int8_t
 			{
-				none = -1,
-				press,
-				release,
-				scroll,
-				move
+				NONE = -1,
+				PRESS,
+				RELEASE,
+				SCROLL,
+				MOVE
 			};
 
 #if defined(MANDALA_PC)
 			enum class button_e : int8_t
 			{
-				none = -1,
-				left,
-				right,
-				middle,
-				four,
-				five,
-				six,
-				seven,
-				eight,
-				count,
+				NONE = -1,
+				LEFT,
+				RIGHT,
+				MIDDLE,
+				FOUR,
+				FIVE,
+				SIX,
+				SEVEN,
+				EIGHT,
+				COUNT,
 			};
 #endif
 
 			touch_id_type id = 0;
-			type_e type = type_e::none;
+			type_e type = type_e::NONE;
 #if defined(MANDALA_PC)
-			button_e button = button_e::none;
+			button_e button = button_e::NONE;
 #endif
             location_type location;
             location_type location_delta;
@@ -77,140 +77,140 @@ namespace mandala
 		{
 			enum class type_e : int8_t
 			{
-				none = -1,
-				key_release,
-				key_press,
-				key_repeat,
-				character
+				NONE = -1,
+				KEY_RELEASE,
+				KEY_PRESS,
+				KEY_REPEAT,
+				CHARACTER
 			};
 
 			enum class key_e : int16_t
 			{
-				none			   = -1,
-				space              = 32,
-				apostrophe         = 39,  /* ' */
-				comma              = 44,  /* , */
-				minus              = 45,  /* - */
-				period             = 46,  /* . */
-				slash              = 47,  /* / */
-				nr_0               = 48,
-				nr_1               = 49,
-				nr_2               = 50,
-				nr_3               = 51,
-				nr_4               = 52,
-				nr_5               = 53,
-				nr_6               = 54,
-				nr_7               = 55,
-				nr_8               = 56,
-				nr_9               = 57,
-				semicolon          = 59,  /* ; */
-				equal              = 61,  /* =  */
-				a                  = 65,
-				b                  = 66,
-				c                  = 67,
-				d                  = 68,
-				e                  = 69,
-				f                  = 70,
-				g                  = 71,
-				h                  = 72,
-				i                  = 73,
-				j                  = 74,
-				k                  = 75,
-				l                  = 76,
-				m                  = 77,
-				n                  = 78,
-				o                  = 79,
-				p                  = 80,
-				q                  = 81,
-				r                  = 82,
-				s                  = 83,
-				t                  = 84,
-				u                  = 85,
-				v                  = 86,
-				w                  = 87,
-				x                  = 88,
-				y                  = 89,
-				z                  = 90,
-				left_bracket       = 91,  /* [ */
-				backslash          = 92,  /* \ */
-				right_bracket      = 93,  /* ] */
-				grave_accent       = 96,  /* ` */
-				world_1            = 161, /* non-us #1 */
-				world_2            = 162, /* non-us #2 */
-				escape             = 256,
-				enter              = 257,
-				tab                = 258,
-				backspace          = 259,
-				insert             = 260,
-				del                = 261,
-				right              = 262,
-				left               = 263,
-				down               = 264,
-				up                 = 265,
-				page_up            = 266,
-				page_down          = 267,
-				home               = 268,
-				end                = 269,
-				caps_lock          = 280,
-				scroll_lock        = 281,
-				num_lock           = 282,
-				print_screen       = 283,
-				pause              = 284,
-				f1                 = 290,
-				f2                 = 291,
-				f3                 = 292,
-				f4                 = 293,
-				f5                 = 294,
-				f6                 = 295,
-				f7                 = 296,
-				f8                 = 297,
-				f9                 = 298,
-				f10                = 299,
-				f11                = 300,
-				f12                = 301,
-				f13                = 302,
-				f14                = 303,
-				f15                = 304,
-				f16                = 305,
-				f17                = 306,
-				f18                = 307,
-				f19                = 308,
-				f20                = 309,
-				f21                = 310,
-				f22                = 311,
-				f23                = 312,
-				f24                = 313,
-				f25                = 314,
-				kp_0               = 320,
-				kp_1               = 321,
-				kp_2               = 322,
-				kp_3               = 323,
-				kp_4               = 324,
-				kp_5               = 325,
-				kp_6               = 326,
-				kp_7               = 327,
-				kp_8               = 328,
-				kp_9               = 329,
-				kp_decimal         = 330,
-				kp_divide          = 331,
-				kp_multiply        = 332,
-				kp_subtract        = 333,
-				kp_add             = 334,
-				kp_enter           = 335,
-				kp_equal           = 336,
-				left_shift         = 340,
-				left_control       = 341,
-				left_alt           = 342,
-				left_super         = 343,
-				right_shift        = 344,
-				right_control      = 345,
-				right_alt          = 346,
-				right_super        = 347,
-				menu               = 348
+				NONE			   = -1,
+				SPACE              = 32,
+				APOSTROPHE         = 39,  /* ' */
+				COMMA              = 44,  /* , */
+				MINUS              = 45,  /* - */
+				PERIOD             = 46,  /* . */
+				SLASH              = 47,  /* / */
+				NR_0               = 48,
+				NR_1               = 49,
+				NR_2               = 50,
+				NR_3               = 51,
+				NR_4               = 52,
+				NR_5               = 53,
+				NR_6               = 54,
+				NR_7               = 55,
+				NR_8               = 56,
+				NR_9               = 57,
+				SEMICOLON          = 59,  /* ; */
+				EQUAL              = 61,  /* =  */
+				A                  = 65,
+				B                  = 66,
+				C                  = 67,
+				D                  = 68,
+				E                  = 69,
+				F                  = 70,
+				G                  = 71,
+				H                  = 72,
+				I                  = 73,
+				J                  = 74,
+				K                  = 75,
+				L                  = 76,
+				M                  = 77,
+				N                  = 78,
+				O                  = 79,
+				P                  = 80,
+				Q                  = 81,
+				R                  = 82,
+				S                  = 83,
+				T                  = 84,
+				U                  = 85,
+				V                  = 86,
+				W                  = 87,
+				X                  = 88,
+				Y                  = 89,
+				Z                  = 90,
+				LEFT_BRACKET       = 91,  /* [ */
+				BACKSLASH          = 92,  /* \ */
+				RIGHT_BRACKET      = 93,  /* ] */
+				GRAVE_ACCENT       = 96,  /* ` */
+				WORLD_1            = 161, /* NON-US #1 */
+				WORLD_2            = 162, /* NON-US #2 */
+				ESCAPE             = 256,
+				ENTER              = 257,
+				TAB                = 258,
+				BACKSPACE          = 259,
+				INSERT             = 260,
+				DEL                = 261,
+				RIGHT              = 262,
+				LEFT               = 263,
+				DOWN               = 264,
+				UP                 = 265,
+				PAGE_UP            = 266,
+				PAGE_DOWN          = 267,
+				HOME               = 268,
+				END                = 269,
+				CAPS_LOCK          = 280,
+				SCROLL_LOCK        = 281,
+				NUM_LOCK           = 282,
+				PRINT_SCREEN       = 283,
+				PAUSE              = 284,
+				F1                 = 290,
+				F2                 = 291,
+				F3                 = 292,
+				F4                 = 293,
+				F5                 = 294,
+				F6                 = 295,
+				F7                 = 296,
+				F8                 = 297,
+				F9                 = 298,
+				F10                = 299,
+				F11                = 300,
+				F12                = 301,
+				F13                = 302,
+				F14                = 303,
+				F15                = 304,
+				F16                = 305,
+				F17                = 306,
+				F18                = 307,
+				F19                = 308,
+				F20                = 309,
+				F21                = 310,
+				F22                = 311,
+				F23                = 312,
+				F24                = 313,
+				F25                = 314,
+				KP_0               = 320,
+				KP_1               = 321,
+				KP_2               = 322,
+				KP_3               = 323,
+				KP_4               = 324,
+				KP_5               = 325,
+				KP_6               = 326,
+				KP_7               = 327,
+				KP_8               = 328,
+				KP_9               = 329,
+				KP_DECIMAL         = 330,
+				KP_DIVIDE          = 331,
+				KP_MULTIPLY        = 332,
+				KP_SUBTRACT        = 333,
+				KP_ADD             = 334,
+				KP_ENTER           = 335,
+				KP_EQUAL           = 336,
+				LEFT_SHIFT         = 340,
+				LEFT_CONTROL       = 341,
+				LEFT_ALT           = 342,
+				LEFT_SUPER         = 343,
+				RIGHT_SHIFT        = 344,
+				RIGHT_CONTROL      = 345,
+				RIGHT_ALT          = 346,
+				RIGHT_SUPER        = 347,
+				MENU               = 348
 			};
 
-			type_e type = type_e::none;
-			key_e key = key_e::none;
+			type_e type = type_e::NONE;
+			key_e key = key_e::NONE;
 			mod_flags_type mod_flags = 0;
 			wchar_t character = L'\0';
 		};
@@ -223,10 +223,10 @@ namespace mandala
 
 			enum class type_e : int8_t
 			{
-				none = -1,
-				press,
-				release,
-				axis_move
+				NONE = -1,
+				PRESS,
+				RELEASE,
+				AXIS_MOVE
 			};
 
 			index_type index = 0;
@@ -234,12 +234,12 @@ namespace mandala
             index_type axis_index = 0;
             axis_value_type axis_value = 0;
             axis_value_type axis_value_delta = 0;
-            type_e type = type_e::none;
+            type_e type = type_e::NONE;
 		};
 #endif
 
 		id_type id = 0;
-		device_type_e device_type = device_type_e::none;
+		device_type_e device_type = device_type_e::NONE;
 		touch_t touch;
 		keyboard_t keyboard;
 #if defined(MANDALA_PC)

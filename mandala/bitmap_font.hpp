@@ -52,13 +52,13 @@ namespace mandala
             texcoord_type texcoord;
         };
 
-        static const auto characters_max = 0xFFFF;
-        static const auto vertices_per_character = 4;
-        static const auto indices_per_character = 6;
-        static const auto indices_max = characters_max * indices_per_character;
+        static const auto CHARACTERS_MAX = 0xFFFF;
+        static const auto VERTICES_PER_CHARACTER = 4;
+        static const auto INDICES_PER_CHARACTER = 6;
+        static const auto INDICES_MAX = CHARACTERS_MAX * INDICES_PER_CHARACTER;
 
         typedef vertex_t vertex_type;
-        typedef index_type<indices_max>::type index_type;
+        typedef index_type<INDICES_MAX>::type index_type;
         typedef vertex_buffer_t<vertex_type> vertex_buffer_type;
         typedef index_buffer_t<index_type> index_buffer_type;
 		typedef std::wstring string_type;

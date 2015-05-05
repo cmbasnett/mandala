@@ -18,10 +18,11 @@
 #include "resource_mgr.hpp"
 #include "string_mgr.hpp"
 #include "audio_mgr.hpp"
-#include "http_mgr.hpp"
 #include "state_mgr.hpp"
 #include "gpu_buffer_mgr.hpp"
 #include "python_mgr.hpp"
+
+#include "armada/bsp_state.hpp"
 
 namespace mandala
 {
@@ -49,6 +50,8 @@ namespace mandala
 
 		game->app_run_start();
 
+        states.push(boost::make_shared<armada::bsp_state_t>(), STATE_FLAG_ALL);
+
         auto simulation_time = high_resolution_clock::now();
 
         while (should_keep_running())
@@ -62,12 +65,12 @@ namespace mandala
 
             while (simulation_time < real_time)
             {
-                static const auto simulation_interval_duration = milliseconds(16);
-                static const auto dt = static_cast<float32_t>(simulation_interval_duration.count()) / std::milli::den;
+                static const auto SIMULATION_INTERVAL_DURATION = milliseconds(16);
+                static const auto DT = static_cast<float32_t>(SIMULATION_INTERVAL_DURATION.count()) / std::milli::den;
 
-                simulation_time += simulation_interval_duration;
+                simulation_time += SIMULATION_INTERVAL_DURATION;
 
-                tick(dt);
+                tick(DT);
             }
 
 			render();
@@ -79,6 +82,8 @@ namespace mandala
 		}
 
 		game->app_run_end();
+
+        py.finalize();
 
 		states.purge();
         states.tick(0); //TODO: hack to avoid exceptions throwing on close due to unreleased state objects, find a better solution later
@@ -131,7 +136,7 @@ namespace mandala
         const auto screen_size = platform.get_screen_size();
 
         gpu.viewports.push(gpu_viewport_type(0, 0, screen_size.x, screen_size.y));
-        gpu.clear(gpu_t::clear_flag_color | gpu_t::clear_flag_depth);
+        gpu.clear(gpu_t::CLEAR_FLAG_COLOR | gpu_t::CLEAR_FLAG_DEPTH);
 
 		platform.app_render_start();
 

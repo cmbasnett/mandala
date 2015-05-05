@@ -21,12 +21,12 @@ namespace mandala
 		}
 
         //version
-		static const uint32_t expected_version = 1;
+		static const uint32_t EXPECTED_VERSION = 1;
         uint32_t version = 0;
 
         read(istream, version);
 
-		if (version != expected_version)
+		if (version != EXPECTED_VERSION)
         {
 			throw std::exception();
         }

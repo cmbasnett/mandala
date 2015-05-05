@@ -11,6 +11,6 @@ namespace mandala
 	template<typename T, T N, T M>
 	struct is_greather_than_or_equal<T, N, M, typename std::enable_if<std::is_integral<T>::value>::type>
 	{
-		static const bool value = (N >= M);
+		static const bool VALUE = (N >= M);
 	};
 }

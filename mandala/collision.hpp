@@ -20,10 +20,10 @@ namespace mandala
 {
 	enum class intersect_type_e
 	{
-		disjoint,
-		intersect,
-		contain,
-		parallel
+		DISJOINT,
+		INTERSECT,
+		CONTAIN,
+		PARALLEL
 	};
 
 	template<typename Scalar>
@@ -52,13 +52,13 @@ namespace mandala
 		if (distance.x > ((aabb.width() / 2) + circle.radius) ||
 			distance.y > ((aabb.height() / 2) + circle.radius))
 		{
-			return intersect_type_e::disjoint;
+			return intersect_type_e::DISJOINT;
 		}
 
 		if (distance.x <= (aabb.width() / 2) ||
 			distance.y <= (aabb.height() / 2))
 		{
-			return intersect_type_e::intersect;
+			return intersect_type_e::INTERSECT;
 		}
 
 		const auto distance_2 = glm::pow2(distance.x - aabb.width() / 2) + glm::pow2(distance.y - aabb.height() / 2);
@@ -77,10 +77,10 @@ namespace mandala
 		if (lhs.max.x < rhs.min.x || lhs.min.x > rhs.max.x ||
 			lhs.max.y < rhs.min.y || lhs.min.y > rhs.max.y)
 		{
-			return intersect_type_e::disjoint;
+			return intersect_type_e::DISJOINT;
 		}
 
-		return intersect_type_e::intersect;
+		return intersect_type_e::INTERSECT;
     }
 
     template<typename AABBScalar, typename PointScalar>
@@ -108,17 +108,17 @@ namespace mandala
 	{
 		if (contains(lhs, rhs))
 		{
-			return intersect_type_e::contain;
+			return intersect_type_e::CONTAIN;
 		}
 
 		if (lhs.max.x < rhs.min.x || lhs.min.x > rhs.max.x ||
 			lhs.max.y < rhs.min.y || lhs.min.y > rhs.max.y ||
 			lhs.max.z < rhs.min.z || lhs.min.z > rhs.max.z)
 		{
-			return intersect_type_e::disjoint;
+			return intersect_type_e::DISJOINT;
 		}
 
-		return intersect_type_e::intersect;
+		return intersect_type_e::INTERSECT;
 	}
 
 	template<typename Scalar>
@@ -127,7 +127,7 @@ namespace mandala
 		//http://www.scratchapixel.com/lessons/3d-basic-lessons/lesson-7-intersecting-simple-shapes/ray-box-intersection/
 		if (line.start == line.end)
 		{
-			return intersect_type_e::disjoint;
+			return intersect_type_e::DISJOINT;
 		}
 
 		auto d = line.direction();
@@ -150,7 +150,7 @@ namespace mandala
 
 		if ((tmin > tymax) || (tymin > tmax))
 		{
-			return intersect_type_e::disjoint;
+			return intersect_type_e::DISJOINT;
 		}
 
 		if (tymin > tmin)
@@ -173,7 +173,7 @@ namespace mandala
 
 		if (tmin > tzmax || tzmin > tmax)
 		{
-			return intersect_type_e::disjoint;
+			return intersect_type_e::DISJOINT;
 		}
 
 		if (tzmin > tmin)
@@ -188,7 +188,7 @@ namespace mandala
 
 		if (tmin < 0.0f)
 		{
-			return intersect_type_e::contain;
+			return intersect_type_e::CONTAIN;
 		}
 
 		if (t != nullptr)
@@ -231,7 +231,7 @@ namespace mandala
 			*location = line.start + (d * tmin);
 		}
 
-		return intersect_type_e::intersect;
+		return intersect_type_e::INTERSECT;
 	}
 
 	template<typename Scalar = std::enable_if<std::is_floating_point<Scalar>::value>::type>
@@ -244,17 +244,17 @@ namespace mandala
 
 		if (glm::abs(d) < glm::epsilon<Scalar>())
 		{
-			return n == 0 ? intersect_type_e::parallel : intersect_type_e::disjoint;
+			return n == 0 ? intersect_type_e::PARALLEL : intersect_type_e::DISJOINT;
 		}
 
 		t = n / d;
 
 		if (t < 0 || t > 1)
 		{
-			return intersect_type_e::disjoint;
+			return intersect_type_e::DISJOINT;
 		}
 
-		return intersect_type_e::intersect;
+		return intersect_type_e::INTERSECT;
 	}
 
 	template<typename Scalar>
@@ -286,15 +286,15 @@ namespace mandala
 	template<typename FrustumScalar, typename SphereScalar>
 	intersect_type_e intersects(const details::frustum_t<FrustumScalar>& frustum, const details::sphere_t<SphereScalar>& sphere)
 	{
-		for (const auto& plane : frustum.planes())
+		for (const auto& plane : frustum.get_planes())
 		{
 			if (distance_to_plane(plane, sphere.origin) + sphere.radius < 0)
 			{
-				return intersect_type_e::disjoint;
+				return intersect_type_e::DISJOINT;
 			}
 		}
 
-		return intersect_type_e::contain;
+		return intersect_type_e::CONTAIN;
 	}
 
 	template<typename FrustumScalar, typename AABBScalar>
@@ -305,9 +305,9 @@ namespace mandala
 
 		size_t total_in = 0;
 
-		for (const auto& plane : frustum.planes())
+		for (const auto& plane : frustum.get_planes())
 		{
-			auto in_count = aabb_type::corner_count;
+			auto in_count = aabb_type::CORNER_COUNT;
 			bool is_point_inside = false;
 
 			for (const auto& corner : aabb.get_corners())
@@ -322,7 +322,7 @@ namespace mandala
 
 			if (in_count == 0)
 			{
-				return intersect_type_e::disjoint;
+				return intersect_type_e::DISJOINT;
 			}
 			else if (is_point_inside)
 			{
@@ -330,12 +330,12 @@ namespace mandala
 			}
 		}
 
-		if (total_in == frustum_plane_count)
+		if (total_in == FRUSTUM_PLANE_COUNT)
 		{
-			return intersect_type_e::contain;
+			return intersect_type_e::CONTAIN;
 		}
 
-		return intersect_type_e::intersect;
+		return intersect_type_e::INTERSECT;
 	}
 
 	template<typename Scalar = std::enable_if<std::is_floating_point<Scalar>::value>::type>
@@ -351,11 +351,11 @@ namespace mandala
 		vector_type u_0(std::numeric_limits<Scalar>::max());
 		vector_type u_1(std::numeric_limits<Scalar>::min());
 
-		if (intersects(aabb0, aabb1) != intersect_type_e::disjoint)
+		if (intersects(aabb0, aabb1) != intersect_type_e::DISJOINT)
 		{
 			u0 = u1 = 0;
 
-			return intersect_type_e::intersect;
+			return intersect_type_e::INTERSECT;
 		}
 
 		for (size_t i = 0; i < 3; ++i)
@@ -392,7 +392,7 @@ namespace mandala
 		u0 = glm::compMax(u_0);
 		u1 = glm::compMin(u_1);
 
-		auto result = (u0 >= 0 && u1 <= 1 && u0 <= u1) ? intersect_type_e::intersect : intersect_type_e::disjoint;
+		auto result = (u0 >= 0 && u1 <= 1 && u0 <= u1) ? intersect_type_e::INTERSECT : intersect_type_e::DISJOINT;
 
 		return result;
 	}

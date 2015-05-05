@@ -30,146 +30,146 @@ namespace mandala
 	{
         enum class buffer_target_e
         {
-            array,
-            atomic_counter,
-            copy_read,
-            copy_write,
-            draw_indrect,
-            dispatch_indirect,
-            element_array,
-            pixel_pack,
-            pixel_unpack,
-            query,
-            shader_storage
+            ARRAY,
+            ATOMIC_COUNTER,
+            COPY_READ,
+            COPY_WRITE,
+            DRAW_INDRECT,
+            DISPATCH_INDIRECT,
+            ELEMENT_ARRAY,
+            PIXEL_PACK,
+            PIXEL_UNPACK,
+            QUERY,
+            SHADER_STORAGE
         };
 
         enum class buffer_usage_e
         {
-            stream_draw,
-            stream_read,
-            stream_copy,
-            static_draw,
-            static_read,
-            static_copy,
-            dynamic_draw,
-            dynamic_read,
-            dynamic_copy
+            STREAM_DRAW,
+            STREAM_READ,
+            STREAM_COPY,
+            STATIC_DRAW,
+            STATIC_READ,
+            STATIC_COPY,
+            DYNAMIC_DRAW,
+            DYNAMIC_READ,
+            DYNAMIC_COPY
         };
 
         enum class primitive_type_e
         {
-            points,
-            lines,
-            line_loop,
-            line_strip,
-            triangles,
-            triangle_strip,
-            triangle_fan,
-            quads,
-            quad_strip,
-            polygon
+            POINTS,
+            LINES,
+            LINE_LOOP,
+            LINE_STRIP,
+            TRIANGLES,
+            TRIANGLE_STRIP,
+            TRIANGLE_FAN,
+            QUADS,
+            QUAD_STRIP,
+            POLYGON
         };
 
 		enum class blend_factor_e
 		{
-			zero,
-			one,
-			src_color,
-			one_minus_src_color,
-			dst_color,
-			one_minus_dst_color,
-			src_alpha,
-			one_minus_src_alpha,
-			dst_alpha,
-			one_minus_dst_alpha,
-			constant_color,
-			one_minus_constant_color,
-			constant_alpha,
-			one_minus_constant_alpha,
-			src_alpha_saturate,
-			default = one
+			ZERO,
+			ONE,
+			SRC_COLOR,
+			ONE_MINUS_SRC_COLOR,
+			DST_COLOR,
+			ONE_MINUS_DST_COLOR,
+			SRC_ALPHA,
+			ONE_MINUS_SRC_ALPHA,
+			DST_ALPHA,
+			ONE_MINUS_DST_ALPHA,
+			CONSTANT_COLOR,
+			ONE_MINUS_CONSTANT_COLOR,
+			CONSTANT_ALPHA,
+			ONE_MINUS_CONSTANT_ALPHA,
+			SRC_ALPHA_SATURATE,
+			DEFAULT = ONE
 		};
 
 		enum class blend_equation_e
 		{
-			add,
-			subtract,
-			subtract_reverse,
-			min,
-			max,
-			default = add
+			ADD,
+			SUBTRACT,
+			SUBTRACT_REVERSE,
+			MIN,
+			MAX,
+			DEFAULT = ADD
 		};
 
 		enum class cull_face_e
 		{
-			front,
-			back,
-			front_and_back,
-			default = back
+			FRONT,
+			BACK,
+			FRONT_AND_BACK,
+			DEFAULT = BACK
 		};
 
 		enum class depth_function_e
 		{
-			never,
-			less,
-			equal,
-			lequal,
-			greater,
-			notequal,
-			gequal,
-			always,
-			default = less
+			NEVER,
+			LESS,
+			EQUAL,
+			LEQUAL,
+			GREATER,
+			NOTEQUAL,
+			GEQUAL,
+			ALWAYS,
+			DEFAULT = LESS
 		};
 
         enum class culling_front_face_e
         {
-            cw,
-            ccw
+            CW,
+            CCW
         };
 
         enum class culling_mode_e
         {
-            front,
-            back,
-            front_and_back
+            FRONT,
+            BACK,
+            FRONT_AND_BACK
         };
 
         enum clear_flag_e : gpu_clear_flag_type
         {
-            clear_flag_color = (1 << 0),
-            clear_flag_depth = (1 << 1),
-            clear_flag_accum = (1 << 2),
-            clear_flag_stencil = (1 << 3)
+            CLEAR_FLAG_COLOR = (1 << 0),
+            CLEAR_FLAG_DEPTH = (1 << 1),
+            CLEAR_FLAG_ACCUM = (1 << 2),
+            CLEAR_FLAG_STENCIL = (1 << 3)
         };
 
         enum class stencil_function_e
         {
-            never,
-            less,
-            lequal,
-            greater,
-            gequal,
-            equal,
-            notequal,
-            always
+            NEVER,
+            LESS,
+            LEQUAL,
+            GREATER,
+            GEQUAL,
+            EQUAL,
+            NOTEQUAL,
+            ALWAYS
         };
 
         enum class stencil_operation_e
         {
-            keep,
-            zero,
-            replace,
-            incr,
-            incr_wrap,
-            decr,
-            decr_wrap,
-            invert
+            KEEP,
+            ZERO,
+            REPLACE,
+            INCR,
+            INCR_WRAP,
+            DECR,
+            DECR_WRAP,
+            INVERT
         };
 
         enum class shader_type_e
         {
-            fragment,
-            vertex
+            FRAGMENT,
+            VERTEX
         };
 
 		//programs
@@ -250,9 +250,9 @@ namespace mandala
 			struct state_t
 			{
 				bool is_enabled = false;
-				blend_factor_e src_factor = blend_factor_e::one;
-				blend_factor_e dst_factor = blend_factor_e::zero;
-				blend_equation_e equation = blend_equation_e::add;
+				blend_factor_e src_factor = blend_factor_e::ONE;
+				blend_factor_e dst_factor = blend_factor_e::ZERO;
+				blend_equation_e equation = blend_equation_e::ADD;
 			};
 
 			state_t get_state() const;
@@ -271,7 +271,7 @@ namespace mandala
 			{
 				bool should_test = false;
 				bool should_write_mask = true;
-				depth_function_e function = depth_function_e::default;
+				depth_function_e function = depth_function_e::DEFAULT;
 			};
 
             state_t get_state() const;
@@ -289,8 +289,8 @@ namespace mandala
             struct state_t
             {
                 bool is_enabled = false;
-                culling_front_face_e front_face = culling_front_face_e::ccw;
-                culling_mode_e mode = culling_mode_e::back;
+                culling_front_face_e front_face = culling_front_face_e::CCW;
+                culling_mode_e mode = culling_mode_e::BACK;
             };
 
             state_t get_state() const;
@@ -310,16 +310,16 @@ namespace mandala
             {
                 struct function_t
                 {
-                    stencil_function_e func = stencil_function_e::always;
+                    stencil_function_e func = stencil_function_e::ALWAYS;
                     int32_t ref = 0;
                     uint32_t mask = 0xFFFFFFFF;
                 };
 
 				struct operations_t
                 {
-                    stencil_operation_e fail = stencil_operation_e::keep;
-                    stencil_operation_e zfail = stencil_operation_e::keep;
-                    stencil_operation_e zpass = stencil_operation_e::keep;
+                    stencil_operation_e fail = stencil_operation_e::KEEP;
+                    stencil_operation_e zfail = stencil_operation_e::KEEP;
+                    stencil_operation_e zpass = stencil_operation_e::KEEP;
                 };
 
 				function_t function;

@@ -16,7 +16,7 @@ namespace mandala
     void gui_scroll_t::on_input_event(input_event_t& input_event)
     {
         //TODO: have some way for layouts to keep track of certain nodes 'owning' touch events by id so that they get exclusive rights to handle future touch events of the same id
-		if (input_event.device_type == input_event_t::device_type_e::touch)
+		if (input_event.device_type == input_event_t::device_type_e::TOUCH)
 		{
 			input_event.touch.location -= scroll_location;
 		}
@@ -28,14 +28,14 @@ namespace mandala
 			return;
 		}
 		
-		if (input_event.device_type == input_event_t::device_type_e::touch)
+		if (input_event.device_type == input_event_t::device_type_e::TOUCH)
 		{
 			input_event.touch.location += scroll_location;
 		}
 
         switch (input_event.touch.type)
         {
-        case input_event_t::touch_t::type_e::press:
+        case input_event_t::touch_t::type_e::PRESS:
             if (contains(get_bounds(), input_event.touch.location))
             {
                 is_scrolling = true;
@@ -44,7 +44,7 @@ namespace mandala
 				input_event.is_consumed = true;
             }
             break;
-        case input_event_t::touch_t::type_e::release:
+        case input_event_t::touch_t::type_e::RELEASE:
             if (is_scrolling && touch_id == input_event.touch.id)
             {
                 is_scrolling = false;
@@ -53,7 +53,7 @@ namespace mandala
 				input_event.is_consumed = true;
             }
             break;
-        case input_event_t::touch_t::type_e::move:
+        case input_event_t::touch_t::type_e::MOVE:
             if (is_scrolling && touch_id == input_event.touch.id)
             {
                 scroll_location_target += input_event.touch.location_delta;

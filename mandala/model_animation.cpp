@@ -119,32 +119,32 @@ namespace mandala
 
 				auto frame_data_start_index = (frame_data_count * i) + bone.data_start_index;
 
-				if (bone.flags & bone_t::flags_t::location_x)
+				if (bone.flags & bone_t::flags_t::LOCATION_X)
 				{
 					skeleton_bone.pose.location.x = frame_data[frame_data_start_index + k++];
 				}
 
-				if(bone.flags & bone_t::flags_t::location_y)
+				if(bone.flags & bone_t::flags_t::LOCATION_Y)
 				{
 					skeleton_bone.pose.location.z = -frame_data[frame_data_start_index + k++];
 				}
 
-				if(bone.flags & bone_t::flags_t::location_z)
+				if(bone.flags & bone_t::flags_t::LOCATION_Z)
 				{
 					skeleton_bone.pose.location.y = frame_data[frame_data_start_index + k++];
 				}
 
-				if(bone.flags & bone_t::flags_t::rotation_x)
+				if(bone.flags & bone_t::flags_t::ROTATION_X)
 				{
 					skeleton_bone.pose.rotation.x = frame_data[frame_data_start_index + k++];
 				}
 
-				if(bone.flags & bone_t::flags_t::rotation_y)
+				if(bone.flags & bone_t::flags_t::ROTATION_Y)
 				{
 					skeleton_bone.pose.rotation.z = -frame_data[frame_data_start_index + k++];
 				}
 
-				if(bone.flags & bone_t::flags_t::rotation_z)
+				if(bone.flags & bone_t::flags_t::ROTATION_Z)
 				{
 					skeleton_bone.pose.rotation.y = frame_data[frame_data_start_index + k++];
 				}

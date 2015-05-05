@@ -183,7 +183,7 @@ namespace mandala
 	template<>
 	struct color_pop_character<wchar_t>
 	{
-		static const wchar_t value = L'↓';
+		static const wchar_t VALUE = L'↓';
 	};
 
 	template<typename Char>
@@ -192,7 +192,7 @@ namespace mandala
 	template<>
 	struct color_push_character<wchar_t>
 	{
-		static const wchar_t value = L'↑';
+		static const wchar_t VALUE = L'↑';
 	};
 }
 

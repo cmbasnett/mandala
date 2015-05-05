@@ -26,11 +26,11 @@ namespace mandala
 		template<typename T = std::enable_if<is_resource<T>::value, T>::type>
 		size_t count()
 		{
-			static const std::type_index type_index = typeid(T);
+			static const std::type_index TYPE_INDEX = typeid(T);
 
             std::lock_guard<std::recursive_mutex> lock(mutex);
 
-			const auto type_resources_itr = type_resources.find(type_index);
+			const auto type_resources_itr = type_resources.find(TYPE_INDEX);
 
 			if (type_resources_itr == type_resources.end())
 			{
@@ -43,19 +43,19 @@ namespace mandala
 		template<typename T = std::enable_if<is_resource<T>::value, T>::type>
 		boost::shared_ptr<T> get(const hash_t& hash)
 		{
-			static const std::type_index type_index = typeid(T);
+			static const std::type_index TYPE_INDEX = typeid(T);
 
             std::lock_guard<std::recursive_mutex> lock(mutex);
 
-			const auto type_resources_itr = type_resources.find(type_index);
+			const auto type_resources_itr = type_resources.find(TYPE_INDEX);
 
 			if (type_resources_itr == type_resources.end())
 			{
 				//no resources of this type have yet been allocated
-                type_resources.insert(std::make_pair(type_index, resource_map_type()));
+                type_resources.insert(std::make_pair(TYPE_INDEX, resource_map_type()));
 			}
 
-			auto& resources = type_resources[type_index];
+			auto& resources = type_resources[TYPE_INDEX];
 
 			auto resources_itr = resources.find(hash);
 
@@ -83,19 +83,19 @@ namespace mandala
 		template<typename T = std::enable_if<is_resource<T>::value, T>::type>
 		void put(boost::shared_ptr<T> resource, const hash_t& hash)
 		{
-			static const std::type_index type_index = typeid(T);
+			static const std::type_index TYPE_INDEX = typeid(T);
 
 			std::lock_guard<std::recursive_mutex> lock(mutex);
 
-			const auto type_resources_itr = type_resources.find(type_index);
+			const auto type_resources_itr = type_resources.find(TYPE_INDEX);
 
 			if (type_resources_itr == type_resources.end())
 			{
 				//no resources of this type allocated
-                type_resources.insert(std::make_pair(type_index, resource_map_type()));
+                type_resources.insert(std::make_pair(TYPE_INDEX, resource_map_type()));
 			}
 
-			auto& resources = type_resources[type_index];
+			auto& resources = type_resources[TYPE_INDEX];
 
 			const auto resources_itr = std::find_if(resources.begin(), resources.end(), [&](const std::pair<hash_t, boost::shared_ptr<resource_t>>& pair)
 			{

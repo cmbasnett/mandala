@@ -123,7 +123,7 @@ std::ostream& operator<<(std::ostream& ostream, mandala::image_t& image)
     }
 
     //TODO: get this thing working with different color types other than rgb
-    const auto pixel_size = 3;
+    static const auto PIXEL_SIZE = 3;
 
     auto get_png_color_type = [](color_type_e color_type) -> int
     {
@@ -163,7 +163,7 @@ std::ostream& operator<<(std::ostream& ostream, mandala::image_t& image)
 
     png_bytepp rows = static_cast<png_bytepp>(png_malloc(png_ptr, image.get_size().y * sizeof(png_bytep)));
 
-    const auto row_size = image.get_size().x * pixel_size;
+    const auto row_size = image.get_size().x * PIXEL_SIZE;
 
     for (unsigned int y = 0; y < image.get_size().y; ++y)
     {

@@ -26,7 +26,7 @@ namespace mandala
             model->pose.location = camera.location;
             model->render(camera, vec3_t(0));
 
-            gpu.clear(gpu_t::clear_flag_depth);
+            gpu.clear(gpu_t::CLEAR_FLAG_DEPTH);
 		}
 	};
 };

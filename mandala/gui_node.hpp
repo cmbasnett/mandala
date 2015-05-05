@@ -21,32 +21,32 @@ namespace mandala
 
 	enum : gui_anchor_flags_type
 	{
-		gui_anchor_flag_none = 0,
-		gui_anchor_flag_bottom = (1 << 0),
-		gui_anchor_flag_left = (1 << 1),
-		gui_anchor_flag_right = (1 << 2),
-		gui_anchor_flag_top = (1 << 3),
-		gui_anchor_flag_vertical = (gui_anchor_flag_bottom | gui_anchor_flag_top),
-		gui_anchor_flag_horizontal = (gui_anchor_flag_left | gui_anchor_flag_right),
-		gui_anchor_flag_all = (gui_anchor_flag_vertical | gui_anchor_flag_horizontal)
+		GUI_ANCHOR_FLAG_NONE = 0,
+		GUI_ANCHOR_FLAG_BOTTOM = (1 << 0),
+		GUI_ANCHOR_FLAG_LEFT = (1 << 1),
+		GUI_ANCHOR_FLAG_RIGHT = (1 << 2),
+		GUI_ANCHOR_FLAG_TOP = (1 << 3),
+		GUI_ANCHOR_FLAG_VERTICAL = (GUI_ANCHOR_FLAG_BOTTOM | GUI_ANCHOR_FLAG_TOP),
+		GUI_ANCHOR_FLAG_HORIZONTAL = (GUI_ANCHOR_FLAG_LEFT | GUI_ANCHOR_FLAG_RIGHT),
+		GUI_ANCHOR_FLAG_ALL = (GUI_ANCHOR_FLAG_VERTICAL | GUI_ANCHOR_FLAG_HORIZONTAL)
 	};
 
 	enum class gui_dock_mode_e
 	{
-		none,
-		bottom,
-		fill,
-		left,
-		right,
-		top
+		NONE,
+		BOTTOM,
+		FILL,
+		LEFT,
+		RIGHT,
+		TOP
 	};
 
     enum class gui_size_mode_e
     {
-        absolute,
-        relative,
-        axis_scale,
-        inherit
+        ABSOLUTE,
+        RELATIVE,
+        AXIS_SCALE,
+        INHERIT
     };
 
     struct gui_size_t : vec2_t
@@ -86,7 +86,7 @@ namespace mandala
 		void set_anchor_offset(const vec2_t& anchor_offset) { this->anchor_offset = anchor_offset; dirty(); }
         void set_padding(const padding_t& padding) { this->padding = padding; dirty(); }
 		void set_margin(const padding_t& margin) { this->margin = margin; dirty(); }
-        void set_size(const vec2_t& size, gui_size_mode_e size_mode = gui_size_mode_e::absolute);
+        void set_size(const vec2_t& size, gui_size_mode_e size_mode = gui_size_mode_e::ABSOLUTE);
         void set_color(const color_type& color) { this->color = color; dirty(); }
         void set_bounds(const bounds_type& bounds) { this->bounds = bounds; dirty(); }
         void set_is_hidden(bool is_hidden) { this->is_hidden = is_hidden; dirty(); }
@@ -114,12 +114,12 @@ namespace mandala
     private:
         boost::shared_ptr<gui_node_t> parent;
         std::vector<boost::shared_ptr<gui_node_t>> children;
-        gui_dock_mode_e dock_mode = gui_dock_mode_e::none;
-        gui_anchor_flags_type anchor_flags = (gui_anchor_flag_top | gui_anchor_flag_left);
+        gui_dock_mode_e dock_mode = gui_dock_mode_e::NONE;
+        gui_anchor_flags_type anchor_flags = (GUI_ANCHOR_FLAG_TOP | GUI_ANCHOR_FLAG_LEFT);
         size_type anchor_offset;
         padding_t padding;
         padding_t margin;
-        gui_size_mode_e size_mode = gui_size_mode_e::absolute;
+        gui_size_mode_e size_mode = gui_size_mode_e::ABSOLUTE;
         size_type size;
         size_type desired_size;
         color_type color = color_type(1.0f);

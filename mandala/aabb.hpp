@@ -21,7 +21,7 @@ namespace mandala
 			typedef Scalar scalar_type;
 			typedef aabb2_t<scalar_type> type;
 
-			static const size_t corner_count = 4;
+			static const size_t CORNER_COUNT = 4;
 
             aabb2_t() = default;
             aabb2_t(const value_type& min, const value_type& max) :
@@ -54,7 +54,7 @@ namespace mandala
                 return (max - min) / scalar_type(2);
             }
 
-			std::array<value_type, corner_count> get_corners() const
+			std::array<value_type, CORNER_COUNT> get_corners() const
 			{
 				return { min,
 						 value_type(min.x, max.y),
@@ -146,8 +146,8 @@ namespace mandala
 			typedef aabb3_t<scalar_type> type;
 			typedef plane3_t<float32_t> plane_type;
 
-			static const size_t corner_count = 8;
-			static const size_t plane_count = 6;
+			static const size_t CORNER_COUNT = 8;
+			static const size_t PLANE_COUNT = 6;
 
             aabb3_t() = default;
             aabb3_t(const value_type& min, const value_type& max) :
@@ -185,7 +185,7 @@ namespace mandala
                 return (max - min) / scalar_type(2);
             }
 
-			std::array<plane_type, plane_count> get_planes() const
+			std::array<plane_type, PLANE_COUNT> get_planes() const
 			{
 				return { { min, VEC3_RIGHT },
 						 { max, VEC3_LEFT },
@@ -195,7 +195,7 @@ namespace mandala
 						 { max, VEC3_FORWARD } };
 			}
 
-			std::array<value_type, corner_count> get_corners() const
+			std::array<value_type, CORNER_COUNT> get_corners() const
 			{
 				return{ min,
 						value_type(min.x, min.y, max.z),

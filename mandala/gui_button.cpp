@@ -7,20 +7,20 @@ namespace mandala
 {
     void gui_button_t::on_input_event(input_event_t& input_event)
     {
-        if (input_event.device_type == input_event_t::device_type_e::touch)
+        if (input_event.device_type == input_event_t::device_type_e::TOUCH)
         {
             switch (input_event.touch.type)
             {
-            case input_event_t::touch_t::type_e::press:
+            case input_event_t::touch_t::type_e::PRESS:
                 if (contains(get_bounds(), input_event.touch.location))
                 {
-                    state = state_t::pressed;
+                    state = state_t::PRESSED;
                 }
                 break;
-            case input_event_t::touch_t::type_e::release:
-                if (state == state_t::pressed && contains(get_bounds(), input_event.touch.location))
+            case input_event_t::touch_t::type_e::RELEASE:
+                if (state == state_t::PRESSED && contains(get_bounds(), input_event.touch.location))
                 {
-                    state = state_t::idle;
+                    state = state_t::IDLE;
 
                     if (on_pressed_function)
                     {
@@ -28,14 +28,14 @@ namespace mandala
                     }
                 }
                 break;
-            case input_event_t::touch_t::type_e::move:
+            case input_event_t::touch_t::type_e::MOVE:
                 switch (state)
                 {
-                case state_t::idle:
+                case state_t::IDLE:
 #if defined(MANDALA_PC)
                     if (contains(get_bounds(), input_event.touch.location))
                     {
-                        state = state_t::hover;
+                        state = state_t::HOVER;
                         
                         if (on_hover_function)
                         {
@@ -45,10 +45,10 @@ namespace mandala
 #endif
                     break;
 #if defined(MANDALA_PC)
-                case state_t::hover:
+                case state_t::HOVER:
                     if (!contains(get_bounds(), input_event.touch.location))
                     {
-                        state = state_t::idle;
+                        state = state_t::IDLE;
 
                         if (on_unhover_function)
                         {

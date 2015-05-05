@@ -13,24 +13,24 @@ namespace mandala
     {
         enum class triangle_mode_e
         {
-            bottom_right,
-            top_left,
-            top_right,
-            bottom_left,
-            both
+            BOTTOM_RIGHT,
+            TOP_LEFT,
+            TOP_RIGHT,
+            BOTTOM_LEFT,
+            BOTH
         };
 
         enum class texcoord_mode_e
         {
-            stretch_to_fit,
-            repeat
+            STRETCH_TO_FIT,
+            REPEAT
         };
 
-		static const size_t vertex_count = 4;
-		static const size_t index_count = 4;
+		static const size_t VERTEX_COUNT = 4;
+		static const size_t INDEX_COUNT = 4;
         
         typedef basic_gpu_vertex_t vertex_type;
-        typedef index_type<index_count>::type index_type;
+        typedef index_type<INDEX_COUNT>::type index_type;
         typedef vertex_buffer_t<vertex_type> vertex_buffer_type;
         typedef index_buffer_t<index_type> index_buffer_type;
 
@@ -49,7 +49,7 @@ namespace mandala
 		boost::shared_ptr<index_buffer_type> index_buffer;
 		boost::optional<sprite_t> sprite;
 		bool is_autosized_to_sprite = false;
-        triangle_mode_e triangle_mode = triangle_mode_e::both;
+        triangle_mode_e triangle_mode = triangle_mode_e::BOTH;
 
 		virtual void on_render_begin(mat4_t& world_matrix, mat4_t& view_projection_matrix) override;
         virtual void on_input_event(input_event_t& input_event) override;

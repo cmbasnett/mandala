@@ -20,9 +20,9 @@ namespace mandala
 		template<typename T = std::enable_if<std::is_base_of<gui_node_t, T>::value>::type>
 		void put(const hash_t& hash, boost::shared_ptr<T> node)
 		{
-			static const std::type_index type_index = typeid(T);
+			static const std::type_index TYPE_INDEX = typeid(T);
 
-			auto type_nodes_itr = type_nodes.find(type_index);
+			auto type_nodes_itr = type_nodes.find(TYPE_INDEX);
 
 			if (type_nodes_itr == type_nodes.end())
 			{
@@ -42,9 +42,9 @@ namespace mandala
 		template<typename T = std::enable_if<std::is_base_of<gui_node_t, T>::value>::type>
 		boost::shared_ptr<T> get(const hash_t& hash)
 		{
-			static const std::type_index type_index = typeid(T);
+			static const std::type_index TYPE_INDEX = typeid(T);
 
-			auto type_nodes_itr = type_nodes.find(type_index);
+			auto type_nodes_itr = type_nodes.find(TYPE_INDEX);
 
 			if (type_nodes_itr == type_nodes.end())
 			{

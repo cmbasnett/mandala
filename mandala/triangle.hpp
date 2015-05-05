@@ -17,10 +17,10 @@ namespace mandala
 		template<typename T>
 		struct triangle3_t<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
 		{
-            static const size_t point_count = 3;
+            static const size_t POINT_COUNT = 3;
 
 			typedef glm::detail::tvec2<T> point_type;
-            typedef std::array<point_type, 3> points_type;
+            typedef std::array<point_type, POINT_COUNT> points_type;
 			typedef glm::detail::tvec2<float32_t> normal_type;
 			typedef triangle3_t<T> type;
 
@@ -58,10 +58,10 @@ namespace mandala
 		template<typename T>
 		struct triangle2_t<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
 		{
-            static const size_t point_count = 3;
+            static const size_t POINT_COUNT = 3;
 
 			typedef glm::detail::tvec2<T> point_type;
-            typedef std::array<point_type, 3> points_type;
+            typedef std::array<point_type, POINT_COUNT> points_type;
 			typedef triangle2_t<T> type;
 
             triangle2_t() = default;

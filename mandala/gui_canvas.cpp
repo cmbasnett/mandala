@@ -23,7 +23,7 @@ namespace mandala
         vertex_buffer(gpu_buffers.make<vertex_buffer_type>())
     {
         std::initializer_list<index_type> indices = { 0, 1, 2, 3 };
-        index_buffer->data(indices, gpu_t::buffer_usage_e::static_draw);
+        index_buffer->data(indices, gpu_t::buffer_usage_e::STATIC_DRAW);
 
         auto vertices =
         {
@@ -32,7 +32,7 @@ namespace mandala
             vertex_type(vertex_type::location_type(1, 1, 0), vertex_type::color_type(1), vertex_type::texcoord_type(1, 1)),
             vertex_type(vertex_type::location_type(0, 1, 0), vertex_type::color_type(1), vertex_type::texcoord_type(0, 1))
         };
-        vertex_buffer->data(vertices, gpu_t::buffer_usage_e::static_draw);
+        vertex_buffer->data(vertices, gpu_t::buffer_usage_e::STATIC_DRAW);
     }
 
     void gui_canvas_t::on_render_begin(mat4_t& world_matrix, mat4_t& view_projection_matrix)
@@ -48,14 +48,14 @@ namespace mandala
 
         //TODO: for each render pass, push/pop frame buffer, do gpu program etc.
 
-        gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
-        gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
+        gpu.buffers.push(gpu_t::buffer_target_e::ARRAY, vertex_buffer);
+        gpu.buffers.push(gpu_t::buffer_target_e::ELEMENT_ARRAY, index_buffer);
 
         const auto gpu_program = gpu_programs.get<blur_horizontal_gpu_program_t>();
 
         gpu.programs.push(gpu_program);
 
-        static const size_t diffuse_texture_index = 0;
+        static const size_t DIFFUSE_TEXTURE_INDEX = 0;
 
         static auto t = 0.0f;
 
@@ -67,17 +67,17 @@ namespace mandala
 
         gpu.set_uniform("world_matrix", gpu_world_matrix);
         gpu.set_uniform("view_projection_matrix", view_projection_matrix);
-        gpu.set_uniform("diffuse_texture", diffuse_texture_index);
+        gpu.set_uniform("diffuse_texture", DIFFUSE_TEXTURE_INDEX);
         gpu.set_uniform("t", t);
 
-        gpu.textures.bind(diffuse_texture_index, frame_buffer->get_color_texture());
+        gpu.textures.bind(DIFFUSE_TEXTURE_INDEX, frame_buffer->get_color_texture());
 
-        gpu.draw_elements(gpu_t::primitive_type_e::triangle_fan, 4, index_buffer_type::data_type, 0);
+        gpu.draw_elements(gpu_t::primitive_type_e::TRIANGLE_FAN, 4, index_buffer_type::DATA_TYPE, 0);
 
-        gpu.textures.unbind(diffuse_texture_index);
+        gpu.textures.unbind(DIFFUSE_TEXTURE_INDEX);
 
-        gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
-        gpu.buffers.pop(gpu_t::buffer_target_e::array);
+        gpu.buffers.pop(gpu_t::buffer_target_e::ELEMENT_ARRAY);
+        gpu.buffers.pop(gpu_t::buffer_target_e::ARRAY);
 
         gpu.programs.pop();
     }
@@ -88,7 +88,7 @@ namespace mandala
 
         if (!frame_buffer)
         {
-            frame_buffer = boost::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::color_depth_stencil, frame_buffer_size);
+            frame_buffer = boost::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::COLOR_DEPTH_STENCIL, frame_buffer_size);
         }
         else if(frame_buffer_size != frame_buffer->get_size())
         {

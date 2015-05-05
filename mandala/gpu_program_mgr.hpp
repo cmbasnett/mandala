@@ -18,11 +18,11 @@ namespace mandala
 		template<typename T = std::enable_if<is_gpu_program<T>::value, T>::type>
         boost::shared_ptr<T> make()
 		{
-			static const std::type_index type_index = typeid(T);
+			static const std::type_index TYPE_INDEX = typeid(T);
 
             const auto gpu_program = boost::make_shared<T>();
 
-			gpu_programs.insert(std::make_pair(type_index, gpu_program));
+			gpu_programs.insert(std::make_pair(TYPE_INDEX, gpu_program));
 
             return gpu_program;
 		}
@@ -30,9 +30,9 @@ namespace mandala
         template<typename T = std::enable_if<is_gpu_program<T>::value, T>::type>
         boost::shared_ptr<T> get()
 		{
-			static const std::type_index type_index = typeid(T);
+			static const std::type_index TYPE_INDEX = typeid(T);
 
-			const auto gpu_programs_itr = gpu_programs.find(type_index);
+			const auto gpu_programs_itr = gpu_programs.find(TYPE_INDEX);
 
 			if (gpu_programs_itr == gpu_programs.end())
 			{

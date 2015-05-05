@@ -53,30 +53,30 @@ namespace mandala
 
 	enum : gpu_frame_buffer_type_flags_type
 	{
-		gpu_frame_buffer_type_flag_color = (1 << 0),
-		gpu_frame_buffer_type_flag_depth = (1 << 1),
-		gpu_frame_buffer_type_flag_stencil = (1 << 2)
+		GPU_FRAME_BUFFER_TYPE_FLAG_COLOR = (1 << 0),
+		GPU_FRAME_BUFFER_TYPE_FLAG_DEPTH = (1 << 1),
+		GPU_FRAME_BUFFER_TYPE_FLAG_STENCIL = (1 << 2)
 	};
 
 	enum class gpu_frame_buffer_type_e : gpu_frame_buffer_type_flags_type
 	{
-		color = (gpu_frame_buffer_type_flag_color),
-		color_depth = (gpu_frame_buffer_type_flag_color | gpu_frame_buffer_type_flag_depth),
-		color_depth_stencil = (gpu_frame_buffer_type_flag_color | gpu_frame_buffer_type_flag_depth | gpu_frame_buffer_type_flag_stencil),
-		depth = (gpu_frame_buffer_type_flag_depth),
-		depth_stencil = (gpu_frame_buffer_type_flag_depth | gpu_frame_buffer_type_flag_stencil)
+		COLOR = (GPU_FRAME_BUFFER_TYPE_FLAG_COLOR),
+		COLOR_DEPTH = (GPU_FRAME_BUFFER_TYPE_FLAG_COLOR | GPU_FRAME_BUFFER_TYPE_FLAG_DEPTH),
+		COLOR_DEPTH_STENCIL = (GPU_FRAME_BUFFER_TYPE_FLAG_COLOR | GPU_FRAME_BUFFER_TYPE_FLAG_DEPTH | GPU_FRAME_BUFFER_TYPE_FLAG_STENCIL),
+		DEPTH = (GPU_FRAME_BUFFER_TYPE_FLAG_DEPTH),
+		DEPTH_STENCIL = (GPU_FRAME_BUFFER_TYPE_FLAG_DEPTH | GPU_FRAME_BUFFER_TYPE_FLAG_STENCIL)
 	};
 
     enum class gpu_data_type_e
     {
-        byte,
-        unsigned_byte,
-        short_,
-        unsigned_short,
-        int_,
-        unsigned_int,
-        float_,
-        double_
+        BYTE,
+        UNSIGNED_BYTE,
+        SHORT,
+        UNSIGNED_SHORT,
+        INT,
+        UNSIGNED_INT,
+        FLOAT,
+        DOUBLE
     };
 
     template<typename T>
@@ -85,48 +85,48 @@ namespace mandala
     template<>
     struct gpu_data_type_<int8_t>
     {
-        static const auto value = gpu_data_type_e::byte;
+        static const auto VALUE = gpu_data_type_e::BYTE;
     };
 
     template<>
     struct gpu_data_type_<uint8_t>
     {
-        static const auto value = gpu_data_type_e::unsigned_byte;
+        static const auto VALUE = gpu_data_type_e::UNSIGNED_BYTE;
     };
 
     template<>
     struct gpu_data_type_<int16_t>
     {
-        static const auto value = gpu_data_type_e::short_;
+        static const auto VALUE = gpu_data_type_e::SHORT;
     };
 
     template<>
     struct gpu_data_type_<uint16_t>
     {
-        static const auto value = gpu_data_type_e::unsigned_short;
+        static const auto VALUE = gpu_data_type_e::UNSIGNED_SHORT;
     };
 
     template<>
     struct gpu_data_type_<int32_t>
     {
-        static const auto value = gpu_data_type_e::int_;
+        static const auto VALUE = gpu_data_type_e::INT;
     };
 
     template<>
     struct gpu_data_type_<uint32_t>
     {
-        static const auto value = gpu_data_type_e::unsigned_int;
+        static const auto VALUE = gpu_data_type_e::UNSIGNED_INT;
     };
 
     template<>
     struct gpu_data_type_<float32_t>
     {
-        static const auto value = gpu_data_type_e::float_;
+        static const auto VALUE = gpu_data_type_e::FLOAT;
     };
 
     template<>
     struct gpu_data_type_<float64_t>
     {
-        static const auto value = gpu_data_type_e::double_;
+        static const auto VALUE = gpu_data_type_e::DOUBLE;
     };
 }

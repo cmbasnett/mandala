@@ -11,7 +11,7 @@ namespace mandala
 	template<typename T, T N>
 	struct is_pow2<T, N, typename std::enable_if<std::is_unsigned<T>::value>::type>
 	{
-		static const bool value = (N != 0 && (N & (~N + 1)) == N);
+		static const bool VALUE = (N != 0 && (N & (~N + 1)) == N);
 	};
 
 	template<typename T>

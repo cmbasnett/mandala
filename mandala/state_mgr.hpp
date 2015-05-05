@@ -25,16 +25,16 @@ namespace mandala
 
 	enum : state_flags_type
 	{
-		state_flag_none = (0 << 0),
-		state_flag_render = (1 << 0),
-		state_flag_input = (1 << 1),
-		state_flag_tick = (1 << 2),
-        state_flag_popping = (1 << 3),
-        state_flag_changing_link_flags = (1 << 4),
-		state_flag_render_input = (state_flag_render | state_flag_input),
-		state_flag_render_tick = (state_flag_render | state_flag_tick),
-		state_flag_input_tick = (state_flag_input | state_flag_tick),
-		state_flag_all = (state_flag_render | state_flag_input | state_flag_tick)
+		STATE_FLAG_NONE = (0 << 0),
+		STATE_FLAG_RENDER = (1 << 0),
+		STATE_FLAG_INPUT = (1 << 1),
+		STATE_FLAG_TICK = (1 << 2),
+        STATE_FLAG_POPPING = (1 << 3),
+        STATE_FLAG_CHANGING_LINK_FLAGS = (1 << 4),
+		STATE_FLAG_RENDER_INPUT = (STATE_FLAG_RENDER | STATE_FLAG_INPUT),
+		STATE_FLAG_RENDER_TICK = (STATE_FLAG_RENDER | STATE_FLAG_TICK),
+		STATE_FLAG_INPUT_TICK = (STATE_FLAG_INPUT | STATE_FLAG_TICK),
+		STATE_FLAG_ALL = (STATE_FLAG_RENDER | STATE_FLAG_INPUT | STATE_FLAG_TICK)
 	};
 
 	struct state_mgr_t
@@ -44,23 +44,23 @@ namespace mandala
 		struct node_t
 		{
 			state_type state;
-			state_flags_type link_flags = state_flag_none;
-			state_flags_type flags = state_flag_none;
+			state_flags_type link_flags = STATE_FLAG_NONE;
+			state_flags_type flags = STATE_FLAG_NONE;
 		};
 
 		struct operation_t
 		{
 			enum class type_e : uint8_t
 			{
-				push,
-				pop,
-				change_link_flags,
-                purge
+				PUSH,
+				POP,
+				CHANGE_LINK_FLAGS,
+                PURGE
 			};
 
-            type_e type = type_e::push;
+            type_e type = type_e::PUSH;
 			state_type state;
-			state_flags_type link_flags = state_flag_none;
+			state_flags_type link_flags = STATE_FLAG_NONE;
 			size_t index = 0;
 		};
 

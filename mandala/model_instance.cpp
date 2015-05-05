@@ -80,8 +80,8 @@ namespace mandala
 			throw std::exception();
 		}
 
-        if (intersects(camera.get_frustum(), sphere) == intersect_type_e::disjoint ||
-            intersects(camera.get_frustum(), aabb) == intersect_type_e::disjoint)
+        if (intersects(camera.get_frustum(), sphere) == intersect_type_e::DISJOINT ||
+            intersects(camera.get_frustum(), aabb) == intersect_type_e::DISJOINT)
 		{
 			//skeleton aabb does not intersect camera frustum
 			return;

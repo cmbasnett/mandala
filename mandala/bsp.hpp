@@ -30,39 +30,39 @@ namespace mandala
 
 		enum class content_type_e : int32_t
 		{
-			empty = -1,
-			solid = -2,
-			water = -3,
-			slime = -4,
-			lava = -5,
-			sky = -6,
-			origin = -7,
-			clip = -8,
-			current_0 = -9,
-			current_90 = -10,
-			current_180 = -11,
-			current_270 = -12,
-			current_up = -13,
-			current_down = -14,
-			translucent = -15
+			EMPTY = -1,
+			SOLID = -2,
+			WATER = -3,
+			SLIME = -4,
+			LAVA = -5,
+			SKY = -6,
+			ORIGIN = -7,
+			CLIP = -8,
+			CURRENT_0 = -9,
+			CURRENT_90 = -10,
+			CURRENT_180 = -11,
+			CURRENT_270 = -12,
+			CURRENT_UP = -13,
+			CURRENT_DOWN = -14,
+			TRANSLUCENT = -15
 		};
 
 		enum class render_mode_e : uint8_t
 		{
-			normal,
-			color,
-			texture,
-			glow,
-			solid,
-			additive
+			NORMAL,
+			COLOR,
+			TEXTURE,
+			GLOW,
+			SOLID,
+			ADDITIVE
         };
 
         struct node_t
         {
-            static const auto child_count = 2;
+            static const auto CHILD_COUNT = 2;
 
             uint32_t plane_index = 0;
-            std::array<int16_t, child_count> child_indices;
+            std::array<int16_t, CHILD_COUNT> child_indices;
             aabb3_i16_t aabb;
             uint16_t face_start_index = 0;
             uint16_t face_count = 0;
@@ -72,40 +72,40 @@ namespace mandala
         {
             typedef uint8_t lighting_style_type;
 
-            static const auto lighting_style_count = 4;
-            static const lighting_style_type lighting_style_none = 255;
+            static const auto LIGHTING_STYLE_COUNT = 4;
+            static const lighting_style_type LIGHTING_STYLE_NONE = 255;
 
 			uint16_t plane_index = 0;
 			uint16_t plane_side = 0;
 			uint32_t surface_edge_start_index = 0;
 			uint16_t surface_edge_count = 0;
 			uint16_t texture_info_index = 0;
-            std::array<lighting_style_type, lighting_style_count> lighting_styles;
+            std::array<lighting_style_type, LIGHTING_STYLE_COUNT> lighting_styles;
 			uint32_t lightmap_offset = 0;
 		};
 
 		struct leaf_t
 		{
-            static const auto ambient_sound_level_count = 4;
+            static const auto AMBIENT_SOUND_LEVEL_COUNT = 4;
             
             typedef uint8_t ambient_sound_level_type;
             typedef aabb3_i16_t aabb_type;
 
-			content_type_e content_type = content_type_e::empty;
+			content_type_e content_type = content_type_e::EMPTY;
 			int32_t visibility_offset = 0;
             aabb_type aabb;
 			uint16_t mark_surface_start_index = 0;
 			uint16_t mark_surface_count = 0;
-            std::array<ambient_sound_level_type, ambient_sound_level_count> ambient_sound_levels;
+            std::array<ambient_sound_level_type, AMBIENT_SOUND_LEVEL_COUNT> ambient_sound_levels;
 		};
 
 		struct edge_t
 		{
             typedef uint16_t vertex_index_type;
 
-            static const auto vertex_index_count = 2;
+            static const auto VERTEX_INDEX_COUNT = 2;
 
-            std::array<vertex_index_type, vertex_index_count> vertex_indices;
+            std::array<vertex_index_type, VERTEX_INDEX_COUNT> vertex_indices;
 		};
 
 		struct texture_info_t
@@ -122,23 +122,23 @@ namespace mandala
 
 		struct clip_node_t
 		{
-            static const auto child_count = 2;
+            static const auto CHILD_COUNT = 2;
 
             typedef int16_t child_index_type;
 
 			int32_t plane_index = 0;
-            std::array<child_index_type, child_count> child_indices;
+            std::array<child_index_type, CHILD_COUNT> child_indices;
         };
 
         struct model_t
         {
-            static const auto head_node_index_count = 4;
+            static const auto HEAD_NODE_INDEX_COUNT = 4;
 
             typedef int32_t head_node_index_type;
 
             aabb3_t aabb;
             vec3_t origin;
-            std::array<head_node_index_type, head_node_index_count> head_node_indices;
+            std::array<head_node_index_type, HEAD_NODE_INDEX_COUNT> head_node_indices;
             int32_t vis_leafs = 0;
             int32_t face_start_index = 0;
             int32_t face_count = 0;
@@ -146,11 +146,11 @@ namespace mandala
 
 		struct bsp_texture_t
 		{
-            static const auto mipmap_offset_count = 4;
+            static const auto MIPMAP_OFFSET_COUNT = 4;
 
 			uint32_t width;
 			uint32_t height;
-            uint32_t mipmap_offsets[mipmap_offset_count];
+            uint32_t mipmap_offsets[MIPMAP_OFFSET_COUNT];
 		};
 
 		struct plane_t

@@ -35,7 +35,7 @@ namespace mandala
             //5, 6, 7,
             //5, 7, 4
         };
-		index_buffer->data(indices, gpu_t::buffer_usage_e::static_draw);
+		index_buffer->data(indices, gpu_t::buffer_usage_e::STATIC_DRAW);
 	}
 
     void gui_image_t::on_clean_end()
@@ -50,7 +50,7 @@ namespace mandala
 
         auto sprite_size = get_size() * scale;
 
-        std::array<vertex_type::location_type, vertex_count> vertex_locations = {
+        std::array<vertex_type::location_type, VERTEX_COUNT> vertex_locations = {
             vertex_type::location_type(vec3_t(vec2_t(-0.5f, -0.5f) * sprite_size, 0.0f)),
             vertex_type::location_type(vec3_t(vec2_t( 0.5f, -0.5f) * sprite_size, 0.0f)),
             vertex_type::location_type(vec3_t(vec2_t( 0.5f,  0.5f) * sprite_size, 0.0f)),
@@ -74,7 +74,7 @@ namespace mandala
             //vertex_type(vertex_locations[3], rgba_type(1), vec2_t(sprite_region.uv.max.x, sprite_region.uv.max.y))
         };
 
-        vertex_buffer->data(vertices, gpu_t::buffer_usage_e::static_draw);
+        vertex_buffer->data(vertices, gpu_t::buffer_usage_e::STATIC_DRAW);
     }
 
     void gui_image_t::set_sprite(boost::optional<sprite_t> sprite)
@@ -98,14 +98,14 @@ namespace mandala
     {
 		auto blend_state = gpu.blend.get_state();
 		blend_state.is_enabled = true;
-		blend_state.src_factor = gpu_t::blend_factor_e::src_alpha;
-		blend_state.dst_factor = gpu_t::blend_factor_e::one_minus_src_alpha;
+		blend_state.src_factor = gpu_t::blend_factor_e::SRC_ALPHA;
+		blend_state.dst_factor = gpu_t::blend_factor_e::ONE_MINUS_SRC_ALPHA;
 
         gpu.blend.push_state(blend_state);
 
         //buffers
-        gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
-        gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
+        gpu.buffers.push(gpu_t::buffer_target_e::ARRAY, vertex_buffer);
+        gpu.buffers.push(gpu_t::buffer_target_e::ELEMENT_ARRAY, index_buffer);
 
         const auto& gpu_program = gpu_programs.get<gui_image_gpu_program_t>();
 
@@ -114,9 +114,9 @@ namespace mandala
 
 		const auto center = get_bounds().center();
 
-		static const auto diffuse_texture_index = 0;
+		static const auto DIFFUSE_TEXTURE_INDEX = 0;
 
-        gpu.set_uniform("diffuse_texture", diffuse_texture_index);
+        gpu.set_uniform("diffuse_texture", DIFFUSE_TEXTURE_INDEX);
         gpu.set_uniform("world_matrix", world_matrix * glm::translate(center.x, center.y, 0.0f));
         gpu.set_uniform("view_projection_matrix", view_projection_matrix);
         gpu.set_uniform("color", get_color());
@@ -126,7 +126,7 @@ namespace mandala
         {
             gpu.set_uniform("region_min", sprite->get_region().uv.min);
             gpu.set_uniform("region_size", sprite->get_region().uv.size());
-            gpu.textures.bind(diffuse_texture_index, sprite->get_sprite_set()->get_texture());
+            gpu.textures.bind(DIFFUSE_TEXTURE_INDEX, sprite->get_sprite_set()->get_texture());
         }
 
         size_t index_offset = 0;
@@ -138,29 +138,29 @@ namespace mandala
 
         switch (triangle_mode)
         {
-        case triangle_mode_e::bottom_right:
-            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 3, index_buffer_type::data_type, index_offset + 0);
+        case triangle_mode_e::BOTTOM_RIGHT:
+            gpu.draw_elements(gpu_t::primitive_type_e::TRIANGLES, 3, index_buffer_type::DATA_TYPE, index_offset + 0);
             break;
-        case triangle_mode_e::top_left:
-            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 3, index_buffer_type::data_type, index_offset + 3);
+        case triangle_mode_e::TOP_LEFT:
+            gpu.draw_elements(gpu_t::primitive_type_e::TRIANGLES, 3, index_buffer_type::DATA_TYPE, index_offset + 3);
             break;
-        case triangle_mode_e::top_right:
-            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 3, index_buffer_type::data_type, index_offset + 6);
+        case triangle_mode_e::TOP_RIGHT:
+            gpu.draw_elements(gpu_t::primitive_type_e::TRIANGLES, 3, index_buffer_type::DATA_TYPE, index_offset + 6);
             break;
-        case triangle_mode_e::bottom_left:
-            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 3, index_buffer_type::data_type, index_offset + 9);
+        case triangle_mode_e::BOTTOM_LEFT:
+            gpu.draw_elements(gpu_t::primitive_type_e::TRIANGLES, 3, index_buffer_type::DATA_TYPE, index_offset + 9);
             break;
-        case triangle_mode_e::both:
-            gpu.draw_elements(gpu_t::primitive_type_e::triangles, 6, index_buffer_type::data_type, index_offset + 0);   //<-- CRASH HERE
+        case triangle_mode_e::BOTH:
+            gpu.draw_elements(gpu_t::primitive_type_e::TRIANGLES, 6, index_buffer_type::DATA_TYPE, index_offset + 0);   //<-- CRASH HERE
             break;
         }
 
-        gpu.textures.unbind(diffuse_texture_index);
+        gpu.textures.unbind(DIFFUSE_TEXTURE_INDEX);
 
 		gpu.programs.pop();
 
-		gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
-		gpu.buffers.pop(gpu_t::buffer_target_e::array);
+		gpu.buffers.pop(gpu_t::buffer_target_e::ELEMENT_ARRAY);
+		gpu.buffers.pop(gpu_t::buffer_target_e::ARRAY);
 
 		gpu.blend.pop_state();
 
@@ -169,8 +169,8 @@ namespace mandala
 
     void gui_image_t::on_input_event(input_event_t& input_event)
     {
-        if (input_event.device_type == input_event_t::device_type_e::touch &&
-            input_event.touch.type == input_event_t::touch_t::type_e::press)
+        if (input_event.device_type == input_event_t::device_type_e::TOUCH &&
+            input_event.touch.type == input_event_t::touch_t::type_e::PRESS)
         {
             if (contains(get_bounds(), input_event.touch.location))
             {

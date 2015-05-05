@@ -169,7 +169,7 @@ namespace mandala
         }
 
         //vertex buffer
-        auto vertex_count = characters.size() * vertices_per_character;
+        auto vertex_count = characters.size() * VERTICES_PER_CHARACTER;
 
         std::vector<vertex_t> vertices;
         vertices.resize(vertex_count);
@@ -217,24 +217,24 @@ namespace mandala
         }
 
         vertex_buffer = gpu_buffers.make<vertex_buffer_type>().lock();
-        vertex_buffer->data(vertices, gpu_t::buffer_usage_e::static_draw);
+        vertex_buffer->data(vertices, gpu_t::buffer_usage_e::STATIC_DRAW);
 
         //index buffer
         std::vector<index_type> indices;
-        indices.resize(characters.size() * indices_per_character);
+        indices.resize(characters.size() * INDICES_PER_CHARACTER);
 
-        const index_type character_index_offsets[indices_per_character] = { 0, 1, 2, 0, 2, 3 };
+        const index_type character_index_offsets[INDICES_PER_CHARACTER] = { 0, 1, 2, 0, 2, 3 };
 
         for (size_t i = 0; i < characters.size(); ++i)
         {
-            for (size_t j = 0; j < indices_per_character; ++j)
+            for (size_t j = 0; j < INDICES_PER_CHARACTER; ++j)
             {
-                indices[(i * indices_per_character) + j] = static_cast<index_type>(i) * vertices_per_character + character_index_offsets[j];
+                indices[(i * INDICES_PER_CHARACTER) + j] = static_cast<index_type>(i) * VERTICES_PER_CHARACTER + character_index_offsets[j];
             }
         }
 
         index_buffer = gpu_buffers.make<index_buffer_type>().lock();
-        index_buffer->data(indices, gpu_t::buffer_usage_e::static_draw);
+        index_buffer->data(indices, gpu_t::buffer_usage_e::STATIC_DRAW);
     }
 
     int16_t bitmap_font_t::get_kerning_amount(char_type lhs, char_type rhs) const
@@ -256,11 +256,11 @@ namespace mandala
 
     void bitmap_font_t::render_string(const string_type& string, mat4_t world_matrix, mat4_t view_projection_matrix, const rgba_type& base_color, std::stack<rgba_type>& color_stack, const std::vector<std::pair<size_t, rgba_type>>& color_pushes, const std::vector<size_t>& color_pop_indices) const
     {
-        static const auto character_index_stride = sizeof(index_type) * indices_per_character;
+        static const auto CHARACTER_INDEX_STRIDE = sizeof(index_type) * INDICES_PER_CHARACTER;
 
         //buffers
-        gpu.buffers.push(gpu_t::buffer_target_e::array, vertex_buffer);
-        gpu.buffers.push(gpu_t::buffer_target_e::element_array, index_buffer);
+        gpu.buffers.push(gpu_t::buffer_target_e::ARRAY, vertex_buffer);
+        gpu.buffers.push(gpu_t::buffer_target_e::ELEMENT_ARRAY, index_buffer);
 
         const auto gpu_program = gpu_programs.get<bitmap_font_gpu_program_t>();
 
@@ -270,8 +270,8 @@ namespace mandala
         //states
         auto blend_state = gpu.blend.get_state();
         blend_state.is_enabled = true;
-        blend_state.src_factor = gpu_t::blend_factor_e::src_alpha;
-        blend_state.dst_factor = gpu_t::blend_factor_e::one_minus_src_alpha;
+        blend_state.src_factor = gpu_t::blend_factor_e::SRC_ALPHA;
+        blend_state.dst_factor = gpu_t::blend_factor_e::ONE_MINUS_SRC_ALPHA;
 
         gpu.blend.push_state(blend_state);
 
@@ -353,7 +353,7 @@ namespace mandala
                 gpu.set_uniform("color_bottom", color);
             }
 
-            gpu.draw_elements(gpu_t::primitive_type_e::triangles, indices_per_character, index_buffer_type::data_type, character_index * character_index_stride);
+            gpu.draw_elements(gpu_t::primitive_type_e::TRIANGLES, INDICES_PER_CHARACTER, index_buffer_type::DATA_TYPE, character_index * CHARACTER_INDEX_STRIDE);
 
             const auto next = (c + 1);
 
@@ -398,8 +398,8 @@ namespace mandala
         gpu.programs.pop();
 
         //buffers
-        gpu.buffers.pop(gpu_t::buffer_target_e::element_array);
-        gpu.buffers.pop(gpu_t::buffer_target_e::array);
+        gpu.buffers.pop(gpu_t::buffer_target_e::ELEMENT_ARRAY);
+        gpu.buffers.pop(gpu_t::buffer_target_e::ARRAY);
     }
 
     void bitmap_font_t::get_string_pages(std::vector<uint8_t>& pages, const string_type& string) const

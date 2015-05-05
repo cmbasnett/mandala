@@ -262,7 +262,6 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="gui_node.hpp" />
     <ClInclude Include="gui_scroll.hpp" />
     <ClInclude Include="gui_state.hpp" />
-    <ClInclude Include="http_mgr.hpp" />
     <ClInclude Include="index_buffer.hpp" />
     <ClInclude Include="index_type.hpp" />
     <ClInclude Include="interpolation.hpp" />
@@ -363,7 +362,6 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="gui_node.cpp" />
     <ClCompile Include="gui_scroll.cpp" />
     <ClCompile Include="gui_state.cpp" />
-    <ClCompile Include="http_mgr.cpp" />
     <ClCompile Include="material_instance.cpp" />
     <ClCompile Include="model_animation.cpp" />
     <ClCompile Include="model_gpu_program.cpp" />

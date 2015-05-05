@@ -35,7 +35,7 @@ namespace mandala
 
 			switch (operation.type)
 			{
-			case operation_t::type_e::pop:
+			case operation_t::type_e::POP:
 			{
 			    if (nodes_itr == nodes.end())
 			    {
@@ -48,7 +48,7 @@ namespace mandala
                 nodes.erase(nodes_itr);
 			}
 				break;
-			case operation_t::type_e::push:
+			case operation_t::type_e::PUSH:
 			{
 		        if (nodes_itr != nodes.end())
 		        {
@@ -65,7 +65,7 @@ namespace mandala
                 pushed_states.push_back(operation.state);
 			}
 				break;
-			case operation_t::type_e::change_link_flags:
+			case operation_t::type_e::CHANGE_LINK_FLAGS:
 			{
 			    if (nodes_itr == nodes.end())
 			    {
@@ -76,10 +76,10 @@ namespace mandala
                 nodes_itr->link_flags = operation.link_flags;
 
                 //clear changing link flags flag from node flags
-                nodes_itr->flags &= ~state_flag_changing_link_flags;
+                nodes_itr->flags &= ~STATE_FLAG_CHANGING_LINK_FLAGS;
 			}
 				break;
-            case operation_t::type_e::purge:
+            case operation_t::type_e::PURGE:
                 while (!nodes.empty())
                 {
                     popped_states.push_back(std::make_pair(nodes.back().state, nodes.back().flags));
@@ -119,38 +119,38 @@ namespace mandala
 			}
 
 			//compare previous node flags to current ones, call start/stop flag events to states if flags changed
-			state_flags_type flags = state_flag_all;
+			state_flags_type flags = STATE_FLAG_ALL;
 
 			for (auto nodes_reverse_itr = nodes.rbegin(); nodes_reverse_itr != nodes.rend(); ++nodes_reverse_itr)
 			{
 				const auto previous_node_flags = nodes_reverse_itr->flags;
 
 				//render
-				if ((previous_node_flags & state_flag_render) == state_flag_none && (flags & state_flag_render) == state_flag_render)
+				if ((previous_node_flags & STATE_FLAG_RENDER) == STATE_FLAG_NONE && (flags & STATE_FLAG_RENDER) == STATE_FLAG_RENDER)
 				{
 					nodes_reverse_itr->state->on_start_render();
 				}
-				else if ((previous_node_flags & state_flag_render) == state_flag_render && (flags & state_flag_render) == state_flag_none)
+				else if ((previous_node_flags & STATE_FLAG_RENDER) == STATE_FLAG_RENDER && (flags & STATE_FLAG_RENDER) == STATE_FLAG_NONE)
 				{
 					nodes_reverse_itr->state->on_stop_render();
 				}
 
 				//input
-				if ((previous_node_flags & state_flag_input) == state_flag_none && (flags & state_flag_input) == state_flag_input)
+				if ((previous_node_flags & STATE_FLAG_INPUT) == STATE_FLAG_NONE && (flags & STATE_FLAG_INPUT) == STATE_FLAG_INPUT)
 				{
 					nodes_reverse_itr->state->on_start_input();
 				}
-				else if ((previous_node_flags & state_flag_input) == state_flag_input && (flags & state_flag_input) == state_flag_none)
+				else if ((previous_node_flags & STATE_FLAG_INPUT) == STATE_FLAG_INPUT && (flags & STATE_FLAG_INPUT) == STATE_FLAG_NONE)
 				{
 					nodes_reverse_itr->state->on_stop_input();
 				}
 
 				//tick
-				if ((previous_node_flags & state_flag_tick) == state_flag_none && (flags & state_flag_tick) == state_flag_tick)
+				if ((previous_node_flags & STATE_FLAG_TICK) == STATE_FLAG_NONE && (flags & STATE_FLAG_TICK) == STATE_FLAG_TICK)
 				{
 					nodes_reverse_itr->state->on_start_tick();
 				}
-				else if ((previous_node_flags & state_flag_tick) == state_flag_tick && (flags & state_flag_tick) == state_flag_none)
+				else if ((previous_node_flags & STATE_FLAG_TICK) == STATE_FLAG_TICK && (flags & STATE_FLAG_TICK) == STATE_FLAG_NONE)
 				{
 					nodes_reverse_itr->state->on_stop_tick();
 				}
@@ -164,17 +164,17 @@ namespace mandala
         //call on_exit on popped states
         for (auto& state : popped_states)
         {
-            if ((state.second & state_flag_render) == state_flag_render)
+            if ((state.second & STATE_FLAG_RENDER) == STATE_FLAG_RENDER)
             {
                 state.first->on_stop_render();
             }
 
-            if ((state.second & state_flag_input) == state_flag_input)
+            if ((state.second & STATE_FLAG_INPUT) == STATE_FLAG_INPUT)
             {
                 state.first->on_stop_input();
             }
 
-            if ((state.second & state_flag_tick) == state_flag_tick)
+            if ((state.second & STATE_FLAG_TICK) == STATE_FLAG_TICK)
             {
                 state.first->on_stop_tick();
             }
@@ -185,7 +185,7 @@ namespace mandala
 		//tick states
 		for (auto nodes_reverse_itr = nodes.rbegin(); nodes_reverse_itr != nodes.rend(); ++nodes_reverse_itr)
 		{
-			if ((nodes_reverse_itr->flags & state_flag_tick) == state_flag_none)
+			if ((nodes_reverse_itr->flags & STATE_FLAG_TICK) == STATE_FLAG_NONE)
 			{
 				//state not ticking, break
 				break;
@@ -199,7 +199,7 @@ namespace mandala
 	{
 		for (auto& node : nodes)
 		{
-			if ((node.flags & state_flag_render) == state_flag_render)
+			if ((node.flags & STATE_FLAG_RENDER) == STATE_FLAG_RENDER)
 			{
 				node.state->render();
 			}
@@ -210,8 +210,8 @@ namespace mandala
 	{
 		for (auto nodes_itr = nodes.rbegin(); nodes_itr != nodes.rend(); ++nodes_itr)
 		{
-            if ((nodes_itr->flags & state_flag_input) != state_flag_input ||
-                (nodes_itr->flags & state_flag_popping) == state_flag_popping)
+            if ((nodes_itr->flags & STATE_FLAG_INPUT) != STATE_FLAG_INPUT ||
+                (nodes_itr->flags & STATE_FLAG_POPPING) == STATE_FLAG_POPPING)
             {
                 //state not handling input or is being popped, return
                 return;
@@ -246,7 +246,7 @@ namespace mandala
 		}
 
         operation_t operation;
-        operation.type = operation_t::type_e::push;
+        operation.type = operation_t::type_e::PUSH;
         operation.state = state;
         operation.link_flags = link_flags;
 
@@ -272,7 +272,7 @@ namespace mandala
             //check operation queue to see if state is about to be pushed
             const auto operations_itr = std::find_if(operations.begin(), operations.end(), [&](const operation_t& operation)
             {
-                return operation.state == state && operation.type == operation_t::type_e::push;
+                return operation.state == state && operation.type == operation_t::type_e::PUSH;
             });
 
             if (operations_itr != operations.end())
@@ -289,10 +289,10 @@ namespace mandala
         }
 
         //add popping flag to node flags
-        nodes_itr->flags |= state_flag_popping;
+        nodes_itr->flags |= STATE_FLAG_POPPING;
 
 		operation_t operation;
-		operation.type = operation_t::type_e::pop;
+		operation.type = operation_t::type_e::POP;
 		operation.state = state;
 
 		operations.push_back(operation);
@@ -316,7 +316,7 @@ namespace mandala
             //check operation queue to see if state is about to be pushed
             const auto operations_itr = std::find_if(operations.begin(), operations.end(), [&](const operation_t& operation)
             {
-                return operation.state == state && operation.type == operation_t::type_e::push;
+                return operation.state == state && operation.type == operation_t::type_e::PUSH;
             });
 
             if (operations_itr != operations.end())
@@ -333,20 +333,20 @@ namespace mandala
         }
 
 		operation_t operation;
-		operation.type = operation_t::type_e::change_link_flags;
+		operation.type = operation_t::type_e::CHANGE_LINK_FLAGS;
 		operation.state = state;
 		operation.link_flags = link_flags;
 
         operations.push_back(operation);
 
         //add changing link flags flag to node flags
-        nodes_itr->flags |= state_flag_changing_link_flags;
+        nodes_itr->flags |= STATE_FLAG_CHANGING_LINK_FLAGS;
 	}
 
 	void state_mgr_t::purge()
 	{
         operation_t operation;
-        operation.type = operation_t::type_e::purge;
+        operation.type = operation_t::type_e::PURGE;
 
         operations.push_back(operation);
 	}
@@ -425,26 +425,26 @@ namespace mandala
 
 	bool state_mgr_t::is_state_rendering(const state_type& state) const
 	{
-		return (get_flags(state) & state_flag_render) == state_flag_render;
+		return (get_flags(state) & STATE_FLAG_RENDER) == STATE_FLAG_RENDER;
 	}
 
 	bool state_mgr_t::is_state_ticking(const state_type& state) const
 	{
-		return (get_flags(state) & state_flag_tick) == state_flag_tick;
+		return (get_flags(state) & STATE_FLAG_TICK) == STATE_FLAG_TICK;
 	}
 
 	bool state_mgr_t::is_state_handling_input(const state_type& state) const
 	{
-		return (get_flags(state) & state_flag_input) == state_flag_input;
+		return (get_flags(state) & STATE_FLAG_INPUT) == STATE_FLAG_INPUT;
 	}
 
     bool state_mgr_t::is_state_popping(const state_type& state) const
     {
-        return (get_flags(state) & state_flag_popping) == state_flag_popping;
+        return (get_flags(state) & STATE_FLAG_POPPING) == STATE_FLAG_POPPING;
     }
 
     bool state_mgr_t::is_state_changing_link_flags(const state_type& state) const
     {
-        return (get_flags(state) & state_flag_changing_link_flags) == state_flag_changing_link_flags;
+        return (get_flags(state) & STATE_FLAG_CHANGING_LINK_FLAGS) == STATE_FLAG_CHANGING_LINK_FLAGS;
     }
 }

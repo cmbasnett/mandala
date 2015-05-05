@@ -99,7 +99,7 @@ namespace mandala
 
             switch (node->get_size_mode())
             {
-            case gui_size_mode_e::relative:
+            case gui_size_mode_e::RELATIVE:
                 if (node->has_parent())   //TODO: doesn't work yet; parents not being set properly
                 {
                     absolute_desired_size *= node->parent->bounds.size();
@@ -114,7 +114,7 @@ namespace mandala
 
             switch (node->dock_mode)
             {
-            case gui_dock_mode_e::bottom:
+            case gui_dock_mode_e::BOTTOM:
                 node->bounds.min = sibling_bounds.min;
                 node->bounds.max.x = sibling_bounds.max.x;
                 node->bounds.max.y = sibling_bounds.min.y + absolute_desired_size.y + node->padding.vertical();
@@ -124,11 +124,11 @@ namespace mandala
                 sibling_bounds.min.y += node->bounds.height() + node->margin.vertical();
 
                 break;
-            case gui_dock_mode_e::fill:
+            case gui_dock_mode_e::FILL:
                 node->bounds = sibling_bounds - node->margin;
 
                 break;
-            case gui_dock_mode_e::left:
+            case gui_dock_mode_e::LEFT:
                 node->bounds.min = sibling_bounds.min;
                 node->bounds.max.x = sibling_bounds.min.x + absolute_desired_size.x + node->padding.horizontal();
                 node->bounds.max.y = sibling_bounds.max.y;
@@ -138,7 +138,7 @@ namespace mandala
                 sibling_bounds.min.x += node->bounds.width() + node->margin.horizontal();
 
                 break;
-            case gui_dock_mode_e::right:
+            case gui_dock_mode_e::RIGHT:
                 node->bounds.min.x = sibling_bounds.max.x - absolute_desired_size.x - node->padding.horizontal();
                 node->bounds.min.y = sibling_bounds.min.y;
                 node->bounds.max = sibling_bounds.max;
@@ -148,7 +148,7 @@ namespace mandala
                 sibling_bounds.max.x -= node->bounds.width() + node->margin.horizontal();
 
                 break;
-            case gui_dock_mode_e::top:
+            case gui_dock_mode_e::TOP:
                 node->bounds.min.x = sibling_bounds.min.x;
                 node->bounds.min.y = sibling_bounds.max.y - absolute_desired_size.y - node->padding.vertical();
                 node->bounds.max = sibling_bounds.max;
@@ -165,38 +165,38 @@ namespace mandala
                 vec2_t anchor_location;
                 vec2_t anchor_translation;
 
-                if ((node->anchor_flags & gui_anchor_flag_horizontal) == gui_anchor_flag_horizontal)
+                if ((node->anchor_flags & GUI_ANCHOR_FLAG_HORIZONTAL) == GUI_ANCHOR_FLAG_HORIZONTAL)
                 {
                     anchor_location.x = (sibling_bounds.max.x - sibling_bounds.min.x) / 2;
                     anchor_translation.x = -((absolute_desired_size.x / 2) + ((node->margin.right - node->margin.left) / 2));
                 }
                 else
                 {
-                    if ((node->anchor_flags & gui_anchor_flag_left) == gui_anchor_flag_left)
+                    if ((node->anchor_flags & GUI_ANCHOR_FLAG_LEFT) == GUI_ANCHOR_FLAG_LEFT)
                     {
                         anchor_location.x = sibling_bounds.min.x;
                         anchor_translation.x = node->margin.left;
                     }
-                    else if ((node->anchor_flags & gui_anchor_flag_right) == gui_anchor_flag_right)
+                    else if ((node->anchor_flags & GUI_ANCHOR_FLAG_RIGHT) == GUI_ANCHOR_FLAG_RIGHT)
                     {
                         anchor_location.x = sibling_bounds.max.x;
                         anchor_translation.x = -(absolute_desired_size.x + node->margin.right);
                     }
                 }
 
-                if ((node->anchor_flags & gui_anchor_flag_vertical) == gui_anchor_flag_vertical)
+                if ((node->anchor_flags & GUI_ANCHOR_FLAG_VERTICAL) == GUI_ANCHOR_FLAG_VERTICAL)
                 {
                     anchor_location.y = (sibling_bounds.max.y - sibling_bounds.min.y) / 2;
                     anchor_translation.y = -((absolute_desired_size.y / 2) + ((node->margin.top - node->margin.bottom) / 2));
                 }
                 else
                 {
-                    if ((node->anchor_flags & gui_anchor_flag_bottom) == gui_anchor_flag_bottom)
+                    if ((node->anchor_flags & GUI_ANCHOR_FLAG_BOTTOM) == GUI_ANCHOR_FLAG_BOTTOM)
                     {
                         anchor_location.y = sibling_bounds.min.y;
                         anchor_translation.y = node->margin.bottom;
                     }
-                    else if ((node->anchor_flags & gui_anchor_flag_top) == gui_anchor_flag_top)
+                    else if ((node->anchor_flags & GUI_ANCHOR_FLAG_TOP) == GUI_ANCHOR_FLAG_TOP)
                     {
                         anchor_location.y = sibling_bounds.max.y;
                         anchor_translation.y = -(absolute_desired_size.y + node->margin.top);
@@ -254,14 +254,14 @@ namespace mandala
 
     const gui_size_mode_e gui_node_t::get_size_mode(bool is_recursive) const
     {
-        if (is_recursive && size_mode == gui_size_mode_e::inherit)
+        if (is_recursive && size_mode == gui_size_mode_e::INHERIT)
         {
             if (parent)
             {
                 return parent->get_size_mode(is_recursive);
             }
 
-            return gui_size_mode_e::absolute;
+            return gui_size_mode_e::ABSOLUTE;
         }
 
         return size_mode;
@@ -308,13 +308,13 @@ namespace mandala
 
             gpu_stencil_state.is_enabled = true;
 
-            gpu_stencil_state.function.func = gpu_t::stencil_function_e::never;
+            gpu_stencil_state.function.func = gpu_t::stencil_function_e::NEVER;
             gpu_stencil_state.function.ref = 1;
             gpu_stencil_state.function.mask = 0xFF;
 
-            gpu_stencil_state.operations.fail = gpu_t::stencil_operation_e::replace;
-            gpu_stencil_state.operations.zfail = gpu_t::stencil_operation_e::keep;
-            gpu_stencil_state.operations.zpass = gpu_t::stencil_operation_e::keep;
+            gpu_stencil_state.operations.fail = gpu_t::stencil_operation_e::REPLACE;
+            gpu_stencil_state.operations.zfail = gpu_t::stencil_operation_e::KEEP;
+            gpu_stencil_state.operations.zpass = gpu_t::stencil_operation_e::KEEP;
 
             gpu_stencil_state.mask = 0xFF;
 
@@ -337,7 +337,7 @@ namespace mandala
 
             gpu.depth.push_state(gpu_depth_state);
 
-            gpu.clear(gpu_t::clear_flag_depth | gpu_t::clear_flag_stencil);
+            gpu.clear(gpu_t::CLEAR_FLAG_DEPTH | gpu_t::CLEAR_FLAG_STENCIL);
 
             render_rectangle(world_matrix, view_projection_matrix, rectangle_t(bounds), true);
 
@@ -345,7 +345,7 @@ namespace mandala
             gpu.depth.pop_state();
 
             gpu_stencil_state.mask = 0;
-            gpu_stencil_state.function.func = gpu_t::stencil_function_e::notequal;
+            gpu_stencil_state.function.func = gpu_t::stencil_function_e::NOTEQUAL;
             gpu_stencil_state.function.ref = 0;
             gpu_stencil_state.function.mask = 0xFF;
 

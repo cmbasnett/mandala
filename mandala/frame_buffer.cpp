@@ -23,7 +23,7 @@ namespace mandala
         auto gpu_color_state = gpu.color.get_state();
         auto gpu_depth_state = gpu.depth.get_state();
 
-        if ((static_cast<gpu_frame_buffer_type_flags_type>(type) & gpu_frame_buffer_type_flag_color) == gpu_frame_buffer_type_flag_color)
+        if ((static_cast<gpu_frame_buffer_type_flags_type>(type) & GPU_FRAME_BUFFER_TYPE_FLAG_COLOR) == GPU_FRAME_BUFFER_TYPE_FLAG_COLOR)
         {
             gpu_color_state.mask.r = true;
             gpu_color_state.mask.g = true;
@@ -38,7 +38,7 @@ namespace mandala
             gpu_color_state.mask.a = false;
         }
 
-        if ((static_cast<gpu_frame_buffer_type_flags_type>(type) & gpu_frame_buffer_type_flag_depth) == gpu_frame_buffer_type_flag_depth)
+        if ((static_cast<gpu_frame_buffer_type_flags_type>(type) & GPU_FRAME_BUFFER_TYPE_FLAG_DEPTH) == GPU_FRAME_BUFFER_TYPE_FLAG_DEPTH)
         {
             gpu_depth_state.should_write_mask = true;
         }

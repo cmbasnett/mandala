@@ -49,10 +49,10 @@ namespace mandala
 			camera.far = 8192;
 
 			bsp_image = boost::make_shared<gui_image_t>();
-			bsp_image->set_dock_mode(gui_dock_mode_e::fill);
+			bsp_image->set_dock_mode(gui_dock_mode_e::FILL);
 
             bsp_canvas = boost::make_shared<gui_canvas_t>();
-            bsp_canvas->set_dock_mode(gui_dock_mode_e::fill);
+            bsp_canvas->set_dock_mode(gui_dock_mode_e::FILL);
             bsp_canvas->adopt(bsp_image);
 
 			get_layout()->adopt(bsp_canvas);
@@ -85,7 +85,7 @@ namespace mandala
                 gpu.viewports.push(viewport);
                 gpu.frame_buffers.push(bsp_frame_buffer);
 
-                gpu.clear(gpu_t::clear_flag_color | gpu_t::clear_flag_depth | gpu_t::clear_flag_stencil);
+                gpu.clear(gpu_t::CLEAR_FLAG_COLOR | gpu_t::CLEAR_FLAG_DEPTH | gpu_t::CLEAR_FLAG_STENCIL);
 
                 //TODO: need to create a proper level thing here! scene graph and whatever
                 skybox.render(camera);
@@ -102,11 +102,11 @@ namespace mandala
         void bsp_state_t::on_input_event(input_event_t& input_event)
 		{
 #if defined(MANDALA_PC)
-            if (input_event.device_type == input_event_t::device_type_e::keyboard &&
-                input_event.keyboard.key == input_event_t::keyboard_t::key_e::escape &&
-                input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press)
+            if (input_event.device_type == input_event_t::device_type_e::KEYBOARD &&
+                input_event.keyboard.key == input_event_t::keyboard_t::key_e::ESCAPE &&
+                input_event.keyboard.type == input_event_t::keyboard_t::type_e::KEY_PRESS)
             {
-                py.exec("states.push(PopupState(), STATE_FLAG_RENDER | STATE_FLAG_TICK)");
+                //py.exec("states.push(PopupState(), STATE_FLAG_RENDER | STATE_FLAG_TICK)");
 
                 //auto texture = bsp_canvas->get_frame_buffer()->get_color_texture();
 
@@ -135,11 +135,11 @@ namespace mandala
 			}
 
 #if defined(MANDALA_PC)
-			if (input_event.device_type == input_event_t::device_type_e::touch)
+			if (input_event.device_type == input_event_t::device_type_e::TOUCH)
 			{
-				if (input_event.touch.button == input_event_t::touch_t::button_e::right)
+				if (input_event.touch.button == input_event_t::touch_t::button_e::RIGHT)
 				{
-					if (input_event.touch.type == input_event_t::touch_t::type_e::press)
+					if (input_event.touch.type == input_event_t::touch_t::type_e::PRESS)
 					{
                         camera.fov /= 2;
                         camera.sensitivity /= 2;
@@ -148,7 +148,7 @@ namespace mandala
 
 						return;
 					}
-					else if (input_event.touch.type == input_event_t::touch_t::type_e::release)
+					else if (input_event.touch.type == input_event_t::touch_t::type_e::RELEASE)
 					{
                         camera.fov *= 2;;
                         camera.sensitivity *= 2;
@@ -158,7 +158,7 @@ namespace mandala
 						return;
 					}
 				}
-				else if (input_event.touch.type == input_event_t::touch_t::type_e::scroll)
+				else if (input_event.touch.type == input_event_t::touch_t::type_e::SCROLL)
 				{
 					if (input_event.touch.location_delta.y > 0)
 					{
@@ -177,8 +177,8 @@ namespace mandala
 						return;
 					}
 				}
-				else if (input_event.touch.button == input_event_t::touch_t::button_e::left &&
-					input_event.touch.type == input_event_t::touch_t::type_e::press)
+				else if (input_event.touch.button == input_event_t::touch_t::button_e::LEFT &&
+					input_event.touch.type == input_event_t::touch_t::type_e::PRESS)
 				{
 					std::uniform_real_distribution<float32_t> pitch_target_delta_distribution(1.0f, 2.0f);
 					std::uniform_real_distribution<float32_t> yaw_target_delta_distribution(-0.5f, 0.5f);
@@ -226,7 +226,7 @@ namespace mandala
         {
             gui_state_t::on_enter();
 
-            bsp_frame_buffer = boost::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::color_depth, static_cast<gpu_frame_buffer_size_type>(get_layout()->get_bounds().size()));
+            bsp_frame_buffer = boost::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::COLOR_DEPTH, static_cast<gpu_frame_buffer_size_type>(get_layout()->get_bounds().size()));
             auto sprite_set = boost::make_shared<sprite_set_t>(bsp_frame_buffer->get_color_texture());
             sprite_t sprite(sprite_set, sprite_set->get_regions().begin()->second.hash);
             bsp_image->set_sprite(sprite);
@@ -237,7 +237,7 @@ namespace mandala
         {
             gui_state_t::on_window_event(window_event);
 
-            if (window_event.type == window_event_t::type_e::resize && bsp_frame_buffer)
+            if (window_event.type == window_event_t::type_e::RESIZE && bsp_frame_buffer)
             {
                 bsp_frame_buffer->set_size(static_cast<gpu_frame_buffer_size_type>(get_layout()->get_bounds().size()));
 

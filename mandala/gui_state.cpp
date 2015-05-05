@@ -19,7 +19,7 @@ namespace mandala
 	gui_state_t::gui_state_t()
 	{
 		layout = boost::make_shared<gui_layout_t>();
-		layout->set_dock_mode(gui_dock_mode_e::fill);
+		layout->set_dock_mode(gui_dock_mode_e::FILL);
     }
 
 	void gui_state_t::tick(float32_t dt)
@@ -82,7 +82,7 @@ namespace mandala
 #if defined(MANDALA_PC)
     void gui_state_t::on_window_event(window_event_t& window_event)
     {
-        if (window_event.type == window_event_t::type_e::resize)
+        if (window_event.type == window_event_t::type_e::RESIZE)
         {
             layout->set_bounds(gui_node_t::bounds_type(vec2_t(), static_cast<vec2_t>(window_event.rectangle.size())));
         }

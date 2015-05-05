@@ -13,12 +13,12 @@ namespace mandala
 	{
         gui_canvas_t();
 
-        static const auto index_count = 4;
+        static const auto INDEX_COUNT = 4;
 
         typedef basic_gpu_vertex_t vertex_type;
         typedef vertex_buffer_t<vertex_type> vertex_buffer_type;
 
-        typedef index_type<index_count>::type index_type;
+        typedef index_type<INDEX_COUNT>::type index_type;
         typedef index_buffer_t<index_type> index_buffer_type;
 
         virtual void on_render_begin(mat4_t& world_matrix, mat4_t& view_projection_matrix) override;

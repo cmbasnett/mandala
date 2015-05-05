@@ -33,12 +33,12 @@ namespace mandala
 
         while (string_itr != string.end())
         {
-            if (*string_itr == color_push_character<gui_label_t::string_type::value_type>::value)
+            if (*string_itr == color_push_character<gui_label_t::string_type::value_type>::VALUE)
             {
                 //encountered color push character
                 string_itr = string.erase(string_itr);
 
-                if (string_itr != string.end() && *string_itr != color_push_character<gui_label_t::string_type::value_type>::value)
+                if (string_itr != string.end() && *string_itr != color_push_character<gui_label_t::string_type::value_type>::VALUE)
                 {
                     //determine how many characters to erase
                     auto erase_count = std::min(std::distance(string_itr, string.end()), rgb_hex_string_length);
@@ -49,7 +49,7 @@ namespace mandala
                     continue;
                 }
             }
-            else if (*string_itr == color_pop_character<gui_label_t::string_type::value_type>::value)
+            else if (*string_itr == color_pop_character<gui_label_t::string_type::value_type>::VALUE)
             {
                 //encountered color pop character
                 string_itr = string.erase(string_itr);
@@ -72,13 +72,13 @@ namespace mandala
 
         while (string_itr != string.end())
         {
-            if (*string_itr == color_push_character<gui_label_t::string_type::value_type>::value)
+            if (*string_itr == color_push_character<gui_label_t::string_type::value_type>::VALUE)
             {
-                string_itr = string.insert(string_itr, color_push_character<gui_label_t::string_type::value_type>::value) + 1;
+                string_itr = string.insert(string_itr, color_push_character<gui_label_t::string_type::value_type>::VALUE) + 1;
             }
-            else if (*string_itr == color_pop_character<gui_label_t::string_type::value_type>::value)
+            else if (*string_itr == color_pop_character<gui_label_t::string_type::value_type>::VALUE)
             {
-                string_itr = string.insert(string_itr, color_pop_character<gui_label_t::string_type::value_type>::value) + 1;
+                string_itr = string.insert(string_itr, color_pop_character<gui_label_t::string_type::value_type>::VALUE) + 1;
             }
 
             if (string_itr != string.end())
@@ -167,7 +167,7 @@ namespace mandala
                 text_size.x = std::max(text_size.x, line.rectangle.width);
             }
 
-            set_size(text_size, gui_size_mode_e::absolute);
+            set_size(text_size, gui_size_mode_e::ABSOLUTE);
         }
     }
 
@@ -188,13 +188,13 @@ namespace mandala
 
         switch (vertical_alignment)
         {
-        case vertical_alignment_e::top:
+        case vertical_alignment_e::TOP:
             base_translation.y += padded_size.y - bitmap_font->get_base();
             break;
-        case vertical_alignment_e::middle:
+        case vertical_alignment_e::MIDDLE:
             base_translation.y += (padded_size.y / 2) - (bitmap_font->get_base() / 2) + ((line_height * (lines.size() - 1)) / 2);
             break;
-        case vertical_alignment_e::bottom:
+        case vertical_alignment_e::BOTTOM:
             base_translation.y += (line_height * lines.size()) - bitmap_font->get_base();
             break;
         default:
@@ -203,10 +203,10 @@ namespace mandala
 
         switch (justification)
         {
-        case justification_e::center:
+        case justification_e::CENTER:
             base_translation.x += padded_size.x / 2;
             break;
-        case justification_e::right:
+        case justification_e::RIGHT:
             base_translation.x += padded_size.x;
             break;
         default:
@@ -266,8 +266,8 @@ namespace mandala
     {
         std::wstring_convert<std::codecvt_utf8<wchar_t>> wstring_convert;
 
-        if (input_event.device_type == input_event_t::device_type_e::touch &&
-            input_event.touch.type == input_event_t::touch_t::type_e::press)
+        if (input_event.device_type == input_event_t::device_type_e::TOUCH &&
+            input_event.touch.type == input_event_t::touch_t::type_e::PRESS)
         {
             if (contains(get_bounds(), input_event.touch.location))
             {
@@ -334,14 +334,14 @@ namespace mandala
 
         if (!is_read_only /*&& has_focus()*/)
         {
-            if (input_event.device_type == input_event_t::device_type_e::keyboard)
+            if (input_event.device_type == input_event_t::device_type_e::KEYBOARD)
             {
-                if (input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_press ||
-                    input_event.keyboard.type == input_event_t::keyboard_t::type_e::key_repeat)
+                if (input_event.keyboard.type == input_event_t::keyboard_t::type_e::KEY_PRESS ||
+                    input_event.keyboard.type == input_event_t::keyboard_t::type_e::KEY_REPEAT)
                 {
                     switch (input_event.keyboard.key)
                     {
-                    case input_event_t::keyboard_t::key_e::backspace:
+                    case input_event_t::keyboard_t::key_e::BACKSPACE:
                     {
                         if (string.empty())
                         {
@@ -367,10 +367,10 @@ namespace mandala
 
                         break;
                     }
-                    case input_event_t::keyboard_t::key_e::enter:
-                    case input_event_t::keyboard_t::key_e::kp_enter:
+                    case input_event_t::keyboard_t::key_e::ENTER:
+                    case input_event_t::keyboard_t::key_e::KP_ENTER:
                     {
-                        if (on_enter_function && (input_event.keyboard.mod_flags & input_event_t::mod_flag_shift) == 0)
+                        if (on_enter_function && (input_event.keyboard.mod_flags & input_event_t::MOD_FLAG_SHIFT) == 0)
                         {
                             on_enter_function();
                         }
@@ -386,7 +386,7 @@ namespace mandala
 
                         break;
                     }
-                    case input_event_t::keyboard_t::key_e::home:
+                    case input_event_t::keyboard_t::key_e::HOME:
                     {
                         //TODO: this is a bit inefficient as it requires iteration over all lines
                         //would be more expedient if we dealt with finding the line the cursor is
@@ -395,7 +395,7 @@ namespace mandala
                         {
                             if (cursor.string_begin >= line.string_begin && cursor.string_begin <= line.string_end)
                             {
-                                if (input_event.keyboard.mod_flags == input_event_t::mod_flag_shift)
+                                if (input_event.keyboard.mod_flags == input_event_t::MOD_FLAG_SHIFT)
                                 {
                                     cursor.string_end = cursor.string_begin;
                                     cursor.string_begin = line.string_begin;
@@ -414,7 +414,7 @@ namespace mandala
 
                         break;
                     }
-                    case input_event_t::keyboard_t::key_e::end:
+                    case input_event_t::keyboard_t::key_e::END:
                     {
                         //TODO: this is a bit inefficient as it requires iteration over all lines
                         //would be more expedient if we dealt with finding the line the cursor is
@@ -423,7 +423,7 @@ namespace mandala
                         {
                             if (cursor.string_begin >= line.string_begin && cursor.string_begin <= line.string_end)
                             {
-                                if (input_event.keyboard.mod_flags == input_event_t::mod_flag_shift)
+                                if (input_event.keyboard.mod_flags == input_event_t::MOD_FLAG_SHIFT)
                                 {
                                     cursor.string_end = line.string_end;
                                 }
@@ -441,7 +441,7 @@ namespace mandala
 
                         break;
                     }
-                    case input_event_t::keyboard_t::key_e::del:
+                    case input_event_t::keyboard_t::key_e::DEL:
                     {
                         if (cursor.string_begin != cursor.string_end)
                         {
@@ -460,13 +460,13 @@ namespace mandala
 
                         break;
                     }
-                    case input_event_t::keyboard_t::key_e::left:
+                    case input_event_t::keyboard_t::key_e::LEFT:
                     {
                         if (cursor.string_begin != string.begin())
                         {
                             --cursor.string_begin;
 
-                            if (input_event.keyboard.mod_flags != input_event_t::mod_flag_shift)
+                            if (input_event.keyboard.mod_flags != input_event_t::MOD_FLAG_SHIFT)
                             {
                                 cursor.string_end = cursor.string_begin;
                             }
@@ -476,13 +476,13 @@ namespace mandala
 
                         break;
                     }
-                    case input_event_t::keyboard_t::key_e::right:
+                    case input_event_t::keyboard_t::key_e::RIGHT:
                     {
                         if (cursor.string_begin < string.end())
                         {
                             cursor.string_end = cursor.string_begin + 1;
 
-                            if (input_event.keyboard.mod_flags != input_event_t::mod_flag_shift)
+                            if (input_event.keyboard.mod_flags != input_event_t::MOD_FLAG_SHIFT)
                             {
                                 cursor.string_begin = cursor.string_end;
                             }
@@ -492,20 +492,20 @@ namespace mandala
 
                         break;
                     }
-                    case input_event_t::keyboard_t::key_e::down:
+                    case input_event_t::keyboard_t::key_e::DOWN:
                     {
                         //TODO: set cursor to the same column on the next line
 
                         break;
                     }
-                    case input_event_t::keyboard_t::key_e::up:
+                    case input_event_t::keyboard_t::key_e::UP:
                     {
                         //TODO: set cursor to the same column on the previous line
 
                         break;
                     }
-                    case input_event_t::keyboard_t::key_e::v:   //PASTE
-                        if (input_event.keyboard.mod_flags == input_event_t::mod_flag_ctrl)
+                    case input_event_t::keyboard_t::key_e::V:   //PASTE
+                        if (input_event.keyboard.mod_flags == input_event_t::MOD_FLAG_CTRL)
                         {
                             const auto clipboard_string = wstring_convert.from_bytes(platform.get_clipboard_string().c_str());
                             auto paste_length = clipboard_string.length();
@@ -523,8 +523,8 @@ namespace mandala
                             input_event.is_consumed = true;
                         }
                         break;
-                    case input_event_t::keyboard_t::key_e::c:   //COPY
-                        if (input_event.keyboard.mod_flags == input_event_t::mod_flag_ctrl)
+                    case input_event_t::keyboard_t::key_e::C:   //COPY
+                        if (input_event.keyboard.mod_flags == input_event_t::MOD_FLAG_CTRL)
                         {
                             string_type string = { cursor.string_begin, cursor.string_end };
                             platform.set_clipboard_string(wstring_convert.to_bytes(string.c_str()));
@@ -534,9 +534,9 @@ namespace mandala
                             input_event.is_consumed = true;
                         }
                         break;
-                    case input_event_t::keyboard_t::key_e::x:   //CUT
+                    case input_event_t::keyboard_t::key_e::X:   //CUT
                     {
-                        if (input_event.keyboard.mod_flags == input_event_t::mod_flag_ctrl)
+                        if (input_event.keyboard.mod_flags == input_event_t::MOD_FLAG_CTRL)
                         {
                             string_type string = { cursor.string_begin, cursor.string_end };
                             platform.set_clipboard_string(wstring_convert.to_bytes(string.c_str()));
@@ -550,9 +550,9 @@ namespace mandala
                         }
                         break;
                     }
-                    case input_event_t::keyboard_t::key_e::a:   //SELECT ALL
+                    case input_event_t::keyboard_t::key_e::A:   //SELECT ALL
                     {
-                        if (input_event.keyboard.mod_flags == input_event_t::mod_flag_ctrl)
+                        if (input_event.keyboard.mod_flags == input_event_t::MOD_FLAG_CTRL)
                         {
                             cursor.string_begin = string.begin();
                             cursor.string_end = string.end();
@@ -567,7 +567,7 @@ namespace mandala
                         break;
                     }
                 }
-                else if (input_event.keyboard.type == input_event_t::keyboard_t::type_e::character)
+                else if (input_event.keyboard.type == input_event_t::keyboard_t::type_e::CHARACTER)
                 {
                     if (!max_length || max_length.get() > string.length())
                     {
@@ -681,12 +681,12 @@ namespace mandala
 
                 while (string_itr != string.end())
                 {
-                    if (*string_itr == color_push_character<string_type::value_type>::value)
+                    if (*string_itr == color_push_character<string_type::value_type>::VALUE)
                     {
                         //encountered color push character
                         string_itr = string.erase(string_itr);
 
-                        if (string_itr != string.end() && *string_itr != color_push_character<string_type::value_type>::value)
+                        if (string_itr != string.end() && *string_itr != color_push_character<string_type::value_type>::VALUE)
                         {
                             //determine how many characters to erase
                             auto erase_count = std::min(std::distance(string_itr, string.end()), rgb_hex_string_length);
@@ -714,12 +714,12 @@ namespace mandala
                             continue;
                         }
                     }
-                    else if (*string_itr == color_pop_character<string_type::value_type>::value)
+                    else if (*string_itr == color_pop_character<string_type::value_type>::VALUE)
                     {
                         //encountered color pop character
                         string_itr = string.erase(string_itr);
 
-                        if (string_itr == string.end() || *string_itr != color_pop_character<string_type::value_type>::value)
+                        if (string_itr == string.end() || *string_itr != color_pop_character<string_type::value_type>::VALUE)
                         {
                             color_pops.push_back(std::distance(string.begin(), string_itr));
 
@@ -780,10 +780,10 @@ namespace mandala
 
                 switch (justification)
                 {
-                case justification_e::center:
+                case justification_e::CENTER:
                     line.rectangle.x -= render_string_width / 2;
                     break;
-                case justification_e::right:
+                case justification_e::RIGHT:
                     line.rectangle.x -= render_string_width;
                     break;
                 default:
@@ -820,7 +820,7 @@ namespace mandala
 
                 if (should_use_color_codes)
                 {
-                    if (*string_itr == color_push_character<string_type::value_type>::value)
+                    if (*string_itr == color_push_character<string_type::value_type>::VALUE)
                     {
                         //encountered color push character
 
@@ -831,14 +831,14 @@ namespace mandala
                         {
                             break;
                         }
-                        else if (*string_itr != color_push_character<string_type::value_type>::value)
+                        else if (*string_itr != color_push_character<string_type::value_type>::VALUE)
                         {
                             string_itr += std::min(std::distance(string_itr, string.end()), rgb_hex_string_length);
 
                             continue;
                         }
                     }
-                    else if (*string_itr == color_pop_character<string_type::value_type>::value)
+                    else if (*string_itr == color_pop_character<string_type::value_type>::VALUE)
                     {
                         //encountered color pop character
                         ++string_itr;
@@ -847,7 +847,7 @@ namespace mandala
                         {
                             break;
                         }
-                        else if (*string_itr != color_pop_character<string_type::value_type>::value)
+                        else if (*string_itr != color_pop_character<string_type::value_type>::VALUE)
                         {
                             continue;
                         }

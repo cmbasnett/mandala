@@ -13,12 +13,12 @@ namespace mandala
 		{
 			enum flags_t : uint8_t
 			{
-				location_x	= (1 << 0),
-				location_y	= (1 << 1),
-				location_z	= (1 << 2),
-				rotation_x	= (1 << 3),
-				rotation_y	= (1 << 4),
-				rotation_z	= (1 << 5),
+				LOCATION_X	= (1 << 0),
+				LOCATION_Y	= (1 << 1),
+				LOCATION_Z	= (1 << 2),
+				ROTATION_X	= (1 << 3),
+				ROTATION_Y	= (1 << 4),
+				ROTATION_Z	= (1 << 5),
 			};
 			
 			hash_t hash;

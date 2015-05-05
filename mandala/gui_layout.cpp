@@ -7,7 +7,7 @@ namespace mandala
 {
     void gui_layout_t::on_input_event(input_event_t& input_event)
     {
-        if (input_event.device_type == input_event_t::device_type_e::touch)
+        if (input_event.device_type == input_event_t::device_type_e::TOUCH)
         {
             input_event.touch.location.y = platform.get_screen_size().y - input_event.touch.location.y;
 
