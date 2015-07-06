@@ -204,17 +204,12 @@ namespace mandala
                 node->bounds.min = vec2_t(0);
                 node->bounds.max = absolute_desired_size;
 
-                if (node->has_parent())
-                {
-                    node->bounds += vec2_t(node->parent->padding.left, node->parent->padding.bottom);
-                }
-
                 vec2_t anchor_location;
                 vec2_t anchor_translation;
 
                 if ((node->anchor_flags & GUI_ANCHOR_FLAG_HORIZONTAL) == GUI_ANCHOR_FLAG_HORIZONTAL)
                 {
-                    anchor_location.x = (sibling_bounds.max.x - sibling_bounds.min.x) / 2;
+                    anchor_location.x = sibling_bounds.min.x + (sibling_bounds.width() / 2);
                     anchor_translation.x = -((absolute_desired_size.x / 2) + ((node->margin.right - node->margin.left) / 2));
                 }
                 else
@@ -233,7 +228,7 @@ namespace mandala
 
                 if ((node->anchor_flags & GUI_ANCHOR_FLAG_VERTICAL) == GUI_ANCHOR_FLAG_VERTICAL)
                 {
-                    anchor_location.y = (sibling_bounds.max.y - sibling_bounds.min.y) / 2;
+                    anchor_location.y = sibling_bounds.min.y + (sibling_bounds.height() / 2);
                     anchor_translation.y = -((absolute_desired_size.y / 2) + ((node->margin.top - node->margin.bottom) / 2));
                 }
                 else
