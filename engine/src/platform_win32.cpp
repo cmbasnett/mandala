@@ -139,7 +139,12 @@ namespace mandala
 
     static inline void on_window_resize(GLFWwindow* window, int width, int height)
 	{
-		//TODO: a less vebose solution is possible
+        if (window == nullptr || width == 0 || height == 0)
+        {
+            return;
+        }
+
+		//TODO: a less verbose solution is possible
         auto window_events_itr = std::find_if(platform.window.events.begin(), platform.window.events.end(), [](const window_event_t& window_event)
         {
             return window_event.type == window_event_t::type_e::RESIZE;
@@ -316,6 +321,63 @@ namespace mandala
 	{
         glfwSetWindowSize(window_ptr, screen_size.x, screen_size.y);
 	}
+
+    //fullscreen
+    bool platform_win32_t::is_fullscreen() const
+    {
+        return window_ptr != nullptr && glfwGetWindowMonitor(window_ptr) != nullptr;
+    }
+
+    void platform_win32_t::set_is_fullscreen(bool is_fullscreen)
+    {
+        if (window_ptr == nullptr)
+        {
+            throw std::exception();
+        }
+
+        window_size_type window_size;
+
+        if (is_fullscreen == this->is_fullscreen())
+        {
+            return;
+        }
+
+        if (is_fullscreen)
+        {
+            const auto video_mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+            glfwWindowHint(GLFW_RED_BITS, video_mode->redBits);
+            glfwWindowHint(GLFW_GREEN_BITS, video_mode->greenBits);
+            glfwWindowHint(GLFW_BLUE_BITS, video_mode->blueBits);
+            glfwWindowHint(GLFW_REFRESH_RATE, video_mode->refreshRate);
+
+            old_window_size = get_window_size();
+
+            window_size.x = video_mode->width;
+            window_size.y = video_mode->height;
+        }
+        else
+        {
+            window_size = old_window_size;
+        }
+
+        auto new_window_ptr = glfwCreateWindow(window_size.x, window_size.y, "mandala", is_fullscreen ? glfwGetPrimaryMonitor() : nullptr, window_ptr);
+        glfwDestroyWindow(window_ptr);
+
+        window_ptr = new_window_ptr;
+
+        glfwMakeContextCurrent(window_ptr);
+
+        glfwSetKeyCallback(window_ptr, on_keyboard_key);
+        glfwSetCharCallback(window_ptr, on_keyboard_character);
+        glfwSetMouseButtonCallback(window_ptr, on_mouse_button);
+        glfwSetCursorPosCallback(window_ptr, on_mouse_move);
+        glfwSetScrollCallback(window_ptr, on_mouse_scroll);
+        glfwSetWindowSizeCallback(window_ptr, on_window_resize);
+        glfwSetWindowPosCallback(window_ptr, on_window_move);
+
+        on_window_resize(window_ptr, window_size.x, window_size.y);
+    }
 
     bool platform_win32_t::pop_input_event(input_event_t& input_event)
     {

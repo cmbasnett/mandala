@@ -46,7 +46,8 @@ namespace mandala
         //unparent
         parent = nullptr;
         
-        root = shared_from_this();
+        //uproot
+        root = nullptr;
 
         //mark as dirty
         dirty();
@@ -84,18 +85,10 @@ namespace mandala
         node->parent = shared_from_this();
 
         //set node's new root
-        node->root = get_root();
+        node->root = root ? root : shared_from_this();
 
         //mark as dirty
         dirty();
-    }
-
-    const boost::shared_ptr<gui_node_t>& gui_node_t::get_root() const
-    {
-        if (parent)
-        {
-            return parent->get_root();
-        }
     }
 
     void gui_node_t::clean()
@@ -110,7 +103,7 @@ namespace mandala
             {
                 if (node->has_parent())
                 {
-                    absolute_desired_size.x *= node->parent->bounds.size().x;
+                    absolute_desired_size.x *= node->parent->bounds.size().x - node->parent->padding.horizontal();
                 }
                 else
                 {
@@ -122,7 +115,7 @@ namespace mandala
             {
                 if (node->has_parent())
                 {
-                    absolute_desired_size.y *= node->parent->bounds.size().y;
+                    absolute_desired_size.y *= node->parent->bounds.size().y - node->parent->padding.vertical();
                 }
                 else
                 {
@@ -210,6 +203,11 @@ namespace mandala
             default:
                 node->bounds.min = vec2_t(0);
                 node->bounds.max = absolute_desired_size;
+
+                if (node->has_parent())
+                {
+                    node->bounds += vec2_t(node->parent->padding.left, node->parent->padding.bottom);
+                }
 
                 vec2_t anchor_location;
                 vec2_t anchor_translation;

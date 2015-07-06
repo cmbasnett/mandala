@@ -30,6 +30,10 @@ namespace mandala
 		virtual screen_size_type get_screen_size() const override;
         virtual void set_screen_size(const screen_size_type& screen_size) const override;
 
+        //fullscreen
+        virtual bool is_fullscreen() const override;
+        virtual void set_is_fullscreen(bool is_fullscreen) override;
+
 		//pop_input_event
 		virtual bool pop_input_event(input_event_t& input_event) override;
 
@@ -59,7 +63,9 @@ namespace mandala
 		virtual std::string get_clipboard_string() const override;
 		virtual void set_clipboard_string(const std::string& clipboard) const override;
 
+    private:
         GLFWwindow* window_ptr = nullptr;
+        window_size_type old_window_size;
 
 		platform_win32_t(const platform_win32_t&) = delete;
 		platform_win32_t& operator=(const platform_win32_t&) = delete;

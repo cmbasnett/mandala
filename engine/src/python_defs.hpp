@@ -647,6 +647,7 @@ BOOST_PYTHON_MODULE(mandala)
         .add_property("y", make_function(&gui_size_modes_t::get_y), &gui_size_modes_t::set_y);
 
     class_<gui_node_t, boost::shared_ptr<gui_node_t>, noncopyable>("GuiNode", init<>())
+        .add_property("root", make_function(&gui_node_t::get_root, return_value_policy<copy_const_reference>()))
         .add_property("parent", make_function(&gui_node_t::get_parent, return_value_policy<copy_const_reference>()))
         .add_property("dock_mode", &gui_node_t::get_dock_mode, &gui_node_t::set_dock_mode)
         .add_property("anchor_flags", &gui_node_t::get_anchor_flags, &gui_node_t::set_anchor_flags)

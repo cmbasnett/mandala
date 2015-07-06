@@ -91,6 +91,9 @@ namespace mandala
 		virtual window_size_type get_window_location() const = 0;
 		virtual void set_window_location(const window_size_type& window_location) const = 0;
 
+        virtual bool is_fullscreen() const = 0;
+        virtual void set_is_fullscreen(bool is_fullscreen) = 0;
+
         //pop_window_event
         virtual bool pop_window_event(window_event_t& window_event) = 0;
 

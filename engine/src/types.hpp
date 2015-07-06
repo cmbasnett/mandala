@@ -49,7 +49,7 @@ namespace mandala
     typedef vec4_t              rgba_type;
 
     template<typename T, typename U>
-    T unsafe_cast(U u)
+    inline T unsafe_cast(U u)
     {
         return (T)u;
     }

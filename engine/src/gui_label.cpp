@@ -247,8 +247,6 @@ namespace mandala
 
     bool gui_label_t::on_input_event(input_event_t& input_event)
     {
-        std::wstring_convert<std::codecvt_utf8<wchar_t>> wstring_convert;
-
         if (input_event.device_type == input_event_t::device_type_e::TOUCH &&
             input_event.touch.type == input_event_t::touch_t::type_e::PRESS)
         {
@@ -326,6 +324,8 @@ namespace mandala
                 if (input_event.keyboard.type == input_event_t::keyboard_t::type_e::KEY_PRESS ||
                     input_event.keyboard.type == input_event_t::keyboard_t::type_e::KEY_REPEAT)
                 {
+                    std::wstring_convert<std::codecvt_utf8<wchar_t>> wstring_convert;
+
                     switch (input_event.keyboard.key)
                     {
                     case input_event_t::keyboard_t::key_e::BACKSPACE:

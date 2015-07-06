@@ -156,6 +156,16 @@ namespace mandala
 
         while (platform.pop_input_event(input_event))
         {
+#if defined(MANDALA_PC)
+            if (input_event.device_type == input_event_t::device_type_e::KEYBOARD &&
+                input_event.keyboard.key == input_event_t::keyboard_t::key_e::F11 &&
+                input_event.keyboard.type == input_event_t::keyboard_t::type_e::KEY_PRESS)
+            {
+                platform.set_is_fullscreen(!platform.is_fullscreen());
+
+                continue;
+            }
+#endif
             //TODO: a bit ugly; if we add more things that evaluate the result
             //of on_input_event, we'll have a nested nightmare. is there a
             //better way to write this?
