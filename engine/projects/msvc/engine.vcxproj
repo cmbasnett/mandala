@@ -1,0 +1,386 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{FEE27E9B-79E9-4666-A0A4-88E089142538}</ProjectGuid>
+    <RootNamespace>mandala</RootNamespace>
+    <ProjectName>engine</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <CustomBuildBeforeTargets>Run</CustomBuildBeforeTargets>
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)..\..\bin\$(Configuration)_$(PlatformTarget)\</OutDir>
+    <IntDir>$(SolutionDir)\intermediate\$(Configuration)_$(PlatformTarget)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)\bin\$(Configuration)_$(PlatformTarget)\</OutDir>
+    <IntDir>$(SolutionDir)\intermediate\$(Configuration)_$(PlatformTarget)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <CustomBuildBeforeTargets>Run</CustomBuildBeforeTargets>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)\bin\$(Configuration)_$(PlatformTarget)\</OutDir>
+    <IntDir>$(SolutionDir)\intermediate\$(Configuration)_$(PlatformTarget)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)\bin\$(Configuration)_$(PlatformTarget)\</OutDir>
+    <IntDir>$(SolutionDir)\intermediate\$(Configuration)_$(PlatformTarget)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\ext\glm-0.9.4.4;$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)..\..\ext\glew-1.10.0\include;$(SolutionDir)..\..\ext\zlib-1.2.8\include;$(SolutionDir)..\..\ext\libpng-1.6.3;$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\include;C:\boost_1_55_0;$(SolutionDir)..\..\ext\Python27\include;$(SolutionDir)..\..\ext\cpp-netlib-0.11.1-final;$(SolutionDir)..\..\ext\openssl-0.9.8k_WIN32\include</AdditionalIncludeDirectories>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;_WIN32_WINNT=0x0501;DEBUG;_WINSOCK_DEPRECATED_NO_WARNINGS;BOOST_PYTHON_STATIC_LIB;GLFW_DLL;BOOST_NETWORK_ENABLE_HTTPS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <UndefinePreprocessorDefinitions>APIENTRY;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
+      <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\boost_1_55_0\stage\lib;$(SolutionDir)..\..\ext\glew-1.10.0\lib\Release\Win32;$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\lib-msvc110;$(SolutionDir)..\..\ext\zlib-1.2.8\lib;$(SolutionDir)..\..\ext\libpng-1.6.3\projects\vstudio\Release Library;$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\lib\Win32;$(SolutionDir)..\..\ext\Python27\libs</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3dll.lib;zlib.lib;libpng16.lib;libOpenAL32.dll.a</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\lib-msvc110\*.dll" "$(OutDir)" /y
+xcopy "$(SolutionDir)..\..\ext\glew-1.10.0\bin\Release\Win32\*.dll" "$(OutDir)" /y
+xcopy "$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\lib\Win32\*.dll" "$(OutDir)" /y</Command>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>python "$(SolutionDir)tools\deploy.py" "$(SolutionDir)testapp\resources_src"
+python "$(SolutionDir)tools\pack.py" "$(SolutionDir)testapp\resour../../src/.deploy" -o "$(SolutionDir)testapp\resources\testapp.pack"</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Deploy Resources</Message>
+      <TreatOutputAsContent>false</TreatOutputAsContent>
+    </CustomBuildStep>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)ext\glm-0.9.4.4;$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)ext\glew-1.10.0\include;$(SolutionDir)ext\zlib-1.2.8\include;$(SolutionDir)ext\libpng-1.6.3;$(SolutionDir)ext\openal-soft-1.15.1-bin\include;$(SolutionDir)ext\curl-7.35.0\include;C:\boost_1_55_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0501;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UndefinePreprocessorDefinitions>APIENTRY;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)ext\glew-1.10.0\lib\Release\Win32;$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\lib-msvc110;$(SolutionDir)ext\zlib-1.2.8\lib;$(SolutionDir)ext\libpng-1.6.3\projects\vstudio\Release Library;$(SolutionDir)ext\openal-soft-1.15.1-bin\lib\Win32;C:\boost_1_55_0\stage\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3dll.lib;zlib.lib;libpng16.lib;libOpenAL32.dll.a</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\lib-msvc110\*.dll" "$(OutDir)" /y
+xcopy "$(SolutionDir)ext\glew-1.10.0\bin\Release\Win32\*.dll" "$(OutDir)" /y
+xcopy "$(SolutionDir)ext\openal-soft-1.15.1-bin\lib\Win32\*.dll" "$(OutDir)" /y
+
+"$(SolutionDir)tools\pack\bin\pack.exe" "$(SolutionDir)resources\deploy\\" "$(OutDir)resources\armada.pack"
+
+echo $(PlatformTarget)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\ext\glm-0.9.4.4;$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)..\..\ext\glew-1.10.0\include;$(SolutionDir)..\..\ext\zlib-1.2.8\include;$(SolutionDir)..\..\ext\libpng-1.6.3;$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\include;C:\boost_1_55_0;$(SolutionDir)..\..\ext\Python27\include;$(SolutionDir)..\..\ext\cpp-netlib-0.11.1-final;$(SolutionDir)..\..\ext\openssl-0.9.8k_WIN32\include</AdditionalIncludeDirectories>
+      <UndefinePreprocessorDefinitions>APIENTRY;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;_WIN32_WINNT=0x0501;DEBUG;_WINSOCK_DEPRECATED_NO_WARNINGS;BOOST_PYTHON_STATIC_LIB;GLFW_DLL;BOOST_NETWORK_ENABLE_HTTPS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3dll.lib;zlib.lib;libpng16.lib;libOpenAL32.dll.a</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\boost_1_55_0\stage\lib;$(SolutionDir)..\..\ext\glew-1.10.0\lib\Release\Win32;$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\lib-msvc110;$(SolutionDir)..\..\ext\zlib-1.2.8\lib;$(SolutionDir)..\..\ext\libpng-1.6.3\projects\vstudio\Release Library;$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\lib\Win32;$(SolutionDir)..\..\ext\Python27\libs</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\lib-msvc110\*.dll" "$(OutDir)" /y
+xcopy "$(SolutionDir)..\..\ext\glew-1.10.0\bin\Release\Win32\*.dll" "$(OutDir)" /y
+xcopy "$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\lib\Win32\*.dll" "$(OutDir)" /y</Command>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>python "$(SolutionDir)tools\deploy.py" "$(SolutionDir)testapp\resources_src"
+python "$(SolutionDir)tools\pack.py" "$(SolutionDir)testapp\resour../../src/.deploy" -o "$(SolutionDir)testapp\resources\testapp.pack"</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Deploy Resources</Message>
+      <TreatOutputAsContent>false</TreatOutputAsContent>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)ext\glm-0.9.4.4;$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)ext\glew-1.10.0\include;$(SolutionDir)ext\zlib-1.2.8\include;$(SolutionDir)ext\libpng-1.6.3;$(SolutionDir)ext\openal-soft-1.15.1-bin\include;C:\boost_1_55_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <UndefinePreprocessorDefinitions>APIENTRY;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0501;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3dll.lib;zlib.lib;libpng16.lib;libOpenAL32.dll.a</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)ext\glew-1.10.0\lib\Release\Win32;$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\lib-msvc110;$(SolutionDir)ext\zlib-1.2.8\lib;$(SolutionDir)ext\libpng-1.6.3\projects\vstudio\Release Library;$(SolutionDir)ext\openal-soft-1.15.1-bin\lib\Win32;C:\boost_1_55_0\stage\lib</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\lib-msvc110\*.dll" "$(OutDir)" /y
+xcopy "$(SolutionDir)ext\glew-1.10.0\bin\Release\Win32\*.dll" "$(OutDir)" /y
+xcopy "$(SolutionDir)ext\openal-soft-1.15.1-bin\lib\Win32\*.dll" "$(OutDir)" /y
+
+"$(SolutionDir)tools\pack\bin\pack.exe" "$(SolutionDir)resources\deploy\\" "$(OutDir)resources\armada.pack"
+
+echo $(PlatformTarget)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="literals.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\aabb.hpp" />
+    <ClInclude Include="..\..\src\actor.hpp" />
+    <ClInclude Include="..\..\src\api.hpp" />
+    <ClInclude Include="..\..\src\app.hpp" />
+    <ClInclude Include="..\..\src\arcball_camera.hpp" />
+    <ClInclude Include="..\..\src\audio_context.hpp" />
+    <ClInclude Include="..\..\src\audio_defs.hpp" />
+    <ClInclude Include="..\..\src\audio_device.hpp" />
+    <ClInclude Include="..\..\src\audio_mgr.hpp" />
+    <ClInclude Include="..\..\src\audio_source.hpp" />
+    <ClInclude Include="..\..\src\basic_gpu_program.hpp" />
+    <ClInclude Include="..\..\src\bitmap_font.hpp" />
+    <ClInclude Include="..\..\src\bitmap_font_gpu_program.hpp" />
+    <ClInclude Include="..\..\src\blur_horizontal_gpu_program.hpp" />
+    <ClInclude Include="..\..\src\boost.hpp" />
+    <ClInclude Include="..\..\src\bsp.hpp" />
+    <ClInclude Include="..\..\src\bsp_entity.hpp" />
+    <ClInclude Include="..\..\src\bsp_gpu_program.hpp" />
+    <ClInclude Include="..\..\src\bsp_state.hpp" />
+    <ClInclude Include="..\..\src\camera.hpp" />
+    <ClInclude Include="..\..\src\circle.hpp" />
+    <ClInclude Include="..\..\src\collision.hpp" />
+    <ClInclude Include="..\..\src\color.hpp" />
+    <ClInclude Include="..\..\src\color_types.hpp" />
+    <ClInclude Include="..\..\src\exceptions.hpp" />
+    <ClInclude Include="..\..\src\factorial.hpp" />
+    <ClInclude Include="..\..\src\fnv.hpp" />
+    <ClInclude Include="..\..\src\frame_buffer.hpp" />
+    <ClInclude Include="..\..\src\frustum.hpp" />
+    <ClInclude Include="..\..\src\game.hpp" />
+    <ClInclude Include="..\..\src\glm.hpp" />
+    <ClInclude Include="..\..\src\gpu.hpp" />
+    <ClInclude Include="..\..\src\gpu_buffer.hpp" />
+    <ClInclude Include="..\..\src\gpu_buffer_mgr.hpp" />
+    <ClInclude Include="..\..\src\gpu_defs.hpp" />
+    <ClInclude Include="..\..\src\gpu_program.hpp" />
+    <ClInclude Include="..\..\src\gpu_program_mgr.hpp" />
+    <ClInclude Include="..\..\src\gpu_vertices.hpp" />
+    <ClInclude Include="..\..\src\gui_button.hpp" />
+    <ClInclude Include="..\..\src\gui_canvas.hpp" />
+    <ClInclude Include="..\..\src\gui_image.hpp" />
+    <ClInclude Include="..\..\src\gui_image_gpu_program.hpp" />
+    <ClInclude Include="..\..\src\gui_label.hpp" />
+    <ClInclude Include="..\..\src\gui_layout.hpp" />
+    <ClInclude Include="..\..\src\gui_node.hpp" />
+    <ClInclude Include="..\..\src\gui_scroll.hpp" />
+    <ClInclude Include="..\..\src\gui_size.hpp" />
+    <ClInclude Include="..\..\src\gui_state.hpp" />
+    <ClInclude Include="..\..\src\hash.hpp" />
+    <ClInclude Include="..\..\src\image.hpp" />
+    <ClInclude Include="..\..\src\index_buffer.hpp" />
+    <ClInclude Include="..\..\src\index_type.hpp" />
+    <ClInclude Include="..\..\src\input_event.hpp" />
+    <ClInclude Include="..\..\src\interpolation.hpp" />
+    <ClInclude Include="..\..\src\io.hpp" />
+    <ClInclude Include="..\..\src\is_pow2.hpp" />
+    <ClInclude Include="..\..\src\level.hpp" />
+    <ClInclude Include="..\..\src\line.hpp" />
+    <ClInclude Include="..\..\src\line_renderer.hpp" />
+    <ClInclude Include="..\..\src\literals.hpp" />
+    <ClInclude Include="..\..\src\material.hpp" />
+    <ClInclude Include="..\..\src\material_instance.hpp" />
+    <ClInclude Include="..\..\src\md5b.hpp" />
+    <ClInclude Include="..\..\src\model.hpp" />
+    <ClInclude Include="..\..\src\model_animation.hpp" />
+    <ClInclude Include="..\..\src\model_gpu_program.hpp" />
+    <ClInclude Include="..\..\src\model_instance.hpp" />
+    <ClInclude Include="..\..\src\model_skeleton.hpp" />
+    <ClInclude Include="..\..\src\ntree.hpp" />
+    <ClInclude Include="..\..\src\openal.hpp" />
+    <ClInclude Include="..\..\src\opengl.hpp" />
+    <ClInclude Include="..\..\src\pack.hpp" />
+    <ClInclude Include="..\..\src\pack_mgr.hpp" />
+    <ClInclude Include="..\..\src\padding.hpp" />
+    <ClInclude Include="..\..\src\plane.hpp" />
+    <ClInclude Include="..\..\src\platform.hpp" />
+    <ClInclude Include="..\..\src\platform_defs.hpp" />
+    <ClInclude Include="..\..\src\platform_win32.hpp" />
+    <ClInclude Include="..\..\src\pose.hpp" />
+    <ClInclude Include="..\..\src\pow.hpp" />
+    <ClInclude Include="..\..\src\python_defs.hpp" />
+    <ClInclude Include="..\..\src\python.hpp" />
+    <ClInclude Include="..\..\src\python_optional.hpp" />
+    <ClInclude Include="..\..\src\quake_camera.hpp" />
+    <ClInclude Include="..\..\src\range.hpp" />
+    <ClInclude Include="..\..\src\rectangle.hpp" />
+    <ClInclude Include="..\..\src\resource.hpp" />
+    <ClInclude Include="..\..\src\resource_mgr.hpp" />
+    <ClInclude Include="..\..\src\sound.hpp" />
+    <ClInclude Include="..\..\src\sphere.hpp" />
+    <ClInclude Include="..\..\src\sprite.hpp" />
+    <ClInclude Include="..\..\src\sprite_animation.hpp" />
+    <ClInclude Include="..\..\src\sprite_set.hpp" />
+    <ClInclude Include="..\..\src\state.hpp" />
+    <ClInclude Include="..\..\src\state_mgr.hpp" />
+    <ClInclude Include="..\..\src\stream_redirect.hpp" />
+    <ClInclude Include="..\..\src\string_archive.hpp" />
+    <ClInclude Include="..\..\src\string_mgr.hpp" />
+    <ClInclude Include="..\..\src\texture.hpp" />
+    <ClInclude Include="..\..\src\triangle.hpp" />
+    <ClInclude Include="..\..\src\types.hpp" />
+    <ClInclude Include="..\..\src\vertex_buffer.hpp" />
+    <ClInclude Include="..\..\src\window_event.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\app.cpp" />
+    <ClCompile Include="..\..\src\arcball_camera.cpp" />
+    <ClCompile Include="..\..\src\audio_context.cpp" />
+    <ClCompile Include="..\..\src\audio_device.cpp" />
+    <ClCompile Include="..\..\src\audio_mgr.cpp" />
+    <ClCompile Include="..\..\src\audio_source.cpp" />
+    <ClCompile Include="..\..\src\basic_gpu_program.cpp" />
+    <ClCompile Include="..\..\src\bitmap_font.cpp" />
+    <ClCompile Include="..\..\src\bitmap_font_gpu_program.cpp" />
+    <ClCompile Include="..\..\src\blur_horizontal_gpu_program.cpp" />
+    <ClCompile Include="..\..\src\bsp.cpp" />
+    <ClCompile Include="..\..\src\bsp_entity.cpp" />
+    <ClCompile Include="..\..\src\bsp_gpu_program.cpp" />
+    <ClCompile Include="..\..\src\bsp_state.cpp" />
+    <ClCompile Include="..\..\src\camera.cpp" />
+    <ClCompile Include="..\..\src\frame_buffer.cpp" />
+    <ClCompile Include="..\..\src\gpu.cpp" />
+    <ClCompile Include="..\..\src\gpu_buffer.cpp" />
+    <ClCompile Include="..\..\src\gpu_buffer_mgr.cpp" />
+    <ClCompile Include="..\..\src\gpu_program.cpp" />
+    <ClCompile Include="..\..\src\gpu_program_mgr.cpp" />
+    <ClCompile Include="..\..\src\gui_button.cpp" />
+    <ClCompile Include="..\..\src\gui_canvas.cpp" />
+    <ClCompile Include="..\..\src\gui_image.cpp" />
+    <ClCompile Include="..\..\src\gui_image_gpu_program.cpp" />
+    <ClCompile Include="..\..\src\gui_label.cpp" />
+    <ClCompile Include="..\..\src\gui_layout.cpp" />
+    <ClCompile Include="..\..\src\gui_node.cpp" />
+    <ClCompile Include="..\..\src\gui_scroll.cpp" />
+    <ClCompile Include="..\..\src\gui_state.cpp" />
+    <ClCompile Include="..\..\src\image.cpp" />
+    <ClCompile Include="..\..\src\level.cpp" />
+    <ClCompile Include="..\..\src\main.cpp" />
+    <ClCompile Include="..\..\src\material.cpp" />
+    <ClCompile Include="..\..\src\material_instance.cpp" />
+    <ClCompile Include="..\..\src\model.cpp" />
+    <ClCompile Include="..\..\src\model_animation.cpp" />
+    <ClCompile Include="..\..\src\model_gpu_program.cpp" />
+    <ClCompile Include="..\..\src\model_instance.cpp" />
+    <ClCompile Include="..\..\src\model_skeleton.cpp" />
+    <ClCompile Include="..\..\src\pack.cpp" />
+    <ClCompile Include="..\..\src\pack_mgr.cpp" />
+    <ClCompile Include="..\..\src\platform_win32.cpp" />
+    <ClCompile Include="..\..\src\python.cpp" />
+    <ClCompile Include="..\..\src\quake_camera.cpp" />
+    <ClCompile Include="..\..\src\resource.cpp" />
+    <ClCompile Include="..\..\src\resource_mgr.cpp" />
+    <ClCompile Include="..\..\src\sound.cpp" />
+    <ClCompile Include="..\..\src\sprite.cpp" />
+    <ClCompile Include="..\..\src\sprite_animation.cpp" />
+    <ClCompile Include="..\..\src\sprite_set.cpp" />
+    <ClCompile Include="..\..\src\state_mgr.cpp" />
+    <ClCompile Include="..\..\src\string_archive.cpp" />
+    <ClCompile Include="..\..\src\string_mgr.cpp" />
+    <ClCompile Include="..\..\src\texture.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

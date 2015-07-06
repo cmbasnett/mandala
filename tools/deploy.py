@@ -36,7 +36,7 @@ def deploy_model(p):
 	process = subprocess.call(['python', md5b_path, p, '-o', deploy_dir])
 
 def deploy_strings(p):
-	process = subprocess.call(['python', stringpack_path, '--input_file', p, '--output_dir', deploy_dir])
+	process = subprocess.call(['python', stringpack_path, p, deploy_dir])
 
 ignore_patterns = []
 

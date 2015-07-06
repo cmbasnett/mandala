@@ -1,0 +1,564 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\..\src\aabb.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\app.hpp">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\arcball_camera.hpp">
+      <Filter>actors\cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\audio_context.hpp">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\audio_defs.hpp">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\audio_device.hpp">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\audio_mgr.hpp">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\audio_source.hpp">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\basic_gpu_program.hpp">
+      <Filter>gpu\programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bitmap_font_gpu_program.hpp">
+      <Filter>gpu\programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\blur_horizontal_gpu_program.hpp">
+      <Filter>gpu\programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bsp_gpu_program.hpp">
+      <Filter>gpu\programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gui_image_gpu_program.hpp">
+      <Filter>gpu\programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\model_gpu_program.hpp">
+      <Filter>gpu\programs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\api.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bitmap_font.hpp">
+      <Filter>resources\bitmap_font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\boost.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bsp.hpp">
+      <Filter>resources\bsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bsp_entity.hpp">
+      <Filter>resources\bsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bsp_state.hpp">
+      <Filter>states</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\camera.hpp">
+      <Filter>actors\cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\circle.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\collision.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\color.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\factorial.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\frame_buffer.hpp">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu_buffer.hpp">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu_buffer_mgr.hpp">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu.hpp">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu_defs.hpp">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu_program.hpp">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu_program_mgr.hpp">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gpu_vertices.hpp">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gui_button.hpp">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gui_canvas.hpp">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gui_image.hpp">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gui_label.hpp">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gui_layout.hpp">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gui_node.hpp">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gui_scroll.hpp">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gui_state.hpp">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\color_types.hpp">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\material.hpp">
+      <Filter>resources\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\material_instance.hpp">
+      <Filter>resources\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\sprite.hpp">
+      <Filter>resources\sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\sprite_animation.hpp">
+      <Filter>resources\sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\sprite_set.hpp">
+      <Filter>resources\sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\is_pow2.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\literals.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\resource_mgr.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\resource.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\interpolation.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pow.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\string_archive.hpp">
+      <Filter>resources\strings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\string_mgr.hpp">
+      <Filter>resources\strings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\model.hpp">
+      <Filter>resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\model_animation.hpp">
+      <Filter>resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\model_instance.hpp">
+      <Filter>resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\model_skeleton.hpp">
+      <Filter>resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\image.hpp">
+      <Filter>resources\image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\sound.hpp">
+      <Filter>resources\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\texture.hpp">
+      <Filter>resources\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\opengl.hpp">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\openal.hpp">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pack.hpp">
+      <Filter>resources\packs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pack_mgr.hpp">
+      <Filter>resources\packs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\state.hpp">
+      <Filter>states</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\exceptions.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\fnv.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\frustum.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\hash.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\platform.hpp">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\platform_defs.hpp">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\platform_win32.hpp">
+      <Filter>platform\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\python_defs.hpp">
+      <Filter>python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\python_optional.hpp">
+      <Filter>python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\io.hpp">
+      <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\plane.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\pose.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\padding.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\line.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\quake_camera.hpp">
+      <Filter>actors\cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rectangle.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\sphere.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\range.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\triangle.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\input_event.hpp">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\window_event.hpp">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\vertex_buffer.hpp">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\index_buffer.hpp">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\index_type.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\glm.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\line_renderer.hpp">
+      <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\md5b.hpp">
+      <Filter>resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\state_mgr.hpp">
+      <Filter>states</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\types.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\python.hpp">
+      <Filter>python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\game.hpp">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\level.hpp">
+      <Filter>level</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\actor.hpp">
+      <Filter>actors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\stream_redirect.hpp">
+      <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ntree.hpp">
+      <Filter>level</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gui_size.hpp">
+      <Filter>gui</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\app.cpp">
+      <Filter>app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\arcball_camera.cpp">
+      <Filter>actors\cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\audio_context.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\audio_device.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\audio_mgr.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\audio_source.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\basic_gpu_program.cpp">
+      <Filter>gpu\programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bitmap_font_gpu_program.cpp">
+      <Filter>gpu\programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\blur_horizontal_gpu_program.cpp">
+      <Filter>gpu\programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bsp_gpu_program.cpp">
+      <Filter>gpu\programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gui_image_gpu_program.cpp">
+      <Filter>gpu\programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\model_gpu_program.cpp">
+      <Filter>gpu\programs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bitmap_font.cpp">
+      <Filter>resources\bitmap_font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bsp.cpp">
+      <Filter>resources\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bsp_entity.cpp">
+      <Filter>resources\bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bsp_state.cpp">
+      <Filter>states</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\camera.cpp">
+      <Filter>actors\cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\frame_buffer.cpp">
+      <Filter>gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu_buffer.cpp">
+      <Filter>gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu_buffer_mgr.cpp">
+      <Filter>gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu.cpp">
+      <Filter>gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu_program.cpp">
+      <Filter>gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu_program_mgr.cpp">
+      <Filter>gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gui_button.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gui_canvas.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gui_image.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gui_label.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gui_layout.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gui_node.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gui_scroll.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gui_state.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\material.cpp">
+      <Filter>resources\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\material_instance.cpp">
+      <Filter>resources\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sprite.cpp">
+      <Filter>resources\sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sprite_animation.cpp">
+      <Filter>resources\sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sprite_set.cpp">
+      <Filter>resources\sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\resource.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\resource_mgr.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\string_archive.cpp">
+      <Filter>resources\strings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\string_mgr.cpp">
+      <Filter>resources\strings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\model.cpp">
+      <Filter>resources\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\model_animation.cpp">
+      <Filter>resources\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\model_instance.cpp">
+      <Filter>resources\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\model_skeleton.cpp">
+      <Filter>resources\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\image.cpp">
+      <Filter>resources\image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sound.cpp">
+      <Filter>resources\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\texture.cpp">
+      <Filter>resources\texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pack.cpp">
+      <Filter>resources\packs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pack_mgr.cpp">
+      <Filter>resources\packs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\platform_win32.cpp">
+      <Filter>platform\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\quake_camera.cpp">
+      <Filter>actors\cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\state_mgr.cpp">
+      <Filter>states</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\python.cpp">
+      <Filter>python</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\main.cpp" />
+    <ClCompile Include="..\..\src\level.cpp">
+      <Filter>level</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="app">
+      <UniqueIdentifier>{58d05419-ee09-429e-9c91-18f40eaf1cd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{57b39ba2-1844-4414-a8f6-45581375ee49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{84748bc8-3ec3-4656-a43a-9c82f8da8903}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gpu">
+      <UniqueIdentifier>{fcc9abfa-e288-478a-974f-74d68eb048f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gpu\programs">
+      <UniqueIdentifier>{668639aa-ec9f-40a4-9016-25982341aad1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui">
+      <UniqueIdentifier>{1c2b7179-f16d-40ce-817d-65c4a687ce79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="io">
+      <UniqueIdentifier>{30f8257e-cfc0-472d-9b90-7750f64673fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{5355c3c6-a3d2-4bd4-97ae-5bd8c26804ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform">
+      <UniqueIdentifier>{bbb4097b-d933-4dc3-be89-d4c3a95ce7c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\win32">
+      <UniqueIdentifier>{8a4553c1-a88c-41f1-b640-3184f6bb24cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="python">
+      <UniqueIdentifier>{110fa48b-6117-4696-b8ee-ea9f832943c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{3c5d273c-ad79-45c7-af1d-4f870782d1d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\bsp">
+      <UniqueIdentifier>{21b0a62c-6884-4714-98f6-ec1cf8d86fa1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\bitmap_font">
+      <UniqueIdentifier>{e14915e5-fb06-4ae2-8bf0-816a9ef249ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\image">
+      <UniqueIdentifier>{e76e9958-510f-46f6-8954-a1b22f68cb47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\material">
+      <UniqueIdentifier>{e4317334-489d-48d3-b17b-f70e2bf56cf7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\model">
+      <UniqueIdentifier>{9dfe90f3-bfcd-40ee-beb9-2e6a6a151eaa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\texture">
+      <UniqueIdentifier>{239dcc50-2a4a-4231-9bc3-8d2c133d0ec8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\sound">
+      <UniqueIdentifier>{449a7afe-0d1d-4749-bd7c-b414a5c16e37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\sprite">
+      <UniqueIdentifier>{1ce79b84-b9e4-4689-a458-ac57e0a0a69d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="states">
+      <UniqueIdentifier>{4742fbc2-00d4-4394-8cc8-cb1a163b3c2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\strings">
+      <UniqueIdentifier>{3bef8f3c-bc1b-411b-bf5f-3a90528fba0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\packs">
+      <UniqueIdentifier>{a8e04df4-77fd-473d-976d-5cef064397cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="level">
+      <UniqueIdentifier>{8b27e0ed-8a61-45b2-8b57-7bbd4998b8f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="actors">
+      <UniqueIdentifier>{9405043a-219c-4989-9ee8-797a1fc2ee78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="actors\cameras">
+      <UniqueIdentifier>{b532d2e6-b0a2-4d46-ae45-576a997d8c63}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="literals.hpp">
+      <Filter>core</Filter>
+    </None>
+  </ItemGroup>
+</Project>

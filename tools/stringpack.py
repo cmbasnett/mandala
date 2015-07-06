@@ -20,8 +20,9 @@ def main():
 	languages = []
 
 	parser = argparse.ArgumentParser()
-	parser.add_argument('--input_file', dest='input_file', required=True)
-	parser.add_argument('--output_dir', dest='output_dir', required=True)
+	parser.add_argument('input_file', help='csv file to be parsed')
+	parser.add_argument('output_dir', help='output directory for .strings file')
+	parser.add_argument('-q', '--quiet', dest='quiet', required=False, action='store_true', help='no output')
 	args = parser.parse_args()
 
 	print args.input_file
