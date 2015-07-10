@@ -6,11 +6,11 @@ namespace mandala
 {
     gpu_buffer_t::gpu_buffer_t()
     {
-		id = gpu.create_buffer();
+        id = gpu.create_buffer();
     }
 
     gpu_buffer_t::~gpu_buffer_t()
     {
-		gpu.destroy_buffer(id);
+        gpu.destroy_buffer(id);
     }
 }

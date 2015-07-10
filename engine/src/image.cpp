@@ -7,43 +7,43 @@
 
 namespace mandala
 {
-	image_t::image_t(std::istream& istream)
-	{
+    image_t::image_t(std::istream& istream)
+    {
         //TODO: determine what the stream actually contains (don't assume PNG!)
-		auto png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+        auto png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 
-		if (png_ptr == nullptr)
-		{
-			throw std::exception();
-		}
+        if (png_ptr == nullptr)
+        {
+            throw std::exception();
+        }
 
         auto info_ptr = png_create_info_struct(png_ptr);
 
-		if (info_ptr == nullptr)
-		{
-			png_destroy_read_struct(&png_ptr, nullptr, nullptr);
+        if (info_ptr == nullptr)
+        {
+            png_destroy_read_struct(&png_ptr, nullptr, nullptr);
 
-			throw std::exception();
-		}
+            throw std::exception();
+        }
 
-		if (setjmp(png_jmpbuf(png_ptr)))
-		{
-			png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
+        if (setjmp(png_jmpbuf(png_ptr)))
+        {
+            png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
 
-			throw std::exception();
-		}
+            throw std::exception();
+        }
 
-		png_set_read_fn(png_ptr, static_cast<png_voidp>(&istream), [](png_structp png_ptr, png_bytep data, png_size_t length)
-		{
-			auto png_io_ptr = png_get_io_ptr(png_ptr);
+        png_set_read_fn(png_ptr, static_cast<png_voidp>(&istream), [](png_structp png_ptr, png_bytep data, png_size_t length)
+        {
+            auto png_io_ptr = png_get_io_ptr(png_ptr);
 
-			static_cast<std::istream*>(png_io_ptr)->read(reinterpret_cast<char*>(data), length);
-		});
+            static_cast<std::istream*>(png_io_ptr)->read(reinterpret_cast<char*>(data), length);
+        });
 
         png_uint_32 sig_read = 0;
 
-		png_set_sig_bytes(png_ptr, sig_read);
-		png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_PACKING | PNG_TRANSFORM_EXPAND, nullptr);
+        png_set_sig_bytes(png_ptr, sig_read);
+        png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_PACKING | PNG_TRANSFORM_EXPAND, nullptr);
 
         int png_color_type;
         png_int_32 interlace_method;
@@ -57,7 +57,7 @@ namespace mandala
             case PNG_COLOR_TYPE_GRAY:
                 return color_type_e::g;
             case PNG_COLOR_TYPE_RGB:
-				return color_type_e::rgb;
+                return color_type_e::rgb;
             case PNG_COLOR_TYPE_PALETTE:
                 return color_type_e::palette;
             case PNG_COLOR_TYPE_GA:
@@ -71,20 +71,20 @@ namespace mandala
 
         color_type = get_color_type(png_color_type);
 
-		auto row_bytes = png_get_rowbytes(png_ptr, info_ptr);
-		auto data_length = row_bytes * size.y;
+        auto row_bytes = png_get_rowbytes(png_ptr, info_ptr);
+        auto data_length = row_bytes * size.y;
 
-		data.reserve(data_length);
+        data.reserve(data_length);
 
-		auto row_pointers = png_get_rows(png_ptr, info_ptr);
+        auto row_pointers = png_get_rows(png_ptr, info_ptr);
 
-		for (uint32_t i = 0; i < size.y; ++i)
-		{
-			memcpy_s(data.data() + (row_bytes * (size.y - 1 - i)), row_bytes, row_pointers[i], row_bytes);
-		}
+        for (uint32_t i = 0; i < size.y; ++i)
+        {
+            memcpy_s(data.data() + (row_bytes * (size.y - 1 - i)), row_bytes, row_pointers[i], row_bytes);
+        }
 
-		png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
-	}
+        png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
+    }
 
     image_t::image_t(const size_type& size, bit_depth_type bit_depth, color_type_e color_type, const data_type::value_type* data_ptr, size_t data_size) :
         size(size),

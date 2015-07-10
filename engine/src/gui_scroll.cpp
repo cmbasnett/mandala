@@ -19,20 +19,20 @@ namespace mandala
         //'owning' touch events by id so that they get exclusive rights
         //to handle future touch events of the same id.
 
-		if (input_event.device_type == input_event_t::device_type_e::TOUCH)
-		{
+        if (input_event.device_type == input_event_t::device_type_e::TOUCH)
+        {
             //offset the touch location by the scroll location so that
             //touch locations are relative to the internal contents
             //of the scroll.
-			input_event.touch.location -= scroll_location;
-		}
+            input_event.touch.location -= scroll_location;
+        }
 
         auto base_result = gui_node_t::on_input_event(input_event);
-		
-		if (input_event.device_type == input_event_t::device_type_e::TOUCH)
-		{
+        
+        if (input_event.device_type == input_event_t::device_type_e::TOUCH)
+        {
             //undo the scroll offset.
-			input_event.touch.location += scroll_location;
+            input_event.touch.location += scroll_location;
         }
 
         if (base_result)
@@ -55,7 +55,7 @@ namespace mandala
             if (is_scrolling && touch_id == input_event.touch.id)
             {
                 is_scrolling = false;
-				touch_id = 0;
+                touch_id = 0;
                 return true;
             }
             break;
@@ -67,7 +67,7 @@ namespace mandala
                 return true;
             }
             break;
-		}
+        }
 
         return false;
     }

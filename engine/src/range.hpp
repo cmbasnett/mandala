@@ -2,9 +2,9 @@
 
 namespace mandala
 {
-	template<typename T>
-	struct range_
-	{
+    template<typename T>
+    struct range_
+    {
         typedef T value_type;
 
         range_() = default;
@@ -16,5 +16,5 @@ namespace mandala
 
         value_type min;
         value_type max;
-	};
+    };
 }

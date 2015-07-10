@@ -18,33 +18,33 @@
 
 namespace mandala
 {
-	struct texture_t;
+    struct texture_t;
 
-	struct bitmap_font_t : resource_t
-	{
+    struct bitmap_font_t : resource_t
+    {
         typedef std::wstring string_type;
         typedef string_type::value_type char_type;
-		typedef uint32_t character_id_type;
+        typedef uint32_t character_id_type;
 
-		struct character_t
-		{
-			character_id_type id = 0;
+        struct character_t
+        {
+            character_id_type id = 0;
             rectangle_u16_t rectangle;
             vec2_i16_t offset;
-			int16_t advance_x = 0;
-			uint8_t texture_index = 0;
-			uint8_t channel = 0;
-		};
+            int16_t advance_x = 0;
+            uint8_t texture_index = 0;
+            uint8_t channel = 0;
+        };
 
-		struct kerning_pair_t
-		{
+        struct kerning_pair_t
+        {
             character_id_type first = 0;
             character_id_type second = 0;
-			int16_t amount = 0;
-		};
+            int16_t amount = 0;
+        };
 
-		struct vertex_t
-		{
+        struct vertex_t
+        {
             typedef vec2_t location_type;
             typedef vec2_t texcoord_type;
 
@@ -61,10 +61,10 @@ namespace mandala
         typedef index_type<INDICES_MAX>::type index_type;
         typedef vertex_buffer_t<vertex_type> vertex_buffer_type;
         typedef index_buffer_t<index_type> index_buffer_type;
-		typedef std::wstring string_type;
-		typedef string_type::value_type char_type;
+        typedef std::wstring string_type;
+        typedef string_type::value_type char_type;
 
-		bitmap_font_t(std::istream& istream);
+        bitmap_font_t(std::istream& istream);
 
         void render_string(const string_type& string, mat4_t world_matrix, mat4_t view_projection_matrix, const rgba_type& base_color, std::stack<rgba_type>& color_stack, const std::vector<std::pair<size_t, rgba_type>>& color_pushes, const std::vector<size_t>& color_pop_indices) const;
         void get_string_pages(std::vector<uint8_t>& pages, const string_type& string) const;
@@ -95,14 +95,14 @@ namespace mandala
         const std::map<character_id_type, character_t>& get_characters() const { return characters; }
         const std::vector<boost::shared_ptr<texture_t>> get_page_textures() const { return page_textures; }
 
-	private:
+    private:
         int16_t size = 0;
         bool is_smooth = false;
         bool is_unicode = false;
         bool is_italic = false;
         bool is_bold = false;
         bool is_fixed_height = false;
-        uint8_t char_set = 0;	//TODO: represent with an enum?
+        uint8_t char_set = 0;    //TODO: represent with an enum?
         uint16_t stretch_height = 0;
         uint8_t antialiasing = 0;
         padding_u8_t padding;
@@ -129,7 +129,7 @@ namespace mandala
 
         int16_t get_kerning_amount(char_type lhs, char_type rhs) const;
 
-		bitmap_font_t(const bitmap_font_t&) = delete;
-		bitmap_font_t& operator=(const bitmap_font_t&) = delete;
-	};
+        bitmap_font_t(const bitmap_font_t&) = delete;
+        bitmap_font_t& operator=(const bitmap_font_t&) = delete;
+    };
 }

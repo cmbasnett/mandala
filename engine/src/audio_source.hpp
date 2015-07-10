@@ -12,8 +12,8 @@ namespace mandala
     struct sound_t;
 
     struct audio_source_t
-	{
-		typedef uint32_t id_type;
+    {
+        typedef uint32_t id_type;
 
         audio_source_t();
         ~audio_source_t();
@@ -37,6 +37,6 @@ namespace mandala
         audio_source_t(const audio_source_t&) = delete;
         audio_source_t& operator=(const audio_source_t&) = delete;
 
-		id_type id;
+        id_type id;
     };
 }

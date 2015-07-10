@@ -41,31 +41,31 @@ namespace mandala
         }
     }
 
-	void pack_mgr_t::unmount_all()
-	{
+    void pack_mgr_t::unmount_all()
+    {
         std::lock_guard<std::recursive_mutex> lock(mutex);
 
-		files.clear();
-		packs.clear();
-	}
+        files.clear();
+        packs.clear();
+    }
 
-	boost::shared_ptr<std::istream> pack_mgr_t::extract(const hash_t& hash)
-	{
+    boost::shared_ptr<std::istream> pack_mgr_t::extract(const hash_t& hash)
+    {
         std::lock_guard<std::recursive_mutex> lock(mutex);
 
-		auto files_itr = files.find(hash);
+        auto files_itr = files.find(hash);
 
-		if (files_itr == files.end())
-		{
+        if (files_itr == files.end())
+        {
             std::ostringstream ostringstream;
             ostringstream << "no such file " << hash;
 
             throw std::out_of_range(ostringstream.str().c_str());
-		}
+        }
 
-		const auto& file = files_itr->second;
-		const auto& pack = packs.at(file.pack_hash);
+        const auto& file = files_itr->second;
+        const auto& pack = packs.at(file.pack_hash);
 
-		return boost::make_shared<std::istrstream>(pack.mapped_file_source.data() + file.offset, file.length);
-	}
+        return boost::make_shared<std::istrstream>(pack.mapped_file_source.data() + file.offset, file.length);
+    }
 }

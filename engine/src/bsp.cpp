@@ -19,9 +19,9 @@
 namespace mandala
 {
     struct bsp_chunk_t
-	{
-		enum class type_e : uint8_t
-		{
+    {
+        enum class type_e : uint8_t
+        {
             ENTITIES,
             PLANES,
             TEXTURES,
@@ -66,7 +66,7 @@ namespace mandala
         //chunks
         std::vector<bsp_chunk_t> chunks;
 
-		chunks.resize(static_cast<size_t>(bsp_chunk_t::type_e::COUNT));
+        chunks.resize(static_cast<size_t>(bsp_chunk_t::type_e::COUNT));
 
         for (auto& chunk : chunks)
         {
@@ -75,7 +75,7 @@ namespace mandala
         }
 
         //planes
-		const auto& plane_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::PLANES)];
+        const auto& plane_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::PLANES)];
         istream.seekg(plane_chunk.offset, std::ios_base::beg);
 
         auto plane_count = plane_chunk.length / sizeof(plane_t);
@@ -93,7 +93,7 @@ namespace mandala
         }
 
         //vertex_locations
-		const auto& vertices_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::VERTICES)];
+        const auto& vertices_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::VERTICES)];
         istream.seekg(vertices_chunk.offset, std::ios_base::beg);
 
         std::vector<vec3_t> vertex_locations;
@@ -111,7 +111,7 @@ namespace mandala
         }
 
         //edges
-		const auto& edges_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::EDGES)];
+        const auto& edges_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::EDGES)];
         istream.seekg(edges_chunk.offset, std::ios_base::beg);
 
         auto edge_count = edges_chunk.length / sizeof(edge_t);
@@ -124,7 +124,7 @@ namespace mandala
         }
 
         //surface_edges
-		const auto& surface_edges_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::SURFACE_EDGES)];
+        const auto& surface_edges_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::SURFACE_EDGES)];
         istream.seekg(surface_edges_chunk.offset, std::ios_base::beg);
 
         auto surface_edge_count = surface_edges_chunk.length / sizeof(int32_t);
@@ -136,7 +136,7 @@ namespace mandala
         }
 
         //faces
-		const auto& faces_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::FACES)];
+        const auto& faces_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::FACES)];
         istream.seekg(faces_chunk.offset, std::ios_base::beg);
 
         auto face_count = faces_chunk.length / sizeof(face_t);
@@ -157,7 +157,7 @@ namespace mandala
         }
 
         //nodes
-		const auto& nodes_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::NODES)];
+        const auto& nodes_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::NODES)];
         istream.seekg(nodes_chunk.offset, std::ios_base::beg);
 
         auto node_count = nodes_chunk.length / sizeof(node_t);
@@ -182,7 +182,7 @@ namespace mandala
         }
 
         //leaves
-		const auto& leaves_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::LEAVES)];
+        const auto& leaves_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::LEAVES)];
         istream.seekg(leaves_chunk.offset, std::ios_base::beg);
 
         auto leaf_count = leaves_chunk.length / sizeof(leaf_t);
@@ -210,7 +210,7 @@ namespace mandala
         }
 
         //mark_surfaces
-		const auto& mark_surfaces_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::MARK_SURFACES)];
+        const auto& mark_surfaces_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::MARK_SURFACES)];
         istream.seekg(mark_surfaces_chunk.offset, std::ios_base::beg);
 
         auto mark_surface_count = mark_surfaces_chunk.length / sizeof(uint16_t);
@@ -222,7 +222,7 @@ namespace mandala
         }
 
         //clip_nodes
-		const auto& clip_nodes_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::CLIP_NODES)];
+        const auto& clip_nodes_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::CLIP_NODES)];
         istream.seekg(clip_nodes_chunk.offset, std::ios_base::beg);
 
         auto clip_node_count = clip_nodes_chunk.length / sizeof(clip_node_t);
@@ -236,7 +236,7 @@ namespace mandala
         }
 
         //models
-		const auto& models_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::MODELS)];
+        const auto& models_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::MODELS)];
         istream.seekg(models_chunk.offset, std::ios_base::beg);
 
         auto model_count = models_chunk.length / sizeof(model_t);
@@ -267,7 +267,7 @@ namespace mandala
         }
 
         //visibility
-		const auto& visibility_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::VISIBLIITY)];
+        const auto& visibility_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::VISIBLIITY)];
         istream.seekg(visibility_chunk.offset, std::ios_base::beg);
 
         if (visibility_chunk.length > 0)
@@ -338,7 +338,7 @@ namespace mandala
         }
 
         //textures
-		const auto& textures_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::TEXTURES)];
+        const auto& textures_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::TEXTURES)];
         istream.seekg(textures_chunk.offset, std::ios_base::beg);
 
         uint32_t texture_count;
@@ -389,7 +389,7 @@ namespace mandala
         }
 
         //texture_info
-		const auto& texture_info_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::TEXTURE_INFO)];
+        const auto& texture_info_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::TEXTURE_INFO)];
         istream.seekg(texture_info_chunk.offset, std::ios_base::beg);
 
         auto texture_info_count = texture_info_chunk.length / sizeof(texture_info_t);
@@ -460,7 +460,7 @@ namespace mandala
         }
 
         //lighting
-		const auto& lighting_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::LIGHTING)];
+        const auto& lighting_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::LIGHTING)];
         istream.seekg(lighting_chunk.offset, std::ios_base::beg);
 
         std::vector<uint8_t> lighting_data;
@@ -557,7 +557,7 @@ namespace mandala
         }
 
         //entities
-		const auto& entities_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::ENTITIES)];
+        const auto& entities_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::ENTITIES)];
         istream.seekg(entities_chunk.offset, std::ios_base::beg);
 
         std::vector<char> entities_buffer;
@@ -618,20 +618,20 @@ namespace mandala
 
         gpu.culling.push_state(culling_state);
 
-		//blend
+        //blend
         auto blend_state = gpu.blend.get_state();
-		blend_state.is_enabled = false;
+        blend_state.is_enabled = false;
 
         gpu.blend.push_state(blend_state);
 
-		static const auto DIFFUSE_TEXTURE_INDEX = 0;
-		static const auto LIGHTMAP_TEXTURE_INDEX = 1;
+        static const auto DIFFUSE_TEXTURE_INDEX = 0;
+        static const auto LIGHTMAP_TEXTURE_INDEX = 1;
 
         //bind buffers
         gpu.buffers.push(gpu_t::buffer_target_e::ARRAY, vertex_buffer);
-		gpu.buffers.push(gpu_t::buffer_target_e::ELEMENT_ARRAY, index_buffer);
+        gpu.buffers.push(gpu_t::buffer_target_e::ELEMENT_ARRAY, index_buffer);
 
-		//bind program
+        //bind program
         const auto gpu_program = gpu_programs.get<bsp_gpu_program_t>();
 
         gpu.programs.push(gpu_program);
@@ -684,7 +684,7 @@ namespace mandala
             ++render_stats.leaf_count;
         };
 
-		std::function<void(node_index_type, node_index_type)> render_node = [&](node_index_type node_index, node_index_type camera_leaf_index)
+        std::function<void(node_index_type, node_index_type)> render_node = [&](node_index_type node_index, node_index_type camera_leaf_index)
         {
             if (node_index < 0)
             {
@@ -708,8 +708,8 @@ namespace mandala
             }
 
             const auto& node = nodes[node_index];
-			const auto& plane = planes[node.plane_index];
-			float32_t distance = 0;
+            const auto& plane = planes[node.plane_index];
+            float32_t distance = 0;
 
             switch (plane.type)
             {
@@ -728,19 +728,19 @@ namespace mandala
 
             if (distance > 0)
             {
-				render_node(node.child_indices[1], camera_leaf_index);
-				render_node(node.child_indices[0], camera_leaf_index);
+                render_node(node.child_indices[1], camera_leaf_index);
+                render_node(node.child_indices[0], camera_leaf_index);
             }
             else
             {
-				render_node(node.child_indices[0], camera_leaf_index);
-				render_node(node.child_indices[1], camera_leaf_index);
+                render_node(node.child_indices[0], camera_leaf_index);
+                render_node(node.child_indices[1], camera_leaf_index);
             }
         };
 
         auto render_brush_entity = [&](int32_t entity_index)
         {
-			return;
+            return;
 
             const auto& entity = entities[entity_index];
             const auto model_index = boost::lexical_cast<int32_t>(entity.get("model").substr(1));
@@ -779,27 +779,27 @@ namespace mandala
                 origin.x = boost::lexical_cast<float32_t>(tokens[0]);
                 origin.y = boost::lexical_cast<float32_t>(tokens[2]);
                 origin.z = -boost::lexical_cast<float32_t>(tokens[1]);
-			}
+            }
 
-			//color
-			vec4_t color(1.0f);
+            //color
+            vec4_t color(1.0f);
 
-			auto color_optional = entity.get_optional("rendercolor");
+            auto color_optional = entity.get_optional("rendercolor");
 
-			if (color_optional)
-			{
-			    std::vector<std::string> tokens;
-			    boost::algorithm::split(tokens, color_optional.get(), boost::is_any_of(" "), boost::algorithm::token_compress_on);
+            if (color_optional)
+            {
+                std::vector<std::string> tokens;
+                boost::algorithm::split(tokens, color_optional.get(), boost::is_any_of(" "), boost::algorithm::token_compress_on);
 
-			    color.r = boost::lexical_cast<float32_t>(tokens[0]) / 255.0f;
-			    color.g = boost::lexical_cast<float32_t>(tokens[1]) / 255.0f;
-			    color.b = boost::lexical_cast<float32_t>(tokens[2]) / 255.0f;
-			}
+                color.r = boost::lexical_cast<float32_t>(tokens[0]) / 255.0f;
+                color.g = boost::lexical_cast<float32_t>(tokens[1]) / 255.0f;
+                color.b = boost::lexical_cast<float32_t>(tokens[2]) / 255.0f;
+            }
 
-			auto blend_state = gpu.blend.get_state();
-			auto depth_state = gpu.depth.get_state();
+            auto blend_state = gpu.blend.get_state();
+            auto depth_state = gpu.depth.get_state();
 
-			depth_state.should_test = true;
+            depth_state.should_test = true;
 
             const auto gpu_program = gpu_programs.get<bsp_gpu_program_t>();
 
@@ -807,27 +807,27 @@ namespace mandala
             {
             case render_mode_e::TEXTURE:
                 gpu.set_uniform("alpha", 0.0f);
-				blend_state.is_enabled = true;
-				blend_state.src_factor = gpu_t::blend_factor_e::SRC_ALPHA;
-				blend_state.dst_factor = gpu_t::blend_factor_e::ONE;
+                blend_state.is_enabled = true;
+                blend_state.src_factor = gpu_t::blend_factor_e::SRC_ALPHA;
+                blend_state.dst_factor = gpu_t::blend_factor_e::ONE;
                 break;
             case render_mode_e::SOLID:
                 gpu.set_uniform("should_test_alpha", 1);
                 break;
             case render_mode_e::ADDITIVE:
                 gpu.set_uniform("alpha", alpha);
-				blend_state.is_enabled = true;
-				blend_state.src_factor = gpu_t::blend_factor_e::ONE;
-				blend_state.dst_factor = gpu_t::blend_factor_e::ONE;
-				depth_state.should_write_mask = false;
+                blend_state.is_enabled = true;
+                blend_state.src_factor = gpu_t::blend_factor_e::ONE;
+                blend_state.dst_factor = gpu_t::blend_factor_e::ONE;
+                depth_state.should_write_mask = false;
                 break;
             default:
-				blend_state.is_enabled = false;
-				depth_state.should_write_mask = true;
+                blend_state.is_enabled = false;
+                depth_state.should_write_mask = true;
                 break;
             }
 
-			gpu.blend.push_state(blend_state);
+            gpu.blend.push_state(blend_state);
             gpu.depth.push_state(depth_state);
 
             auto world_matrix = glm::translate(model.origin);
@@ -850,15 +850,15 @@ namespace mandala
                 break;
             }
 
-			gpu.depth.pop_state();
+            gpu.depth.pop_state();
             gpu.blend.pop_state();
         };
 
         render_stats.reset();
 
-		//depth
+        //depth
         auto depth_state = gpu.depth.get_state();
-		depth_state.should_test = true;
+        depth_state.should_test = true;
 
         gpu.depth.push_state(depth_state);
 
@@ -869,9 +869,9 @@ namespace mandala
         for (auto brush_entity_index : brush_entity_indices)
         {
             render_brush_entity(brush_entity_index);
-		}
+        }
 
-		gpu.programs.pop();
+        gpu.programs.pop();
 
         gpu.buffers.pop(gpu_t::buffer_target_e::ELEMENT_ARRAY);
         gpu.buffers.pop(gpu_t::buffer_target_e::ARRAY);
@@ -905,136 +905,136 @@ namespace mandala
 
     //bsp_t::trace_result_t bsp_t::trace(const trace_args_t& trace_args) const
     //{
-    //	trace_result_t trace_result;
+    //    trace_result_t trace_result;
 
-    //	auto hull_point_contents = [&](size_t node_index, vec3_t point)
-    //	{
-    //		float32_t d = 0;
+    //    auto hull_point_contents = [&](size_t node_index, vec3_t point)
+    //    {
+    //        float32_t d = 0;
 
-    //		while (node_index >= 0)
-    //		{
-    //			const auto& node = clip_nodes[node_index];
-    //			const auto& plane = planes[node.plane_index];
+    //        while (node_index >= 0)
+    //        {
+    //            const auto& node = clip_nodes[node_index];
+    //            const auto& plane = planes[node.plane_index];
 
-    //			d = glm::dot(plane.plane.normal, point) - plane.plane.distance;
-    //			
-    //			if (d < 0)
-    //			{
-    //				node_index = node.children[1];
-    //			}
-    //			else
-    //			{
-    //				node_index = node.children[0];
-    //			}
-    //		}
-    //	};
+    //            d = glm::dot(plane.plane.normal, point) - plane.plane.distance;
+    //            
+    //            if (d < 0)
+    //            {
+    //                node_index = node.children[1];
+    //            }
+    //            else
+    //            {
+    //                node_index = node.children[0];
+    //            }
+    //        }
+    //    };
 
-    //	std::function<bool(size_t, float, float, vec3_t, vec3_t)> recursive_hull_check = [&](size_t node_index, float p1, float p2, vec3_t start, vec3_t end)
-    //	{
-    //		if (node_index < 0)
-    //		{
-    //			auto leaf_index = ~node_index;
+    //    std::function<bool(size_t, float, float, vec3_t, vec3_t)> recursive_hull_check = [&](size_t node_index, float p1, float p2, vec3_t start, vec3_t end)
+    //    {
+    //        if (node_index < 0)
+    //        {
+    //            auto leaf_index = ~node_index;
 
-    //			const auto& node = leafs[leaf_index];
+    //            const auto& node = leafs[leaf_index];
 
-    //			if (node.content_type != content_type_e::solid)
-    //			{
-    //				trace_result.is_all_solid = false;
-    //			}
+    //            if (node.content_type != content_type_e::solid)
+    //            {
+    //                trace_result.is_all_solid = false;
+    //            }
 
-    //			return true;
-    //		}
+    //            return true;
+    //        }
 
-    //		const auto& node = nodes[node_index];
-    //		const auto& plane = planes[node.plane_index];
+    //        const auto& node = nodes[node_index];
+    //        const auto& plane = planes[node.plane_index];
 
-    //		auto t1 = glm::dot(plane.plane.normal, start) - plane.plane.distance;
-    //		auto t2 = glm::dot(plane.plane.normal, end) - plane.plane.distance;
+    //        auto t1 = glm::dot(plane.plane.normal, start) - plane.plane.distance;
+    //        auto t2 = glm::dot(plane.plane.normal, end) - plane.plane.distance;
 
-    //		if (t1 >= 0 && t2 >= 0)
-    //		{
-    //			return recursive_hull_check(node.children[0], p1, p2, start, end);
-    //		}
+    //        if (t1 >= 0 && t2 >= 0)
+    //        {
+    //            return recursive_hull_check(node.children[0], p1, p2, start, end);
+    //        }
 
-    //		if (t1 < 0 && t2 < 0)
-    //		{
-    //			return recursive_hull_check(node.children[1], p1, p2, start, end);
-    //		}
+    //        if (t1 < 0 && t2 < 0)
+    //        {
+    //            return recursive_hull_check(node.children[1], p1, p2, start, end);
+    //        }
 
-    //		float32_t frac;
+    //        float32_t frac;
 
-    //		if (t1 < 0)
-    //		{
-    //			frac = (t1 + glm::epsilon<float32_t>()) / (t1 - t2);
-    //		}
-    //		else
-    //		{
-    //			frac = (t1 - glm::epsilon<float32_t>()) / (t1 - t2);
-    //		}
+    //        if (t1 < 0)
+    //        {
+    //            frac = (t1 + glm::epsilon<float32_t>()) / (t1 - t2);
+    //        }
+    //        else
+    //        {
+    //            frac = (t1 - glm::epsilon<float32_t>()) / (t1 - t2);
+    //        }
 
-    //		frac = glm::clamp(frac, 0.0f, 1.0f);
+    //        frac = glm::clamp(frac, 0.0f, 1.0f);
 
-    //		auto midf = p1 + (p2 - p1) * frac;
-    //		auto mid = start + (end - start) * frac;
+    //        auto midf = p1 + (p2 - p1) * frac;
+    //        auto mid = start + (end - start) * frac;
 
-    //		auto child_index = t1 < 0 ? 1 : 0;
+    //        auto child_index = t1 < 0 ? 1 : 0;
 
-    //		if (!recursive_hull_check(node.children[child_index], p1, midf, mid, end))
-    //		{
-    //			return false;
-    //		}
+    //        if (!recursive_hull_check(node.children[child_index], p1, midf, mid, end))
+    //        {
+    //            return false;
+    //        }
 
-    //		if (hull_point_contents(node.children[child_index ^ 1], mid) != content_type_e::solid)
-    //		{
-    //			return recursive_hull_check(node.children[child_index ^ 1], midf, p2, mid, end);
-    //		}
+    //        if (hull_point_contents(node.children[child_index ^ 1], mid) != content_type_e::solid)
+    //        {
+    //            return recursive_hull_check(node.children[child_index ^ 1], midf, p2, mid, end);
+    //        }
 
-    //		if (trace_result.is_all_solid)
-    //		{
-    //			return false;
-    //		}
+    //        if (trace_result.is_all_solid)
+    //        {
+    //            return false;
+    //        }
 
-    //		if (child_index == 0)
-    //		{
-    //			trace_result.plane = plane.plane;
-    //		}
-    //		else
-    //		{
-    //			trace_result.plane = -plane.plane;
-    //		}
+    //        if (child_index == 0)
+    //        {
+    //            trace_result.plane = plane.plane;
+    //        }
+    //        else
+    //        {
+    //            trace_result.plane = -plane.plane;
+    //        }
 
-    //		while (hull_point_contents(models.front().head_nodes[0], mid) == content_type_e::solid)
-    //		{
-    //			frac -= 0.1f;
+    //        while (hull_point_contents(models.front().head_nodes[0], mid) == content_type_e::solid)
+    //        {
+    //            frac -= 0.1f;
 
-    //			if (frac < 0)
-    //			{
-    //				trace_result.ratio = midf;
+    //            if (frac < 0)
+    //            {
+    //                trace_result.ratio = midf;
 
-    //				return false;
-    //			}
+    //                return false;
+    //            }
 
-    //			midf = p1 + (p2 - p1) * frac;
-    //			mid = p1 + (end - start) * frac;
-    //		}
+    //            midf = p1 + (p2 - p1) * frac;
+    //            mid = p1 + (end - start) * frac;
+    //        }
 
-    //		trace_result.ratio = midf;
+    //        trace_result.ratio = midf;
 
-    //		return false;
-    //	};
+    //        return false;
+    //    };
 
-    //	recursive_hull_check(models.front().head_nodes[0], 0, 1, trace_args.line.start, trace_args.line.end);
+    //    recursive_hull_check(models.front().head_nodes[0], 0, 1, trace_args.line.start, trace_args.line.end);
 
-    //	if (trace_result.ratio == 1.0f)
-    //	{
-    //		trace_result.did_hit = false;
-    //	}
-    //	else
-    //	{
-    //		trace_result.hit_position = trace_args.line.start + (trace_args.line.end - trace_args.line.start) * trace_result.ratio;
-    //		trace_result.hit_normal = trace_result.
-    //	}
+    //    if (trace_result.ratio == 1.0f)
+    //    {
+    //        trace_result.did_hit = false;
+    //    }
+    //    else
+    //    {
+    //        trace_result.hit_position = trace_args.line.start + (trace_args.line.end - trace_args.line.start) * trace_result.ratio;
+    //        trace_result.hit_normal = trace_result.
+    //    }
 
-    //	return result;
+    //    return result;
     //}
 }

@@ -43,17 +43,17 @@ namespace mandala
         {
             model->play(hash_t("boblampclean.md5a"));
 
-			camera.speed_max = 512;
-			camera.far = 8192;
+            camera.speed_max = 512;
+            camera.far = 8192;
 
-			bsp_image = boost::make_shared<gui_image_t>();
-			bsp_image->set_dock_mode(gui_dock_mode_e::FILL);
+            bsp_image = boost::make_shared<gui_image_t>();
+            bsp_image->set_dock_mode(gui_dock_mode_e::FILL);
 
             bsp_canvas = boost::make_shared<gui_canvas_t>();
             bsp_canvas->set_dock_mode(gui_dock_mode_e::FILL);
             bsp_canvas->adopt(bsp_image);
 
-			get_layout()->adopt(bsp_canvas);
+            get_layout()->adopt(bsp_canvas);
         }
 
         void bsp_state_t::tick(float32_t dt)
@@ -72,8 +72,8 @@ namespace mandala
 
         void bsp_state_t::render()
         {
-			if (states.is_state_ticking(shared_from_this()))
-			{
+            if (states.is_state_ticking(shared_from_this()))
+            {
                 gpu_viewport_type viewport;
                 viewport.x = 0;
                 viewport.y = 0;
@@ -89,15 +89,15 @@ namespace mandala
                 bsp->render(camera);
                 model->render(camera, vec3_t(0));
 
-				gpu.frame_buffers.pop();
-				gpu.viewports.pop();
-			}
+                gpu.frame_buffers.pop();
+                gpu.viewports.pop();
+            }
 
-			gui_state_t::render();
+            gui_state_t::render();
         }
 
         bool bsp_state_t::on_input_event(input_event_t& input_event)
-		{
+        {
 #if defined(MANDALA_PC)
             if (input_event.device_type == input_event_t::device_type_e::KEYBOARD &&
                 input_event.keyboard.key == input_event_t::keyboard_t::key_e::ESCAPE &&
@@ -131,64 +131,64 @@ namespace mandala
             }
 
 #if defined(MANDALA_PC)
-			if (input_event.device_type == input_event_t::device_type_e::TOUCH)
-			{
-				if (input_event.touch.button == input_event_t::touch_t::button_e::RIGHT)
-				{
-					if (input_event.touch.type == input_event_t::touch_t::type_e::PRESS)
-					{
+            if (input_event.device_type == input_event_t::device_type_e::TOUCH)
+            {
+                if (input_event.touch.button == input_event_t::touch_t::button_e::RIGHT)
+                {
+                    if (input_event.touch.type == input_event_t::touch_t::type_e::PRESS)
+                    {
                         camera.fov /= 2;
                         camera.sensitivity /= 2;
 
                         return true;
-					}
-					else if (input_event.touch.type == input_event_t::touch_t::type_e::RELEASE)
-					{
+                    }
+                    else if (input_event.touch.type == input_event_t::touch_t::type_e::RELEASE)
+                    {
                         camera.fov *= 2;;
                         camera.sensitivity *= 2;
 
                         return true;
-					}
-				}
-				else if (input_event.touch.type == input_event_t::touch_t::type_e::SCROLL)
-				{
-					if (input_event.touch.location_delta.y > 0)
-					{
+                    }
+                }
+                else if (input_event.touch.type == input_event_t::touch_t::type_e::SCROLL)
+                {
+                    if (input_event.touch.location_delta.y > 0)
+                    {
                         bsp->render_settings.lightmap_gamma += 0.1f;
 
                         return true;
-					}
-					else
-					{
+                    }
+                    else
+                    {
                         bsp->render_settings.lightmap_gamma -= 0.1f;
 
                         return true;
-					}
-				}
-				else if (input_event.touch.button == input_event_t::touch_t::button_e::LEFT &&
-					input_event.touch.type == input_event_t::touch_t::type_e::PRESS)
-				{
-					std::uniform_real_distribution<float32_t> pitch_target_delta_distribution(1.0f, 2.0f);
-					std::uniform_real_distribution<float32_t> yaw_target_delta_distribution(-0.5f, 0.5f);
+                    }
+                }
+                else if (input_event.touch.button == input_event_t::touch_t::button_e::LEFT &&
+                    input_event.touch.type == input_event_t::touch_t::type_e::PRESS)
+                {
+                    std::uniform_real_distribution<float32_t> pitch_target_delta_distribution(1.0f, 2.0f);
+                    std::uniform_real_distribution<float32_t> yaw_target_delta_distribution(-0.5f, 0.5f);
 
-					auto pitch_target_delta = pitch_target_delta_distribution(mt19937);
-					auto yaw_target_delta = yaw_target_delta_distribution(mt19937);
+                    auto pitch_target_delta = pitch_target_delta_distribution(mt19937);
+                    auto yaw_target_delta = yaw_target_delta_distribution(mt19937);
 
-					camera.pitch_target += pitch_target_delta;
-					camera.yaw_target += yaw_target_delta;
+                    camera.pitch_target += pitch_target_delta;
+                    camera.yaw_target += yaw_target_delta;
 
                     const auto& sound = resources.get<sound_t>(hash_t("garand_shoot.wav"));
 
                     auto source = boost::make_shared<audio_source_t>();
                     source->set_location(camera.pose.location);
-					source->set_max_distance(500.0f);
-					source->set_reference_distance(250.0f);
-					source->queue_sound(sound);
-					source->play();
+                    source->set_max_distance(500.0f);
+                    source->set_reference_distance(250.0f);
+                    source->queue_sound(sound);
+                    source->play();
 
                     return true;
-				}
-			}
+                }
+            }
 #endif
             
             return false;
@@ -196,7 +196,7 @@ namespace mandala
 
         void bsp_state_t::on_stop_input()
         {
-			camera.local_velocity_target = vec3_t(0);	//TODO: hide local_velocity from public access
+            camera.local_velocity_target = vec3_t(0);    //TODO: hide local_velocity from public access
 
             platform.is_cursor_centered = false;
 

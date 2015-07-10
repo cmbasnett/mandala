@@ -73,34 +73,34 @@ namespace mandala
         sphere.radius = glm::length(aabb.extents());
     }
 
-	void model_instance_t::render(const camera_t& camera, const vec3_t& light_location) const
-	{
-		if (model == nullptr)
-		{
-			throw std::exception();
-		}
+    void model_instance_t::render(const camera_t& camera, const vec3_t& light_location) const
+    {
+        if (model == nullptr)
+        {
+            throw std::exception();
+        }
 
         if (intersects(camera.get_frustum(), sphere) == intersect_type_e::DISJOINT ||
             intersects(camera.get_frustum(), aabb) == intersect_type_e::DISJOINT)
-		{
-			//skeleton aabb does not intersect camera frustum
-			return;
-		}
+        {
+            //skeleton aabb does not intersect camera frustum
+            return;
+        }
 
         auto view_projection_matrix = camera.get_projection_matrix() * camera.get_view_matrix();
 
-		model->render(camera.pose.location, pose.to_matrix(), view_projection_matrix, bone_matrices, light_location);
+        model->render(camera.pose.location, pose.to_matrix(), view_projection_matrix, bone_matrices, light_location);
 
 #if defined (DEBUG)
-        render_aabb(pose.to_matrix(), view_projection_matrix, skeleton.aabb);
-        render_aabb(mat4_t(), view_projection_matrix, aabb);
+        render_aabb(pose.to_matrix(), view_projection_matrix, skeleton.aabb, rgba_type(1, 0, 0, 1));
+        render_aabb(mat4_t(), view_projection_matrix, aabb, rgba_type(0, 1, 0, 1));
         render_sphere(mat4_t(), view_projection_matrix, sphere);
 #endif
-	}
-	
-	const pose3& model_instance_t::get_bone_pose(const hash_t& bone_hash) const
-	{
-		auto bone_index = model->get_bone_index(bone_hash);
+    }
+    
+    const pose3& model_instance_t::get_bone_pose(const hash_t& bone_hash) const
+    {
+        auto bone_index = model->get_bone_index(bone_hash);
 
         if (!bone_index)
         {
@@ -110,7 +110,7 @@ namespace mandala
         }
 
         return skeleton.bones[*bone_index].pose;
-	}
+    }
 
     void model_instance_t::set_model(const boost::shared_ptr<model_t>& model)
     {

@@ -11,7 +11,7 @@
 template<typename T>
 inline void read(std::istream& istream, T& t)
 {
-	istream.read(reinterpret_cast<char*>(&t), sizeof(T));
+    istream.read(reinterpret_cast<char*>(&t), sizeof(T));
 }
 
 template<typename T>

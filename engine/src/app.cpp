@@ -26,8 +26,8 @@ namespace mandala
 {
     app_t app;
 
-	void app_t::run(const std::string& game_class)
-	{
+    void app_t::run(const std::string& game_class)
+    {
         using namespace std::chrono;
         using namespace boost;
         using namespace boost::python;
@@ -38,7 +38,7 @@ namespace mandala
 
         this->game = extract<shared_ptr<game_t>>(py.eval((game_class + "()").c_str()))();
 
-		begin:
+        begin:
 
         platform.app_run_start();
 
@@ -72,33 +72,33 @@ namespace mandala
                 tick(DT);
             }
 
-			render();
+            render();
 
             auto b = high_resolution_clock::now() - real_time;
             auto c = b.count();
 
             performance.fps = 1.0f / (static_cast<float32_t>(c) / high_resolution_clock::duration::period::den);
-		}
+        }
 
         this->game->on_run_end();
         this->game.reset();
 
         py.finalize();
-		states.purge();
+        states.purge();
         states.tick(0); //TODO: hack to avoid exceptions throwing on close due to unreleased state objects, find a better solution later
         resources.purge();
-		strings.purge();
-		gpu_programs.purge();
+        strings.purge();
+        gpu_programs.purge();
         gpu_buffers.purge();
 
-		platform.app_run_end();
+        platform.app_run_end();
 
-		if (is_resetting)
-		{
-			is_resetting = false;
+        if (is_resetting)
+        {
+            is_resetting = false;
 
-			goto begin;
-		}
+            goto begin;
+        }
     }
 
     void app_t::exit()
@@ -106,42 +106,42 @@ namespace mandala
         is_exiting = true;
     }
 
-	void app_t::reset()
-	{
-		is_resetting = true;
-	}
+    void app_t::reset()
+    {
+        is_resetting = true;
+    }
 
     long long app_t::get_uptime() const
     {
         return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - run_time_point).count();
     }
 
-	void app_t::tick(float32_t dt)
+    void app_t::tick(float32_t dt)
     {
-		platform.app_tick_start(dt);
+        platform.app_tick_start(dt);
 
         game->on_tick_start(dt);
 
-		states.tick(dt);
-		audio.tick(dt);
+        states.tick(dt);
+        audio.tick(dt);
 
         game->on_tick_end(dt);
 
-		platform.app_tick_end(dt);
-	}
+        platform.app_tick_end(dt);
+    }
 
-	void app_t::render()
-	{
+    void app_t::render()
+    {
         const auto screen_size = platform.get_screen_size();
 
         gpu.viewports.push(gpu_viewport_type(0, 0, screen_size.x, screen_size.y));
         gpu.clear(gpu_t::CLEAR_FLAG_COLOR | gpu_t::CLEAR_FLAG_DEPTH);
 
-		platform.app_render_start();
+        platform.app_render_start();
 
         game->on_render_start();
 
-		states.render();
+        states.render();
 
         game->on_render_end();
 
@@ -192,8 +192,8 @@ namespace mandala
     }
 #endif
 
-	bool app_t::should_keep_running()
-	{
-		return !is_exiting && !is_resetting && !platform.should_exit();
-	}
+    bool app_t::should_keep_running()
+    {
+        return !is_exiting && !is_resetting && !platform.should_exit();
+    }
 }

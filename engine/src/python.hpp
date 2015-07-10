@@ -12,7 +12,7 @@
 namespace mandala
 {
     struct python_t
-	{
+    {
         python_t();
         ~python_t();
 
@@ -27,7 +27,7 @@ namespace mandala
         boost::python::object main_module;
 
         std::string handle_pyerr();
-	};
+    };
 
     MANDALA_API_ENTRY extern python_t py;
 }

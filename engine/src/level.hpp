@@ -6,6 +6,9 @@
 //boost
 #include <boost/shared_ptr.hpp>
 
+//mandala
+#include "quadtree.hpp"
+
 namespace mandala
 {
     struct actor_t;

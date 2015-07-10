@@ -11,9 +11,9 @@ namespace mandala
     texture_t::texture_t(color_type_e color_type, const size_type& size, const void* data) :
         color_type(color_type),
         size(size)
-	{
+    {
         id = gpu.create_texture(color_type, size, data);
-	}
+    }
 
     texture_t::texture_t(const boost::shared_ptr<image_t>& image) :
         texture_t(image->get_color_type(),

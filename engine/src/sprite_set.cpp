@@ -13,7 +13,7 @@
 
 namespace mandala
 {
-	sprite_set_t::sprite_set_t(std::istream& istream)
+    sprite_set_t::sprite_set_t(std::istream& istream)
     {
         //magic
         std::array<char, TPSB_MAGIC_LENGTH> magic;
@@ -26,7 +26,7 @@ namespace mandala
 
         //version
         int32_t version = 0;
-		read(istream, version);
+        read(istream, version);
 
         if (version != TPSB_VERSION)
         {
@@ -42,7 +42,7 @@ namespace mandala
         //region count
         uint16_t region_count = 0;
 
-		read(istream, region_count);
+        read(istream, region_count);
 
         for (uint16_t i = 0; i < region_count; ++i)
         {
@@ -54,27 +54,27 @@ namespace mandala
             
             region.hash = hash_t(std::move(region_name));
 
-			//frame rectangle
-			read(istream, region.frame_rectangle.x);
-			read(istream, region.frame_rectangle.y);
-			read(istream, region.frame_rectangle.width);
-			read(istream, region.frame_rectangle.height);
+            //frame rectangle
+            read(istream, region.frame_rectangle.x);
+            read(istream, region.frame_rectangle.y);
+            read(istream, region.frame_rectangle.width);
+            read(istream, region.frame_rectangle.height);
 
             //rectangle
-			read(istream, region.rectangle.x);
-			read(istream, region.rectangle.y);
-			read(istream, region.rectangle.width);
-			read(istream, region.rectangle.height);
+            read(istream, region.rectangle.x);
+            read(istream, region.rectangle.y);
+            read(istream, region.rectangle.width);
+            read(istream, region.rectangle.height);
 
             //source size
-			read(istream, region.source_size.x);
-			read(istream, region.source_size.y);
+            read(istream, region.source_size.x);
+            read(istream, region.source_size.y);
 
             //uv
-			read(istream, region.uv.min.x);
-			read(istream, region.uv.min.y);
-			read(istream, region.uv.max.x);
-			read(istream, region.uv.max.y);
+            read(istream, region.uv.min.x);
+            read(istream, region.uv.min.y);
+            read(istream, region.uv.max.x);
+            read(istream, region.uv.max.y);
 
             //flags
             typedef uint8_t flags_type;
@@ -88,43 +88,43 @@ namespace mandala
 
             flags_type flags = flag_none;
 
-			read(istream, flags);
+            read(istream, flags);
 
             region.is_rotated = ((flags & flag_rotated) == flag_rotated);
             region.is_trimmed = ((flags & flag_trimmed) == flag_trimmed);
 
             regions.insert(std::make_pair(region.hash, region));
         }
-	}
+    }
 
-	sprite_set_t::sprite_set_t(const boost::shared_ptr<texture_t>& texture) :
-		texture(texture)
-	{
+    sprite_set_t::sprite_set_t(const boost::shared_ptr<texture_t>& texture) :
+        texture(texture)
+    {
         if (texture == nullptr)
         {
             throw std::invalid_argument("");
         }
 
-		region_t region;
-		region.frame_rectangle.x = 0;
-		region.frame_rectangle.y = 0;
+        region_t region;
+        region.frame_rectangle.x = 0;
+        region.frame_rectangle.y = 0;
         region.frame_rectangle.width = texture->get_size().x;
-		region.frame_rectangle.height = texture->get_size().y;
-		region.hash = texture->hash;
-		region.is_rotated = false;
-		region.is_trimmed = false;
-		region.rectangle.x = 0;
-		region.rectangle.y = 0;
-		region.rectangle.width = texture->get_size().x;
-		region.rectangle.height = texture->get_size().y;
+        region.frame_rectangle.height = texture->get_size().y;
+        region.hash = texture->hash;
+        region.is_rotated = false;
+        region.is_trimmed = false;
+        region.rectangle.x = 0;
+        region.rectangle.y = 0;
+        region.rectangle.width = texture->get_size().x;
+        region.rectangle.height = texture->get_size().y;
         region.source_size = texture->get_size();
-		region.uv.min.x = 0.0f;
-		region.uv.min.y = 0.0f;
-		region.uv.max.x = 1.0f;
-		region.uv.max.y = 1.0f;
+        region.uv.min.x = 0.0f;
+        region.uv.min.y = 0.0f;
+        region.uv.max.x = 1.0f;
+        region.uv.max.y = 1.0f;
 
-		regions.emplace(hash_t(), region);
-	}
+        regions.emplace(hash_t(), region);
+    }
 
     boost::optional<sprite_set_t::region_t> sprite_set_t::get_region(const hash_t & region_hash) const
     {

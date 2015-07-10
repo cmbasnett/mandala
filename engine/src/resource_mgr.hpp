@@ -17,113 +17,113 @@
 
 namespace mandala
 {
-	struct resource_mgr_t : public pack_mgr_t
-	{
-		typedef std::map<hash_t, boost::shared_ptr<resource_t>> resource_map_type;
+    struct resource_mgr_t : public pack_mgr_t
+    {
+        typedef std::map<hash_t, boost::shared_ptr<resource_t>> resource_map_type;
 
-		size_t count() const;
+        size_t count() const;
 
-		template<typename T = std::enable_if<is_resource<T>::value, T>::type>
-		size_t count()
-		{
-			static const std::type_index TYPE_INDEX = typeid(T);
-
-            std::lock_guard<std::recursive_mutex> lock(mutex);
-
-			const auto type_resources_itr = type_resources.find(TYPE_INDEX);
-
-			if (type_resources_itr == type_resources.end())
-			{
-				return 0;
-			}
-
-			return type_resources_itr->second.size();
-		}
-
-		template<typename T = std::enable_if<is_resource<T>::value, T>::type>
-		boost::shared_ptr<T> get(const hash_t& hash)
-		{
-			static const std::type_index TYPE_INDEX = typeid(T);
+        template<typename T = std::enable_if<is_resource<T>::value, T>::type>
+        size_t count()
+        {
+            static const std::type_index TYPE_INDEX = typeid(T);
 
             std::lock_guard<std::recursive_mutex> lock(mutex);
 
-			const auto type_resources_itr = type_resources.find(TYPE_INDEX);
+            const auto type_resources_itr = type_resources.find(TYPE_INDEX);
 
-			if (type_resources_itr == type_resources.end())
-			{
-				//no resources of this type have yet been allocated
+            if (type_resources_itr == type_resources.end())
+            {
+                return 0;
+            }
+
+            return type_resources_itr->second.size();
+        }
+
+        template<typename T = std::enable_if<is_resource<T>::value, T>::type>
+        boost::shared_ptr<T> get(const hash_t& hash)
+        {
+            static const std::type_index TYPE_INDEX = typeid(T);
+
+            std::lock_guard<std::recursive_mutex> lock(mutex);
+
+            const auto type_resources_itr = type_resources.find(TYPE_INDEX);
+
+            if (type_resources_itr == type_resources.end())
+            {
+                //no resources of this type have yet been allocated
                 type_resources.insert(std::make_pair(TYPE_INDEX, resource_map_type()));
-			}
+            }
 
-			auto& resources = type_resources[TYPE_INDEX];
+            auto& resources = type_resources[TYPE_INDEX];
 
-			auto resources_itr = resources.find(hash);
+            auto resources_itr = resources.find(hash);
 
-			if (resources_itr != resources.end())
-			{
-				//resource already exists
-				auto& resource = resources_itr->second;
+            if (resources_itr != resources.end())
+            {
+                //resource already exists
+                auto& resource = resources_itr->second;
 
                 resource->last_access_time = resource_t::clock_type::now();
 
-				return boost::static_pointer_cast<T, resource_t>(resource);
-			}
+                return boost::static_pointer_cast<T, resource_t>(resource);
+            }
 
-			auto istream = extract(hash);
+            auto istream = extract(hash);
 
-			auto resource = boost::make_shared<T>(*istream);
+            auto resource = boost::make_shared<T>(*istream);
 
-			resource->hash = hash;
+            resource->hash = hash;
 
-			resources.emplace(hash, resource);
+            resources.emplace(hash, resource);
 
-			return resource;
-		}
+            return resource;
+        }
 
-		template<typename T = std::enable_if<is_resource<T>::value, T>::type>
-		void put(boost::shared_ptr<T> resource, const hash_t& hash)
-		{
-			static const std::type_index TYPE_INDEX = typeid(T);
+        template<typename T = std::enable_if<is_resource<T>::value, T>::type>
+        void put(boost::shared_ptr<T> resource, const hash_t& hash)
+        {
+            static const std::type_index TYPE_INDEX = typeid(T);
 
-			std::lock_guard<std::recursive_mutex> lock(mutex);
+            std::lock_guard<std::recursive_mutex> lock(mutex);
 
-			const auto type_resources_itr = type_resources.find(TYPE_INDEX);
+            const auto type_resources_itr = type_resources.find(TYPE_INDEX);
 
-			if (type_resources_itr == type_resources.end())
-			{
-				//no resources of this type allocated
+            if (type_resources_itr == type_resources.end())
+            {
+                //no resources of this type allocated
                 type_resources.insert(std::make_pair(TYPE_INDEX, resource_map_type()));
-			}
+            }
 
-			auto& resources = type_resources[TYPE_INDEX];
+            auto& resources = type_resources[TYPE_INDEX];
 
-			const auto resources_itr = std::find_if(resources.begin(), resources.end(), [&](const std::pair<hash_t, boost::shared_ptr<resource_t>>& pair)
-			{
-				return resource == pair.second;
-			});
+            const auto resources_itr = std::find_if(resources.begin(), resources.end(), [&](const std::pair<hash_t, boost::shared_ptr<resource_t>>& pair)
+            {
+                return resource == pair.second;
+            });
 
-			if (resources_itr != resources.end())
-			{
+            if (resources_itr != resources.end())
+            {
                 std::ostringstream ostringstream;
 
                 ostringstream << "resource " << hash << " already exists";
 
                 throw std::exception(ostringstream.str().c_str());
-			}
+            }
 
-			resource->hash = hash;
-			resource->last_access_time = std::chrono::system_clock::now();
-			
-			resources.emplace(resource->hash, resource);
-		}
+            resource->hash = hash;
+            resource->last_access_time = std::chrono::system_clock::now();
+            
+            resources.emplace(resource->hash, resource);
+        }
 
-		void prune();
-		void purge();
+        void prune();
+        void purge();
 
     private:
         std::recursive_mutex mutex;
         std::map<std::type_index, resource_map_type> type_resources;
-	};
+    };
 
-	extern resource_mgr_t resources;
+    extern resource_mgr_t resources;
 }

@@ -22,39 +22,39 @@
 
 namespace mandala
 {
-	struct camera_t;
+    struct camera_t;
 
-	struct bsp_t : public resource_t
-	{
-		typedef int32_t node_index_type;
+    struct bsp_t : public resource_t
+    {
+        typedef int32_t node_index_type;
 
-		enum class content_type_e : int32_t
-		{
-			EMPTY = -1,
-			SOLID = -2,
-			WATER = -3,
-			SLIME = -4,
-			LAVA = -5,
-			SKY = -6,
-			ORIGIN = -7,
-			CLIP = -8,
-			CURRENT_0 = -9,
-			CURRENT_90 = -10,
-			CURRENT_180 = -11,
-			CURRENT_270 = -12,
-			CURRENT_UP = -13,
-			CURRENT_DOWN = -14,
-			TRANSLUCENT = -15
-		};
+        enum class content_type_e : int32_t
+        {
+            EMPTY = -1,
+            SOLID = -2,
+            WATER = -3,
+            SLIME = -4,
+            LAVA = -5,
+            SKY = -6,
+            ORIGIN = -7,
+            CLIP = -8,
+            CURRENT_0 = -9,
+            CURRENT_90 = -10,
+            CURRENT_180 = -11,
+            CURRENT_270 = -12,
+            CURRENT_UP = -13,
+            CURRENT_DOWN = -14,
+            TRANSLUCENT = -15
+        };
 
-		enum class render_mode_e : uint8_t
-		{
-			NORMAL,
-			COLOR,
-			TEXTURE,
-			GLOW,
-			SOLID,
-			ADDITIVE
+        enum class render_mode_e : uint8_t
+        {
+            NORMAL,
+            COLOR,
+            TEXTURE,
+            GLOW,
+            SOLID,
+            ADDITIVE
         };
 
         struct node_t
@@ -68,65 +68,65 @@ namespace mandala
             uint16_t face_count = 0;
         };
 
-		struct face_t
+        struct face_t
         {
             typedef uint8_t lighting_style_type;
 
             static const auto LIGHTING_STYLE_COUNT = 4;
             static const lighting_style_type LIGHTING_STYLE_NONE = 255;
 
-			uint16_t plane_index = 0;
-			uint16_t plane_side = 0;
-			uint32_t surface_edge_start_index = 0;
-			uint16_t surface_edge_count = 0;
-			uint16_t texture_info_index = 0;
+            uint16_t plane_index = 0;
+            uint16_t plane_side = 0;
+            uint32_t surface_edge_start_index = 0;
+            uint16_t surface_edge_count = 0;
+            uint16_t texture_info_index = 0;
             std::array<lighting_style_type, LIGHTING_STYLE_COUNT> lighting_styles;
-			uint32_t lightmap_offset = 0;
-		};
+            uint32_t lightmap_offset = 0;
+        };
 
-		struct leaf_t
-		{
+        struct leaf_t
+        {
             static const auto AMBIENT_SOUND_LEVEL_COUNT = 4;
             
             typedef uint8_t ambient_sound_level_type;
             typedef aabb3_i16_t aabb_type;
 
-			content_type_e content_type = content_type_e::EMPTY;
-			int32_t visibility_offset = 0;
+            content_type_e content_type = content_type_e::EMPTY;
+            int32_t visibility_offset = 0;
             aabb_type aabb;
-			uint16_t mark_surface_start_index = 0;
-			uint16_t mark_surface_count = 0;
+            uint16_t mark_surface_start_index = 0;
+            uint16_t mark_surface_count = 0;
             std::array<ambient_sound_level_type, AMBIENT_SOUND_LEVEL_COUNT> ambient_sound_levels;
-		};
+        };
 
-		struct edge_t
-		{
+        struct edge_t
+        {
             typedef uint16_t vertex_index_type;
 
             static const auto VERTEX_INDEX_COUNT = 2;
 
             std::array<vertex_index_type, VERTEX_INDEX_COUNT> vertex_indices;
-		};
+        };
 
-		struct texture_info_t
-		{
-			struct
-			{
-				vec3_t axis;
-				float32_t offset = 0;
-			} s, t;
+        struct texture_info_t
+        {
+            struct
+            {
+                vec3_t axis;
+                float32_t offset = 0;
+            } s, t;
 
-			uint32_t texture_index = 0;
-			uint32_t flags = 0;
-		};
+            uint32_t texture_index = 0;
+            uint32_t flags = 0;
+        };
 
-		struct clip_node_t
-		{
+        struct clip_node_t
+        {
             static const auto CHILD_COUNT = 2;
 
             typedef int16_t child_index_type;
 
-			int32_t plane_index = 0;
+            int32_t plane_index = 0;
             std::array<child_index_type, CHILD_COUNT> child_indices;
         };
 
@@ -144,37 +144,37 @@ namespace mandala
             int32_t face_count = 0;
         };
 
-		struct bsp_texture_t
-		{
+        struct bsp_texture_t
+        {
             static const auto MIPMAP_OFFSET_COUNT = 4;
 
-			uint32_t width;
-			uint32_t height;
+            uint32_t width;
+            uint32_t height;
             uint32_t mipmap_offsets[MIPMAP_OFFSET_COUNT];
-		};
+        };
 
-		struct plane_t
-		{
-			typedef plane3_t plane_type;
+        struct plane_t
+        {
+            typedef plane3_t plane_type;
 
-			enum class type_e : uint32_t
-			{
-				x,
-				y,
-				z,
-				any_x,
-				any_y,
-				any_z
-			};
+            enum class type_e : uint32_t
+            {
+                x,
+                y,
+                z,
+                any_x,
+                any_y,
+                any_z
+            };
 
             plane_type plane;
             type_e type = type_e::x;
-		};
+        };
 
-		struct vertex_t
-		{
-			typedef vec3_t location_type;
-			typedef vec3_t normal_type;
+        struct vertex_t
+        {
+            typedef vec3_t location_type;
+            typedef vec3_t normal_type;
             typedef vec2_t texcoord_type;
 
             location_type location;
@@ -189,18 +189,18 @@ namespace mandala
         typedef uint32_t index_type;
         typedef index_buffer_t<index_type> index_buffer_type;
 
-		struct trace_args_t
-		{
-			line3_t line;
-		};
+        struct trace_args_t
+        {
+            line3_t line;
+        };
 
-		struct trace_result_t
-		{
-			bool did_hit = false;
-			bool is_all_solid = false;
-			vec3_t location;
-			plane3_t plane;
-			float32_t ratio = 0.0f;
+        struct trace_result_t
+        {
+            bool did_hit = false;
+            bool is_all_solid = false;
+            vec3_t location;
+            plane3_t plane;
+            float32_t ratio = 0.0f;
         };
 
         struct render_settings_t
@@ -222,7 +222,7 @@ namespace mandala
             }
         };
 
-		bsp_t(std::istream& istream);
+        bsp_t(std::istream& istream);
 
         void render(const camera_t& camera);
 
@@ -232,7 +232,7 @@ namespace mandala
 
         render_settings_t render_settings;  //TODO: sort this out elsewhere
 
-	private:
+    private:
         std::vector<plane_t> planes;
         std::vector<edge_t> edges;
         std::vector<face_t> faces;
@@ -256,5 +256,5 @@ namespace mandala
 
         bsp_t(const bsp_t&) = delete;
         bsp_t& operator=(const bsp_t&) = delete;
-	};
+    };
 }

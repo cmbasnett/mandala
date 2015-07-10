@@ -46,7 +46,7 @@ namespace mandala
         viewport.x = static_cast<int>(get_bounds().min.x);
         viewport.y = static_cast<int>(get_bounds().min.y);
 
-		gpu.frame_buffers.push(frame_buffer);
+        gpu.frame_buffers.push(frame_buffer);
         //gpu.viewports.push(viewport);
     }
 

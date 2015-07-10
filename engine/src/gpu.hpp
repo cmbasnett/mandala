@@ -22,12 +22,12 @@ namespace mandala
 {
     struct frame_buffer_t;
     struct gpu_buffer_t;
-	struct gpu_program_t;
-	struct texture_t;
+    struct gpu_program_t;
+    struct texture_t;
     struct image_t;
 
     struct gpu_t
-	{
+    {
         enum class buffer_target_e
         {
             ARRAY,
@@ -70,56 +70,56 @@ namespace mandala
             POLYGON
         };
 
-		enum class blend_factor_e
-		{
-			ZERO,
-			ONE,
-			SRC_COLOR,
-			ONE_MINUS_SRC_COLOR,
-			DST_COLOR,
-			ONE_MINUS_DST_COLOR,
-			SRC_ALPHA,
-			ONE_MINUS_SRC_ALPHA,
-			DST_ALPHA,
-			ONE_MINUS_DST_ALPHA,
-			CONSTANT_COLOR,
-			ONE_MINUS_CONSTANT_COLOR,
-			CONSTANT_ALPHA,
-			ONE_MINUS_CONSTANT_ALPHA,
-			SRC_ALPHA_SATURATE,
-			DEFAULT = ONE
-		};
+        enum class blend_factor_e
+        {
+            ZERO,
+            ONE,
+            SRC_COLOR,
+            ONE_MINUS_SRC_COLOR,
+            DST_COLOR,
+            ONE_MINUS_DST_COLOR,
+            SRC_ALPHA,
+            ONE_MINUS_SRC_ALPHA,
+            DST_ALPHA,
+            ONE_MINUS_DST_ALPHA,
+            CONSTANT_COLOR,
+            ONE_MINUS_CONSTANT_COLOR,
+            CONSTANT_ALPHA,
+            ONE_MINUS_CONSTANT_ALPHA,
+            SRC_ALPHA_SATURATE,
+            DEFAULT = ONE
+        };
 
-		enum class blend_equation_e
-		{
-			ADD,
-			SUBTRACT,
-			SUBTRACT_REVERSE,
-			MIN,
-			MAX,
-			DEFAULT = ADD
-		};
+        enum class blend_equation_e
+        {
+            ADD,
+            SUBTRACT,
+            SUBTRACT_REVERSE,
+            MIN,
+            MAX,
+            DEFAULT = ADD
+        };
 
-		enum class cull_face_e
-		{
-			FRONT,
-			BACK,
-			FRONT_AND_BACK,
-			DEFAULT = BACK
-		};
+        enum class cull_face_e
+        {
+            FRONT,
+            BACK,
+            FRONT_AND_BACK,
+            DEFAULT = BACK
+        };
 
-		enum class depth_function_e
-		{
-			NEVER,
-			LESS,
-			EQUAL,
-			LEQUAL,
-			GREATER,
-			NOTEQUAL,
-			GEQUAL,
-			ALWAYS,
-			DEFAULT = LESS
-		};
+        enum class depth_function_e
+        {
+            NEVER,
+            LESS,
+            EQUAL,
+            LEQUAL,
+            GREATER,
+            NOTEQUAL,
+            GEQUAL,
+            ALWAYS,
+            DEFAULT = LESS
+        };
 
         enum class culling_front_face_e
         {
@@ -172,7 +172,7 @@ namespace mandala
             VERTEX
         };
 
-		//programs
+        //programs
         struct program_mgr_t
         {
             typedef boost::weak_ptr<gpu_program_t> weak_type;
@@ -185,7 +185,7 @@ namespace mandala
             std::stack<weak_type> programs;
         } programs;
 
-		//frame buffers
+        //frame buffers
         struct frame_buffer_mgr_t
         {
             typedef boost::weak_ptr<frame_buffer_t> weak_type;
@@ -199,7 +199,7 @@ namespace mandala
             std::stack<shared_type> frame_buffers;
         } frame_buffers;
 
-		//textures
+        //textures
         struct texture_mgr_t
         {
             const static auto texture_count = 32;
@@ -214,20 +214,20 @@ namespace mandala
 
         private:
             std::array<shared_type, texture_count> textures;
-		} textures;
+        } textures;
 
-		//viewports
+        //viewports
         struct viewport_mgr_t
         {
-			gpu_viewport_type top() const;
+            gpu_viewport_type top() const;
             void push(const gpu_viewport_type& viewport);
-			gpu_viewport_type pop();
+            gpu_viewport_type pop();
 
         private:
             std::stack<gpu_viewport_type> viewports;
         } viewports;
 
-		//buffers
+        //buffers
         struct buffer_mgr_t
         {
             typedef boost::shared_ptr<gpu_buffer_t> buffer_type;
@@ -244,45 +244,45 @@ namespace mandala
             std::set<buffer_type> buffers;
         } buffers;
 
-		//blend
-		struct blend_t
-		{
-			struct state_t
-			{
-				bool is_enabled = false;
-				blend_factor_e src_factor = blend_factor_e::ONE;
-				blend_factor_e dst_factor = blend_factor_e::ZERO;
-				blend_equation_e equation = blend_equation_e::ADD;
-			};
-
-			state_t get_state() const;
-			void push_state(const state_t& state);
-			void pop_state();
-		private:
-			std::stack<state_t> states;
-
-			void apply_state(const state_t& state);
-		} blend;
-
-		//depth
-		struct depth_t
-		{
-			struct state_t
-			{
-				bool should_test = false;
-				bool should_write_mask = true;
-				depth_function_e function = depth_function_e::DEFAULT;
-			};
+        //blend
+        struct blend_t
+        {
+            struct state_t
+            {
+                bool is_enabled = false;
+                blend_factor_e src_factor = blend_factor_e::ONE;
+                blend_factor_e dst_factor = blend_factor_e::ZERO;
+                blend_equation_e equation = blend_equation_e::ADD;
+            };
 
             state_t get_state() const;
-			void push_state(const state_t& state);
-			void pop_state();
+            void push_state(const state_t& state);
+            void pop_state();
+        private:
+            std::stack<state_t> states;
 
-		private:
-			std::stack<state_t> states;
+            void apply_state(const state_t& state);
+        } blend;
 
-			void apply_state(const state_t& state);
-		} depth;
+        //depth
+        struct depth_t
+        {
+            struct state_t
+            {
+                bool should_test = false;
+                bool should_write_mask = true;
+                depth_function_e function = depth_function_e::DEFAULT;
+            };
+
+            state_t get_state() const;
+            void push_state(const state_t& state);
+            void pop_state();
+
+        private:
+            std::stack<state_t> states;
+
+            void apply_state(const state_t& state);
+        } depth;
 
         struct culling_t
         {
@@ -315,15 +315,15 @@ namespace mandala
                     uint32_t mask = 0xFFFFFFFF;
                 };
 
-				struct operations_t
+                struct operations_t
                 {
                     stencil_operation_e fail = stencil_operation_e::KEEP;
                     stencil_operation_e zfail = stencil_operation_e::KEEP;
                     stencil_operation_e zpass = stencil_operation_e::KEEP;
                 };
 
-				function_t function;
-				operations_t operations;
+                function_t function;
+                operations_t operations;
                 bool is_enabled = false;
                 uint32_t mask = 0xFFFFFFFF;
             };
@@ -350,7 +350,7 @@ namespace mandala
                     bool a = true;
                 };
 
-				mask_t mask;
+                mask_t mask;
             };
 
             state_t get_state() const;
@@ -363,16 +363,16 @@ namespace mandala
         } color;
 
         void clear(const gpu_clear_flag_type clear_flags) const;
-		void draw_elements(primitive_type_e primitive_type, size_t count, gpu_data_type_e index_data_type, size_t offset) const;
+        void draw_elements(primitive_type_e primitive_type, size_t count, gpu_data_type_e index_data_type, size_t offset) const;
 
-		gpu_id_t create_program(const std::string& vertex_shader_source, const std::string& fragment_shader_source) const;
-		void destroy_program(gpu_id_t id);
+        gpu_id_t create_program(const std::string& vertex_shader_source, const std::string& fragment_shader_source) const;
+        void destroy_program(gpu_id_t id);
 
-		gpu_id_t create_buffer();
-		void destroy_buffer(gpu_id_t id);
+        gpu_id_t create_buffer();
+        void destroy_buffer(gpu_id_t id);
 
-		gpu_id_t create_frame_buffer(gpu_frame_buffer_type_e type, const gpu_frame_buffer_size_type& size, boost::shared_ptr<texture_t>& color_texture, boost::shared_ptr<texture_t>& depth_stencil_texture, boost::shared_ptr<texture_t>& depth_texture);
-		void destroy_frame_buffer(gpu_id_t id);
+        gpu_id_t create_frame_buffer(gpu_frame_buffer_type_e type, const gpu_frame_buffer_size_type& size, boost::shared_ptr<texture_t>& color_texture, boost::shared_ptr<texture_t>& depth_stencil_texture, boost::shared_ptr<texture_t>& depth_texture);
+        void destroy_frame_buffer(gpu_id_t id);
 
         gpu_id_t create_texture(color_type_e color_type, vec2_u32_t size, const void* data);
         void resize_texture(const boost::shared_ptr<texture_t>& texture, vec2_u32_t size);
@@ -381,10 +381,10 @@ namespace mandala
         gpu_location_t get_uniform_location(gpu_id_t program_id, const char* name) const;
         gpu_location_t get_attribute_location(gpu_id_t program_id, const char* name) const;
 
-		void enable_vertex_attribute_array(gpu_location_t location);
-		void disable_vertex_attribute_array(gpu_location_t location);
-		void set_vertex_attrib_pointer(gpu_location_t location, int32_t size, gpu_data_type_e data_type, bool is_normalized, int32_t stride, const void* pointer);
-		void set_vertex_attrib_pointer(gpu_location_t location, int32_t size, gpu_data_type_e data_type, int32_t stride, const void* pointer);
+        void enable_vertex_attribute_array(gpu_location_t location);
+        void disable_vertex_attribute_array(gpu_location_t location);
+        void set_vertex_attrib_pointer(gpu_location_t location, int32_t size, gpu_data_type_e data_type, bool is_normalized, int32_t stride, const void* pointer);
+        void set_vertex_attrib_pointer(gpu_location_t location, int32_t size, gpu_data_type_e data_type, int32_t stride, const void* pointer);
         void set_uniform(const char* name, const mat3_t& value, bool should_tranpose = false) const;
         void set_uniform(const char* name, const mat4_t& value, bool should_tranpose = false) const;
         void set_uniform(const char* name, int32_t value) const;
@@ -394,13 +394,13 @@ namespace mandala
         void set_uniform(const char* name, const vec3_t& value) const;
         void set_uniform(const char* name, const vec4_t& value) const;
         void set_uniform(const char* name, const std::vector<mat4_t>& value, bool should_transpose = false) const;
-		void set_uniform_subroutine(shader_type_e shader_type, gpu_index_t index);
+        void set_uniform_subroutine(shader_type_e shader_type, gpu_index_t index);
 
-		void set_clear_color(rgba_type& color);
-		rgba_type get_clear_color();
+        void set_clear_color(rgba_type& color);
+        rgba_type get_clear_color();
 
-		gpu_location_t get_subroutine_uniform_location(gpu_id_t program_id, shader_type_e shader_type, const std::string& name);
-		gpu_index_t get_subroutine_index(gpu_id_t program_id, shader_type_e shader_type, const std::string& name);
+        gpu_location_t get_subroutine_uniform_location(gpu_id_t program_id, shader_type_e shader_type, const std::string& name);
+        gpu_index_t get_subroutine_index(gpu_id_t program_id, shader_type_e shader_type, const std::string& name);
 
         const std::string& get_vendor() const;
         const std::string& get_renderer() const;
@@ -409,7 +409,7 @@ namespace mandala
         const std::string& get_extensions() const;
 
         void get_texture_data(const boost::shared_ptr<texture_t>& texture, std::vector<uint8_t>& data, int32_t level = 0);
-	};
+    };
 
     extern gpu_t gpu;
 }

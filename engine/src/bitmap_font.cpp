@@ -16,9 +16,9 @@
 #include "bitmap_font_gpu_program.hpp"
 #include "io.hpp"
 
-#define BMF_MAGIC_LENGTH	(3)
-#define BMF_MAGIC			(std::array<char, BMF_MAGIC_LENGTH> { 'B', 'M', 'F' })
-#define BMF_VERSION			(3)
+#define BMF_MAGIC_LENGTH    (3)
+#define BMF_MAGIC            (std::array<char, BMF_MAGIC_LENGTH> { 'B', 'M', 'F' })
+#define BMF_VERSION            (3)
 
 namespace mandala
 {

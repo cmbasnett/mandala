@@ -1,0 +1,63 @@
+#pragma once
+
+//std
+#include <array>
+
+//boost
+#include <boost/make_shared.hpp>
+
+//mandala
+#include "aabb.hpp"
+
+namespace mandala
+{
+    namespace details
+    {
+        template<typename Scalar, typename Enable = void>
+        struct octree_;
+
+        template<typename Scalar>
+        struct octree_<Scalar, typename std::enable_if<std::is_floating_point<Scalar>::value>::type>
+        {
+            typedef Scalar scalar_type;
+            typedef aabb3_t<scalar_type> bounds_type;
+            typedef octree_<scalar_type> type;
+            typedef std::array<boost::shared_ptr<type>, 8> children_type;
+
+            octree_(scalar_type size) :
+                bounds(bounds_type::value_type(-size / 2), bounds_type::value_type(size / 2))
+            {
+            }
+
+            octree_(const bounds_type& bounds) :
+                bounds(bounds)
+            {
+            }
+
+            void birth()
+            {
+                const auto child_bounds = bounds_type(bounds.min, bounds.center());
+                const auto child_bounds_size = child_bounds.size();
+
+                children[0] = boost::make_shared<type>(child_bounds);
+                children[1] = boost::make_shared<type>(child_bounds + bounds_type::value_type(child_bounds_size.x, 0, 0));
+                children[2] = boost::make_shared<type>(child_bounds + bounds_type::value_type(0, child_bounds_size.y, 0));
+                children[3] = boost::make_shared<type>(child_bounds + bounds_type::value_type(child_bounds_size.x, child_bounds_size.y, 0));
+                children[4] = boost::make_shared<type>(child_bounds + bounds_type::value_type(0, 0, child_bounds_size.z));
+                children[5] = boost::make_shared<type>(child_bounds + bounds_type::value_type(child_bounds_size.x, 0, child_bounds_size.z));
+                children[6] = boost::make_shared<type>(child_bounds + bounds_type::value_type(0, child_bounds_size.y, child_bounds_size.z));
+                children[7] = boost::make_shared<type>(child_bounds + child_bounds_size);
+            }
+
+            const bounds_type& get_bounds() const { return bounds; }
+            const children_type& get_children() const { return children; }
+
+        private:
+            bounds_type bounds;
+            children_type children;
+        };
+    }
+
+    typedef details::octree_<float32_t> octree_f32_t;
+    typedef details::octree_<float64_t> octree_f64_t;
+}

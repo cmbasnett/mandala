@@ -34,8 +34,8 @@ namespace mandala
             //5, 6, 7,
             //5, 7, 4
         };
-		index_buffer->data(indices, gpu_t::buffer_usage_e::STATIC_DRAW);
-	}
+        index_buffer->data(indices, gpu_t::buffer_usage_e::STATIC_DRAW);
+    }
 
     void gui_image_t::on_clean_end()
     {
@@ -96,12 +96,12 @@ namespace mandala
         set_sprite(sprite);
     }
 
-	void gui_image_t::on_render_begin(mat4_t& world_matrix, mat4_t& view_projection_matrix)
+    void gui_image_t::on_render_begin(mat4_t& world_matrix, mat4_t& view_projection_matrix)
     {
-		auto blend_state = gpu.blend.get_state();
-		blend_state.is_enabled = true;
-		blend_state.src_factor = gpu_t::blend_factor_e::SRC_ALPHA;
-		blend_state.dst_factor = gpu_t::blend_factor_e::ONE_MINUS_SRC_ALPHA;
+        auto blend_state = gpu.blend.get_state();
+        blend_state.is_enabled = true;
+        blend_state.src_factor = gpu_t::blend_factor_e::SRC_ALPHA;
+        blend_state.dst_factor = gpu_t::blend_factor_e::ONE_MINUS_SRC_ALPHA;
 
         gpu.blend.push_state(blend_state);
 
@@ -111,19 +111,22 @@ namespace mandala
 
         const auto& gpu_program = gpu_programs.get<gui_image_gpu_program_t>();
 
-		//program
-		gpu.programs.push(gpu_program);
+        //program
+        gpu.programs.push(gpu_program);
 
-		const auto center = get_bounds().center();
+        const auto center = get_bounds().center();
 
         //TODO: 
 
-		static const auto DIFFUSE_TEXTURE_INDEX = 0;
+        static float t = 0.0;
+
+        static const auto DIFFUSE_TEXTURE_INDEX = 0;
 
         gpu.set_uniform("diffuse_texture", DIFFUSE_TEXTURE_INDEX);
         gpu.set_uniform("world_matrix", world_matrix * glm::translate(center.x, center.y, 0.0f));
         gpu.set_uniform("view_projection_matrix", view_projection_matrix);
         gpu.set_uniform("color", get_color());
+        gpu.set_uniform("t", t += 0.01f);
 
         //TODO: what to do if sprite is null?
         if (sprite)
@@ -161,13 +164,13 @@ namespace mandala
 
         gpu.textures.unbind(DIFFUSE_TEXTURE_INDEX);
 
-		gpu.programs.pop();
+        gpu.programs.pop();
 
-		gpu.buffers.pop(gpu_t::buffer_target_e::ELEMENT_ARRAY);
-		gpu.buffers.pop(gpu_t::buffer_target_e::ARRAY);
+        gpu.buffers.pop(gpu_t::buffer_target_e::ELEMENT_ARRAY);
+        gpu.buffers.pop(gpu_t::buffer_target_e::ARRAY);
 
-		gpu.blend.pop_state();
+        gpu.blend.pop_state();
 
         gui_node_t::on_render_begin(world_matrix, view_projection_matrix);
-	}
+    }
 }

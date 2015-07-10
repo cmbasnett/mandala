@@ -14,7 +14,7 @@ namespace mandala
 
     frame_buffer_t::~frame_buffer_t()
     {
-		gpu.destroy_frame_buffer(id);
+        gpu.destroy_frame_buffer(id);
     }
 
     void frame_buffer_t::on_bind() const

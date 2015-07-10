@@ -17,29 +17,29 @@ namespace mandala
     platform_win32_t platform;
 
     static inline void on_keyboard_key(GLFWwindow* window, int key, int scancode, int action, int mods)
-	{
-		input_event_t input_event;
-		input_event.device_type = input_event_t::device_type_e::KEYBOARD;
-		input_event.keyboard.key = static_cast<input_event_t::keyboard_t::key_e>(key);
+    {
+        input_event_t input_event;
+        input_event.device_type = input_event_t::device_type_e::KEYBOARD;
+        input_event.keyboard.key = static_cast<input_event_t::keyboard_t::key_e>(key);
 
-		if ((mods & GLFW_MOD_SHIFT) == GLFW_MOD_SHIFT)
-		{
-			input_event.keyboard.mod_flags |= input_event_t::MOD_FLAG_SHIFT;
-		}
+        if ((mods & GLFW_MOD_SHIFT) == GLFW_MOD_SHIFT)
+        {
+            input_event.keyboard.mod_flags |= input_event_t::MOD_FLAG_SHIFT;
+        }
 
         if ((mods & GLFW_MOD_CONTROL) == GLFW_MOD_CONTROL)
         {
-			input_event.keyboard.mod_flags |= input_event_t::MOD_FLAG_CTRL;
+            input_event.keyboard.mod_flags |= input_event_t::MOD_FLAG_CTRL;
         }
 
         if ((mods & GLFW_MOD_ALT) == GLFW_MOD_ALT)
         {
-			input_event.keyboard.mod_flags |= input_event_t::MOD_FLAG_ALT;
+            input_event.keyboard.mod_flags |= input_event_t::MOD_FLAG_ALT;
         }
 
         if ((mods & GLFW_MOD_SUPER) == GLFW_MOD_SUPER)
         {
-			input_event.keyboard.mod_flags |= input_event_t::MOD_FLAG_SUPER;
+            input_event.keyboard.mod_flags |= input_event_t::MOD_FLAG_SUPER;
         }
 
         switch (action)
@@ -96,27 +96,27 @@ namespace mandala
     }
 
     static inline void on_mouse_move(GLFWwindow* window, double x, double y)
-	{
+    {
         const auto screen_size = platform.get_screen_size();
 
-		input_event_t input_event;
-		input_event.device_type = input_event_t::device_type_e::TOUCH;
-		input_event.touch.type = input_event_t::touch_t::type_e::MOVE;
-		input_event.touch.location.x = x;
-		input_event.touch.location.y = screen_size.y - y;
-		input_event.touch.location_delta.x = x - platform.cursor_location.x;
+        input_event_t input_event;
+        input_event.device_type = input_event_t::device_type_e::TOUCH;
+        input_event.touch.type = input_event_t::touch_t::type_e::MOVE;
+        input_event.touch.location.x = x;
+        input_event.touch.location.y = screen_size.y - y;
+        input_event.touch.location_delta.x = x - platform.cursor_location.x;
         input_event.touch.location_delta.y = -(y - platform.cursor_location.y);
 
         input_event.touch.id = platform.input.touch_id;
 
-		if (platform.is_cursor_centered)
-		{
-			const auto screen_size = platform.get_screen_size();
+        if (platform.is_cursor_centered)
+        {
+            const auto screen_size = platform.get_screen_size();
 
             auto cursor_location = glm::floor(static_cast<vec2_f64_t>(screen_size) / 2.0);
 
-			platform.set_cursor_location(cursor_location);
-		}
+            platform.set_cursor_location(cursor_location);
+        }
 
         platform.cursor_location = platform.get_cursor_location();
 
@@ -138,13 +138,13 @@ namespace mandala
     }
 
     static inline void on_window_resize(GLFWwindow* window, int width, int height)
-	{
+    {
         if (window == nullptr || width == 0 || height == 0)
         {
             return;
         }
 
-		//TODO: a less verbose solution is possible
+        //TODO: a less verbose solution is possible
         auto window_events_itr = std::find_if(platform.window.events.begin(), platform.window.events.end(), [](const window_event_t& window_event)
         {
             return window_event.type == window_event_t::type_e::RESIZE;
@@ -153,14 +153,14 @@ namespace mandala
         if (window_events_itr != platform.window.events.end())
         {
             window_events_itr->rectangle.width = width;
-			window_events_itr->rectangle.height = height;
+            window_events_itr->rectangle.height = height;
         }
         else
         {
             window_event_t window_event;
             window_event.type = window_event_t::type_e::RESIZE;
-			window_event.rectangle.width = width;
-			window_event.rectangle.height = height;
+            window_event.rectangle.width = width;
+            window_event.rectangle.height = height;
 
             platform.window.events.push_back(window_event);
         }
@@ -170,8 +170,8 @@ namespace mandala
     }
 
     static inline void on_window_move(GLFWwindow* window, int x, int y)
-	{
-		//TODO: a less vebose solution is possible
+    {
+        //TODO: a less vebose solution is possible
         auto window_events_itr = std::find_if(platform.window.events.begin(), platform.window.events.end(), [](const window_event_t& window_event)
         {
             return window_event.type == window_event_t::type_e::MOVE;
@@ -179,15 +179,15 @@ namespace mandala
 
         if (window_events_itr != platform.window.events.end())
         {
-			window_events_itr->rectangle.x = x;
-			window_events_itr->rectangle.y = y;
+            window_events_itr->rectangle.x = x;
+            window_events_itr->rectangle.y = y;
         }
         else
         {
             window_event_t window_event;
             window_event.type = window_event_t::type_e::MOVE;
-			window_event.rectangle.x = x;
-			window_event.rectangle.y = y;
+            window_event.rectangle.x = x;
+            window_event.rectangle.y = y;
 
             platform.window.events.push_back(window_event);
         }
@@ -201,12 +201,12 @@ namespace mandala
         throw std::exception();
     }
 
-	void platform_win32_t::app_run_start()
-	{
-		//glfw
-		glfwInit();
+    void platform_win32_t::app_run_start()
+    {
+        //glfw
+        glfwInit();
 
-		window_ptr = glfwCreateWindow(1, 1, "mandala", nullptr, nullptr);
+        window_ptr = glfwCreateWindow(1, 1, "mandala", nullptr, nullptr);
 
         glfwMakeContextCurrent(window_ptr);
 
@@ -218,95 +218,95 @@ namespace mandala
         glfwSetWindowSizeCallback(window_ptr, on_window_resize);
         glfwSetWindowPosCallback(window_ptr, on_window_move);
 
-		//glew
+        //glew
         auto glew_init_result = glewInit();
 
         if (glew_init_result != GLEW_OK)
         {
             throw std::exception(unsafe_cast<char*>(glewGetErrorString(glew_init_result)));
         }
-	}
+    }
 
-	void platform_win32_t::app_run_end()
-	{
+    void platform_win32_t::app_run_end()
+    {
         glfwDestroyWindow(window_ptr);
         glfwTerminate();
 
         window_ptr = nullptr;
-	}
+    }
 
-	void platform_win32_t::app_tick_start(float32_t dt)
-	{
+    void platform_win32_t::app_tick_start(float32_t dt)
+    {
         glfwPollEvents();
 
-		for (size_t gamepad_index = 0; gamepad_index < input.gamepad_states.size(); ++gamepad_index)
-		{
+        for (size_t gamepad_index = 0; gamepad_index < input.gamepad_states.size(); ++gamepad_index)
+        {
             if (!glfwJoystickPresent(static_cast<int>(gamepad_index)))
-			{
-				break;
-			}
+            {
+                break;
+            }
 
-			auto& gamepad_state = input.gamepad_states[gamepad_index];
+            auto& gamepad_state = input.gamepad_states[gamepad_index];
 
-			int axis_count = 0;
-			auto axes = glfwGetJoystickAxes(static_cast<int>(gamepad_index), &axis_count);
+            int axis_count = 0;
+            auto axes = glfwGetJoystickAxes(static_cast<int>(gamepad_index), &axis_count);
 
-			for (auto axis_index = 0; axis_index < axis_count; ++axis_index)
-			{
-				if (axes[axis_index] != gamepad_state.axes[axis_index])
-				{
-					input_event_t input_event;
-					input_event.device_type = input_event_t::device_type_e::GAMEPAD;
-					input_event.gamepad.index = gamepad_index;
-					input_event.gamepad.type = input_event_t::gamepad_t::type_e::AXIS_MOVE;
-					input_event.gamepad.axis_index = axis_index;
-					input_event.gamepad.axis_value = axes[axis_index];
+            for (auto axis_index = 0; axis_index < axis_count; ++axis_index)
+            {
+                if (axes[axis_index] != gamepad_state.axes[axis_index])
+                {
+                    input_event_t input_event;
+                    input_event.device_type = input_event_t::device_type_e::GAMEPAD;
+                    input_event.gamepad.index = gamepad_index;
+                    input_event.gamepad.type = input_event_t::gamepad_t::type_e::AXIS_MOVE;
+                    input_event.gamepad.axis_index = axis_index;
+                    input_event.gamepad.axis_value = axes[axis_index];
                     input_event.gamepad.axis_value_delta = axes[axis_index] - gamepad_state.axes[axis_index];
 
-					platform.input.events.push_back(input_event);
-				}
+                    platform.input.events.push_back(input_event);
+                }
 
-				gamepad_state.axes[axis_index] = axes[axis_index];
-			}
+                gamepad_state.axes[axis_index] = axes[axis_index];
+            }
 
-			int button_count = 0;
-			auto buttons = glfwGetJoystickButtons(static_cast<int>(gamepad_index), &button_count);
+            int button_count = 0;
+            auto buttons = glfwGetJoystickButtons(static_cast<int>(gamepad_index), &button_count);
 
-			for (auto button_index = 0; button_index < button_count; ++button_index)
-			{
-				if (buttons[button_index] != gamepad_state.buttons[button_index])
-				{
-					input_event_t input_event;
-					input_event.device_type = input_event_t::device_type_e::GAMEPAD;
-					input_event.gamepad.index = gamepad_index;
-					input_event.gamepad.type = buttons[button_index] == 0 ? input_event_t::gamepad_t::type_e::RELEASE : input_event_t::gamepad_t::type_e::PRESS;
+            for (auto button_index = 0; button_index < button_count; ++button_index)
+            {
+                if (buttons[button_index] != gamepad_state.buttons[button_index])
+                {
+                    input_event_t input_event;
+                    input_event.device_type = input_event_t::device_type_e::GAMEPAD;
+                    input_event.gamepad.index = gamepad_index;
+                    input_event.gamepad.type = buttons[button_index] == 0 ? input_event_t::gamepad_t::type_e::RELEASE : input_event_t::gamepad_t::type_e::PRESS;
                     input_event.gamepad.button_index = button_index;
 
-					platform.input.events.push_back(input_event);
-				}
+                    platform.input.events.push_back(input_event);
+                }
 
-				gamepad_state.buttons[button_index] = buttons[button_index];
-			}
-		}
-	}
+                gamepad_state.buttons[button_index] = buttons[button_index];
+            }
+        }
+    }
 
-	void platform_win32_t::app_tick_end(float32_t dt)
-	{
-	}
+    void platform_win32_t::app_tick_end(float32_t dt)
+    {
+    }
 
-	void platform_win32_t::app_render_start()
-	{
-	}
+    void platform_win32_t::app_render_start()
+    {
+    }
 
-	void platform_win32_t::app_render_end()
-	{
+    void platform_win32_t::app_render_end()
+    {
         glfwSwapBuffers(window_ptr);
-	}
+    }
 
-	bool platform_win32_t::should_exit() const
-	{
+    bool platform_win32_t::should_exit() const
+    {
         return glfwWindowShouldClose(window_ptr) != 0;
-	}
+    }
 
     platform_t::screen_size_type platform_win32_t::get_screen_size() const
     {
@@ -314,13 +314,13 @@ namespace mandala
 
         glfwGetWindowSize(window_ptr, &screen_size.x, &screen_size.y);
 
-		return screen_size;
+        return screen_size;
     }
-	
-	void platform_win32_t::set_screen_size(const screen_size_type& screen_size) const
-	{
+    
+    void platform_win32_t::set_screen_size(const screen_size_type& screen_size) const
+    {
         glfwSetWindowSize(window_ptr, screen_size.x, screen_size.y);
-	}
+    }
 
     //fullscreen
     bool platform_win32_t::is_fullscreen() const
@@ -376,22 +376,23 @@ namespace mandala
         glfwSetWindowSizeCallback(window_ptr, on_window_resize);
         glfwSetWindowPosCallback(window_ptr, on_window_move);
 
+        //HACK: would use set_window_size, but the callback doesn't get triggered
         on_window_resize(window_ptr, window_size.x, window_size.y);
     }
 
     bool platform_win32_t::pop_input_event(input_event_t& input_event)
     {
-		if (input.events.empty())
+        if (input.events.empty())
         {
             return false;
         }
 
-		input_event = input.events.front();
-		input_event.id = input.event_id;
+        input_event = input.events.front();
+        input_event.id = input.event_id;
 
-		input.events.pop_front();
+        input.events.pop_front();
 
-		++input.event_id;
+        ++input.event_id;
 
         return true;
     }
@@ -410,76 +411,76 @@ namespace mandala
         return true;
     }
 
-	platform_t::cursor_location_type platform_win32_t::get_cursor_location() const
-	{
+    platform_t::cursor_location_type platform_win32_t::get_cursor_location() const
+    {
         cursor_location_type cursor_location;
 
         glfwGetCursorPos(window_ptr, &cursor_location.x, &cursor_location.y);
 
-		return cursor_location;
-	}
+        return cursor_location;
+    }
 
-	void platform_win32_t::set_cursor_location(const cursor_location_type& cursor_location) const
-	{
+    void platform_win32_t::set_cursor_location(const cursor_location_type& cursor_location) const
+    {
         glfwSetCursorPos(window_ptr, cursor_location.x, cursor_location.y);
-	}
+    }
 
-	bool platform_win32_t::is_cursor_hidden() const
-	{
+    bool platform_win32_t::is_cursor_hidden() const
+    {
         return glfwGetInputMode(window_ptr, GLFW_CURSOR) == GLFW_CURSOR_HIDDEN;
-	}
+    }
 
-	void platform_win32_t::set_cursor_hidden(bool is_hidden) const
-	{
+    void platform_win32_t::set_cursor_hidden(bool is_hidden) const
+    {
         glfwSetInputMode(window_ptr, GLFW_CURSOR, is_hidden ? GLFW_CURSOR_HIDDEN : GLFW_CURSOR_NORMAL);
-	}
+    }
 
-	platform_t::window_title_type platform_win32_t::get_window_title() const
-	{
-		//TODO: implement this
-		return std::string();
-	}
+    platform_t::window_title_type platform_win32_t::get_window_title() const
+    {
+        //TODO: implement this
+        return std::string();
+    }
 
-	void platform_win32_t::set_window_title(const window_title_type& window_title) const
-	{
+    void platform_win32_t::set_window_title(const window_title_type& window_title) const
+    {
         glfwSetWindowTitle(window_ptr, window_title.c_str());
-	}
+    }
 
     platform_t::window_size_type platform_win32_t::get_window_size() const
-	{
+    {
         window_size_type window_size;
 
         glfwGetWindowSize(window_ptr, &window_size.x, &window_size.y);
 
-		return window_size;
-	}
+        return window_size;
+    }
 
-	void platform_win32_t::set_window_size(const window_size_type& window_size) const
-	{
+    void platform_win32_t::set_window_size(const window_size_type& window_size) const
+    {
         glfwSetWindowSize(window_ptr, window_size.x, window_size.y);
-	}
+    }
 
-	platform_t::window_size_type platform_win32_t::get_window_location() const
-	{
-		vec2_i32_t window_location;
+    platform_t::window_size_type platform_win32_t::get_window_location() const
+    {
+        vec2_i32_t window_location;
 
         glfwGetWindowPos(window_ptr, &window_location.x, &window_location.y);
 
-		return window_location;
-	}
+        return window_location;
+    }
 
-	void platform_win32_t::set_window_location(const window_size_type& window_location) const
-	{
+    void platform_win32_t::set_window_location(const window_size_type& window_location) const
+    {
         glfwSetWindowPos(window_ptr, window_location.x, window_location.y);
-	}
+    }
 
-	std::string platform_win32_t::get_clipboard_string() const
-	{
-		return glfwGetClipboardString(window_ptr);
-	}
+    std::string platform_win32_t::get_clipboard_string() const
+    {
+        return glfwGetClipboardString(window_ptr);
+    }
 
-	void platform_win32_t::set_clipboard_string(const std::string& clipboard_string) const
-	{
-		glfwSetClipboardString(window_ptr, clipboard_string.c_str());
-	}
+    void platform_win32_t::set_clipboard_string(const std::string& clipboard_string) const
+    {
+        glfwSetClipboardString(window_ptr, clipboard_string.c_str());
+    }
 }

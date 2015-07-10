@@ -25,9 +25,9 @@ namespace mandala
             uint32_t stream_index = 0;
             hash_t hash;
             uint32_t offset = 0;
-		};
+        };
 
-		typedef std::map<const hash_t, string_t> strings_type;
+        typedef std::map<const hash_t, string_t> strings_type;
         
         void mount(const std::string& file);
         void purge();
@@ -41,8 +41,8 @@ namespace mandala
     private:
         std::recursive_mutex mutex;
         std::vector<boost::shared_ptr<std::istream>> streams;
-		std::map<language_type, strings_type> language_strings;
+        std::map<language_type, strings_type> language_strings;
     };
 
-	extern string_mgr_t strings;
+    extern string_mgr_t strings;
 }

@@ -8,7 +8,7 @@
 #include <glm\gtc\matrix_inverse.hpp>
 #include <glm\gtx\norm.hpp>
 #include <glm\gtx\transform.hpp>
-#include <glm\gtc\type_ptr.hpp>	
+#include <glm\gtc\type_ptr.hpp>    
 
 //mandala
 #include "model.hpp"

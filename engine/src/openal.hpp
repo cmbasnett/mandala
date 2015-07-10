@@ -10,13 +10,13 @@
 
 namespace mandala
 {
-	inline void alCheckError()
-	{
-		ALenum error = alGetError();
+    inline void alCheckError()
+    {
+        ALenum error = alGetError();
 
-		if (error != AL_NO_ERROR)
-		{
-			throw std::exception();
-		}
-	}
+        if (error != AL_NO_ERROR)
+        {
+            throw std::exception();
+        }
+    }
 }

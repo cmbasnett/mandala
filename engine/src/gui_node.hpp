@@ -16,7 +16,7 @@
 
 namespace mandala
 {
-	struct input_event_t;
+    struct input_event_t;
 
     typedef uint8_t gui_anchor_flags_type;
 
@@ -32,15 +32,15 @@ namespace mandala
         GUI_ANCHOR_FLAG_ALL = (GUI_ANCHOR_FLAG_VERTICAL | GUI_ANCHOR_FLAG_HORIZONTAL)
     };
 
-	enum class gui_dock_mode_e
-	{
-		NONE,
-		BOTTOM,
-		FILL,
-		LEFT,
-		RIGHT,
-		TOP
-	};
+    enum class gui_dock_mode_e
+    {
+        NONE,
+        BOTTOM,
+        FILL,
+        LEFT,
+        RIGHT,
+        TOP
+    };
 
     struct gui_node_t : public boost::enable_shared_from_this<gui_node_t>
     {
@@ -61,17 +61,17 @@ namespace mandala
         const size_type& get_size() const { return size; }
 
         const color_type& get_color() const { return color; }
-		const bounds_type& get_bounds() const { return bounds; }
+        const bounds_type& get_bounds() const { return bounds; }
         bool get_is_dirty() const { return is_dirty; }
-		bool get_is_hidden() const { return is_hidden; }
+        bool get_is_hidden() const { return is_hidden; }
         bool get_should_clip() const { return should_clip; }
-		const std::vector<boost::shared_ptr<gui_node_t>>& get_children() const { return children; }
+        const std::vector<boost::shared_ptr<gui_node_t>>& get_children() const { return children; }
 
-		void set_dock_mode(gui_dock_mode_e dock_mode) { this->dock_mode = dock_mode; dirty(); }
-		void set_anchor_flags(gui_anchor_flags_type anchor_flags) { this->anchor_flags = anchor_flags; dirty(); }
-		void set_anchor_offset(const vec2_t& anchor_offset) { this->anchor_offset = anchor_offset; dirty(); }
+        void set_dock_mode(gui_dock_mode_e dock_mode) { this->dock_mode = dock_mode; dirty(); }
+        void set_anchor_flags(gui_anchor_flags_type anchor_flags) { this->anchor_flags = anchor_flags; dirty(); }
+        void set_anchor_offset(const vec2_t& anchor_offset) { this->anchor_offset = anchor_offset; dirty(); }
         void set_padding(const padding_t& padding) { this->padding = padding; dirty(); }
-		void set_margin(const padding_t& margin) { this->margin = margin; dirty(); }
+        void set_margin(const padding_t& margin) { this->margin = margin; dirty(); }
         void set_size(const size_type& size) { this->desired_size = size; dirty(); }
         void set_size_modes(const gui_size_modes_t size_modes) { this->size_modes = size_modes; dirty(); }
         void set_color(const color_type& color) { this->color = color; dirty(); }
@@ -92,10 +92,10 @@ namespace mandala
         void render(mat4_t world_matrix, mat4_t view_projection_matrix);
 
         bool has_children() const { return !children.empty(); }
-		bool has_parent() const { return parent.get() != nullptr; }
+        bool has_parent() const { return parent.get() != nullptr; }
 
         void dirty();
-		void orphan();
+        void orphan();
         void adopt(const boost::shared_ptr<gui_node_t>& child);
 
     private:
@@ -113,10 +113,10 @@ namespace mandala
         bounds_type bounds;
         bool is_hidden = false;
         bool should_clip = false;
-		bool has_focus = false;
+        bool has_focus = false;
         gui_size_modes_t size_modes;
 
-	protected:
-		bool is_dirty = true;
-	};
+    protected:
+        bool is_dirty = true;
+    };
 }

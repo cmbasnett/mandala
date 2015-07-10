@@ -8,16 +8,16 @@
 
 namespace mandala
 {
-	//TODO: get rid of this
-	inline void glCheckError()
-	{
-		GLenum error = GL_NO_ERROR;
+    //TODO: get rid of this
+    inline void glCheckError()
+    {
+        GLenum error = GL_NO_ERROR;
 
-		error = glGetError();
+        error = glGetError();
 
-		if (error != GL_NO_ERROR)
-		{
-			throw std::exception();
-		}
-	}
+        if (error != GL_NO_ERROR)
+        {
+            throw std::exception();
+        }
+    }
 }

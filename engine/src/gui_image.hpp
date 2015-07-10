@@ -26,32 +26,32 @@ namespace mandala
             REPEAT
         };
 
-		static const size_t VERTEX_COUNT = 4;
-		static const size_t INDEX_COUNT = 4;
+        static const size_t VERTEX_COUNT = 4;
+        static const size_t INDEX_COUNT = 4;
         
         typedef basic_gpu_vertex_t vertex_type;
         typedef index_type<INDEX_COUNT>::type index_type;
         typedef vertex_buffer_t<vertex_type> vertex_buffer_type;
         typedef index_buffer_t<index_type> index_buffer_type;
 
-		gui_image_t();
+        gui_image_t();
 
-		const boost::optional<sprite_t>& get_sprite() const { return sprite; }
-		bool get_is_autosized_to_sprite() const { return is_autosized_to_sprite; }
+        const boost::optional<sprite_t>& get_sprite() const { return sprite; }
+        bool get_is_autosized_to_sprite() const { return is_autosized_to_sprite; }
         triangle_mode_e get_triangle_mode() const { return triangle_mode; }
 
         void set_sprite(boost::optional<sprite_t> sprite);
         void set_is_autosized_to_sprite(bool is_autosized_to_sprite);
         void set_triangle_mode(triangle_mode_e triangle_mode) { this->triangle_mode = triangle_mode; }
 
-	private:
-		boost::shared_ptr<vertex_buffer_type> vertex_buffer;
-		boost::shared_ptr<index_buffer_type> index_buffer;
-		boost::optional<sprite_t> sprite;
-		bool is_autosized_to_sprite = false;
+    private:
+        boost::shared_ptr<vertex_buffer_type> vertex_buffer;
+        boost::shared_ptr<index_buffer_type> index_buffer;
+        boost::optional<sprite_t> sprite;
+        bool is_autosized_to_sprite = false;
         triangle_mode_e triangle_mode = triangle_mode_e::BOTH;
 
-		virtual void on_render_begin(mat4_t& world_matrix, mat4_t& view_projection_matrix) override;
+        virtual void on_render_begin(mat4_t& world_matrix, mat4_t& view_projection_matrix) override;
         virtual void on_clean_end() override;
     };
 }

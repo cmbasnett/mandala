@@ -10,7 +10,7 @@
 namespace mandala
 {
     struct gui_canvas_t : gui_node_t
-	{
+    {
         gui_canvas_t();
 
         static const auto INDEX_COUNT = 4;

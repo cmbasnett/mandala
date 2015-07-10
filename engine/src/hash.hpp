@@ -9,11 +9,11 @@
 
 namespace mandala
 {
-	namespace details
-	{
-		template<typename Value>
-		struct hash_t
-		{
+    namespace details
+    {
+        template<typename Value>
+        struct hash_t
+        {
             typedef std::string string_type;
             typedef Value value_type;
             typedef hash_t<value_type> type;
@@ -28,16 +28,16 @@ namespace mandala
                 string(string),
 #endif
                 value(fnv::fnv1a<value_type>(reinterpret_cast<string_type::value_type*>(const_cast<string_type::value_type*>(string.c_str())), string.length()))
-			{
-			}
+            {
+            }
 
-			hash_t(type&& copy) :
+            hash_t(type&& copy) :
 #if defined(DEBUG)
-				string(std::move(copy.string)),
+                string(std::move(copy.string)),
 #endif
                 value(copy.value)
-			{
-			}
+            {
+            }
 
 #if defined(DEBUG)
             const string_type& get_string() const
@@ -51,55 +51,55 @@ namespace mandala
                 return value;
             }
 
-		private:
+        private:
 #if defined(DEBUG)
             string_type string;
 #endif
             value_type value = value_type(0);
 
-		public:
-			hash_t& operator=(const hash_t& rhs)
-			{
+        public:
+            hash_t& operator=(const hash_t& rhs)
+            {
 #if defined(DEBUG)
                 string = rhs.string;
 #endif
                 value = rhs.value;
 
-				return *this;
-			}
+                return *this;
+            }
 
-			type& operator=(string_type&& string)
-			{
+            type& operator=(string_type&& string)
+            {
 #if defined(DEBUG)
                 this->string = string;
 #endif
                 value(fnv::fnv1a<value_type>(reinterpret_cast<char*>(const_cast<char*>(string.c_str())), string.length()))
 
-				return *this;
-			}
+                return *this;
+            }
 
-			inline type& operator=(type&& copy)
-			{
+            inline type& operator=(type&& copy)
+            {
 #if defined(DEBUG)
-				string = std::move(copy.string);
+                string = std::move(copy.string);
 #endif
-				value = copy.value;
+                value = copy.value;
 
-				return *this;
-			}
+                return *this;
+            }
 
-			inline bool operator==(const type& rhs) const { return value == rhs.value; }
-			inline bool operator!=(const type& rhs) const { return value != rhs.value; }
-			inline bool operator>(const type& rhs) const { return value > rhs.value; }
-			inline bool operator<(const type& rhs) const { return value < rhs.value; }
-			inline bool operator>=(const type& rhs) const { return value >= rhs.value; }
-			inline bool operator<=(const type& rhs) const { return value <= rhs.value; }
-		};
-	}
+            inline bool operator==(const type& rhs) const { return value == rhs.value; }
+            inline bool operator!=(const type& rhs) const { return value != rhs.value; }
+            inline bool operator>(const type& rhs) const { return value > rhs.value; }
+            inline bool operator<(const type& rhs) const { return value < rhs.value; }
+            inline bool operator>=(const type& rhs) const { return value >= rhs.value; }
+            inline bool operator<=(const type& rhs) const { return value <= rhs.value; }
+        };
+    }
 
-	typedef details::hash_t<uint32_t> hash32_t;
-	typedef details::hash_t<uint64_t> hash64_t;
-	typedef hash32_t hash_t;
+    typedef details::hash_t<uint32_t> hash32_t;
+    typedef details::hash_t<uint64_t> hash64_t;
+    typedef hash32_t hash_t;
 }
 
 template<typename T>

@@ -32,12 +32,12 @@ namespace mandala
             data(vertices.begin(), vertices.size(), usage);
         }
 
-		void data(std::vector<vertex_type>& vertices, gpu_t::buffer_usage_e usage)
+        void data(std::vector<vertex_type>& vertices, gpu_t::buffer_usage_e usage)
         {
             data(vertices.data(), vertices.size(), usage);
         }
 
-	private:
+    private:
         vertex_buffer_t(const vertex_buffer_t&) = delete;
         vertex_buffer_t& operator=(const vertex_buffer_t&) = delete;
     };

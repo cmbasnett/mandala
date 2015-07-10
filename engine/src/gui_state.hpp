@@ -10,14 +10,14 @@
 
 namespace mandala
 {
-	struct input_event_t;
+    struct input_event_t;
 
-	struct gui_state_t : state_t
-	{
-		gui_state_t();
+    struct gui_state_t : state_t
+    {
+        gui_state_t();
 
-		virtual void tick(float32_t dt) override;
-		virtual void render() override;
+        virtual void tick(float32_t dt) override;
+        virtual void render() override;
         virtual bool on_input_event(input_event_t& input_event) override;
         virtual void on_enter() override;
 #if defined(MANDALA_PC)
@@ -27,6 +27,6 @@ namespace mandala
         const boost::shared_ptr<gui_layout_t>& get_layout() const { return layout; }
 
     private:
-		boost::shared_ptr<gui_layout_t> layout;
-	};
+        boost::shared_ptr<gui_layout_t> layout;
+    };
 }

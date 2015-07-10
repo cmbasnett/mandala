@@ -16,17 +16,17 @@
 
 namespace mandala
 {
-	gui_state_t::gui_state_t()
-	{
-		layout = boost::make_shared<gui_layout_t>();
-		layout->set_dock_mode(gui_dock_mode_e::FILL);
+    gui_state_t::gui_state_t()
+    {
+        layout = boost::make_shared<gui_layout_t>();
+        layout->set_dock_mode(gui_dock_mode_e::FILL);
     }
 
-	void gui_state_t::tick(float32_t dt)
-	{
+    void gui_state_t::tick(float32_t dt)
+    {
         state_t::tick(dt);
 
-		//TODO: get child nodes to tell layout about cleanliness, recursing every tick is expensive!
+        //TODO: get child nodes to tell layout about cleanliness, recursing every tick is expensive!
         std::function<bool(const boost::shared_ptr<gui_node_t>&)> is_dirty = [&](const boost::shared_ptr<gui_node_t>& node)
         {
             if (node->get_is_dirty())
@@ -51,26 +51,26 @@ namespace mandala
         }
 
         layout->tick(dt);
-	}
+    }
 
-	void gui_state_t::render()
-	{
-		const auto screen_size = platform.get_screen_size();
+    void gui_state_t::render()
+    {
+        const auto screen_size = platform.get_screen_size();
 
-		auto view_projection_matrix = glm::ortho(0.0f, static_cast<float32_t>(screen_size.x), 0.0f, static_cast<float32_t>(screen_size.y));
+        auto view_projection_matrix = glm::ortho(0.0f, static_cast<float32_t>(screen_size.x), 0.0f, static_cast<float32_t>(screen_size.y));
 
         auto depth_state = gpu.depth.get_state();
         depth_state.should_test = false;
 
         gpu.depth.push_state(depth_state);
 
-		layout->render(mat4_t(), view_projection_matrix);
+        layout->render(mat4_t(), view_projection_matrix);
 
-		gpu.depth.pop_state();
-	}
+        gpu.depth.pop_state();
+    }
 
-	bool gui_state_t::on_input_event(input_event_t& input_event)
-	{
+    bool gui_state_t::on_input_event(input_event_t& input_event)
+    {
         return layout->on_input_event(input_event);
     }
 

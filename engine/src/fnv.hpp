@@ -5,10 +5,10 @@
 
 namespace mandala
 {
-	namespace fnv
-	{
-		namespace detail
-		{
+    namespace fnv
+    {
+        namespace detail
+        {
             template<typename Value>
             struct fnv1a_t;
 
@@ -29,22 +29,22 @@ namespace mandala
                 static const value_type OFFSET_BASIS = 14695981039346656037ULL;
                 static const value_type PRIME = 1099511628211ULL;
             };
-		}
+        }
 
-		template<typename Value>
+        template<typename Value>
         Value fnv1a(void* ptr, size_t length)
-		{
-			Value hash = detail::fnv1a_t<Value>::OFFSET_BASIS;
-			auto current = static_cast<uint8_t*>(ptr);
-			auto end = current + length;
+        {
+            Value hash = detail::fnv1a_t<Value>::OFFSET_BASIS;
+            auto current = static_cast<uint8_t*>(ptr);
+            auto end = current + length;
 
-			while(current < end)
-			{
-				hash ^= *(current++);
+            while(current < end)
+            {
+                hash ^= *(current++);
                 hash *= detail::fnv1a_t<Value>::PRIME;
-			}
+            }
 
-			return hash;
-		}
-	}
+            return hash;
+        }
+    }
 }

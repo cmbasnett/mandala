@@ -15,7 +15,7 @@
 namespace mandala
 {
     template<typename T>
-    void render_rectangle(const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const details::rectangle_t<T>& rectangle, bool is_filled = false)
+    void render_rectangle(const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const details::rectangle_t<T>& rectangle, const rgba_type& color, bool is_filled = false)
     {
         typedef vertex_buffer_t<basic_gpu_vertex_t> vertex_buffer_type;
         typedef index_buffer_t<uint8_t> index_buffer_type;
@@ -50,6 +50,7 @@ namespace mandala
 
         gpu.set_uniform("world_matrix", world_matrix * glm::translate(rectangle.x, rectangle.y, T(0)) * glm::scale(rectangle.width, rectangle.height, T(0)));
         gpu.set_uniform("view_projection_matrix", view_projection_matrix);
+        gpu.set_uniform("color", color);
 
         gpu.draw_elements(is_filled ? gpu_t::primitive_type_e::TRIANGLE_FAN : gpu_t::primitive_type_e::LINE_LOOP, 4, index_buffer_type::DATA_TYPE, 0);
 
@@ -60,7 +61,7 @@ namespace mandala
     }
 
     template<typename T>
-    void render_aabb(const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const details::aabb3_t<T>& aabb)
+    void render_aabb(const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const details::aabb3_t<T>& aabb, const rgba_type& color)
     {
         typedef vertex_buffer_t<basic_gpu_vertex_t> vertex_buffer_type;
         typedef index_buffer_t<uint8_t> index_buffer_type;
@@ -99,6 +100,7 @@ namespace mandala
 
         gpu.set_uniform("world_matrix", world_matrix * glm::translate(aabb.min) * glm::scale(aabb.size()));
         gpu.set_uniform("view_projection_matrix", view_projection_matrix);
+        gpu.set_uniform("color", color);
 
         gpu.draw_elements(gpu_t::primitive_type_e::LINES, 24, index_buffer_type::DATA_TYPE, 0);
 

@@ -16,7 +16,7 @@
 namespace mandala
 {
     struct game_t;
-	struct input_event_t;
+    struct input_event_t;
 
     struct app_t
     {

@@ -31,16 +31,16 @@ namespace mandala
         Py_Finalize();
     }
 
-	boost::python::api::object python_t::exec(const char* string)
-	{
-		try
+    boost::python::api::object python_t::exec(const char* string)
+    {
+        try
         {
-			return boost::python::exec(string, main_namespace);
-		}
-		catch (boost::python::error_already_set const&)
-		{
-			PyObject* type = nullptr;
-			PyObject* value = nullptr;
+            return boost::python::exec(string, main_namespace);
+        }
+        catch (boost::python::error_already_set const&)
+        {
+            PyObject* type = nullptr;
+            PyObject* value = nullptr;
             PyObject* traceback = nullptr;
             const char* error_string = nullptr;
 
@@ -54,11 +54,11 @@ namespace mandala
                 error_string = value_as_string;
             }
 
-			PyErr_Clear();
+            PyErr_Clear();
 
-			throw std::exception(error_string);
-		}
-	}
+            throw std::exception(error_string);
+        }
+    }
 
     boost::python::api::object MANDALA_API_ENTRY python_t::exec_file(const char* file)
     {

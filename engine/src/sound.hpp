@@ -8,14 +8,14 @@
 
 namespace mandala
 {
-	struct sound_t : resource_t
-	{
+    struct sound_t : resource_t
+    {
         typedef uint32_t buffer_id_type;
 
-		typedef std::chrono::milliseconds duration_type;
+        typedef std::chrono::milliseconds duration_type;
 
-		sound_t(std::istream& istream);
-		virtual ~sound_t();
+        sound_t(std::istream& istream);
+        virtual ~sound_t();
 
         int16_t get_channel_count() const { return channel_count; }
         int32_t get_sample_rate() const { return sample_rate; }
@@ -33,5 +33,5 @@ namespace mandala
         int16_t bits_per_sample = 0;
         buffer_id_type buffer_id = 0;
         duration_type duration;
-	};
+    };
 }

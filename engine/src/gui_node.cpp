@@ -393,7 +393,7 @@ namespace mandala
 
             gpu.clear(gpu_t::CLEAR_FLAG_DEPTH | gpu_t::CLEAR_FLAG_STENCIL);
 
-            render_rectangle(world_matrix, view_projection_matrix, rectangle_t(bounds), true);
+            render_rectangle(world_matrix, view_projection_matrix, rectangle_t(bounds), rgba_type(1), true);
 
             gpu.color.pop_state();
             gpu.depth.pop_state();
@@ -409,7 +409,7 @@ namespace mandala
 
         //TODO: configure this to be enable-able in-game
 #if defined(DEBUG)
-        render_rectangle(world_matrix, view_projection_matrix, rectangle_t(bounds));
+        render_rectangle(world_matrix, view_projection_matrix, rectangle_t(bounds), rgba_type(1));
 #endif
 
         on_render_begin(world_matrix, view_projection_matrix);

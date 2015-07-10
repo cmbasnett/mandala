@@ -9,17 +9,17 @@
 namespace mandala
 {
     audio_source_t::audio_source_t()
-	{
+    {
         id = audio.create_source();
-	}
+    }
 
     audio_source_t::~audio_source_t()
-	{
+    {
         audio.destroy_source(id);
-	}
+    }
 
     audio_source_state_e audio_source_t::get_state() const
-	{
+    {
         return audio.get_source_state(id);
     }
 
@@ -48,33 +48,33 @@ namespace mandala
         audio.set_source_max_distance(id, max_distance);
     }
 
-	void audio_source_t::play()
-	{
+    void audio_source_t::play()
+    {
         audio.play_source(id);
-	}
+    }
 
-	void audio_source_t::pause()
-	{
+    void audio_source_t::pause()
+    {
         audio.pause_source(id);
-	}
+    }
 
-	void audio_source_t::rewind()
-	{
+    void audio_source_t::rewind()
+    {
         audio.rewind_source(id);
-	}
+    }
 
-	void audio_source_t::stop()
-	{
+    void audio_source_t::stop()
+    {
         audio.stop_source(id);
-	}
+    }
 
-	void audio_source_t::queue_sound(const boost::shared_ptr<sound_t>& sound)
-	{
+    void audio_source_t::queue_sound(const boost::shared_ptr<sound_t>& sound)
+    {
         audio.source_queue_sound(id, sound);
-	}
+    }
 
     void audio_source_t::unqueue_sound(const boost::shared_ptr<sound_t>& sound)
-	{
+    {
         audio.source_unqueue_sound(id, sound);
-	}
+    }
 }

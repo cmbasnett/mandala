@@ -238,7 +238,7 @@ namespace mandala
 
             if (should_show_cursor)
             {
-                render_rectangle(world_matrix, view_projection_matrix, cursor.rectangle, true);
+                render_rectangle(world_matrix, view_projection_matrix, cursor.rectangle, rgba_type(1, 0, 0, 1), true);
             }
         }
 

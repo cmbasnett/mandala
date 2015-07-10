@@ -2,7 +2,7 @@
 #include "python.hpp"
 #include "app.hpp"
 #include "game.hpp"
-#include "ntree.hpp"
+#include "octtree.hpp"
 
 int main()
 {
@@ -10,9 +10,8 @@ int main()
     using namespace boost;
     using namespace boost::python;
 
-    ntree<8> a;
-
-    std::cout << reinterpret_cast<int>(&a);
+    octree_f32_t qt = octree_f32_t(64);
+    qt.birth();
 
     try
     {
@@ -21,5 +20,7 @@ int main()
     catch (std::exception& e)
     {
         std::cout << e.what();
+
+        system("pause");
     }
 }

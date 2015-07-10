@@ -14,13 +14,13 @@
 
 namespace mandala
 {
-	struct sound_t;
+    struct sound_t;
     struct audio_source_t;
     struct audio_device_t;
     struct audio_context_t;
 
-	struct audio_mgr_t
-	{
+    struct audio_mgr_t
+    {
         struct doppler_t
         {
             float32_t factor = 1.0f;
@@ -33,18 +33,18 @@ namespace mandala
             vec3_t velocity;
         };
 
-		struct channel_t
-		{
-		};
+        struct channel_t
+        {
+        };
 
-		static const int CHANNEL_COUNT = 16;
+        static const int CHANNEL_COUNT = 16;
 
-		typedef index_type<CHANNEL_COUNT>::type channel_index_type;
+        typedef index_type<CHANNEL_COUNT>::type channel_index_type;
         typedef std::map<uint32_t, boost::shared_ptr<audio_source_t>> sources_type;
 
-		audio_mgr_t();
+        audio_mgr_t();
 
-		void tick(float32_t dt);
+        void tick(float32_t dt);
 
         listener_t listener;
         doppler_t doppler;
@@ -69,11 +69,11 @@ namespace mandala
 
         const sources_type& get_sources() const { return sources; }
 
-	private:
-		boost::shared_ptr<audio_context_t> context;
+    private:
+        boost::shared_ptr<audio_context_t> context;
         sources_type sources;
         std::vector<boost::shared_ptr<audio_device_t>> devices;
-	};
+    };
 
-	extern audio_mgr_t audio;
+    extern audio_mgr_t audio;
 }

@@ -304,11 +304,14 @@
     <ClInclude Include="..\..\src\stream_redirect.hpp">
       <Filter>io</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\ntree.hpp">
-      <Filter>level</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\gui_size.hpp">
       <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\octtree.hpp">
+      <Filter>level</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\quadtree.hpp">
+      <Filter>level</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -17,16 +17,16 @@
 
 namespace mandala
 {
-	audio_mgr_t audio;
+    audio_mgr_t audio;
 
-	audio_mgr_t::audio_mgr_t()
-	{
+    audio_mgr_t::audio_mgr_t()
+    {
         try
         {
             auto device = boost::make_shared<audio_device_t>();
             devices.push_back(device);
 
-		    context = boost::make_shared<audio_context_t>(device);
+            context = boost::make_shared<audio_context_t>(device);
 
             if (alcMakeContextCurrent(*context) == ALC_FALSE)
             {
@@ -43,8 +43,8 @@ namespace mandala
         }
     }
 
-	void audio_mgr_t::tick(float32_t dt)
-	{
+    void audio_mgr_t::tick(float32_t dt)
+    {
         alDopplerFactor(doppler.factor);
         alDopplerVelocity(doppler.speed_of_sound);
 
@@ -55,29 +55,29 @@ namespace mandala
 
         auto sources_itr = sources.begin();
 
-		while (sources_itr != sources.end())
-		{
+        while (sources_itr != sources.end())
+        {
             const auto& source = sources_itr->second;
 
-			if (source.unique() && source->get_state() == audio_source_state_e::stopped)
-			{
-				sources_itr = sources.erase(sources_itr);
-			}
-			else
-			{
-				++sources_itr;
-			}
-		}
-	}
+            if (source.unique() && source->get_state() == audio_source_state_e::stopped)
+            {
+                sources_itr = sources.erase(sources_itr);
+            }
+            else
+            {
+                ++sources_itr;
+            }
+        }
+    }
 
-	uint32_t audio_mgr_t::create_source()
-	{
+    uint32_t audio_mgr_t::create_source()
+    {
         uint32_t source_id;
 
         alGenSources(1, &source_id); alCheckError();
 
-		return source_id;
-	}
+        return source_id;
+    }
 
     void audio_mgr_t::destroy_source(uint32_t source_id)
     {

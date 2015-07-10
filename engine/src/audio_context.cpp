@@ -14,18 +14,18 @@ namespace mandala
             throw std::exception();
         }
 
-		pointer = alcCreateContext(*device.get(), nullptr); alCheckError();
+        pointer = alcCreateContext(*device.get(), nullptr); alCheckError();
 
         if (pointer == nullptr)
         {
             throw std::exception();
         }
 
-		alcProcessContext(pointer); alCheckError();
+        alcProcessContext(pointer); alCheckError();
     }
 
     audio_context_t::~audio_context_t()
     {
-		alcDestroyContext(pointer); alCheckError();
+        alcDestroyContext(pointer); alCheckError();
     }
 }

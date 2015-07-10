@@ -10,7 +10,7 @@
 
 namespace mandala
 {
-	string_mgr_t strings;
+    string_mgr_t strings;
 
     void string_mgr_t::mount(const std::string& file)
     {
@@ -23,21 +23,21 @@ namespace mandala
 
         for (const auto& archive_language_string : archive.language_strings)
         {
-			const auto& language = archive_language_string.first;
-			
-			auto language_strings_itr = language_strings.emplace_hint(language_strings.begin(), language, strings_type());
+            const auto& language = archive_language_string.first;
+            
+            auto language_strings_itr = language_strings.emplace_hint(language_strings.begin(), language, strings_type());
 
-			auto& strings = language_strings_itr->second;
+            auto& strings = language_strings_itr->second;
 
-			for (auto& archive_string : archive_language_string.second)
-			{
-				auto strings_itr = strings.emplace_hint(strings.begin(), archive_string.hash, string_t());
-				auto& string = strings_itr->second;
+            for (auto& archive_string : archive_language_string.second)
+            {
+                auto strings_itr = strings.emplace_hint(strings.begin(), archive_string.hash, string_t());
+                auto& string = strings_itr->second;
 
-				string.hash = std::move(archive_string.hash);
-				string.stream_index = streams.size() - 1;
-				string.offset = archive_string.offset;
-			}
+                string.hash = std::move(archive_string.hash);
+                string.stream_index = streams.size() - 1;
+                string.offset = archive_string.offset;
+            }
         }
     }
 
@@ -46,7 +46,7 @@ namespace mandala
         std::lock_guard<std::recursive_mutex> lock(mutex);
 
         streams.clear();
-		language_strings.clear();
+        language_strings.clear();
     }
 
     size_t string_mgr_t::count() const
@@ -67,24 +67,24 @@ namespace mandala
 
         std::lock_guard<std::recursive_mutex> lock(mutex);
 
-		auto language_strings_itr = language_strings.find(language);
+        auto language_strings_itr = language_strings.find(language);
 
-		if (language_strings_itr == language_strings.end())
-		{
-			std::ostringstream oss;
-			oss << "no strings mounted for language \"" << language << "\"";
-			throw std::out_of_range(oss.str());
-		}
+        if (language_strings_itr == language_strings.end())
+        {
+            std::ostringstream oss;
+            oss << "no strings mounted for language \"" << language << "\"";
+            throw std::out_of_range(oss.str());
+        }
 
-		auto& strings = language_strings_itr->second;
+        auto& strings = language_strings_itr->second;
 
         const auto strings_itr = strings.find(hash);
 
         if (strings_itr == strings.end())
         {
-			std::ostringstream oss;
-			oss << "no string \"" << hash << "\" for language \"" << language << "\"";
-			throw std::out_of_range(oss.str());
+            std::ostringstream oss;
+            oss << "no string \"" << hash << "\" for language \"" << language << "\"";
+            throw std::out_of_range(oss.str());
         }
 
         const auto& string = strings_itr->second;
@@ -92,8 +92,8 @@ namespace mandala
 
         stream->seekg(string.offset, std::ios::beg);
 
-		std::string buffer;
-		std::getline(*stream, buffer, '\0');
+        std::string buffer;
+        std::getline(*stream, buffer, '\0');
 
         //string expansion
         auto beg = 0;
