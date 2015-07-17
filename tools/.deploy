@@ -1,0 +1,47 @@
+{
+    "subprocesses":
+    [
+        {
+            "patterns":
+            [
+            	"models\\\\(.+)\\.md5m",
+            	"models\\\\(.+)\\.md5a"
+            ],
+            "processes":
+            [
+            	"python \"%(workingdir)s\\md5b.py\" \"%(abspath)s\" -o \"%(deploydir)s\""
+            ]
+        },
+        {
+            "patterns":
+            [
+            	"fonts\\\\(.+)\\.bmfc"
+            ],
+            "processes":
+            [
+            	"\"%(workingdir)s\\bmfont\\source\\Release\\bmfont.exe\" -c \"%(abspath)s\" -o \"%(deploydir)s\""
+            ]
+        },
+        {
+            "patterns":
+            [
+            	"strings\\\\(.+)\\.csv"
+            ],
+            "processes":
+            [
+            	"python \"%(workingdir)s\\stringpack.py\" \"%(abspath)s\" \"%(deploydir)s\""
+            ]
+        },
+        {
+        	"patterns":
+        	[
+        		"sprite_sets\\\\(.+)\\.tps"
+        	],
+        	"processes":
+        	[
+        		"TexturePacker \"%(abspath)s\" --quiet",
+        		"\"%(workingdir)s\\tpsb\\bin\\tpsb.exe\" \"%(absdir)s\\%(name)s.json\" \"%(deploydir)s\""
+        	]
+        }
+    ]
+}

@@ -5,6 +5,8 @@ import shutil
 import fnmatch
 import zlib
 import json
+import re
+import shlex
 
 def iequal(a, b):
     try:
@@ -13,30 +15,8 @@ def iequal(a, b):
         return a == b
 
 cwd = os.path.dirname(os.path.realpath(__file__))
-
-bmfont_path = os.path.normpath(os.path.join(cwd, 'bmfont', 'source', 'Release', 'bmfont.exe'))
-tpsb_path = os.path.normpath(os.path.join(cwd, 'tpsb', 'bin', 'tpsb.exe'))
-md5b_path = os.path.normpath(os.path.join(cwd, 'md5b.py'))
-stringpack_path = os.path.normpath(os.path.join(cwd, 'stringpack.py'))
-
 resources_dir = ''
 deploy_dir = ''
-
-def deploy_bitmap_font(p):
-	process = subprocess.call([bmfont_path, '-c', p, '-o', os.path.join(deploy_dir, os.path.splitext(os.path.basename(p))[0] + '.fnt')])
-
-def deploy_sprite_set(p):
-	#TODO: create custom texturepacker export format to eliminate need for this!
-	process = subprocess.call(['TexturePacker', p, '--quiet'])
-	json_file = os.path.splitext(p)[0] + '.json'
-	process = subprocess.call([tpsb_path, json_file, deploy_dir])
-	#TODO: remove intermediate .json file (maybe?)
-
-def deploy_model(p):
-	process = subprocess.call(['python', md5b_path, p, '-o', deploy_dir])
-
-def deploy_strings(p):
-	process = subprocess.call(['python', stringpack_path, p, deploy_dir])
 
 ignore_patterns = []
 
@@ -86,12 +66,23 @@ def main():
 		if not os.path.isdir(deploy_dir):
 			raise
 
-	crcs = dict()
+	deploycrc = dict()
+	deploycrc['scripts'] = dict()
+	deploycrc['files'] = dict()
+
+	# read .deployconfig
+	try:
+		with open(os.path.join(cwd, ".deploy")) as f:
+			deployconfig = json.loads(f.read())
+	except IOError as e:
+		raise
+
+	subprocesses = deployconfig['subprocesses']
 
 	# read .deploycrc
 	try:
 		with open(os.path.join(deploy_dir, '.deploycrc')) as f:
-			crcs = json.loads(f.read())
+			deploycrc = json.loads(f.read())
 	except IOError:
 		pass
 
@@ -115,26 +106,35 @@ def main():
 			with open(abspath, 'rb') as g:
 				crc = zlib.crc32(g.read())
 
-				if relpath not in crcs or crcs[relpath] != crc:
-					crcs[relpath] = crc
+				if relpath not in deploycrc['files'] or deploycrc['files'][relpath] != crc:
+					deploycrc['files'][relpath] = crc
 
+					absdir = os.path.dirname(abspath)
+					name = os.path.splitext(os.path.basename(relpath))[0]
 					ext = os.path.splitext(relpath)[-1]
 
-					# TODO: load in a pre-processing rule-sheet
-					if iequal(ext, '.bmfc'):
-						deploy_bitmap_font(abspath)
-					elif iequal(ext, '.md5anim') or iequal(ext, '.md5mesh'):
-						deploy_model(abspath)
-					elif iequal(ext, '.csv'):	#TODO: will cause issues if other non-string csvs exist, figure out a way to mitigate this
-						deploy_strings(abspath)
-					elif iequal(ext, '.tps'):
-						deploy_sprite_set(abspath)
+					processes = None
+
+					# resolve processes to run on this file
+					for subprocess_ in subprocesses:
+						for pattern in subprocess_['patterns']:
+							if re.match(pattern, relpath) is not None:
+								if isinstance(subprocess_['processes'], list):
+									processes = subprocess_['processes']
+								break
+
+					# run preprocessor
+					if isinstance(processes, list):
+						for process in processes:
+							process = process % {'relpath': relpath, 'deploydir': deploy_dir, 'name': name, 'ext': ext, 'workingdir': cwd, 'abspath': abspath, 'absdir': absdir }
+							args = shlex.split(process)
+							subprocess.call(args)
 					else:
 						shutil.copy(abspath, deploy_dir)
 
 	# write .deploycrc
 	with open(os.path.join(deploy_dir, '.deploycrc'), 'w+') as f:
-		f.write(json.dumps(crcs, indent=4, sort_keys=True))
+		f.write(json.dumps(deploycrc, indent=4, sort_keys=True))
 
 if __name__ == '__main__':
 	main()
