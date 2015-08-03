@@ -72,13 +72,21 @@ namespace tpb
             if (region.is_rotated)
             {
                 std::swap(region.frame_rectangle.width, region.frame_rectangle.height);
+                std::swap(region.rectangle.x, region.rectangle.y);
+                std::swap(region.rectangle.height, region.rectangle.width);
             }
 
+            //frame_uv
+            region.frame_uv.min.x = static_cast<glm::f32>(region.frame_rectangle.x) / texture_size.x;
+            region.frame_uv.min.y = static_cast<glm::f32>(texture_size.y - region.frame_rectangle.y - region.frame_rectangle.height) / texture_size.y;
+            region.frame_uv.max.x = static_cast<glm::f32>(region.frame_rectangle.x + region.frame_rectangle.width) / texture_size.x;
+            region.frame_uv.max.y = static_cast<glm::f32>(texture_size.y - region.frame_rectangle.y) / texture_size.y;
+
             //uv
-            region.uv.min.x = static_cast<glm::f32>(region.frame_rectangle.x) / texture_size.x;
-            region.uv.min.y = static_cast<glm::f32>(texture_size.y - region.frame_rectangle.y - region.frame_rectangle.height) / texture_size.y;
-            region.uv.max.x = static_cast<glm::f32>(region.frame_rectangle.x + region.frame_rectangle.width) / texture_size.x;
-            region.uv.max.y = static_cast<glm::f32>(texture_size.y - region.frame_rectangle.y) / texture_size.y;
+            region.uv.min.x = static_cast<glm::f32>(region.frame_rectangle.x - region.rectangle.x) / texture_size.x;
+            region.uv.min.y = static_cast<glm::f32>(texture_size.y - region.frame_rectangle.y - region.frame_rectangle.height - region.rectangle.y) / texture_size.y;
+            region.uv.max.x = static_cast<glm::f32>(region.frame_rectangle.x - region.rectangle.x + region.source_size.x) / texture_size.x;
+            region.uv.max.y = static_cast<glm::f32>(texture_size.y - region.frame_rectangle.y - region.frame_rectangle.height - region.rectangle.y + region.source_size.y) / texture_size.y;
 
             regions.push_back(region);
         }
@@ -124,6 +132,12 @@ namespace tpb
             //source size
             ostream.write(reinterpret_cast<const char*>(&region.source_size.x), sizeof(region.source_size.x));
             ostream.write(reinterpret_cast<const char*>(&region.source_size.y), sizeof(region.source_size.y));
+
+            //frame uv
+            ostream.write(reinterpret_cast<const char*>(&region.frame_uv.min.x), sizeof(region.frame_uv.min.x));
+            ostream.write(reinterpret_cast<const char*>(&region.frame_uv.min.y), sizeof(region.frame_uv.min.y));
+            ostream.write(reinterpret_cast<const char*>(&region.frame_uv.max.x), sizeof(region.frame_uv.max.x));
+            ostream.write(reinterpret_cast<const char*>(&region.frame_uv.max.y), sizeof(region.frame_uv.max.y));
 
             //uv
             ostream.write(reinterpret_cast<const char*>(&region.uv.min.x), sizeof(region.uv.min.x));

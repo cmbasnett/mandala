@@ -42,6 +42,7 @@ namespace tpb
             rectangle_type frame_rectangle;
             rectangle_type rectangle;
             size_type source_size;
+            uv_type frame_uv;
             uv_type uv;
             bool is_rotated = false;
             bool is_trimmed = false;
