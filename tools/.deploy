@@ -19,7 +19,7 @@
             ],
             "processes":
             [
-            	"\"%(workingdir)s\\bmfont\\source\\Release\\bmfont.exe\" -c \"%(abspath)s\" -o \"%(deploydir)s\\%(name)s.font\""
+            	"\"%(workingdir)s\\bmfont\\source\\Release\\bmfont.exe\" -c \"%(abspath)s\" -o \"%(deploydir)s\\%(name)s\""
             ]
         },
         {
