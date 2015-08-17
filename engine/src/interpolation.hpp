@@ -7,8 +7,15 @@
 
 namespace mandala
 {
-    inline vec2_t bezier(std::array<vec2_t, 3> points, float32_t t)
+    template<typename Scalar = std::enable_if<std::is_floating_point<Scalar>::value>::type>
+    inline glm::detail::tvec2<Scalar> bezier(const glm::detail::tvec2<Scalar>& point0, const glm::detail::tvec2<Scalar>& point1, const glm::detail::tvec2<Scalar>& point2, Scalar t)
     {
-        return points[0] + ((points[2] - points[1]) * t - (points[1] - points[0]) * t) * t;
+        return point0 + ((point2 - point1) * t - (point1 - point0) * t) * t;
+    }
+
+    template<typename Scalar = std::enable_if<std::is_floating_point<Scalar>::value>::type>
+    inline glm::detail::tvec3<Scalar> bezier(const glm::detail::tvec3<Scalar>& point0, const glm::detail::tvec3<Scalar>& point1, const glm::detail::tvec3<Scalar>& point2, Scalar t)
+    {
+        return point0 + ((point2 - point1) * t - (point1 - point0) * t) * t;
     }
 }

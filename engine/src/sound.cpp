@@ -7,14 +7,14 @@
 #include "io.hpp"
 
 #define WAV_CHUNK_TAG_LENGTH    (4)
-#define WAV_CHUNK_TAG           (std::array<char, WAV_CHUNK_TAG_LENGTH> { 'R', 'I', 'F', 'F' })
+#define WAV_CHUNK_TAG           (std::array<char, WAV_CHUNK_TAG_LENGTH> { { 'R', 'I', 'F', 'F' } })
 
 #define WAV_CHUNK_FORMAT_LENGTH (4)
-#define WAV_CHUNK_FORMAT        (std::array<char, WAV_CHUNK_FORMAT_LENGTH> { 'W', 'A', 'V', 'E' })
+#define WAV_CHUNK_FORMAT        (std::array<char, WAV_CHUNK_FORMAT_LENGTH> { { 'W', 'A', 'V', 'E' } })
 
 #define WAV_SUBCHUNK_ID_LENGTH  (4)
-#define WAV_SUBCHUNK1_ID        (std::array<char, WAV_SUBCHUNK_ID_LENGTH> { 'f', 'm', 't', ' ' })
-#define WAV_SUBCHUNK2_ID        (std::array<char, WAV_SUBCHUNK_ID_LENGTH> { 'd', 'a', 't', 'a' })
+#define WAV_SUBCHUNK1_ID        (std::array<char, WAV_SUBCHUNK_ID_LENGTH> { { 'f', 'm', 't', ' ' } })
+#define WAV_SUBCHUNK2_ID        (std::array<char, WAV_SUBCHUNK_ID_LENGTH> { { 'd', 'a', 't', 'a' } })
 
 namespace mandala
 {

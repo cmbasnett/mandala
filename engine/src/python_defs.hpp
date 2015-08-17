@@ -4,6 +4,7 @@
 #include <boost/preprocessor.hpp>
 #include <boost/python.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
+#include <boost/python/suite/indexing/map_indexing_suite.hpp>
 
 //mandala
 #include "app.hpp"
@@ -32,10 +33,46 @@
 #include "gui_canvas.hpp"
 #include "game.hpp"
 #include "python.hpp"
+#include "closure_traits.hpp"
+#include "cache_mgr.hpp"
 
 using namespace boost;
 using namespace boost::python;
 using namespace mandala;
+
+#include <boost/preprocessor.hpp>
+
+//generate "type _#"
+#define PARAMS(z,n,data) BOOST_PP_TUPLE_ELEM(n,data) _##n
+
+//The first variant: with parameters
+//parameters: PARAMS(z,0,(char,short,int)), PARAMS(z,1,(char,short,int)), PARAMS(z,2,(char,short,int))
+//call: _0, _1, _2
+
+#define DEFINE_FUNCTION_WRAPPER_WITH_PARAMS(return_type, name, ...)\
+return_type name##_wrapper(BOOST_PP_ENUM(BOOST_PP_VARIADIC_SIZE(__VA_ARGS__), PARAMS, (__VA_ARGS__)))\
+{\
+    return name(BOOST_PP_ENUM_PARAMS(BOOST_PP_VARIADIC_SIZE(__VA_ARGS__), _));\
+}
+
+//The second variant: no parameters
+#define DEFINE_FUNCTION_WRAPPER_WITHOUT_PARAMS(return_type, name)\
+return_type name##_wrapper()\
+{\
+    return name();\
+}
+
+//choose variant based on whether more than two arguments are passed
+#define DEFINE_FUNCTION_WRAPPER(...)\
+    BOOST_PP_IF(\
+        BOOST_PP_GREATER(BOOST_PP_VARIADIC_SIZE(__VA_ARGS__), 2), \
+        DEFINE_FUNCTION_WRAPPER_WITH_PARAMS,\
+        DEFINE_FUNCTION_WRAPPER_WITHOUT_PARAMS\
+    )(__VA_ARGS__)
+
+//Clang output:
+//void foo_wrapper( char _0 , short _1 , int _2){ return foo( _0 , _1 , _2);}
+//int bar_wrapper(){ return bar();}
 
 #define MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(name) struct name##_wrapper_t : name##_t, wrapper<name##_t>
 
@@ -316,18 +353,29 @@ BOOST_PYTHON_MODULE(mandala)
 
     //PLATFORM
     //TODO: remove specialized platform structs, have only 1 platform_t per platform
+    {
+        scope platform_scope = 
 #if defined(MANDALA_WINDOWS)
-    class_<platform_win32_t, noncopyable>("Platform", no_init)
+        class_<platform_win32_t, noncopyable>("Platform", no_init)
 #elif defined(MANDALA_OSX)
-    class_<platform_osx_t, noncopyable>("Platform", no_init)
+        class_<platform_osx_t, noncopyable>("Platform", no_init)
 #endif
-        .add_property("screen_size", &platform_t::get_screen_size, &platform_t::set_screen_size)
+            .add_property("screen_size", &platform_t::get_screen_size, &platform_t::set_screen_size)
 #if defined(MANDALA_PC)
-        .add_property("cursor_location", &platform_t::get_cursor_location, &platform_t::set_cursor_location)
-        .add_property("window_size", &platform_t::get_window_size, &platform_t::set_window_size)
-        .add_property("window_location", &platform_t::get_window_location, &platform_t::set_window_location)
+            .add_property("cursor_location", &platform_t::get_cursor_location, &platform_t::set_cursor_location)
+            .add_property("window_size", &platform_t::get_window_size, &platform_t::set_window_size)
+            .add_property("window_location", &platform_t::get_window_location, &platform_t::set_window_location)
+            .add_property("displays", &platform_t::get_window_location, &platform_t::set_window_location)
 #endif
-        ;
+            ;
+
+        class_<platform_t::display_t, noncopyable>("PlatformDisplay", no_init)
+            .def_readonly("name", &platform_t::display_t::name)
+            .def_readonly("position", &platform_t::display_t::position)
+            .def_readonly("ppi", &platform_t::display_t::position)
+            //.add_property("ppi", make_getter(&platform_t::display_t::ppi, return_value_policy<copy_const_reference>()))
+            ;
+    }
 
     {
         scope input_event_scope = class_<input_event_t>("InputEvent", no_init)
@@ -616,6 +664,12 @@ BOOST_PYTHON_MODULE(mandala)
 
     scope().attr("resources") = boost::ref(resources);
 
+    //CACHE
+    class_<cache_mgr_t, noncopyable>("CacheMgr", no_init)
+        .def("purge", &cache_mgr_t::purge);
+
+    scope().attr("cache") = boost::ref(cache);
+
     //GUI
     scope().attr("GUI_ANCHOR_FLAG_NONE") = gui_anchor_flags_type(GUI_ANCHOR_FLAG_NONE);
     scope().attr("GUI_ANCHOR_FLAG_BOTTOM") = gui_anchor_flags_type(GUI_ANCHOR_FLAG_BOTTOM);
@@ -642,9 +696,16 @@ BOOST_PYTHON_MODULE(mandala)
         .value("TOP", gui_dock_mode_e::TOP)
         .export_values();
 
+    enum_<gui_visiblity_e>("GuiVisibility")
+        .value("OMIT", gui_visiblity_e::OMIT)
+        .value("HIDDEN", gui_visiblity_e::HIDDEN)
+        .value("VISIBLE", gui_visiblity_e::VISIBLE)
+        .export_values();
+
     class_<gui_size_modes_t>("GuiSizeModes", init<gui_size_mode_e, gui_size_mode_e>())
         .add_property("x", make_function(&gui_size_modes_t::get_x), &gui_size_modes_t::set_x)
-        .add_property("y", make_function(&gui_size_modes_t::get_y), &gui_size_modes_t::set_y);
+        .add_property("y", make_function(&gui_size_modes_t::get_y), &gui_size_modes_t::set_y)
+        ;
 
     class_<gui_node_t, boost::shared_ptr<gui_node_t>, noncopyable>("GuiNode", init<>())
         .add_property("root", make_function(&gui_node_t::get_root, return_value_policy<copy_const_reference>()))
@@ -660,16 +721,20 @@ BOOST_PYTHON_MODULE(mandala)
         .add_property("bounds", make_function(&gui_node_t::get_bounds, return_value_policy<copy_const_reference>()), &gui_node_t::set_bounds)
         .add_property("should_clip", &gui_node_t::get_should_clip, &gui_node_t::set_should_clip)
         .add_property("is_dirty", &gui_node_t::get_is_dirty)
-        .add_property("is_hidden", &gui_node_t::get_is_hidden, &gui_node_t::set_is_hidden)
+        .add_property("visibility", &gui_node_t::get_visibility, &gui_node_t::set_visibility)
         .add_property("has_children", &gui_node_t::has_children)
         .add_property("has_parent", &gui_node_t::has_parent)
         .def("orphan", &gui_node_t::orphan)
         .def("dirty", &gui_node_t::dirty)
-        .def("adopt", &gui_node_t::adopt);
+        .def("adopt", &gui_node_t::adopt)
+        ;
 
     {
         scope gui_button_scope = class_<gui_button_t, bases<gui_node_t>, boost::shared_ptr<gui_button_t>, noncopyable>("GuiButton", init<>())
-            .add_property("state", &gui_button_t::get_state);
+            .add_property("state", &gui_button_t::get_state)
+            .def("on_state_changed", WRAP_MEM(gui_button_t, on_state_changed))
+            .def("set_on_state_changed", SET_MEM(gui_button_t, on_state_changed))
+            ;
 
         enum_<gui_button_t::state_t>("State")
             .value("IDLE", gui_button_t::state_t::IDLE)
@@ -718,14 +783,19 @@ BOOST_PYTHON_MODULE(mandala)
         scope gui_image_scope = class_<gui_image_t, bases<gui_node_t>, boost::shared_ptr<gui_image_t>, noncopyable>("GuiImage", init<>())
             .add_property("sprite", make_function(&gui_image_t::get_sprite, return_value_policy<copy_const_reference>()), &gui_image_t::set_sprite)
             .add_property("is_autosized_to_sprite", &gui_image_t::get_is_autosized_to_sprite, &gui_image_t::set_is_autosized_to_sprite)
-            .add_property("triangle_mode", &gui_image_t::get_triangle_mode, &gui_image_t::set_triangle_mode);
+            .add_property("triangle_mode", &gui_image_t::get_triangle_mode, &gui_image_t::set_triangle_mode)
+            .add_property("texcoord_scale", make_function(&gui_image_t::get_texcoord_scale, return_value_policy<copy_const_reference>()), &gui_image_t::set_texcoord_scale)
+            .add_property("texcoord_origin", make_function(&gui_image_t::get_texcoord_origin, return_value_policy<copy_const_reference>()), &gui_image_t::set_texcoord_origin)
+            .add_property("texcoord_rotation", &gui_image_t::get_texcoord_rotation, &gui_image_t::set_texcoord_rotation)
+            .add_property("slice_padding", make_function(&gui_image_t::get_slice_padding, return_value_policy<copy_const_reference>()), &gui_image_t::set_slice_padding);
 
         enum_<gui_image_t::triangle_mode_e>("TriangleMode")
             .value("BOTTOM_RIGHT", gui_image_t::triangle_mode_e::BOTTOM_RIGHT)
             .value("TOP_LEFT", gui_image_t::triangle_mode_e::TOP_LEFT)
             .value("TOP_RIGHT", gui_image_t::triangle_mode_e::TOP_RIGHT)
             .value("BOTTOM_LEFT", gui_image_t::triangle_mode_e::BOTTOM_LEFT)
-            .value("BOTH", gui_image_t::triangle_mode_e::BOTH);
+            .value("BOTH", gui_image_t::triangle_mode_e::BOTH)
+            .value("SLICE", gui_image_t::triangle_mode_e::SLICE);
     }
 
     class_<gui_layout_t, bases<gui_node_t>, boost::shared_ptr<gui_layout_t>, noncopyable>("GuiLayout", no_init);
@@ -781,13 +851,29 @@ BOOST_PYTHON_MODULE(mandala)
         .add_property("green_channel", &bitmap_font_t::get_green_channel)
         .add_property("blue_channel", &bitmap_font_t::get_blue_channel);
 
+    class_<std::map<const hash_t, boost::shared_ptr<sprite_set_t::region_t>>>("SpriteSetRegionMap")
+        .def(map_indexing_suite<std::map<const hash_t, boost::shared_ptr<sprite_set_t::region_t>>>());
+
     class_<texture_t, bases<resource_t>, boost::shared_ptr<texture_t>, noncopyable>("Texture", no_init)
         .add_property("size", make_function(&texture_t::get_size, return_value_policy<copy_const_reference>()))
         .add_property("id", &texture_t::get_id);
 
+    class_<sprite_set_t::region_t, boost::shared_ptr<sprite_set_t::region_t>, noncopyable>("SpriteSetRegion", no_init)
+        .add_property("hash", &sprite_set_t::region_t::hash)
+        .add_property("frame_rectangle", &sprite_set_t::region_t::frame_rectangle)
+        .add_property("rectangle", &sprite_set_t::region_t::rectangle)
+        .add_property("source_size", &sprite_set_t::region_t::source_size)
+        .add_property("is_rotated", &sprite_set_t::region_t::is_rotated)
+        .add_property("is_trimmed", &sprite_set_t::region_t::is_trimmed)
+        .add_property("frame_uv", &sprite_set_t::region_t::frame_uv)
+        .add_property("uv", &sprite_set_t::region_t::uv)
+        ;
+
     {
         scope sprite_set_scope = class_<sprite_set_t, bases<resource_t>, boost::shared_ptr<sprite_set_t>, noncopyable>("SpriteSet", no_init)
-            .add_property("texture", make_function(&sprite_set_t::get_texture, return_value_policy<copy_const_reference>()));
+            .add_property("texture", make_function(&sprite_set_t::get_texture, return_value_policy<copy_const_reference>()))
+            .add_property("regions", make_function(&sprite_set_t::get_regions, return_value_policy<copy_const_reference>()))
+            ;
     }
 
     class_<sprite_t, noncopyable>("Sprite", init<const hash_t&, const hash_t&>())

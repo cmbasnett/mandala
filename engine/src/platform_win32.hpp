@@ -1,9 +1,14 @@
 #pragma once
 
+//std
+#include <map>
+
 //mandala
 #include "platform.hpp"
+#include "monitor.hpp"
 
 struct GLFWwindow;
+struct GLFWmonitor;
 
 namespace mandala
 {
@@ -62,6 +67,8 @@ namespace mandala
         //clipboard
         virtual std::string get_clipboard_string() const override;
         virtual void set_clipboard_string(const std::string& clipboard) const override;
+
+        std::map<GLFWmonitor*, size_t> monitors;
 
     private:
         GLFWwindow* window_ptr = nullptr;

@@ -5,28 +5,35 @@
 
 namespace mandala
 {
-    bool gui_button_t::on_input_event(input_event_t& input_event)
+    bool gui_button_t::on_input_event_begin(input_event_t& input_event)
     {
         if (input_event.device_type == input_event_t::device_type_e::TOUCH)
         {
+            auto is_contained = contains(get_bounds(), input_event.touch.location);
+
             switch (input_event.touch.type)
             {
             case input_event_t::touch_t::type_e::PRESS:
-                if (contains(get_bounds(), input_event.touch.location))
+                if (is_contained)
                 {
                     state = state_t::PRESSED;
+
+                    if (on_state_changed)
+                    {
+                        on_state_changed(shared_from_this());
+                    }
 
                     return true;
                 }
                 break;
             case input_event_t::touch_t::type_e::RELEASE:
-                if (state == state_t::PRESSED && contains(get_bounds(), input_event.touch.location))
+                if (is_contained && state == state_t::PRESSED)
                 {
-                    state = state_t::IDLE;
+                    state = state_t::HOVER;
 
-                    if (on_pressed)
+                    if (on_state_changed)
                     {
-                        on_pressed();
+                        on_state_changed(shared_from_this());
                     }
 
                     return true;
@@ -37,13 +44,13 @@ namespace mandala
                 {
                 case state_t::IDLE:
 #if defined(MANDALA_PC)
-                    if (contains(get_bounds(), input_event.touch.location))
+                    if (is_contained)
                     {
                         state = state_t::HOVER;
                         
-                        if (on_hover)
+                        if (on_state_changed)
                         {
-                            on_hover();
+                            on_state_changed(shared_from_this());
                         }
 
                         return true;
@@ -52,13 +59,14 @@ namespace mandala
                     break;
 #if defined(MANDALA_PC)
                 case state_t::HOVER:
-                    if (!contains(get_bounds(), input_event.touch.location))
+                case state_t::PRESSED:
+                    if (!is_contained)
                     {
                         state = state_t::IDLE;
 
-                        if (on_unhover)
+                        if (on_state_changed)
                         {
-                            on_unhover();
+                            on_state_changed(shared_from_this());
                         }
 
                         return true;

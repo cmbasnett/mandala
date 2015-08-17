@@ -245,7 +245,7 @@ namespace mandala
         gui_node_t::on_render_begin(world_matrix, view_projection_matrix);
     }
 
-    bool gui_label_t::on_input_event(input_event_t& input_event)
+    bool gui_label_t::on_input_event_begin(input_event_t& input_event)
     {
         if (input_event.device_type == input_event_t::device_type_e::TOUCH &&
             input_event.touch.type == input_event_t::touch_t::type_e::PRESS)

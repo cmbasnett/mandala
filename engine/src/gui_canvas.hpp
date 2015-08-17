@@ -5,7 +5,7 @@
 #include "frame_buffer.hpp"
 #include "vertex_buffer.hpp"
 #include "index_buffer.hpp"
-#include "gpu_vertices.hpp"
+#include "blur_horizontal_gpu_program.hpp"
 
 namespace mandala
 {
@@ -15,9 +15,8 @@ namespace mandala
 
         static const auto INDEX_COUNT = 4;
 
-        typedef basic_gpu_vertex_t vertex_type;
+        typedef blur_horizontal_gpu_program_t::vertex_type vertex_type;
         typedef vertex_buffer_t<vertex_type> vertex_buffer_type;
-
         typedef index_type<INDEX_COUNT>::type index_type;
         typedef index_buffer_t<index_type> index_buffer_type;
 

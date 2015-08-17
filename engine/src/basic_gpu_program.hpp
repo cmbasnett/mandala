@@ -1,28 +1,78 @@
 #pragma once
 
-//boost
-#include <boost\shared_ptr.hpp>
-
-//mandala
 #include "gpu_program.hpp"
-#include "gpu_vertices.hpp"
+#include "glm.hpp"
+
+using namespace glm;
 
 namespace mandala
 {
     struct basic_gpu_program_t : gpu_program_t
     {
-        typedef basic_gpu_vertex_t vertex_type;
+        struct vertex_t
+        {
+            vertex_t() = default;
+            vertex_t(vec3 location, vec4 color)
+            {
+this->location = location;
+this->color = color;            }
 
-        static std::string vertex_shader_source;
-        static std::string fragment_shader_source;
+            vec3 location;
+            vec4 color;
+        };
 
-        basic_gpu_program_t();
+        typedef vertex_t vertex_type;
 
-        void on_bind() override;
-        void on_unbind() override;
+        basic_gpu_program_t() :
+            gpu_program_t(R"(#version 400
+
+uniform mat4 world_matrix;
+uniform mat4 view_projection_matrix;
+
+in vec3 location;
+in vec4 color;
+
+out vec4 out_color;
+
+void main() 
+{
+    gl_Position = view_projection_matrix * (world_matrix * vec4(location, 1));
+
+    out_color = color;
+})", R"(#version 400
+
+uniform vec4 color;
+
+in vec4 out_color;
+
+out vec4 fragment;
+
+void main() 
+{
+    fragment = out_color * color;
+}  )")
+        {
+            location_location = gpu.get_attribute_location(get_id(), "location");
+            color_location = gpu.get_attribute_location(get_id(), "color");
+        }
+
+        void on_bind() override
+        {
+            gpu.enable_vertex_attribute_array(location_location);
+            gpu.enable_vertex_attribute_array(color_location);
+            gpu.set_vertex_attrib_pointer(location_location, sizeof(vec3) / sizeof(vec3::value_type), gpu_data_type_<vec3::value_type>::VALUE, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, location)));
+            gpu.set_vertex_attrib_pointer(color_location, sizeof(vec4) / sizeof(vec4::value_type), gpu_data_type_<vec4::value_type>::VALUE, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, color)));
+        }
+
+        void on_unbind() override
+        {
+            gpu.disable_vertex_attribute_array(location_location);
+            gpu.disable_vertex_attribute_array(color_location);
+        }
+
 
     private:
-        gpu_location_t location_location;
-        gpu_location_t color_location;
+       gpu_location_t location_location;
+       gpu_location_t color_location;
     };
 }

@@ -97,9 +97,6 @@
     <ClInclude Include="..\..\src\gpu_program_mgr.hpp">
       <Filter>gpu</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\gpu_vertices.hpp">
-      <Filter>gpu</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\gui_button.hpp">
       <Filter>gui</Filter>
     </ClInclude>
@@ -313,6 +310,13 @@
     <ClInclude Include="..\..\src\quadtree.hpp">
       <Filter>level</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\cache_mgr.hpp">
+      <Filter>cache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\closure_traits.hpp">
+      <Filter>type_traits</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\bisect.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\app.cpp">
@@ -332,24 +336,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\audio_source.cpp">
       <Filter>audio</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\basic_gpu_program.cpp">
-      <Filter>gpu\programs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bitmap_font_gpu_program.cpp">
-      <Filter>gpu\programs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\blur_horizontal_gpu_program.cpp">
-      <Filter>gpu\programs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bsp_gpu_program.cpp">
-      <Filter>gpu\programs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\gui_image_gpu_program.cpp">
-      <Filter>gpu\programs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\model_gpu_program.cpp">
-      <Filter>gpu\programs</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\bitmap_font.cpp">
       <Filter>resources\bitmap_font</Filter>
@@ -478,6 +464,9 @@
     <ClCompile Include="..\..\src\level.cpp">
       <Filter>level</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\cache_mgr.cpp">
+      <Filter>cache</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="app">
@@ -557,6 +546,12 @@
     </Filter>
     <Filter Include="actors\cameras">
       <UniqueIdentifier>{b532d2e6-b0a2-4d46-ae45-576a997d8c63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cache">
+      <UniqueIdentifier>{e57cce02-57ae-485f-b0fa-5d6da1f1ab15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="type_traits">
+      <UniqueIdentifier>{5b1bbda6-a2c0-4e47-86db-e2113661cf61}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

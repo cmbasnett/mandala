@@ -31,10 +31,11 @@ namespace mandala
             size_type source_size;
             bool is_rotated = false;
             bool is_trimmed = false;
+            uv_type frame_uv;
             uv_type uv;
         };
 
-        typedef std::map<const hash_t, const region_t> regions_type;
+        typedef std::map<const hash_t, boost::shared_ptr<region_t>> regions_type;
 
         sprite_set_t(std::istream& istream);
         sprite_set_t(const boost::shared_ptr<texture_t>& texture);    //TODO: ugly, feels like this needs to be elsewhere in a helper class
@@ -42,7 +43,7 @@ namespace mandala
         const boost::shared_ptr<texture_t>& get_texture() const { return texture; }
         const regions_type& get_regions() const { return regions; }
 
-        boost::optional<region_t> get_region(const hash_t& region_hash) const;
+        boost::shared_ptr<region_t> get_region(const hash_t& region_hash) const;
 
     private:
         boost::shared_ptr<texture_t> texture;

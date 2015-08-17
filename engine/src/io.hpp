@@ -8,6 +8,10 @@
 //glm
 #include <glm\glm.hpp>
 
+//mandala
+#include "types.hpp"
+#include "range.hpp"
+
 template<typename T>
 inline void read(std::istream& istream, T& t)
 {
@@ -49,9 +53,21 @@ inline void read(std::istream& istream, T data[N])
 }
 
 template<typename T>
-inline void write(std::ostream& ostream, T& t)
+inline void write(std::ostream& ostream, T& data)
 {
-    ostream.write(reinterpret_cast<char*>(&t), sizeof(T));
+    ostream.write(reinterpret_cast<char*>(&data), sizeof(T));
+}
+
+template<typename T>
+inline void write(std::ostream& ostream, const T* data, size_t count)
+{
+    ostream.write(unsafe_cast<char*>(data), count);
+}
+
+template<typename T>
+inline void write(std::ostream& ostream, std::vector<T>& data)
+{
+    ostream.write(reinterpret_cast<char*>(data.data()), sizeof(T) * data.size());
 }
 
 namespace glm
@@ -77,9 +93,6 @@ namespace glm
         }
     }
 }
-
-//mandala
-#include "range.hpp"
 
 namespace mandala
 {

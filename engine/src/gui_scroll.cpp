@@ -13,7 +13,7 @@ namespace mandala
         world_matrix = glm::translate(world_matrix, vec3_t(scroll_location, 0));
     }
 
-    bool gui_scroll_t::on_input_event(input_event_t& input_event)
+    bool gui_scroll_t::on_input_event_begin(input_event_t& input_event)
     {
         //TODO: have some way for layouts to keep track of certain nodes
         //'owning' touch events by id so that they get exclusive rights

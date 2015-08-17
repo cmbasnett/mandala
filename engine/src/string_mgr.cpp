@@ -101,6 +101,7 @@ namespace mandala
 
         for (;;)
         {
+            //TODO: use regular expressions
             beg = buffer.find("{$", beg);
 
             if (beg == std::string::npos)

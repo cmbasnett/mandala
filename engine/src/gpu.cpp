@@ -1,9 +1,12 @@
 //std
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 //boost
 #include <boost\make_shared.hpp>
+#include <boost\crc.hpp>
+#include <boost\filesystem.hpp>
 
 //mandala
 #include "opengl.hpp"
@@ -13,6 +16,8 @@
 #include "texture.hpp"
 #include "gpu_buffer.hpp"
 #include "image.hpp"
+#include "cache_mgr.hpp"
+#include "io.hpp"
 
 //glm
 #include <glm\gtc\type_ptr.hpp>
@@ -896,12 +901,56 @@ namespace mandala
             return id;
         };
 
+        //create program
+        const auto id = glCreateProgram(); glCheckError();
+
+        boost::crc_32_type crc32;
+        crc32.process_bytes(vertex_shader_source.data(), vertex_shader_source.size());
+        crc32.process_bytes(fragment_shader_source.data(), fragment_shader_source.size());
+        auto source_checksum = crc32.checksum();
+
+        //TODO: give these programs proper names
+        auto ifstream = cache.get(std::to_string(source_checksum));
+
+        if (ifstream->is_open())
+        {
+            GLenum binary_format;
+            GLsizei binary_length;
+            std::vector<char> binary;
+
+            read(*ifstream, binary_format);
+            read(*ifstream, binary_length);
+            read(*ifstream, binary, binary_length);
+
+            glProgramBinary(id, binary_format, binary.data(), binary_length); glCheckError();
+
+            //link status
+            GLint link_status;
+            glGetProgramiv(id, GL_LINK_STATUS, &link_status); glCheckError();
+
+            if (link_status == GL_TRUE)
+            {
+                return id;
+            }
+
+            GLint program_info_log_length = 0;
+
+            glGetProgramiv(id, GL_INFO_LOG_LENGTH, &program_info_log_length); glCheckError();
+
+            if (program_info_log_length > 0)
+            {
+                std::string program_info_log;
+                program_info_log.resize(program_info_log_length);
+
+                glGetProgramInfoLog(id, program_info_log_length, nullptr, &program_info_log[0]); glCheckError();
+
+                std::cout << program_info_log << std::endl;
+            }
+        }
+
         const auto vertex_shader = create_shader(GL_VERTEX_SHADER, vertex_shader_source);
         const auto fragment_shader = create_shader(GL_FRAGMENT_SHADER, fragment_shader_source);
 
-        //create program
-        const auto id = glCreateProgram(); glCheckError();
-        
         //attach shaders
         glAttachShader(id, vertex_shader); glCheckError();
         glAttachShader(id, fragment_shader); glCheckError();
@@ -937,22 +986,23 @@ namespace mandala
         glDetachShader(id, vertex_shader); glCheckError();
         glDetachShader(id, fragment_shader); glCheckError();
 
-        glDeleteShader(vertex_shader); glCheckError();
-        glDeleteShader(fragment_shader); glCheckError();
-
         //save compiled program binary
-        //GLsizei binary_length = 0;
+        GLsizei binary_length = 0;
 
-        //glGetProgramiv(id, GL_PROGRAM_BINARY_LENGTH, &binary_length); glCheckError();
+        glGetProgramiv(id, GL_PROGRAM_BINARY_LENGTH, &binary_length); glCheckError();
 
-        //GLenum binary_format = 0;
-        //std::vector<uint8_t> program_binary_data(binary_length);
+        GLenum binary_format = 0;
+        std::vector<uint8_t> program_binary_data(binary_length);
 
-        //glGetProgramBinary(id, binary_length, &binary_length, &binary_format, static_cast<GLvoid*>(program_binary_data.data())); glCheckError();
+        glGetProgramBinary(id, program_binary_data.size(), &binary_length, &binary_format, static_cast<GLvoid*>(program_binary_data.data())); glCheckError();
 
-        //auto s = std::ofstream("program.cgp", std::ios::binary);
-        //s.write(reinterpret_cast<char*>(program_binary_data.data()), program_binary_data.size());
-        //s.close();
+        std::stringstream stringstream;
+        write(stringstream, binary_format);
+        write(stringstream, binary_length);
+        write(stringstream, program_binary_data);
+        auto data = stringstream.str();
+
+        cache.put(std::to_string(source_checksum), data.data(), data.size());
 
         return id;
     }

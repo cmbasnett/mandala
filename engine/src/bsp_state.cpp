@@ -216,7 +216,7 @@ namespace mandala
 
             bsp_frame_buffer = boost::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::COLOR_DEPTH, static_cast<gpu_frame_buffer_size_type>(get_layout()->get_bounds().size()));
             auto sprite_set = boost::make_shared<sprite_set_t>(bsp_frame_buffer->get_color_texture());
-            sprite_t sprite(sprite_set, sprite_set->get_regions().begin()->second.hash);
+            sprite_t sprite(sprite_set, sprite_set->get_regions().begin()->second->hash);
             bsp_image->set_sprite(sprite);
         }
 
@@ -230,7 +230,7 @@ namespace mandala
                 bsp_frame_buffer->set_size(static_cast<gpu_frame_buffer_size_type>(get_layout()->get_bounds().size()));
 
                 auto sprite_set = boost::make_shared<sprite_set_t>(bsp_frame_buffer->get_color_texture());
-                sprite_t sprite(sprite_set, sprite_set->get_regions().begin()->second.hash);
+                sprite_t sprite(sprite_set, sprite_set->get_regions().begin()->second->hash);
                 bsp_image->set_sprite(sprite);
             }
         }

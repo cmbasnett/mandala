@@ -9,7 +9,7 @@
 #include "io.hpp"
 
 #define MD5A_MAGIC_LENGTH       (4)
-#define MD5A_MAGIC              (std::array<char, MD5A_MAGIC_LENGTH> { 'M', 'D', '5', 'A' })
+#define MD5A_MAGIC              (std::array<char, MD5A_MAGIC_LENGTH> { { 'M', 'D', '5', 'A' } })
 #define MD5A_VERSION            (1)
 #define MD5A_BONE_INDEX_NULL    (255)
 

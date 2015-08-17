@@ -76,7 +76,7 @@ namespace mandala
             return type_nodes_itr->second.size();
         }
 
-        virtual bool on_input_event(input_event_t& input_event) override;
+        virtual bool on_input_event_begin(input_event_t& input_event) override;
 
     private:
         std::map<std::type_index, std::map<const hash_t, boost::shared_ptr<gui_node_t>>> type_nodes;

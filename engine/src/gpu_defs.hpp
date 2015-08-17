@@ -46,10 +46,10 @@ namespace mandala
     typedef details::value_wrapper_<int32_t, -1> gpu_location_t;
     typedef details::value_wrapper_<uint32_t, 0> gpu_index_t;
 
-    typedef rectangle_i32_t    gpu_viewport_type;
-    typedef uint8_t            gpu_clear_flag_type;
-    typedef vec2_u32_t        gpu_frame_buffer_size_type;
-    typedef uint8_t            gpu_frame_buffer_type_flags_type;
+    typedef rectangle_i32_t gpu_viewport_type;
+    typedef uint8_t         gpu_clear_flag_type;
+    typedef vec2_u32_t      gpu_frame_buffer_size_type;
+    typedef uint8_t         gpu_frame_buffer_type_flags_type;
 
     enum : gpu_frame_buffer_type_flags_type
     {

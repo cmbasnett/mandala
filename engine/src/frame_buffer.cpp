@@ -53,7 +53,7 @@ namespace mandala
         //TODO: stencil mask
     }
 
-    void frame_buffer_t::set_size(const gpu_frame_buffer_size_type & size)
+    void frame_buffer_t::set_size(const gpu_frame_buffer_size_type& size)
     {
         if (size == get_size())
         {

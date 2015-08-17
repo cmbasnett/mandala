@@ -1,5 +1,6 @@
 //mandala
 #include "sprite_animation.hpp"
+#include "bisect.hpp"
 
 //boost
 #include <boost\property_tree\json_parser.hpp>
@@ -20,19 +21,6 @@ namespace mandala
 
     const sprite_ref_t& sprite_animation_t::get_sprite_at_time(const time_type& time) const
     {
-        assert(!frames.empty());
-
-        if (time.count() <= 0)
-        {
-            return frames.begin()->sprite;
-        }
-        else if (time >= _duration)
-        {
-            return frames.rbegin()->sprite;
-        }
-        else
-        {
-            return frames.begin()->sprite;
-        }
+        return frames[bisect_left(frames, time, 0, frames.size() - 1)].sprite;
     }
 }

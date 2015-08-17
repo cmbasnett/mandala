@@ -5,7 +5,7 @@
 
 namespace mandala
 {
-    bool gui_layout_t::on_input_event(input_event_t& input_event)
+    bool gui_layout_t::on_input_event_begin(input_event_t& input_event)
     {
         if (input_event.device_type == input_event_t::device_type_e::TOUCH)
         {
@@ -27,6 +27,6 @@ namespace mandala
             }
         }
 
-        return gui_node_t::on_input_event(input_event);
+        return false;
     }
 }

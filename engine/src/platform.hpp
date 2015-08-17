@@ -2,6 +2,9 @@
 
 //std
 #include <deque>
+#include <array>
+#include <vector>
+#include <memory>
 
 //mandala
 #include "types.hpp"
@@ -11,6 +14,10 @@
 #if defined (MANDALA_PC)
 #include "window_event.hpp"
 #endif
+
+#include <boost/units/quantity.hpp>
+#include <boost/units/systems/si/length.hpp>
+#include <boost/units/base_units/imperial/inch.hpp>
 
 namespace mandala
 {
@@ -40,6 +47,22 @@ namespace mandala
             rectangle_i32_t rectangle;
         } window;
 #endif
+
+        struct display_t
+        {
+            struct video_mode_t
+            {
+                int32_t width = 0;
+                int32_t height = 0;
+                int32_t bit_depth = 0;
+                int32_t refresh_rate = 0;
+            };
+
+            std::string name;
+            vec2_i32_t position;
+            float32_t ppi = 0.0f;
+            std::vector<video_mode_t> video_modes;
+        };
 
         typedef vec2_i32_t screen_size_type;
 
@@ -99,6 +122,10 @@ namespace mandala
 
         bool is_cursor_centered = false;
         cursor_location_type cursor_location;
+
+        const display_t& get_display(size_t index) const;
+
+        std::array<std::unique_ptr<display_t>, 8> displays;
 #endif
     };
 }

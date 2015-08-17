@@ -13,6 +13,7 @@
 #include "padding.hpp"
 #include "range.hpp"
 #include "gui_size.hpp"
+#include "hash.hpp"
 
 namespace mandala
 {
@@ -42,12 +43,20 @@ namespace mandala
         TOP
     };
 
+    enum class gui_visiblity_e
+    {
+        OMIT,
+        HIDDEN,
+        VISIBLE
+    };
+
     struct gui_node_t : public boost::enable_shared_from_this<gui_node_t>
     {
         typedef aabb2_t bounds_type;
         typedef vec2_t size_type;
         typedef rgba_type color_type;
 
+        const hash_t& get_id() const { return id; }
         const boost::shared_ptr<gui_node_t>& get_root() const { return root; }
         const boost::shared_ptr<gui_node_t>& get_parent() const { return parent; }
         gui_dock_mode_e get_dock_mode() const { return dock_mode; }
@@ -63,7 +72,7 @@ namespace mandala
         const color_type& get_color() const { return color; }
         const bounds_type& get_bounds() const { return bounds; }
         bool get_is_dirty() const { return is_dirty; }
-        bool get_is_hidden() const { return is_hidden; }
+        gui_visiblity_e get_visibility() const { return visibility; }
         bool get_should_clip() const { return should_clip; }
         const std::vector<boost::shared_ptr<gui_node_t>>& get_children() const { return children; }
 
@@ -76,7 +85,7 @@ namespace mandala
         void set_size_modes(const gui_size_modes_t size_modes) { this->size_modes = size_modes; dirty(); }
         void set_color(const color_type& color) { this->color = color; dirty(); }
         void set_bounds(const bounds_type& bounds) { this->bounds = bounds; dirty(); }
-        void set_is_hidden(bool is_hidden) { this->is_hidden = is_hidden; dirty(); }
+        void set_visibility(gui_visiblity_e visibility) { this->visibility = visibility; dirty(); }
         void set_should_clip(bool should_clip) { this->should_clip = should_clip; }
 
         virtual void on_clean_begin() { }
@@ -85,11 +94,13 @@ namespace mandala
         virtual void on_render_end(mat4_t& world_matrix, mat4_t& view_projection_matrix) { }
         virtual void on_tick_begin(float32_t dt) { }
         virtual void on_tick_end(float32_t dt) { }
-        virtual bool on_input_event(input_event_t& input_event);
+        virtual bool on_input_event_begin(input_event_t& input_event) { return false; }
+        virtual bool on_input_event_end(input_event_t& input_event) { return false; }
 
         void clean();
         void tick(float32_t dt);
         void render(mat4_t world_matrix, mat4_t view_projection_matrix);
+        bool on_input_event(input_event_t& input_event);
 
         bool has_children() const { return !children.empty(); }
         bool has_parent() const { return parent.get() != nullptr; }
@@ -99,6 +110,7 @@ namespace mandala
         void adopt(const boost::shared_ptr<gui_node_t>& child);
 
     private:
+        hash_t id;
         boost::shared_ptr<gui_node_t> root;
         boost::shared_ptr<gui_node_t> parent;
         std::vector<boost::shared_ptr<gui_node_t>> children;
@@ -111,7 +123,7 @@ namespace mandala
         size_type desired_size;
         color_type color = color_type(1.0f);
         bounds_type bounds;
-        bool is_hidden = false;
+        gui_visiblity_e visibility = gui_visiblity_e::VISIBLE;
         bool should_clip = false;
         bool has_focus = false;
         gui_size_modes_t size_modes;

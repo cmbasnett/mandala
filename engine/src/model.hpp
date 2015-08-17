@@ -9,7 +9,7 @@
 #include "resource.hpp"
 #include "vertex_buffer.hpp"
 #include "index_buffer.hpp"
-#include "gpu_vertices.hpp"
+#include "model_gpu_program.hpp"
 
 namespace mandala
 {
@@ -26,8 +26,7 @@ namespace mandala
         struct mesh_t
         {
             typedef uint16_t index_type;
-            typedef model_vertex_t vertex_type;
-
+            typedef model_gpu_program_t::vertex_type vertex_type;
             typedef vertex_buffer_t<vertex_type> vertex_buffer_type;
             typedef index_buffer_t<index_type> index_buffer_type;
 

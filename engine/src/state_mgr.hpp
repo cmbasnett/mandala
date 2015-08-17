@@ -46,6 +46,7 @@ namespace mandala
             state_type state;
             state_flags_type link_flags = STATE_FLAG_NONE;
             state_flags_type flags = STATE_FLAG_NONE;
+            int32_t weight = 0;
         };
 
         struct operation_t

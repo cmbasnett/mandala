@@ -1,6 +1,9 @@
 //std
 #include <chrono>
 
+//boost
+#include <boost\property_tree\json_parser.hpp>
+
 //mandala
 #include "app.hpp"
 #include "platform.hpp"
@@ -26,7 +29,7 @@ namespace mandala
 {
     app_t app;
 
-    void app_t::run(const std::string& game_class)
+    void app_t::run()
     {
         using namespace std::chrono;
         using namespace boost;
@@ -34,6 +37,19 @@ namespace mandala
 
         run_time_point = std::chrono::system_clock::now();
 
+        std::ifstream ifstream(".app");
+
+        if (!ifstream.is_open())
+        {
+            throw std::exception();
+        }
+
+        //TODO: not injection-proof, particularly dangerous if we don't want end-users running python commands
+        boost::property_tree::ptree _ptree;
+        boost::property_tree::read_json(ifstream, _ptree);
+        auto game_class = _ptree.get<std::string>("game_class");
+
+        //TODO: make this execute a .pyc file instead (more secure?)
         py.exec_file("app.py");
 
         this->game = extract<shared_ptr<game_t>>(py.eval((game_class + "()").c_str()))();
@@ -83,9 +99,9 @@ namespace mandala
         this->game->on_run_end();
         this->game.reset();
 
-        py.finalize();
         states.purge();
         states.tick(0); //TODO: hack to avoid exceptions throwing on close due to unreleased state objects, find a better solution later
+        py.finalize();
         resources.purge();
         strings.purge();
         gpu_programs.purge();

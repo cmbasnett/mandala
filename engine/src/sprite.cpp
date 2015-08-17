@@ -36,14 +36,12 @@ namespace mandala
             throw std::invalid_argument("sprite set cannot be null");
         }
 
-        const auto region_optional = sprite_set->get_region(region_hash);
+        region = sprite_set->get_region(region_hash);
 
-        if (!region_optional)
+        if (!region)
         {
             throw std::invalid_argument("region does not exist in sprite set");
         }
-
-        region = region_optional.get();
     }
 
         sprite_t& sprite_t::operator=(const sprite_t& rhs)
@@ -58,25 +56,23 @@ namespace mandala
     {
         sprite_set = resources.get<sprite_set_t>(rhs.sprite_set_hash);
 
-        const auto region_optional = sprite_set->get_region(rhs.region_hash);
+        auto region = sprite_set->get_region(rhs.region_hash);
 
-        if (!region_optional)
+        if (!region)
         {
             throw std::exception("region does not exist in sprite set");
         }
-
-        region = region_optional.get();
 
         return *this;
     }
 
     bool sprite_t::operator==(const sprite_ref_t& sprite_ref) const
     {
-        return region.hash == sprite_ref.region_hash && sprite_set->hash == sprite_ref.sprite_set_hash;
+        return region->hash == sprite_ref.region_hash && sprite_set->hash == sprite_ref.sprite_set_hash;
     }
 
     bool sprite_t::operator!=(const sprite_ref_t& sprite_ref) const
     {
-        return region.hash != sprite_ref.region_hash || sprite_set->hash != sprite_ref.sprite_set_hash;
+        return region->hash != sprite_ref.region_hash || sprite_set->hash != sprite_ref.sprite_set_hash;
     }
 }

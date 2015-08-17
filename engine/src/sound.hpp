@@ -11,7 +11,6 @@ namespace mandala
     struct sound_t : resource_t
     {
         typedef uint32_t buffer_id_type;
-
         typedef std::chrono::milliseconds duration_type;
 
         sound_t(std::istream& istream);

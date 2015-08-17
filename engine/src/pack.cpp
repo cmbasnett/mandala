@@ -10,8 +10,8 @@
 #include <boost\iostreams\stream.hpp>
 #include <boost\filesystem.hpp>
 
-#define PACK_MAGIC_LENGTH    (4)
-#define PACK_MAGIC            (std::array<char, PACK_MAGIC_LENGTH> { 'P', 'A', 'C', 'K' })
+#define PACK_MAGIC_LENGTH   (4)
+#define PACK_MAGIC          (std::array<char, PACK_MAGIC_LENGTH> { 'P', 'A', 'C', 'K' })
 #define PACK_VERSION        (1)
 
 namespace mandala

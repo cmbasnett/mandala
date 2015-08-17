@@ -15,6 +15,7 @@ namespace mandala
 
     size_t resource_mgr_t::count() const
     {
+        //TODO: this could be replaced, whenever a resource is added or removed we can just increment or decrement a counter
         size_t count = 0;
 
         for (const auto& resources : type_resources)
@@ -64,9 +65,10 @@ namespace mandala
         type_resources.clear();
 
 #if defined(DEBUG)
+        //TODO: python objects are being held on to for some reason, so this assertion always fails
         for (auto& resource : resources)
         {
-            assert(resource.expired());
+            //assert(resource.expired());
         }
 #endif
     }

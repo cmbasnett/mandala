@@ -40,6 +40,5 @@ namespace mandala
 
         frame_buffer_t(const frame_buffer_t&) = delete;
         frame_buffer_t& operator=(const frame_buffer_t&) = delete;
-
     };
 }

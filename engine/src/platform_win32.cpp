@@ -103,7 +103,7 @@ namespace mandala
         input_event.device_type = input_event_t::device_type_e::TOUCH;
         input_event.touch.type = input_event_t::touch_t::type_e::MOVE;
         input_event.touch.location.x = x;
-        input_event.touch.location.y = screen_size.y - y;
+        input_event.touch.location.y = y;
         input_event.touch.location_delta.x = x - platform.cursor_location.x;
         input_event.touch.location_delta.y = -(y - platform.cursor_location.y);
 
@@ -196,15 +196,99 @@ namespace mandala
         platform.window.rectangle.y = y;
     }
 
+    static inline void on_monitor_event(GLFWmonitor* monitor, int event)
+    {
+        using namespace boost::units;
+
+        if (event == GLFW_CONNECTED)
+        {
+            auto display_itr = platform.displays.begin();
+
+            for (; display_itr != platform.displays.end(); ++display_itr)
+            {
+                if (*display_itr == nullptr)
+                {
+                    break;
+                }
+            }
+
+            if (display_itr == platform.displays.end())
+            {
+                return;
+            }
+
+            auto& display = (*display_itr);
+
+            display = std::make_unique<platform_t::display_t>();
+            display->name = glfwGetMonitorName(monitor);
+
+            //https://en.wikipedia.org/wiki/Pixel_density#Calculation_of_monitor_PPI
+            int32_t width = 0;
+            int32_t height = 0;
+            glfwGetMonitorPhysicalSize(monitor, &width, &height);
+            glfwGetMonitorPos(monitor, &display->position.x, &display->position.y);
+
+            vec2_t physical_size(static_cast<float32_t>(width) / std::milli::den, static_cast<float32_t>(height) / std::milli::den);
+            physical_size *= conversion_factor(si::meter_base_unit::unit_type(), imperial::inch_base_unit::unit_type());
+
+            auto video_mode = glfwGetVideoMode(monitor);
+            auto dp = glm::sqrt(static_cast<float32_t>((video_mode->width * video_mode->width) + (video_mode->height * video_mode->height)));
+            auto di = glm::sqrt(static_cast<float32_t>((physical_size.x * physical_size.x) + (physical_size.y * physical_size.y)));
+
+            display->ppi = (dp / di);
+
+            int32_t video_mode_count = 0;
+
+            display->video_modes.reserve(video_mode_count);
+
+            auto video_mode_ptr = glfwGetVideoModes(monitor, &video_mode_count);
+
+            for (auto i = 0; i < video_mode_count; ++i)
+            {
+                auto video_mode_itr = display->video_modes.emplace(display->video_modes.end());
+
+                video_mode_itr->width = video_mode_ptr->width;
+                video_mode_itr->height = video_mode_ptr->height;
+                video_mode_itr->bit_depth = video_mode_ptr->blueBits + video_mode_ptr->greenBits + video_mode_ptr->redBits;
+                video_mode_itr->refresh_rate = video_mode_ptr->refreshRate;
+
+                ++video_mode_ptr;
+            }
+        }
+        else if (event == GLFW_DISCONNECTED)
+        {
+            auto monitors_itr = platform.monitors.find(monitor);
+
+#if defined(DEBUG)
+            assert(monitors_itr != platform.monitors.end());
+#endif
+
+            platform.monitors.erase(monitors_itr);
+
+            platform.displays[monitors_itr->second] = nullptr;
+        }
+    }
+
     static inline void on_error(int error_code, const char* message)
     {
-        throw std::exception();
+        throw std::exception(message);
     }
 
     void platform_win32_t::app_run_start()
     {
         //glfw
         glfwInit();
+
+        int32_t monitor_count = 0;
+        auto monitor_ptrs = glfwGetMonitors(&monitor_count);
+
+        if (monitor_ptrs != nullptr)
+        {
+            for (int32_t i = 0; i < monitor_count; ++i)
+            {
+                on_monitor_event(monitor_ptrs[i], GLFW_CONNECTED);
+            }
+        }
 
         window_ptr = glfwCreateWindow(1, 1, "mandala", nullptr, nullptr);
 
@@ -217,6 +301,7 @@ namespace mandala
         glfwSetScrollCallback(window_ptr, on_mouse_scroll);
         glfwSetWindowSizeCallback(window_ptr, on_window_resize);
         glfwSetWindowPosCallback(window_ptr, on_window_move);
+        glfwSetMonitorCallback(on_monitor_event);
 
         //glew
         auto glew_init_result = glewInit();

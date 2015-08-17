@@ -9,7 +9,6 @@
 
 //mandala
 #include "gui_node.hpp"
-#include "gpu_vertices.hpp"
 #include "vertex_buffer.hpp"
 #include "index_buffer.hpp"
 
@@ -74,7 +73,7 @@ namespace mandala
         virtual void on_clean_begin() override;
         virtual void on_clean_end() override;
         virtual void on_render_begin(mat4_t& world_matrix, mat4_t& view_projection_matrix) override;
-        virtual bool on_input_event(input_event_t& input_event) override;
+        virtual bool on_input_event_begin(input_event_t& input_event) override;
 
     private:
         struct line_t

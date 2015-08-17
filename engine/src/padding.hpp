@@ -104,6 +104,12 @@ namespace mandala
             {
                 return bottom != rhs.bottom || left != rhs.left || right != rhs.right || top != rhs.top;
             }
+
+            template<typename U>
+            operator glm::detail::tvec4<U>() const
+            {
+                return glm::detail::tvec4<U>(static_cast<U>(bottom), static_cast<U>(left), static_cast<U>(right), static_cast<U>(top));
+            }
         };
 
         template<typename T>

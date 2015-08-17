@@ -22,11 +22,11 @@ namespace mandala
 
         void finalize();
 
+        static std::string handle_pyerr();
+
     private:
         boost::python::object main_namespace;
         boost::python::object main_module;
-
-        std::string handle_pyerr();
     };
 
     MANDALA_API_ENTRY extern python_t py;

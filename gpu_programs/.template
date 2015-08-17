@@ -1,0 +1,45 @@
+#pragma once
+
+#include "gpu_program.hpp"
+#include "glm.hpp"
+
+using namespace glm;
+
+namespace mandala
+{
+    struct {name}_gpu_program_t : gpu_program_t
+    {
+        struct vertex_t
+        {
+            vertex_t() = default;
+            vertex_t({vertex_args}})
+            {
+                {vertex_assign}
+            }
+
+            {vertex_members}
+        };
+
+        typedef vertex_t vertex_type;
+
+        basic_gpu_program_t() :
+            gpu_program_t(R"({vertex_shader_source}})", R"({fragment_shader_source}})")
+        {
+            {ctor}
+        }
+
+        void on_bind() override
+        {
+            {on_bind}
+        }
+
+        void on_unbind() override
+        {
+            {on_unbind}
+        }
+
+
+    private:
+        {attributes}
+    };
+}

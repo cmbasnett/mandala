@@ -46,7 +46,7 @@ namespace mandala
 
         app_t() = default;
 
-        void run(const std::string& game_class);
+        void run();
         void exit();
         void reset();
         void screenshot();

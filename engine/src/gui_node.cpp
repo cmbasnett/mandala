@@ -95,6 +95,11 @@ namespace mandala
     {
         std::function<void(boost::shared_ptr<gui_node_t>&, aabb2_t&)> clean_node = [&clean_node](boost::shared_ptr<gui_node_t>& node, aabb2_t& sibling_bounds)
         {
+            if (node->get_visibility() == gui_visiblity_e::OMIT)
+            {
+                return;
+            }
+
             node->on_clean_begin();
 
             auto absolute_desired_size = node->desired_size;
@@ -287,12 +292,27 @@ namespace mandala
 
     bool gui_node_t::on_input_event(input_event_t& input_event)
     {
+        if (visibility == gui_visiblity_e::OMIT)
+        {
+            return false;
+        }
+
+        if (on_input_event_begin(input_event))
+        {
+            return true;
+        }
+
         for (auto children_itr = children.begin(); children_itr != children.end(); ++children_itr)
         {
             if ((*children_itr)->on_input_event(input_event))
             {
                 return true;
             }
+        }
+
+        if (on_input_event_end(input_event))
+        {
+            return true;
         }
 
         return false;
@@ -337,7 +357,7 @@ namespace mandala
         }
 
         is_dirty = true;
-        
+
         if (parent)
         {
             parent->dirty();
@@ -346,7 +366,7 @@ namespace mandala
 
     void gui_node_t::render(mat4_t world_matrix, mat4_t view_projection_matrix)
     {
-        if (is_hidden)
+        if (visibility != gui_visiblity_e::VISIBLE)
         {
             return;
         }
@@ -409,7 +429,7 @@ namespace mandala
 
         //TODO: configure this to be enable-able in-game
 #if defined(DEBUG)
-        render_rectangle(world_matrix, view_projection_matrix, rectangle_t(bounds), rgba_type(1));
+        //render_rectangle(world_matrix, view_projection_matrix, rectangle_t(bounds), rgba_type(1));
 #endif
 
         on_render_begin(world_matrix, view_projection_matrix);

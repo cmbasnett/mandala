@@ -10,17 +10,19 @@ int main()
     using namespace boost;
     using namespace boost::python;
 
-    octree_f32_t qt = octree_f32_t(64);
-    qt.birth();
-
     try
     {
-        app.run("TestGame");
+        app.run();
     }
     catch (std::exception& e)
     {
         std::cout << e.what();
-
+        system("pause");
+    }
+    //TODO: needing to handle this type of exception is a tad annoying, search for a better way
+    catch (boost::python::error_already_set&)
+    {
+        std::cout << python_t::handle_pyerr();
         system("pause");
     }
 }

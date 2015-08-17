@@ -30,10 +30,10 @@ namespace mandala
 
         auto vertices =
         {
-            vertex_type(vertex_type::location_type(0, 0, 0), vertex_type::color_type(1), vertex_type::texcoord_type(0, 0)),
-            vertex_type(vertex_type::location_type(1, 0, 0), vertex_type::color_type(1), vertex_type::texcoord_type(1, 0)),
-            vertex_type(vertex_type::location_type(1, 1, 0), vertex_type::color_type(1), vertex_type::texcoord_type(1, 1)),
-            vertex_type(vertex_type::location_type(0, 1, 0), vertex_type::color_type(1), vertex_type::texcoord_type(0, 1))
+            vertex_type(vec3_t(0, 0, 0), vec2_t(0, 0)),
+            vertex_type(vec3_t(1, 0, 0), vec2_t(1, 0)),
+            vertex_type(vec3_t(1, 1, 0), vec2_t(1, 1)),
+            vertex_type(vec3_t(0, 1, 0), vec2_t(0, 1))
         };
         vertex_buffer->data(vertices, gpu_t::buffer_usage_e::STATIC_DRAW);
     }
@@ -41,10 +41,10 @@ namespace mandala
     void gui_canvas_t::on_render_begin(mat4_t& world_matrix, mat4_t& view_projection_matrix)
     {
         gpu_viewport_type viewport;
-        viewport.width = static_cast<int>(get_size().x);
-        viewport.height = static_cast<int>(get_size().y);
-        viewport.x = static_cast<int>(get_bounds().min.x);
-        viewport.y = static_cast<int>(get_bounds().min.y);
+        viewport.width = static_cast<gpu_viewport_type::scalar_type>(get_size().x);
+        viewport.height = static_cast<gpu_viewport_type::scalar_type>(get_size().y);
+        viewport.x = static_cast<gpu_viewport_type::scalar_type>(get_bounds().min.x);
+        viewport.y = static_cast<gpu_viewport_type::scalar_type>(get_bounds().min.y);
 
         gpu.frame_buffers.push(frame_buffer);
         //gpu.viewports.push(viewport);

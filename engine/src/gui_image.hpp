@@ -5,7 +5,7 @@
 #include "gui_node.hpp"
 #include "vertex_buffer.hpp"
 #include "index_buffer.hpp"
-#include "gpu_vertices.hpp"
+#include "gui_image_gpu_program.hpp"
 
 namespace mandala
 {
@@ -17,19 +17,14 @@ namespace mandala
             TOP_LEFT,
             TOP_RIGHT,
             BOTTOM_LEFT,
+            SLICE,
             BOTH
         };
 
-        enum class texcoord_mode_e
-        {
-            STRETCH_TO_FIT,
-            REPEAT
-        };
-
-        static const size_t VERTEX_COUNT = 4;
-        static const size_t INDEX_COUNT = 4;
+        static const size_t VERTEX_COUNT = 16;
+        static const size_t INDEX_COUNT = 54;
         
-        typedef basic_gpu_vertex_t vertex_type;
+        typedef gui_image_gpu_program_t::vertex_type vertex_type;
         typedef index_type<INDEX_COUNT>::type index_type;
         typedef vertex_buffer_t<vertex_type> vertex_buffer_type;
         typedef index_buffer_t<index_type> index_buffer_type;
@@ -39,10 +34,18 @@ namespace mandala
         const boost::optional<sprite_t>& get_sprite() const { return sprite; }
         bool get_is_autosized_to_sprite() const { return is_autosized_to_sprite; }
         triangle_mode_e get_triangle_mode() const { return triangle_mode; }
+        const vec2_t& get_texcoord_scale() const { return texcoord_scale; }
+        const vec2_t& get_texcoord_origin() const { return texcoord_origin; }
+        float32_t get_texcoord_rotation() const { return texcoord_rotation; }
+        const padding_t& get_slice_padding() const { return slice_padding; }
 
         void set_sprite(boost::optional<sprite_t> sprite);
         void set_is_autosized_to_sprite(bool is_autosized_to_sprite);
         void set_triangle_mode(triangle_mode_e triangle_mode) { this->triangle_mode = triangle_mode; }
+        void set_texcoord_scale(const vec2_t& texcoord_scale) { this->texcoord_scale = texcoord_scale; }
+        void set_texcoord_origin(const vec2_t& texcoord_origin) { this->texcoord_origin = texcoord_origin; }
+        void set_texcoord_rotation(float32_t texcoord_rotation) { this->texcoord_rotation = texcoord_rotation; }
+        void set_slice_padding(const padding_t& slice_padding) { this->slice_padding = slice_padding; }
 
     private:
         boost::shared_ptr<vertex_buffer_type> vertex_buffer;
@@ -50,6 +53,11 @@ namespace mandala
         boost::optional<sprite_t> sprite;
         bool is_autosized_to_sprite = false;
         triangle_mode_e triangle_mode = triangle_mode_e::BOTH;
+        vec2_t texcoord_scale = vec2_t(1.0f);
+        vec2_t texcoord_origin = vec2_t(0.5f);
+        vec2_t texcoord_offset;
+        float32_t texcoord_rotation = 0.0f;
+        padding_t slice_padding;
 
         virtual void on_render_begin(mat4_t& world_matrix, mat4_t& view_projection_matrix) override;
         virtual void on_clean_end() override;

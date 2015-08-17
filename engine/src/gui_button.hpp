@@ -20,16 +20,12 @@ namespace mandala
             PRESSED
         };
 
-        virtual bool on_input_event(input_event_t& input_event) override;
+        virtual bool on_input_event_begin(input_event_t& input_event) override;
 
         state_t get_state() const { return state; }
 
-#if defined(MANDALA_PC)
-        boost::function<void()> on_hover;
-        boost::function<void()> on_unhover;
-#endif
-        boost::function<void()> on_pressed;
-    
+        boost::function<void(boost::shared_ptr<gui_node_t>&)> on_state_changed;
+
     private:
         state_t state = state_t::IDLE;
     };

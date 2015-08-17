@@ -23,7 +23,7 @@
 #include "io.hpp"
 
 #define MD5M_MAGIC_LENGTH       (4)
-#define MD5M_MAGIC              (std::array<char, MD5M_MAGIC_LENGTH> { 'M', 'D', '5', 'M' })
+#define MD5M_MAGIC              (std::array<char, MD5M_MAGIC_LENGTH> { { 'M', 'D', '5', 'M' } })
 #define MD5M_VERSION            (1)
 
 namespace mandala
@@ -223,6 +223,7 @@ namespace mandala
                 vertex_1.normal += normal;
                 vertex_2.normal += normal;
 
+                /*
                 //tangent
                 auto t0 = vertex_2.texcoord - vertex_0.texcoord;
                 auto t1 = vertex_1.texcoord - vertex_0.texcoord;
@@ -248,8 +249,10 @@ namespace mandala
                 vertex_0.tangent += tangent;
                 vertex_1.tangent += tangent;
                 vertex_2.tangent += tangent;
+                */
             }
 
+            /*
             for (auto& vertex : vertices)
             {
                 vertex.normal = glm::normalize(vertex.normal);
@@ -259,6 +262,7 @@ namespace mandala
                     vertex.tangent = glm::normalize(vertex.tangent);
                 }
             }
+            */
 
             mesh->vertex_buffer = boost::make_shared<mesh_t::vertex_buffer_type>();
             mesh->vertex_buffer->data(vertices, gpu_t::buffer_usage_e::STATIC_DRAW);
@@ -321,7 +325,9 @@ namespace mandala
             gpu.set_uniform("light_location", light_location);
             gpu.set_uniform("camera_location", camera_location);
 
-            gpu_program->is_lit(mesh->material->get_is_lit());
+            gpu_program->set_calculate_lighting_subroutine(mesh->material->get_is_lit() ?
+                model_gpu_program_t::calculate_lighting_subroutine_e::CALCULATE_LIGHTING_LIT :
+                model_gpu_program_t::calculate_lighting_subroutine_e::CALCULATE_LIGHTING_UNLIT);
 
             mesh->render(world_matrix, view_projection_matrix, bone_matrices);
 

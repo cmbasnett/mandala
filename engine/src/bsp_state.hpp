@@ -6,7 +6,6 @@
 #include "gui_state.hpp"
 #include "bsp.hpp"
 #include "vertex_buffer.hpp"
-#include "gpu_vertices.hpp"
 
 namespace mandala
 {
