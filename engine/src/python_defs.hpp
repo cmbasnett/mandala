@@ -307,6 +307,8 @@ class_<mandala::details::padding_t<scalar_type>>(name, init<scalar_type, scalar_
 .def(self_ns::self -= self_ns::self)\
 .def(self_ns::str(self_ns::self));\
 
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(state_mgr_push_overloads, state_mgr_t::push, 2, 3)
+
 BOOST_PYTHON_MODULE(mandala)
 {
     python_optional<sprite_t>();
@@ -628,9 +630,10 @@ BOOST_PYTHON_MODULE(mandala)
     scope().attr("STATE_FLAG_ALL") = state_flags_type(STATE_FLAG_ALL);
 
     class_<state_mgr_t, noncopyable>("StateMgr", no_init)
-        .def("push", &state_mgr_t::push)
+        .def("push", &state_mgr_t::push, state_mgr_push_overloads(boost::python::args("state", "link_flags", "weight")))
         .def("pop", &state_mgr_t::pop)
         .def("change_link_flags", &state_mgr_t::change_link_flags)
+        .def("change_weight", &state_mgr_t::change_weight)
         .def("purge", &state_mgr_t::purge)
         .def("get_flags", &state_mgr_t::get_flags)
         .def("get_link_flags", &state_mgr_t::get_link_flags)

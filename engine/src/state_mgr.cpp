@@ -59,6 +59,7 @@ namespace mandala
                 node_t node;
                 node.link_flags = operation.link_flags;
                 node.state = operation.state;
+                node.weight = operation.weight;
 
                 nodes.push_back(node);
 
@@ -72,7 +73,7 @@ namespace mandala
                     throw std::exception("state does not exist on stack, cannot change link flags");
                 }
 
-                //modify link flags of state on stack
+                //change link flags of state on stack
                 nodes_itr->link_flags = operation.link_flags;
 
                 //clear changing link flags flag from node flags
@@ -80,13 +81,25 @@ namespace mandala
             }
                 break;
             case operation_t::type_e::PURGE:
+            {
                 while (!nodes.empty())
                 {
                     popped_states.push_back(std::make_pair(nodes.back().state, nodes.back().flags));
 
                     nodes.pop_back();
                 }
+            }
+                break;
+            case operation_t::type_e::CHANGE_WEIGHT:
+            {
+                if (nodes_itr == nodes.end())
+                {
+                    throw std::exception("state does not exist on the stack, cannot change weight");
+                }
 
+                //change weight of state on stack
+                nodes_itr->weight = operation.weight;
+            }
                 break;
             }
 
@@ -102,6 +115,12 @@ namespace mandala
         //check if stack was modified
         if (did_nodes_change)
         {
+            //sort nodes by weight
+            nodes.sort([&](const node_t& lhs, const node_t& rhs)
+            {
+                return lhs.weight > rhs.weight;
+            });
+
             //check if top state changed
             if (!nodes.empty() && previous_top_state != nodes.rbegin()->state)
             {
@@ -237,7 +256,7 @@ namespace mandala
 #endif
 
     //push a state onto the stack
-    void state_mgr_t::push(const state_type& state, state_flags_type link_flags)
+    void state_mgr_t::push(const state_type& state, state_flags_type link_flags, int32_t weight)
     {
         if (state == nullptr)
         {
@@ -248,6 +267,7 @@ namespace mandala
         operation.type = operation_t::type_e::PUSH;
         operation.state = state;
         operation.link_flags = link_flags;
+        operation.weight = weight;
 
         operations.push_back(operation);
     }
@@ -342,6 +362,46 @@ namespace mandala
         nodes_itr->flags |= STATE_FLAG_CHANGING_LINK_FLAGS;
     }
 
+    void state_mgr_t::change_weight(const state_type& state, int32_t weight = 0)
+    {
+        if (state == nullptr)
+        {
+            throw std::invalid_argument("state cannot be null");
+        }
+
+        const auto nodes_itr = std::find_if(nodes.begin(), nodes.end(), [&](const node_t& node)
+        {
+            return node.state == state;
+        });
+
+        if (nodes_itr == nodes.end())
+        {
+            const auto operations_itr = std::find_if(operations.begin(), operations.end(), [&](const operation_t& operation)
+            {
+                return operation.state == state && (operation.type == operation_t::type_e::PUSH || operation.type == operation_t::type_e::CHANGE_WEIGHT);
+            });
+
+            if (operations_itr != operations.end())
+            {
+                //state is in operation queue to be pushed or have it's weight changed, change operations' weight
+                operations_itr->weight = weight;
+
+                return;
+            }
+            else
+            {
+                throw std::exception("state is not on the stack nor in queue to be pushed");
+            }
+        }
+
+        operation_t operation;
+        operation.type = operation_t::type_e::CHANGE_WEIGHT;
+        operation.state = state;
+        operation.weight = weight;
+
+        operations.push_back(operation);
+    }
+
     void state_mgr_t::purge()
     {
         operation_t operation;
@@ -420,6 +480,21 @@ namespace mandala
         }
 
         return nodes_itr->flags;
+    }
+
+    int32_t state_mgr_t::get_weight(const state_type& state) const
+    {
+        const auto nodes_itr = std::find_if(nodes.begin(), nodes.end(), [&](const node_t& node)
+        {
+            return node.state == state;
+        });
+
+        if (nodes_itr == nodes.end())
+        {
+            throw std::out_of_range("state is not on the stack");
+        }
+
+        return nodes_itr->weight;
     }
 
     bool state_mgr_t::is_state_rendering(const state_type& state) const

@@ -56,6 +56,7 @@ namespace mandala
                 PUSH,
                 POP,
                 CHANGE_LINK_FLAGS,
+                CHANGE_WEIGHT,
                 PURGE
             };
 
@@ -63,6 +64,7 @@ namespace mandala
             state_type state;
             state_flags_type link_flags = STATE_FLAG_NONE;
             size_t index = 0;
+            int32_t weight = 0;
         };
 
         state_mgr_t() = default;
@@ -74,13 +76,15 @@ namespace mandala
         void on_window_event(window_event_t& window_event);
 #endif
 
-        void push(const state_type& state, state_flags_type link_flags);
+        void push(const state_type& state, state_flags_type link_flags, int32_t weight = 0);
         void pop(const state_type& state);
         void change_link_flags(const state_type& state, state_flags_type link_flags);
+        void change_weight(const state_type& state, int32_t weight);
         void purge();
 
         state_flags_type get_flags(const state_type& state) const;
         state_flags_type get_link_flags(const state_type& state) const;
+        int32_t get_weight(const state_type& state) const;
         size_t count() const;
         state_type at(size_t node_index) const;
         boost::optional<size_t> index_of(const state_type& state) const;
