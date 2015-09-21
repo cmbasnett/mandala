@@ -14,6 +14,71 @@
 
 namespace mandala
 {
+    inline void render_line_loop(const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<vec3_t>& points, const rgba_type& color)
+    {
+        static const size_t MAX_LINES = 1024;
+        static const size_t VERTEX_COUNT = MAX_LINES + 1;
+        static const size_t INDEX_COUNT = MAX_LINES;
+
+        assert(points.size() <= MAX_LINES);
+
+        typedef vertex_buffer_t<basic_gpu_program_t::vertex_type> vertex_buffer_type;
+        typedef index_buffer_t<index_type<INDEX_COUNT>::type> index_buffer_type;
+
+        static boost::weak_ptr<vertex_buffer_type> vertex_buffer;
+        static boost::weak_ptr<index_buffer_type> index_buffer;
+
+        static std::array<basic_gpu_program_t::vertex_type, VERTEX_COUNT> vertices;
+
+        if (vertex_buffer.expired())
+        {
+            vertex_buffer = gpu_buffers.make<vertex_buffer_type>();
+
+            for (auto& vertex : vertices)
+            {
+                vertex.color = rgba_type(1);
+            }
+        }
+
+        for (size_t i = 0; i < points.size(); ++i)
+        {
+            vertices[i].location = points[i];
+        }
+
+        vertex_buffer.lock()->data(vertices.data(), points.size(), gpu_t::buffer_usage_e::STREAM_DRAW);
+
+        if (index_buffer.expired())
+        {
+            std::array<index_buffer_type::index_type, INDEX_COUNT> indices;
+
+            for (size_t i = 0; i < INDEX_COUNT; ++i)
+            {
+                indices[i] = i;
+            }
+
+            index_buffer = gpu_buffers.make<index_buffer_type>();
+            index_buffer.lock()->data(indices.data(), indices.size(), gpu_t::buffer_usage_e::STATIC_DRAW);
+        }
+
+        gpu.buffers.push(gpu_t::buffer_target_e::ARRAY, vertex_buffer.lock());
+        gpu.buffers.push(gpu_t::buffer_target_e::ELEMENT_ARRAY, index_buffer.lock());
+
+        const auto gpu_program = gpu_programs.get<basic_gpu_program_t>();
+
+        gpu.programs.push(gpu_program);
+
+        gpu.set_uniform("world_matrix", world_matrix);
+        gpu.set_uniform("view_projection_matrix", view_projection_matrix);
+        gpu.set_uniform("color", color);
+
+        gpu.draw_elements(gpu_t::primitive_type_e::LINE_STRIP, points.size(), index_buffer_type::DATA_TYPE, 0);
+
+        gpu.programs.pop();
+
+        gpu.buffers.pop(gpu_t::buffer_target_e::ARRAY);
+        gpu.buffers.pop(gpu_t::buffer_target_e::ELEMENT_ARRAY);
+    }
+
     template<typename T>
     void render_rectangle(const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const details::rectangle_t<T>& rectangle, const rgba_type& color, bool is_filled = false)
     {
@@ -32,7 +97,7 @@ namespace mandala
                 basic_gpu_program_t::vertex_type(vec3_t(1, 1, 0), rgba_type(1)),
                 basic_gpu_program_t::vertex_type(vec3_t(0, 1, 0), rgba_type(1))
             };
-            vertex_buffer.lock()->data(vertices, gpu_t::buffer_usage_e::DYNAMIC_DRAW);
+            vertex_buffer.lock()->data(vertices, gpu_t::buffer_usage_e::STATIC_DRAW);
         }
 
         if (index_buffer.expired())

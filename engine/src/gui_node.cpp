@@ -47,7 +47,7 @@ namespace mandala
         parent = nullptr;
         
         //uproot
-        root = nullptr;
+        layout = nullptr;
 
         //mark as dirty
         dirty();

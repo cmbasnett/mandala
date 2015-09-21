@@ -18,6 +18,7 @@
 namespace mandala
 {
     struct input_event_t;
+    struct gui_layout_t;
 
     typedef uint8_t gui_anchor_flags_type;
 
@@ -127,6 +128,7 @@ namespace mandala
         bool should_clip = false;
         bool has_focus = false;
         gui_size_modes_t size_modes;
+        boost::shared_ptr<gui_layout_t> layout;
 
     protected:
         bool is_dirty = true;

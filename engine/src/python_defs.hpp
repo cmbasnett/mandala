@@ -35,12 +35,15 @@
 #include "python.hpp"
 #include "closure_traits.hpp"
 #include "cache_mgr.hpp"
+#include "interpolation.hpp"
+#include "scene.hpp"
+#include "actor.hpp"
+#include "pose.hpp"
+#include "camera.hpp"
 
 using namespace boost;
 using namespace boost::python;
 using namespace mandala;
-
-#include <boost/preprocessor.hpp>
 
 //generate "type _#"
 #define PARAMS(z,n,data) BOOST_PP_TUPLE_ELEM(n,data) _##n
@@ -232,7 +235,8 @@ class_<glm::detail::tvec2<value_type>>(name, init<value_type, value_type>())\
     .def(self_ns::self += self_ns::self)\
     .def(self_ns::self - self_ns::self)\
     .def(self_ns::self -= self_ns::self)\
-    .def(self_ns::str(self_ns::self));\
+    .def(self_ns::str(self_ns::self))\
+    .def(self_ns::repr(self_ns::self));\
 
 #define MANDALA_PYTHON_DEFINE_VEC3(name, value_type)\
 class_<glm::detail::tvec3<value_type>>(name, init<value_type, value_type, value_type>())\
@@ -340,6 +344,7 @@ BOOST_PYTHON_MODULE(mandala)
     //move to GLM module?
     MANDALA_PYTHON_DEFINE_VEC2("Vec2I", int);
     MANDALA_PYTHON_DEFINE_VEC2("Vec2F", float);
+    MANDALA_PYTHON_DEFINE_VEC2("Vec2D", double);
 
     MANDALA_PYTHON_DEFINE_VEC3("Vec3I", int);
     MANDALA_PYTHON_DEFINE_VEC3("Vec3F", float);
@@ -369,6 +374,7 @@ BOOST_PYTHON_MODULE(mandala)
             .add_property("window_location", &platform_t::get_window_location, &platform_t::set_window_location)
             .add_property("displays", &platform_t::get_window_location, &platform_t::set_window_location)
 #endif
+            .add_property("clipboard_string", &platform_t::get_clipboard_string, &platform_t::set_clipboard_string)
             ;
 
         class_<platform_t::display_t, noncopyable>("PlatformDisplay", no_init)
@@ -900,7 +906,7 @@ BOOST_PYTHON_MODULE(mandala)
 
     scope().attr("gpu") = boost::ref(gpu);
 
-    enum_<gpu_frame_buffer_type_e>("GpuFrameBufferType")
+    enum_<gpu_frame_buffer_type_e>("FrameBufferType")
         .value("COLOR", gpu_frame_buffer_type_e::COLOR)
         .value("COLOR_DEPTH", gpu_frame_buffer_type_e::COLOR_DEPTH)
         .value("COLOR_DEPTH_STENCIL", gpu_frame_buffer_type_e::COLOR_DEPTH_STENCIL)
@@ -916,4 +922,44 @@ BOOST_PYTHON_MODULE(mandala)
         .add_property("size", make_function(&frame_buffer_t::get_size, return_value_policy<copy_const_reference>()), &frame_buffer_t::set_size)
         .add_property("type", &frame_buffer_t::get_type)
         ;
+
+    def("bezier2D", mandala::bezier2<double>, args("point0", "point1", "point2", "t"));
+
+    class_<pose2>("Pose2", init<>())
+        .def_readwrite("location", &pose2::location)
+        .def_readwrite("rotation", &pose2::rotation)
+        ;
+
+    class_<pose3>("Pose3", init<>())
+        .def_readwrite("location", &pose3::location)
+        .def_readwrite("rotation", &pose3::rotation)
+        ;
+
+    class_<actor_t, boost::shared_ptr<actor_t>>("Actor")
+        .add_property("model", make_function(&actor_t::get_model, return_value_policy<copy_const_reference>()), &actor_t::set_model)
+        .def_readwrite("pose", &actor_t::pose)
+        ;
+
+    class_<std::vector<boost::shared_ptr<actor_t>>>("ActorVec")
+        .def(vector_indexing_suite<std::vector<boost::shared_ptr<actor_t>>>());
+
+    class_<scene_t, noncopyable>("Scene")
+        .add_property("actors", make_function(&scene_t::get_actors, return_value_policy<copy_const_reference>()))
+        .def("render", &scene_t::render)
+        ;
+
+    {
+        auto camera_scope = class_<camera_t, bases<actor_t>, boost::shared_ptr<camera_t>>("Camera")
+            .def_readwrite("near", &camera_t::near)
+            .def_readwrite("far", &camera_t::far)
+            .def_readwrite("aspect", &camera_t::aspect)
+            .def_readwrite("fov", &camera_t::fov)
+            .def_readwrite("projection_type", &camera_t::projection_type)
+            ;
+
+        enum_<camera_t::projection_type_e>("ProjectionType")
+            .value("ORTHOGRAPHIC", camera_t::projection_type_e::ORTHOGRAPHIC)
+            .value("PERSPECTIVE", camera_t::projection_type_e::PERSPECTIVE)
+            .export_values();
+    }
 }

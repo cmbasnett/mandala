@@ -14,6 +14,9 @@
 #include "window_event.hpp"
 #endif
 
+#include "line_renderer.hpp"
+#include "interpolation.hpp"
+
 namespace mandala
 {
     gui_state_t::gui_state_t()
@@ -56,7 +59,6 @@ namespace mandala
     void gui_state_t::render()
     {
         const auto screen_size = platform.get_screen_size();
-
         auto view_projection_matrix = glm::ortho(0.0f, static_cast<float32_t>(screen_size.x), 0.0f, static_cast<float32_t>(screen_size.y));
 
         auto depth_state = gpu.depth.get_state();

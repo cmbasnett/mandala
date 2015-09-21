@@ -118,9 +118,6 @@
     <ClInclude Include="..\..\src\gui_scroll.hpp">
       <Filter>gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\gui_state.hpp">
-      <Filter>gui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\color_types.hpp">
       <Filter>gpu</Filter>
     </ClInclude>
@@ -292,9 +289,6 @@
     <ClInclude Include="..\..\src\game.hpp">
       <Filter>app</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\level.hpp">
-      <Filter>level</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\actor.hpp">
       <Filter>actors</Filter>
     </ClInclude>
@@ -305,10 +299,10 @@
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\octtree.hpp">
-      <Filter>level</Filter>
+      <Filter>scene</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\quadtree.hpp">
-      <Filter>level</Filter>
+      <Filter>scene</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\cache_mgr.hpp">
       <Filter>cache</Filter>
@@ -317,6 +311,18 @@
       <Filter>type_traits</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\bisect.hpp" />
+    <ClInclude Include="..\..\src\gui_state.hpp">
+      <Filter>states</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\terrain.hpp">
+      <Filter>resources\terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\heightmap.hpp">
+      <Filter>resources\terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scene.hpp">
+      <Filter>scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\app.cpp">
@@ -391,9 +397,6 @@
     <ClCompile Include="..\..\src\gui_scroll.cpp">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\gui_state.cpp">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\material.cpp">
       <Filter>resources\material</Filter>
     </ClCompile>
@@ -461,11 +464,17 @@
       <Filter>python</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\main.cpp" />
-    <ClCompile Include="..\..\src\level.cpp">
-      <Filter>level</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\cache_mgr.cpp">
       <Filter>cache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gui_state.cpp">
+      <Filter>states</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scene.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\terrain.cpp">
+      <Filter>resources\terrain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -538,9 +547,6 @@
     <Filter Include="resources\packs">
       <UniqueIdentifier>{a8e04df4-77fd-473d-976d-5cef064397cd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="level">
-      <UniqueIdentifier>{8b27e0ed-8a61-45b2-8b57-7bbd4998b8f6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="actors">
       <UniqueIdentifier>{9405043a-219c-4989-9ee8-797a1fc2ee78}</UniqueIdentifier>
     </Filter>
@@ -552,6 +558,12 @@
     </Filter>
     <Filter Include="type_traits">
       <UniqueIdentifier>{5b1bbda6-a2c0-4e47-86db-e2113661cf61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\terrain">
+      <UniqueIdentifier>{d1f15da3-3f4a-49ec-8968-3457fae518db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scene">
+      <UniqueIdentifier>{8b27e0ed-8a61-45b2-8b57-7bbd4998b8f6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

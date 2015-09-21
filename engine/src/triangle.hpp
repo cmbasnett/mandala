@@ -9,7 +9,7 @@
 
 namespace mandala
 {
-    namespace detail
+    namespace details
     {
         template<typename T, typename Enable = void>
         struct triangle3_t;

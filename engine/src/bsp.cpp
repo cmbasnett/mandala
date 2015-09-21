@@ -605,7 +605,7 @@ namespace mandala
 
     void bsp_t::render(const camera_t& camera)
     {
-        static boost::dynamic_bitset<> faces_rendered = boost::dynamic_bitset<>(faces.size());
+        boost::dynamic_bitset<> faces_rendered = boost::dynamic_bitset<>(faces.size());
 
         faces_rendered.reset();
 

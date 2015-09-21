@@ -3,57 +3,65 @@
 //std
 #include <array>
 
-//boost
-#include <boost/make_shared.hpp>
-
 //mandala
 #include "aabb.hpp"
 
 namespace mandala
 {
-    namespace details
+    struct quadtree_t
     {
-        template<typename Scalar, typename Enable = void>
-        struct quadtree_;
+        typedef float32_t scalar_type;
+        typedef details::aabb2_t<scalar_type> bounds_type;
 
-        template<typename Scalar>
-        struct quadtree_<Scalar, typename std::enable_if<std::is_floating_point<Scalar>::value>::type>
+        struct node_t
         {
-            typedef Scalar scalar_type;
-            typedef aabb2_t<scalar_type> bounds_type;
-            typedef quadtree_<scalar_type> type;
-            typedef std::array<boost::shared_ptr<type>, 4> children_type;
+            typedef std::array<std::unique_ptr<node_t>, 4> children_type;
 
-            quadtree_(scalar_type size) :
-                bounds(bounds_type::value_type(-size / 2), bounds_type::value_type(size / 2))
-            {
-            }
-
-            quadtree_(const bounds_type& bounds) :
+            node_t(const bounds_type& bounds) :
                 bounds(bounds)
             {
             }
 
-            void birth()
+            void branch()
             {
                 const auto child_bounds = bounds_type(bounds.min, bounds.center());
                 const auto child_bounds_size = child_bounds.size();
 
-                children[0] = boost::make_shared<type>(child_bounds);
-                children[1] = boost::make_shared<type>(child_bounds + bounds_type::value_type(child_bounds_size.x, 0));
-                children[1] = boost::make_shared<type>(child_bounds + bounds_type::value_type(0, child_bounds_size.y));
-                children[3] = boost::make_shared<type>(child_bounds + child_bounds_size);
+                children[0] = std::make_unique<node_t>(child_bounds);
+                children[1] = std::make_unique<node_t>(child_bounds + bounds_type::value_type(child_bounds_size.x, 0));
+                children[1] = std::make_unique<node_t>(child_bounds + bounds_type::value_type(0, child_bounds_size.y));
+                children[3] = std::make_unique<node_t>(child_bounds + child_bounds_size);
             }
 
-            const bounds_type& get_bounds() const { return bounds; }
-            const children_type& get_children() const { return children; }
+            bool is_leaf() const
+            {
+                return children[0] != nullptr;
+            }
+
+            const bounds_type& get_bounds() const
+            {
+                return bounds;
+            }
 
         private:
             bounds_type bounds;
             children_type children;
         };
-    }
 
-    typedef details::quadtree_<float32_t> quadtree_f32_t;
-    typedef details::quadtree_<float64_t> quadtree_f64_t;
+        quadtree_t(scalar_type size)
+        {
+            if (size == 0)
+            {
+                throw std::invalid_argument("size cannot be 0");
+            }
+
+            root = std::make_unique<node_t>(bounds_type(bounds_type::value_type(-size / 2), bounds_type::value_type(size / 2)));
+            root->branch();
+        }
+
+        const bounds_type& get_bounds() const { return root->get_bounds(); }
+
+    private:
+        std::unique_ptr<node_t> root;
+    };
 }

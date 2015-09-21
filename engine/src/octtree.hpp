@@ -24,7 +24,7 @@ namespace mandala
             typedef octree_<scalar_type> type;
             typedef std::array<boost::shared_ptr<type>, 8> children_type;
 
-            octree_(scalar_type size) :
+            octree_(scalar_type size = 2048) :
                 bounds(bounds_type::value_type(-size / 2), bounds_type::value_type(size / 2))
             {
             }
@@ -34,7 +34,7 @@ namespace mandala
             {
             }
 
-            void birth()
+            void grow()
             {
                 const auto child_bounds = bounds_type(bounds.min, bounds.center());
                 const auto child_bounds_size = child_bounds.size();
@@ -51,6 +51,7 @@ namespace mandala
 
             const bounds_type& get_bounds() const { return bounds; }
             const children_type& get_children() const { return children; }
+            bool is_leaf() const { return children[0] == nullptr; }
 
         private:
             bounds_type bounds;
@@ -60,4 +61,5 @@ namespace mandala
 
     typedef details::octree_<float32_t> octree_f32_t;
     typedef details::octree_<float64_t> octree_f64_t;
+    typedef octree_f32_t octree_t;
 }

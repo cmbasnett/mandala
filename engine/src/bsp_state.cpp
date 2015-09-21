@@ -38,7 +38,6 @@ namespace mandala
         std::mt19937 mt19937;
 
         bsp_state_t::bsp_state_t() :
-            bsp(resources.get<bsp_t>(hash_t("dod_flash.bsp"))),
             model(boost::make_shared<model_instance_t>(hash_t("boblampclean.md5m")))
         {
             model->play(hash_t("boblampclean.md5a"));
@@ -65,7 +64,7 @@ namespace mandala
             audio.listener.location = camera.pose.location;
             audio.listener.velocity = camera.velocity;
 
-            render_data.leaf_index = bsp->get_leaf_index_from_location(camera.pose.location);
+            //render_data.leaf_index = world.get_bsp()->get_leaf_index_from_location(camera.pose.location);
 
             gui_state_t::tick(dt);
         }
@@ -86,7 +85,7 @@ namespace mandala
                 gpu.clear(gpu_t::CLEAR_FLAG_COLOR | gpu_t::CLEAR_FLAG_DEPTH | gpu_t::CLEAR_FLAG_STENCIL);
 
                 //TODO: need to create a proper level thing here! scene graph and whatever
-                bsp->render(camera);
+                //bsp->render(camera);
                 model->render(camera, vec3_t(0));
 
                 gpu.frame_buffers.pop();
@@ -154,13 +153,13 @@ namespace mandala
                 {
                     if (input_event.touch.location_delta.y > 0)
                     {
-                        bsp->render_settings.lightmap_gamma += 0.1f;
+                        //bsp->render_settings.lightmap_gamma += 0.1f;
 
                         return true;
                     }
                     else
                     {
-                        bsp->render_settings.lightmap_gamma -= 0.1f;
+                        //bsp->render_settings.lightmap_gamma -= 0.1f;
 
                         return true;
                     }

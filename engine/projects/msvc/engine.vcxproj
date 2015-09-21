@@ -269,6 +269,8 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\gui_size.hpp" />
     <ClInclude Include="..\..\src\gui_state.hpp" />
     <ClInclude Include="..\..\src\hash.hpp" />
+    <ClInclude Include="..\..\src\heightmap.hpp" />
+    <ClInclude Include="..\..\src\terrain.hpp" />
     <ClInclude Include="..\..\src\octtree.hpp" />
     <ClInclude Include="..\..\src\image.hpp" />
     <ClInclude Include="..\..\src\index_buffer.hpp" />
@@ -277,7 +279,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\interpolation.hpp" />
     <ClInclude Include="..\..\src\io.hpp" />
     <ClInclude Include="..\..\src\is_pow2.hpp" />
-    <ClInclude Include="..\..\src\level.hpp" />
+    <ClInclude Include="..\..\src\scene.hpp" />
     <ClInclude Include="..\..\src\line.hpp" />
     <ClInclude Include="..\..\src\line_renderer.hpp" />
     <ClInclude Include="..\..\src\literals.hpp" />
@@ -353,7 +355,7 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="..\..\src\gui_scroll.cpp" />
     <ClCompile Include="..\..\src\gui_state.cpp" />
     <ClCompile Include="..\..\src\image.cpp" />
-    <ClCompile Include="..\..\src\level.cpp" />
+    <ClCompile Include="..\..\src\scene.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\material.cpp" />
     <ClCompile Include="..\..\src\material_instance.cpp" />
@@ -369,6 +371,7 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="..\..\src\resource.cpp" />
     <ClCompile Include="..\..\src\resource_mgr.cpp" />
     <ClCompile Include="..\..\src\sound.cpp" />
+    <ClCompile Include="..\..\src\terrain.cpp" />
     <ClCompile Include="..\..\src\sprite.cpp" />
     <ClCompile Include="..\..\src\sprite_animation.cpp" />
     <ClCompile Include="..\..\src\sprite_set.cpp" />

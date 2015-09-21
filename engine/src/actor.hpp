@@ -9,6 +9,7 @@
 namespace mandala
 {
     struct model_instance_t;
+    struct camera_t;
 
     struct actor_t
     {
@@ -21,6 +22,7 @@ namespace mandala
         virtual void on_create() { }
         virtual void on_destroy() { }
         virtual void on_tick(float32_t dt) { }
+        virtual void render(const boost::shared_ptr<camera_t>& camera) { }
 
         pose3 pose;
 

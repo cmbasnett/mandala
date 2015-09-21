@@ -18,7 +18,6 @@ namespace mandala
     model_instance_t::model_instance_t(boost::shared_ptr<model_t> model) :
         model(model)
     {
-        //TODO: kind of ham-fisted, find a better way to do this?
         skeleton.bones.resize(model->get_bones().size());
         skeleton.bone_matrices.resize(model->get_bones().size());
 

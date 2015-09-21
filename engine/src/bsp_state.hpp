@@ -40,7 +40,6 @@ namespace mandala
             virtual void on_enter() override;
 
         private:
-            boost::shared_ptr<bsp_t> bsp;
             boost::shared_ptr<model_instance_t> model;
             boost::shared_ptr<gui_image_t> bsp_image;
             boost::shared_ptr<gui_canvas_t> bsp_canvas;

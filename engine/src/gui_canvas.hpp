@@ -28,7 +28,7 @@ namespace mandala
 
     private:
         boost::shared_ptr<frame_buffer_t> frame_buffer;
-        boost::shared_ptr<vertex_buffer_type> vertex_buffer;
-        boost::shared_ptr<index_buffer_type> index_buffer;
+        static boost::weak_ptr<vertex_buffer_type> vertex_buffer;
+        static boost::weak_ptr<index_buffer_type> index_buffer;
     };
 }

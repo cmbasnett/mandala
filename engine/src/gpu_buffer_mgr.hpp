@@ -3,6 +3,9 @@
 //std
 #include <map>
 
+//boost
+#include <boost\make_shared.hpp>
+
 //mandala
 #include "gpu_buffer.hpp"
 

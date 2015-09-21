@@ -5,6 +5,8 @@
 #include "state_mgr.hpp"
 #include "state.hpp"
 
+#include "line_renderer.hpp"
+
 namespace mandala
 {
     state_mgr_t states;
