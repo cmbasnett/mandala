@@ -3,6 +3,10 @@
 //std
 #include <string>
 
+#ifndef BOOST_PYTHON_STATIC_LIB
+#define BOOST_PYTHON_STATIC_LIB
+#endif
+
 //boost
 #include <boost\python.hpp>
 
