@@ -434,9 +434,9 @@ namespace mandala
 
             for (auto i = 0; i < face.surface_edge_count; ++i)
             {
-                vertex_t vertex;
+                vertex_type vertex;
 
-                vertex.normal = normal;
+                //vertex.normal = normal;
 
                 auto edge_index = surface_edges[face.surface_edge_start_index + i];
 

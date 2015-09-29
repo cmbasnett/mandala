@@ -372,7 +372,10 @@ BOOST_PYTHON_MODULE(mandala)
             .add_property("cursor_location", &platform_t::get_cursor_location, &platform_t::set_cursor_location)
             .add_property("window_size", &platform_t::get_window_size, &platform_t::set_window_size)
             .add_property("window_location", &platform_t::get_window_location, &platform_t::set_window_location)
-            .add_property("displays", &platform_t::get_window_location, &platform_t::set_window_location)
+            //.add_property("display", &platform_t::get_display, &platform_t::set_window_location)
+            .add_property("fullscreen", &platform_t::is_fullscreen, &platform_t::set_is_fullscreen)
+            .def_readwrite("is_cursor_centered", &platform_t::is_cursor_centered)
+            .add_property("is_cursor_hidden", &platform_t::is_cursor_hidden, &platform_t::set_cursor_hidden)
 #endif
             .add_property("clipboard_string", &platform_t::get_clipboard_string, &platform_t::set_clipboard_string)
             ;

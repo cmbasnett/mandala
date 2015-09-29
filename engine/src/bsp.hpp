@@ -13,6 +13,7 @@
 #include "vertex_buffer.hpp"
 #include "index_buffer.hpp"
 #include "bsp_entity.hpp"
+#include "bsp_gpu_program.hpp"
 
 //boost
 #include <boost\shared_ptr.hpp>
@@ -171,19 +172,7 @@ namespace mandala
             type_e type = type_e::x;
         };
 
-        struct vertex_t
-        {
-            typedef vec3_t location_type;
-            typedef vec3_t normal_type;
-            typedef vec2_t texcoord_type;
-
-            location_type location;
-            normal_type normal;
-            texcoord_type diffuse_texcoord;
-            texcoord_type lightmap_texcoord;
-        };
-
-        typedef vertex_t vertex_type;
+        typedef bsp_gpu_program_t::vertex_type vertex_type;
         typedef vertex_buffer_t<vertex_type> vertex_buffer_type;
 
         typedef uint32_t index_type;
