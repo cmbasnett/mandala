@@ -22,7 +22,7 @@ namespace mandala
         pose3 pose;
 
         void tick(float32_t dt);
-        void render(const camera_t& camera, const vec3_t& light_location) const;
+        void render(const boost::shared_ptr<camera_t>& camera, const vec3_t& light_location) const;
 
         void play(const hash_t& animation_hash);
 

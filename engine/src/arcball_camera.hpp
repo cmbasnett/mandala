@@ -8,7 +8,7 @@ namespace mandala
 {
     struct arcball_camera_t : camera_t
     {
-        virtual void tick(float32_t dt);
+        virtual void on_tick(float32_t dt) override;
         bool on_input_event(input_event_t& input_event);
 
         float32_t fov_min = 70.0f;

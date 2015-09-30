@@ -24,7 +24,7 @@ namespace mandala
         vec3_t target;
         projection_type_e projection_type = projection_type_e::PERSPECTIVE;
 
-        virtual void tick(float32_t dt);
+        virtual void on_tick(float32_t dt) override;
 
         line3_t get_ray(const vec2_f64_t& screen_location) const;
 

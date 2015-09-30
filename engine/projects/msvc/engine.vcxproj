@@ -328,6 +328,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\window_event.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\actor.cpp" />
     <ClCompile Include="..\..\src\app.cpp" />
     <ClCompile Include="..\..\src\arcball_camera.cpp" />
     <ClCompile Include="..\..\src\audio_context.cpp" />

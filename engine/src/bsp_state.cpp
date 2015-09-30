@@ -58,7 +58,7 @@ namespace mandala
         void bsp_state_t::tick(float32_t dt)
         {
             model->tick(dt);
-            camera.tick(dt);
+            //camera.tick(dt);
 
             audio.doppler.factor = 0.0f;
             audio.listener.location = camera.pose.location;
@@ -86,7 +86,7 @@ namespace mandala
 
                 //TODO: need to create a proper level thing here! scene graph and whatever
                 //bsp->render(camera);
-                model->render(camera, vec3_t(0));
+                //model->render(camera, vec3_t(0));
 
                 gpu.frame_buffers.pop();
                 gpu.viewports.pop();

@@ -10,30 +10,38 @@ namespace mandala
 {
     struct model_instance_t;
     struct camera_t;
+    struct bsp_t;
+    struct input_event_t;
 
     struct actor_t
     {
         enum class draw_type_e
         {
             NONE,
-            MODEL
+            BSP,
+            MODEL,
         };
 
         virtual void on_create() { }
         virtual void on_destroy() { }
-        virtual void on_tick(float32_t dt) { }
-        virtual void render(const boost::shared_ptr<camera_t>& camera) { }
+        virtual bool on_input_event(input_event_t& input_event) { return false; }
+        virtual void on_tick(float32_t dt);
+        virtual void render(const boost::shared_ptr<camera_t>& camera);
 
         pose3 pose;
 
         const boost::shared_ptr<model_instance_t>& get_model() const { return model; }
-        const draw_type_e get_draw_type() const { return draw_type; }
-
         void set_model(const boost::shared_ptr<model_instance_t>& model) { this->model = model; }
+
+        const draw_type_e get_draw_type() const { return draw_type; }
         void set_draw_type(draw_type_e draw_type) { this->draw_type = draw_type; }
+
+        const boost::shared_ptr<bsp_t>& get_bsp() const { return bsp; }
+        void set_bsp(const boost::shared_ptr<bsp_t>& bsp) { this->bsp = bsp; }
 
     private:
         draw_type_e draw_type = draw_type_e::NONE;
         boost::shared_ptr<model_instance_t> model;
+        boost::shared_ptr<bsp_t> bsp;
     };
 }

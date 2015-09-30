@@ -213,7 +213,7 @@ namespace mandala
 
         bsp_t(std::istream& istream);
 
-        void render(const camera_t& camera);
+        void render(const boost::shared_ptr<camera_t>& camera);
 
         int32_t get_leaf_index_from_location(const vec3_t& location) const;
 

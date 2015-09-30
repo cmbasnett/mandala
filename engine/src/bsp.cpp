@@ -603,13 +603,13 @@ namespace mandala
         index_buffer->data(indices, gpu_t::buffer_usage_e::STATIC_DRAW);
     }
 
-    void bsp_t::render(const camera_t& camera)
+    void bsp_t::render(const boost::shared_ptr<camera_t>& camera)
     {
         boost::dynamic_bitset<> faces_rendered = boost::dynamic_bitset<>(faces.size());
 
         faces_rendered.reset();
 
-        auto camera_leaf_index = get_leaf_index_from_location(camera.pose.location);
+        auto camera_leaf_index = get_leaf_index_from_location(camera->pose.location);
 
         //culling
         auto culling_state = gpu.culling.get_state();
@@ -637,7 +637,7 @@ namespace mandala
         gpu.programs.push(gpu_program);
 
         gpu.set_uniform("world_matrix", mat4_t());
-        gpu.set_uniform("view_projection_matrix", camera.get_projection_matrix() * camera.get_view_matrix());
+        gpu.set_uniform("view_projection_matrix", camera->get_projection_matrix() * camera->get_view_matrix());
         gpu.set_uniform("diffuse_texture", DIFFUSE_TEXTURE_INDEX);
         gpu.set_uniform("lightmap_texture", LIGHTMAP_TEXTURE_INDEX);
         gpu.set_uniform("lightmap_gamma", render_settings.lightmap_gamma);
@@ -714,16 +714,16 @@ namespace mandala
             switch (plane.type)
             {
             case plane_t::type_e::x:
-                distance = camera.pose.location.x - plane.plane.distance;
+                distance = camera->pose.location.x - plane.plane.distance;
                 break;
             case plane_t::type_e::y:
-                distance = camera.pose.location.y - plane.plane.distance;
+                distance = camera->pose.location.y - plane.plane.distance;
                 break;
             case plane_t::type_e::z:
-                distance = camera.pose.location.z - plane.plane.distance;
+                distance = camera->pose.location.z - plane.plane.distance;
                 break;
             default:
-                distance = glm::dot(plane.plane.normal, camera.pose.location) - plane.plane.distance;
+                distance = glm::dot(plane.plane.normal, camera->pose.location) - plane.plane.distance;
             }
 
             if (distance > 0)

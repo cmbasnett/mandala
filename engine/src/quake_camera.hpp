@@ -28,8 +28,8 @@ namespace mandala
         float32_t sensitivity = 0.1f;    //TODO: read sensitivity from configuration file?
         bool debug_is_rolling = false;
         
-        virtual void tick(float32_t dt) override;
+        virtual void on_tick(float32_t dt) override;
 
-        bool on_input_event(input_event_t& input_event);
+        bool on_input_event(input_event_t& input_event) override;
     };
 }

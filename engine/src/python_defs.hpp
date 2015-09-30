@@ -40,6 +40,7 @@
 #include "actor.hpp"
 #include "pose.hpp"
 #include "camera.hpp"
+#include "quake_camera.hpp"
 
 using namespace boost;
 using namespace boost::python;
@@ -203,6 +204,7 @@ MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(gui_state)
         return _wrapper_wrapped_type_::on_input_event(input_event);
     }
 
+    MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, render)
     MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, on_active)
     MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, on_passive)
     MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, on_enter)
@@ -719,6 +721,8 @@ BOOST_PYTHON_MODULE(mandala)
         .add_property("y", make_function(&gui_size_modes_t::get_y), &gui_size_modes_t::set_y)
         ;
 
+    class_<frame_buffer_t, boost::shared_ptr<frame_buffer_t>, noncopyable>("FrameBuffer", no_init);
+
     class_<gui_node_t, boost::shared_ptr<gui_node_t>, noncopyable>("GuiNode", init<>())
         .add_property("root", make_function(&gui_node_t::get_root, return_value_policy<copy_const_reference>()))
         .add_property("parent", make_function(&gui_node_t::get_parent, return_value_policy<copy_const_reference>()))
@@ -834,6 +838,7 @@ BOOST_PYTHON_MODULE(mandala)
         .def("on_start_render", &gui_state_wrapper_t::on_start_render)
         .def("on_stop_input", &gui_state_wrapper_t::on_stop_input)
         .def("on_start_input", &gui_state_wrapper_t::on_start_input)
+        .def("render_base", &gui_state_wrapper_t::render_base)
         .add_property("layout", make_function(&gui_state_wrapper_t::get_layout, return_value_policy<copy_const_reference>()));
 
     //RESOURCES
@@ -898,6 +903,8 @@ BOOST_PYTHON_MODULE(mandala)
     class_<model_t, bases<resource_t>, boost::shared_ptr<model_t>, noncopyable>("Model", no_init)
         .add_property("bones", make_function(&model_t::get_bone_names, return_value_policy<copy_const_reference>()));
 
+    class_<bsp_t, bases<resource_t>, boost::shared_ptr<bsp_t>, noncopyable>("Bsp", no_init);
+
     //GPU
     class_<gpu_t, noncopyable>("Gpu", no_init)
         .add_property("vendor", make_function(&gpu_t::get_vendor, return_value_policy<copy_const_reference>()))
@@ -926,7 +933,7 @@ BOOST_PYTHON_MODULE(mandala)
         .add_property("type", &frame_buffer_t::get_type)
         ;
 
-    def("bezier2D", mandala::bezier2<double>, args("point0", "point1", "point2", "t"));
+    def("bezier", mandala::bezier3<float32_t>, args("point0", "point1", "point2", "t"));
 
     class_<pose2>("Pose2", init<>())
         .def_readwrite("location", &pose2::location)
@@ -938,8 +945,16 @@ BOOST_PYTHON_MODULE(mandala)
         .def_readwrite("rotation", &pose3::rotation)
         ;
 
+    enum_<actor_t::draw_type_e>("ActorDrawType")
+        .value("NONE", actor_t::draw_type_e::NONE)
+        .value("BSP", actor_t::draw_type_e::BSP)
+        .value("MODEL", actor_t::draw_type_e::MODEL)
+        .export_values();
+
     class_<actor_t, boost::shared_ptr<actor_t>>("Actor")
         .add_property("model", make_function(&actor_t::get_model, return_value_policy<copy_const_reference>()), &actor_t::set_model)
+        .add_property("bsp", make_function(&actor_t::get_bsp, return_value_policy<copy_const_reference>()), &actor_t::set_bsp)
+        .add_property("draw_type", &actor_t::get_draw_type, &actor_t::set_draw_type)
         .def_readwrite("pose", &actor_t::pose)
         ;
 
@@ -947,8 +962,11 @@ BOOST_PYTHON_MODULE(mandala)
         .def(vector_indexing_suite<std::vector<boost::shared_ptr<actor_t>>>());
 
     class_<scene_t, noncopyable>("Scene")
-        .add_property("actors", make_function(&scene_t::get_actors, return_value_policy<copy_const_reference>()))
+        //.add_property("actors", make_function(&scene_t::get_actors, return_value_policy<copy_const_reference>()))
+        .def("add_actor", &scene_t::add_actor)
         .def("render", &scene_t::render)
+        .def("tick", &scene_t::tick)
+        .def("on_input_event", &scene_t::on_input_event)
         ;
 
     {
@@ -965,4 +983,6 @@ BOOST_PYTHON_MODULE(mandala)
             .value("PERSPECTIVE", camera_t::projection_type_e::PERSPECTIVE)
             .export_values();
     }
+
+    class_<quake_camera_t, bases<camera_t>, boost::shared_ptr<quake_camera_t>, noncopyable>("QuakeCamera", init<>());
 }

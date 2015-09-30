@@ -476,6 +476,9 @@
     <ClCompile Include="..\..\src\terrain.cpp">
       <Filter>resources\terrain</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\actor.cpp">
+      <Filter>actors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="app">

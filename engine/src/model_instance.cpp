@@ -72,23 +72,23 @@ namespace mandala
         sphere.radius = glm::length(aabb.extents());
     }
 
-    void model_instance_t::render(const camera_t& camera, const vec3_t& light_location) const
+    void model_instance_t::render(const boost::shared_ptr<camera_t>& camera, const vec3_t& light_location) const
     {
         if (model == nullptr)
         {
             throw std::exception();
         }
 
-        if (intersects(camera.get_frustum(), sphere) == intersect_type_e::DISJOINT ||
-            intersects(camera.get_frustum(), aabb) == intersect_type_e::DISJOINT)
+        if (intersects(camera->get_frustum(), sphere) == intersect_type_e::DISJOINT ||
+            intersects(camera->get_frustum(), aabb) == intersect_type_e::DISJOINT)
         {
             //skeleton aabb does not intersect camera frustum
             return;
         }
 
-        auto view_projection_matrix = camera.get_projection_matrix() * camera.get_view_matrix();
+        auto view_projection_matrix = camera->get_projection_matrix() * camera->get_view_matrix();
 
-        model->render(camera.pose.location, pose.to_matrix(), view_projection_matrix, bone_matrices, light_location);
+        model->render(camera->pose.location, pose.to_matrix(), view_projection_matrix, bone_matrices, light_location);
 
 #if defined (DEBUG)
         render_aabb(pose.to_matrix(), view_projection_matrix, skeleton.aabb, rgba_type(1, 0, 0, 1));
