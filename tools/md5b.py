@@ -1,8 +1,6 @@
 import os
 import argparse
-import sys
 import struct
-import json
 
 
 def iequal(a, b):
@@ -31,7 +29,7 @@ class Quaternion:
         self.y = 0.0
         self.z = 0.0
         self.w = 0.0
-        
+
 
 class Animation:
     class Bone:
