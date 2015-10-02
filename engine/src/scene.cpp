@@ -16,6 +16,8 @@ namespace mandala
         gpu.viewports.push(viewport);
         gpu.frame_buffers.push(frame_buffer);
 
+        gpu.clear(gpu_t::CLEAR_FLAG_COLOR | gpu_t::CLEAR_FLAG_DEPTH);
+
         for (const auto& actor : actors)
         {
             actor->render(camera);
