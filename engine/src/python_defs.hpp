@@ -17,7 +17,7 @@
 #include "io.hpp"
 #include "state.hpp"
 #include "input_event.hpp"
-#include "gui_state.hpp"
+#include "state.hpp"
 #include "gui_image.hpp"
 #include "gui_button.hpp"
 #include "rectangle.hpp"
@@ -43,6 +43,7 @@
 #include "quake_camera.hpp"
 #include "arcball_camera.hpp"
 #include "model_instance.hpp"
+#include "gui_layout.hpp"
 
 using namespace boost;
 using namespace boost::python;

@@ -3,7 +3,7 @@
 //mandala
 #include "state.hpp"
 #include "quake_camera.hpp"
-#include "gui_state.hpp"
+#include "state.hpp"
 #include "bsp.hpp"
 #include "vertex_buffer.hpp"
 

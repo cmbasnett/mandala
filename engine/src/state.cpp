@@ -6,9 +6,10 @@
 
 //mandala
 #include "opengl.hpp"
-#include "gui_state.hpp"
+#include "state.hpp"
 #include "platform.hpp"
 #include "gpu.hpp"
+#include "gui_layout.hpp"
 
 #if defined(MANDALA_PC)
 #include "window_event.hpp"

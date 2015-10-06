@@ -26,6 +26,7 @@
 #include "gui_canvas.hpp"
 #include "image.hpp"
 #include "python.hpp"
+#include "gui_layout.hpp"
 
 #if defined(MANDALA_PC)
 #include "window_event.hpp"
