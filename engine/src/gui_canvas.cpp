@@ -35,17 +35,17 @@ namespace mandala
         {
             auto vertices =
             {
-                vertex_type(vec3_t(0, 0, 0), vec2_t(0, 0)),
-                vertex_type(vec3_t(1, 0, 0), vec2_t(1, 0)),
-                vertex_type(vec3_t(1, 1, 0), vec2_t(1, 1)),
-                vertex_type(vec3_t(0, 1, 0), vec2_t(0, 1))
+                vertex_type(vec3(0, 0, 0), vec2(0, 0)),
+                vertex_type(vec3(1, 0, 0), vec2(1, 0)),
+                vertex_type(vec3(1, 1, 0), vec2(1, 1)),
+                vertex_type(vec3(0, 1, 0), vec2(0, 1))
             };
             vertex_buffer = gpu_buffers.make<vertex_buffer_type>().lock();
             vertex_buffer.lock()->data(vertices, gpu_t::buffer_usage_e::STATIC_DRAW);
         }
     }
 
-    void gui_canvas_t::on_render_begin(mat4_t& world_matrix, mat4_t& view_projection_matrix)
+    void gui_canvas_t::on_render_begin(mat4& world_matrix, mat4& view_projection_matrix)
     {
         gpu_viewport_type viewport;
         viewport.width = static_cast<gpu_viewport_type::scalar_type>(get_size().x);
@@ -57,7 +57,7 @@ namespace mandala
         //gpu.viewports.push(viewport);
     }
 
-    void gui_canvas_t::on_render_end(mat4_t& world_matrix, mat4_t& view_projection_matrix)
+    void gui_canvas_t::on_render_end(mat4& world_matrix, mat4& view_projection_matrix)
     {
         static const size_t DIFFUSE_TEXTURE_INDEX = 0;
 

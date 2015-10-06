@@ -22,9 +22,9 @@ namespace mandala
 
         struct string_t
         {
-            uint32_t stream_index = 0;
+            u32 stream_index = 0;
             hash_t hash;
-            uint32_t offset = 0;
+            u32 offset = 0;
         };
 
         typedef std::map<const hash_t, string_t> strings_type;

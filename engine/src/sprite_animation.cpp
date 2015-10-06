@@ -16,7 +16,7 @@ namespace mandala
 
         read_json(istream, _ptree);
 
-        _ptree.get<float32_t>("duration");
+        _ptree.get<f32>("duration");
     }
 
     const sprite_ref_t& sprite_animation_t::get_sprite_at_time(const time_type& time) const

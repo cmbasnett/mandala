@@ -42,14 +42,14 @@ namespace mandala
         };
     }
 
-    typedef details::value_wrapper_<uint32_t, 0> gpu_id_t;
-    typedef details::value_wrapper_<int32_t, -1> gpu_location_t;
-    typedef details::value_wrapper_<uint32_t, 0> gpu_index_t;
+    typedef details::value_wrapper_<u32, 0> gpu_id_t;
+    typedef details::value_wrapper_<i32, -1> gpu_location_t;
+    typedef details::value_wrapper_<u32, 0> gpu_index_t;
 
-    typedef rectangle_i32_t gpu_viewport_type;
-    typedef uint8_t         gpu_clear_flag_type;
-    typedef vec2_u32_t      gpu_frame_buffer_size_type;
-    typedef uint8_t         gpu_frame_buffer_type_flags_type;
+    typedef rectangle_i32 gpu_viewport_type;
+    typedef u8         gpu_clear_flag_type;
+    typedef vec2_u32      gpu_frame_buffer_size_type;
+    typedef u8         gpu_frame_buffer_type_flags_type;
 
     enum : gpu_frame_buffer_type_flags_type
     {
@@ -83,49 +83,49 @@ namespace mandala
     struct gpu_data_type_;
 
     template<>
-    struct gpu_data_type_<int8_t>
+    struct gpu_data_type_<i8>
     {
         static const auto VALUE = gpu_data_type_e::BYTE;
     };
 
     template<>
-    struct gpu_data_type_<uint8_t>
+    struct gpu_data_type_<u8>
     {
         static const auto VALUE = gpu_data_type_e::UNSIGNED_BYTE;
     };
 
     template<>
-    struct gpu_data_type_<int16_t>
+    struct gpu_data_type_<i16>
     {
         static const auto VALUE = gpu_data_type_e::SHORT;
     };
 
     template<>
-    struct gpu_data_type_<uint16_t>
+    struct gpu_data_type_<u16>
     {
         static const auto VALUE = gpu_data_type_e::UNSIGNED_SHORT;
     };
 
     template<>
-    struct gpu_data_type_<int32_t>
+    struct gpu_data_type_<i32>
     {
         static const auto VALUE = gpu_data_type_e::INT;
     };
 
     template<>
-    struct gpu_data_type_<uint32_t>
+    struct gpu_data_type_<u32>
     {
         static const auto VALUE = gpu_data_type_e::UNSIGNED_INT;
     };
 
     template<>
-    struct gpu_data_type_<float32_t>
+    struct gpu_data_type_<f32>
     {
         static const auto VALUE = gpu_data_type_e::FLOAT;
     };
 
     template<>
-    struct gpu_data_type_<float64_t>
+    struct gpu_data_type_<f64>
     {
         static const auto VALUE = gpu_data_type_e::DOUBLE;
     };

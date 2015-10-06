@@ -22,7 +22,7 @@ namespace mandala
         }
 
     private:
-        boost::multi_array<float32_t, 2> outer;
-        boost::multi_array<float32_t, 2> inner;
+        boost::multi_array<f32, 2> outer;
+        boost::multi_array<f32, 2> inner;
     };
 }

@@ -11,7 +11,7 @@ namespace mandala
 {
     state_mgr_t states;
 
-    void state_mgr_t::tick(float32_t dt)
+    void state_mgr_t::tick(f32 dt)
     {
         bool did_nodes_change = !operations.empty();
 
@@ -258,7 +258,7 @@ namespace mandala
 #endif
 
     //push a state onto the stack
-    void state_mgr_t::push(const state_type& state, state_flags_type link_flags, int32_t weight)
+    void state_mgr_t::push(const state_type& state, state_flags_type link_flags, i32 weight)
     {
         if (state == nullptr)
         {
@@ -364,7 +364,7 @@ namespace mandala
         nodes_itr->flags |= STATE_FLAG_CHANGING_LINK_FLAGS;
     }
 
-    void state_mgr_t::change_weight(const state_type& state, int32_t weight = 0)
+    void state_mgr_t::change_weight(const state_type& state, i32 weight = 0)
     {
         if (state == nullptr)
         {
@@ -484,7 +484,7 @@ namespace mandala
         return nodes_itr->flags;
     }
 
-    int32_t state_mgr_t::get_weight(const state_type& state) const
+    i32 state_mgr_t::get_weight(const state_type& state) const
     {
         const auto nodes_itr = std::find_if(nodes.begin(), nodes.end(), [&](const node_t& node)
         {

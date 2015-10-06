@@ -18,9 +18,9 @@ namespace mandala
         {
             hash_t pack_hash;
             std::string name;
-            uint32_t offset = 0;
-            uint32_t length = 0;
-            uint32_t crc32 = 0;
+            u32 offset = 0;
+            u32 length = 0;
+            u32 crc32 = 0;
         };
 
         typedef std::map<const hash_t, file_t> files_type;

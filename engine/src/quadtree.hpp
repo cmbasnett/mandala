@@ -10,8 +10,8 @@ namespace mandala
 {
     struct quadtree_t
     {
-        typedef float32_t scalar_type;
-        typedef details::aabb2_t<scalar_type> bounds_type;
+        typedef f32 scalar_type;
+        typedef details::aabb2<scalar_type> bounds_type;
 
         struct node_t
         {

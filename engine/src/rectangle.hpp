@@ -9,24 +9,24 @@ namespace mandala
     namespace details
     {
         template<typename Scalar, typename Enable = void>
-        struct rectangle_t;
+        struct rectangle;
 
         template<typename Scalar>
-        struct rectangle_t<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
+        struct rectangle<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
         {
             typedef Scalar scalar_type;
             typedef glm::detail::tvec2<scalar_type> vector_type;
-            typedef rectangle_t<scalar_type> type;
+            typedef rectangle<scalar_type> type;
 
             scalar_type x = 0;
             scalar_type y = 0;
             scalar_type width = 0;
             scalar_type height = 0;
 
-            rectangle_t() = default;
+            rectangle() = default;
 
             template<typename Scalar>
-            rectangle_t(Scalar x, Scalar y, Scalar width, Scalar height) :
+            rectangle(Scalar x, Scalar y, Scalar width, Scalar height) :
                 x(static_cast<scalar_type>(x)),
                 y(static_cast<scalar_type>(y)),
                 width(static_cast<scalar_type>(width)),
@@ -35,7 +35,7 @@ namespace mandala
             }
             
             template<typename Scalar>
-            rectangle_t(const glm::detail::tvec4<Scalar>& v) :
+            rectangle(const glm::detail::tvec4<Scalar>& v) :
                             x(static_cast<scalar_type>(v.x)),
                             y(static_cast<scalar_type>(v.y)),
                             width(static_cast<scalar_type>(v.z)),
@@ -44,7 +44,7 @@ namespace mandala
             }
 
             template<typename Scalar>
-            rectangle_t(const aabb2_t<Scalar>& aabb)
+            rectangle(const aabb2<Scalar>& aabb)
             {
                 x = static_cast<scalar_type>(aabb.min.x);
                 y = static_cast<scalar_type>(aabb.min.y);
@@ -85,17 +85,17 @@ namespace mandala
         };
     }
 
-    typedef details::rectangle_t<int8_t> rectangle_i8_t;
-    typedef details::rectangle_t<int16_t> rectangle_i16_t;
-    typedef details::rectangle_t<uint16_t> rectangle_u16_t;
-    typedef details::rectangle_t<uint8_t> rectangle_u8_t;
-    typedef details::rectangle_t<int16_t> rectangle_i16_t;
-    typedef details::rectangle_t<uint16_t> rectangle_u16_t;
-    typedef details::rectangle_t<int32_t> rectangle_i32_t;
-    typedef details::rectangle_t<uint32_t> rectangle_u32_t;
-    typedef details::rectangle_t<int64_t> rectangle_i64_t;
-    typedef details::rectangle_t<uint64_t> rectangle_u64_t;
-    typedef details::rectangle_t<float32_t> rectangle_f32_t;
-    typedef details::rectangle_t<float64_t> rectangle_f64_t;
-    typedef rectangle_f32_t rectangle_t;
+    typedef details::rectangle<i8> rectangle_i8;
+    typedef details::rectangle<i16> rectangle_i16;
+    typedef details::rectangle<u16> rectangle_u16;
+    typedef details::rectangle<u8> rectangle_u8;
+    typedef details::rectangle<i16> rectangle_i16;
+    typedef details::rectangle<u16> rectangle_u16;
+    typedef details::rectangle<i32> rectangle_i32;
+    typedef details::rectangle<u32> rectangle_u32;
+    typedef details::rectangle<i64> rectangle_i64;
+    typedef details::rectangle<u64> rectangle_u64;
+    typedef details::rectangle<f32> rectangle_f32;
+    typedef details::rectangle<f64> rectangle_f64;
+    typedef rectangle_f32 rectangle;
 }

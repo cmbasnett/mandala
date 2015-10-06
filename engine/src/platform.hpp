@@ -28,8 +28,8 @@ namespace mandala
 #if defined(MANDALA_PC)
             struct gamepad_state_t
             {
-                std::array<float32_t, 16> axes;
-                std::array<int32_t, 16> buttons;
+                std::array<f32, 16> axes;
+                std::array<i32, 16> buttons;
             };
 
             std::array<gamepad_state_t, 4> gamepad_states;
@@ -44,7 +44,7 @@ namespace mandala
         struct window_mgr_t
         {
             std::deque<window_event_t> events;
-            rectangle_i32_t rectangle;
+            rectangle_i32 rectangle;
         } window;
 #endif
 
@@ -52,27 +52,27 @@ namespace mandala
         {
             struct video_mode_t
             {
-                int32_t width = 0;
-                int32_t height = 0;
-                int32_t bit_depth = 0;
-                int32_t refresh_rate = 0;
+                i32 width = 0;
+                i32 height = 0;
+                i32 bit_depth = 0;
+                i32 refresh_rate = 0;
             };
 
             std::string name;
-            vec2_i32_t position;
-            float32_t ppi = 0.0f;
+            vec2_i32 position;
+            f32 ppi = 0.0f;
             std::vector<video_mode_t> video_modes;
         };
 
-        typedef vec2_i32_t screen_size_type;
+        typedef vec2_i32 screen_size_type;
 
         //run
         virtual void app_run_start() = 0;
         virtual void app_run_end() = 0;
 
         //tick
-        virtual void app_tick_start(float32_t dt) = 0;
-        virtual void app_tick_end(float32_t dt) = 0;
+        virtual void app_tick_start(f32 dt) = 0;
+        virtual void app_tick_end(f32 dt) = 0;
 
         //render
         virtual void app_render_start() = 0;
@@ -93,8 +93,8 @@ namespace mandala
         virtual void set_clipboard_string(const std::string& clipboard) const = 0;
 
 #if defined(MANDALA_PC)
-        typedef vec2_f64_t cursor_location_type;
-        typedef vec2_i32_t window_size_type;
+        typedef vec2_f64 cursor_location_type;
+        typedef vec2_i32 window_size_type;
         typedef std::string window_title_type;
 
         //cursor_location

@@ -27,9 +27,9 @@ namespace mandala
 
     struct bsp_t : public resource_t
     {
-        typedef int32_t node_index_type;
+        typedef i32 node_index_type;
 
-        enum class content_type_e : int32_t
+        enum class content_type_e : i32
         {
             EMPTY = -1,
             SOLID = -2,
@@ -48,7 +48,7 @@ namespace mandala
             TRANSLUCENT = -15
         };
 
-        enum class render_mode_e : uint8_t
+        enum class render_mode_e : u8
         {
             NORMAL,
             COLOR,
@@ -62,47 +62,47 @@ namespace mandala
         {
             static const auto CHILD_COUNT = 2;
 
-            uint32_t plane_index = 0;
-            std::array<int16_t, CHILD_COUNT> child_indices;
-            aabb3_i16_t aabb;
-            uint16_t face_start_index = 0;
-            uint16_t face_count = 0;
+            u32 plane_index = 0;
+            std::array<i16, CHILD_COUNT> child_indices;
+            aabb3_i16 aabb;
+            u16 face_start_index = 0;
+            u16 face_count = 0;
         };
 
         struct face_t
         {
-            typedef uint8_t lighting_style_type;
+            typedef u8 lighting_style_type;
 
             static const auto LIGHTING_STYLE_COUNT = 4;
             static const lighting_style_type LIGHTING_STYLE_NONE = 255;
 
-            uint16_t plane_index = 0;
-            uint16_t plane_side = 0;
-            uint32_t surface_edge_start_index = 0;
-            uint16_t surface_edge_count = 0;
-            uint16_t texture_info_index = 0;
+            u16 plane_index = 0;
+            u16 plane_side = 0;
+            u32 surface_edge_start_index = 0;
+            u16 surface_edge_count = 0;
+            u16 texture_info_index = 0;
             std::array<lighting_style_type, LIGHTING_STYLE_COUNT> lighting_styles;
-            uint32_t lightmap_offset = 0;
+            u32 lightmap_offset = 0;
         };
 
         struct leaf_t
         {
             static const auto AMBIENT_SOUND_LEVEL_COUNT = 4;
             
-            typedef uint8_t ambient_sound_level_type;
-            typedef aabb3_i16_t aabb_type;
+            typedef u8 ambient_sound_level_type;
+            typedef aabb3_i16 aabb_type;
 
             content_type_e content_type = content_type_e::EMPTY;
-            int32_t visibility_offset = 0;
+            i32 visibility_offset = 0;
             aabb_type aabb;
-            uint16_t mark_surface_start_index = 0;
-            uint16_t mark_surface_count = 0;
+            u16 mark_surface_start_index = 0;
+            u16 mark_surface_count = 0;
             std::array<ambient_sound_level_type, AMBIENT_SOUND_LEVEL_COUNT> ambient_sound_levels;
         };
 
         struct edge_t
         {
-            typedef uint16_t vertex_index_type;
+            typedef u16 vertex_index_type;
 
             static const auto VERTEX_INDEX_COUNT = 2;
 
@@ -113,21 +113,21 @@ namespace mandala
         {
             struct
             {
-                vec3_t axis;
-                float32_t offset = 0;
+                vec3 axis;
+                f32 offset = 0;
             } s, t;
 
-            uint32_t texture_index = 0;
-            uint32_t flags = 0;
+            u32 texture_index = 0;
+            u32 flags = 0;
         };
 
         struct clip_node_t
         {
             static const auto CHILD_COUNT = 2;
 
-            typedef int16_t child_index_type;
+            typedef i16 child_index_type;
 
-            int32_t plane_index = 0;
+            i32 plane_index = 0;
             std::array<child_index_type, CHILD_COUNT> child_indices;
         };
 
@@ -135,30 +135,30 @@ namespace mandala
         {
             static const auto HEAD_NODE_INDEX_COUNT = 4;
 
-            typedef int32_t head_node_index_type;
+            typedef i32 head_node_index_type;
 
-            aabb3_t aabb;
-            vec3_t origin;
+            aabb3 aabb;
+            vec3 origin;
             std::array<head_node_index_type, HEAD_NODE_INDEX_COUNT> head_node_indices;
-            int32_t vis_leafs = 0;
-            int32_t face_start_index = 0;
-            int32_t face_count = 0;
+            i32 vis_leafs = 0;
+            i32 face_start_index = 0;
+            i32 face_count = 0;
         };
 
         struct bsp_texture_t
         {
             static const auto MIPMAP_OFFSET_COUNT = 4;
 
-            uint32_t width;
-            uint32_t height;
-            uint32_t mipmap_offsets[MIPMAP_OFFSET_COUNT];
+            u32 width;
+            u32 height;
+            u32 mipmap_offsets[MIPMAP_OFFSET_COUNT];
         };
 
         struct plane_t
         {
-            typedef plane3_t plane_type;
+            typedef plane3 plane_type;
 
-            enum class type_e : uint32_t
+            enum class type_e : u32
             {
                 x,
                 y,
@@ -175,33 +175,33 @@ namespace mandala
         typedef bsp_gpu_program_t::vertex_type vertex_type;
         typedef vertex_buffer_t<vertex_type> vertex_buffer_type;
 
-        typedef uint32_t index_type;
+        typedef u32 index_type;
         typedef index_buffer_t<index_type> index_buffer_type;
 
         struct trace_args_t
         {
-            line3_t line;
+            line3 line;
         };
 
         struct trace_result_t
         {
             bool did_hit = false;
             bool is_all_solid = false;
-            vec3_t location;
-            plane3_t plane;
-            float32_t ratio = 0.0f;
+            vec3 location;
+            plane3 plane;
+            f32 ratio = 0.0f;
         };
 
         struct render_settings_t
         {
-            float32_t lightmap_gamma = 1.0f;
+            f32 lightmap_gamma = 1.0f;
         };
 
         struct render_stats_t
         {
-            uint32_t face_count = 0;
-            uint32_t leaf_count = 0;
-            uint32_t leaf_index = 0;
+            u32 face_count = 0;
+            u32 leaf_count = 0;
+            u32 leaf_index = 0;
 
             void reset()
             {
@@ -215,7 +215,7 @@ namespace mandala
 
         void render(const camera_params& camera_params);
 
-        int32_t get_leaf_index_from_location(const vec3_t& location) const;
+        i32 get_leaf_index_from_location(const vec3& location) const;
 
         const render_stats_t& get_render_stats() const { return render_stats; }
 
@@ -225,10 +225,10 @@ namespace mandala
         std::vector<plane_t> planes;
         std::vector<edge_t> edges;
         std::vector<face_t> faces;
-        std::vector<int32_t> surface_edges;
+        std::vector<i32> surface_edges;
         std::vector<node_t> nodes;
         std::vector<leaf_t> leafs;
-        std::vector<uint16_t> mark_surfaces;
+        std::vector<u16> mark_surfaces;
         std::vector<texture_info_t> texture_infos;
         std::vector<boost::shared_ptr<texture_t>> face_lightmap_textures;
         std::vector<clip_node_t> clip_nodes;

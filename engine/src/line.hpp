@@ -8,22 +8,22 @@ namespace mandala
     namespace details
     {
         template<typename Scalar, typename Enable = void>
-        struct line2_t;
+        struct line2;
 
         template<typename Scalar>
-        struct line2_t<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
+        struct line2<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
         {
             typedef Scalar scalar_type;
-            typedef line2_t<scalar_type> type;
+            typedef line2<scalar_type> type;
             typedef glm::detail::tvec2<scalar_type> value_type;
-            typedef line2_t<float32_t> real_type;
+            typedef line2<f32> real_type;
 
             value_type start;
             value_type end;
 
-            line2_t() = default;
+            line2() = default;
 
-            line2_t(const value_type& start, const value_type& end) :
+            line2(const value_type& start, const value_type& end) :
                 start(start),
                 end(end)
             {
@@ -34,7 +34,7 @@ namespace mandala
                 return glm::normalize((real_type::value_type)end - (real_type::value_type)start);
             }
 
-            float32_t length() const
+            f32 length() const
             {
                 return glm::length((real_type::value_type)end - (real_type::value_type)start);
             }
@@ -69,22 +69,22 @@ namespace mandala
         };
 
         template<typename Scalar, typename Real = void, typename Enable = void>
-        struct line3_t;
+        struct line3;
 
         template<typename Scalar>
-        struct line3_t<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
+        struct line3<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
         {
             typedef Scalar scalar_type;
-            typedef line3_t<scalar_type> type;
+            typedef line3<scalar_type> type;
             typedef glm::detail::tvec3<scalar_type> value_type;
-            typedef line3_t<float32_t> real_type;
+            typedef line3<f32> real_type;
 
             value_type start;
             value_type end;
 
-            line3_t() = default;
+            line3() = default;
 
-            line3_t(const value_type& start, const value_type& end) :
+            line3(const value_type& start, const value_type& end) :
                 start(start),
                 end(end)
             {
@@ -95,7 +95,7 @@ namespace mandala
                 return glm::normalize((real_type::value_type)end - (real_type::value_type)start);
             }
 
-            float32_t length() const
+            f32 length() const
             {
                 return glm::length((real_type::value_type)end - (real_type::value_type)start);
             }
@@ -130,19 +130,19 @@ namespace mandala
         };
     }
 
-    typedef details::line2_t<int8_t>    line2_i8_t;
-    typedef details::line2_t<int16_t>    line2_i16_t;
-    typedef details::line2_t<int32_t>    line2_i32_t;
-    typedef details::line2_t<int64_t>    line2_i64_t;
-    typedef details::line2_t<float32_t> line2_f32_t;
-    typedef details::line2_t<float64_t> line2_f64_t;
-    typedef line2_f32_t line2_t;
+    typedef details::line2<i8>	line2_i8;
+    typedef details::line2<i16> line2_i16;
+    typedef details::line2<i32> line2_i32;
+    typedef details::line2<i64> line2_i64;
+    typedef details::line2<f32> line2_f32;
+    typedef details::line2<f64> line2_f64;
+    typedef line2_f32			line2;
 
-    typedef details::line3_t<int8_t>    line3_i8_t;
-    typedef details::line3_t<int16_t>    line3_i16_t;
-    typedef details::line3_t<int32_t>    line3_i32_t;
-    typedef details::line3_t<int64_t>    line3_i64_t;
-    typedef details::line3_t<float32_t> line3_f32_t;
-    typedef details::line3_t<float64_t> line3_f64_t;
-    typedef line3_f32_t line3_t;
+    typedef details::line3<i8>  line3_i8;
+    typedef details::line3<i16> line3_i16;
+    typedef details::line3<i32> line3_i32;
+    typedef details::line3<i64> line3_i64;
+    typedef details::line3<f32> line3_f32;
+    typedef details::line3<f64> line3_f64;
+    typedef line3_f32			line3;
 }

@@ -21,7 +21,7 @@ namespace mandala
     struct window_event_t;
 #endif
 
-    typedef uint8_t state_flags_type;
+    typedef u8 state_flags_type;
 
     enum : state_flags_type
     {
@@ -46,12 +46,12 @@ namespace mandala
             state_type state;
             state_flags_type link_flags = STATE_FLAG_NONE;
             state_flags_type flags = STATE_FLAG_NONE;
-            int32_t weight = 0;
+            i32 weight = 0;
         };
 
         struct operation_t
         {
-            enum class type_e : uint8_t
+            enum class type_e : u8
             {
                 PUSH,
                 POP,
@@ -64,27 +64,27 @@ namespace mandala
             state_type state;
             state_flags_type link_flags = STATE_FLAG_NONE;
             size_t index = 0;
-            int32_t weight = 0;
+            i32 weight = 0;
         };
 
         state_mgr_t() = default;
 
-        void tick(float32_t dt);
+        void tick(f32 dt);
         void render();
         bool on_input_event(input_event_t& input_event);
 #if defined(MANDALA_PC)
         void on_window_event(window_event_t& window_event);
 #endif
 
-        void push(const state_type& state, state_flags_type link_flags, int32_t weight = 0);
+        void push(const state_type& state, state_flags_type link_flags, i32 weight = 0);
         void pop(const state_type& state);
         void change_link_flags(const state_type& state, state_flags_type link_flags);
-        void change_weight(const state_type& state, int32_t weight);
+        void change_weight(const state_type& state, i32 weight);
         void purge();
 
         state_flags_type get_flags(const state_type& state) const;
         state_flags_type get_link_flags(const state_type& state) const;
-        int32_t get_weight(const state_type& state) const;
+        i32 get_weight(const state_type& state) const;
         size_t count() const;
         state_type at(size_t node_index) const;
         boost::optional<size_t> index_of(const state_type& state) const;

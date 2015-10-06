@@ -42,22 +42,22 @@ namespace mandala
     namespace details
     {
         template<typename Scalar, typename Enable = void>
-        struct frustum_t;
+        struct frustum;
 
         template<typename Scalar>
-        struct frustum_t<Scalar, typename std::enable_if<std::is_floating_point<Scalar>::value>::type>
+        struct frustum<Scalar, typename std::enable_if<std::is_floating_point<Scalar>::value>::type>
         {
             typedef Scalar scalar_type;
             typedef glm::detail::tvec3<scalar_type> vector_type;
-            typedef frustum_t<scalar_type> type;
-            typedef details::plane3_t<scalar_type> plane_type;
+            typedef frustum<scalar_type> type;
+            typedef details::plane3<scalar_type> plane_type;
             typedef glm::detail::tmat4x4<scalar_type> matrix_type;
             typedef std::array<plane_type, FRUSTUM_PLANE_COUNT> planes_type;
             typedef std::array<vector_type, FRUSTUM_CORNER_COUNT> corners_type;
-            typedef details::aabb3_t<scalar_type> aabb_type;
-            typedef details::sphere_t<scalar_type> sphere_type;
+            typedef details::aabb3<scalar_type> aabb_type;
+            typedef details::sphere<scalar_type> sphereype;
 
-            frustum_t() = default;
+            frustum() = default;
 
             void set(const vector_type& origin, const vector_type& left, const vector_type& up, const vector_type& forward, scalar_type fov, scalar_type near, scalar_type far, scalar_type aspect)
             {
@@ -127,17 +127,17 @@ namespace mandala
             const planes_type& get_planes() const { return planes; }
             const corners_type& get_corners() const { return corners; }
             const aabb_type& get_aabb() const { return aabb; }
-            const sphere_type& get_sphere() const { return sphere; }
+            const sphereype& get_sphere() const { return sphere; }
 
         private:
             planes_type planes;
             corners_type corners;
             aabb_type aabb;
-            sphere_type sphere;
+            sphereype sphere;
         };
     }
 
-    typedef details::frustum_t<float32_t> frustum_f32_t;
-    typedef details::frustum_t<float64_t> frustum_f64_t;
-    typedef frustum_f32_t frustum_t;
+    typedef details::frustum<f32> frustum_f32;
+    typedef details::frustum<f64> frustum_f64;
+    typedef frustum_f32 frustum;
 }

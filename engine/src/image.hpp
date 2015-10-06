@@ -16,9 +16,9 @@ namespace mandala
 {
     struct image_t : resource_t
     {
-        typedef std::vector<uint8_t> data_type;
-        typedef int32_t bit_depth_type;
-        typedef glm::detail::tvec2<uint32_t> size_type;
+        typedef std::vector<u8> data_type;
+        typedef i32 bit_depth_type;
+        typedef glm::detail::tvec2<u32> size_type;
 
         image_t() = default;
         image_t(std::istream& istream);
@@ -35,7 +35,7 @@ namespace mandala
         image_t& operator=(const image_t&) = delete;
 
         size_type size;
-        int32_t bit_depth = 0;
+        i32 bit_depth = 0;
         color_type_e color_type = color_type_e::g;
         data_type data;
         std::mutex data_mutex;

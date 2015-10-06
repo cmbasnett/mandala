@@ -32,7 +32,7 @@ namespace mandala
     struct bone_info_t
     {
         std::string name;
-        uint8_t parent_index = 0;
+        u8 parent_index = 0;
         pose3 pose;
     };
 
@@ -40,21 +40,21 @@ namespace mandala
     {
         struct vertex_t
         {
-            vec2_t texcoord;
-            uint16_t weight_index_start = 0;
-            uint8_t weight_count = 0;
+            vec2 texcoord;
+            u16 weight_index_start = 0;
+            u8 weight_count = 0;
         };
 
         struct weight_t
         {
-            uint8_t bone_index = 0;
-            float32_t bias = 0;
-            vec3_t location;
+            u8 bone_index = 0;
+            f32 bias = 0;
+            vec3 location;
         };
 
         std::string shader;
         std::vector<vertex_t> vertices;
-        std::vector<uint16_t> indices;
+        std::vector<u16> indices;
         std::vector<weight_t> weights;
     };
 
@@ -70,7 +70,7 @@ namespace mandala
         }
 
         //version
-        int32_t version = 0;
+        i32 version = 0;
         read(istream, version);
 
         if (version != MD5M_VERSION)
@@ -79,7 +79,7 @@ namespace mandala
         }
 
         //bone count
-        uint32_t bone_count;
+        u32 bone_count;
         read(istream, bone_count);
 
         //bones
@@ -87,7 +87,7 @@ namespace mandala
 
         bone_infos.resize(bone_count);
 
-        for (uint8_t i = 0; i < bone_infos.size(); ++i)
+        for (u8 i = 0; i < bone_infos.size(); ++i)
         {
             auto& bone_info = bone_infos[i];
 
@@ -109,7 +109,7 @@ namespace mandala
         }
 
         //mesh count
-        uint8_t mesh_count = 0;
+        u8 mesh_count = 0;
         read(istream, mesh_count);
 
         std::vector<mesh_info_t> mesh_infos;
@@ -121,7 +121,7 @@ namespace mandala
             std::getline(istream, mesh.shader, '\0');
 
             //vertex count
-            uint32_t vertex_count;
+            u32 vertex_count;
             read(istream, vertex_count);
 
             //vertices
@@ -136,12 +136,12 @@ namespace mandala
             }
 
             //index count
-            uint32_t index_count;
+            u32 index_count;
             read(istream, index_count);
             read(istream, mesh.indices, index_count);
 
             //weight count
-            uint32_t weight_count;
+            u32 weight_count;
             read(istream, weight_count);
 
             //weights
@@ -277,7 +277,7 @@ namespace mandala
         //bind pose bone matrices
         bones.resize(bone_count);
 
-        for (uint8_t i = 0; i < bone_count; ++i)
+        for (u8 i = 0; i < bone_count; ++i)
         {
             const auto& bone_info = bone_infos[i];
             auto& bone = bones[i];
@@ -287,7 +287,7 @@ namespace mandala
         }
     }
 
-    void model_t::render(const vec3_t& camera_location, const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices, const vec3_t& light_location, const std::vector<boost::shared_ptr<material_instance_t>>& mesh_materials) const
+    void model_t::render(const vec3& camera_location, const mat4& world_matrix, const mat4& view_projection_matrix, const std::vector<mat4>& bone_matrices, const vec3& light_location, const std::vector<boost::shared_ptr<material_instance_t>>& mesh_materials) const
     {
         //blend
         auto blend_state = gpu.blend.get_state();
@@ -359,7 +359,7 @@ namespace mandala
         return boost::none;
     }
 
-    void model_t::mesh_t::render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices, const boost::shared_ptr<material_instance_t>& material) const
+    void model_t::mesh_t::render(const mat4& world_matrix, const mat4& view_projection_matrix, const std::vector<mat4>& bone_matrices, const boost::shared_ptr<material_instance_t>& material) const
     {
         static const auto DIFFUSE_TEXTURE_INDEX = 0;
         static const auto NORMAL_TEXTURE_INDEX = 1;

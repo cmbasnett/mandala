@@ -15,8 +15,8 @@ namespace mandala
     {
         virtual void on_run_start() = 0;
         virtual void on_run_end() = 0;
-        virtual void on_tick_start(float32_t) = 0;
-        virtual void on_tick_end(float32_t) = 0;
+        virtual void on_tick_start(f32) = 0;
+        virtual void on_tick_end(f32) = 0;
         virtual void on_render_start() = 0;
         virtual void on_render_end() = 0;
         virtual bool on_input_event(input_event_t& input_event) = 0;

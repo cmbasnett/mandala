@@ -21,26 +21,26 @@ namespace mandala
 
         pose3 pose;
 
-        void tick(float32_t dt);
-        void render(const camera_params& camera_params, const vec3_t& light_location) const;
+        void tick(f32 dt);
+        void render(const camera_params& camera_params, const vec3& light_location) const;
 
         void play(const hash_t& animation_hash);
 
         const boost::shared_ptr<model_t>& get_model() const { return model; }
-        const pose3& get_bone_pose(const hash_t& bone_hash) const;
-        const aabb3_t& get_aabb() const { return aabb; }
-        const sphere_t& get_sphere() const { return sphere; }
+        pose3 get_bone_pose(const hash_t& bone_hash) const;
+        const aabb3& get_aabb() const { return aabb; }
+        const sphere& get_sphere() const { return sphere; }
 
         void set_model(const boost::shared_ptr<model_t>& model);
 
     private:
         boost::shared_ptr<model_t> model;
-        float32_t t = 0.0f;
-        std::vector<mat4_t> bone_matrices;
+        f32 t = 0.0f;
+        std::vector<mat4> bone_matrices;
         model_skeleton_t skeleton;
         boost::shared_ptr<model_animation_t> animation;
         std::vector<boost::shared_ptr<material_instance_t>> mesh_materials;
-        aabb3_t aabb;
-        sphere_t sphere;
+        aabb3 aabb;
+        sphere sphere;
     };
 }

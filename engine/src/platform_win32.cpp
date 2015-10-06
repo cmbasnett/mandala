@@ -113,7 +113,7 @@ namespace mandala
         {
             const auto screen_size = platform.get_screen_size();
 
-            auto cursor_location = glm::floor(static_cast<vec2_f64_t>(screen_size) / 2.0);
+            auto cursor_location = glm::floor(static_cast<vec2_f64>(screen_size) / 2.0);
 
             platform.set_cursor_location(cursor_location);
         }
@@ -223,21 +223,21 @@ namespace mandala
             display->name = glfwGetMonitorName(monitor);
 
             //https://en.wikipedia.org/wiki/Pixel_density#Calculation_of_monitor_PPI
-            int32_t width = 0;
-            int32_t height = 0;
+            i32 width = 0;
+            i32 height = 0;
             glfwGetMonitorPhysicalSize(monitor, &width, &height);
             glfwGetMonitorPos(monitor, &display->position.x, &display->position.y);
 
-            vec2_t physical_size(static_cast<float32_t>(width) / std::milli::den, static_cast<float32_t>(height) / std::milli::den);
+            vec2 physical_size(static_cast<f32>(width) / std::milli::den, static_cast<f32>(height) / std::milli::den);
             physical_size *= conversion_factor(si::meter_base_unit::unit_type(), imperial::inch_base_unit::unit_type());
 
             auto video_mode = glfwGetVideoMode(monitor);
-            auto dp = glm::sqrt(static_cast<float32_t>((video_mode->width * video_mode->width) + (video_mode->height * video_mode->height)));
-            auto di = glm::sqrt(static_cast<float32_t>((physical_size.x * physical_size.x) + (physical_size.y * physical_size.y)));
+            auto dp = glm::sqrt(static_cast<f32>((video_mode->width * video_mode->width) + (video_mode->height * video_mode->height)));
+            auto di = glm::sqrt(static_cast<f32>((physical_size.x * physical_size.x) + (physical_size.y * physical_size.y)));
 
             display->ppi = (dp / di);
 
-            int32_t video_mode_count = 0;
+            i32 video_mode_count = 0;
 
             display->video_modes.reserve(video_mode_count);
 
@@ -279,12 +279,12 @@ namespace mandala
         //glfw
         glfwInit();
 
-        int32_t monitor_count = 0;
+        i32 monitor_count = 0;
         auto monitor_ptrs = glfwGetMonitors(&monitor_count);
 
         if (monitor_ptrs != nullptr)
         {
-            for (int32_t i = 0; i < monitor_count; ++i)
+            for (i32 i = 0; i < monitor_count; ++i)
             {
                 on_monitor_event(monitor_ptrs[i], GLFW_CONNECTED);
             }
@@ -320,7 +320,7 @@ namespace mandala
         window_ptr = nullptr;
     }
 
-    void platform_win32_t::app_tick_start(float32_t dt)
+    void platform_win32_t::app_tick_start(f32 dt)
     {
         glfwPollEvents();
 
@@ -375,7 +375,7 @@ namespace mandala
         }
     }
 
-    void platform_win32_t::app_tick_end(float32_t dt)
+    void platform_win32_t::app_tick_end(f32 dt)
     {
     }
 
@@ -547,7 +547,7 @@ namespace mandala
 
     platform_t::window_size_type platform_win32_t::get_window_location() const
     {
-        vec2_i32_t window_location;
+        vec2_i32 window_location;
 
         glfwGetWindowPos(window_ptr, &window_location.x, &window_location.y);
 

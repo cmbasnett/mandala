@@ -20,13 +20,13 @@ namespace mandala
     {
         struct bone_t
         {
-            mat4_t bind_pose_matrix;
-            mat4_t inverse_bind_pose_matrix;
+            mat4 bind_pose_matrix;
+            mat4 inverse_bind_pose_matrix;
         };
 
         struct mesh_t
         {
-            typedef uint16_t index_type;
+            typedef u16 index_type;
             typedef model_gpu_program_t::vertex_type vertex_type;
             typedef vertex_buffer_t<vertex_type> vertex_buffer_type;
             typedef index_buffer_t<index_type> index_buffer_type;
@@ -38,7 +38,7 @@ namespace mandala
 
             mesh_t() = default;
 
-            void render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices, const boost::shared_ptr<material_instance_t>& material) const;
+            void render(const mat4& world_matrix, const mat4& view_projection_matrix, const std::vector<mat4>& bone_matrices, const boost::shared_ptr<material_instance_t>& material) const;
 
         private:
             mesh_t(const mesh_t&) = delete;
@@ -47,7 +47,7 @@ namespace mandala
 
         model_t(std::istream& istream);
 
-        void render(const vec3_t& camera_location, const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices, const vec3_t& light_location, const std::vector<boost::shared_ptr<material_instance_t>>& mesh_materials) const;
+        void render(const vec3& camera_location, const mat4& world_matrix, const mat4& view_projection_matrix, const std::vector<mat4>& bone_matrices, const vec3& light_location, const std::vector<boost::shared_ptr<material_instance_t>>& mesh_materials) const;
 
         boost::optional<size_t> get_bone_index(const hash_t& bone_hash) const;
 
@@ -57,7 +57,7 @@ namespace mandala
 
     private:
         std::vector<boost::shared_ptr<const mesh_t>> meshes;
-        std::map<const hash_t, const uint8_t> bone_indices;
+        std::map<const hash_t, const u8> bone_indices;
         std::vector<const bone_t> bones;
         std::vector<const std::string> bone_names;
 

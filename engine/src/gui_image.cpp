@@ -53,26 +53,26 @@ namespace mandala
 
         //TODO: find a better way to generalize this so it's less of a mess
         auto vertices = {
-            vertex_type(vec3_t(0, 0, 0), vec2_t(0, 0)),
-            vertex_type(vec3_t(size.x, 0, 0), vec2_t(1, 0)),
-            vertex_type(vec3_t(size.x, size.y, 0), vec2_t(1, 1)),
-            vertex_type(vec3_t(0, size.y, 0), vec2_t(0, 1)),
+            vertex_type(vec3(0, 0, 0), vec2(0, 0)),
+            vertex_type(vec3(size.x, 0, 0), vec2(1, 0)),
+            vertex_type(vec3(size.x, size.y, 0), vec2(1, 1)),
+            vertex_type(vec3(0, size.y, 0), vec2(0, 1)),
 
-            vertex_type(vec3_t(0 + slice_padding.left, 0, 0), vec2_t(slice_uv.left, 0)),
-            vertex_type(vec3_t(size.x - slice_padding.right, 0, 0), vec2_t(1.0f - slice_uv.right, 0)),
+            vertex_type(vec3(0 + slice_padding.left, 0, 0), vec2(slice_uv.left, 0)),
+            vertex_type(vec3(size.x - slice_padding.right, 0, 0), vec2(1.0f - slice_uv.right, 0)),
 
-            vertex_type(vec3_t(0, slice_padding.bottom, 0), vec2_t(0, slice_uv.bottom)),
-            vertex_type(vec3_t(slice_padding.left, slice_padding.bottom, 0), vec2_t(slice_uv.left, slice_uv.bottom)),
-            vertex_type(vec3_t(size.x - slice_padding.right, slice_padding.bottom, 0), vec2_t(1.0f - slice_uv.right, slice_uv.bottom)),
-            vertex_type(vec3_t(size.x, slice_padding.bottom, 0), vec2_t(1.0f, slice_uv.bottom)),
+            vertex_type(vec3(0, slice_padding.bottom, 0), vec2(0, slice_uv.bottom)),
+            vertex_type(vec3(slice_padding.left, slice_padding.bottom, 0), vec2(slice_uv.left, slice_uv.bottom)),
+            vertex_type(vec3(size.x - slice_padding.right, slice_padding.bottom, 0), vec2(1.0f - slice_uv.right, slice_uv.bottom)),
+            vertex_type(vec3(size.x, slice_padding.bottom, 0), vec2(1.0f, slice_uv.bottom)),
 
-            vertex_type(vec3_t(0, size.y - slice_padding.top, 0), vec2_t(0, 1.0f - slice_uv.top)),
-            vertex_type(vec3_t(slice_padding.left, size.y - slice_padding.top, 0), vec2_t(slice_uv.left, 1.0f - slice_uv.top)),
-            vertex_type(vec3_t(size.x - slice_padding.right, size.y - slice_padding.top, 0), vec2_t(1.0f - slice_uv.right, 1.0f - slice_uv.top)),
-            vertex_type(vec3_t(size.x, size.y - slice_padding.top, 0), vec2_t(1.0f, 1.0f - slice_uv.top)),
+            vertex_type(vec3(0, size.y - slice_padding.top, 0), vec2(0, 1.0f - slice_uv.top)),
+            vertex_type(vec3(slice_padding.left, size.y - slice_padding.top, 0), vec2(slice_uv.left, 1.0f - slice_uv.top)),
+            vertex_type(vec3(size.x - slice_padding.right, size.y - slice_padding.top, 0), vec2(1.0f - slice_uv.right, 1.0f - slice_uv.top)),
+            vertex_type(vec3(size.x, size.y - slice_padding.top, 0), vec2(1.0f, 1.0f - slice_uv.top)),
 
-            vertex_type(vec3_t(0 + slice_padding.left, size.y, 0), vec2_t(slice_uv.left, 1.0)),
-            vertex_type(vec3_t(size.x - slice_padding.right, size.y, 0), vec2_t(1.0f - slice_uv.right, 1.0f)),
+            vertex_type(vec3(0 + slice_padding.left, size.y, 0), vec2(slice_uv.left, 1.0)),
+            vertex_type(vec3(size.x - slice_padding.right, size.y, 0), vec2(1.0f - slice_uv.right, 1.0f)),
         };
 
         vertex_buffer->data(vertices, gpu_t::buffer_usage_e::STATIC_DRAW);
@@ -96,7 +96,7 @@ namespace mandala
         set_sprite(sprite);
     }
 
-    void gui_image_t::on_render_begin(mat4_t& world_matrix, mat4_t& view_projection_matrix)
+    void gui_image_t::on_render_begin(mat4& world_matrix, mat4& view_projection_matrix)
     {
         if (sprite)
         {

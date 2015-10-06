@@ -13,18 +13,18 @@ namespace mandala
 
     struct audio_source_t
     {
-        typedef uint32_t id_type;
+        typedef u32 id_type;
 
         audio_source_t();
         ~audio_source_t();
 
         id_type get_id() const { return id; }
         audio_source_state_e get_state() const;
-        void set_location(const vec3_t& location);
-        void set_velocity(const vec3_t& velocity);
-        void set_gain(float32_t gain);
-        void set_reference_distance(float32_t reference_distance);
-        void set_max_distance(float32_t max_distance);
+        void set_location(const vec3& location);
+        void set_velocity(const vec3& velocity);
+        void set_gain(f32 gain);
+        void set_reference_distance(f32 reference_distance);
+        void set_max_distance(f32 max_distance);
 
         void play();
         void pause();

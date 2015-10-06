@@ -4,7 +4,7 @@
 
 namespace mandala
 {
-    void actor_t::on_tick(float32_t dt)
+    void actor_t::on_tick(f32 dt)
     {
         if (model)
         {
@@ -25,7 +25,7 @@ namespace mandala
         case draw_type_e::MODEL:
             if (model)
             {
-                model->render(camera_params, vec3_t(100, 0, 0));
+                model->render(camera_params, vec3(100, 0, 0));
             }
             break;
         case draw_type_e::NONE:

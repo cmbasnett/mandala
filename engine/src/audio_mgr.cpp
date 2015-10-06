@@ -43,14 +43,14 @@ namespace mandala
         }
     }
 
-    void audio_mgr_t::tick(float32_t dt)
+    void audio_mgr_t::tick(f32 dt)
     {
         alDopplerFactor(doppler.factor);
         alDopplerVelocity(doppler.speed_of_sound);
 
         alListenerfv(AL_POSITION, glm::value_ptr(listener.location));
         alListenerfv(AL_VELOCITY, glm::value_ptr(listener.velocity));
-        std::array<float32_t, 6> orientation;
+        std::array<f32, 6> orientation;
         alListenerfv(AL_ORIENTATION, orientation.data());
 
         auto sources_itr = sources.begin();
@@ -70,21 +70,21 @@ namespace mandala
         }
     }
 
-    uint32_t audio_mgr_t::create_source()
+    u32 audio_mgr_t::create_source()
     {
-        uint32_t source_id;
+        u32 source_id;
 
         alGenSources(1, &source_id); alCheckError();
 
         return source_id;
     }
 
-    void audio_mgr_t::destroy_source(uint32_t source_id)
+    void audio_mgr_t::destroy_source(u32 source_id)
     {
         alDeleteSources(1, &source_id); alCheckError();
     }
 
-    audio_source_state_e audio_mgr_t::get_source_state(uint32_t source_id) const
+    audio_source_state_e audio_mgr_t::get_source_state(u32 source_id) const
     {
         ALint state;
 
@@ -105,59 +105,59 @@ namespace mandala
         }
     }
 
-    void audio_mgr_t::set_source_location(uint32_t source_id, const vec3_t & location) const
+    void audio_mgr_t::set_source_location(u32 source_id, const vec3 & location) const
     {
         alSourcefv(source_id, AL_POSITION, glm::value_ptr(location)); alCheckError();
     }
 
-    void audio_mgr_t::set_source_velocity(uint32_t source_id, const vec3_t & velocity) const
+    void audio_mgr_t::set_source_velocity(u32 source_id, const vec3 & velocity) const
     {
         alSourcefv(source_id, AL_VELOCITY, glm::value_ptr(velocity)); alCheckError();
     }
 
-    void audio_mgr_t::set_source_gain(uint32_t source_id, float32_t gain) const
+    void audio_mgr_t::set_source_gain(u32 source_id, f32 gain) const
     {
         alSourcef(source_id, AL_GAIN, gain); alCheckError();
     }
 
-    void audio_mgr_t::set_source_reference_distance(uint32_t source_id, float32_t reference_distance) const
+    void audio_mgr_t::set_source_reference_distance(u32 source_id, f32 reference_distance) const
     {
         alSourcef(source_id, AL_REFERENCE_DISTANCE, reference_distance); alCheckError();
     }
 
-    void audio_mgr_t::set_source_max_distance(uint32_t source_id, float32_t max_distance) const
+    void audio_mgr_t::set_source_max_distance(u32 source_id, f32 max_distance) const
     {
         alSourcef(source_id, AL_MAX_DISTANCE, max_distance); alCheckError();
     }
 
-    void audio_mgr_t::play_source(uint32_t source_id) const
+    void audio_mgr_t::play_source(u32 source_id) const
     {
         alSourcePlay(source_id); alCheckError();
     }
 
-    void audio_mgr_t::pause_source(uint32_t source_id) const
+    void audio_mgr_t::pause_source(u32 source_id) const
     {
         alSourcePause(source_id); alCheckError();
     }
 
-    void audio_mgr_t::rewind_source(uint32_t source_id) const
+    void audio_mgr_t::rewind_source(u32 source_id) const
     {
         alSourceRewind(source_id); alCheckError();
     }
 
-    void audio_mgr_t::stop_source(uint32_t source_id) const
+    void audio_mgr_t::stop_source(u32 source_id) const
     {
         alSourceStop(source_id); alCheckError();
     }
 
-    void audio_mgr_t::source_queue_sound(uint32_t source_id, const boost::shared_ptr<sound_t>& sound) const
+    void audio_mgr_t::source_queue_sound(u32 source_id, const boost::shared_ptr<sound_t>& sound) const
     {
         auto buffer_id = sound->get_buffer_id();
 
         alSourceQueueBuffers(source_id, 1, &buffer_id); alCheckError();
     }
 
-    void audio_mgr_t::source_unqueue_sound(uint32_t source_id, const boost::shared_ptr<sound_t>& sound) const
+    void audio_mgr_t::source_unqueue_sound(u32 source_id, const boost::shared_ptr<sound_t>& sound) const
     {
         auto buffer_id = sound->get_buffer_id();
 

@@ -119,7 +119,7 @@ MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(game)
     MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION_VIRTUAL(void, on_run_start)
     MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION_VIRTUAL(void, on_run_end)
 
-    void on_tick_start(float32_t dt) override
+    void on_tick_start(f32 dt) override
     {
         auto override_ = get_override("on_tick_start");
 
@@ -129,7 +129,7 @@ MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(game)
         }
     }
 
-    void on_tick_end(float32_t dt) override
+    void on_tick_end(f32 dt) override
     {
         auto override_ = get_override("on_tick_end");
 
@@ -169,7 +169,7 @@ MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(game)
 
 MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(state)
 {
-    void on_tick(float32_t dt) override
+    void on_tick(f32 dt) override
     {
         auto override_ = get_override("on_tick");
 
@@ -183,7 +183,7 @@ MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(state)
         }
     }
 
-    void on_tick_base(float32_t dt)
+    void on_tick_base(f32 dt)
     {
         _wrapper_wrapped_type_::on_tick(dt);
     }
@@ -267,49 +267,49 @@ class_<glm::detail::tvec4<value_type>>(name, init<value_type, value_type, value_
     .def(self_ns::str(self_ns::self));\
 
 #define MANDALA_PYTHON_DEFINE_AABB2(name, scalar_type)\
-class_<mandala::details::aabb2_t<scalar_type>>(name, init<>())\
-.def_readwrite("min", &mandala::details::aabb2_t<scalar_type>::min)\
-.def_readwrite("max", &mandala::details::aabb2_t<scalar_type>::max)\
-.add_property("width", &mandala::details::aabb2_t<scalar_type>::width)\
-.add_property("height", &mandala::details::aabb2_t<scalar_type>::height)\
-.add_property("size", make_function(&mandala::details::aabb2_t<scalar_type>::size, return_value_policy<return_by_value>()))\
-.add_property("center", make_function(&mandala::details::aabb2_t<scalar_type>::center, return_value_policy<return_by_value>()))\
-.def(self_ns::self + other<mandala::details::aabb2_t<scalar_type>::value_type>())\
-.def(self_ns::self += other<mandala::details::aabb2_t<scalar_type>::value_type>())\
-.def(self_ns::self - other<mandala::details::aabb2_t<scalar_type>::value_type>())\
-.def(self_ns::self -= other<mandala::details::aabb2_t<scalar_type>::value_type>())\
+class_<mandala::details::aabb2<scalar_type>>(name, init<>())\
+.def_readwrite("min", &mandala::details::aabb2<scalar_type>::min)\
+.def_readwrite("max", &mandala::details::aabb2<scalar_type>::max)\
+.add_property("width", &mandala::details::aabb2<scalar_type>::width)\
+.add_property("height", &mandala::details::aabb2<scalar_type>::height)\
+.add_property("size", make_function(&mandala::details::aabb2<scalar_type>::size, return_value_policy<return_by_value>()))\
+.add_property("center", make_function(&mandala::details::aabb2<scalar_type>::center, return_value_policy<return_by_value>()))\
+.def(self_ns::self + other<mandala::details::aabb2<scalar_type>::value_type>())\
+.def(self_ns::self += other<mandala::details::aabb2<scalar_type>::value_type>())\
+.def(self_ns::self - other<mandala::details::aabb2<scalar_type>::value_type>())\
+.def(self_ns::self -= other<mandala::details::aabb2<scalar_type>::value_type>())\
 .def(self_ns::str(self_ns::self));\
 
 #define MANDALA_PYTHON_DEFINE_AABB3(name, scalar_type)\
-class_<mandala::details::aabb3_t<scalar_type>>(name, init<>())\
-.def_readwrite("min", &mandala::details::aabb3_t<scalar_type>::min)\
-.def_readwrite("max", &mandala::details::aabb3_t<scalar_type>::max)\
-.add_property("width", &mandala::details::aabb3_t<scalar_type>::width)\
-.add_property("height", &mandala::details::aabb3_t<scalar_type>::height)\
-.add_property("depth", &mandala::details::aabb3_t<scalar_type>::depth)\
-.add_property("size", make_function(&mandala::details::aabb3_t<scalar_type>::size, return_value_policy<return_by_value>()))\
-.add_property("center", make_function(&mandala::details::aabb3_t<scalar_type>::center, return_value_policy<return_by_value>()))\
-.def(self_ns::self + other<mandala::details::aabb3_t<scalar_type>::value_type>())\
-.def(self_ns::self += other<mandala::details::aabb3_t<scalar_type>::value_type>())\
-.def(self_ns::self - other<mandala::details::aabb3_t<scalar_type>::value_type>())\
-.def(self_ns::self -= other<mandala::details::aabb3_t<scalar_type>::value_type>());\
+class_<mandala::details::aabb3<scalar_type>>(name, init<>())\
+.def_readwrite("min", &mandala::details::aabb3<scalar_type>::min)\
+.def_readwrite("max", &mandala::details::aabb3<scalar_type>::max)\
+.add_property("width", &mandala::details::aabb3<scalar_type>::width)\
+.add_property("height", &mandala::details::aabb3<scalar_type>::height)\
+.add_property("depth", &mandala::details::aabb3<scalar_type>::depth)\
+.add_property("size", make_function(&mandala::details::aabb3<scalar_type>::size, return_value_policy<return_by_value>()))\
+.add_property("center", make_function(&mandala::details::aabb3<scalar_type>::center, return_value_policy<return_by_value>()))\
+.def(self_ns::self + other<mandala::details::aabb3<scalar_type>::value_type>())\
+.def(self_ns::self += other<mandala::details::aabb3<scalar_type>::value_type>())\
+.def(self_ns::self - other<mandala::details::aabb3<scalar_type>::value_type>())\
+.def(self_ns::self -= other<mandala::details::aabb3<scalar_type>::value_type>());\
 
 #define MANDALA_PYTHON_DEFINE_RECTANGLE(name, scalar_type)\
-class_<mandala::details::rectangle_t<scalar_type>>(name, init<>())\
-.def_readwrite("x", &mandala::details::rectangle_t<scalar_type>::x)\
-.def_readwrite("y", &mandala::details::rectangle_t<scalar_type>::y)\
-.def_readwrite("width", &mandala::details::rectangle_t<scalar_type>::width)\
-.def_readwrite("height", &mandala::details::rectangle_t<scalar_type>::height);\
+class_<mandala::details::rectangle<scalar_type>>(name, init<>())\
+.def_readwrite("x", &mandala::details::rectangle<scalar_type>::x)\
+.def_readwrite("y", &mandala::details::rectangle<scalar_type>::y)\
+.def_readwrite("width", &mandala::details::rectangle<scalar_type>::width)\
+.def_readwrite("height", &mandala::details::rectangle<scalar_type>::height);\
 
 #define MANDALA_PYTHON_DEFINE_PADDING(name, scalar_type)\
-class_<mandala::details::padding_t<scalar_type>>(name, init<scalar_type, scalar_type, scalar_type, scalar_type>())\
-.def_readwrite("bottom", &mandala::details::padding_t<scalar_type>::bottom)\
-.def_readwrite("left", &mandala::details::padding_t<scalar_type>::left)\
-.def_readonly("top", &mandala::details::padding_t<scalar_type>::top)\
-.def_readonly("right", &mandala::details::padding_t<scalar_type>::right)\
-.add_property("vertical", &mandala::details::padding_t<scalar_type>::vertical)\
-.add_property("horizontal", &mandala::details::padding_t<scalar_type>::horizontal)\
-.add_property("size", &mandala::details::padding_t<scalar_type>::size)\
+class_<mandala::details::padding<scalar_type>>(name, init<scalar_type, scalar_type, scalar_type, scalar_type>())\
+.def_readwrite("bottom", &mandala::details::padding<scalar_type>::bottom)\
+.def_readwrite("left", &mandala::details::padding<scalar_type>::left)\
+.def_readonly("top", &mandala::details::padding<scalar_type>::top)\
+.def_readonly("right", &mandala::details::padding<scalar_type>::right)\
+.add_property("vertical", &mandala::details::padding<scalar_type>::vertical)\
+.add_property("horizontal", &mandala::details::padding<scalar_type>::horizontal)\
+.add_property("size", &mandala::details::padding<scalar_type>::size)\
 .def(self_ns::self + self_ns::self)\
 .def(self_ns::self += self_ns::self)\
 .def(self_ns::self - self_ns::self)\
@@ -934,7 +934,7 @@ BOOST_PYTHON_MODULE(mandala)
         .add_property("type", &frame_buffer_t::get_type)
         ;
 
-    def("bezier", mandala::bezier3<float32_t>, args("point0", "point1", "point2", "t"));
+    def("bezier", mandala::bezier3<f32>, args("point0", "point1", "point2", "t"));
 
     class_<pose2>("Pose2", init<>())
         .def_readwrite("location", &pose2::location)

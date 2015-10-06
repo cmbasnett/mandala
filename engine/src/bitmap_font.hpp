@@ -24,29 +24,29 @@ namespace mandala
     {
         typedef std::wstring string_type;
         typedef string_type::value_type char_type;
-        typedef uint32_t character_id_type;
+        typedef u32 character_id_type;
 
         struct character_t
         {
             character_id_type id = 0;
-            rectangle_u16_t rectangle;
-            vec2_i16_t offset;
-            int16_t advance_x = 0;
-            uint8_t texture_index = 0;
-            uint8_t channel = 0;
+            rectangle_u16 rectangle;
+            vec2_i16 offset;
+            i16 advance_x = 0;
+            u8 texture_index = 0;
+            u8 channel = 0;
         };
 
         struct kerning_pair_t
         {
             character_id_type first = 0;
             character_id_type second = 0;
-            int16_t amount = 0;
+            i16 amount = 0;
         };
 
         struct vertex_t
         {
-            typedef vec2_t location_type;
-            typedef vec2_t texcoord_type;
+            typedef vec2 location_type;
+            typedef vec2 texcoord_type;
 
             location_type location;
             texcoord_type texcoord;
@@ -66,59 +66,59 @@ namespace mandala
 
         bitmap_font_t(std::istream& istream);
 
-        void render_string(const string_type& string, mat4_t world_matrix, mat4_t view_projection_matrix, const rgba_type& base_color, std::stack<rgba_type>& color_stack, const std::vector<std::pair<size_t, rgba_type>>& color_pushes, const std::vector<size_t>& color_pop_indices) const;
-        void get_string_pages(std::vector<uint8_t>& pages, const string_type& string) const;
-        int16_t get_string_width(const string_type& string) const;
+        void render_string(const string_type& string, mat4 world_matrix, mat4 view_projection_matrix, const vec4& base_color, std::stack<vec4>& color_stack, const std::vector<std::pair<size_t, vec4>>& color_pushes, const std::vector<size_t>& color_pop_indices) const;
+        void get_string_pages(std::vector<u8>& pages, const string_type& string) const;
+        i16 get_string_width(const string_type& string) const;
 
-        int16_t get_size() const { return size; }
+        i16 get_size() const { return size; }
         bool get_is_smooth() const { return is_smooth; }
         bool get_is_unicode() const { return is_unicode; }
         bool get_is_bold() const { return is_bold; }
         bool get_is_fixed_height() const { return is_fixed_height; }
-        uint8_t get_char_set() const { return char_set; }
-        uint16_t get_stretch_height() const { return stretch_height; }
-        uint8_t get_antialiasing() const { return antialiasing; }
-        const padding_u8_t& get_padding() const { return padding; }
-        uint8_t get_spacing_horizontal() const { return spacing_horizontal; }
-        uint8_t get_spacing_vertical() const { return spacing_vertical; }
-        uint8_t get_outline() const { return outline; }
-        uint16_t get_line_height() const { return line_height; }
-        uint16_t get_base() const { return base; }
-        uint16_t get_width() const { return width; }
-        uint16_t get_height() const { return height; }
-        uint16_t get_page_count() const { return page_count; }
-        uint8_t get_flags_1() const { return flags_1; }
-        uint8_t get_alpha_channel() const { return alpha_channel; }
-        uint8_t get_red_channel() const { return red_channel; }
-        uint8_t get_green_channel() const { return green_channel; }
-        uint8_t get_blue_channel() const { return blue_channel; }
+        u8 get_char_set() const { return char_set; }
+        u16 get_stretch_height() const { return stretch_height; }
+        u8 get_antialiasing() const { return antialiasing; }
+        const padding_u8& get_padding() const { return padding; }
+        u8 get_spacing_horizontal() const { return spacing_horizontal; }
+        u8 get_spacing_vertical() const { return spacing_vertical; }
+        u8 get_outline() const { return outline; }
+        u16 get_line_height() const { return line_height; }
+        u16 get_base() const { return base; }
+        u16 get_width() const { return width; }
+        u16 get_height() const { return height; }
+        u16 get_page_count() const { return page_count; }
+        u8 get_flags_1() const { return flags_1; }
+        u8 get_alpha_channel() const { return alpha_channel; }
+        u8 get_red_channel() const { return red_channel; }
+        u8 get_green_channel() const { return green_channel; }
+        u8 get_blue_channel() const { return blue_channel; }
         const std::map<character_id_type, character_t>& get_characters() const { return characters; }
         const std::vector<boost::shared_ptr<texture_t>> get_page_textures() const { return page_textures; }
 
     private:
-        int16_t size = 0;
+        i16 size = 0;
         bool is_smooth = false;
         bool is_unicode = false;
         bool is_italic = false;
         bool is_bold = false;
         bool is_fixed_height = false;
-        uint8_t char_set = 0;    //TODO: represent with an enum?
-        uint16_t stretch_height = 0;
-        uint8_t antialiasing = 0;
-        padding_u8_t padding;
-        uint8_t spacing_horizontal = 0;
-        uint8_t spacing_vertical = 0;
-        uint8_t outline = 0;
-        uint16_t line_height = 0;
-        uint16_t base = 0;
-        uint16_t width = 0;
-        uint16_t height = 0;
-        uint16_t page_count = 0;
-        uint8_t flags_1 = 0;
-        uint8_t alpha_channel = 0;
-        uint8_t red_channel = 0;
-        uint8_t green_channel = 0;
-        uint8_t blue_channel = 0;
+        u8 char_set = 0;    //TODO: represent with an enum?
+        u16 stretch_height = 0;
+        u8 antialiasing = 0;
+        padding_u8 padding;
+        u8 spacing_horizontal = 0;
+        u8 spacing_vertical = 0;
+        u8 outline = 0;
+        u16 line_height = 0;
+        u16 base = 0;
+        u16 width = 0;
+        u16 height = 0;
+        u16 page_count = 0;
+        u8 flags_1 = 0;
+        u8 alpha_channel = 0;
+        u8 red_channel = 0;
+        u8 green_channel = 0;
+        u8 blue_channel = 0;
         std::vector<character_id_type> character_ids;
         std::map<character_id_type, size_t> character_indices;
         std::map<character_id_type, character_t> characters;
@@ -127,7 +127,7 @@ namespace mandala
         boost::shared_ptr<index_buffer_type> index_buffer;
         std::vector<boost::shared_ptr<texture_t>> page_textures;
 
-        int16_t get_kerning_amount(char_type lhs, char_type rhs) const;
+        i16 get_kerning_amount(char_type lhs, char_type rhs) const;
 
         bitmap_font_t(const bitmap_font_t&) = delete;
         bitmap_font_t& operator=(const bitmap_font_t&) = delete;

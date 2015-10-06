@@ -34,7 +34,7 @@ namespace mandala
         }
 
         //version
-        uint8_t version = 0;
+        u8 version = 0;
         read(istream, version);
 
         if (version != BMF_VERSION)
@@ -46,7 +46,7 @@ namespace mandala
         istream.seekg(5, std::ios_base::cur);
         read(istream, size);
 
-        enum : uint8_t
+        enum : u8
         {
             flag_smooth = (1 << 7),
             flag_unicode = (1 << 6),
@@ -58,7 +58,7 @@ namespace mandala
             flag_reserved2 = (1 << 0)
         };
 
-        uint8_t flags;
+        u8 flags;
 
         read(istream, flags);
 
@@ -98,7 +98,7 @@ namespace mandala
         istream.seekg(1, std::ios_base::cur);
 
         //textures
-        uint32_t page_texture_names_length;
+        u32 page_texture_names_length;
         read(istream, page_texture_names_length);
 
         while (page_texture_names_length > 0)
@@ -106,7 +106,7 @@ namespace mandala
             std::string page_texture_name;
             std::getline(istream, page_texture_name, '\0');
 
-            page_texture_names_length -= static_cast<uint32_t>(page_texture_name.length() + 1);
+            page_texture_names_length -= static_cast<u32>(page_texture_name.length() + 1);
 
             auto page_texture = resources.get<texture_t>(hash_t(page_texture_name));
 
@@ -114,7 +114,7 @@ namespace mandala
         }
 
         //TODO: abstract and this value in some sort of opengl capabilities struct
-        int32_t pages_max = 32;
+        i32 pages_max = 32;
         //glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS_ARB, &pages_max);
 
         if (page_textures.size() > static_cast<size_t>(pages_max))
@@ -124,7 +124,7 @@ namespace mandala
 
         //characters
         istream.seekg(1, std::ios_base::cur);
-        uint32_t characters_length;
+        u32 characters_length;
         read(istream, characters_length);
 
         auto character_count = characters_length / sizeof(character_t);
@@ -154,7 +154,7 @@ namespace mandala
 
         if (istream.good())
         {
-            uint32_t kerning_pairs_length;
+            u32 kerning_pairs_length;
             read(istream, kerning_pairs_length);
 
             auto kerning_pair_count = kerning_pairs_length / sizeof(kerning_pair_t);
@@ -182,36 +182,36 @@ namespace mandala
             auto character = characters.at(character_id);
 
             //location 0
-            vertices[j + 0].location.x = static_cast<float32_t>(character.offset.x);
-            vertices[j + 0].location.y = -static_cast<float32_t>(character.offset.y + character.rectangle.height - base);
+            vertices[j + 0].location.x = static_cast<f32>(character.offset.x);
+            vertices[j + 0].location.y = -static_cast<f32>(character.offset.y + character.rectangle.height - base);
 
             //location 1
-            vertices[j + 1].location.x = static_cast<float32_t>(character.offset.x + character.rectangle.width);
-            vertices[j + 1].location.y = -static_cast<float32_t>(character.offset.y + character.rectangle.height - base);
+            vertices[j + 1].location.x = static_cast<f32>(character.offset.x + character.rectangle.width);
+            vertices[j + 1].location.y = -static_cast<f32>(character.offset.y + character.rectangle.height - base);
 
             //location 2
-            vertices[j + 2].location.x = static_cast<float32_t>(character.offset.x + character.rectangle.width);
-            vertices[j + 2].location.y = -static_cast<float32_t>(character.offset.y - base);
+            vertices[j + 2].location.x = static_cast<f32>(character.offset.x + character.rectangle.width);
+            vertices[j + 2].location.y = -static_cast<f32>(character.offset.y - base);
 
             //location 3
-            vertices[j + 3].location.x = static_cast<float32_t>(character.offset.x);
-            vertices[j + 3].location.y = -static_cast<float32_t>(character.offset.y - base);
+            vertices[j + 3].location.x = static_cast<f32>(character.offset.x);
+            vertices[j + 3].location.y = -static_cast<f32>(character.offset.y - base);
 
             //texcoord 0
-            vertices[j + 0].texcoord.x = static_cast<float32_t>(character.rectangle.x) / width;
-            vertices[j + 0].texcoord.y = 1.0f - static_cast<float32_t>(character.rectangle.y + character.rectangle.height) / height;
+            vertices[j + 0].texcoord.x = static_cast<f32>(character.rectangle.x) / width;
+            vertices[j + 0].texcoord.y = 1.0f - static_cast<f32>(character.rectangle.y + character.rectangle.height) / height;
 
             //texcoord 1
-            vertices[j + 1].texcoord.x = static_cast<float32_t>(character.rectangle.x + character.rectangle.width) / width;
-            vertices[j + 1].texcoord.y = 1.0f - static_cast<float32_t>(character.rectangle.y + character.rectangle.height) / height;
+            vertices[j + 1].texcoord.x = static_cast<f32>(character.rectangle.x + character.rectangle.width) / width;
+            vertices[j + 1].texcoord.y = 1.0f - static_cast<f32>(character.rectangle.y + character.rectangle.height) / height;
 
             //texcoord 2
-            vertices[j + 2].texcoord.x = static_cast<float32_t>(character.rectangle.x + character.rectangle.width) / width;
-            vertices[j + 2].texcoord.y = 1.0f - static_cast<float32_t>(character.rectangle.y) / height;
+            vertices[j + 2].texcoord.x = static_cast<f32>(character.rectangle.x + character.rectangle.width) / width;
+            vertices[j + 2].texcoord.y = 1.0f - static_cast<f32>(character.rectangle.y) / height;
 
             //texcoord 3
-            vertices[j + 3].texcoord.x = static_cast<float32_t>(character.rectangle.x) / width;
-            vertices[j + 3].texcoord.y = 1.0f - static_cast<float32_t>(character.rectangle.y) / height;
+            vertices[j + 3].texcoord.x = static_cast<f32>(character.rectangle.x) / width;
+            vertices[j + 3].texcoord.y = 1.0f - static_cast<f32>(character.rectangle.y) / height;
 
             j += 4;
         }
@@ -237,9 +237,9 @@ namespace mandala
         index_buffer->data(indices, gpu_t::buffer_usage_e::STATIC_DRAW);
     }
 
-    int16_t bitmap_font_t::get_kerning_amount(char_type lhs, char_type rhs) const
+    i16 bitmap_font_t::get_kerning_amount(char_type lhs, char_type rhs) const
     {
-        int16_t kerning_amount = 0;
+        i16 kerning_amount = 0;
 
         for (auto kerning_pair : kerning_pairs)
         {
@@ -254,7 +254,7 @@ namespace mandala
         return kerning_amount;
     }
 
-    void bitmap_font_t::render_string(const string_type& string, mat4_t world_matrix, mat4_t view_projection_matrix, const rgba_type& base_color, std::stack<rgba_type>& color_stack, const std::vector<std::pair<size_t, rgba_type>>& color_pushes, const std::vector<size_t>& color_pop_indices) const
+    void bitmap_font_t::render_string(const string_type& string, mat4 world_matrix, mat4 view_projection_matrix, const vec4& base_color, std::stack<vec4>& color_stack, const std::vector<std::pair<size_t, vec4>>& color_pushes, const std::vector<size_t>& color_pop_indices) const
     {
         static const auto CHARACTER_INDEX_STRIDE = sizeof(index_type) * INDICES_PER_CHARACTER;
 
@@ -282,8 +282,8 @@ namespace mandala
 
         //view projection matrix
         gpu.set_uniform("view_projection_matrix", view_projection_matrix);
-        gpu.set_uniform("line_height", static_cast<float32_t>(line_height));
-        gpu.set_uniform("base", static_cast<float32_t>(base));
+        gpu.set_uniform("line_height", static_cast<f32>(line_height));
+        gpu.set_uniform("base", static_cast<f32>(base));
 
         auto start_color = color_stack.empty() ? base_color : color_stack.top();
 
@@ -291,7 +291,7 @@ namespace mandala
         gpu.set_uniform("color_bottom", start_color);
 
         //textures
-        std::vector<uint8_t> page_indices;
+        std::vector<u8> page_indices;
         get_string_pages(page_indices, string);
 
         for (auto page_index : page_indices)
@@ -300,7 +300,7 @@ namespace mandala
         }
 
         //TODO: this is kind of sloppy, find cleaner way to do this
-        uint8_t character_texture_index = -1;
+        u8 character_texture_index = -1;
         bool did_color_stack_change = false;
         auto color_pushes_itr = color_pushes.begin();
         auto color_pop_indices_itr = color_pop_indices.begin();
@@ -318,7 +318,7 @@ namespace mandala
                 gpu.set_uniform("diffuse_texture", character_texture_index);
             }
 
-            auto x = static_cast<float32_t>(character.advance_x);
+            auto x = static_cast<f32>(character.advance_x);
             const auto character_index = character_indices.at(character.id);
             const auto string_index = std::distance(string.begin(), c);
 
@@ -402,9 +402,9 @@ namespace mandala
         gpu.buffers.pop(gpu_t::buffer_target_e::ARRAY);
     }
 
-    void bitmap_font_t::get_string_pages(std::vector<uint8_t>& pages, const string_type& string) const
+    void bitmap_font_t::get_string_pages(std::vector<u8>& pages, const string_type& string) const
     {
-        std::set<uint8_t> pages_set;
+        std::set<u8> pages_set;
 
         for (const auto c : string)
         {
@@ -416,9 +416,9 @@ namespace mandala
         std::copy(pages_set.begin(), pages_set.end(), std::back_inserter(pages));
     }
 
-    int16_t bitmap_font_t::get_string_width(const string_type& string) const
+    i16 bitmap_font_t::get_string_width(const string_type& string) const
     {
-        int16_t width = 0;
+        i16 width = 0;
 
         for (const auto c : string)
         {

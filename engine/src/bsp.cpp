@@ -21,7 +21,7 @@ namespace mandala
 {
     struct bsp_chunk_t
     {
-        enum class type_e : uint8_t
+        enum class type_e : u8
         {
             ENTITIES,
             PLANES,
@@ -41,8 +41,8 @@ namespace mandala
             COUNT
         };
 
-        uint32_t offset = 0;
-        uint32_t length = 0;
+        u32 offset = 0;
+        u32 length = 0;
     };
 
     bsp_t::bsp_t(std::istream& istream)
@@ -53,7 +53,7 @@ namespace mandala
         }
 
         //version
-        int32_t version;
+        i32 version;
 
         read(istream, version);
 
@@ -97,9 +97,9 @@ namespace mandala
         const auto& vertices_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::VERTICES)];
         istream.seekg(vertices_chunk.offset, std::ios_base::beg);
 
-        std::vector<vec3_t> vertex_locations;
+        std::vector<vec3> vertex_locations;
 
-        auto vertex_location_count = vertices_chunk.length / sizeof(vec3_t);
+        auto vertex_location_count = vertices_chunk.length / sizeof(vec3);
         vertex_locations.resize(vertex_location_count);
 
         for (auto& vertex_location : vertex_locations)
@@ -128,7 +128,7 @@ namespace mandala
         const auto& surface_edges_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::SURFACE_EDGES)];
         istream.seekg(surface_edges_chunk.offset, std::ios_base::beg);
 
-        auto surface_edge_count = surface_edges_chunk.length / sizeof(int32_t);
+        auto surface_edge_count = surface_edges_chunk.length / sizeof(i32);
         surface_edges.resize(surface_edge_count);
 
         for (auto& surface_edge : surface_edges)
@@ -214,7 +214,7 @@ namespace mandala
         const auto& mark_surfaces_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::MARK_SURFACES)];
         istream.seekg(mark_surfaces_chunk.offset, std::ios_base::beg);
 
-        auto mark_surface_count = mark_surfaces_chunk.length / sizeof(uint16_t);
+        auto mark_surface_count = mark_surfaces_chunk.length / sizeof(u16);
         mark_surfaces.resize(mark_surface_count);
 
         for (auto& mark_surface : mark_surfaces)
@@ -273,7 +273,7 @@ namespace mandala
 
         if (visibility_chunk.length > 0)
         {
-            std::function<void(int32_t)> count_vis_leaves = [&](int32_t node_index)
+            std::function<void(i32)> count_vis_leaves = [&](i32 node_index)
             {
                 if (node_index < 0)
                 {
@@ -293,7 +293,7 @@ namespace mandala
 
             count_vis_leaves(0);
 
-            std::vector<uint8_t> visibility_data;
+            std::vector<u8> visibility_data;
             read(istream, visibility_data, visibility_chunk.length);
 
             for (size_t i = 0; i < vis_leaf_count; ++i)
@@ -322,7 +322,7 @@ namespace mandala
                     }
                     else
                     {
-                        for (uint8_t mask = 1; mask != 0; ++leaf_pvs_index, mask <<= 1)
+                        for (u8 mask = 1; mask != 0; ++leaf_pvs_index, mask <<= 1)
                         {
                             if ((*visibility_data_itr & mask) && (leaf_pvs_index < vis_leaf_count))
                             {
@@ -342,11 +342,11 @@ namespace mandala
         const auto& textures_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::TEXTURES)];
         istream.seekg(textures_chunk.offset, std::ios_base::beg);
 
-        uint32_t texture_count;
+        u32 texture_count;
 
         read(istream, texture_count);
 
-        std::vector<uint32_t> texture_offsets;
+        std::vector<u32> texture_offsets;
         texture_offsets.resize(texture_count);
 
         for (auto& texture_offset : texture_offsets)
@@ -356,7 +356,7 @@ namespace mandala
 
         std::vector<bsp_texture_t> bsp_textures;
 
-        for (uint32_t i = 0; i < texture_count; ++i)
+        for (u32 i = 0; i < texture_count; ++i)
         {
             istream.seekg(textures_chunk.offset + texture_offsets[i], std::ios_base::beg);
 
@@ -456,7 +456,7 @@ namespace mandala
                 vertex.diffuse_texcoord.y = -(glm::dot(vertex.location, texture_info.t.axis) + texture_info.t.offset) / bsp_texture.height;
 
                 vertices.push_back(vertex);
-                indices.push_back(static_cast<uint32_t>(indices.size()));
+                indices.push_back(static_cast<u32>(indices.size()));
             }
         }
 
@@ -464,7 +464,7 @@ namespace mandala
         const auto& lighting_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::LIGHTING)];
         istream.seekg(lighting_chunk.offset, std::ios_base::beg);
 
-        std::vector<uint8_t> lighting_data;
+        std::vector<u8> lighting_data;
         read(istream, lighting_data, lighting_chunk.length);
 
         face_lightmap_textures.resize(faces.size());
@@ -473,19 +473,19 @@ namespace mandala
         {
             auto& face = faces[face_index];
 
-            if (face.lighting_styles[0] == 0 && static_cast<int32_t>(face.lightmap_offset) >= -1)
+            if (face.lighting_styles[0] == 0 && static_cast<i32>(face.lightmap_offset) >= -1)
             {
-                auto min_u = std::numeric_limits<float32_t>::max();
-                auto min_v = std::numeric_limits<float32_t>::max();
-                auto max_u = -std::numeric_limits<float32_t>::max();
-                auto max_v = -std::numeric_limits<float32_t>::max();
+                auto min_u = std::numeric_limits<f32>::max();
+                auto min_v = std::numeric_limits<f32>::max();
+                auto max_u = -std::numeric_limits<f32>::max();
+                auto max_v = -std::numeric_limits<f32>::max();
 
                 auto& texture_info = texture_infos[face.texture_info_index];
 
                 for (auto surface_edge_index = 0; surface_edge_index < face.surface_edge_count; ++surface_edge_index)
                 {
                     auto edge_index = surface_edges[face.surface_edge_start_index + surface_edge_index];
-                    vec3_t vertex_location;
+                    vec3 vertex_location;
 
                     if (edge_index >= 0)
                     {
@@ -512,7 +512,7 @@ namespace mandala
                 auto texture_max_u = glm::ceil(max_u / 16);
                 auto texture_max_v = glm::ceil(max_v / 16);
 
-                vec2_t texture_size;
+                vec2 texture_size;
                 texture_size.x = texture_max_u - texture_min_u + 1;
                 texture_size.y = texture_max_v - texture_min_v + 1;
 
@@ -520,7 +520,7 @@ namespace mandala
                 {
                     auto edge_index = surface_edges[face.surface_edge_start_index + surface_edge_index];
 
-                    vec3_t vertex_location;
+                    vec3 vertex_location;
 
                     if (edge_index >= 0)
                     {
@@ -542,7 +542,7 @@ namespace mandala
                     lightmap_texcoord.y = lightmap_v / texture_size.y;
                 }
 
-                auto lighting_data_size = 3 * static_cast<int32_t>(texture_size.x) * static_cast<int32_t>(texture_size.y);
+                auto lighting_data_size = 3 * static_cast<i32>(texture_size.x) * static_cast<i32>(texture_size.y);
 
                 auto image = boost::make_shared<image_t>(
                     static_cast<image_t::size_type>(texture_size),
@@ -637,13 +637,13 @@ namespace mandala
 
         gpu.programs.push(gpu_program);
 
-        gpu.set_uniform("world_matrix", mat4_t());
+        gpu.set_uniform("world_matrix", mat4());
         gpu.set_uniform("view_projection_matrix", camera_params.projection_matrix * camera_params.view_matrix);
         gpu.set_uniform("diffuse_texture", DIFFUSE_TEXTURE_INDEX);
         gpu.set_uniform("lightmap_texture", LIGHTMAP_TEXTURE_INDEX);
         gpu.set_uniform("lightmap_gamma", render_settings.lightmap_gamma);
 
-        auto render_face = [&](int32_t face_index)
+        auto render_face = [&](i32 face_index)
         {
             if (faces_rendered[face_index])
             {
@@ -710,7 +710,7 @@ namespace mandala
 
             const auto& node = nodes[node_index];
             const auto& plane = planes[node.plane_index];
-            float32_t distance = 0;
+            f32 distance = 0;
 
             switch (plane.type)
             {
@@ -739,16 +739,16 @@ namespace mandala
             }
         };
 
-        auto render_brush_entity = [&](int32_t entity_index)
+        auto render_brush_entity = [&](i32 entity_index)
         {
             return;
 
             const auto& entity = entities[entity_index];
-            const auto model_index = boost::lexical_cast<int32_t>(entity.get("model").substr(1));
+            const auto model_index = boost::lexical_cast<i32>(entity.get("model").substr(1));
             const auto& model = models[model_index];
 
             //render mode
-            auto render_mode_optional = entity.get_optional<int32_t>("rendermode");
+            auto render_mode_optional = entity.get_optional<i32>("rendermode");
 
             render_mode_e render_mode = render_mode_e::NORMAL;
 
@@ -758,17 +758,17 @@ namespace mandala
             }
 
             //alpha
-            float32_t alpha = 1.0f;
+            f32 alpha = 1.0f;
 
-            auto alpha_optional = entity.get_optional<uint8_t>("renderamt");
+            auto alpha_optional = entity.get_optional<u8>("renderamt");
 
             if (alpha_optional)
             {
-                alpha = static_cast<float32_t>(alpha_optional.get()) / 255.0f;
+                alpha = static_cast<f32>(alpha_optional.get()) / 255.0f;
             }
 
             //origin
-            vec3_t origin;
+            vec3 origin;
 
             auto origin_optional = entity.get_optional("origin");
 
@@ -777,13 +777,13 @@ namespace mandala
                 std::vector<std::string> tokens;
                 boost::algorithm::split(tokens, origin_optional.get(), boost::is_any_of(" "), boost::algorithm::token_compress_on);
 
-                origin.x = boost::lexical_cast<float32_t>(tokens[0]);
-                origin.y = boost::lexical_cast<float32_t>(tokens[2]);
-                origin.z = -boost::lexical_cast<float32_t>(tokens[1]);
+                origin.x = boost::lexical_cast<f32>(tokens[0]);
+                origin.y = boost::lexical_cast<f32>(tokens[2]);
+                origin.z = -boost::lexical_cast<f32>(tokens[1]);
             }
 
             //color
-            vec4_t color(1.0f);
+            vec4 color(1.0f);
 
             auto color_optional = entity.get_optional("rendercolor");
 
@@ -792,9 +792,9 @@ namespace mandala
                 std::vector<std::string> tokens;
                 boost::algorithm::split(tokens, color_optional.get(), boost::is_any_of(" "), boost::algorithm::token_compress_on);
 
-                color.r = boost::lexical_cast<float32_t>(tokens[0]) / 255.0f;
-                color.g = boost::lexical_cast<float32_t>(tokens[1]) / 255.0f;
-                color.b = boost::lexical_cast<float32_t>(tokens[2]) / 255.0f;
+                color.r = boost::lexical_cast<f32>(tokens[0]) / 255.0f;
+                color.g = boost::lexical_cast<f32>(tokens[1]) / 255.0f;
+                color.b = boost::lexical_cast<f32>(tokens[2]) / 255.0f;
             }
 
             auto blend_state = gpu.blend.get_state();
@@ -882,7 +882,7 @@ namespace mandala
         gpu.blend.pop_state();
     }
 
-    int32_t bsp_t::get_leaf_index_from_location(const vec3_t& location) const
+    i32 bsp_t::get_leaf_index_from_location(const vec3& location) const
     {
         node_index_type node_index = 0;
 
@@ -908,9 +908,9 @@ namespace mandala
     //{
     //    trace_result_t trace_result;
 
-    //    auto hull_point_contents = [&](size_t node_index, vec3_t point)
+    //    auto hull_point_contents = [&](size_t node_index, vec3 point)
     //    {
-    //        float32_t d = 0;
+    //        f32 d = 0;
 
     //        while (node_index >= 0)
     //        {
@@ -930,7 +930,7 @@ namespace mandala
     //        }
     //    };
 
-    //    std::function<bool(size_t, float, float, vec3_t, vec3_t)> recursive_hull_check = [&](size_t node_index, float p1, float p2, vec3_t start, vec3_t end)
+    //    std::function<bool(size_t, float, float, vec3, vec3)> recursive_hull_check = [&](size_t node_index, float p1, float p2, vec3 start, vec3 end)
     //    {
     //        if (node_index < 0)
     //        {
@@ -962,15 +962,15 @@ namespace mandala
     //            return recursive_hull_check(node.children[1], p1, p2, start, end);
     //        }
 
-    //        float32_t frac;
+    //        f32 frac;
 
     //        if (t1 < 0)
     //        {
-    //            frac = (t1 + glm::epsilon<float32_t>()) / (t1 - t2);
+    //            frac = (t1 + glm::epsilon<f32>()) / (t1 - t2);
     //        }
     //        else
     //        {
-    //            frac = (t1 - glm::epsilon<float32_t>()) / (t1 - t2);
+    //            frac = (t1 - glm::epsilon<f32>()) / (t1 - t2);
     //        }
 
     //        frac = glm::clamp(frac, 0.0f, 1.0f);

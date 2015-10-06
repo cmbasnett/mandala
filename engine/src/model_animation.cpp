@@ -27,7 +27,7 @@ namespace mandala
         }
 
         //version
-        int32_t version = 0;
+        i32 version = 0;
         read(istream, version);
 
         if(version != MD5A_VERSION)
@@ -60,7 +60,7 @@ namespace mandala
         read(istream, frame_count);
 
         //frame bounds
-        std::vector<aabb3_t> frame_bounds;
+        std::vector<aabb3> frame_bounds;
         frame_bounds.resize(frame_count);
 
         for (auto& frame_bound : frame_bounds)
@@ -90,11 +90,11 @@ namespace mandala
         }
 
         //frame data count
-        uint32_t frame_data_count;
+        u32 frame_data_count;
         read(istream, frame_data_count);
 
         //frame data
-        std::vector<float32_t> frame_data;
+        std::vector<f32> frame_data;
         read(istream, frame_data, frame_data_count * frame_count);
 
         //build frame skeletons

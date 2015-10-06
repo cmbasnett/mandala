@@ -11,7 +11,7 @@ namespace mandala
     {
         struct bone_t
         {
-            enum flags_t : uint8_t
+            enum flags_t : u8
             {
                 LOCATION_X    = (1 << 0),
                 LOCATION_Y    = (1 << 1),
@@ -22,17 +22,17 @@ namespace mandala
             };
             
             hash_t hash;
-            uint8_t parent_index = 0;
-            uint8_t flags = 0;
-            int32_t data_start_index = 0;
+            u8 parent_index = 0;
+            u8 flags = 0;
+            i32 data_start_index = 0;
         };
         
         model_animation_t(std::istream& istream);
 
         std::string name;
-        uint8_t frames_per_second = 0;
-        uint16_t frame_count = 0;
-        uint8_t bone_count = 0;
+        u8 frames_per_second = 0;
+        u16 frame_count = 0;
+        u8 bone_count = 0;
         std::vector<model_skeleton_t> frame_skeletons;
 
     private:

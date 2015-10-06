@@ -20,7 +20,7 @@ namespace mandala
     struct input_event_t;
     struct gui_layout_t;
 
-    typedef uint8_t gui_anchor_flags_type;
+    typedef u8 gui_anchor_flags_type;
 
     enum : gui_anchor_flags_type
     {
@@ -53,18 +53,18 @@ namespace mandala
 
     struct gui_node_t : public boost::enable_shared_from_this<gui_node_t>
     {
-        typedef aabb2_t bounds_type;
-        typedef vec2_t size_type;
-        typedef rgba_type color_type;
+        typedef aabb2 bounds_type;
+        typedef vec2 size_type;
+        typedef vec4 color_type;
 
         const hash_t& get_id() const { return id; }
         const boost::shared_ptr<gui_node_t>& get_root() const { return root; }
         const boost::shared_ptr<gui_node_t>& get_parent() const { return parent; }
         gui_dock_mode_e get_dock_mode() const { return dock_mode; }
         gui_anchor_flags_type get_anchor_flags() const { return anchor_flags; }
-        const vec2_t& get_anchor_offset() const { return anchor_offset; }
-        const padding_t& get_padding() const { return padding; }
-        const padding_t& get_margin() const { return margin; }
+        const vec2& get_anchor_offset() const { return anchor_offset; }
+        const padding& get_padding() const { return padding; }
+        const padding& get_margin() const { return margin; }
         const gui_size_modes_t& get_size_modes() const { return size_modes; }
         const gui_size_modes_t get_size_modes_real() const;
         const size_type& get_desired_size() const { return desired_size; }
@@ -79,9 +79,9 @@ namespace mandala
 
         void set_dock_mode(gui_dock_mode_e dock_mode) { this->dock_mode = dock_mode; dirty(); }
         void set_anchor_flags(gui_anchor_flags_type anchor_flags) { this->anchor_flags = anchor_flags; dirty(); }
-        void set_anchor_offset(const vec2_t& anchor_offset) { this->anchor_offset = anchor_offset; dirty(); }
-        void set_padding(const padding_t& padding) { this->padding = padding; dirty(); }
-        void set_margin(const padding_t& margin) { this->margin = margin; dirty(); }
+        void set_anchor_offset(const vec2& anchor_offset) { this->anchor_offset = anchor_offset; dirty(); }
+        void set_padding(const padding& padding) { this->padding = padding; dirty(); }
+        void set_margin(const padding& margin) { this->margin = margin; dirty(); }
         void set_size(const size_type& size) { this->desired_size = size; dirty(); }
         void set_size_modes(const gui_size_modes_t size_modes) { this->size_modes = size_modes; dirty(); }
         void set_color(const color_type& color) { this->color = color; dirty(); }
@@ -91,16 +91,16 @@ namespace mandala
 
         virtual void on_clean_begin() { }
         virtual void on_clean_end() { }
-        virtual void on_render_begin(mat4_t& world_matrix, mat4_t& view_projection_matrix) { }
-        virtual void on_render_end(mat4_t& world_matrix, mat4_t& view_projection_matrix) { }
-        virtual void on_tick_begin(float32_t dt) { }
-        virtual void on_tick_end(float32_t dt) { }
+        virtual void on_render_begin(mat4& world_matrix, mat4& view_projection_matrix) { }
+        virtual void on_render_end(mat4& world_matrix, mat4& view_projection_matrix) { }
+        virtual void on_tick_begin(f32 dt) { }
+        virtual void on_tick_end(f32 dt) { }
         virtual bool on_input_event_begin(input_event_t& input_event) { return false; }
         virtual bool on_input_event_end(input_event_t& input_event) { return false; }
 
         void clean();
-        void tick(float32_t dt);
-        void render(mat4_t world_matrix, mat4_t view_projection_matrix);
+        void tick(f32 dt);
+        void render(mat4 world_matrix, mat4 view_projection_matrix);
         bool on_input_event(input_event_t& input_event);
 
         bool has_children() const { return !children.empty(); }
@@ -118,8 +118,8 @@ namespace mandala
         gui_dock_mode_e dock_mode = gui_dock_mode_e::NONE;
         gui_anchor_flags_type anchor_flags = (GUI_ANCHOR_FLAG_TOP | GUI_ANCHOR_FLAG_LEFT);
         size_type anchor_offset;
-        padding_t padding;
-        padding_t margin;
+        padding_f32 padding;
+        padding_f32 margin;
         size_type size;
         size_type desired_size;
         color_type color = color_type(1.0f);

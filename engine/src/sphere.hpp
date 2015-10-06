@@ -8,20 +8,20 @@ namespace mandala
     namespace details
     {
         template<typename T, typename Enable = void>
-        struct sphere_t;
+        struct sphere;
 
         template<typename T>
-        struct sphere_t<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
+        struct sphere<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
         {
-            typedef sphere_t<T> type;
+            typedef sphere<T> type;
             typedef glm::detail::tvec3<T> origin_type;
-            typedef float32_t radius_type;
+            typedef f32 radius_type;
 
             origin_type origin;
             radius_type radius = 0;
 
-            sphere_t() = default;
-            sphere_t(const origin_type& origin, radius_type radius) :
+            sphere() = default;
+            sphere(const origin_type& origin, radius_type radius) :
                 origin(origin),
                 radius(radius)
             {
@@ -49,11 +49,11 @@ namespace mandala
         };
     }
 
-    typedef details::sphere_t<int8_t> sphere_i8_t;
-    typedef details::sphere_t<int16_t> sphere_i16_t;
-    typedef details::sphere_t<int32_t> sphere_i32_t;
-    typedef details::sphere_t<int64_t> sphere_i64_t;
-    typedef details::sphere_t<float32_t> sphere_f32_t;
-    typedef details::sphere_t<float64_t> sphere_f64_t;
-    typedef sphere_f32_t sphere_t;
+    typedef details::sphere<i8> sphere_i8;
+    typedef details::sphere<i16> sphere_i16;
+    typedef details::sphere<i32> sphere_i32;
+    typedef details::sphere<i64> sphere_i64;
+    typedef details::sphere<f32> sphere_f32;
+    typedef details::sphere<f64> sphere_f64;
+    typedef sphere_f32 sphere;
 }

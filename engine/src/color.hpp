@@ -12,48 +12,48 @@
 
 namespace mandala
 {
-    inline uint32_t rgb_to_uint(const rgb_type& rgb)
+    inline u32 rgb_to_u32(const vec3& rgb)
     {
-        uint32_t i = 0;
+        u32 i = 0;
 
-        i |= (static_cast<uint32_t>(rgb.r * 255) << 16);
-        i |= (static_cast<uint32_t>(rgb.g * 255) << 8);
-        i |= (static_cast<uint32_t>(rgb.b * 255) << 0);
+        i |= (static_cast<u32>(rgb.r * 255) << 16);
+        i |= (static_cast<u32>(rgb.g * 255) << 8);
+        i |= (static_cast<u32>(rgb.b * 255) << 0);
 
         return i;
     }
 
-    inline uint32_t rgba_to_uint(const rgba_type& rgba)
+    inline u32 rgba_to_u32(const vec4& rgba)
     {
-        uint32_t i = 0;
+        u32 i = 0;
 
-        i |= (static_cast<uint32_t>(rgba.a * 255) << 24);
-        i |= (static_cast<uint32_t>(rgba.r * 255) << 16);
-        i |= (static_cast<uint32_t>(rgba.g * 255) << 8);
-        i |= (static_cast<uint32_t>(rgba.b * 255) << 0);
+        i |= (static_cast<u32>(rgba.a * 255) << 24);
+        i |= (static_cast<u32>(rgba.r * 255) << 16);
+        i |= (static_cast<u32>(rgba.g * 255) << 8);
+        i |= (static_cast<u32>(rgba.b * 255) << 0);
 
         return i;
     }
 
-    inline rgb_type uint_to_rgb(uint32_t i)
+    inline vec3 u32_to_rgb(u32 i)
     {
-        rgb_type rgb;
+        vec3 rgb;
 
-        rgb.r = static_cast<rgb_type::value_type>((i & 0x00FF0000) >> 16) / 255.0f;
-        rgb.g = static_cast<rgb_type::value_type>((i & 0x0000FF00) >> 8) / 255.0f;
-        rgb.b = static_cast<rgb_type::value_type>((i & 0x000000FF) >> 0) / 255.0f;
+        rgb.r = static_cast<vec3::value_type>((i & 0x00FF0000) >> 16) / 255.0f;
+        rgb.g = static_cast<vec3::value_type>((i & 0x0000FF00) >> 8) / 255.0f;
+        rgb.b = static_cast<vec3::value_type>((i & 0x000000FF) >> 0) / 255.0f;
 
         return rgb;
     }
 
-    inline rgba_type uint_to_rgba(uint32_t i)
+    inline vec4 u32_to_rgba(u32 i)
     {
-        rgba_type rgb;
+        vec4 rgb;
 
-        rgb.a = static_cast<rgba_type::value_type>((i & 0xFF000000) >> 24) / 255.0f;
-        rgb.r = static_cast<rgba_type::value_type>((i & 0x00FF0000) >> 16) / 255.0f;
-        rgb.g = static_cast<rgba_type::value_type>((i & 0x0000FF00) >> 8) / 255.0f;
-        rgb.b = static_cast<rgba_type::value_type>((i & 0x000000FF) >> 0) / 255.0f;
+        rgb.a = static_cast<vec4::value_type>((i & 0xFF000000) >> 24) / 255.0f;
+        rgb.r = static_cast<vec4::value_type>((i & 0x00FF0000) >> 16) / 255.0f;
+        rgb.g = static_cast<vec4::value_type>((i & 0x0000FF00) >> 8) / 255.0f;
+        rgb.b = static_cast<vec4::value_type>((i & 0x000000FF) >> 0) / 255.0f;
 
         return rgb;
     }
@@ -62,55 +62,55 @@ namespace mandala
     static ptrdiff_t rgba_hex_string_length = 8;
 
     template<typename Char>
-    inline std::basic_string<Char> rgb_to_hex(const rgb_type& rgb)
+    inline std::basic_string<Char> rgb_to_hex(const vec3& rgb)
     {
         std::basic_ostringstream<Char> ostringstream;
         
-        ostringstream << std::hex << std::setw(6) << std::setfill<Char>('0') << rgb_to_uint(rgb);
+        ostringstream << std::hex << std::setw(6) << std::setfill<Char>('0') << rgb_to_u32(rgb);
 
         return ostringstream.str();
     }
 
     template<typename Char>
-    inline std::basic_string<Char> rgba_to_hex(const rgba_type& rgba)
+    inline std::basic_string<Char> rgba_to_hex(const vec4& rgba)
     {
         std::basic_ostringstream<Char> ostringstream;
 
-        ostringstream << std::hex << std::setw(8) << std::setfill<Char>('0') << rgba_to_uint(rgb);
+        ostringstream << std::hex << std::setw(8) << std::setfill<Char>('0') << rgba_to_u32(rgb);
 
         return ostringstream.str();
     }
 
     template<typename Char>
-    inline rgb_type hex_to_rgb(const std::basic_string<Char>& hex_string)
+    inline vec3 hex_to_rgb(const std::basic_string<Char>& hex_string)
     {
-        rgb_type rgb;
+        vec3 rgb;
 
         auto i = std::stoul(hex_string, nullptr, 16);
 
-        rgb.r = static_cast<rgb_type::value_type>((i & 0xFF0000) >> 16) / 255.0f;
-        rgb.g = static_cast<rgb_type::value_type>((i & 0x00FF00) >> 8) / 255.0f;
-        rgb.b = static_cast<rgb_type::value_type>((i & 0x0000FF) >> 0) / 255.0f;
+        rgb.r = static_cast<vec3::value_type>((i & 0xFF0000) >> 16) / 255.0f;
+        rgb.g = static_cast<vec3::value_type>((i & 0x00FF00) >> 8) / 255.0f;
+        rgb.b = static_cast<vec3::value_type>((i & 0x0000FF) >> 0) / 255.0f;
 
         return rgb;
     }
 
     template<typename Char>
-    inline rgba_type hex_to_rgba(const std::basic_string<Char>& hex_string)
+    inline vec4 hex_to_rgba(const std::basic_string<Char>& hex_string)
     {
-        rgba_type rgba;
+        vec4 rgba;
 
         auto i = std::stoul(hex_string, nullptr, 16);
 
-        rgba.a = static_cast<rgba_type::value_type>((i & 0xFF000000) >> 24) / 255.0f;
-        rgba.r = static_cast<rgba_type::value_type>((i & 0x00FF0000) >> 16) / 255.0f;
-        rgba.g = static_cast<rgba_type::value_type>((i & 0x0000FF00) >> 8) / 255.0f;
-        rgba.b = static_cast<rgba_type::value_type>((i & 0x000000FF) >> 0) / 255.0f;
+        rgba.a = static_cast<vec4::value_type>((i & 0xFF000000) >> 24) / 255.0f;
+        rgba.r = static_cast<vec4::value_type>((i & 0x00FF0000) >> 16) / 255.0f;
+        rgba.g = static_cast<vec4::value_type>((i & 0x0000FF00) >> 8) / 255.0f;
+        rgba.b = static_cast<vec4::value_type>((i & 0x000000FF) >> 0) / 255.0f;
 
         return rgb;
     }
 
-    inline rgb_type rgb_to_hsv(const rgb_type& rgb)
+    inline vec3 rgb_to_hsv(const vec3& rgb)
     {
         auto rgb_max = glm::compMax(rgb);
         auto rgb_min = glm::compMin(rgb);
@@ -118,10 +118,10 @@ namespace mandala
 
         if (rgb_max == 0)
         {
-            return rgb_type(-1, 0, 0);
+            return vec3(-1, 0, 0);
         }
 
-        rgb_type::value_type h, s, v = 0;
+        vec3::value_type h, s, v = 0;
             
         v = rgb_max;
         s = rgb_diff / rgb_max;
@@ -146,27 +146,27 @@ namespace mandala
             h += 360;
         }
 
-        return rgb_type(h, s, v);
+        return vec3(h, s, v);
     }
 
-    const rgb_type color_black = rgb_type(0);
-    const rgb_type color_white = rgb_type(1);
-    const rgb_type color_red = rgb_type(1, 0, 0);
-    const rgb_type color_green = rgb_type(0, 1, 0);
-    const rgb_type color_blue = rgb_type(0, 0, 1);
-    const rgb_type color_yellow = rgb_type(1, 1, 0);
+    const vec3 color_black = vec3(0);
+    const vec3 color_white = vec3(1);
+    const vec3 color_red = vec3(1, 0, 0);
+    const vec3 color_green = vec3(0, 1, 0);
+    const vec3 color_blue = vec3(0, 0, 1);
+    const vec3 color_yellow = vec3(1, 1, 0);
 
     //TODO: get the feeling these should be elsewhere
     struct color_push
     {
         color_push() = delete;
         color_push(const color_push&) = delete;
-        color_push(const rgb_type& color) :
+        color_push(const vec3& color) :
             color(color)
         {
         }
 
-        rgb_type color;
+        vec3 color;
     };
 
     namespace details

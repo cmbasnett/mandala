@@ -20,7 +20,7 @@ namespace mandala
     {
         typedef std::wstring string_type;
         typedef string_type::iterator string_itr_type;
-        typedef uint16_t line_height_type;
+        typedef u16 line_height_type;
 
         enum class justification_e
         {
@@ -72,20 +72,20 @@ namespace mandala
 
         virtual void on_clean_begin() override;
         virtual void on_clean_end() override;
-        virtual void on_render_begin(mat4_t& world_matrix, mat4_t& view_projection_matrix) override;
+        virtual void on_render_begin(mat4& world_matrix, mat4& view_projection_matrix) override;
         virtual bool on_input_event_begin(input_event_t& input_event) override;
 
     private:
         struct line_t
         {
-            typedef int32_t width_type;
-            typedef rgba_type color_type;
+            typedef i32 width_type;
+            typedef vec4 color_type;
             typedef std::pair<size_t, color_type> color_push_type;
 
             string_itr_type string_begin;
             string_itr_type string_end;
             string_type render_string;
-            rectangle_t rectangle;
+            rectangle rectangle;
 
             std::vector<color_push_type> colors_pushes;
             std::vector<size_t> color_pop_indices;
@@ -99,7 +99,7 @@ namespace mandala
             string_itr_type string_begin;
             string_itr_type string_end;
             time_point_type time_point;
-            rectangle_t rectangle;
+            rectangle rectangle;
         };
 
         void update_cursor();

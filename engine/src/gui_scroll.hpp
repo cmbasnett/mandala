@@ -8,12 +8,12 @@ namespace mandala
 {
     struct gui_scroll_t : gui_node_t
     {
-        typedef vec2_t scroll_location_type;
-        typedef aabb2_t scroll_extents_type;
+        typedef vec2 scroll_location_type;
+        typedef aabb2 scroll_extents_type;
 
         virtual bool on_input_event_begin(input_event_t& input_event) override;
-        virtual void on_tick_end(float32_t dt) override;
-        virtual void on_render_begin(mat4_t& world_matrix, mat4_t& view_projection_matrix) override;
+        virtual void on_tick_end(f32 dt) override;
+        virtual void on_render_begin(mat4& world_matrix, mat4& view_projection_matrix) override;
         virtual void on_clean_end() override;
 
         inline const scroll_location_type get_scroll_location() const { return scroll_location; }

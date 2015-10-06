@@ -18,18 +18,18 @@ namespace mandala
             PERSPECTIVE
         };
 
-        float32_t near = 0.25f;
-        float32_t far = 8192.0f;
-        float32_t fov = 90.0f;
-        float32_t roll = 0.0f;
+        f32 near = 0.25f;
+        f32 far = 8192.0f;
+        f32 fov = 90.0f;
+        f32 roll = 0.0f;
         projection_type_e projection_type = projection_type_e::PERSPECTIVE;
 
-        line3_t get_ray(const vec2_f64_t& screen_location) const;
+        line3 get_ray(const vec2_f64& screen_location) const;
         camera_params get_params(const gpu_viewport_type& viewport) const;
 
     private:
-        mat4_t view_matrix;
-        mat4_t projection_matrix;
-        frustum_t frustum;
+        mat4 view_matrix;
+        mat4 projection_matrix;
+        frustum frustum;
     };
 }

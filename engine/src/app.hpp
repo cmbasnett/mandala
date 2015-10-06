@@ -22,7 +22,7 @@ namespace mandala
     {
         struct performance_t
         {
-            typedef float32_t fps_type;
+            typedef f32 fps_type;
 
             static const auto FRAME_COUNT = 256;
 
@@ -63,7 +63,7 @@ namespace mandala
         app_t(const app_t&) = delete;
         app_t& operator=(const app_t&) = delete;
 
-        void tick(float32_t dt);
+        void tick(f32 dt);
         void render();
         void handle_input_events();
 #if defined(MANDALA_PC)

@@ -7,7 +7,7 @@ namespace mandala
 {
     namespace md5b
     {
-        inline void compute_quaternion_w(quat_t& quaternion)
+        inline void compute_quaternion_w(quat& quaternion)
         {
             auto t = 1.0f - ((quaternion.x * quaternion.x) + (quaternion.y * quaternion.y) + (quaternion.z * quaternion.z));
 

@@ -11,7 +11,7 @@ namespace mandala
         typedef size_t id_type;
 
 #if defined(MANDALA_PC)
-        typedef uint8_t mod_flags_type;
+        typedef u8 mod_flags_type;
 
         enum : mod_flags_type
         {
@@ -22,7 +22,7 @@ namespace mandala
         };
 #endif
 
-        enum class device_type_e : int8_t
+        enum class device_type_e : i8
         {
             NONE = -1,
             TOUCH,
@@ -36,9 +36,9 @@ namespace mandala
         struct touch_t
         {
             typedef size_t touch_id_type;
-            typedef vec2_f64_t location_type;
+            typedef vec2_f64 location_type;
 
-            enum class type_e : int8_t
+            enum class type_e : i8
             {
                 NONE = -1,
                 PRESS,
@@ -48,7 +48,7 @@ namespace mandala
             };
 
 #if defined(MANDALA_PC)
-            enum class button_e : int8_t
+            enum class button_e : i8
             {
                 NONE = -1,
                 LEFT,
@@ -75,7 +75,7 @@ namespace mandala
 
         struct keyboard_t
         {
-            enum class type_e : int8_t
+            enum class type_e : i8
             {
                 NONE = -1,
                 KEY_RELEASE,
@@ -84,7 +84,7 @@ namespace mandala
                 CHARACTER
             };
 
-            enum class key_e : int16_t
+            enum class key_e : i16
             {
                 NONE               = -1,
                 SPACE              = 32,
@@ -218,10 +218,10 @@ namespace mandala
 #if defined(MANDALA_PC)
         struct gamepad_t
         {
-            typedef uint8_t index_type;
-            typedef float32_t axis_value_type;
+            typedef u8 index_type;
+            typedef f32 axis_value_type;
 
-            enum class type_e : int8_t
+            enum class type_e : i8
             {
                 NONE = -1,
                 PRESS,

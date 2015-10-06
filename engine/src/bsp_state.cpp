@@ -56,7 +56,7 @@ namespace mandala
             get_layout()->adopt(bsp_canvas);
         }
 
-        void bsp_state_t::tick(float32_t dt)
+        void bsp_state_t::tick(f32 dt)
         {
             model->tick(dt);
             //camera.tick(dt);
@@ -87,7 +87,7 @@ namespace mandala
 
                 //TODO: need to create a proper level thing here! scene graph and whatever
                 //bsp->render(camera);
-                //model->render(camera, vec3_t(0));
+                //model->render(camera, vec3(0));
 
                 gpu.frame_buffers.pop();
                 gpu.viewports.pop();
@@ -109,7 +109,7 @@ namespace mandala
 
                 //auto begin = std::chrono::system_clock::now();
 
-                //std::vector<uint8_t> data;
+                //std::vector<u8> data;
                 //gpu.get_texture_data(texture, data);
 
                 //std::ofstream ostream = std::ofstream("screenshot.png", std::ios::binary);
@@ -168,8 +168,8 @@ namespace mandala
                 else if (input_event.touch.button == input_event_t::touch_t::button_e::LEFT &&
                     input_event.touch.type == input_event_t::touch_t::type_e::PRESS)
                 {
-                    std::uniform_real_distribution<float32_t> pitch_target_delta_distribution(1.0f, 2.0f);
-                    std::uniform_real_distribution<float32_t> yaw_target_delta_distribution(-0.5f, 0.5f);
+                    std::uniform_real_distribution<f32> pitch_target_delta_distribution(1.0f, 2.0f);
+                    std::uniform_real_distribution<f32> yaw_target_delta_distribution(-0.5f, 0.5f);
 
                     auto pitch_target_delta = pitch_target_delta_distribution(mt19937);
                     auto yaw_target_delta = yaw_target_delta_distribution(mt19937);
@@ -196,7 +196,7 @@ namespace mandala
 
         void bsp_state_t::on_stop_input()
         {
-            camera.local_velocity_target = vec3_t(0);    //TODO: hide local_velocity from public access
+            camera.local_velocity_target = vec3(0);    //TODO: hide local_velocity from public access
 
             platform.is_cursor_centered = false;
 

@@ -31,7 +31,7 @@ namespace mandala
         }
 
         //version
-        uint32_t version = 0;
+        u32 version = 0;
         read(istream, version);
 
         if (version != PACK_VERSION)
@@ -40,10 +40,10 @@ namespace mandala
         }
 
         //file count
-        uint32_t file_count = 0;
+        u32 file_count = 0;
         read(istream, file_count);
 
-        for(uint32_t i = 0; i < file_count; ++i)
+        for(u32 i = 0; i < file_count; ++i)
         {
             file_t file;
 

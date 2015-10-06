@@ -8,26 +8,26 @@ namespace mandala
     namespace details
     {
         template<typename Scalar, typename Enable = void>
-        struct circle_t;
+        struct circle;
 
         template<typename Scalar>
-        struct circle_t<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
+        struct circle<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
         {
             typedef Scalar scalar_type;
             typedef glm::detail::tvec2<Scalar> origin_type;
-            typedef circle_t<Scalar> type;
+            typedef circle<Scalar> type;
 
             origin_type origin;
             scalar_type radius = 0;
 
-            float32_t area() const
+            f32 area() const
             {
-                return glm::pi<float32_t>() * glm::pow2(radius);
+                return glm::pi<f32>() * glm::pow2(radius);
             }
 
-            float32_t circumfrence() const
+            f32 circumfrence() const
             {
-                return glm::pi<float32_t>() * radius * 2;
+                return glm::pi<f32>() * radius * 2;
             }
 
             scalar_type diameter() const
@@ -37,11 +37,11 @@ namespace mandala
         };
     }
     
-    typedef details::circle_t<int8_t> circle_i8_t;
-    typedef details::circle_t<int16_t> circle_i16_t;
-    typedef details::circle_t<int32_t> circle_i32_t;
-    typedef details::circle_t<int64_t> circle_i64_t;
-    typedef details::circle_t<float32_t> circle_f32_t;
-    typedef details::circle_t<float64_t> circle_f64_t;
-    typedef circle_f32_t circle_t;
+    typedef details::circle<i8> circle_i8;
+    typedef details::circle<i16> circle_i16;
+    typedef details::circle<i32> circle_i32;
+    typedef details::circle<i64> circle_i64;
+    typedef details::circle<f32> circle_f32;
+    typedef details::circle<f64> circle_f64;
+    typedef circle_f32 circle;
 }

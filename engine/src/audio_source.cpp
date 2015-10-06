@@ -23,27 +23,27 @@ namespace mandala
         return audio.get_source_state(id);
     }
 
-    void audio_source_t::set_location(const vec3_t& location)
+    void audio_source_t::set_location(const vec3& location)
     {
         audio.set_source_location(id, location);
     }
 
-    void audio_source_t::set_velocity(const vec3_t& velocity)
+    void audio_source_t::set_velocity(const vec3& velocity)
     {
         audio.set_source_velocity(id, velocity);
     }
 
-    void audio_source_t::set_gain(float32_t gain)
+    void audio_source_t::set_gain(f32 gain)
     {
         audio.set_source_gain(id, gain);
     }
 
-    void audio_source_t::set_reference_distance(float32_t reference_distance)
+    void audio_source_t::set_reference_distance(f32 reference_distance)
     {
         audio.set_source_reference_distance(id, reference_distance);
     }
 
-    void audio_source_t::set_max_distance(float32_t max_distance)
+    void audio_source_t::set_max_distance(f32 max_distance)
     {
         audio.set_source_max_distance(id, max_distance);
     }

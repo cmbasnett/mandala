@@ -25,13 +25,13 @@ namespace mandala
     {
     }
 
-    void model_instance_t::tick(float32_t dt)
+    void model_instance_t::tick(f32 dt)
     {
         if (animation != nullptr)
         {
             t += dt;
 
-            auto frame_count = static_cast<float32_t>(animation->frame_count);
+            auto frame_count = static_cast<f32>(animation->frame_count);
             auto seconds_per_frame = 1.0f / animation->frames_per_second;
             auto frame_0_index = static_cast<size_t>(glm::floor(glm::mod(t / seconds_per_frame, frame_count)));
             auto frame_1_index = (frame_0_index + 1) % animation->frame_count;
@@ -55,7 +55,7 @@ namespace mandala
         sphere.radius = glm::length(aabb.extents());
     }
 
-    void model_instance_t::render(const camera_params& camera_params, const vec3_t& light_location) const
+    void model_instance_t::render(const camera_params& camera_params, const vec3& light_location) const
     {
         if (model == nullptr)
         {
@@ -74,13 +74,13 @@ namespace mandala
         model->render(camera_params.location, pose.to_matrix(), view_projection_matrix, bone_matrices, light_location, mesh_materials);
 
 #if defined (DEBUG)
-        render_aabb(pose.to_matrix(), view_projection_matrix, skeleton.aabb, rgba_type(1, 0, 0, 1));
-        render_aabb(mat4_t(), view_projection_matrix, aabb, rgba_type(0, 1, 0, 1));
-        render_sphere(mat4_t(), view_projection_matrix, sphere);
+        render_aabb(pose.to_matrix(), view_projection_matrix, skeleton.aabb, vec4(1, 0, 0, 1));
+        render_aabb(mat4(), view_projection_matrix, aabb, vec4(0, 1, 0, 1));
+        render_sphere(mat4(), view_projection_matrix, sphere);
 #endif
     }
     
-    const pose3& model_instance_t::get_bone_pose(const hash_t& bone_hash) const
+    pose3 model_instance_t::get_bone_pose(const hash_t& bone_hash) const
     {
         auto bone_index = model->get_bone_index(bone_hash);
 
@@ -91,7 +91,7 @@ namespace mandala
             throw std::invalid_argument(oss.str().c_str());
         }
 
-        return skeleton.bones[*bone_index].pose;
+		return pose * skeleton.bones[*bone_index].pose;
     }
 
     void model_instance_t::set_model(const boost::shared_ptr<model_t>& model)

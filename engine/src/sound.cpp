@@ -29,7 +29,7 @@ namespace mandala
             throw std::exception();
         }
 
-        int32_t chunk_size = 0;
+        i32 chunk_size = 0;
         read(istream, chunk_size);
         
         std::array<char, WAV_CHUNK_FORMAT_LENGTH> chunk_format;
@@ -41,8 +41,8 @@ namespace mandala
         }
 
         std::array<char, WAV_SUBCHUNK_ID_LENGTH> subchunk1_id;
-        int32_t subchunk1_size = 0;
-        int16_t audio_format = 0;
+        i32 subchunk1_size = 0;
+        i16 audio_format = 0;
 
         read(istream, subchunk1_id);
 
@@ -67,10 +67,10 @@ namespace mandala
             throw std::exception();
         }
 
-        int32_t subchunk2_size = 0;
+        i32 subchunk2_size = 0;
         read(istream, subchunk2_size);
 
-        std::vector<uint8_t> data(subchunk2_size);
+        std::vector<u8> data(subchunk2_size);
         read(istream, data, subchunk2_size);
 
         alGenBuffers(1, &buffer_id);
@@ -112,7 +112,7 @@ namespace mandala
             throw std::exception();
         }
 
-        duration = duration_type(static_cast<int64_t>((static_cast<float32_t>(data.size()) / byte_rate * duration_type::period::den)));
+        duration = duration_type(static_cast<i64>((static_cast<f32>(data.size()) / byte_rate * duration_type::period::den)));
     }
 
     sound_t::~sound_t()

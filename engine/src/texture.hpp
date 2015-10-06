@@ -14,11 +14,11 @@ namespace mandala
 
     struct texture_t : resource_t, boost::enable_shared_from_this<texture_t>
     {
-        typedef uint32_t size_value_type;
+        typedef u32 size_value_type;
         typedef glm::detail::tvec2<size_value_type> size_type;
-        typedef uint32_t id_type;
-        typedef int32_t format_type;
-        typedef int32_t type_type;
+        typedef u32 id_type;
+        typedef i32 format_type;
+        typedef i32 type_type;
 
         texture_t(color_type_e color_type, const size_type& size, const void* data);
         texture_t(const boost::shared_ptr<image_t>& image);

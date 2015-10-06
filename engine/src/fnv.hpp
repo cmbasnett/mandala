@@ -13,18 +13,18 @@ namespace mandala
             struct fnv1a_t;
 
             template<>
-            struct fnv1a_t<uint32_t>
+            struct fnv1a_t<u32>
             {
-                typedef uint32_t value_type;
+                typedef u32 value_type;
 
                 static const value_type OFFSET_BASIS = 2166136261UL;
                 static const value_type PRIME = 16777619UL;
             };
 
             template<>
-            struct fnv1a_t<uint64_t>
+            struct fnv1a_t<u64>
             {
-                typedef uint64_t value_type;
+                typedef u64 value_type;
 
                 static const value_type OFFSET_BASIS = 14695981039346656037ULL;
                 static const value_type PRIME = 1099511628211ULL;
@@ -35,7 +35,7 @@ namespace mandala
         Value fnv1a(void* ptr, size_t length)
         {
             Value hash = detail::fnv1a_t<Value>::OFFSET_BASIS;
-            auto current = static_cast<uint8_t*>(ptr);
+            auto current = static_cast<u8*>(ptr);
             auto end = current + length;
 
             while(current < end)

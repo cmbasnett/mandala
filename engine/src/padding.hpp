@@ -12,13 +12,13 @@ namespace mandala
     namespace details
     {
         template<typename Scalar, typename Enable = void>
-        struct padding_t;
+        struct padding;
 
         template<typename Scalar>
-        struct padding_t<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
+        struct padding<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
         {
             typedef Scalar scalar_type;
-            typedef padding_t<scalar_type> type;
+            typedef padding<scalar_type> type;
             typedef glm::detail::tvec2<scalar_type> size_type;
 
             scalar_type bottom = 0;
@@ -26,8 +26,8 @@ namespace mandala
             scalar_type top = 0;
             scalar_type right = 0;
 
-            padding_t() = default;
-            padding_t(scalar_type bottom, scalar_type left, scalar_type top, scalar_type right) :
+            padding() = default;
+            padding(scalar_type bottom, scalar_type left, scalar_type top, scalar_type right) :
                 bottom(bottom),
                 left(left),
                 top(top),
@@ -35,8 +35,8 @@ namespace mandala
             {
             }
 
-            padding_t(scalar_type all) :
-                padding_t(all, all, all, all)
+            padding(scalar_type all) :
+                padding(all, all, all, all)
             {
             }
 
@@ -56,7 +56,7 @@ namespace mandala
             }
 
             template<typename U>
-            type operator+(const padding_t<U>& rhs) const
+            type operator+(const padding<U>& rhs) const
             {
                 auto sum = *this;
                 sum += rhs;
@@ -64,7 +64,7 @@ namespace mandala
             }
 
             template<typename U>
-            type& operator+=(const padding_t<U>& rhs)
+            type& operator+=(const padding<U>& rhs)
             {
                 bottom += rhs.bottom;
                 left += rhs.left;
@@ -75,7 +75,7 @@ namespace mandala
             }
 
             template<typename U>
-            type operator-(const padding_t<U>& rhs) const
+            type operator-(const padding<U>& rhs) const
             {
                 auto sum = *this;
                 sum -= rhs;
@@ -83,7 +83,7 @@ namespace mandala
             }
 
             template<typename U>
-            type& operator-=(const padding_t<U>& rhs)
+            type& operator-=(const padding<U>& rhs)
             {
                 bottom -= rhs.bottom;
                 left -= rhs.left;
@@ -94,13 +94,13 @@ namespace mandala
             }
 
             template<typename U>
-            bool operator==(const padding_t<U>& rhs) const
+            bool operator==(const padding<U>& rhs) const
             {
                 return bottom == rhs.bottom && left == rhs.left && right == rhs.right && top == rhs.top;
             }
 
             template<typename U>
-            bool operator!=(const padding_t<U>& rhs) const
+            bool operator!=(const padding<U>& rhs) const
             {
                 return bottom != rhs.bottom || left != rhs.left || right != rhs.right || top != rhs.top;
             }
@@ -113,28 +113,28 @@ namespace mandala
         };
 
         template<typename T>
-        std::ostream& operator<<(std::ostream& ostream, const padding_t<T>& p)
+        std::ostream& operator<<(std::ostream& ostream, const padding<T>& p)
         {
             return ostream << "(" << p.bottom << "," << p.left << "," << p.top << "," << p.right << ")";
         }
     }
 
-    typedef details::padding_t<uint8_t>        padding_u8_t;
-    typedef details::padding_t<uint16_t>    padding_u16_t;
-    typedef details::padding_t<uint32_t>    padding_u32_t;
-    typedef details::padding_t<uint64_t>    padding_u64_t;
-    typedef details::padding_t<float32_t>    padding_f32_t;
-    typedef details::padding_t<float64_t>    padding_f64_t;
-    typedef padding_f32_t padding_t;
+    typedef details::padding<u8>	padding_u8;
+    typedef details::padding<u16>   padding_u16;
+    typedef details::padding<u32>   padding_u32;
+    typedef details::padding<u64>   padding_u64;
+    typedef details::padding<f32>   padding_f32;
+    typedef details::padding<f64>   padding_f64;
+    typedef padding_f32				padding;
 
     template<typename T, typename U>
-    details::aabb2_t<T> operator-(const details::aabb2_t<T>& aabb, const details::padding_t<U>& padding)
+    details::aabb2<T> operator-(const details::aabb2<T>& aabb, const details::padding<U>& padding)
     {
-        return details::aabb2_t<T>(glm::detail::tvec2<T>(aabb.min.x + padding.left, aabb.min.y + padding.bottom), glm::detail::tvec2<T>(aabb.max.x - padding.right, aabb.max.y - padding.top));
+        return details::aabb2<T>(glm::detail::tvec2<T>(aabb.min.x + padding.left, aabb.min.y + padding.bottom), glm::detail::tvec2<T>(aabb.max.x - padding.right, aabb.max.y - padding.top));
     }
 
     template<typename T, typename U>
-    void operator-=(details::aabb2_t<T>& aabb, const details::padding_t<U>& padding)
+    void operator-=(details::aabb2<T>& aabb, const details::padding<U>& padding)
     {
         //TODO: verify correctness
         aabb.min.x += std::min(padding.left, aabb.width());
@@ -144,13 +144,13 @@ namespace mandala
     }
 
     template<typename T, typename U>
-    details::aabb2_t<T> operator+(const details::aabb2_t<T>& aabb, const details::padding_t<U>& padding)
+    details::aabb2<T> operator+(const details::aabb2<T>& aabb, const details::padding<U>& padding)
     {
-        return details::aabb2_t<T>(glm::detail::tvec2<T>(aabb.min.x - padding.left, aabb.min.y - padding.bottom), glm::detail::tvec2<T>(aabb.max.x + padding.right, aabb.max.y + padding.top));
+        return details::aabb2<T>(glm::detail::tvec2<T>(aabb.min.x - padding.left, aabb.min.y - padding.bottom), glm::detail::tvec2<T>(aabb.max.x + padding.right, aabb.max.y + padding.top));
     }
 
     template<typename T, typename U>
-    void operator+=(details::aabb2_t<T>& aabb, const details::padding_t<U>& padding)
+    void operator+=(details::aabb2<T>& aabb, const details::padding<U>& padding)
     {
         aabb.min.x -= padding.left;
         aabb.min.y -= padding.bottom;

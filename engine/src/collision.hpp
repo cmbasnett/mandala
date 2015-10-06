@@ -27,7 +27,7 @@ namespace mandala
     };
 
     template<typename Scalar>
-    glm::detail::tvec3<Scalar> intersect(const details::plane3_t<Scalar>& p0, const details::plane3_t<Scalar>& p1, const details::plane3_t<Scalar>& p2)
+    glm::detail::tvec3<Scalar> intersect(const details::plane3<Scalar>& p0, const details::plane3<Scalar>& p1, const details::plane3<Scalar>& p2)
     {
         const auto d0 = p0.distance;
         const auto d1 = p1.distance;
@@ -44,10 +44,10 @@ namespace mandala
     }
 
     template<typename Scalar>
-    intersect_type_e intersects(const details::circle_t<Scalar>& circle, const details::aabb2_t<Scalar>& aabb)
+    intersect_type_e intersects(const details::circle<Scalar>& circle, const details::aabb2<Scalar>& aabb)
     {
         const auto aabb_center = aabb.center();
-        const auto distance = vec2_t(glm::abs(circle.origin.x - aabb_center.x), glm::abs(circle.origin.y - aabb_center.y));
+        const auto distance = vec2(glm::abs(circle.origin.x - aabb_center.x), glm::abs(circle.origin.y - aabb_center.y));
 
         if (distance.x > ((aabb.width() / 2) + circle.radius) ||
             distance.y > ((aabb.height() / 2) + circle.radius))
@@ -72,7 +72,7 @@ namespace mandala
     }
 
     template<typename LHSScalar, typename RHSScalar>
-    intersect_type_e intersects(const details::aabb2_t<LHSScalar>& lhs, const details::aabb2_t<RHSScalar>& rhs)
+    intersect_type_e intersects(const details::aabb2<LHSScalar>& lhs, const details::aabb2<RHSScalar>& rhs)
     {
         if (lhs.max.x < rhs.min.x || lhs.min.x > rhs.max.x ||
             lhs.max.y < rhs.min.y || lhs.min.y > rhs.max.y)
@@ -84,27 +84,27 @@ namespace mandala
     }
 
     template<typename AABBScalar, typename PointScalar>
-    bool contains(const details::aabb2_t<AABBScalar>& aabb, const glm::detail::tvec2<PointScalar>& point)
+    bool contains(const details::aabb2<AABBScalar>& aabb, const glm::detail::tvec2<PointScalar>& point)
     {
         return aabb.min == glm::min(aabb.min, static_cast<glm::detail::tvec2<AABBScalar>>(point)) &&
                aabb.max == glm::max(aabb.max, static_cast<glm::detail::tvec2<AABBScalar>>(point));
     }
 
     template<typename AABBScalar, typename PointScalar>
-    bool contains(const details::aabb3_t<AABBScalar>& aabb, const glm::detail::tvec3<PointScalar>& point)
+    bool contains(const details::aabb3<AABBScalar>& aabb, const glm::detail::tvec3<PointScalar>& point)
     {
         return aabb.min == glm::min(aabb.min, static_cast<glm::detail::tvec3<AABBScalar>>(point)) &&
                aabb.max == glm::max(aabb.max, static_cast<glm::detail::tvec3<AABBScalar>>(point));
     }
 
     template<typename LHSScalar, typename RHSScalar>
-    bool contains(const details::aabb3_t<LHSScalar>& lhs, const details::aabb3_t<RHSScalar>& rhs)
+    bool contains(const details::aabb3<LHSScalar>& lhs, const details::aabb3<RHSScalar>& rhs)
     {
         return contains(lhs, rhs.min) && contains(lhs, rhs.max);
     }
 
     template<typename LHSScalar, typename RHSScalar>
-    intersect_type_e intersects(const details::aabb3_t<LHSScalar>& lhs, const details::aabb3_t<RHSScalar>& rhs)
+    intersect_type_e intersects(const details::aabb3<LHSScalar>& lhs, const details::aabb3<RHSScalar>& rhs)
     {
         if (contains(lhs, rhs))
         {
@@ -122,7 +122,7 @@ namespace mandala
     }
 
     template<typename Scalar>
-    intersect_type_e intersects(const details::line3_t<Scalar>& line, const details::aabb3_t<Scalar>& aabb, Scalar* t = nullptr, glm::detail::tvec3<Scalar>* location = nullptr, glm::detail::tvec3<Scalar>* normal = nullptr)
+    intersect_type_e intersects(const details::line3<Scalar>& line, const details::aabb3<Scalar>& aabb, Scalar* t = nullptr, glm::detail::tvec3<Scalar>* location = nullptr, glm::detail::tvec3<Scalar>* normal = nullptr)
     {
         //http://www.scratchapixel.com/lessons/3d-basic-lessons/lesson-7-intersecting-simple-shapes/ray-box-intersection/
         if (line.start == line.end)
@@ -235,7 +235,7 @@ namespace mandala
     }
 
     template<typename Scalar = std::enable_if<std::is_floating_point<Scalar>::value>::type>
-    intersect_type_e intersects(const details::line3_t<Scalar>& line, const details::plane3_t<Scalar>& plane, Scalar& t)
+    intersect_type_e intersects(const details::line3<Scalar>& line, const details::plane3<Scalar>& plane, Scalar& t)
     {
         const auto u = line.end - line.start;
         const auto w = line.start - plane.normal;
@@ -258,19 +258,19 @@ namespace mandala
     }
 
     template<typename Scalar>
-    Scalar distance_to_plane(const details::plane3_t<Scalar>& plane, const glm::detail::tvec3<Scalar>& point)
+    Scalar distance_to_plane(const details::plane3<Scalar>& plane, const glm::detail::tvec3<Scalar>& point)
     {
         return glm::dot(plane.normal, point - plane.origin());
     }
 
     template<typename PlaneScalar, typename PointScalar>
-    PlaneScalar distance_to_plane(const details::plane3_t<PlaneScalar>& plane, const glm::detail::tvec3<PointScalar>& point)
+    PlaneScalar distance_to_plane(const details::plane3<PlaneScalar>& plane, const glm::detail::tvec3<PointScalar>& point)
     {
         return glm::dot(plane.normal, static_cast<glm::detail::tvec3<PlaneScalar>>(point)-plane.origin());
     }
 
     template<typename FrustumScalar, typename PointScalar>
-    intersect_type_e intersects(const details::frustum_t<FrustumScalar>& frustum, const glm::detail::tvec3<PointScalar>& point)
+    intersect_type_e intersects(const details::frustum<FrustumScalar>& frustum, const glm::detail::tvec3<PointScalar>& point)
     {
         for (const auto& plane : frustum.planes())
         {
@@ -284,7 +284,7 @@ namespace mandala
     }
 
     template<typename FrustumScalar, typename SphereScalar>
-    intersect_type_e intersects(const details::frustum_t<FrustumScalar>& frustum, const details::sphere_t<SphereScalar>& sphere)
+    intersect_type_e intersects(const details::frustum<FrustumScalar>& frustum, const details::sphere<SphereScalar>& sphere)
     {
         for (const auto& plane : frustum.get_planes())
         {
@@ -298,10 +298,10 @@ namespace mandala
     }
 
     template<typename FrustumScalar, typename AABBScalar>
-    intersect_type_e intersects(const details::frustum_t<FrustumScalar>& frustum, const details::aabb3_t<AABBScalar>& aabb)
+    intersect_type_e intersects(const details::frustum<FrustumScalar>& frustum, const details::aabb3<AABBScalar>& aabb)
     {
-        typedef details::frustum_t<FrustumScalar> frustum_type;
-        typedef details::aabb3_t<AABBScalar> aabb_type;
+        typedef details::frustum<FrustumScalar> frustumype;
+        typedef details::aabb3<AABBScalar> aabb_type;
 
         size_t total_in = 0;
 
@@ -339,7 +339,7 @@ namespace mandala
     }
 
     template<typename Scalar = std::enable_if<std::is_floating_point<Scalar>::value>::type>
-    intersect_type_e intersects(const details::aabb3_t<Scalar> aabb0, const glm::detail::tvec3<Scalar>& d0, const details::aabb3_t<Scalar>& aabb1, const glm::detail::tvec3<Scalar>& d1, Scalar& u0, Scalar& u1)
+    intersect_type_e intersects(const details::aabb3<Scalar> aabb0, const glm::detail::tvec3<Scalar>& d0, const details::aabb3<Scalar>& aabb1, const glm::detail::tvec3<Scalar>& d1, Scalar& u0, Scalar& u1)
     {
         typedef glm::detail::tvec3<Scalar> vector_type;
 

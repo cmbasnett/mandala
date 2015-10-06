@@ -26,7 +26,7 @@ namespace mandala
         layout->set_dock_mode(gui_dock_mode_e::FILL);
     }
 
-    void state_t::tick(float32_t dt)
+    void state_t::tick(f32 dt)
     {
         on_tick(dt);
 
@@ -60,14 +60,14 @@ namespace mandala
     void state_t::render()
     {
         const auto screen_size = platform.get_screen_size();
-        auto view_projection_matrix = glm::ortho(0.0f, static_cast<float32_t>(screen_size.x), 0.0f, static_cast<float32_t>(screen_size.y));
+        auto view_projection_matrix = glm::ortho(0.0f, static_cast<f32>(screen_size.x), 0.0f, static_cast<f32>(screen_size.y));
 
         auto depth_state = gpu.depth.get_state();
         depth_state.should_test = false;
 
         gpu.depth.push_state(depth_state);
 
-        layout->render(mat4_t(), view_projection_matrix);
+        layout->render(mat4(), view_projection_matrix);
 
         gpu.depth.pop_state();
     }
@@ -79,7 +79,7 @@ namespace mandala
 
     void state_t::on_enter()
     {
-        layout->set_bounds(gui_node_t::bounds_type(vec2_t(), static_cast<vec2_t>(platform.get_screen_size())));
+        layout->set_bounds(gui_node_t::bounds_type(vec2(), static_cast<vec2>(platform.get_screen_size())));
     }
 
 #if defined(MANDALA_PC)
@@ -87,7 +87,7 @@ namespace mandala
     {
         if (window_event.type == window_event_t::type_e::RESIZE)
         {
-            layout->set_bounds(gui_node_t::bounds_type(vec2_t(), static_cast<vec2_t>(window_event.rectangle.size())));
+            layout->set_bounds(gui_node_t::bounds_type(vec2(), static_cast<vec2>(window_event.rectangle.size())));
         }
     }
 #endif

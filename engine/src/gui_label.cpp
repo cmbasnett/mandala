@@ -142,7 +142,7 @@ namespace mandala
 
             size_type text_size;
 
-            text_size.y = static_cast<float32_t>(lines.size() * get_line_height());
+            text_size.y = static_cast<f32>(lines.size() * get_line_height());
 
             for (auto& line : lines)
             {
@@ -208,14 +208,14 @@ namespace mandala
         update_cursor();
     }
 
-    void gui_label_t::on_render_begin(mat4_t& world_matrix, mat4_t& view_projection_matrix)
+    void gui_label_t::on_render_begin(mat4& world_matrix, mat4& view_projection_matrix)
     {
         if (bitmap_font == nullptr)
         {
             throw std::exception("bitmap font not set");
         }
 
-        std::stack<rgba_type> color_stack;
+        std::stack<vec4> color_stack;
 
         //round translation component of world_matrix (otherwise text can appear blurry)
         //TODO: figure out a nicer way to write this
@@ -238,7 +238,7 @@ namespace mandala
 
             if (should_show_cursor)
             {
-                render_rectangle(world_matrix, view_projection_matrix, cursor.rectangle, rgba_type(1, 0, 0, 1), true);
+                render_rectangle(world_matrix, view_projection_matrix, cursor.rectangle, vec4(1, 0, 0, 1), true);
             }
         }
 
@@ -658,7 +658,7 @@ namespace mandala
             auto was_line_added = false;
             auto string_space_itr = string.end();
 
-            auto parse_color_codes = [&](string_type& string, std::vector<std::pair<size_t, vec4_t>>& color_pushes, std::vector<size_t>& color_pops)
+            auto parse_color_codes = [&](string_type& string, std::vector<std::pair<size_t, vec4>>& color_pushes, std::vector<size_t>& color_pops)
             {
                 auto string_itr = string.begin();
 
@@ -681,7 +681,7 @@ namespace mandala
 
                                 try
                                 {
-                                    auto color = rgba_type(hex_to_rgb(hex_string), 1);
+                                    auto color = vec4(hex_to_rgb(hex_string), 1);
 
                                     color_pushes.push_back(std::make_pair(std::distance(string.begin(), string_itr), color));
                                 }
@@ -759,7 +759,7 @@ namespace mandala
                 line.rectangle.width = render_string_width;
                 line.rectangle.height = bitmap_font->get_line_height();
                 line.rectangle.x = 0;
-                line.rectangle.y = static_cast<float32_t>(lines.size()) * -get_line_height();
+                line.rectangle.y = static_cast<f32>(lines.size()) * -get_line_height();
 
                 switch (justification)
                 {
@@ -799,7 +799,7 @@ namespace mandala
                     string_space_itr = string_itr;
                 }
 
-                int16_t character_width = 0;
+                i16 character_width = 0;
 
                 if (should_use_color_codes)
                 {
@@ -837,7 +837,7 @@ namespace mandala
                     }
                 }
 
-                uint16_t character_id = *string_itr;
+                u16 character_id = *string_itr;
 
                 auto characters_itr = bitmap_font->get_characters().find(character_id);
 

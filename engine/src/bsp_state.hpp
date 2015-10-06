@@ -29,7 +29,7 @@ namespace mandala
 
             bsp_state_t();
 
-            virtual void tick(float32_t dt) override;
+            virtual void tick(f32 dt) override;
             virtual void render() override;
             virtual bool on_input_event(input_event_t& input_event) override;
 #if defined(MANDALA_PC)

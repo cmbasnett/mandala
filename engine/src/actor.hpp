@@ -25,7 +25,7 @@ namespace mandala
         virtual void on_create() { }
         virtual void on_destroy() { }
         virtual bool on_input_event(input_event_t& input_event) { return false; }
-        virtual void on_tick(float32_t dt);
+        virtual void on_tick(f32 dt);
         virtual void render(const camera_params& camera);
 
         pose3 pose;

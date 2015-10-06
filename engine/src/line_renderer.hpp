@@ -14,7 +14,7 @@
 
 namespace mandala
 {
-    inline void render_line_loop(const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<vec3_t>& points, const rgba_type& color)
+    inline void render_line_loop(const mat4& world_matrix, const mat4& view_projection_matrix, const std::vector<vec3>& points, const vec4& color)
     {
         static const size_t MAX_LINES = 1024;
         static const size_t VERTEX_COUNT = MAX_LINES + 1;
@@ -36,7 +36,7 @@ namespace mandala
 
             for (auto& vertex : vertices)
             {
-                vertex.color = rgba_type(1);
+                vertex.color = vec4(1);
             }
         }
 
@@ -80,10 +80,10 @@ namespace mandala
     }
 
     template<typename T>
-    void render_rectangle(const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const details::rectangle_t<T>& rectangle, const rgba_type& color, bool is_filled = false)
+    void render_rectangle(const mat4& world_matrix, const mat4& view_projection_matrix, const details::rectangle<T>& rectangle, const vec4& color, bool is_filled = false)
     {
         typedef vertex_buffer_t<basic_gpu_program_t::vertex_type> vertex_buffer_type;
-        typedef index_buffer_t<uint8_t> index_buffer_type;
+        typedef index_buffer_t<u8> index_buffer_type;
 
         static boost::weak_ptr<vertex_buffer_type> vertex_buffer;
         static boost::weak_ptr<index_buffer_type> index_buffer;
@@ -92,10 +92,10 @@ namespace mandala
         {
             vertex_buffer = gpu_buffers.make<vertex_buffer_type>();
             auto vertices = {
-                basic_gpu_program_t::vertex_type(vec3_t(0, 0, 0), rgba_type(1)),
-                basic_gpu_program_t::vertex_type(vec3_t(1, 0, 0), rgba_type(1)),
-                basic_gpu_program_t::vertex_type(vec3_t(1, 1, 0), rgba_type(1)),
-                basic_gpu_program_t::vertex_type(vec3_t(0, 1, 0), rgba_type(1))
+                basic_gpu_program_t::vertex_type(vec3(0, 0, 0), vec4(1)),
+                basic_gpu_program_t::vertex_type(vec3(1, 0, 0), vec4(1)),
+                basic_gpu_program_t::vertex_type(vec3(1, 1, 0), vec4(1)),
+                basic_gpu_program_t::vertex_type(vec3(0, 1, 0), vec4(1))
             };
             vertex_buffer.lock()->data(vertices, gpu_t::buffer_usage_e::STATIC_DRAW);
         }
@@ -126,10 +126,10 @@ namespace mandala
     }
 
     template<typename T>
-    void render_aabb(const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const details::aabb3_t<T>& aabb, const rgba_type& color)
+    void render_aabb(const mat4& world_matrix, const mat4& view_projection_matrix, const details::aabb3<T>& aabb, const vec4& color)
     {
         typedef vertex_buffer_t<basic_gpu_program_t::vertex_type> vertex_buffer_type;
-        typedef index_buffer_t<uint8_t> index_buffer_type;
+        typedef index_buffer_t<u8> index_buffer_type;
 
         static boost::weak_ptr<vertex_buffer_type> vertex_buffer;
         static boost::weak_ptr<index_buffer_type> index_buffer;
@@ -138,14 +138,14 @@ namespace mandala
         {
             vertex_buffer = gpu_buffers.make<vertex_buffer_type>();
             auto vertices = {
-                basic_gpu_program_t::vertex_type(vec3_t(0, 0, 0), rgba_type(1)),
-                basic_gpu_program_t::vertex_type(vec3_t(1, 0, 0), rgba_type(1)),
-                basic_gpu_program_t::vertex_type(vec3_t(1, 1, 0), rgba_type(1)),
-                basic_gpu_program_t::vertex_type(vec3_t(0, 1, 0), rgba_type(1)),
-                basic_gpu_program_t::vertex_type(vec3_t(0, 0, 1), rgba_type(1)),
-                basic_gpu_program_t::vertex_type(vec3_t(1, 0, 1), rgba_type(1)),
-                basic_gpu_program_t::vertex_type(vec3_t(1, 1, 1), rgba_type(1)),
-                basic_gpu_program_t::vertex_type(vec3_t(0, 1, 1), rgba_type(1))
+                basic_gpu_program_t::vertex_type(vec3(0, 0, 0), vec4(1)),
+                basic_gpu_program_t::vertex_type(vec3(1, 0, 0), vec4(1)),
+                basic_gpu_program_t::vertex_type(vec3(1, 1, 0), vec4(1)),
+                basic_gpu_program_t::vertex_type(vec3(0, 1, 0), vec4(1)),
+                basic_gpu_program_t::vertex_type(vec3(0, 0, 1), vec4(1)),
+                basic_gpu_program_t::vertex_type(vec3(1, 0, 1), vec4(1)),
+                basic_gpu_program_t::vertex_type(vec3(1, 1, 1), vec4(1)),
+                basic_gpu_program_t::vertex_type(vec3(0, 1, 1), vec4(1))
             };
             vertex_buffer.lock()->data(vertices, gpu_t::buffer_usage_e::DYNAMIC_DRAW);
         }
@@ -176,10 +176,10 @@ namespace mandala
     }
 
     template<typename T>
-    void render_sphere(const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const details::sphere_t<T>& sphere)
+    void render_sphere(const mat4& world_matrix, const mat4& view_projection_matrix, const details::sphere<T>& sphere)
     {
         typedef vertex_buffer_t<basic_gpu_program_t::vertex_type> vertex_buffer_type;
-        typedef index_buffer_t<uint8_t> index_buffer_type;
+        typedef index_buffer_t<u8> index_buffer_type;
 
         static boost::weak_ptr<vertex_buffer_type> vertex_buffer;
         static boost::weak_ptr<index_buffer_type> index_buffer;
@@ -196,23 +196,23 @@ namespace mandala
             //TODO: this is lame, write this better
             for (auto i = 0; i < SPHERE_SIDES; ++i)
             {
-                auto sigma = static_cast<float32_t>(i) / SPHERE_SIDES * glm::pi<float32_t>() * 2;
+                auto sigma = static_cast<f32>(i) / SPHERE_SIDES * glm::pi<f32>() * 2;
 
-                vertices.emplace_back(vec3_t(glm::sin(sigma), glm::cos(sigma), 0), rgba_type(0, 0, 1, 1));
+                vertices.emplace_back(vec3(glm::sin(sigma), glm::cos(sigma), 0), vec4(0, 0, 1, 1));
             }
 
             for (auto i = 0; i < SPHERE_SIDES; ++i)
             {
-                auto sigma = static_cast<float32_t>(i) / SPHERE_SIDES * glm::pi<float32_t>() * 2;
+                auto sigma = static_cast<f32>(i) / SPHERE_SIDES * glm::pi<f32>() * 2;
 
-                vertices.emplace_back(vec3_t(0, glm::sin(sigma), glm::cos(sigma)), rgba_type(1, 0, 0, 1));
+                vertices.emplace_back(vec3(0, glm::sin(sigma), glm::cos(sigma)), vec4(1, 0, 0, 1));
             }
 
             for (auto i = 0; i < SPHERE_SIDES; ++i)
             {
-                auto sigma = static_cast<float32_t>(i) / SPHERE_SIDES * glm::pi<float32_t>() * 2;
+                auto sigma = static_cast<f32>(i) / SPHERE_SIDES * glm::pi<f32>() * 2;
 
-                vertices.emplace_back(vec3_t(glm::cos(sigma), 0, glm::sin(sigma)), rgba_type(0, 1, 0, 1));
+                vertices.emplace_back(vec3(glm::cos(sigma), 0, glm::sin(sigma)), vec4(0, 1, 0, 1));
             }
 
             vertex_buffer.lock()->data(vertices, gpu_t::buffer_usage_e::DYNAMIC_DRAW);
@@ -222,7 +222,7 @@ namespace mandala
         {
             index_buffer = gpu_buffers.make<index_buffer_type>();
 
-            std::vector<uint8_t> indices;
+            std::vector<u8> indices;
             indices.reserve(SPHERE_SIDES * 3);
 
             for (auto i = 0; i < SPHERE_SIDES * 3; ++i)
@@ -240,7 +240,7 @@ namespace mandala
 
         gpu.programs.push(gpu_program);
 
-        gpu.set_uniform("world_matrix", world_matrix * glm::translate(sphere.origin) * glm::scale(vec3_t(sphere.radius)));
+        gpu.set_uniform("world_matrix", world_matrix * glm::translate(sphere.origin) * glm::scale(vec3(sphere.radius)));
         gpu.set_uniform("view_projection_matrix", view_projection_matrix);
 
         gpu.draw_elements(gpu_t::primitive_type_e::LINE_LOOP, SPHERE_SIDES, index_buffer_type::DATA_TYPE, SPHERE_SIDES * 0);

@@ -93,7 +93,7 @@ namespace mandala
 
     void gui_node_t::clean()
     {
-        std::function<void(boost::shared_ptr<gui_node_t>&, aabb2_t&)> clean_node = [&clean_node](boost::shared_ptr<gui_node_t>& node, aabb2_t& sibling_bounds)
+        std::function<void(boost::shared_ptr<gui_node_t>&, aabb2&)> clean_node = [&clean_node](boost::shared_ptr<gui_node_t>& node, aabb2& sibling_bounds)
         {
             if (node->get_visibility() == gui_visiblity_e::OMIT)
             {
@@ -206,11 +206,11 @@ namespace mandala
 
                 break;
             default:
-                node->bounds.min = vec2_t(0);
+                node->bounds.min = vec2(0);
                 node->bounds.max = absolute_desired_size;
 
-                vec2_t anchor_location;
-                vec2_t anchor_translation;
+                vec2 anchor_location;
+                vec2 anchor_translation;
 
                 if ((node->anchor_flags & GUI_ANCHOR_FLAG_HORIZONTAL) == GUI_ANCHOR_FLAG_HORIZONTAL)
                 {
@@ -278,7 +278,7 @@ namespace mandala
         clean_node(shared_from_this(), padded_bounds);
     }
 
-    void gui_node_t::tick(float32_t dt)
+    void gui_node_t::tick(f32 dt)
     {
         on_tick_begin(dt);
 
@@ -364,7 +364,7 @@ namespace mandala
         }
     }
 
-    void gui_node_t::render(mat4_t world_matrix, mat4_t view_projection_matrix)
+    void gui_node_t::render(mat4 world_matrix, mat4 view_projection_matrix)
     {
         if (visibility != gui_visiblity_e::VISIBLE)
         {
@@ -413,7 +413,7 @@ namespace mandala
 
             gpu.clear(gpu_t::CLEAR_FLAG_DEPTH | gpu_t::CLEAR_FLAG_STENCIL);
 
-            render_rectangle(world_matrix, view_projection_matrix, rectangle_t(bounds), rgba_type(1), true);
+            render_rectangle(world_matrix, view_projection_matrix, rectangle(bounds), vec4(1), true);
 
             gpu.color.pop_state();
             gpu.depth.pop_state();
@@ -429,7 +429,7 @@ namespace mandala
 
         //TODO: configure this to be enable-able in-game
 #if defined(DEBUG)
-        //render_rectangle(world_matrix, view_projection_matrix, rectangle_t(bounds), rgba_type(1));
+        //render_rectangle(world_matrix, view_projection_matrix, rectangle(bounds), vec4(1));
 #endif
 
         on_render_begin(world_matrix, view_projection_matrix);

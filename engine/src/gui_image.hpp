@@ -34,18 +34,18 @@ namespace mandala
         const boost::optional<sprite_t>& get_sprite() const { return sprite; }
         bool get_is_autosized_to_sprite() const { return is_autosized_to_sprite; }
         triangle_mode_e get_triangle_mode() const { return triangle_mode; }
-        const vec2_t& get_texcoord_scale() const { return texcoord_scale; }
-        const vec2_t& get_texcoord_origin() const { return texcoord_origin; }
-        float32_t get_texcoord_rotation() const { return texcoord_rotation; }
-        const padding_t& get_slice_padding() const { return slice_padding; }
+        const vec2& get_texcoord_scale() const { return texcoord_scale; }
+        const vec2& get_texcoord_origin() const { return texcoord_origin; }
+        f32 get_texcoord_rotation() const { return texcoord_rotation; }
+        const padding_f32& get_slice_padding() const { return slice_padding; }
 
         void set_sprite(boost::optional<sprite_t> sprite);
         void set_is_autosized_to_sprite(bool is_autosized_to_sprite);
         void set_triangle_mode(triangle_mode_e triangle_mode) { this->triangle_mode = triangle_mode; }
-        void set_texcoord_scale(const vec2_t& texcoord_scale) { this->texcoord_scale = texcoord_scale; }
-        void set_texcoord_origin(const vec2_t& texcoord_origin) { this->texcoord_origin = texcoord_origin; }
-        void set_texcoord_rotation(float32_t texcoord_rotation) { this->texcoord_rotation = texcoord_rotation; }
-        void set_slice_padding(const padding_t& slice_padding) { this->slice_padding = slice_padding; }
+        void set_texcoord_scale(const vec2& texcoord_scale) { this->texcoord_scale = texcoord_scale; }
+        void set_texcoord_origin(const vec2& texcoord_origin) { this->texcoord_origin = texcoord_origin; }
+        void set_texcoord_rotation(f32 texcoord_rotation) { this->texcoord_rotation = texcoord_rotation; }
+		void set_slice_padding(const padding_f32& slice_padding) { this->slice_padding = slice_padding; }
 
     private:
         boost::shared_ptr<vertex_buffer_type> vertex_buffer;
@@ -53,13 +53,13 @@ namespace mandala
         boost::optional<sprite_t> sprite;
         bool is_autosized_to_sprite = false;
         triangle_mode_e triangle_mode = triangle_mode_e::BOTH;
-        vec2_t texcoord_scale = vec2_t(1.0f);
-        vec2_t texcoord_origin = vec2_t(0.5f);
-        vec2_t texcoord_offset;
-        float32_t texcoord_rotation = 0.0f;
-        padding_t slice_padding;
+        vec2 texcoord_scale = vec2(1.0f);
+        vec2 texcoord_origin = vec2(0.5f);
+        vec2 texcoord_offset;
+        f32 texcoord_rotation = 0.0f;
+        padding_f32 slice_padding;
 
-        virtual void on_render_begin(mat4_t& world_matrix, mat4_t& view_projection_matrix) override;
+        virtual void on_render_begin(mat4& world_matrix, mat4& view_projection_matrix) override;
         virtual void on_clean_end() override;
     };
 }

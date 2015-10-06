@@ -81,7 +81,7 @@ namespace mandala
             while (simulation_time < real_time)
             {
                 static const auto SIMULATION_INTERVAL_DURATION = milliseconds(16);
-                static const auto DT = static_cast<float32_t>(SIMULATION_INTERVAL_DURATION.count()) / std::milli::den;
+                static const auto DT = static_cast<f32>(SIMULATION_INTERVAL_DURATION.count()) / std::milli::den;
 
                 simulation_time += SIMULATION_INTERVAL_DURATION;
 
@@ -93,7 +93,7 @@ namespace mandala
             auto b = high_resolution_clock::now() - real_time;
             auto c = b.count();
 
-            performance.fps = 1.0f / (static_cast<float32_t>(c) / high_resolution_clock::duration::period::den);
+            performance.fps = 1.0f / (static_cast<f32>(c) / high_resolution_clock::duration::period::den);
         }
 
         this->game->on_run_end();
@@ -132,7 +132,7 @@ namespace mandala
         return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - run_time_point).count();
     }
 
-    void app_t::tick(float32_t dt)
+    void app_t::tick(f32 dt)
     {
         platform.app_tick_start(dt);
 

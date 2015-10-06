@@ -9,16 +9,16 @@ namespace mandala
 {
     struct window_event_t
     {
-        typedef rectangle_u16_t rectangle_type;
+        typedef rectangle_u16 rectangleype;
 
-        enum class type_e : uint8_t
+        enum class type_e : u8
         {
             RESIZE,
             MOVE
         };
 
         type_e type;
-        rectangle_type rectangle;
+        rectangleype rectangle;
     };
 }
 #endif

@@ -6,7 +6,7 @@
 
 namespace mandala
 {
-    void model_skeleton_t::interpolate(model_skeleton_t& skeleton, const model_skeleton_t& a, const model_skeleton_t& b, float32_t t)
+    void model_skeleton_t::interpolate(model_skeleton_t& skeleton, const model_skeleton_t& a, const model_skeleton_t& b, f32 t)
     {
 #if defined(DEBUG)
         assert(skeleton.bone_matrices.size() == a.bone_matrices.size());
@@ -33,6 +33,6 @@ namespace mandala
             skeleton.bone_matrices[i] = skeleton_bone.pose.to_matrix();
         }
 
-        skeleton.aabb = aabb3_t::join(a.aabb, b.aabb);
+        skeleton.aabb = aabb3::join(a.aabb, b.aabb);
     }
 }

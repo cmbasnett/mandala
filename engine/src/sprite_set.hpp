@@ -21,13 +21,13 @@ namespace mandala
     {
         struct region_t
         {
-            typedef rectangle_i16_t rectangle_type;
-            typedef vec2_i16_t size_type;
-            typedef aabb2_t uv_type;
+            typedef rectangle_i16 rectangleype;
+            typedef vec2_i16 size_type;
+            typedef aabb2 uv_type;
 
             hash_t hash;
-            rectangle_type frame_rectangle;
-            rectangle_type rectangle;
+            rectangleype frame_rectangle;
+            rectangleype rectangle;
             size_type source_size;
             bool is_rotated = false;
             bool is_trimmed = false;

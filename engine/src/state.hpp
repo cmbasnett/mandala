@@ -21,7 +21,7 @@ namespace mandala
     {
         state_t();
 
-        virtual void tick(float32_t dt);
+        virtual void tick(f32 dt);
         virtual void render();
         virtual bool on_input_event(input_event_t& input_event);
 #if defined(MANDALA_PC)
@@ -37,7 +37,7 @@ namespace mandala
         virtual void on_start_render() { }
         virtual void on_stop_input() { }
         virtual void on_start_input() { }
-        virtual void on_tick(float32_t dt) { }
+        virtual void on_tick(f32 dt) { }
 
         const boost::shared_ptr<gui_layout_t>& get_layout() const { return layout; }
 

@@ -78,7 +78,7 @@ namespace mandala
 
         auto row_pointers = png_get_rows(png_ptr, info_ptr);
 
-        for (uint32_t i = 0; i < size.y; ++i)
+        for (u32 i = 0; i < size.y; ++i)
         {
             memcpy_s(data.data() + (row_bytes * (size.y - 1 - i)), row_bytes, row_pointers[i], row_bytes);
         }

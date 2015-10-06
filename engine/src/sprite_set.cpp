@@ -25,7 +25,7 @@ namespace mandala
         }
 
         //version
-        int32_t version = 0;
+        i32 version = 0;
         read(istream, version);
 
         if (version != TPSB_VERSION)
@@ -40,11 +40,11 @@ namespace mandala
         texture = resources.get<texture_t>(hash_t(texture_name));
 
         //region count
-        uint16_t region_count = 0;
+        u16 region_count = 0;
 
         read(istream, region_count);
 
-        for (uint16_t i = 0; i < region_count; ++i)
+        for (u16 i = 0; i < region_count; ++i)
         {
             auto region = boost::make_shared<region_t>();
 
@@ -83,7 +83,7 @@ namespace mandala
             read(istream, region->uv.max.y);
 
             //flags
-            typedef uint8_t flags_type;
+            typedef u8 flags_type;
 
             enum : flags_type
             {

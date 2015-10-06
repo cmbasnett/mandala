@@ -16,7 +16,7 @@ namespace mandala
         struct diffuse_t
         {
             boost::shared_ptr<texture_t> texture;
-            vec4_t color = vec4_t(1.0f);
+            vec4 color = vec4(1.0f);
         };
 
         struct normal_t
@@ -27,15 +27,15 @@ namespace mandala
         struct specular_t
         {
             boost::shared_ptr<texture_t> texture;
-            rgba_type color = rgba_type(1);
-            float32_t intensity = 1.0f;
+            vec4 color = vec4(1);
+            f32 intensity = 1.0f;
         };
 
         struct emissive_t
         {
             boost::shared_ptr<texture_t> texture;
-            rgba_type color = rgba_type(1);
-            float32_t intensity = 1.0f;
+            vec4 color = vec4(1);
+            f32 intensity = 1.0f;
         };
 
         material_t(std::istream& istream);

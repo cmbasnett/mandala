@@ -20,7 +20,7 @@ namespace mandala
         struct octree_<Scalar, typename std::enable_if<std::is_floating_point<Scalar>::value>::type>
         {
             typedef Scalar scalar_type;
-            typedef aabb3_t<scalar_type> bounds_type;
+            typedef aabb3<scalar_type> bounds_type;
             typedef octree_<scalar_type> type;
             typedef std::array<boost::shared_ptr<type>, 8> children_type;
 
@@ -59,7 +59,7 @@ namespace mandala
         };
     }
 
-    typedef details::octree_<float32_t> octree_f32_t;
-    typedef details::octree_<float64_t> octree_f64_t;
-    typedef octree_f32_t octree_t;
+    typedef details::octree_<f32> octree_f32;
+    typedef details::octree_<f64> octree_f64;
+    typedef octree_f32 octree_t;
 }

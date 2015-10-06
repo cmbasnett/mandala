@@ -20,7 +20,7 @@ namespace mandala
     {
         const std::vector<boost::shared_ptr<actor_t>>& get_actors() const { return actors; }
 
-        void tick(float32_t dt);
+        void tick(f32 dt);
         void render(const boost::shared_ptr<frame_buffer_t>& frame_buffer, const boost::shared_ptr<camera_t>& camera) const;
         void on_input_event(input_event_t& input_event);
 

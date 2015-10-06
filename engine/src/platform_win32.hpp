@@ -21,8 +21,8 @@ namespace mandala
         virtual void app_run_end() override;
 
         //tick
-        virtual void app_tick_start(float32_t dt) override;
-        virtual void app_tick_end(float32_t dt) override;
+        virtual void app_tick_start(f32 dt) override;
+        virtual void app_tick_end(f32 dt) override;
 
         //render
         virtual void app_render_start() override;

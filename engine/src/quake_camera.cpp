@@ -14,7 +14,7 @@
 
 namespace mandala
 {
-    void quake_camera_t::on_tick(float32_t dt)
+    void quake_camera_t::on_tick(f32 dt)
     {
         const auto rotation_smoothing_value = glm::min(dt * (QUAKE_CAMERA_SMOOTHING_CONSTANT * smoothing_strength), 1.0f);
         const auto roll_smoothing_value = glm::min(dt * (QUAKE_CAMERA_SMOOTHING_CONSTANT * 0.25f), 1.0f);
@@ -30,7 +30,7 @@ namespace mandala
         yaw += (yaw_target - yaw) * rotation_smoothing_value;
         roll += (roll_target - roll) * roll_smoothing_value;
 
-        pose.rotation = glm::angleAxis(-roll, vec3_t(0, 0, 1)) * glm::angleAxis(pitch, vec3_t(1, 0, 0)) * glm::angleAxis(yaw, vec3_t(0, 1, 0));
+        pose.rotation = glm::angleAxis(-roll, vec3(0, 0, 1)) * glm::angleAxis(pitch, vec3(1, 0, 0)) * glm::angleAxis(yaw, vec3(0, 1, 0));
 
         //temporary local velocity target variable so we don't modify the original
         auto local_velocity_target_tick = local_velocity_target;
@@ -157,12 +157,12 @@ namespace mandala
                     {
                         if (debug_is_rolling)
                         {
-                            roll_target += static_cast<float32_t>(input_event.touch.location_delta.x) * sensitivity;
+                            roll_target += static_cast<f32>(input_event.touch.location_delta.x) * sensitivity;
                         }
                         else
                         {
-                            pitch_target += static_cast<float32_t>(input_event.touch.location_delta.y) * sensitivity;
-                            yaw_target += static_cast<float32_t>(input_event.touch.location_delta.x) * sensitivity;
+                            pitch_target += static_cast<f32>(input_event.touch.location_delta.y) * sensitivity;
+                            yaw_target += static_cast<f32>(input_event.touch.location_delta.x) * sensitivity;
                         }
 
                         return true;

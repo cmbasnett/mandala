@@ -38,7 +38,7 @@ namespace mandala
         return std::make_unique<std::ifstream>(file_path.string());
     }
 
-    int32_t cache_mgr_t::put(const std::string& file_name, const void* data, size_t count)
+    i32 cache_mgr_t::put(const std::string& file_name, const void* data, size_t count)
     {
         boost::crc_32_type crc32;
 
@@ -86,7 +86,7 @@ namespace mandala
         }
     }
 
-    int32_t cache_mgr_t::checksum(const std::string& file_name) const
+    i32 cache_mgr_t::checksum(const std::string& file_name) const
     {
         auto file_checksums_itr = file_checksums.find(file_name);
 

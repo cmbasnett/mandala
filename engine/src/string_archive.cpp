@@ -21,8 +21,8 @@ namespace mandala
         }
 
         //version
-        static const uint32_t EXPECTED_VERSION = 1;
-        uint32_t version = 0;
+        static const u32 EXPECTED_VERSION = 1;
+        u32 version = 0;
 
         read(istream, version);
 
@@ -32,16 +32,16 @@ namespace mandala
         }
 
         //language count
-        uint32_t language_count = 0;
+        u32 language_count = 0;
         read(istream, language_count);
 
         //key count
-        uint32_t key_count = 0;
+        u32 key_count = 0;
         read(istream, key_count);
 
         std::vector<std::string> languages;
 
-        for (uint32_t i = 0; i < language_count; ++i)
+        for (u32 i = 0; i < language_count; ++i)
         {
             std::string language;
             std::getline(istream, language, '\0');
@@ -52,11 +52,11 @@ namespace mandala
         }
 
         //strings
-        uint32_t strings_length = 0;
+        u32 strings_length = 0;
         read(istream, strings_length);
         istream.seekg(strings_length, std::ios_base::cur);
 
-        for (uint32_t i = 0; i < key_count; ++i)
+        for (u32 i = 0; i < key_count; ++i)
         {
             std::string key;
             

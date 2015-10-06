@@ -12,7 +12,7 @@ namespace mandala
 {
     struct sprite_animation_t : resource_t
     {
-        typedef float32_t time_type;
+        typedef f32 time_type;
 
         struct frame_t
         {

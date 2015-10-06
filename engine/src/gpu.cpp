@@ -445,9 +445,9 @@ namespace mandala
         glDeleteFramebuffers(1, &id);
     }
 
-    gpu_id_t gpu_t::create_texture(color_type_e color_type, vec2_u32_t size, const void* data)
+    gpu_id_t gpu_t::create_texture(color_type_e color_type, vec2_u32 size, const void* data)
     {
-        size = glm::max(vec2_u32_t(1), size);
+        size = glm::max(vec2_u32(1), size);
 
         gpu_id_t id;
 
@@ -472,12 +472,12 @@ namespace mandala
         return id;
     }
 
-    void gpu_t::resize_texture(const boost::shared_ptr<texture_t>& texture, vec2_u32_t size)
+    void gpu_t::resize_texture(const boost::shared_ptr<texture_t>& texture, vec2_u32 size)
     {
         texture_t::format_type internal_format, format;
         texture_t::type_type type;
 
-        size = glm::max(vec2_u32_t(1), size);
+        size = glm::max(vec2_u32(1), size);
 
         get_texture_formats(texture->get_color_type(), internal_format, format, type);
 
@@ -515,57 +515,57 @@ namespace mandala
         glDisableVertexAttribArray(location); glCheckError();
     }
 
-    void gpu_t::set_vertex_attrib_pointer(gpu_location_t location, int32_t size, gpu_data_type_e data_type, bool is_normalized, int32_t stride, const void* pointer)
+    void gpu_t::set_vertex_attrib_pointer(gpu_location_t location, i32 size, gpu_data_type_e data_type, bool is_normalized, i32 stride, const void* pointer)
     {
         glVertexAttribPointer(location, size, get_data_type(data_type), is_normalized, stride, pointer); glCheckError();
     }
 
-    void gpu_t::set_vertex_attrib_pointer(gpu_location_t location, int32_t size, gpu_data_type_e data_type, int32_t stride, const void * pointer)
+    void gpu_t::set_vertex_attrib_pointer(gpu_location_t location, i32 size, gpu_data_type_e data_type, i32 stride, const void * pointer)
     {
         glVertexAttribIPointer(location, size, get_data_type(data_type), stride, pointer); glCheckError();
     }
 
-    void gpu_t::set_uniform(const char* name, const mat3_t& value, bool should_transpose) const
+    void gpu_t::set_uniform(const char* name, const mat3& value, bool should_transpose) const
     {
         glUniformMatrix3fv(get_uniform_location(programs.top()->lock()->get_id(), name), 1, should_transpose, glm::value_ptr(value)); glCheckError();
     }
 
-    void gpu_t::set_uniform(const char* name, const mat4_t& value, bool should_transpose) const
+    void gpu_t::set_uniform(const char* name, const mat4& value, bool should_transpose) const
     {
         glUniformMatrix4fv(get_uniform_location(programs.top()->lock()->get_id(), name), 1, should_transpose, glm::value_ptr(value)); glCheckError();
     }
 
-    void gpu_t::set_uniform(const char* name, int32_t value) const
+    void gpu_t::set_uniform(const char* name, i32 value) const
     {
         glUniform1i(get_uniform_location(programs.top()->lock()->get_id(), name), value); glCheckError();
     }
 
-    void gpu_t::set_uniform(const char* name, uint32_t value) const
+    void gpu_t::set_uniform(const char* name, u32 value) const
     {
         glUniform1i(get_uniform_location(programs.top()->lock()->get_id(), name), value); glCheckError();
     }
 
-    void gpu_t::set_uniform(const char* name, float32_t value) const
+    void gpu_t::set_uniform(const char* name, f32 value) const
     {
         glUniform1f(get_uniform_location(programs.top()->lock()->get_id(), name), value); glCheckError();
     }
 
-    void gpu_t::set_uniform(const char* name, const vec2_t& value) const
+    void gpu_t::set_uniform(const char* name, const vec2& value) const
     {
         glUniform2fv(get_uniform_location(programs.top()->lock()->get_id(), name), 1, glm::value_ptr(value)); glCheckError();
     }
 
-    void gpu_t::set_uniform(const char* name, const vec3_t& value) const
+    void gpu_t::set_uniform(const char* name, const vec3& value) const
     {
         glUniform3fv(get_uniform_location(programs.top()->lock()->get_id(), name), 1, glm::value_ptr(value)); glCheckError();
     }
 
-    void gpu_t::set_uniform(const char* name, const vec4_t& value) const
+    void gpu_t::set_uniform(const char* name, const vec4& value) const
     {
         glUniform4fv(get_uniform_location(programs.top()->lock()->get_id(), name), 1, glm::value_ptr(value)); glCheckError();
     }
 
-    void gpu_t::set_uniform(const char* name, const std::vector<mat4_t>& matrices, bool should_transpose) const
+    void gpu_t::set_uniform(const char* name, const std::vector<mat4>& matrices, bool should_transpose) const
     {
         glUniformMatrix4fv(get_uniform_location(programs.top()->lock()->get_id(), name), static_cast<GLsizei>(matrices.size()), false, reinterpret_cast<const float*>(matrices.data())); glCheckError();
     }
@@ -575,14 +575,14 @@ namespace mandala
         glUniformSubroutinesuiv(get_shader_type(shader_type), 1, &index); glCheckError();
     }
 
-    void gpu_t::set_clear_color(rgba_type & color)
+    void gpu_t::set_clear_color(vec4 & color)
     {
         glClearColor(color.r, color.g, color.b, color.a); glCheckError();
     }
 
-    rgba_type gpu_t::get_clear_color()
+    vec4 gpu_t::get_clear_color()
     {
-        rgba_type clear_color;
+        vec4 clear_color;
 
         glGetFloatv(GL_COLOR_CLEAR_VALUE, glm::value_ptr(clear_color)); glCheckError();
 
@@ -754,7 +754,7 @@ namespace mandala
     {
         if (viewports.empty())
         {
-            vec4_i32_t viewport;
+            vec4_i32 viewport;
             glGetIntegerv(GL_VIEWPORT, glm::value_ptr(viewport)); glCheckError();
 
             return gpu_viewport_type(viewport.x, viewport.y, viewport.z, viewport.w);
@@ -992,7 +992,7 @@ namespace mandala
         glGetProgramiv(id, GL_PROGRAM_BINARY_LENGTH, &binary_length); glCheckError();
 
         GLenum binary_format = 0;
-        std::vector<uint8_t> program_binary_data(binary_length);
+        std::vector<u8> program_binary_data(binary_length);
 
         glGetProgramBinary(id, program_binary_data.size(), &binary_length, &binary_format, static_cast<GLvoid*>(program_binary_data.data())); glCheckError();
 
@@ -1261,9 +1261,9 @@ namespace mandala
         return EXTENSIONS;
     }
 
-    void gpu_t::get_texture_data(const boost::shared_ptr<texture_t>& texture, std::vector<uint8_t>& data, int32_t level)
+    void gpu_t::get_texture_data(const boost::shared_ptr<texture_t>& texture, std::vector<u8>& data, i32 level)
     {
-        int32_t internal_format, format, type;
+        i32 internal_format, format, type;
 
         get_texture_formats(texture->get_color_type(), internal_format, format, type);
 

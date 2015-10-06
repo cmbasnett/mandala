@@ -57,7 +57,7 @@ namespace mandala
 
                 for(auto iterator = color_ptree.begin(); iterator != color_ptree.end(); ++iterator)
                 {
-                    *(color_value_ptr++) = iterator->second.get_value<float32_t>();
+                    *(color_value_ptr++) = iterator->second.get_value<f32>();
                 }
             }
         }
@@ -103,12 +103,12 @@ namespace mandala
 
                 for(auto iterator = color_ptree.begin(); iterator != color_ptree.end(); ++iterator)
                 {
-                    *(color_value_ptr++) = iterator->second.get_value<float32_t>();
+                    *(color_value_ptr++) = iterator->second.get_value<f32>();
                 }
             }
 
             //intensity
-            const auto intensity_optional = specular_ptree.get_optional<float32_t>("intensity");
+            const auto intensity_optional = specular_ptree.get_optional<f32>("intensity");
 
             if(intensity_optional)
             {
@@ -144,12 +144,12 @@ namespace mandala
 
                 for(auto iterator = color_ptree.begin(); iterator != color_ptree.end(); ++iterator)
                 {
-                    *(color_value_ptr++) = iterator->second.get_value<float32_t>();
+                    *(color_value_ptr++) = iterator->second.get_value<f32>();
                 }
             }
 
             //intensity
-            const auto intensity_optional = emissive_ptree.get_optional<float32_t>("intensity");
+            const auto intensity_optional = emissive_ptree.get_optional<f32>("intensity");
 
             if(intensity_optional)
             {

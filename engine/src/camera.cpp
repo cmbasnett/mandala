@@ -11,7 +11,7 @@ namespace mandala
 {
     camera_params camera_t::get_params(const gpu_viewport_type& viewport) const
     {
-        const auto aspect = static_cast<float32_t>(viewport.width) / glm::max(static_cast<float32_t>(viewport.height), 1.0f);
+        const auto aspect = static_cast<f32>(viewport.width) / glm::max(static_cast<f32>(viewport.height), 1.0f);
 
         camera_params params;
         params.location = pose.location;
@@ -28,8 +28,8 @@ namespace mandala
         }
         }
 
-        const auto forward = vec3_t(0, 0, 1) * glm::mat3_cast(pose.rotation);
-        const auto left = glm::normalize(glm::cross(vec3_t(0, 1, 0), forward));
+        const auto forward = vec3(0, 0, 1) * glm::mat3_cast(pose.rotation);
+        const auto left = glm::normalize(glm::cross(vec3(0, 1, 0), forward));
         auto up = glm::normalize(glm::cross(forward, left));
 
         //rotate up matrix along forward axis
@@ -41,13 +41,13 @@ namespace mandala
         return params;
     }
     
-    line3_t camera_t::get_ray(const vec2_f64_t& screen_location) const
+    line3 camera_t::get_ray(const vec2_f64& screen_location) const
     {
-        vec4_t viewport = gpu.viewports.top();
+        vec4 viewport = gpu.viewports.top();
 
-        line3_t ray;
-        ray.start = glm::unProject(vec3_t(screen_location, 0), view_matrix, projection_matrix, viewport);
-        ray.end = glm::unProject(vec3_t(screen_location, 1), view_matrix, projection_matrix, viewport);
+        line3 ray;
+        ray.start = glm::unProject(vec3(screen_location, 0), view_matrix, projection_matrix, viewport);
+        ray.end = glm::unProject(vec3(screen_location, 1), view_matrix, projection_matrix, viewport);
 
         return ray;
     }

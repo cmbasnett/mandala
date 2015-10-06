@@ -10,7 +10,7 @@
 
 namespace mandala
 {
-    void arcball_camera_t::on_tick(float32_t dt)
+    void arcball_camera_t::on_tick(f32 dt)
     {
         const auto smoothing_value = glm::min(dt * (ARCBALL_CAMERA_SMOOTHING_CONSTANT * ARCBALL_CAMERA_DEFAULT_SMOOTHING_STRENGTH), 1.0f);
 
@@ -32,9 +32,9 @@ namespace mandala
         //target
         target += (target_target - target) * smoothing_value;
 
-        pose.rotation = glm::angleAxis(-roll, vec3_t(0, 0, 1)) * glm::angleAxis(pitch, vec3_t(1, 0, 0)) * glm::angleAxis(yaw, vec3_t(0, 1, 0));
-        mat3_t asd = glm::mat3_cast(pose.rotation);
-        const auto forward = vec3_t(0, 0, 1) * asd;
+        pose.rotation = glm::angleAxis(-roll, vec3(0, 0, 1)) * glm::angleAxis(pitch, vec3(1, 0, 0)) * glm::angleAxis(yaw, vec3(0, 1, 0));
+        mat3 asd = glm::mat3_cast(pose.rotation);
+        const auto forward = vec3(0, 0, 1) * asd;
 
         //location
         pose.location = target - (forward * distance);
@@ -44,7 +44,7 @@ namespace mandala
 
     bool arcball_camera_t::on_input_event(input_event_t& input_event)
     {
-        auto forward = glm::mul(vec3_t(0, 0, 1), glm::mat3_cast(pose.rotation));
+        auto forward = glm::mul(vec3(0, 0, 1), glm::mat3_cast(pose.rotation));
 
         switch (input_event.device_type)
         {
@@ -89,10 +89,10 @@ namespace mandala
                             forward.y = 0;
                             forward = glm::normalize(forward);
 
-                            auto left = glm::cross(vec3_t(0, 1, 0), forward);
+                            auto left = glm::cross(vec3(0, 1, 0), forward);
 
-                            forward *= static_cast<float32_t>(-input_event.touch.location_delta.y) * 0.1f;
-                            left *= static_cast<float32_t>(input_event.touch.location_delta.x) * 0.1f;
+                            forward *= static_cast<f32>(-input_event.touch.location_delta.y) * 0.1f;
+                            left *= static_cast<f32>(input_event.touch.location_delta.x) * 0.1f;
 
                             auto target_delta = forward + left;
 
@@ -104,7 +104,7 @@ namespace mandala
                     break;
                 case input_event_t::touch_t::type_e::SCROLL:
                     {
-                        distance_target += static_cast<float32_t>(input_event.touch.location_delta.y) * 32.0f;
+                        distance_target += static_cast<f32>(input_event.touch.location_delta.y) * 32.0f;
 
                         return true;
                     }

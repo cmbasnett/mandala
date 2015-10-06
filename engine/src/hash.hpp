@@ -97,8 +97,8 @@ namespace mandala
         };
     }
 
-    typedef details::hash_t<uint32_t> hash32_t;
-    typedef details::hash_t<uint64_t> hash64_t;
+    typedef details::hash_t<u32> hash32_t;
+    typedef details::hash_t<u64> hash64_t;
     typedef hash32_t hash_t;
 }
 

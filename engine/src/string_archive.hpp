@@ -15,7 +15,7 @@ namespace mandala
         struct string_t
         {
             hash_t hash;
-            uint32_t offset;
+            u32 offset;
         };
 
         string_archive_t(std::istream& istream);

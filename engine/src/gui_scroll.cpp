@@ -8,9 +8,9 @@
 
 namespace mandala
 {
-    void gui_scroll_t::on_render_begin(mat4_t& world_matrix, mat4_t& view_projection_matrix)
+    void gui_scroll_t::on_render_begin(mat4& world_matrix, mat4& view_projection_matrix)
     {
-        world_matrix = glm::translate(world_matrix, vec3_t(scroll_location, 0));
+        world_matrix = glm::translate(world_matrix, vec3(scroll_location, 0));
     }
 
     bool gui_scroll_t::on_input_event_begin(input_event_t& input_event)
@@ -72,7 +72,7 @@ namespace mandala
         return false;
     }
 
-    void gui_scroll_t::on_tick_end(float32_t dt)
+    void gui_scroll_t::on_tick_end(f32 dt)
     {
         //TODO: figure out a proper algorithm for this smoothing
         scroll_location += (scroll_location_target - scroll_location) * dt * 30.0f;
@@ -91,7 +91,7 @@ namespace mandala
 
     void gui_scroll_t::on_clean_end()
     {
-        aabb2_t scroll_extents;
+        aabb2 scroll_extents;
         const auto bounds = get_bounds();
 
         for (const auto& child : get_children())

@@ -12,26 +12,26 @@ namespace mandala
     namespace details
     {
         template<typename T, typename Enable = void>
-        struct triangle3_t;
+        struct triangle3;
 
         template<typename T>
-        struct triangle3_t<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
+        struct triangle3<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
         {
             static const size_t POINT_COUNT = 3;
 
             typedef glm::detail::tvec2<T> point_type;
             typedef std::array<point_type, POINT_COUNT> points_type;
-            typedef glm::detail::tvec2<float32_t> normal_type;
-            typedef triangle3_t<T> type;
+            typedef glm::detail::tvec2<f32> normal_type;
+            typedef triangle3<T> type;
 
-            triangle3_t() = default;
+            triangle3() = default;
 
-            triangle3_t(const points_type& points) :
+            triangle3(const points_type& points) :
                 points(points)
             {
             }
 
-            triangle3_t(const point_type& point0, const point_type& point1, const point_type& point2)
+            triangle3(const point_type& point0, const point_type& point1, const point_type& point2)
             {
                 points[0] = point0;
                 points[1] = point1;
@@ -53,25 +53,25 @@ namespace mandala
         };
 
         template<typename T, typename Enable = void>
-        struct triangle2_t;
+        struct triangle2;
 
         template<typename T>
-        struct triangle2_t<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
+        struct triangle2<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
         {
             static const size_t POINT_COUNT = 3;
 
             typedef glm::detail::tvec2<T> point_type;
             typedef std::array<point_type, POINT_COUNT> points_type;
-            typedef triangle2_t<T> type;
+            typedef triangle2<T> type;
 
-            triangle2_t() = default;
+            triangle2() = default;
 
-            triangle2_t(const points_type& points) :
+            triangle2(const points_type& points) :
                 points(points)
             {
             }
 
-            triangle2_t(const point_type& point0, const point_type& point1, const point_type& point2)
+            triangle2(const point_type& point0, const point_type& point1, const point_type& point2)
             {
                 points[0] = point0;
                 points[1] = point1;
@@ -83,9 +83,9 @@ namespace mandala
                 return points[index];
             }
 
-            explicit operator triangle3_t<T>() const
+            explicit operator triangle3<T>() const
             {
-                return triangle3_t<T>(static_cast<triangle3_t<T>::point_type>(points[0]), static_cast<triangle3_t<T>::point_type>(points[1]), static_cast<triangle3_t<T>::point_type>(points[2]));
+                return triangle3<T>(static_cast<triangle3<T>::point_type>(points[0]), static_cast<triangle3<T>::point_type>(points[1]), static_cast<triangle3<T>::point_type>(points[2]));
             }
 
         private:
@@ -93,19 +93,19 @@ namespace mandala
         };
     }
 
-    typedef detail::triangle2_t<int8_t> triangle2_i8_t;
-    typedef detail::triangle2_t<int16_t> triangle2_i16_t;
-    typedef detail::triangle2_t<int32_t> triangle2_i32_t;
-    typedef detail::triangle2_t<int64_t> triangle2_i64_t;
-    typedef detail::triangle2_t<float32_t> triangle2_f32_t;
-    typedef detail::triangle2_t<float64_t> triangle2_f64_t;
-    typedef triangle2_f32_t triangle2_t;
+    typedef detail::triangle2<i8> triangle2_i8;
+    typedef detail::triangle2<i16> triangle2_i16;
+    typedef detail::triangle2<i32> triangle2_i32;
+    typedef detail::triangle2<i64> triangle2_i64;
+    typedef detail::triangle2<f32> triangle2_f32;
+    typedef detail::triangle2<f64> triangle2_f64;
+    typedef triangle2_f32 triangle2;
 
-    typedef detail::triangle3_t<int8_t> triangle3_i8_t;
-    typedef detail::triangle3_t<int16_t> triangle3_i16_t;
-    typedef detail::triangle3_t<int32_t> triangle3_i32_t;
-    typedef detail::triangle3_t<int64_t> triangle3_i64_t;
-    typedef detail::triangle3_t<float32_t> triangle3_f32_t;
-    typedef detail::triangle3_t<float64_t> triangle3_f64_t;
-    typedef triangle3_f32_t triangle3_t;
+    typedef detail::triangle3<i8> triangle3_i8;
+    typedef detail::triangle3<i16> triangle3_i16;
+    typedef detail::triangle3<i32> triangle3_i32;
+    typedef detail::triangle3<i64> triangle3_i64;
+    typedef detail::triangle3<f32> triangle3_f32;
+    typedef detail::triangle3<f64> triangle3_f64;
+    typedef triangle3_f32 triangle3;
 }

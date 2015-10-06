@@ -311,8 +311,8 @@ namespace mandala
                 struct function_t
                 {
                     stencil_function_e func = stencil_function_e::ALWAYS;
-                    int32_t ref = 0;
-                    uint32_t mask = 0xFFFFFFFF;
+                    i32 ref = 0;
+                    u32 mask = 0xFFFFFFFF;
                 };
 
                 struct operations_t
@@ -325,7 +325,7 @@ namespace mandala
                 function_t function;
                 operations_t operations;
                 bool is_enabled = false;
-                uint32_t mask = 0xFFFFFFFF;
+                u32 mask = 0xFFFFFFFF;
             };
 
             state_t get_state() const;
@@ -374,8 +374,8 @@ namespace mandala
         gpu_id_t create_frame_buffer(gpu_frame_buffer_type_e type, const gpu_frame_buffer_size_type& size, boost::shared_ptr<texture_t>& color_texture, boost::shared_ptr<texture_t>& depth_stencil_texture, boost::shared_ptr<texture_t>& depth_texture);
         void destroy_frame_buffer(gpu_id_t id);
 
-        gpu_id_t create_texture(color_type_e color_type, vec2_u32_t size, const void* data);
-        void resize_texture(const boost::shared_ptr<texture_t>& texture, vec2_u32_t size);
+        gpu_id_t create_texture(color_type_e color_type, vec2_u32 size, const void* data);
+        void resize_texture(const boost::shared_ptr<texture_t>& texture, vec2_u32 size);
         void destroy_texture(gpu_id_t id);
 
         gpu_location_t get_uniform_location(gpu_id_t program_id, const char* name) const;
@@ -383,21 +383,21 @@ namespace mandala
 
         void enable_vertex_attribute_array(gpu_location_t location);
         void disable_vertex_attribute_array(gpu_location_t location);
-        void set_vertex_attrib_pointer(gpu_location_t location, int32_t size, gpu_data_type_e data_type, bool is_normalized, int32_t stride, const void* pointer);
-        void set_vertex_attrib_pointer(gpu_location_t location, int32_t size, gpu_data_type_e data_type, int32_t stride, const void* pointer);
-        void set_uniform(const char* name, const mat3_t& value, bool should_tranpose = false) const;
-        void set_uniform(const char* name, const mat4_t& value, bool should_tranpose = false) const;
-        void set_uniform(const char* name, int32_t value) const;
-        void set_uniform(const char* name, uint32_t value) const;
-        void set_uniform(const char* name, float32_t value) const;
-        void set_uniform(const char* name, const vec2_t& value) const;
-        void set_uniform(const char* name, const vec3_t& value) const;
-        void set_uniform(const char* name, const vec4_t& value) const;
-        void set_uniform(const char* name, const std::vector<mat4_t>& value, bool should_transpose = false) const;
+        void set_vertex_attrib_pointer(gpu_location_t location, i32 size, gpu_data_type_e data_type, bool is_normalized, i32 stride, const void* pointer);
+        void set_vertex_attrib_pointer(gpu_location_t location, i32 size, gpu_data_type_e data_type, i32 stride, const void* pointer);
+        void set_uniform(const char* name, const mat3& value, bool should_tranpose = false) const;
+        void set_uniform(const char* name, const mat4& value, bool should_tranpose = false) const;
+        void set_uniform(const char* name, i32 value) const;
+        void set_uniform(const char* name, u32 value) const;
+        void set_uniform(const char* name, f32 value) const;
+        void set_uniform(const char* name, const vec2& value) const;
+        void set_uniform(const char* name, const vec3& value) const;
+        void set_uniform(const char* name, const vec4& value) const;
+        void set_uniform(const char* name, const std::vector<mat4>& value, bool should_transpose = false) const;
         void set_uniform_subroutine(shader_type_e shader_type, gpu_index_t index);
 
-        void set_clear_color(rgba_type& color);
-        rgba_type get_clear_color();
+        void set_clear_color(vec4& color);
+        vec4 get_clear_color();
 
         gpu_location_t get_subroutine_uniform_location(gpu_id_t program_id, shader_type_e shader_type, const std::string& name);
         gpu_index_t get_subroutine_index(gpu_id_t program_id, shader_type_e shader_type, const std::string& name);
@@ -408,7 +408,7 @@ namespace mandala
         const std::string& get_shading_language_version() const;
         const std::string& get_extensions() const;
 
-        void get_texture_data(const boost::shared_ptr<texture_t>& texture, std::vector<uint8_t>& data, int32_t level = 0);
+        void get_texture_data(const boost::shared_ptr<texture_t>& texture, std::vector<u8>& data, i32 level = 0);
     };
 
     extern gpu_t gpu;

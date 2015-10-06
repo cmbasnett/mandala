@@ -1,10 +1,15 @@
 #pragma once
 
+//std
 #include <string>
 #include <map>
 #include <mutex>
 
+//boost
 #include <boost\shared_ptr.hpp>
+
+//mandala
+#include "types.hpp"
 
 namespace mandala
 {
@@ -14,15 +19,15 @@ namespace mandala
         ~cache_mgr_t();
 
         std::unique_ptr<std::ifstream> get(const std::string& file_name) const;
-        int32_t put(const std::string& file_name, const void* buffer, size_t count);
+        i32 put(const std::string& file_name, const void* buffer, size_t count);
         void erase(const std::string& file_name);
-        int32_t checksum(const std::string& file_name) const;
+        i32 checksum(const std::string& file_name) const;
         void purge();
         void write();
         void read();
 
     private:
-        std::map<std::string, int32_t> file_checksums;
+        std::map<std::string, i32> file_checksums;
         std::mutex mutex;
     };
 
