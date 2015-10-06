@@ -166,7 +166,7 @@ MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(game)
 #endif
 };
 
-MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(gui_state)
+MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(state)
 {
     void on_tick(float32_t dt) override
     {
@@ -197,7 +197,7 @@ MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(gui_state)
         }
         else
         {
-            return gui_state_t::on_input_event(input_event);
+            return state_t::on_input_event(input_event);
         }
     }
 
@@ -821,27 +821,25 @@ BOOST_PYTHON_MODULE(mandala)
     //STATES
     class_<state_t, boost::shared_ptr<state_t>, noncopyable>("StateBase", no_init);
 
-    class_<gui_state_t, bases<state_t>, boost::shared_ptr<gui_state_t>, noncopyable>("GuiStateBase", no_init);
-
-    class_<gui_state_wrapper_t, boost::shared_ptr<gui_state_wrapper_t>, noncopyable>("GuiState", init<>())
-        .def("tick", &gui_state_wrapper_t::tick)
-        .def("on_input_event", &gui_state_wrapper_t::on_input_event)
-        .def("on_input_event_base", &gui_state_wrapper_t::on_input_event_base)
+    class_<state_wrapper_t, boost::shared_ptr<state_wrapper_t>, noncopyable>("State", init<>())
+        .def("tick", &state_wrapper_t::tick)
+        .def("on_input_event", &state_wrapper_t::on_input_event)
+        .def("on_input_event_base", &state_wrapper_t::on_input_event_base)
 #if defined(MANDALA_PC)
-        .def("on_window_event", &gui_state_wrapper_t::on_window_event)
+        .def("on_window_event", &state_wrapper_t::on_window_event)
 #endif
-        .def("on_active", &gui_state_wrapper_t::on_active)
-        .def("on_passive", &gui_state_wrapper_t::on_passive)
-        .def("on_enter", &gui_state_wrapper_t::on_enter)
-        .def("on_exit", &gui_state_wrapper_t::on_exit)
-        .def("on_stop_tick", &gui_state_wrapper_t::on_stop_tick)
-        .def("on_start_tick", &gui_state_wrapper_t::on_start_tick)
-        .def("on_stop_render", &gui_state_wrapper_t::on_stop_render)
-        .def("on_start_render", &gui_state_wrapper_t::on_start_render)
-        .def("on_stop_input", &gui_state_wrapper_t::on_stop_input)
-        .def("on_start_input", &gui_state_wrapper_t::on_start_input)
-        .def("render_base", &gui_state_wrapper_t::render_base)
-        .add_property("layout", make_function(&gui_state_wrapper_t::get_layout, return_value_policy<copy_const_reference>()));
+        .def("on_active", &state_wrapper_t::on_active)
+        .def("on_passive", &state_wrapper_t::on_passive)
+        .def("on_enter", &state_wrapper_t::on_enter)
+        .def("on_exit", &state_wrapper_t::on_exit)
+        .def("on_stop_tick", &state_wrapper_t::on_stop_tick)
+        .def("on_start_tick", &state_wrapper_t::on_start_tick)
+        .def("on_stop_render", &state_wrapper_t::on_stop_render)
+        .def("on_start_render", &state_wrapper_t::on_start_render)
+        .def("on_stop_input", &state_wrapper_t::on_stop_input)
+        .def("on_start_input", &state_wrapper_t::on_start_input)
+        .def("render_base", &state_wrapper_t::render_base)
+        .add_property("layout", make_function(&state_wrapper_t::get_layout, return_value_policy<copy_const_reference>()));
 
     //RESOURCES
     class_<resource_t, boost::shared_ptr<resource_t>, noncopyable>("Resource", no_init);

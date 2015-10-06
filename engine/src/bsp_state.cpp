@@ -66,7 +66,7 @@ namespace mandala
 
             //render_data.leaf_index = world.get_bsp()->get_leaf_index_from_location(camera.pose.location);
 
-            gui_state_t::tick(dt);
+            state_t::tick(dt);
         }
 
         void bsp_state_t::render()
@@ -92,7 +92,7 @@ namespace mandala
                 gpu.viewports.pop();
             }
 
-            gui_state_t::render();
+            state_t::render();
         }
 
         bool bsp_state_t::on_input_event(input_event_t& input_event)
@@ -211,7 +211,7 @@ namespace mandala
 
         void bsp_state_t::on_enter()
         {
-            gui_state_t::on_enter();
+            state_t::on_enter();
 
             bsp_frame_buffer = boost::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::COLOR_DEPTH, static_cast<gpu_frame_buffer_size_type>(get_layout()->get_bounds().size()));
             auto sprite_set = boost::make_shared<sprite_set_t>(bsp_frame_buffer->get_color_texture());
@@ -222,7 +222,7 @@ namespace mandala
 #if defined(MANDALA_PC)
         void bsp_state_t::on_window_event(window_event_t& window_event)
         {
-            gui_state_t::on_window_event(window_event);
+            state_t::on_window_event(window_event);
 
             if (window_event.type == window_event_t::type_e::RESIZE && bsp_frame_buffer)
             {

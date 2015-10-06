@@ -20,7 +20,7 @@ namespace mandala
         struct pause_state_t;
         struct console_state_t;
 
-        struct bsp_state_t : gui_state_t
+        struct bsp_state_t : state_t
         {
             struct render_data_t
             {

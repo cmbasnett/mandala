@@ -311,9 +311,6 @@
       <Filter>type_traits</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\bisect.hpp" />
-    <ClInclude Include="..\..\src\gui_state.hpp">
-      <Filter>states</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\terrain.hpp">
       <Filter>resources\terrain</Filter>
     </ClInclude>
@@ -470,9 +467,6 @@
     <ClCompile Include="..\..\src\cache_mgr.cpp">
       <Filter>cache</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\gui_state.cpp">
-      <Filter>states</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\scene.cpp">
       <Filter>scene</Filter>
     </ClCompile>
@@ -481,6 +475,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\actor.cpp">
       <Filter>actors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\state.cpp">
+      <Filter>states</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

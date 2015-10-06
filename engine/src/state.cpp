@@ -19,15 +19,15 @@
 
 namespace mandala
 {
-    gui_state_t::gui_state_t()
+    state_t::state_t()
     {
         layout = boost::make_shared<gui_layout_t>();
         layout->set_dock_mode(gui_dock_mode_e::FILL);
     }
 
-    void gui_state_t::tick(float32_t dt)
+    void state_t::tick(float32_t dt)
     {
-        state_t::tick(dt);
+        on_tick(dt);
 
         //TODO: get child nodes to tell layout about cleanliness, recursing every tick is expensive!
         std::function<bool(const boost::shared_ptr<gui_node_t>&)> is_dirty = [&](const boost::shared_ptr<gui_node_t>& node)
@@ -56,7 +56,7 @@ namespace mandala
         layout->tick(dt);
     }
 
-    void gui_state_t::render()
+    void state_t::render()
     {
         const auto screen_size = platform.get_screen_size();
         auto view_projection_matrix = glm::ortho(0.0f, static_cast<float32_t>(screen_size.x), 0.0f, static_cast<float32_t>(screen_size.y));
@@ -71,18 +71,18 @@ namespace mandala
         gpu.depth.pop_state();
     }
 
-    bool gui_state_t::on_input_event(input_event_t& input_event)
+    bool state_t::on_input_event(input_event_t& input_event)
     {
         return layout->on_input_event(input_event);
     }
 
-    void gui_state_t::on_enter()
+    void state_t::on_enter()
     {
         layout->set_bounds(gui_node_t::bounds_type(vec2_t(), static_cast<vec2_t>(platform.get_screen_size())));
     }
 
 #if defined(MANDALA_PC)
-    void gui_state_t::on_window_event(window_event_t& window_event)
+    void state_t::on_window_event(window_event_t& window_event)
     {
         if (window_event.type == window_event_t::type_e::RESIZE)
         {
