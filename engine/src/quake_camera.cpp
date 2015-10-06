@@ -30,9 +30,7 @@ namespace mandala
         yaw += (yaw_target - yaw) * rotation_smoothing_value;
         roll += (roll_target - roll) * roll_smoothing_value;
 
-        auto rotation_quaternion = glm::angleAxis(-roll, vec3_t(0, 0, 1)) * glm::angleAxis(pitch, vec3_t(1, 0, 0)) * glm::angleAxis(yaw, vec3_t(0, 1, 0));
-        auto rotation_matrix = glm::mat3_cast(glm::normalize(rotation_quaternion));
-        auto forward = glm::row(rotation_matrix, 2);
+        pose.rotation = glm::angleAxis(-roll, vec3_t(0, 0, 1)) * glm::angleAxis(pitch, vec3_t(1, 0, 0)) * glm::angleAxis(yaw, vec3_t(0, 1, 0));
 
         //temporary local velocity target variable so we don't modify the original
         auto local_velocity_target_tick = local_velocity_target;
@@ -44,11 +42,9 @@ namespace mandala
 
         local_velocity += (local_velocity_target_tick - local_velocity) * movement_smoothing_value;
 
-        velocity = glm::inverse(rotation_matrix) * (local_velocity * speed_max);
+        velocity = glm::inverse(pose.rotation) * (local_velocity * speed_max);
 
         pose.location += velocity * dt;
-
-        target = pose.location + forward;
 
         camera_t::on_tick(dt);
     }

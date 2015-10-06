@@ -28,7 +28,7 @@ namespace mandala
         }
         }
 
-        const auto forward = glm::normalize(target - pose.location);
+        const auto forward = vec3_t(0, 0, 1) * glm::mat3_cast(pose.rotation);
         const auto left = glm::normalize(glm::cross(vec3_t(0, 1, 0), forward));
         auto up = glm::normalize(glm::cross(forward, left));
 
@@ -36,7 +36,7 @@ namespace mandala
         up = glm::rotate(glm::angleAxis(roll, forward), up);
 
         params.frustum.set(pose.location, left, up, forward, fov, near, far, aspect);
-        params.view_matrix = glm::lookAt(pose.location, target, up);
+        params.view_matrix = glm::lookAt(pose.location, pose.location + forward, up);
 
         return params;
     }

@@ -32,9 +32,9 @@ namespace mandala
         //target
         target += (target_target - target) * smoothing_value;
 
-        auto q = quat_t(vec3_t(0, glm::radians(yaw), glm::radians(pitch)));
-        auto m = glm::mat3_cast(glm::normalize(q));
-        auto forward = glm::row(m, 0);
+        pose.rotation = glm::angleAxis(-roll, vec3_t(0, 0, 1)) * glm::angleAxis(pitch, vec3_t(1, 0, 0)) * glm::angleAxis(yaw, vec3_t(0, 1, 0));
+        mat3_t asd = glm::mat3_cast(pose.rotation);
+        const auto forward = vec3_t(0, 0, 1) * asd;
 
         //location
         pose.location = target - (forward * distance);
@@ -44,6 +44,8 @@ namespace mandala
 
     bool arcball_camera_t::on_input_event(input_event_t& input_event)
     {
+        auto forward = glm::mul(vec3_t(0, 0, 1), glm::mat3_cast(pose.rotation));
+
         switch (input_event.device_type)
         {
         case input_event_t::device_type_e::TOUCH:
@@ -84,13 +86,12 @@ namespace mandala
                     {
                         if(is_panning)
                         {
-                            auto forward = target - pose.location;
                             forward.y = 0;
                             forward = glm::normalize(forward);
 
                             auto left = glm::cross(vec3_t(0, 1, 0), forward);
 
-                            forward *= static_cast<float32_t>(input_event.touch.location_delta.y) * 0.1f;
+                            forward *= static_cast<float32_t>(-input_event.touch.location_delta.y) * 0.1f;
                             left *= static_cast<float32_t>(input_event.touch.location_delta.x) * 0.1f;
 
                             auto target_delta = forward + left;
@@ -103,7 +104,7 @@ namespace mandala
                     break;
                 case input_event_t::touch_t::type_e::SCROLL:
                     {
-                        distance_target += static_cast<float32_t>(input_event.touch.location.y) * 10.0f;
+                        distance_target += static_cast<float32_t>(input_event.touch.location_delta.y) * 32.0f;
 
                         return true;
                     }

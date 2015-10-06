@@ -22,7 +22,6 @@ namespace mandala
         float32_t far = 8192.0f;
         float32_t fov = 90.0f;
         float32_t roll = 0.0f;
-        vec3_t target;
         projection_type_e projection_type = projection_type_e::PERSPECTIVE;
 
         line3_t get_ray(const vec2_f64_t& screen_location) const;
