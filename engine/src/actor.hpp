@@ -9,9 +9,9 @@
 namespace mandala
 {
     struct model_instance_t;
-    struct camera_t;
     struct bsp_t;
     struct input_event_t;
+    struct camera_params;
 
     struct actor_t
     {
@@ -26,7 +26,7 @@ namespace mandala
         virtual void on_destroy() { }
         virtual bool on_input_event(input_event_t& input_event) { return false; }
         virtual void on_tick(float32_t dt);
-        virtual void render(const boost::shared_ptr<camera_t>& camera);
+        virtual void render(const camera_params& camera);
 
         pose3 pose;
 

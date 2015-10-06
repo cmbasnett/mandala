@@ -23,7 +23,7 @@
 
 namespace mandala
 {
-    struct camera_t;
+    struct camera_params;
 
     struct bsp_t : public resource_t
     {
@@ -213,7 +213,7 @@ namespace mandala
 
         bsp_t(std::istream& istream);
 
-        void render(const boost::shared_ptr<camera_t>& camera);
+        void render(const camera_params& camera_params);
 
         int32_t get_leaf_index_from_location(const vec3_t& location) const;
 

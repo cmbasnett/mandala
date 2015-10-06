@@ -21,6 +21,7 @@
 #include "gpu.hpp"
 #include "model_gpu_program.hpp"
 #include "io.hpp"
+#include "material_instance.hpp"
 
 #define MD5M_MAGIC_LENGTH       (4)
 #define MD5M_MAGIC              (std::array<char, MD5M_MAGIC_LENGTH> { { 'M', 'D', '5', 'M' } })
@@ -286,7 +287,7 @@ namespace mandala
         }
     }
 
-    void model_t::render(const vec3_t& camera_location, const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices, const vec3_t& light_location) const
+    void model_t::render(const vec3_t& camera_location, const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices, const vec3_t& light_location, const std::vector<boost::shared_ptr<material_instance_t>>& mesh_materials) const
     {
         //blend
         auto blend_state = gpu.blend.get_state();
@@ -302,8 +303,10 @@ namespace mandala
 
         gpu.depth.push_state(depth_state);
 
-        for (auto& mesh : meshes)
+        for (size_t i = 0; i < meshes.size(); ++i)
         {
+            const auto& mesh = meshes[i];
+
             //culling
             auto culling_state = gpu.culling.get_state();
 
@@ -325,11 +328,11 @@ namespace mandala
             gpu.set_uniform("light_location", light_location);
             gpu.set_uniform("camera_location", camera_location);
 
-            gpu_program->set_calculate_lighting_subroutine(mesh->material->get_is_lit() ?
+            gpu_program->set_calculate_lighting_subroutine(mesh_materials[i]->get_is_lit() ?
                 model_gpu_program_t::calculate_lighting_subroutine_e::CALCULATE_LIGHTING_LIT :
                 model_gpu_program_t::calculate_lighting_subroutine_e::CALCULATE_LIGHTING_UNLIT);
 
-            mesh->render(world_matrix, view_projection_matrix, bone_matrices);
+            mesh->render(world_matrix, view_projection_matrix, bone_matrices, mesh_materials[i]);
 
             gpu.programs.pop();
 
@@ -346,19 +349,17 @@ namespace mandala
 
     boost::optional<size_t> model_t::get_bone_index(const hash_t & bone_hash) const
     {
-        boost::optional<size_t> bone_index;
-
         auto bone_indices_itr = bone_indices.find(bone_hash);
 
         if (bone_indices_itr != bone_indices.end())
         {
-            bone_index = bone_indices_itr->second;
+            return bone_indices_itr->second;
         }
 
-        return bone_index;
+        return boost::none;
     }
 
-    void model_t::mesh_t::render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices) const
+    void model_t::mesh_t::render(const mat4_t& world_matrix, const mat4_t& view_projection_matrix, const std::vector<mat4_t>& bone_matrices, const boost::shared_ptr<material_instance_t>& material) const
     {
         static const auto DIFFUSE_TEXTURE_INDEX = 0;
         static const auto NORMAL_TEXTURE_INDEX = 1;

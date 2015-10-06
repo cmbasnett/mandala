@@ -7,10 +7,11 @@ import zlib
 def main():
 	print 'boilerplate'
 
-	UNIFORMS_PATTERN = '[\;|\n?|\s]uniform\s+(\S+)\s+(\S+)\s?\;'
-	VERTEX_ATTRIBUTES_PATTERN = '[\;|\n?|\s]in\s+(\S+)\s+(\S+)\s?\;'
-	SUBROUTINE_UNIFORMS_PATTERN = '[\;|\n?|\s]subroutine\s+\S+\s+(\S+)\s?\(\s?\)\s?\;'
-	SUBROUTINES_PATTERN = '[\;|\n?|\s+]+subroutine\s+\((\S+)\)\s+\S+\s+(\S+)\s?\([^)]*\)'
+	UNIFORMS_PATTERN = '[\;|\n?|\s|}]uniform\s+(\S+)\s+(\S+)\s?\;'
+	VERTEX_ATTRIBUTES_PATTERN = '[\;|\n?|\s|}]in\s+(\S+)\s+(\S+)\s?\;'
+	SUBROUTINE_PATTERN = '[\;|\n?|\s|}]subroutine\s+\S+\s+(\S+)\s?\(\s?\)\s?\;'
+	SUBROUTINE_FUNCTION_PATTERN = '[\;|\n?|\s+|}]+subroutine\s+\((\S+)\)\s+\S+\s+(\S+)\s?\([^)]*\)'
+	SUBROUTINE_UNIFORM_PATTERN = '[\;|\n?|\s|}]subroutine\s+uniform\s+(\S+)\s+(\S+);'
 
 	parser = argparse.ArgumentParser()
 	parser.add_argument('input_dir', help='directory that contains shader files')
@@ -27,23 +28,26 @@ def main():
 			class_name = '{}_gpu_program_t'.format(gpu_program)
 			vertex_attributes = []
 			uniforms = []
-			subroutine_uniforms = []
 			subroutines = []
+			subroutine_functions = []
+			subroutine_uniforms = []
 
 			with open(os.path.join(args.input_dir, gpu_program + '.vert')) as f:
 				vertex_shader_source = f.read()
 
 				vertex_attributes = re.findall(VERTEX_ATTRIBUTES_PATTERN, vertex_shader_source)
 				uniforms = uniforms + re.findall(UNIFORMS_PATTERN, vertex_shader_source)
-				subroutine_uniforms = subroutine_uniforms + re.findall(SUBROUTINE_UNIFORMS_PATTERN, vertex_shader_source)
-				subroutines = subroutines + re.findall(SUBROUTINES_PATTERN, vertex_shader_source)
+				subroutines = subroutines + re.findall(SUBROUTINE_PATTERN, vertex_shader_source)
+				subroutine_uniforms = subroutine_uniforms + re.findall(SUBROUTINE_UNIFORM_PATTERN, vertex_shader_source)
+				subroutine_functions = subroutine_functions + re.findall(SUBROUTINE_FUNCTION_PATTERN, vertex_shader_source)
 
 			with open(os.path.join(args.input_dir, gpu_program + '.frag')) as f:
 				fragment_shader_source = f.read()
 
 				uniforms = uniforms + re.findall(UNIFORMS_PATTERN, fragment_shader_source)
-				subroutine_uniforms = subroutine_uniforms + re.findall(SUBROUTINE_UNIFORMS_PATTERN, fragment_shader_source)
-				subroutines = subroutines + re.findall(SUBROUTINES_PATTERN, fragment_shader_source)
+				subroutines = subroutines + re.findall(SUBROUTINE_PATTERN, fragment_shader_source)
+				subroutine_uniforms = subroutine_uniforms + re.findall(SUBROUTINE_UNIFORM_PATTERN, fragment_shader_source)
+				subroutine_functions = subroutine_functions + re.findall(SUBROUTINE_FUNCTION_PATTERN, fragment_shader_source)
 
 			crc = 0
 
@@ -75,13 +79,13 @@ def main():
 			s.append('    {\n')
 
 			for subroutine_uniform in subroutine_uniforms:
-				s.append('        enum class {}_subroutine_e\n'.format(subroutine_uniform))
+				s.append('        enum class {}_subroutine_e\n'.format(subroutine_uniform[0]))
 				s.append('        {\n')
 
-				for subroutine in subroutines:
-					uniform, function = subroutine
+				for subroutine_function in subroutine_functions:
+					uniform, function = subroutine_function
 
-					if uniform == subroutine_uniform:
+					if uniform == subroutine_uniform[0]:
 						s.append('             {},\n'.format(function.upper()))
 
 				s.append('        };\n')
@@ -112,12 +116,14 @@ def main():
 				type, name = vertex_attribute
 				s.append('            {0}_location = gpu.get_attribute_location(get_id(), \"{0}\");\n'.format(name))
 
+			# TODO: this assumes that all subroutine uniforms are in the fragment shader
 			for subroutine_uniform in subroutine_uniforms:
-				s.append('            {0}_subroutine_uniform_location = gpu.get_subroutine_uniform_location(get_id(), gpu_t::shader_type_e::FRAGMENT, \"{0}\");\n'.format(subroutine_uniform))
+				subroutine, uniform = subroutine_uniform
+				s.append('            {0}_subroutine_uniform_location = gpu.get_subroutine_uniform_location(get_id(), gpu_t::shader_type_e::FRAGMENT, \"{1}\");\n'.format(subroutine, uniform))
 
-				for subroutine in subroutines:
-					uniform, function = subroutine
-					
+				for subroutine_function in subroutine_functions:
+					subroutine, function = subroutine_function
+
 					if uniform == subroutine_uniform:
 						s.append('            {0}_subroutine_index = gpu.get_subroutine_index(get_id(), gpu_t::shader_type_e::FRAGMENT, \"{0}\");\n'.format(function))
 
@@ -146,17 +152,17 @@ def main():
 			s.append('        }\n')
 			s.append('\n')
 
-			for subroutine_uniform in subroutine_uniforms:
-				s.append('        void set_{0}_subroutine({0}_subroutine_e e)\n'.format(subroutine_uniform))
+			for subroutine in subroutines:
+				s.append('        void set_{0}_subroutine({0}_subroutine_e e)\n'.format(subroutine))
 				s.append('        {\n')
 				s.append('            switch(e)\n')
 				s.append('            {\n')
 
-				for subroutine in subroutines:
-					uniform, function = subroutine
+				for subroutine_function in subroutine_functions:
+					sr, function = subroutine_function
 
-					if uniform == subroutine_uniform:
-						s.append('                case {}_subroutine_e::{}:'.format(uniform, function.upper()))
+					if sr == subroutine:
+						s.append('                case {}_subroutine_e::{}:'.format(sr, function.upper()))
 						s.append('                    gpu.set_uniform_subroutine(gpu_t::shader_type_e::FRAGMENT, {}_subroutine_index);'.format(function))
 						s.append('                    break;\n')
 
@@ -171,13 +177,13 @@ def main():
 				type, name = vertex_attribute
 				s.append('       gpu_location_t {}_location;\n'.format(name))
 
-			for subroutine_uniform in subroutine_uniforms:
-				s.append('       gpu_location_t {}_subroutine_uniform_location\n;'.format(subroutine_uniform))
+			for subroutine in subroutines:
+				s.append('       gpu_location_t {}_subroutine_uniform_location;\n'.format(subroutine))
 
-				for subroutine in subroutines:
-					uniform, function = subroutine
+				for subroutine_function in subroutine_functions:
+					sr, function = subroutine_function
 
-					if uniform == subroutine_uniform:
+					if sr == subroutine:
 						s.append('       gpu_index_t {}_subroutine_index;\n'.format(function))
 
 			s.append('    };\n')
@@ -189,7 +195,7 @@ def main():
 			if (args.force or zlib.crc32(s) != crc):
 				with open(os.path.join(args.output_dir, gpu_program + '_gpu_program.hpp'), 'w+') as f:
 					if crc != zlib.crc32(s):
-						print s
+						print 'writing ' + gpu_program
 						f.write(s)
 
 if __name__ == '__main__':

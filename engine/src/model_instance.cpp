@@ -15,28 +15,9 @@
 
 namespace mandala
 {
-    model_instance_t::model_instance_t(boost::shared_ptr<model_t> model) :
-        model(model)
+    model_instance_t::model_instance_t(boost::shared_ptr<model_t> model)
     {
-        skeleton.bones.resize(model->get_bones().size());
-        skeleton.bone_matrices.resize(model->get_bones().size());
-
-        for (size_t i = 0; i < skeleton.bones.size(); ++i)
-        {
-            skeleton.bone_matrices[i] = model->get_bones()[i].bind_pose_matrix;
-        }
-
-        bone_matrices.resize(skeleton.bones.size());
-
-        for (size_t i = 0; i < skeleton.bones.size(); ++i)
-        {
-            bone_matrices[i] = skeleton.bone_matrices[i] * model->get_bones()[i].inverse_bind_pose_matrix;
-        }
-
-        for (const auto& mesh : model->get_meshes())
-        {
-            mesh_materials.push_back(boost::make_shared<material_instance_t>(mesh->material));
-        }
+        set_model(model);
     }
 
     model_instance_t::model_instance_t(const hash_t& model_hash) :
@@ -61,6 +42,8 @@ namespace mandala
             model_skeleton_t::interpolate(skeleton, frame_skeleton_0, frame_skeleton_1, interpolate_t);
         }
 
+        //TODO: the AABB is not calculated if there is no animation
+
         for (size_t i = 0; i < skeleton.bones.size(); ++i)
         {
             bone_matrices[i] = skeleton.bone_matrices[i] * model->get_bones()[i].inverse_bind_pose_matrix;
@@ -72,23 +55,23 @@ namespace mandala
         sphere.radius = glm::length(aabb.extents());
     }
 
-    void model_instance_t::render(const boost::shared_ptr<camera_t>& camera, const vec3_t& light_location) const
+    void model_instance_t::render(const camera_params& camera_params, const vec3_t& light_location) const
     {
         if (model == nullptr)
         {
             throw std::exception();
         }
 
-        if (intersects(camera->get_frustum(), sphere) == intersect_type_e::DISJOINT ||
-            intersects(camera->get_frustum(), aabb) == intersect_type_e::DISJOINT)
+        if (intersects(camera_params.frustum, sphere) == intersect_type_e::DISJOINT ||
+            intersects(camera_params.frustum, aabb) == intersect_type_e::DISJOINT)
         {
             //skeleton aabb does not intersect camera frustum
-            return;
+            //return;
         }
 
-        auto view_projection_matrix = camera->get_projection_matrix() * camera->get_view_matrix();
+        auto view_projection_matrix = camera_params.projection_matrix * camera_params.view_matrix;
 
-        model->render(camera->pose.location, pose.to_matrix(), view_projection_matrix, bone_matrices, light_location);
+        model->render(camera_params.location, pose.to_matrix(), view_projection_matrix, bone_matrices, light_location, mesh_materials);
 
 #if defined (DEBUG)
         render_aabb(pose.to_matrix(), view_projection_matrix, skeleton.aabb, rgba_type(1, 0, 0, 1));
@@ -113,7 +96,27 @@ namespace mandala
 
     void model_instance_t::set_model(const boost::shared_ptr<model_t>& model)
     {
+        this->model = model;
 
+        skeleton.bones.resize(model->get_bones().size());
+        skeleton.bone_matrices.resize(model->get_bones().size());
+
+        for (size_t i = 0; i < skeleton.bones.size(); ++i)
+        {
+            skeleton.bone_matrices[i] = model->get_bones()[i].bind_pose_matrix;
+        }
+
+        bone_matrices.resize(skeleton.bones.size());
+
+        for (size_t i = 0; i < skeleton.bones.size(); ++i)
+        {
+            bone_matrices[i] = skeleton.bone_matrices[i] * model->get_bones()[i].inverse_bind_pose_matrix;
+        }
+
+        for (const auto& mesh : model->get_meshes())
+        {
+            mesh_materials.push_back(boost::make_shared<material_instance_t>(mesh->material));
+        }
     }
 
     void model_instance_t::play(const hash_t& animation_hash)

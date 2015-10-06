@@ -199,9 +199,7 @@ void main()
             bone_indices_1_location = gpu.get_attribute_location(get_id(), "bone_indices_1");
             bone_weights_0_location = gpu.get_attribute_location(get_id(), "bone_weights_0");
             bone_weights_1_location = gpu.get_attribute_location(get_id(), "bone_weights_1");
-            calculate_lighting_subroutine_uniform_location = gpu.get_subroutine_uniform_location(get_id(), gpu_t::shader_type_e::FRAGMENT, "calculate_lighting");
-            calculate_lighting_lit_subroutine_index = gpu.get_subroutine_index(get_id(), gpu_t::shader_type_e::FRAGMENT, "calculate_lighting_lit");
-            calculate_lighting_unlit_subroutine_index = gpu.get_subroutine_index(get_id(), gpu_t::shader_type_e::FRAGMENT, "calculate_lighting_unlit");
+            calculate_lighting_subroutine_uniform_location = gpu.get_subroutine_uniform_location(get_id(), gpu_t::shader_type_e::FRAGMENT, "calculate_lighting_function");
         }
 
         void on_bind() override
@@ -254,8 +252,8 @@ void main()
        gpu_location_t bone_indices_1_location;
        gpu_location_t bone_weights_0_location;
        gpu_location_t bone_weights_1_location;
-       gpu_location_t calculate_lighting_subroutine_uniform_location
-;       gpu_index_t calculate_lighting_lit_subroutine_index;
+       gpu_location_t calculate_lighting_subroutine_uniform_location;
+       gpu_index_t calculate_lighting_lit_subroutine_index;
        gpu_index_t calculate_lighting_unlit_subroutine_index;
     };
 }

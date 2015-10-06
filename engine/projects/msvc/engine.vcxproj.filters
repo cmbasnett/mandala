@@ -323,6 +323,9 @@
     <ClInclude Include="..\..\src\scene.hpp">
       <Filter>scene</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\camera_params.hpp">
+      <Filter>scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\app.cpp">

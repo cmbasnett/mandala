@@ -4,6 +4,7 @@
 #include "actor.hpp"
 #include "gpu.hpp"
 #include "frame_buffer.hpp"
+#include "camera_params.hpp"
 
 namespace mandala
 {
@@ -16,11 +17,14 @@ namespace mandala
         gpu.viewports.push(viewport);
         gpu.frame_buffers.push(frame_buffer);
 
+        gpu.set_clear_color(rgba_type(1, 0, 0, 1));
         gpu.clear(gpu_t::CLEAR_FLAG_COLOR | gpu_t::CLEAR_FLAG_DEPTH);
+
+        const auto camera_params = camera->get_params(viewport);
 
         for (const auto& actor : actors)
         {
-            actor->render(camera);
+            actor->render(camera_params);
         }
 
         gpu.frame_buffers.pop();

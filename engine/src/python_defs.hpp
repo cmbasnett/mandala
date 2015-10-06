@@ -41,6 +41,8 @@
 #include "pose.hpp"
 #include "camera.hpp"
 #include "quake_camera.hpp"
+#include "arcball_camera.hpp"
+#include "model_instance.hpp"
 
 using namespace boost;
 using namespace boost::python;
@@ -973,7 +975,6 @@ BOOST_PYTHON_MODULE(mandala)
         auto camera_scope = class_<camera_t, bases<actor_t>, boost::shared_ptr<camera_t>>("Camera")
             .def_readwrite("near", &camera_t::near)
             .def_readwrite("far", &camera_t::far)
-            .def_readwrite("aspect", &camera_t::aspect)
             .def_readwrite("fov", &camera_t::fov)
             .def_readwrite("projection_type", &camera_t::projection_type)
             ;
@@ -985,4 +986,8 @@ BOOST_PYTHON_MODULE(mandala)
     }
 
     class_<quake_camera_t, bases<camera_t>, boost::shared_ptr<quake_camera_t>, noncopyable>("QuakeCamera", init<>());
+
+    class_<arcball_camera_t, bases<camera_t>, boost::shared_ptr<arcball_camera_t>, noncopyable>("ArcballCamera", init<>());
+
+    class_<model_instance_t, boost::shared_ptr<model_instance_t>, noncopyable>("ModelInstance", init<const hash_t&>());
 }

@@ -12,20 +12,20 @@ namespace mandala
         }
     }
 
-    void actor_t::render(const boost::shared_ptr<camera_t>& camera)
+    void actor_t::render(const camera_params& camera_params)
     {
         switch (draw_type)
         {
         case draw_type_e::BSP:
             if (bsp)
             {
-                bsp->render(camera);
+                bsp->render(camera_params);
             }
             break;
         case draw_type_e::MODEL:
             if (model)
             {
-                model->render(camera, vec3_t());
+                model->render(camera_params, vec3_t(100, 0, 0));
             }
             break;
         case draw_type_e::NONE:

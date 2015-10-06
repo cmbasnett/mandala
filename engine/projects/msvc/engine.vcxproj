@@ -240,6 +240,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\bsp_state.hpp" />
     <ClInclude Include="..\..\src\cache_mgr.hpp" />
     <ClInclude Include="..\..\src\camera.hpp" />
+    <ClInclude Include="..\..\src\camera_params.hpp" />
     <ClInclude Include="..\..\src\circle.hpp" />
     <ClInclude Include="..\..\src\closure_traits.hpp" />
     <ClInclude Include="..\..\src\collision.hpp" />
