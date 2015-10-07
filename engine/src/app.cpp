@@ -27,9 +27,9 @@
 
 namespace mandala
 {
-    app_t app;
+    app app_;
 
-    void app_t::run()
+    void app::run()
     {
         using namespace std::chrono;
         using namespace boost;
@@ -52,18 +52,18 @@ namespace mandala
         //TODO: make this execute a .pyc file instead (more secure?)
         py.exec_file("app.py");
 
-        this->game = extract<shared_ptr<game_t>>(py.eval((game_class + "()").c_str()))();
+        this->game = extract<shared_ptr<mandala::game>>(py.eval((game_class + "()").c_str()))();
 
         begin:
 
         platform.app_run_start();
 
-        gpu_programs.make<gui_image_gpu_program_t>();
-        gpu_programs.make<model_gpu_program_t>();
-        gpu_programs.make<bitmap_font_gpu_program_t>();
-        gpu_programs.make<bsp_gpu_program_t>();
-        gpu_programs.make<blur_horizontal_gpu_program_t>();
-        gpu_programs.make<basic_gpu_program_t>();
+        gpu_programs.make<gui_image_gpu_program>();
+        gpu_programs.make<model_gpu_program>();
+        gpu_programs.make<bitmap_font_gpu_program>();
+        gpu_programs.make<bsp_gpu_program>();
+        gpu_programs.make<blur_horizontal_gpu_program>();
+        gpu_programs.make<basic_gpu_program>();
 
         this->game->on_run_start();
 
@@ -117,22 +117,22 @@ namespace mandala
         }
     }
 
-    void app_t::exit()
+    void app::exit()
     {
         is_exiting = true;
     }
 
-    void app_t::reset()
+    void app::reset()
     {
         is_resetting = true;
     }
 
-    long long app_t::get_uptime() const
+    long long app::get_uptime() const
     {
         return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - run_time_point).count();
     }
 
-    void app_t::tick(f32 dt)
+    void app::tick(f32 dt)
     {
         platform.app_tick_start(dt);
 
@@ -146,7 +146,7 @@ namespace mandala
         platform.app_tick_end(dt);
     }
 
-    void app_t::render()
+    void app::render()
     {
         const auto screen_size = platform.get_screen_size();
 
@@ -166,7 +166,7 @@ namespace mandala
         gpu.viewports.pop();
     }
 
-    void app_t::handle_input_events()
+    void app::handle_input_events()
     {
         input_event_t input_event;
 
@@ -195,9 +195,9 @@ namespace mandala
     }
 
 #if defined(MANDALA_PC)
-    void app_t::handle_window_events()
+    void app::handle_window_events()
     {
-        window_event_t window_event;
+        window_event window_event;
 
         while (platform.pop_window_event(window_event))
         {
@@ -208,7 +208,7 @@ namespace mandala
     }
 #endif
 
-    bool app_t::should_keep_running()
+    bool app::should_keep_running()
     {
         return !is_exiting && !is_resetting && !platform.should_exit();
     }

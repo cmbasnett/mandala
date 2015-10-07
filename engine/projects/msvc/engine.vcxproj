@@ -215,9 +215,6 @@ echo $(PlatformTarget)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="literals.hpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="..\..\src\aabb.hpp" />
     <ClInclude Include="..\..\src\actor.hpp" />
     <ClInclude Include="..\..\src\api.hpp" />
@@ -237,7 +234,6 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\bsp.hpp" />
     <ClInclude Include="..\..\src\bsp_entity.hpp" />
     <ClInclude Include="..\..\src\bsp_gpu_program.hpp" />
-    <ClInclude Include="..\..\src\bsp_state.hpp" />
     <ClInclude Include="..\..\src\cache_mgr.hpp" />
     <ClInclude Include="..\..\src\camera.hpp" />
     <ClInclude Include="..\..\src\camera_params.hpp" />
@@ -338,7 +334,6 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="..\..\src\bitmap_font.cpp" />
     <ClCompile Include="..\..\src\bsp.cpp" />
     <ClCompile Include="..\..\src\bsp_entity.cpp" />
-    <ClCompile Include="..\..\src\bsp_state.cpp" />
     <ClCompile Include="..\..\src\cache_mgr.cpp" />
     <ClCompile Include="..\..\src\camera.cpp" />
     <ClCompile Include="..\..\src\frame_buffer.cpp" />

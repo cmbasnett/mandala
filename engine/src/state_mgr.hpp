@@ -14,11 +14,11 @@
 
 namespace mandala
 {
-    struct app_t;
-    struct state_t;
+    struct app;
+    struct state;
 
 #if defined(MANDALA_PC)
-    struct window_event_t;
+    struct window_event;
 #endif
 
     typedef u8 state_flags_type;
@@ -37,9 +37,9 @@ namespace mandala
         STATE_FLAG_ALL = (STATE_FLAG_RENDER | STATE_FLAG_INPUT | STATE_FLAG_TICK)
     };
 
-    struct state_mgr_t
+    struct state_mgr
     {
-        typedef boost::shared_ptr<state_t> state_type;
+        typedef boost::shared_ptr<state> state_type;
 
         struct node_t
         {
@@ -67,13 +67,13 @@ namespace mandala
             i32 weight = 0;
         };
 
-        state_mgr_t() = default;
+        state_mgr() = default;
 
         void tick(f32 dt);
         void render();
         bool on_input_event(input_event_t& input_event);
 #if defined(MANDALA_PC)
-        void on_window_event(window_event_t& window_event);
+        void on_window_event(window_event& window_event);
 #endif
 
         void push(const state_type& state, state_flags_type link_flags, i32 weight = 0);
@@ -95,12 +95,12 @@ namespace mandala
         bool is_state_changing_link_flags(const state_type& state) const;
         
     private:
-        state_mgr_t(const state_mgr_t&) = delete;
-        state_mgr_t& operator=(const state_mgr_t&) = delete;
+        state_mgr(const state_mgr&) = delete;
+        state_mgr& operator=(const state_mgr&) = delete;
 
         std::list<node_t> nodes;
         std::deque<operation_t> operations;
     };
 
-    extern state_mgr_t states;
+    extern state_mgr states;
 }

@@ -14,22 +14,22 @@ namespace mandala
     namespace details
     {
         template<typename Scalar, typename Enable = void>
-        struct octree_;
+        struct octree;
 
         template<typename Scalar>
-        struct octree_<Scalar, typename std::enable_if<std::is_floating_point<Scalar>::value>::type>
+        struct octree<Scalar, typename std::enable_if<std::is_floating_point<Scalar>::value>::type>
         {
             typedef Scalar scalar_type;
             typedef aabb3<scalar_type> bounds_type;
-            typedef octree_<scalar_type> type;
+            typedef octree<scalar_type> type;
             typedef std::array<boost::shared_ptr<type>, 8> children_type;
 
-            octree_(scalar_type size = 2048) :
+            octree(scalar_type size = 2048) :
                 bounds(bounds_type::value_type(-size / 2), bounds_type::value_type(size / 2))
             {
             }
 
-            octree_(const bounds_type& bounds) :
+            octree(const bounds_type& bounds) :
                 bounds(bounds)
             {
             }
@@ -59,7 +59,7 @@ namespace mandala
         };
     }
 
-    typedef details::octree_<f32> octree_f32;
-    typedef details::octree_<f64> octree_f64;
-    typedef octree_f32 octree_t;
+    typedef details::octree<f32> octree_f32;
+    typedef details::octree<f64> octree_f64;
+    typedef octree_f32 octree;
 }

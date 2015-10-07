@@ -22,13 +22,13 @@ namespace mandala
 
         assert(points.size() <= MAX_LINES);
 
-        typedef vertex_buffer_t<basic_gpu_program_t::vertex_type> vertex_buffer_type;
-        typedef index_buffer_t<index_type<INDEX_COUNT>::type> index_buffer_type;
+        typedef vertex_buffer<basic_gpu_program::vertex_type> vertex_buffer_type;
+        typedef index_buffer<index_type<INDEX_COUNT>::type> index_buffer_type;
 
         static boost::weak_ptr<vertex_buffer_type> vertex_buffer;
         static boost::weak_ptr<index_buffer_type> index_buffer;
 
-        static std::array<basic_gpu_program_t::vertex_type, VERTEX_COUNT> vertices;
+        static std::array<basic_gpu_program::vertex_type, VERTEX_COUNT> vertices;
 
         if (vertex_buffer.expired())
         {
@@ -45,7 +45,7 @@ namespace mandala
             vertices[i].location = points[i];
         }
 
-        vertex_buffer.lock()->data(vertices.data(), points.size(), gpu_t::buffer_usage_e::STREAM_DRAW);
+        vertex_buffer.lock()->data(vertices.data(), points.size(), gpu_t::buffer_usage::STREAM_DRAW);
 
         if (index_buffer.expired())
         {
@@ -57,13 +57,13 @@ namespace mandala
             }
 
             index_buffer = gpu_buffers.make<index_buffer_type>();
-            index_buffer.lock()->data(indices.data(), indices.size(), gpu_t::buffer_usage_e::STATIC_DRAW);
+            index_buffer.lock()->data(indices.data(), indices.size(), gpu_t::buffer_usage::STATIC_DRAW);
         }
 
-        gpu.buffers.push(gpu_t::buffer_target_e::ARRAY, vertex_buffer.lock());
-        gpu.buffers.push(gpu_t::buffer_target_e::ELEMENT_ARRAY, index_buffer.lock());
+        gpu.buffers.push(gpu_t::buffer_target::ARRAY, vertex_buffer.lock());
+        gpu.buffers.push(gpu_t::buffer_target::ELEMENT_ARRAY, index_buffer.lock());
 
-        const auto gpu_program = gpu_programs.get<basic_gpu_program_t>();
+        const auto gpu_program = gpu_programs.get<basic_gpu_program>();
 
         gpu.programs.push(gpu_program);
 
@@ -71,19 +71,19 @@ namespace mandala
         gpu.set_uniform("view_projection_matrix", view_projection_matrix);
         gpu.set_uniform("color", color);
 
-        gpu.draw_elements(gpu_t::primitive_type_e::LINE_STRIP, points.size(), index_buffer_type::DATA_TYPE, 0);
+        gpu.draw_elements(gpu_t::primitive_type::LINE_STRIP, points.size(), index_buffer_type::DATA_TYPE, 0);
 
         gpu.programs.pop();
 
-        gpu.buffers.pop(gpu_t::buffer_target_e::ARRAY);
-        gpu.buffers.pop(gpu_t::buffer_target_e::ELEMENT_ARRAY);
+        gpu.buffers.pop(gpu_t::buffer_target::ARRAY);
+        gpu.buffers.pop(gpu_t::buffer_target::ELEMENT_ARRAY);
     }
 
     template<typename T>
     void render_rectangle(const mat4& world_matrix, const mat4& view_projection_matrix, const details::rectangle<T>& rectangle, const vec4& color, bool is_filled = false)
     {
-        typedef vertex_buffer_t<basic_gpu_program_t::vertex_type> vertex_buffer_type;
-        typedef index_buffer_t<u8> index_buffer_type;
+        typedef vertex_buffer<basic_gpu_program::vertex_type> vertex_buffer_type;
+        typedef index_buffer<u8> index_buffer_type;
 
         static boost::weak_ptr<vertex_buffer_type> vertex_buffer;
         static boost::weak_ptr<index_buffer_type> index_buffer;
@@ -92,24 +92,24 @@ namespace mandala
         {
             vertex_buffer = gpu_buffers.make<vertex_buffer_type>();
             auto vertices = {
-                basic_gpu_program_t::vertex_type(vec3(0, 0, 0), vec4(1)),
-                basic_gpu_program_t::vertex_type(vec3(1, 0, 0), vec4(1)),
-                basic_gpu_program_t::vertex_type(vec3(1, 1, 0), vec4(1)),
-                basic_gpu_program_t::vertex_type(vec3(0, 1, 0), vec4(1))
+                basic_gpu_program::vertex_type(vec3(0, 0, 0), vec4(1)),
+                basic_gpu_program::vertex_type(vec3(1, 0, 0), vec4(1)),
+                basic_gpu_program::vertex_type(vec3(1, 1, 0), vec4(1)),
+                basic_gpu_program::vertex_type(vec3(0, 1, 0), vec4(1))
             };
-            vertex_buffer.lock()->data(vertices, gpu_t::buffer_usage_e::STATIC_DRAW);
+            vertex_buffer.lock()->data(vertices, gpu_t::buffer_usage::STATIC_DRAW);
         }
 
         if (index_buffer.expired())
         {
             index_buffer = gpu_buffers.make<index_buffer_type>();
-            index_buffer.lock()->data({ 0, 1, 2, 3 }, gpu_t::buffer_usage_e::STATIC_DRAW);
+            index_buffer.lock()->data({ 0, 1, 2, 3 }, gpu_t::buffer_usage::STATIC_DRAW);
         }
 
-        gpu.buffers.push(gpu_t::buffer_target_e::ARRAY, vertex_buffer.lock());
-        gpu.buffers.push(gpu_t::buffer_target_e::ELEMENT_ARRAY, index_buffer.lock());
+        gpu.buffers.push(gpu_t::buffer_target::ARRAY, vertex_buffer.lock());
+        gpu.buffers.push(gpu_t::buffer_target::ELEMENT_ARRAY, index_buffer.lock());
 
-        const auto gpu_program = gpu_programs.get<basic_gpu_program_t>();
+        const auto gpu_program = gpu_programs.get<basic_gpu_program>();
 
         gpu.programs.push(gpu_program);
 
@@ -117,19 +117,19 @@ namespace mandala
         gpu.set_uniform("view_projection_matrix", view_projection_matrix);
         gpu.set_uniform("color", color);
 
-        gpu.draw_elements(is_filled ? gpu_t::primitive_type_e::TRIANGLE_FAN : gpu_t::primitive_type_e::LINE_LOOP, 4, index_buffer_type::DATA_TYPE, 0);
+        gpu.draw_elements(is_filled ? gpu_t::primitive_type::TRIANGLE_FAN : gpu_t::primitive_type::LINE_LOOP, 4, index_buffer_type::DATA_TYPE, 0);
 
         gpu.programs.pop();
 
-        gpu.buffers.pop(gpu_t::buffer_target_e::ELEMENT_ARRAY);
-        gpu.buffers.pop(gpu_t::buffer_target_e::ARRAY);
+        gpu.buffers.pop(gpu_t::buffer_target::ELEMENT_ARRAY);
+        gpu.buffers.pop(gpu_t::buffer_target::ARRAY);
     }
 
     template<typename T>
     void render_aabb(const mat4& world_matrix, const mat4& view_projection_matrix, const details::aabb3<T>& aabb, const vec4& color)
     {
-        typedef vertex_buffer_t<basic_gpu_program_t::vertex_type> vertex_buffer_type;
-        typedef index_buffer_t<u8> index_buffer_type;
+        typedef vertex_buffer<basic_gpu_program::vertex_type> vertex_buffer_type;
+        typedef index_buffer<u8> index_buffer_type;
 
         static boost::weak_ptr<vertex_buffer_type> vertex_buffer;
         static boost::weak_ptr<index_buffer_type> index_buffer;
@@ -138,28 +138,28 @@ namespace mandala
         {
             vertex_buffer = gpu_buffers.make<vertex_buffer_type>();
             auto vertices = {
-                basic_gpu_program_t::vertex_type(vec3(0, 0, 0), vec4(1)),
-                basic_gpu_program_t::vertex_type(vec3(1, 0, 0), vec4(1)),
-                basic_gpu_program_t::vertex_type(vec3(1, 1, 0), vec4(1)),
-                basic_gpu_program_t::vertex_type(vec3(0, 1, 0), vec4(1)),
-                basic_gpu_program_t::vertex_type(vec3(0, 0, 1), vec4(1)),
-                basic_gpu_program_t::vertex_type(vec3(1, 0, 1), vec4(1)),
-                basic_gpu_program_t::vertex_type(vec3(1, 1, 1), vec4(1)),
-                basic_gpu_program_t::vertex_type(vec3(0, 1, 1), vec4(1))
+                basic_gpu_program::vertex_type(vec3(0, 0, 0), vec4(1)),
+                basic_gpu_program::vertex_type(vec3(1, 0, 0), vec4(1)),
+                basic_gpu_program::vertex_type(vec3(1, 1, 0), vec4(1)),
+                basic_gpu_program::vertex_type(vec3(0, 1, 0), vec4(1)),
+                basic_gpu_program::vertex_type(vec3(0, 0, 1), vec4(1)),
+                basic_gpu_program::vertex_type(vec3(1, 0, 1), vec4(1)),
+                basic_gpu_program::vertex_type(vec3(1, 1, 1), vec4(1)),
+                basic_gpu_program::vertex_type(vec3(0, 1, 1), vec4(1))
             };
-            vertex_buffer.lock()->data(vertices, gpu_t::buffer_usage_e::DYNAMIC_DRAW);
+            vertex_buffer.lock()->data(vertices, gpu_t::buffer_usage::DYNAMIC_DRAW);
         }
 
         if (index_buffer.expired())
         {
             index_buffer = gpu_buffers.make<index_buffer_type>();
-            index_buffer.lock()->data({ 0, 1, 1, 2, 2, 3, 3, 0, 0, 4, 1, 5, 2, 6, 3, 7, 4, 5, 5, 6, 6, 7, 7, 4 }, gpu_t::buffer_usage_e::STATIC_DRAW);
+            index_buffer.lock()->data({ 0, 1, 1, 2, 2, 3, 3, 0, 0, 4, 1, 5, 2, 6, 3, 7, 4, 5, 5, 6, 6, 7, 7, 4 }, gpu_t::buffer_usage::STATIC_DRAW);
         }
 
-        gpu.buffers.push(gpu_t::buffer_target_e::ARRAY, vertex_buffer.lock());
-        gpu.buffers.push(gpu_t::buffer_target_e::ELEMENT_ARRAY, index_buffer.lock());
+        gpu.buffers.push(gpu_t::buffer_target::ARRAY, vertex_buffer.lock());
+        gpu.buffers.push(gpu_t::buffer_target::ELEMENT_ARRAY, index_buffer.lock());
 
-        const auto gpu_program = gpu_programs.get<basic_gpu_program_t>();
+        const auto gpu_program = gpu_programs.get<basic_gpu_program>();
 
         gpu.programs.push(gpu_program);
 
@@ -167,19 +167,19 @@ namespace mandala
         gpu.set_uniform("view_projection_matrix", view_projection_matrix);
         gpu.set_uniform("color", color);
 
-        gpu.draw_elements(gpu_t::primitive_type_e::LINES, 24, index_buffer_type::DATA_TYPE, 0);
+        gpu.draw_elements(gpu_t::primitive_type::LINES, 24, index_buffer_type::DATA_TYPE, 0);
 
         gpu.programs.pop();
 
-        gpu.buffers.pop(gpu_t::buffer_target_e::ELEMENT_ARRAY);
-        gpu.buffers.pop(gpu_t::buffer_target_e::ARRAY);
+        gpu.buffers.pop(gpu_t::buffer_target::ELEMENT_ARRAY);
+        gpu.buffers.pop(gpu_t::buffer_target::ARRAY);
     }
 
     template<typename T>
     void render_sphere(const mat4& world_matrix, const mat4& view_projection_matrix, const details::sphere<T>& sphere)
     {
-        typedef vertex_buffer_t<basic_gpu_program_t::vertex_type> vertex_buffer_type;
-        typedef index_buffer_t<u8> index_buffer_type;
+        typedef vertex_buffer<basic_gpu_program::vertex_type> vertex_buffer_type;
+        typedef index_buffer<u8> index_buffer_type;
 
         static boost::weak_ptr<vertex_buffer_type> vertex_buffer;
         static boost::weak_ptr<index_buffer_type> index_buffer;
@@ -190,7 +190,7 @@ namespace mandala
         {
             vertex_buffer = gpu_buffers.make<vertex_buffer_type>();
 
-            std::vector<basic_gpu_program_t::vertex_type> vertices;
+            std::vector<basic_gpu_program::vertex_type> vertices;
             vertices.reserve(SPHERE_SIDES);
 
             //TODO: this is lame, write this better
@@ -215,7 +215,7 @@ namespace mandala
                 vertices.emplace_back(vec3(glm::cos(sigma), 0, glm::sin(sigma)), vec4(0, 1, 0, 1));
             }
 
-            vertex_buffer.lock()->data(vertices, gpu_t::buffer_usage_e::DYNAMIC_DRAW);
+            vertex_buffer.lock()->data(vertices, gpu_t::buffer_usage::DYNAMIC_DRAW);
         }
 
         if (index_buffer.expired())
@@ -230,26 +230,26 @@ namespace mandala
                 indices.push_back(i);
             }
 
-            index_buffer.lock()->data(indices, gpu_t::buffer_usage_e::STATIC_DRAW);
+            index_buffer.lock()->data(indices, gpu_t::buffer_usage::STATIC_DRAW);
         }
 
-        gpu.buffers.push(gpu_t::buffer_target_e::ARRAY, vertex_buffer.lock());
-        gpu.buffers.push(gpu_t::buffer_target_e::ELEMENT_ARRAY, index_buffer.lock());
+        gpu.buffers.push(gpu_t::buffer_target::ARRAY, vertex_buffer.lock());
+        gpu.buffers.push(gpu_t::buffer_target::ELEMENT_ARRAY, index_buffer.lock());
 
-        const auto gpu_program = gpu_programs.get<basic_gpu_program_t>();
+        const auto gpu_program = gpu_programs.get<basic_gpu_program>();
 
         gpu.programs.push(gpu_program);
 
         gpu.set_uniform("world_matrix", world_matrix * glm::translate(sphere.origin) * glm::scale(vec3(sphere.radius)));
         gpu.set_uniform("view_projection_matrix", view_projection_matrix);
 
-        gpu.draw_elements(gpu_t::primitive_type_e::LINE_LOOP, SPHERE_SIDES, index_buffer_type::DATA_TYPE, SPHERE_SIDES * 0);
-        gpu.draw_elements(gpu_t::primitive_type_e::LINE_LOOP, SPHERE_SIDES, index_buffer_type::DATA_TYPE, SPHERE_SIDES * 1);
-        gpu.draw_elements(gpu_t::primitive_type_e::LINE_LOOP, SPHERE_SIDES, index_buffer_type::DATA_TYPE, SPHERE_SIDES * 2);
+        gpu.draw_elements(gpu_t::primitive_type::LINE_LOOP, SPHERE_SIDES, index_buffer_type::DATA_TYPE, SPHERE_SIDES * 0);
+        gpu.draw_elements(gpu_t::primitive_type::LINE_LOOP, SPHERE_SIDES, index_buffer_type::DATA_TYPE, SPHERE_SIDES * 1);
+        gpu.draw_elements(gpu_t::primitive_type::LINE_LOOP, SPHERE_SIDES, index_buffer_type::DATA_TYPE, SPHERE_SIDES * 2);
 
         gpu.programs.pop();
 
-        gpu.buffers.pop(gpu_t::buffer_target_e::ELEMENT_ARRAY);
-        gpu.buffers.pop(gpu_t::buffer_target_e::ARRAY);
+        gpu.buffers.pop(gpu_t::buffer_target::ELEMENT_ARRAY);
+        gpu.buffers.pop(gpu_t::buffer_target::ARRAY);
     }
 }

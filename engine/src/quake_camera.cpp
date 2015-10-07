@@ -14,7 +14,7 @@
 
 namespace mandala
 {
-    void quake_camera_t::on_tick(f32 dt)
+    void quake_camera::on_tick(f32 dt)
     {
         const auto rotation_smoothing_value = glm::min(dt * (QUAKE_CAMERA_SMOOTHING_CONSTANT * smoothing_strength), 1.0f);
         const auto roll_smoothing_value = glm::min(dt * (QUAKE_CAMERA_SMOOTHING_CONSTANT * 0.25f), 1.0f);
@@ -46,10 +46,10 @@ namespace mandala
 
         pose.location += velocity * dt;
 
-        camera_t::on_tick(dt);
+        camera::on_tick(dt);
     }
 
-    bool quake_camera_t::on_input_event(input_event_t& input_event)
+    bool quake_camera::on_input_event(input_event_t& input_event)
     {
         switch (input_event.device_type)
         {

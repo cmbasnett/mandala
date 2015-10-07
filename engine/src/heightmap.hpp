@@ -13,9 +13,9 @@
 
 namespace mandala
 {
-    struct heightmap_t
+    struct heightmap
     {
-        heightmap_t(size_t width, size_t depth) :
+        heightmap(size_t width, size_t depth) :
             outer(boost::extents[width + 1][depth + 1]),
             inner(boost::extents[width][depth])
         {

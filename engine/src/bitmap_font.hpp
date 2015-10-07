@@ -6,6 +6,7 @@
 #include "index_buffer.hpp"
 #include "index_type.hpp"
 #include "padding.hpp"
+#include "bitmap_font_gpu_program.hpp"
 
 //std
 #include <vector>
@@ -18,15 +19,15 @@
 
 namespace mandala
 {
-    struct texture_t;
+    struct texture;
 
-    struct bitmap_font_t : resource_t
+    struct bitmap_font : resource
     {
         typedef std::wstring string_type;
         typedef string_type::value_type char_type;
         typedef u32 character_id_type;
 
-        struct character_t
+        struct character
         {
             character_id_type id = 0;
             rectangle_u16 rectangle;
@@ -36,20 +37,11 @@ namespace mandala
             u8 channel = 0;
         };
 
-        struct kerning_pair_t
+        struct kerning_pair
         {
             character_id_type first = 0;
             character_id_type second = 0;
             i16 amount = 0;
-        };
-
-        struct vertex_t
-        {
-            typedef vec2 location_type;
-            typedef vec2 texcoord_type;
-
-            location_type location;
-            texcoord_type texcoord;
         };
 
         static const auto CHARACTERS_MAX = 0xFFFF;
@@ -57,14 +49,14 @@ namespace mandala
         static const auto INDICES_PER_CHARACTER = 6;
         static const auto INDICES_MAX = CHARACTERS_MAX * INDICES_PER_CHARACTER;
 
-        typedef vertex_t vertex_type;
+        typedef bitmap_font_gpu_program::vertex_type vertex_type;
         typedef index_type<INDICES_MAX>::type index_type;
-        typedef vertex_buffer_t<vertex_type> vertex_buffer_type;
-        typedef index_buffer_t<index_type> index_buffer_type;
+        typedef vertex_buffer<vertex_type> vertex_buffer_type;
+        typedef index_buffer<index_type> index_buffer_type;
         typedef std::wstring string_type;
         typedef string_type::value_type char_type;
 
-        bitmap_font_t(std::istream& istream);
+        bitmap_font(std::istream& istream);
 
         void render_string(const string_type& string, mat4 world_matrix, mat4 view_projection_matrix, const vec4& base_color, std::stack<vec4>& color_stack, const std::vector<std::pair<size_t, vec4>>& color_pushes, const std::vector<size_t>& color_pop_indices) const;
         void get_string_pages(std::vector<u8>& pages, const string_type& string) const;
@@ -92,8 +84,8 @@ namespace mandala
         u8 get_red_channel() const { return red_channel; }
         u8 get_green_channel() const { return green_channel; }
         u8 get_blue_channel() const { return blue_channel; }
-        const std::map<character_id_type, character_t>& get_characters() const { return characters; }
-        const std::vector<boost::shared_ptr<texture_t>> get_page_textures() const { return page_textures; }
+        const std::map<character_id_type, character>& get_characters() const { return characters; }
+        const std::vector<boost::shared_ptr<texture>> get_page_textures() const { return page_textures; }
 
     private:
         i16 size = 0;
@@ -121,15 +113,15 @@ namespace mandala
         u8 blue_channel = 0;
         std::vector<character_id_type> character_ids;
         std::map<character_id_type, size_t> character_indices;
-        std::map<character_id_type, character_t> characters;
-        std::vector<kerning_pair_t> kerning_pairs;
+        std::map<character_id_type, character> characters;
+        std::vector<kerning_pair> kerning_pairs;
         boost::shared_ptr<vertex_buffer_type> vertex_buffer;
         boost::shared_ptr<index_buffer_type> index_buffer;
-        std::vector<boost::shared_ptr<texture_t>> page_textures;
+        std::vector<boost::shared_ptr<texture>> page_textures;
 
         i16 get_kerning_amount(char_type lhs, char_type rhs) const;
 
-        bitmap_font_t(const bitmap_font_t&) = delete;
-        bitmap_font_t& operator=(const bitmap_font_t&) = delete;
+        bitmap_font(const bitmap_font&) = delete;
+        bitmap_font& operator=(const bitmap_font&) = delete;
     };
 }

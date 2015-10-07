@@ -22,7 +22,7 @@
 
 namespace mandala
 {
-    bitmap_font_t::bitmap_font_t(std::istream& istream)
+    bitmap_font::bitmap_font(std::istream& istream)
     {
         //magic
         std::array<char, BMF_MAGIC_LENGTH> magic;
@@ -108,7 +108,7 @@ namespace mandala
 
             page_texture_names_length -= static_cast<u32>(page_texture_name.length() + 1);
 
-            auto page_texture = resources.get<texture_t>(hash_t(page_texture_name));
+            auto page_texture = resources.get<texture>(mandala::hash(page_texture_name));
 
             page_textures.push_back(page_texture);
         }
@@ -127,11 +127,11 @@ namespace mandala
         u32 characters_length;
         read(istream, characters_length);
 
-        auto character_count = characters_length / sizeof(character_t);
+        auto character_count = characters_length / sizeof(character);
 
         for (size_t i = 0; i < character_count; ++i)
         {
-            character_t character;
+            character character;
 
             read(istream, character.id);
             read(istream, character.rectangle.x);
@@ -157,7 +157,7 @@ namespace mandala
             u32 kerning_pairs_length;
             read(istream, kerning_pairs_length);
 
-            auto kerning_pair_count = kerning_pairs_length / sizeof(kerning_pair_t);
+            auto kerning_pair_count = kerning_pairs_length / sizeof(kerning_pair);
             kerning_pairs.resize(kerning_pair_count);
 
             for (auto& kerning_pair : kerning_pairs)
@@ -171,7 +171,7 @@ namespace mandala
         //vertex buffer
         auto vertex_count = characters.size() * VERTICES_PER_CHARACTER;
 
-        std::vector<vertex_t> vertices;
+        std::vector<vertex_type> vertices;
         vertices.resize(vertex_count);
 
         auto j = 0;
@@ -217,7 +217,7 @@ namespace mandala
         }
 
         vertex_buffer = gpu_buffers.make<vertex_buffer_type>().lock();
-        vertex_buffer->data(vertices, gpu_t::buffer_usage_e::STATIC_DRAW);
+        vertex_buffer->data(vertices, gpu_t::buffer_usage::STATIC_DRAW);
 
         //index buffer
         std::vector<index_type> indices;
@@ -234,10 +234,10 @@ namespace mandala
         }
 
         index_buffer = gpu_buffers.make<index_buffer_type>().lock();
-        index_buffer->data(indices, gpu_t::buffer_usage_e::STATIC_DRAW);
+        index_buffer->data(indices, gpu_t::buffer_usage::STATIC_DRAW);
     }
 
-    i16 bitmap_font_t::get_kerning_amount(char_type lhs, char_type rhs) const
+    i16 bitmap_font::get_kerning_amount(char_type lhs, char_type rhs) const
     {
         i16 kerning_amount = 0;
 
@@ -254,15 +254,15 @@ namespace mandala
         return kerning_amount;
     }
 
-    void bitmap_font_t::render_string(const string_type& string, mat4 world_matrix, mat4 view_projection_matrix, const vec4& base_color, std::stack<vec4>& color_stack, const std::vector<std::pair<size_t, vec4>>& color_pushes, const std::vector<size_t>& color_pop_indices) const
+    void bitmap_font::render_string(const string_type& string, mat4 world_matrix, mat4 view_projection_matrix, const vec4& base_color, std::stack<vec4>& color_stack, const std::vector<std::pair<size_t, vec4>>& color_pushes, const std::vector<size_t>& color_pop_indices) const
     {
         static const auto CHARACTER_INDEX_STRIDE = sizeof(index_type) * INDICES_PER_CHARACTER;
 
         //buffers
-        gpu.buffers.push(gpu_t::buffer_target_e::ARRAY, vertex_buffer);
-        gpu.buffers.push(gpu_t::buffer_target_e::ELEMENT_ARRAY, index_buffer);
+        gpu.buffers.push(gpu_t::buffer_target::ARRAY, vertex_buffer);
+        gpu.buffers.push(gpu_t::buffer_target::ELEMENT_ARRAY, index_buffer);
 
-        const auto gpu_program = gpu_programs.get<bitmap_font_gpu_program_t>();
+        const auto gpu_program = gpu_programs.get<bitmap_font_gpu_program>();
 
         //program
         gpu.programs.push(gpu_program);
@@ -270,8 +270,8 @@ namespace mandala
         //states
         auto blend_state = gpu.blend.get_state();
         blend_state.is_enabled = true;
-        blend_state.src_factor = gpu_t::blend_factor_e::SRC_ALPHA;
-        blend_state.dst_factor = gpu_t::blend_factor_e::ONE_MINUS_SRC_ALPHA;
+        blend_state.src_factor = gpu_t::blend_factor::SRC_ALPHA;
+        blend_state.dst_factor = gpu_t::blend_factor::ONE_MINUS_SRC_ALPHA;
 
         gpu.blend.push_state(blend_state);
 
@@ -353,7 +353,7 @@ namespace mandala
                 gpu.set_uniform("color_bottom", color);
             }
 
-            gpu.draw_elements(gpu_t::primitive_type_e::TRIANGLES, INDICES_PER_CHARACTER, index_buffer_type::DATA_TYPE, character_index * CHARACTER_INDEX_STRIDE);
+            gpu.draw_elements(gpu_t::primitive_type::TRIANGLES, INDICES_PER_CHARACTER, index_buffer_type::DATA_TYPE, character_index * CHARACTER_INDEX_STRIDE);
 
             const auto next = (c + 1);
 
@@ -398,11 +398,11 @@ namespace mandala
         gpu.programs.pop();
 
         //buffers
-        gpu.buffers.pop(gpu_t::buffer_target_e::ELEMENT_ARRAY);
-        gpu.buffers.pop(gpu_t::buffer_target_e::ARRAY);
+        gpu.buffers.pop(gpu_t::buffer_target::ELEMENT_ARRAY);
+        gpu.buffers.pop(gpu_t::buffer_target::ARRAY);
     }
 
-    void bitmap_font_t::get_string_pages(std::vector<u8>& pages, const string_type& string) const
+    void bitmap_font::get_string_pages(std::vector<u8>& pages, const string_type& string) const
     {
         std::set<u8> pages_set;
 
@@ -416,7 +416,7 @@ namespace mandala
         std::copy(pages_set.begin(), pages_set.end(), std::back_inserter(pages));
     }
 
-    i16 bitmap_font_t::get_string_width(const string_type& string) const
+    i16 bitmap_font::get_string_width(const string_type& string) const
     {
         i16 width = 0;
 

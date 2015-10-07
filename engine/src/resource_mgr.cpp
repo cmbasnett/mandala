@@ -11,9 +11,9 @@
 
 namespace mandala
 {
-    resource_mgr_t resources;
+    resource_mgr resources;
 
-    size_t resource_mgr_t::count() const
+    size_t resource_mgr::count() const
     {
         //TODO: this could be replaced, whenever a resource is added or removed we can just increment or decrement a counter
         size_t count = 0;
@@ -26,7 +26,7 @@ namespace mandala
         return count;
     }
 
-    void resource_mgr_t::prune()
+    void resource_mgr::prune()
     {
         for (auto& type_resource : type_resources)
         {
@@ -48,10 +48,10 @@ namespace mandala
         }
     }
 
-    void resource_mgr_t::purge()
+    void resource_mgr::purge()
     {
 #if defined(DEBUG)
-        std::vector<boost::weak_ptr<resource_t>> resources;
+        std::vector<boost::weak_ptr<resource>> resources;
 
         for (auto& type_resource : type_resources)
         {

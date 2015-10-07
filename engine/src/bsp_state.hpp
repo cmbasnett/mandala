@@ -10,7 +10,7 @@
 namespace mandala
 {
     struct bsp_t;
-    struct model_instance_t;
+    struct model_instance;
     struct gui_image_t;
     struct gui_canvas_t;
     struct frame_buffer_t;
@@ -40,7 +40,7 @@ namespace mandala
             virtual void on_enter() override;
 
         private:
-            boost::shared_ptr<model_instance_t> model;
+            boost::shared_ptr<model_instance> model;
             boost::shared_ptr<gui_image_t> bsp_image;
             boost::shared_ptr<gui_canvas_t> bsp_canvas;
             boost::shared_ptr<frame_buffer_t> bsp_frame_buffer;

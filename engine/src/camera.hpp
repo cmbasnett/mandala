@@ -10,7 +10,7 @@
 
 namespace mandala
 {
-    struct camera_t : actor_t
+    struct camera : actor
     {
         enum class projection_type_e
         {

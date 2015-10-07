@@ -7,43 +7,45 @@
 #include <boost/python/suite/indexing/map_indexing_suite.hpp>
 
 //mandala
-#include "app.hpp"
-#include "string_mgr.hpp"
-#include "state_mgr.hpp"
-#include "resource_mgr.hpp"
-#include "gui_label.hpp"
-#include "bitmap_font.hpp"
-#include "padding.hpp"
-#include "io.hpp"
-#include "state.hpp"
-#include "input_event.hpp"
-#include "state.hpp"
-#include "gui_image.hpp"
-#include "gui_button.hpp"
-#include "rectangle.hpp"
-#include "python_optional.hpp"
-#include "texture.hpp"
-#include "bsp.hpp"
-#include "material.hpp"
-#include "sprite_set.hpp"
-#include "sound.hpp"
-#include "image.hpp"
-#include "model.hpp"
-#include "frame_buffer.hpp"
-#include "gui_canvas.hpp"
-#include "game.hpp"
-#include "python.hpp"
-#include "closure_traits.hpp"
-#include "cache_mgr.hpp"
-#include "interpolation.hpp"
-#include "scene.hpp"
 #include "actor.hpp"
-#include "pose.hpp"
-#include "camera.hpp"
-#include "quake_camera.hpp"
+#include "app.hpp"
 #include "arcball_camera.hpp"
-#include "model_instance.hpp"
+#include "audio_mgr.hpp"
+#include "audio_source.hpp"
+#include "bitmap_font.hpp"
+#include "bsp.hpp"
+#include "cache_mgr.hpp"
+#include "camera.hpp"
+#include "closure_traits.hpp"
+#include "frame_buffer.hpp"
+#include "game.hpp"
+#include "gui_button.hpp"
+#include "gui_canvas.hpp"
+#include "gui_image.hpp"
+#include "gui_label.hpp"
 #include "gui_layout.hpp"
+#include "image.hpp"
+#include "input_event.hpp"
+#include "interpolation.hpp"
+#include "io.hpp"
+#include "material.hpp"
+#include "model.hpp"
+#include "model_instance.hpp"
+#include "padding.hpp"
+#include "pose.hpp"
+#include "python.hpp"
+#include "python_optional.hpp"
+#include "quake_camera.hpp"
+#include "rectangle.hpp"
+#include "resource_mgr.hpp"
+#include "scene.hpp"
+#include "sound.hpp"
+#include "sprite_set.hpp"
+#include "state.hpp"
+#include "state.hpp"
+#include "state_mgr.hpp"
+#include "string_mgr.hpp"
+#include "texture.hpp"
 
 using namespace boost;
 using namespace boost::python;
@@ -81,7 +83,7 @@ return_type name##_wrapper()\
 //void foo_wrapper( char _0 , short _1 , int _2){ return foo( _0 , _1 , _2);}
 //int bar_wrapper(){ return bar();}
 
-#define MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(name) struct name##_wrapper_t : name##_t, wrapper<name##_t>
+#define MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(name) struct name##_wrapper : name, wrapper<name>
 
 #define MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(return_type, name, ...)\
 return_type name(__VA_ARGS__) override\
@@ -155,7 +157,7 @@ MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(game)
     }
 
 #if defined(MANDALA_PC)
-    void on_window_event(window_event_t& window_event) override
+    void on_window_event(window_event& window_event) override
     {
         auto override_ = get_override("on_window_event");
 
@@ -198,7 +200,7 @@ MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(state)
         }
         else
         {
-            return state_t::on_input_event(input_event);
+            return state::on_input_event(input_event);
         }
     }
 
@@ -221,7 +223,7 @@ MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(state)
 };
 
 #define MANDALA_DEFINE_RESOURCE_GET_FUNCTION(name)\
-boost::shared_ptr<name##_t> resources_get_##name(resource_mgr_t& resources, const std::string& hash) { return resources.get<name##_t>(hash_t(hash)); }
+boost::shared_ptr<name> resources_get_##name(resource_mgr& resources, const std::string& hash) { return resources.get<name>(mandala::hash(hash)); }
 
 MANDALA_DEFINE_RESOURCE_GET_FUNCTION(bitmap_font)
 MANDALA_DEFINE_RESOURCE_GET_FUNCTION(bsp)
@@ -316,59 +318,59 @@ class_<mandala::details::padding<scalar_type>>(name, init<scalar_type, scalar_ty
 .def(self_ns::self -= self_ns::self)\
 .def(self_ns::str(self_ns::self));\
 
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(state_mgr_push_overloads, state_mgr_t::push, 2, 3)
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(state_mgr_push_overloads, state_mgr::push, 2, 3)
 
 BOOST_PYTHON_MODULE(mandala)
 {
-    python_optional<sprite_t>();
+    python_optional<sprite>();
     python_optional<size_t>();
 
-    class_<python_t, noncopyable>("Python", no_init)
-        .def("execute", &python_t::exec)
-        .def("exec_file", &python_t::exec_file);
+    class_<mandala::python, noncopyable>("Python", no_init)
+        .def("execute", &mandala::python::exec)
+        .def("exec_file", &mandala::python::exec_file);
 
     scope().attr("py") = boost::ref(py);
 
-    class_<game_wrapper_t, boost::shared_ptr<game_wrapper_t>, noncopyable>("Game", init<>())
-        .def("on_run_start", pure_virtual(&game_t::on_run_start))
-        .def("on_run_end", pure_virtual(&game_t::on_run_end))
-        .def("on_tick_start", pure_virtual(&game_t::on_tick_start))
-        .def("on_tick_end", pure_virtual(&game_t::on_tick_end))
-        .def("on_render_start", pure_virtual(&game_t::on_render_start))
-        .def("on_render_end", pure_virtual(&game_t::on_render_end));
+    class_<game_wrapper, boost::shared_ptr<game_wrapper>, noncopyable>("Game", init<>())
+        .def("on_run_start", pure_virtual(&game::on_run_start))
+        .def("on_run_end", pure_virtual(&game::on_run_end))
+        .def("on_tick_start", pure_virtual(&game::on_tick_start))
+        .def("on_tick_end", pure_virtual(&game::on_tick_end))
+        .def("on_render_start", pure_virtual(&game::on_render_start))
+        .def("on_render_end", pure_virtual(&game::on_render_end));
 
-    class_<hash_t>("Hash", init<std::string>());
+    class_<mandala::hash>("Hash", init<std::string>());
 
     //MATH
-    MANDALA_PYTHON_DEFINE_AABB2("AABB2I", int);
-    MANDALA_PYTHON_DEFINE_AABB2("AABB2F", float);
+    MANDALA_PYTHON_DEFINE_AABB2("AABB2I", i32);
+    MANDALA_PYTHON_DEFINE_AABB2("AABB2F", f32);
 
-    MANDALA_PYTHON_DEFINE_AABB3("AABB3I", int);
-    MANDALA_PYTHON_DEFINE_AABB3("AABB3F", float);
+    MANDALA_PYTHON_DEFINE_AABB3("AABB3I", i32);
+    MANDALA_PYTHON_DEFINE_AABB3("AABB3F", f32);
 
     //move to GLM module?
-    MANDALA_PYTHON_DEFINE_VEC2("Vec2I", int);
-    MANDALA_PYTHON_DEFINE_VEC2("Vec2F", float);
-    MANDALA_PYTHON_DEFINE_VEC2("Vec2D", double);
+    MANDALA_PYTHON_DEFINE_VEC2("Vec2I", i32);
+    MANDALA_PYTHON_DEFINE_VEC2("Vec2F", f32);
+    MANDALA_PYTHON_DEFINE_VEC2("Vec2D", f64);
 
-    MANDALA_PYTHON_DEFINE_VEC3("Vec3I", int);
-    MANDALA_PYTHON_DEFINE_VEC3("Vec3F", float);
+    MANDALA_PYTHON_DEFINE_VEC3("Vec3I", i32);
+    MANDALA_PYTHON_DEFINE_VEC3("Vec3F", f32);
 
-    MANDALA_PYTHON_DEFINE_VEC4("Vec4I", int);
-    MANDALA_PYTHON_DEFINE_VEC4("Vec4F", float);
+    MANDALA_PYTHON_DEFINE_VEC4("Vec4I", i32);
+    MANDALA_PYTHON_DEFINE_VEC4("Vec4F", f32);
 
-    MANDALA_PYTHON_DEFINE_RECTANGLE("RectangleI", int);
-    MANDALA_PYTHON_DEFINE_RECTANGLE("RectangleF", float);
+    MANDALA_PYTHON_DEFINE_RECTANGLE("RectangleI", i32);
+    MANDALA_PYTHON_DEFINE_RECTANGLE("RectangleF", f32);
 
-    MANDALA_PYTHON_DEFINE_PADDING("PaddingI", int);
-    MANDALA_PYTHON_DEFINE_PADDING("PaddingF", float);
+    MANDALA_PYTHON_DEFINE_PADDING("PaddingI", i32);
+    MANDALA_PYTHON_DEFINE_PADDING("PaddingF", f32);
 
     //PLATFORM
     //TODO: remove specialized platform structs, have only 1 platform_t per platform
     {
         scope platform_scope = 
 #if defined(MANDALA_WINDOWS)
-        class_<platform_win32_t, noncopyable>("Platform", no_init)
+        class_<platform_win32, noncopyable>("Platform", no_init)
 #elif defined(MANDALA_OSX)
         class_<platform_osx_t, noncopyable>("Platform", no_init)
 #endif
@@ -598,41 +600,39 @@ BOOST_PYTHON_MODULE(mandala)
     }
 
 #if defined(MANDALA_PC)
-    {
-        scope window_event_scope = class_<window_event_t>("WindowEvent", no_init)
-            .add_property("type", &window_event_t::type)
-            .add_property("rectangle", &window_event_t::rectangle);
+    enum_<window_event_type>("WindowEventType")
+        .value("MOVE", window_event_type::MOVE)
+        .value("RESIZE", window_event_type::RESIZE)
+        .export_values();
 
-        enum_<window_event_t::type_e>("Type")
-            .value("MOVE", window_event_t::type_e::MOVE)
-            .value("RESIZE", window_event_t::type_e::RESIZE)
-            .export_values();
-    }
+    class_<window_event>("WindowEvent", no_init)
+        .add_property("type", &window_event::type)
+        .add_property("rectangle", &window_event::rectangle);
 #endif
 
     scope().attr("platform") = boost::ref(platform);
 
     //APP
     {
-        scope app_scope = class_<app_t, noncopyable>("App", no_init)
-            .def("exit", &app_t::exit)
-            .def("reset", &app_t::reset)
-            .def("run", &app_t::run)
-            .add_property("performance", make_function(&app_t::get_performance, return_value_policy<copy_const_reference>()))
-            .add_property("uptime", &app_t::get_uptime);
+        scope app_scope = class_<app, noncopyable>("App", no_init)
+            .def("exit", &app::exit)
+            .def("reset", &app::reset)
+            .def("run", &app::run)
+            .add_property("performance", make_function(&app::get_performance, return_value_policy<copy_const_reference>()))
+            .add_property("uptime", &app::get_uptime);
 
-        class_<app_t::performance_t>("Performance", no_init)
-            .def_readonly("fps", &app_t::performance_t::fps);
+        class_<app::performance_t>("Performance", no_init)
+            .def_readonly("fps", &app::performance_t::fps);
     }
 
-    scope().attr("app") = boost::ref(app);
+    scope().attr("app") = boost::ref(app_);
 
     //STRING MANAGER
-    class_<string_mgr_t, noncopyable>("StringMgr", no_init)
-        .def("mount", &string_mgr_t::mount)
-        .def("get", &string_mgr_t::get)
-        .def("purge", &string_mgr_t::purge)
-        .add_property("count", &string_mgr_t::count);
+    class_<string_mgr, noncopyable>("StringMgr", no_init)
+        .def("mount", &string_mgr::mount)
+        .def("get", &string_mgr::get)
+        .def("purge", &string_mgr::purge)
+        .add_property("count", &string_mgr::count);
 
     scope().attr("strings") = boost::ref(strings);
 
@@ -643,32 +643,32 @@ BOOST_PYTHON_MODULE(mandala)
     scope().attr("STATE_FLAG_TICK") = state_flags_type(STATE_FLAG_TICK);
     scope().attr("STATE_FLAG_ALL") = state_flags_type(STATE_FLAG_ALL);
 
-    class_<state_mgr_t, noncopyable>("StateMgr", no_init)
-        .def("push", &state_mgr_t::push, state_mgr_push_overloads(boost::python::args("state", "link_flags", "weight")))
-        .def("pop", &state_mgr_t::pop)
-        .def("change_link_flags", &state_mgr_t::change_link_flags)
-        .def("change_weight", &state_mgr_t::change_weight)
-        .def("purge", &state_mgr_t::purge)
-        .def("get_flags", &state_mgr_t::get_flags)
-        .def("get_link_flags", &state_mgr_t::get_link_flags)
-        .add_property("count", &state_mgr_t::count)
-        .def("at", &state_mgr_t::at)
-        .def("index_of", &state_mgr_t::index_of)
-        .def("is_state_rendering", &state_mgr_t::is_state_rendering)
-        .def("is_state_ticking", &state_mgr_t::is_state_ticking)
-        .def("is_state_handling_input", &state_mgr_t::is_state_handling_input)
-        .def("is_state_popping", &state_mgr_t::is_state_popping)
-        .def("is_state_changing_link_flags", &state_mgr_t::is_state_changing_link_flags);
+    class_<state_mgr, noncopyable>("StateMgr", no_init)
+        .def("push", &state_mgr::push, state_mgr_push_overloads(boost::python::args("state", "link_flags", "weight")))
+        .def("pop", &state_mgr::pop)
+        .def("change_link_flags", &state_mgr::change_link_flags)
+        .def("change_weight", &state_mgr::change_weight)
+        .def("purge", &state_mgr::purge)
+        .def("get_flags", &state_mgr::get_flags)
+        .def("get_link_flags", &state_mgr::get_link_flags)
+        .add_property("count", &state_mgr::count)
+        .def("at", &state_mgr::at)
+        .def("index_of", &state_mgr::index_of)
+        .def("is_state_rendering", &state_mgr::is_state_rendering)
+        .def("is_state_ticking", &state_mgr::is_state_ticking)
+        .def("is_state_handling_input", &state_mgr::is_state_handling_input)
+        .def("is_state_popping", &state_mgr::is_state_popping)
+        .def("is_state_changing_link_flags", &state_mgr::is_state_changing_link_flags);
 
     scope().attr("states") = boost::ref(states);
 
     //RESOURCES
-    class_<resource_mgr_t, noncopyable>("ResourceMgr", no_init)
-        .def("mount", &resource_mgr_t::mount)
-        .def("unmount_all", &resource_mgr_t::unmount_all)
-        .def("extract", &resource_mgr_t::extract)
-        .add_property("count", &resource_mgr_t::count)
-        .def("purge", &resource_mgr_t::purge)
+    class_<resource_mgr, noncopyable>("ResourceMgr", no_init)
+        .def("mount", &resource_mgr::mount)
+        .def("unmount_all", &resource_mgr::unmount_all)
+        .def("extract", &resource_mgr::extract)
+        .add_property("count", &resource_mgr::count)
+        .def("purge", &resource_mgr::purge)
         .def("get_bitmap_font", &resources_get_bitmap_font)
         .def("get_bsp", &resources_get_bsp)
         .def("get_image", &resources_get_image)
@@ -682,8 +682,8 @@ BOOST_PYTHON_MODULE(mandala)
     scope().attr("resources") = boost::ref(resources);
 
     //CACHE
-    class_<cache_mgr_t, noncopyable>("CacheMgr", no_init)
-        .def("purge", &cache_mgr_t::purge);
+    class_<cache_mgr, noncopyable>("CacheMgr", no_init)
+        .def("purge", &cache_mgr::purge);
 
     scope().attr("cache") = boost::ref(cache);
 
@@ -724,187 +724,187 @@ BOOST_PYTHON_MODULE(mandala)
         .add_property("y", make_function(&gui_size_modes_t::get_y), &gui_size_modes_t::set_y)
         ;
 
-    class_<frame_buffer_t, boost::shared_ptr<frame_buffer_t>, noncopyable>("FrameBuffer", no_init);
+    class_<frame_buffer, boost::shared_ptr<frame_buffer>, noncopyable>("FrameBuffer", no_init);
 
-    class_<gui_node_t, boost::shared_ptr<gui_node_t>, noncopyable>("GuiNode", init<>())
-        .add_property("root", make_function(&gui_node_t::get_root, return_value_policy<copy_const_reference>()))
-        .add_property("parent", make_function(&gui_node_t::get_parent, return_value_policy<copy_const_reference>()))
-        .add_property("dock_mode", &gui_node_t::get_dock_mode, &gui_node_t::set_dock_mode)
-        .add_property("anchor_flags", &gui_node_t::get_anchor_flags, &gui_node_t::set_anchor_flags)
-        .add_property("anchor_offset", make_function(&gui_node_t::get_anchor_offset, return_value_policy<copy_const_reference>()), &gui_node_t::set_anchor_offset)
-        .add_property("padding", make_function(&gui_node_t::get_padding, return_value_policy<copy_const_reference>()), &gui_node_t::set_padding)
-        .add_property("margin", make_function(&gui_node_t::get_margin, return_value_policy<copy_const_reference>()), &gui_node_t::set_margin)
-        .add_property("size", make_function(&gui_node_t::get_size, return_value_policy<copy_const_reference>()), &gui_node_t::set_size)
-        .add_property("size_modes", make_function(&gui_node_t::get_size_modes, return_value_policy<copy_const_reference>()), &gui_node_t::set_size_modes)
-        .add_property("color", make_function(&gui_node_t::get_color, return_value_policy<copy_const_reference>()), &gui_node_t::set_color)
-        .add_property("bounds", make_function(&gui_node_t::get_bounds, return_value_policy<copy_const_reference>()), &gui_node_t::set_bounds)
-        .add_property("should_clip", &gui_node_t::get_should_clip, &gui_node_t::set_should_clip)
-        .add_property("is_dirty", &gui_node_t::get_is_dirty)
-        .add_property("visibility", &gui_node_t::get_visibility, &gui_node_t::set_visibility)
-        .add_property("has_children", &gui_node_t::has_children)
-        .add_property("has_parent", &gui_node_t::has_parent)
-        .def("orphan", &gui_node_t::orphan)
-        .def("dirty", &gui_node_t::dirty)
-        .def("adopt", &gui_node_t::adopt)
+    class_<gui_node, boost::shared_ptr<gui_node>, noncopyable>("GuiNode", init<>())
+        .add_property("root", make_function(&gui_node::get_root, return_value_policy<copy_const_reference>()))
+        .add_property("parent", make_function(&gui_node::get_parent, return_value_policy<copy_const_reference>()))
+        .add_property("dock_mode", &gui_node::get_dock_mode, &gui_node::set_dock_mode)
+        .add_property("anchor_flags", &gui_node::get_anchor_flags, &gui_node::set_anchor_flags)
+        .add_property("anchor_offset", make_function(&gui_node::get_anchor_offset, return_value_policy<copy_const_reference>()), &gui_node::set_anchor_offset)
+        .add_property("padding", make_function(&gui_node::get_padding, return_value_policy<copy_const_reference>()), &gui_node::set_padding)
+        .add_property("margin", make_function(&gui_node::get_margin, return_value_policy<copy_const_reference>()), &gui_node::set_margin)
+        .add_property("size", make_function(&gui_node::get_size, return_value_policy<copy_const_reference>()), &gui_node::set_size)
+        .add_property("size_modes", make_function(&gui_node::get_size_modes, return_value_policy<copy_const_reference>()), &gui_node::set_size_modes)
+        .add_property("color", make_function(&gui_node::get_color, return_value_policy<copy_const_reference>()), &gui_node::set_color)
+        .add_property("bounds", make_function(&gui_node::get_bounds, return_value_policy<copy_const_reference>()), &gui_node::set_bounds)
+        .add_property("should_clip", &gui_node::get_should_clip, &gui_node::set_should_clip)
+        .add_property("is_dirty", &gui_node::get_is_dirty)
+        .add_property("visibility", &gui_node::get_visibility, &gui_node::set_visibility)
+        .add_property("has_children", &gui_node::has_children)
+        .add_property("has_parent", &gui_node::has_parent)
+        .def("orphan", &gui_node::orphan)
+        .def("dirty", &gui_node::dirty)
+        .def("adopt", &gui_node::adopt)
         ;
 
     {
-        scope gui_button_scope = class_<gui_button_t, bases<gui_node_t>, boost::shared_ptr<gui_button_t>, noncopyable>("GuiButton", init<>())
-            .add_property("state", &gui_button_t::get_state)
-            .def("on_state_changed", WRAP_MEM(gui_button_t, on_state_changed))
-            .def("set_on_state_changed", SET_MEM(gui_button_t, on_state_changed))
+        scope gui_button_scope = class_<gui_button, bases<gui_node>, boost::shared_ptr<gui_button>, noncopyable>("GuiButton", init<>())
+            .add_property("state", &gui_button::get_state)
+            .def("on_state_changed", WRAP_MEM(gui_button, on_state_changed))
+            .def("set_on_state_changed", SET_MEM(gui_button, on_state_changed))
             ;
 
-        enum_<gui_button_t::state_t>("State")
-            .value("IDLE", gui_button_t::state_t::IDLE)
+        enum_<gui_button::state_t>("State")
+            .value("IDLE", gui_button::state_t::IDLE)
 #if defined(MANDALA_PC)
-            .value("HOVER", gui_button_t::state_t::HOVER)
+            .value("HOVER", gui_button::state_t::HOVER)
 #endif
-            .value("PRESSED", gui_button_t::state_t::PRESSED)
+            .value("PRESSED", gui_button::state_t::PRESSED)
             .export_values();
     }
 
-    class_<gui_canvas_t, bases<gui_node_t>, boost::shared_ptr<gui_canvas_t>, noncopyable>("GuiCanvas", init<>())
-        .add_property("frame_buffer", make_function(&gui_canvas_t::get_frame_buffer, return_value_policy<copy_const_reference>()));
+    class_<gui_canvas, bases<gui_node>, boost::shared_ptr<gui_canvas>, noncopyable>("GuiCanvas", init<>())
+        .add_property("frame_buffer", make_function(&gui_canvas::get_frame_buffer, return_value_policy<copy_const_reference>()));
 
     {
-        scope gui_label_scope = class_<gui_label_t, bases<gui_node_t>, boost::shared_ptr<gui_label_t>, noncopyable>("GuiLabel", init<>())
-            .add_property("bitmap_font", make_function(&gui_label_t::get_bitmap_font, return_value_policy<copy_const_reference>()), &gui_label_t::set_bitmap_font)
-            .add_property("string", make_function(&gui_label_t::get_string, return_value_policy<copy_const_reference>()), &gui_label_t::set_string)
-            .add_property("justification", &gui_label_t::get_justification, &gui_label_t::set_justification)
-            .add_property("vertical_alignment", &gui_label_t::get_vertical_alignment, &gui_label_t::set_vertical_alignment)
-            .add_property("line_spacing", &gui_label_t::get_line_spacing, &gui_label_t::set_line_spacing)
-            .add_property("is_multiline", &gui_label_t::get_is_multiline, &gui_label_t::set_is_multiline)
-            .add_property("should_use_ellipses", &gui_label_t::get_should_use_ellipses, &gui_label_t::set_should_use_ellipses)
-            .add_property("should_use_color_codes", &gui_label_t::get_should_use_color_codes, &gui_label_t::set_should_use_color_codes)
-            .add_property("is_read_only", &gui_label_t::get_is_read_only, &gui_label_t::set_is_read_only)
-            .add_property("max_length", &gui_label_t::get_max_length, &gui_label_t::set_max_length)
-            .add_property("is_autosized_to_text", &gui_label_t::get_is_autosized_to_text, &gui_label_t::set_is_autosized_to_text)
-            .add_property("is_obscured", &gui_label_t::get_is_obscured, &gui_label_t::set_is_obscured)
-            .def("escape_string", &gui_label_t::escape_string, return_value_policy<copy_non_const_reference>())
+        scope gui_label_scope = class_<gui_label, bases<gui_node>, boost::shared_ptr<gui_label>, noncopyable>("GuiLabel", init<>())
+            .add_property("bitmap_font", make_function(&gui_label::get_bitmap_font, return_value_policy<copy_const_reference>()), &gui_label::set_bitmap_font)
+            .add_property("string", make_function(&gui_label::get_string, return_value_policy<copy_const_reference>()), &gui_label::set_string)
+            .add_property("justification", &gui_label::get_justification, &gui_label::set_justification)
+            .add_property("vertical_alignment", &gui_label::get_vertical_alignment, &gui_label::set_vertical_alignment)
+            .add_property("line_spacing", &gui_label::get_line_spacing, &gui_label::set_line_spacing)
+            .add_property("is_multiline", &gui_label::get_is_multiline, &gui_label::set_is_multiline)
+            .add_property("should_use_ellipses", &gui_label::get_should_use_ellipses, &gui_label::set_should_use_ellipses)
+            .add_property("should_use_color_codes", &gui_label::get_should_use_color_codes, &gui_label::set_should_use_color_codes)
+            .add_property("is_read_only", &gui_label::get_is_read_only, &gui_label::set_is_read_only)
+            .add_property("max_length", &gui_label::get_max_length, &gui_label::set_max_length)
+            .add_property("is_autosized_to_text", &gui_label::get_is_autosized_to_text, &gui_label::set_is_autosized_to_text)
+            .add_property("is_obscured", &gui_label::get_is_obscured, &gui_label::set_is_obscured)
+            .def("escape_string", &gui_label::escape_string, return_value_policy<copy_non_const_reference>())
             .staticmethod("escape_string");
 
 
-        enum_<gui_label_t::justification_e>("Justification")
-            .value("LEFT", gui_label_t::justification_e::LEFT)
-            .value("CENTER", gui_label_t::justification_e::CENTER)
-            .value("RIGHT", gui_label_t::justification_e::RIGHT)
+        enum_<gui_label::justification_e>("Justification")
+            .value("LEFT", gui_label::justification_e::LEFT)
+            .value("CENTER", gui_label::justification_e::CENTER)
+            .value("RIGHT", gui_label::justification_e::RIGHT)
             .export_values();
 
-        enum_<gui_label_t::vertical_alignment_e>("VerticalAlignment")
-            .value("TOP", gui_label_t::vertical_alignment_e::TOP)
-            .value("MIDDLE", gui_label_t::vertical_alignment_e::MIDDLE)
-            .value("BOTTOM", gui_label_t::vertical_alignment_e::BOTTOM)
+        enum_<gui_label::vertical_alignment_e>("VerticalAlignment")
+            .value("TOP", gui_label::vertical_alignment_e::TOP)
+            .value("MIDDLE", gui_label::vertical_alignment_e::MIDDLE)
+            .value("BOTTOM", gui_label::vertical_alignment_e::BOTTOM)
             .export_values();
     }
     
     {
-        scope gui_image_scope = class_<gui_image_t, bases<gui_node_t>, boost::shared_ptr<gui_image_t>, noncopyable>("GuiImage", init<>())
-            .add_property("sprite", make_function(&gui_image_t::get_sprite, return_value_policy<copy_const_reference>()), &gui_image_t::set_sprite)
-            .add_property("is_autosized_to_sprite", &gui_image_t::get_is_autosized_to_sprite, &gui_image_t::set_is_autosized_to_sprite)
-            .add_property("triangle_mode", &gui_image_t::get_triangle_mode, &gui_image_t::set_triangle_mode)
-            .add_property("texcoord_scale", make_function(&gui_image_t::get_texcoord_scale, return_value_policy<copy_const_reference>()), &gui_image_t::set_texcoord_scale)
-            .add_property("texcoord_origin", make_function(&gui_image_t::get_texcoord_origin, return_value_policy<copy_const_reference>()), &gui_image_t::set_texcoord_origin)
-            .add_property("texcoord_rotation", &gui_image_t::get_texcoord_rotation, &gui_image_t::set_texcoord_rotation)
-            .add_property("slice_padding", make_function(&gui_image_t::get_slice_padding, return_value_policy<copy_const_reference>()), &gui_image_t::set_slice_padding);
+        scope gui_image_scope = class_<gui_image, bases<gui_node>, boost::shared_ptr<gui_image>, noncopyable>("GuiImage", init<>())
+            .add_property("sprite", make_function(&gui_image::get_sprite, return_value_policy<copy_const_reference>()), &gui_image::set_sprite)
+            .add_property("is_autosized_to_sprite", &gui_image::get_is_autosized_to_sprite, &gui_image::set_is_autosized_to_sprite)
+            .add_property("triangle_mode", &gui_image::get_triangle_mode, &gui_image::set_triangle_mode)
+            .add_property("texcoord_scale", make_function(&gui_image::get_texcoord_scale, return_value_policy<copy_const_reference>()), &gui_image::set_texcoord_scale)
+            .add_property("texcoord_origin", make_function(&gui_image::get_texcoord_origin, return_value_policy<copy_const_reference>()), &gui_image::set_texcoord_origin)
+            .add_property("texcoord_rotation", &gui_image::get_texcoord_rotation, &gui_image::set_texcoord_rotation)
+            .add_property("slice_padding", make_function(&gui_image::get_slice_padding, return_value_policy<copy_const_reference>()), &gui_image::set_slice_padding);
 
-        enum_<gui_image_t::triangle_mode_e>("TriangleMode")
-            .value("BOTTOM_RIGHT", gui_image_t::triangle_mode_e::BOTTOM_RIGHT)
-            .value("TOP_LEFT", gui_image_t::triangle_mode_e::TOP_LEFT)
-            .value("TOP_RIGHT", gui_image_t::triangle_mode_e::TOP_RIGHT)
-            .value("BOTTOM_LEFT", gui_image_t::triangle_mode_e::BOTTOM_LEFT)
-            .value("BOTH", gui_image_t::triangle_mode_e::BOTH)
-            .value("SLICE", gui_image_t::triangle_mode_e::SLICE);
+        enum_<gui_image::triangle_mode_e>("TriangleMode")
+            .value("BOTTOM_RIGHT", gui_image::triangle_mode_e::BOTTOM_RIGHT)
+            .value("TOP_LEFT", gui_image::triangle_mode_e::TOP_LEFT)
+            .value("TOP_RIGHT", gui_image::triangle_mode_e::TOP_RIGHT)
+            .value("BOTTOM_LEFT", gui_image::triangle_mode_e::BOTTOM_LEFT)
+            .value("BOTH", gui_image::triangle_mode_e::BOTH)
+            .value("SLICE", gui_image::triangle_mode_e::SLICE);
     }
 
-    class_<gui_layout_t, bases<gui_node_t>, boost::shared_ptr<gui_layout_t>, noncopyable>("GuiLayout", no_init);
+    class_<gui_layout, bases<gui_node>, boost::shared_ptr<gui_layout>, noncopyable>("GuiLayout", no_init);
 
     //STATES
-    class_<state_t, boost::shared_ptr<state_t>, noncopyable>("StateBase", no_init);
+    class_<state, boost::shared_ptr<state>, noncopyable>("StateBase", no_init);
 
-    class_<state_wrapper_t, boost::shared_ptr<state_wrapper_t>, noncopyable>("State", init<>())
-        .def("tick", &state_wrapper_t::tick)
-        .def("on_input_event", &state_wrapper_t::on_input_event)
-        .def("on_input_event_base", &state_wrapper_t::on_input_event_base)
+    class_<state_wrapper, boost::shared_ptr<state_wrapper>, noncopyable>("State", init<>())
+        .def("tick", &state_wrapper::tick)
+        .def("on_input_event", &state_wrapper::on_input_event)
+        .def("on_input_event_base", &state_wrapper::on_input_event_base)
 #if defined(MANDALA_PC)
-        .def("on_window_event", &state_wrapper_t::on_window_event)
+        .def("on_window_event", &state_wrapper::on_window_event)
 #endif
-        .def("on_active", &state_wrapper_t::on_active)
-        .def("on_passive", &state_wrapper_t::on_passive)
-        .def("on_enter", &state_wrapper_t::on_enter)
-        .def("on_exit", &state_wrapper_t::on_exit)
-        .def("on_stop_tick", &state_wrapper_t::on_stop_tick)
-        .def("on_start_tick", &state_wrapper_t::on_start_tick)
-        .def("on_stop_render", &state_wrapper_t::on_stop_render)
-        .def("on_start_render", &state_wrapper_t::on_start_render)
-        .def("on_stop_input", &state_wrapper_t::on_stop_input)
-        .def("on_start_input", &state_wrapper_t::on_start_input)
-        .def("render_base", &state_wrapper_t::render_base)
-        .add_property("layout", make_function(&state_wrapper_t::get_layout, return_value_policy<copy_const_reference>()));
+        .def("on_active", &state_wrapper::on_active)
+        .def("on_passive", &state_wrapper::on_passive)
+        .def("on_enter", &state_wrapper::on_enter)
+        .def("on_exit", &state_wrapper::on_exit)
+        .def("on_stop_tick", &state_wrapper::on_stop_tick)
+        .def("on_start_tick", &state_wrapper::on_start_tick)
+        .def("on_stop_render", &state_wrapper::on_stop_render)
+        .def("on_start_render", &state_wrapper::on_start_render)
+        .def("on_stop_input", &state_wrapper::on_stop_input)
+        .def("on_start_input", &state_wrapper::on_start_input)
+        .def("render_base", &state_wrapper::render_base)
+        .add_property("layout", make_function(&state_wrapper::get_layout, return_value_policy<copy_const_reference>()));
 
     //RESOURCES
-    class_<resource_t, boost::shared_ptr<resource_t>, noncopyable>("Resource", no_init);
+    class_<resource, boost::shared_ptr<resource>, noncopyable>("Resource", no_init);
 
-    class_<bitmap_font_t, bases<resource_t>, boost::shared_ptr<bitmap_font_t>, noncopyable>("BitmapFont", no_init)
-        .add_property("size", &bitmap_font_t::get_size)
-        .add_property("is_smooth", &bitmap_font_t::get_is_smooth)
-        .add_property("is_unicode", &bitmap_font_t::get_is_unicode)
-        .add_property("is_bold", &bitmap_font_t::get_is_bold)
-        .add_property("is_fixed_height", &bitmap_font_t::get_is_fixed_height)
-        .add_property("char_set", &bitmap_font_t::get_char_set)
-        .add_property("stretch_height", &bitmap_font_t::get_stretch_height)
-        .add_property("antialiasing", &bitmap_font_t::get_antialiasing)
-        .add_property("padding", make_function(&bitmap_font_t::get_padding, return_value_policy<copy_const_reference>()))
-        .add_property("spacing_horizontal", &bitmap_font_t::get_spacing_horizontal)
-        .add_property("spacing_vertical", &bitmap_font_t::get_spacing_vertical)
-        .add_property("outline", &bitmap_font_t::get_outline)
-        .add_property("line_height", &bitmap_font_t::get_line_height)
-        .add_property("base", &bitmap_font_t::get_base)
-        .add_property("width", &bitmap_font_t::get_width)
-        .add_property("height", &bitmap_font_t::get_height)
-        .add_property("page_count", &bitmap_font_t::get_page_count)
-        .add_property("flags_1", &bitmap_font_t::get_flags_1)
-        .add_property("alpha_channel", &bitmap_font_t::get_alpha_channel)
-        .add_property("red_channel", &bitmap_font_t::get_red_channel)
-        .add_property("green_channel", &bitmap_font_t::get_green_channel)
-        .add_property("blue_channel", &bitmap_font_t::get_blue_channel);
+    class_<bitmap_font, bases<resource>, boost::shared_ptr<bitmap_font>, noncopyable>("BitmapFont", no_init)
+        .add_property("size", &bitmap_font::get_size)
+        .add_property("is_smooth", &bitmap_font::get_is_smooth)
+        .add_property("is_unicode", &bitmap_font::get_is_unicode)
+        .add_property("is_bold", &bitmap_font::get_is_bold)
+        .add_property("is_fixed_height", &bitmap_font::get_is_fixed_height)
+        .add_property("char_set", &bitmap_font::get_char_set)
+        .add_property("stretch_height", &bitmap_font::get_stretch_height)
+        .add_property("antialiasing", &bitmap_font::get_antialiasing)
+        .add_property("padding", make_function(&bitmap_font::get_padding, return_value_policy<copy_const_reference>()))
+        .add_property("spacing_horizontal", &bitmap_font::get_spacing_horizontal)
+        .add_property("spacing_vertical", &bitmap_font::get_spacing_vertical)
+        .add_property("outline", &bitmap_font::get_outline)
+        .add_property("line_height", &bitmap_font::get_line_height)
+        .add_property("base", &bitmap_font::get_base)
+        .add_property("width", &bitmap_font::get_width)
+        .add_property("height", &bitmap_font::get_height)
+        .add_property("page_count", &bitmap_font::get_page_count)
+        .add_property("flags_1", &bitmap_font::get_flags_1)
+        .add_property("alpha_channel", &bitmap_font::get_alpha_channel)
+        .add_property("red_channel", &bitmap_font::get_red_channel)
+        .add_property("green_channel", &bitmap_font::get_green_channel)
+        .add_property("blue_channel", &bitmap_font::get_blue_channel);
 
-    class_<std::map<const hash_t, boost::shared_ptr<sprite_set_t::region_t>>>("SpriteSetRegionMap")
-        .def(map_indexing_suite<std::map<const hash_t, boost::shared_ptr<sprite_set_t::region_t>>>());
+    class_<std::map<const mandala::hash, boost::shared_ptr<sprite_set::region>>>("SpriteSetRegionMap")
+        .def(map_indexing_suite<std::map<const mandala::hash, boost::shared_ptr<sprite_set::region>>>());
 
-    class_<texture_t, bases<resource_t>, boost::shared_ptr<texture_t>, noncopyable>("Texture", no_init)
-        .add_property("size", make_function(&texture_t::get_size, return_value_policy<copy_const_reference>()))
-        .add_property("id", &texture_t::get_id);
+    class_<texture, bases<resource>, boost::shared_ptr<texture>, noncopyable>("Texture", no_init)
+        .add_property("size", make_function(&texture::get_size, return_value_policy<copy_const_reference>()))
+        .add_property("id", &texture::get_id);
 
-    class_<sprite_set_t::region_t, boost::shared_ptr<sprite_set_t::region_t>, noncopyable>("SpriteSetRegion", no_init)
-        .add_property("hash", &sprite_set_t::region_t::hash)
-        .add_property("frame_rectangle", &sprite_set_t::region_t::frame_rectangle)
-        .add_property("rectangle", &sprite_set_t::region_t::rectangle)
-        .add_property("source_size", &sprite_set_t::region_t::source_size)
-        .add_property("is_rotated", &sprite_set_t::region_t::is_rotated)
-        .add_property("is_trimmed", &sprite_set_t::region_t::is_trimmed)
-        .add_property("frame_uv", &sprite_set_t::region_t::frame_uv)
-        .add_property("uv", &sprite_set_t::region_t::uv)
+    class_<sprite_set::region, boost::shared_ptr<sprite_set::region>, noncopyable>("SpriteSetRegion", no_init)
+        .add_property("hash", &sprite_set::region::hash)
+        .add_property("frame_rectangle", &sprite_set::region::frame_rectangle)
+        .add_property("rectangle", &sprite_set::region::rectangle)
+        .add_property("source_size", &sprite_set::region::source_size)
+        .add_property("is_rotated", &sprite_set::region::is_rotated)
+        .add_property("is_trimmed", &sprite_set::region::is_trimmed)
+        .add_property("frame_uv", &sprite_set::region::frame_uv)
+        .add_property("uv", &sprite_set::region::uv)
         ;
 
     {
-        scope sprite_set_scope = class_<sprite_set_t, bases<resource_t>, boost::shared_ptr<sprite_set_t>, noncopyable>("SpriteSet", no_init)
-            .add_property("texture", make_function(&sprite_set_t::get_texture, return_value_policy<copy_const_reference>()))
-            .add_property("regions", make_function(&sprite_set_t::get_regions, return_value_policy<copy_const_reference>()))
+        scope sprite_set_scope = class_<sprite_set, bases<resource>, boost::shared_ptr<sprite_set>, noncopyable>("SpriteSet", no_init)
+            .add_property("texture", make_function(&sprite_set::get_texture, return_value_policy<copy_const_reference>()))
+            .add_property("regions", make_function(&sprite_set::get_regions, return_value_policy<copy_const_reference>()))
             ;
     }
 
-    class_<sprite_t, noncopyable>("Sprite", init<const hash_t&, const hash_t&>())
-        .add_property("region", make_function(&sprite_t::get_region, return_value_policy<copy_const_reference>()))
-        .add_property("sprite_set", make_function(&sprite_t::get_sprite_set, return_value_policy<copy_const_reference>()));
+    class_<sprite, noncopyable>("Sprite", init<const mandala::hash&, const mandala::hash&>())
+        .add_property("region", make_function(&sprite::get_region, return_value_policy<copy_const_reference>()))
+        .add_property("sprite_set", make_function(&sprite::get_sprite_set, return_value_policy<copy_const_reference>()));
 
     class_<std::vector<const std::string>>("StringVec")
         .def(vector_indexing_suite<std::vector<const std::string>>());
 
-    class_<model_t, bases<resource_t>, boost::shared_ptr<model_t>, noncopyable>("Model", no_init)
-        .add_property("bones", make_function(&model_t::get_bone_names, return_value_policy<copy_const_reference>()));
+    class_<model, bases<resource>, boost::shared_ptr<model>, noncopyable>("Model", no_init)
+        .add_property("bones", make_function(&model::get_bone_names, return_value_policy<copy_const_reference>()));
 
-    class_<bsp_t, bases<resource_t>, boost::shared_ptr<bsp_t>, noncopyable>("Bsp", no_init);
+    class_<bsp, bases<resource>, boost::shared_ptr<bsp>, noncopyable>("Bsp", no_init);
 
     //GPU
     class_<gpu_t, noncopyable>("Gpu", no_init)
@@ -917,76 +917,91 @@ BOOST_PYTHON_MODULE(mandala)
 
     scope().attr("gpu") = boost::ref(gpu);
 
-    enum_<gpu_frame_buffer_type_e>("FrameBufferType")
-        .value("COLOR", gpu_frame_buffer_type_e::COLOR)
-        .value("COLOR_DEPTH", gpu_frame_buffer_type_e::COLOR_DEPTH)
-        .value("COLOR_DEPTH_STENCIL", gpu_frame_buffer_type_e::COLOR_DEPTH_STENCIL)
-        .value("DEPTH", gpu_frame_buffer_type_e::DEPTH)
-        .value("DEPTH_STENCIL", gpu_frame_buffer_type_e::DEPTH_STENCIL)
+    enum_<gpu_frame_buffer_type>("FrameBufferType")
+        .value("COLOR", gpu_frame_buffer_type::COLOR)
+        .value("COLOR_DEPTH", gpu_frame_buffer_type::COLOR_DEPTH)
+        .value("COLOR_DEPTH_STENCIL", gpu_frame_buffer_type::COLOR_DEPTH_STENCIL)
+        .value("DEPTH", gpu_frame_buffer_type::DEPTH)
+        .value("DEPTH_STENCIL", gpu_frame_buffer_type::DEPTH_STENCIL)
         .export_values();
 
-    class_<frame_buffer_t, noncopyable>("FrameBuffer", no_init)
-        .add_property("id", &frame_buffer_t::get_id)
-        .add_property("color_texture", make_function(&frame_buffer_t::get_color_texture, return_value_policy<copy_const_reference>()))
-        .add_property("depth_texture", make_function(&frame_buffer_t::get_depth_texture, return_value_policy<copy_const_reference>()))
-        .add_property("depth_stencil_texture", make_function(&frame_buffer_t::get_depth_stencil_texture, return_value_policy<copy_const_reference>()))
-        .add_property("size", make_function(&frame_buffer_t::get_size, return_value_policy<copy_const_reference>()), &frame_buffer_t::set_size)
-        .add_property("type", &frame_buffer_t::get_type)
+    class_<frame_buffer, noncopyable>("FrameBuffer", no_init)
+        .add_property("id", &frame_buffer::get_id)
+        .add_property("color_texture", make_function(&frame_buffer::get_color_texture, return_value_policy<copy_const_reference>()))
+        .add_property("depth_texture", make_function(&frame_buffer::get_depth_texture, return_value_policy<copy_const_reference>()))
+        .add_property("depth_stencil_texture", make_function(&frame_buffer::get_depth_stencil_texture, return_value_policy<copy_const_reference>()))
+        .add_property("size", make_function(&frame_buffer::get_size, return_value_policy<copy_const_reference>()), &frame_buffer::set_size)
+        .add_property("type", &frame_buffer::get_type)
         ;
 
     def("bezier", mandala::bezier3<f32>, args("point0", "point1", "point2", "t"));
 
-    class_<pose2>("Pose2", init<>())
+    class_<pose2>("Pose2")
         .def_readwrite("location", &pose2::location)
         .def_readwrite("rotation", &pose2::rotation)
         ;
 
-    class_<pose3>("Pose3", init<>())
+    class_<pose3>("Pose3")
         .def_readwrite("location", &pose3::location)
         .def_readwrite("rotation", &pose3::rotation)
         ;
 
-    enum_<actor_t::draw_type_e>("ActorDrawType")
-        .value("NONE", actor_t::draw_type_e::NONE)
-        .value("BSP", actor_t::draw_type_e::BSP)
-        .value("MODEL", actor_t::draw_type_e::MODEL)
+    enum_<actor_draw_type>("ActorDrawType")
+        .value("NONE", actor_draw_type::NONE)
+        .value("BSP", actor_draw_type::BSP)
+        .value("MODEL", actor_draw_type::MODEL)
         .export_values();
 
-    class_<actor_t, boost::shared_ptr<actor_t>>("Actor")
-        .add_property("model", make_function(&actor_t::get_model, return_value_policy<copy_const_reference>()), &actor_t::set_model)
-        .add_property("bsp", make_function(&actor_t::get_bsp, return_value_policy<copy_const_reference>()), &actor_t::set_bsp)
-        .add_property("draw_type", &actor_t::get_draw_type, &actor_t::set_draw_type)
-        .def_readwrite("pose", &actor_t::pose)
+    class_<actor, boost::shared_ptr<actor>>("Actor")
+        .add_property("model", make_function(&actor::get_model, return_value_policy<copy_const_reference>()), &actor::set_model)
+        .add_property("bsp", make_function(&actor::get_bsp, return_value_policy<copy_const_reference>()), &actor::set_bsp)
+        .add_property("draw_type", &actor::get_draw_type, &actor::set_draw_type)
+        .def_readwrite("pose", &actor::pose)
         ;
 
-    class_<std::vector<boost::shared_ptr<actor_t>>>("ActorVec")
-        .def(vector_indexing_suite<std::vector<boost::shared_ptr<actor_t>>>());
+    class_<std::vector<boost::shared_ptr<actor>>>("ActorVec")
+        .def(vector_indexing_suite<std::vector<boost::shared_ptr<actor>>>());
 
-    class_<scene_t, noncopyable>("Scene")
+    class_<scene, boost::shared_ptr<scene>, noncopyable>("Scene")
         //.add_property("actors", make_function(&scene_t::get_actors, return_value_policy<copy_const_reference>()))
-        .def("add_actor", &scene_t::add_actor)
-        .def("render", &scene_t::render)
-        .def("tick", &scene_t::tick)
-        .def("on_input_event", &scene_t::on_input_event)
+        .def("add_actor", &scene::add_actor)
+        .def("render", &scene::render)
+        .def("tick", &scene::tick)
+        .def("on_input_event", &scene::on_input_event)
         ;
 
     {
-        auto camera_scope = class_<camera_t, bases<actor_t>, boost::shared_ptr<camera_t>>("Camera")
-            .def_readwrite("near", &camera_t::near)
-            .def_readwrite("far", &camera_t::far)
-            .def_readwrite("fov", &camera_t::fov)
-            .def_readwrite("projection_type", &camera_t::projection_type)
+        auto camera_scope = class_<camera, bases<actor>, boost::shared_ptr<camera>>("Camera")
+            .def_readwrite("near", &camera::near)
+            .def_readwrite("far", &camera::far)
+            .def_readwrite("fov", &camera::fov)
+            .def_readwrite("projection_type", &camera::projection_type)
             ;
 
-        enum_<camera_t::projection_type_e>("ProjectionType")
-            .value("ORTHOGRAPHIC", camera_t::projection_type_e::ORTHOGRAPHIC)
-            .value("PERSPECTIVE", camera_t::projection_type_e::PERSPECTIVE)
+        enum_<camera::projection_type_e>("ProjectionType")
+            .value("ORTHOGRAPHIC", camera::projection_type_e::ORTHOGRAPHIC)
+            .value("PERSPECTIVE", camera::projection_type_e::PERSPECTIVE)
             .export_values();
     }
 
-    class_<quake_camera_t, bases<camera_t>, boost::shared_ptr<quake_camera_t>, noncopyable>("QuakeCamera", init<>());
+    class_<sound, bases<resource>, boost::shared_ptr<sound>, noncopyable>("Sound", no_init)
+        .add_property("channel_count", &sound::get_channel_count)
+        .add_property("sample_rate", &sound::get_sample_rate)
+        .add_property("byte_rate", &sound::get_byte_rate)
+        .add_property("bits_per_sample", &sound::get_bits_per_sample)
+        .add_property("duration", &sound::get_duration);
 
-    class_<arcball_camera_t, bases<camera_t>, boost::shared_ptr<arcball_camera_t>, noncopyable>("ArcballCamera", init<>());
+    class_<quake_camera, bases<camera>, boost::shared_ptr<quake_camera>, noncopyable>("QuakeCamera", init<>());
 
-    class_<model_instance_t, boost::shared_ptr<model_instance_t>, noncopyable>("ModelInstance", init<const hash_t&>());
+    class_<arcball_camera, bases<camera>, boost::shared_ptr<arcball_camera>, noncopyable>("ArcballCamera", init<>());
+
+    class_<model_instance, boost::shared_ptr<model_instance>, noncopyable>("ModelInstance", init<const mandala::hash&>());
+
+    // AUDIO
+    class_<audio_mgr, noncopyable>("AudioMgr", no_init);
+
+    class_<audio_source, boost::shared_ptr<audio_source>, noncopyable>("AudioSource", no_init);
+        //.add_property("state", &audio_source::get_state);
+        //.add_property("location", &audio_source::get_location)
+        //;
 }

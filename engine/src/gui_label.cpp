@@ -27,18 +27,18 @@
 
 namespace mandala
 {
-    gui_label_t::string_type& gui_label_t::sanitize_string(string_type& string)
+    gui_label::string_type& gui_label::sanitize_string(string_type& string)
     {
         auto string_itr = string.begin();
 
         while (string_itr != string.end())
         {
-            if (*string_itr == color_push_character<gui_label_t::string_type::value_type>::VALUE)
+            if (*string_itr == color_push_character<gui_label::string_type::value_type>::VALUE)
             {
                 //encountered color push character
                 string_itr = string.erase(string_itr);
 
-                if (string_itr != string.end() && *string_itr != color_push_character<gui_label_t::string_type::value_type>::VALUE)
+                if (string_itr != string.end() && *string_itr != color_push_character<gui_label::string_type::value_type>::VALUE)
                 {
                     //determine how many characters to erase
                     auto erase_count = std::min(std::distance(string_itr, string.end()), rgb_hex_string_length);
@@ -49,7 +49,7 @@ namespace mandala
                     continue;
                 }
             }
-            else if (*string_itr == color_pop_character<gui_label_t::string_type::value_type>::VALUE)
+            else if (*string_itr == color_pop_character<gui_label::string_type::value_type>::VALUE)
             {
                 //encountered color pop character
                 string_itr = string.erase(string_itr);
@@ -66,7 +66,7 @@ namespace mandala
         return string;
     }
 
-    gui_label_t::string_type& gui_label_t::escape_string(string_type& string)
+    gui_label::string_type& gui_label::escape_string(string_type& string)
     {
         auto string_itr = string.begin();
 
@@ -90,24 +90,24 @@ namespace mandala
         return string;
     }
 
-    gui_label_t::gui_label_t()
+    gui_label::gui_label()
     {
         cursor.string_begin = string.begin();
         cursor.string_end = string.end();
         cursor.time_point = cursor_data_t::clock_type::now();
     }
 
-    gui_label_t::line_height_type gui_label_t::get_line_height() const
+    gui_label::line_height_type gui_label::get_line_height() const
     {
         return bitmap_font->get_line_height() + line_spacing;
     }
 
-    size_t gui_label_t::get_line_count() const
+    size_t gui_label::get_line_count() const
     {
         return lines.size();
     }
 
-    void gui_label_t::set_string(const string_type& string)
+    void gui_label::set_string(const string_type& string)
     {
         if (max_length)
         {
@@ -124,7 +124,7 @@ namespace mandala
         dirty();
     }
 
-    void gui_label_t::set_max_length(const boost::optional<size_t>& max_length)
+    void gui_label::set_max_length(const boost::optional<size_t>& max_length)
     {
         this->max_length = max_length;
 
@@ -134,7 +134,7 @@ namespace mandala
         }
     }
 
-    void gui_label_t::on_clean_begin()
+    void gui_label::on_clean_begin()
     {
         if (is_autosized_to_text)
         {
@@ -154,7 +154,7 @@ namespace mandala
         }
     }
 
-    void gui_label_t::on_clean_end()
+    void gui_label::on_clean_end()
     {
         if (!is_autosized_to_text)
         {
@@ -208,7 +208,7 @@ namespace mandala
         update_cursor();
     }
 
-    void gui_label_t::on_render_begin(mat4& world_matrix, mat4& view_projection_matrix)
+    void gui_label::on_render_begin(mat4& world_matrix, mat4& view_projection_matrix)
     {
         if (bitmap_font == nullptr)
         {
@@ -242,10 +242,10 @@ namespace mandala
             }
         }
 
-        gui_node_t::on_render_begin(world_matrix, view_projection_matrix);
+        gui_node::on_render_begin(world_matrix, view_projection_matrix);
     }
 
-    bool gui_label_t::on_input_event_begin(input_event_t& input_event)
+    bool gui_label::on_input_event_begin(input_event_t& input_event)
     {
         if (input_event.device_type == input_event_t::device_type_e::TOUCH &&
             input_event.touch.type == input_event_t::touch_t::type_e::PRESS)
@@ -571,7 +571,7 @@ namespace mandala
         return false;
     }
 
-    void gui_label_t::update_cursor()
+    void gui_label::update_cursor()
     {
         for (const auto& line : lines)
         {
@@ -593,7 +593,7 @@ namespace mandala
         cursor.time_point = cursor_data_t::clock_type::now();
     }
 
-    void gui_label_t::update_lines()
+    void gui_label::update_lines()
     {
         static const auto OBSCURE_CHARACTER = L'•';
         static const auto FALLBACK_CHARACTER = L'?';
@@ -723,7 +723,7 @@ namespace mandala
 
                 while (string_itr != string.end())
                 {
-                    if (bitmap_font->get_characters().find(*string_itr) == bitmap_font->get_characters().end())
+                    if (get_bitmap_font()->get_characters().find(*string_itr) == get_bitmap_font()->get_characters().end())
                     {
                         string.replace(string_itr, string_itr + 1, 1, FALLBACK_CHARACTER);
                     }

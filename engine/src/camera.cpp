@@ -9,7 +9,7 @@
 
 namespace mandala
 {
-    camera_params camera_t::get_params(const gpu_viewport_type& viewport) const
+    camera_params camera::get_params(const gpu_viewport_type& viewport) const
     {
         const auto aspect = static_cast<f32>(viewport.width) / glm::max(static_cast<f32>(viewport.height), 1.0f);
 
@@ -41,7 +41,7 @@ namespace mandala
         return params;
     }
     
-    line3 camera_t::get_ray(const vec2_f64& screen_location) const
+    line3 camera::get_ray(const vec2_f64& screen_location) const
     {
         vec4 viewport = gpu.viewports.top();
 

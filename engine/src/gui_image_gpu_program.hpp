@@ -7,12 +7,12 @@ using namespace glm;
 
 namespace mandala
 {
-    struct gui_image_gpu_program_t : gpu_program_t
+    struct gui_image_gpu_program : gpu_program
     {
-        struct vertex_t
+        struct vertex
         {
-            vertex_t() = default;
-            vertex_t(vec3 location, vec2 texcoord)
+            vertex() = default;
+            vertex(vec3 location, vec2 texcoord)
             {
 this->location = location;
 this->texcoord = texcoord;            }
@@ -21,10 +21,10 @@ this->texcoord = texcoord;            }
             vec2 texcoord;
         };
 
-        typedef vertex_t vertex_type;
+        typedef vertex vertex_type;
 
-        gui_image_gpu_program_t() :
-            gpu_program_t(R"(#version 400
+        gui_image_gpu_program() :
+            gpu_program(R"(#version 400
 
 uniform mat4 world_matrix;
 uniform mat4 view_projection_matrix;
@@ -103,7 +103,7 @@ void main()
 
 
     private:
-       gpu_location_t location_location;
-       gpu_location_t texcoord_location;
+       gpu_location location_location;
+       gpu_location texcoord_location;
     };
 }

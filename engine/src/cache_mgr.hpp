@@ -13,10 +13,10 @@
 
 namespace mandala
 {
-    struct cache_mgr_t
+    struct cache_mgr
     {
-        cache_mgr_t();
-        ~cache_mgr_t();
+        cache_mgr();
+        ~cache_mgr();
 
         std::unique_ptr<std::ifstream> get(const std::string& file_name) const;
         i32 put(const std::string& file_name, const void* buffer, size_t count);
@@ -31,5 +31,5 @@ namespace mandala
         std::mutex mutex;
     };
 
-    extern cache_mgr_t cache;
+    extern cache_mgr cache;
 }

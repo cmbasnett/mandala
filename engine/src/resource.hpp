@@ -9,29 +9,29 @@
 
 namespace mandala
 {
-    struct resource_t
+    struct resource
     {
         typedef std::chrono::system_clock clock_type;
         typedef clock_type::time_point time_point_type;
 
-        hash_t hash;
+        hash hash;
         time_point_type last_access_time;
 
         const time_point_type& get_creation_time() const { return creation_time; }
 
     protected:
-        resource_t();
+        resource();
 
     private:
         time_point_type creation_time;
 
-        resource_t(const resource_t&) = delete;
-        resource_t& operator=(const resource_t&) = delete;
+        resource(const resource&) = delete;
+        resource& operator=(const resource&) = delete;
     };
 
     template<typename T, typename Enable = void>
     struct is_resource : std::false_type { };
 
     template<typename T>
-    struct is_resource<T, typename std::enable_if<std::is_base_of<resource_t, T>::value>::type> : std::true_type { };
+    struct is_resource<T, typename std::enable_if<std::is_base_of<resource, T>::value>::type> : std::true_type { };
 }

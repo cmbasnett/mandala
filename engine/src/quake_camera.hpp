@@ -8,7 +8,7 @@ namespace mandala
 {
     struct input_event_t;
 
-    struct quake_camera_t : camera_t
+    struct quake_camera : camera
     {
         f32 pitch_max = 89.9f;
         f32 pitch_min = -89.9f;

@@ -14,18 +14,18 @@
 namespace mandala
 {
     struct input_event_t;
-    struct state_mgr_t;
-    struct gui_layout_t;
+    struct state_mgr;
+    struct gui_layout;
 
-    struct state_t : public boost::enable_shared_from_this<state_t>
+    struct state : public boost::enable_shared_from_this<state>
     {
-        state_t();
+        state();
 
         virtual void tick(f32 dt);
         virtual void render();
         virtual bool on_input_event(input_event_t& input_event);
 #if defined(MANDALA_PC)
-        virtual void on_window_event(window_event_t& window_event);
+        virtual void on_window_event(window_event& window_event);
 #endif
         virtual void on_active() { }
         virtual void on_passive() { }
@@ -39,9 +39,9 @@ namespace mandala
         virtual void on_start_input() { }
         virtual void on_tick(f32 dt) { }
 
-        const boost::shared_ptr<gui_layout_t>& get_layout() const { return layout; }
+        const boost::shared_ptr<gui_layout>& get_layout() const { return layout; }
 
     private:
-        boost::shared_ptr<gui_layout_t> layout;
+        boost::shared_ptr<gui_layout> layout;
     };
 }

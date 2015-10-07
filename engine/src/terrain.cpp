@@ -3,7 +3,7 @@
 
 namespace mandala
 {
-    terrain_t::terrain_t(size_type width, size_type depth) :
+    terrain::terrain(size_type width, size_type depth) :
         heightmap(width, depth),
         quadtree(std::max(width, depth))
     {
@@ -75,7 +75,7 @@ namespace mandala
             }
         }
 
-        vertex_buffer->data(vertices, gpu_t::buffer_usage_e::DYNAMIC_DRAW);
+        vertex_buffer->data(vertices, gpu_t::buffer_usage::DYNAMIC_DRAW);
 
         // index buffer
         std::vector<index_type> indices;
@@ -119,6 +119,6 @@ namespace mandala
         }
 
         index_buffer = gpu_buffers.make<index_buffer_type>().lock();
-        index_buffer->data(indices, gpu_t::buffer_usage_e::STATIC_DRAW);
+        index_buffer->data(indices, gpu_t::buffer_usage::STATIC_DRAW);
     }
 }

@@ -10,16 +10,16 @@
 
 namespace mandala
 {
-    struct string_archive_t
+    struct string_archive
     {
-        struct string_t
+        struct string
         {
-            hash_t hash;
+            hash hash;
             u32 offset;
         };
 
-        string_archive_t(std::istream& istream);
+        string_archive(std::istream& istream);
 
-        std::map<std::string, std::vector<string_t>> language_strings;
+        std::map<std::string, std::vector<string>> language_strings;
     };
 }

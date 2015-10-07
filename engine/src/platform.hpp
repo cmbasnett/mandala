@@ -43,7 +43,7 @@ namespace mandala
 #if defined(MANDALA_PC)
         struct window_mgr_t
         {
-            std::deque<window_event_t> events;
+            std::deque<window_event> events;
             rectangle_i32 rectangle;
         } window;
 #endif
@@ -118,7 +118,7 @@ namespace mandala
         virtual void set_is_fullscreen(bool is_fullscreen) = 0;
 
         //pop_window_event
-        virtual bool pop_window_event(window_event_t& window_event) = 0;
+        virtual bool pop_window_event(window_event& window_event) = 0;
 
         bool is_cursor_centered = false;
         cursor_location_type cursor_location;

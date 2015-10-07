@@ -15,10 +15,10 @@
 
 namespace mandala
 {
-    struct game_t;
+    struct game;
     struct input_event_t;
 
-    struct app_t
+    struct app
     {
         struct performance_t
         {
@@ -44,7 +44,7 @@ namespace mandala
 
         const performance_t& get_performance() const { return performance; }
 
-        app_t() = default;
+        app() = default;
 
         void run();
         void exit();
@@ -58,10 +58,10 @@ namespace mandala
         bool is_resetting = false;
         performance_t performance;
         std::chrono::system_clock::time_point run_time_point;
-        boost::shared_ptr<game_t> game;
+        boost::shared_ptr<game> game;
 
-        app_t(const app_t&) = delete;
-        app_t& operator=(const app_t&) = delete;
+        app(const app&) = delete;
+        app& operator=(const app&) = delete;
 
         void tick(f32 dt);
         void render();
@@ -72,5 +72,5 @@ namespace mandala
         bool should_keep_running();
     };
 
-    extern app_t app;
+    extern app app_;
 }

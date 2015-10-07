@@ -3,12 +3,12 @@
 
 namespace mandala
 {
-    material_instance_t::material_instance_t(const boost::shared_ptr<material_t>& material)
+    material_instance::material_instance(const boost::shared_ptr<material>& material)
     {
         *this = material;
     }
 
-    material_instance_t& material_instance_t::operator=(const boost::shared_ptr<material_t>& material)
+    material_instance& material_instance::operator=(const boost::shared_ptr<material>& material)
     {
         is_two_sided = material->get_is_two_sided();
         is_lit = material->get_is_lit();

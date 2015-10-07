@@ -18,19 +18,19 @@
 
 namespace mandala
 {
-    cache_mgr_t cache;
+    cache_mgr cache;
 
-    cache_mgr_t::cache_mgr_t()
+    cache_mgr::cache_mgr()
     {
         read();
     }
 
-    cache_mgr_t::~cache_mgr_t()
+    cache_mgr::~cache_mgr()
     {
         write();
     }
 
-    std::unique_ptr<std::ifstream> cache_mgr_t::get(const std::string& file_name) const
+    std::unique_ptr<std::ifstream> cache_mgr::get(const std::string& file_name) const
     {
         boost::filesystem::path file_path(CACHE_DIRECTORY);
         file_path /= file_name;
@@ -38,7 +38,7 @@ namespace mandala
         return std::make_unique<std::ifstream>(file_path.string());
     }
 
-    i32 cache_mgr_t::put(const std::string& file_name, const void* data, size_t count)
+    i32 cache_mgr::put(const std::string& file_name, const void* data, size_t count)
     {
         boost::crc_32_type crc32;
 
@@ -57,7 +57,7 @@ namespace mandala
         return checksum;
     }
 
-    void cache_mgr_t::erase(const std::string& file_name)
+    void cache_mgr::erase(const std::string& file_name)
     {
         boost::filesystem::path file_path(CACHE_DIRECTORY);
         file_path /= file_name;
@@ -74,7 +74,7 @@ namespace mandala
         file_checksums.erase(file_name);
     }
 
-    void cache_mgr_t::purge()
+    void cache_mgr::purge()
     {
         try
         {
@@ -86,7 +86,7 @@ namespace mandala
         }
     }
 
-    i32 cache_mgr_t::checksum(const std::string& file_name) const
+    i32 cache_mgr::checksum(const std::string& file_name) const
     {
         auto file_checksums_itr = file_checksums.find(file_name);
 
@@ -98,7 +98,7 @@ namespace mandala
         return file_checksums_itr->second;
     }
 
-    void cache_mgr_t::write()
+    void cache_mgr::write()
     {
         using namespace boost::property_tree;
 
@@ -128,7 +128,7 @@ namespace mandala
         }
     }
 
-    void cache_mgr_t::read()
+    void cache_mgr::read()
     {
         using namespace boost::property_tree;
 

@@ -5,7 +5,7 @@
 
 namespace mandala
 {
-    bool gui_button_t::on_input_event_begin(input_event_t& input_event)
+    bool gui_button::on_input_event_begin(input_event_t& input_event)
     {
         if (input_event.device_type == input_event_t::device_type_e::TOUCH)
         {

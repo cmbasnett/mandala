@@ -8,20 +8,20 @@
 
 namespace mandala
 {
-    struct audio_device_t;
+    struct audio_device;
 
-    struct audio_context_t
+    struct audio_context
     {
         typedef ALCcontext* pointer_type;
 
-        audio_context_t(const boost::shared_ptr<audio_device_t>& device);
-        ~audio_context_t();
+        audio_context(const boost::shared_ptr<audio_device>& device);
+        ~audio_context();
 
         operator pointer_type() const { return pointer; }
 
     private:
-        audio_context_t(const audio_context_t&) = delete;
-        audio_context_t& operator=(const audio_context_t&) = delete;
+        audio_context(const audio_context&) = delete;
+        audio_context& operator=(const audio_context&) = delete;
 
         pointer_type pointer = nullptr;
     };

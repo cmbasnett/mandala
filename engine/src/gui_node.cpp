@@ -19,7 +19,7 @@
 
 namespace mandala
 {
-    void gui_node_t::orphan()
+    void gui_node::orphan()
     {
         if (parent.get() == nullptr)
         {
@@ -53,7 +53,7 @@ namespace mandala
         dirty();
     }
 
-    void gui_node_t::adopt(const boost::shared_ptr<gui_node_t>& node)
+    void gui_node::adopt(const boost::shared_ptr<gui_node>& node)
     {
         if (node == nullptr)
         {
@@ -91,9 +91,9 @@ namespace mandala
         dirty();
     }
 
-    void gui_node_t::clean()
+    void gui_node::clean()
     {
-        std::function<void(boost::shared_ptr<gui_node_t>&, aabb2&)> clean_node = [&clean_node](boost::shared_ptr<gui_node_t>& node, aabb2& sibling_bounds)
+        std::function<void(boost::shared_ptr<gui_node>&, aabb2&)> clean_node = [&clean_node](boost::shared_ptr<gui_node>& node, aabb2& sibling_bounds)
         {
             if (node->get_visibility() == gui_visiblity_e::OMIT)
             {
@@ -264,6 +264,30 @@ namespace mandala
                 clean_node(child, children_bounds);
             }
 
+            if (node->get_size_modes_real().get_x() == gui_size_mode_e::RELATIVE)
+            {
+                if (node->has_parent())
+                {
+                    absolute_desired_size.x *= node->parent->bounds.size().x - node->parent->padding.horizontal();
+                }
+                else
+                {
+                    absolute_desired_size.x *= sibling_bounds.size().x;
+                }
+            }
+
+            if (node->get_size_modes_real().get_y() == gui_size_mode_e::RELATIVE)
+            {
+                if (node->has_parent())
+                {
+                    absolute_desired_size.y *= node->parent->bounds.size().y - node->parent->padding.vertical();
+                }
+                else
+                {
+                    absolute_desired_size.y *= sibling_bounds.size().y;
+                }
+            }
+
             node->is_dirty = false;
 
             node->on_clean_end();
@@ -278,7 +302,7 @@ namespace mandala
         clean_node(shared_from_this(), padded_bounds);
     }
 
-    void gui_node_t::tick(f32 dt)
+    void gui_node::tick(f32 dt)
     {
         on_tick_begin(dt);
 
@@ -290,7 +314,7 @@ namespace mandala
         on_tick_end(dt);
     }
 
-    bool gui_node_t::on_input_event(input_event_t& input_event)
+    bool gui_node::on_input_event(input_event_t& input_event)
     {
         if (visibility == gui_visiblity_e::OMIT)
         {
@@ -318,7 +342,7 @@ namespace mandala
         return false;
     }
 
-    const gui_size_modes_t gui_node_t::get_size_modes_real() const
+    const gui_size_modes_t gui_node::get_size_modes_real() const
     {
         auto real_size_modes = size_modes;
 
@@ -349,7 +373,7 @@ namespace mandala
         return real_size_modes;
     }
 
-    void gui_node_t::dirty()
+    void gui_node::dirty()
     {
         if (is_dirty)
         {
@@ -364,7 +388,7 @@ namespace mandala
         }
     }
 
-    void gui_node_t::render(mat4 world_matrix, mat4 view_projection_matrix)
+    void gui_node::render(mat4 world_matrix, mat4 view_projection_matrix)
     {
         if (visibility != gui_visiblity_e::VISIBLE)
         {
@@ -382,13 +406,13 @@ namespace mandala
 
             gpu_stencil_state.is_enabled = true;
 
-            gpu_stencil_state.function.func = gpu_t::stencil_function_e::NEVER;
+            gpu_stencil_state.function.func = gpu_t::stencil_function::NEVER;
             gpu_stencil_state.function.ref = 1;
             gpu_stencil_state.function.mask = 0xFF;
 
-            gpu_stencil_state.operations.fail = gpu_t::stencil_operation_e::REPLACE;
-            gpu_stencil_state.operations.zfail = gpu_t::stencil_operation_e::KEEP;
-            gpu_stencil_state.operations.zpass = gpu_t::stencil_operation_e::KEEP;
+            gpu_stencil_state.operations.fail = gpu_t::stencil_operation::REPLACE;
+            gpu_stencil_state.operations.zfail = gpu_t::stencil_operation::KEEP;
+            gpu_stencil_state.operations.zpass = gpu_t::stencil_operation::KEEP;
 
             gpu_stencil_state.mask = 0xFF;
 
@@ -419,7 +443,7 @@ namespace mandala
             gpu.depth.pop_state();
 
             gpu_stencil_state.mask = 0;
-            gpu_stencil_state.function.func = gpu_t::stencil_function_e::NOTEQUAL;
+            gpu_stencil_state.function.func = gpu_t::stencil_function::NOTEQUAL;
             gpu_stencil_state.function.ref = 0;
             gpu_stencil_state.function.mask = 0xFF;
 

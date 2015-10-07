@@ -2,11 +2,11 @@
 
 namespace mandala
 {
-    enum class audio_source_state_e
+    enum class audio_source_state
     {
-        initial,
-        playing,
-        paused,
-        stopped
+        INITIAL,
+        PLAYING,
+        PAUSED,
+        STOPPED
     };
 }

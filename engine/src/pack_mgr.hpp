@@ -9,16 +9,16 @@
 
 namespace mandala
 {
-    struct pack_mgr_t
+    struct pack_mgr
     {
         void mount(const std::string& path);
         void unmount_all();
 
-        boost::shared_ptr<std::istream> extract(const hash_t& hash);
+        boost::shared_ptr<std::istream> extract(const hash& hash);
 
     private:
         std::recursive_mutex mutex;
-        std::map<const hash_t, pack_t::file_t> files;
-        std::map<const hash_t, pack_t> packs;
+        std::map<const hash, pack::file> files;
+        std::map<const hash, pack> packs;
     };
 }

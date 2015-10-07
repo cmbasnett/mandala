@@ -9,7 +9,7 @@
 
 namespace mandala
 {
-    struct gui_image_t : public gui_node_t
+    struct gui_image : public gui_node
     {
         enum class triangle_mode_e
         {
@@ -24,14 +24,14 @@ namespace mandala
         static const size_t VERTEX_COUNT = 16;
         static const size_t INDEX_COUNT = 54;
         
-        typedef gui_image_gpu_program_t::vertex_type vertex_type;
+        typedef gui_image_gpu_program::vertex_type vertex_type;
         typedef index_type<INDEX_COUNT>::type index_type;
-        typedef vertex_buffer_t<vertex_type> vertex_buffer_type;
-        typedef index_buffer_t<index_type> index_buffer_type;
+        typedef vertex_buffer<vertex_type> vertex_buffer_type;
+        typedef index_buffer<index_type> index_buffer_type;
 
-        gui_image_t();
+        gui_image();
 
-        const boost::optional<sprite_t>& get_sprite() const { return sprite; }
+        const boost::optional<sprite>& get_sprite() const { return sprite; }
         bool get_is_autosized_to_sprite() const { return is_autosized_to_sprite; }
         triangle_mode_e get_triangle_mode() const { return triangle_mode; }
         const vec2& get_texcoord_scale() const { return texcoord_scale; }
@@ -39,7 +39,7 @@ namespace mandala
         f32 get_texcoord_rotation() const { return texcoord_rotation; }
         const padding_f32& get_slice_padding() const { return slice_padding; }
 
-        void set_sprite(boost::optional<sprite_t> sprite);
+        void set_sprite(boost::optional<sprite> sprite);
         void set_is_autosized_to_sprite(bool is_autosized_to_sprite);
         void set_triangle_mode(triangle_mode_e triangle_mode) { this->triangle_mode = triangle_mode; }
         void set_texcoord_scale(const vec2& texcoord_scale) { this->texcoord_scale = texcoord_scale; }
@@ -50,7 +50,7 @@ namespace mandala
     private:
         boost::shared_ptr<vertex_buffer_type> vertex_buffer;
         boost::shared_ptr<index_buffer_type> index_buffer;
-        boost::optional<sprite_t> sprite;
+        boost::optional<sprite> sprite;
         bool is_autosized_to_sprite = false;
         triangle_mode_e triangle_mode = triangle_mode_e::BOTH;
         vec2 texcoord_scale = vec2(1.0f);

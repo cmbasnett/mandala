@@ -8,20 +8,20 @@
 
 namespace mandala
 {
-    struct model_instance_t;
-    struct bsp_t;
+    struct model_instance;
+    struct bsp;
     struct input_event_t;
     struct camera_params;
 
-    struct actor_t
+    enum class actor_draw_type
     {
-        enum class draw_type_e
-        {
-            NONE,
-            BSP,
-            MODEL,
-        };
+        NONE,
+        BSP,
+        MODEL,
+    };
 
+    struct actor
+    {
         virtual void on_create() { }
         virtual void on_destroy() { }
         virtual bool on_input_event(input_event_t& input_event) { return false; }
@@ -30,18 +30,18 @@ namespace mandala
 
         pose3 pose;
 
-        const boost::shared_ptr<model_instance_t>& get_model() const { return model; }
-        void set_model(const boost::shared_ptr<model_instance_t>& model) { this->model = model; }
+        const boost::shared_ptr<model_instance>& get_model() const { return model; }
+        void set_model(const boost::shared_ptr<model_instance>& model) { this->model = model; }
 
-        const draw_type_e get_draw_type() const { return draw_type; }
-        void set_draw_type(draw_type_e draw_type) { this->draw_type = draw_type; }
+        const actor_draw_type get_draw_type() const { return draw_type; }
+        void set_draw_type(actor_draw_type draw_type) { this->draw_type = draw_type; }
 
-        const boost::shared_ptr<bsp_t>& get_bsp() const { return bsp; }
-        void set_bsp(const boost::shared_ptr<bsp_t>& bsp) { this->bsp = bsp; }
+        const boost::shared_ptr<bsp>& get_bsp() const { return bsp; }
+        void set_bsp(const boost::shared_ptr<bsp>& bsp) { this->bsp = bsp; }
 
     private:
-        draw_type_e draw_type = draw_type_e::NONE;
-        boost::shared_ptr<model_instance_t> model;
-        boost::shared_ptr<bsp_t> bsp;
+        actor_draw_type draw_type = actor_draw_type::NONE;
+        boost::shared_ptr<model_instance> model;
+        boost::shared_ptr<bsp> bsp;
     };
 }

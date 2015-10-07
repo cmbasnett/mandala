@@ -2,14 +2,14 @@
 
 namespace mandala
 {
-    enum class color_type_e
+    enum class color_type
     {
-        g,
-        ga,
-        rgb,
-        rgba,
-        palette,
-        depth,
-        depth_stencil
+        G,
+        GA,
+        RGB,
+        RGBA,
+        PALETTE,
+        DEPTH,
+        DEPTH_STENCIL
     };
 }

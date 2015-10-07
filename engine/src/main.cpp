@@ -12,7 +12,7 @@ int main()
 
     try
     {
-        app.run();
+        app_.run();
     }
     catch (std::exception& e)
     {
@@ -22,7 +22,7 @@ int main()
     //TODO: needing to handle this type of exception is a tad annoying, search for a better way
     catch (boost::python::error_already_set&)
     {
-        std::cout << python_t::handle_pyerr();
+        std::cout << mandala::python::handle_pyerr();
         system("pause");
     }
 }

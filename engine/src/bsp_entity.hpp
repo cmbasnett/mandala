@@ -8,9 +8,9 @@
 
 namespace mandala
 {
-    struct bsp_entity_t
+    struct bsp_entity
     {
-        bsp_entity_t(const std::string& string);
+        bsp_entity(const std::string& string);
 
         const std::string& get_classname() const { return classname; }
 

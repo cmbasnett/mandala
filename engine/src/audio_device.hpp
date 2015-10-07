@@ -8,19 +8,19 @@
 
 namespace mandala
 {
-    struct audio_device_t
+    struct audio_device
     {
         typedef ALCdevice* pointer_type;
 
-        audio_device_t();
-        audio_device_t(const std::string& name);
-        ~audio_device_t();
+        audio_device();
+        audio_device(const std::string& name);
+        ~audio_device();
 
         operator pointer_type() const { return pointer; }
 
     private:
-        audio_device_t(const audio_device_t&) = delete;
-        audio_device_t& operator=(const audio_device_t&) = delete;
+        audio_device(const audio_device&) = delete;
+        audio_device& operator=(const audio_device&) = delete;
 
         pointer_type pointer = nullptr;
     };

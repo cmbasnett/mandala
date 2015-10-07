@@ -6,7 +6,7 @@
 
 namespace mandala
 {
-    audio_device_t::audio_device_t()
+    audio_device::audio_device()
     {
         pointer = alcOpenDevice(nullptr); alCheckError();
 
@@ -16,7 +16,7 @@ namespace mandala
         }
     }
 
-    audio_device_t::audio_device_t(const std::string& name)
+    audio_device::audio_device(const std::string& name)
     {
         pointer = alcOpenDevice(name.c_str()); alCheckError();
 
@@ -26,7 +26,7 @@ namespace mandala
         }
     }
 
-    audio_device_t::~audio_device_t()
+    audio_device::~audio_device()
     {
         alcCloseDevice(pointer); alCheckError();
     }

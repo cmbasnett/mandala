@@ -13,7 +13,7 @@
 
 namespace mandala
 {
-    sprite_set_t::sprite_set_t(std::istream& istream)
+    sprite_set::sprite_set(std::istream& istream)
     {
         //magic
         std::array<char, TPSB_MAGIC_LENGTH> magic;
@@ -37,7 +37,7 @@ namespace mandala
         std::string texture_name;
         std::getline(istream, texture_name, '\0');
 
-        texture = resources.get<texture_t>(hash_t(texture_name));
+        texture = resources.get<mandala::texture>(mandala::hash(texture_name));
 
         //region count
         u16 region_count = 0;
@@ -46,13 +46,13 @@ namespace mandala
 
         for (u16 i = 0; i < region_count; ++i)
         {
-            auto region = boost::make_shared<region_t>();
+            auto region = boost::make_shared<sprite_set::region>();
 
             //hash
             std::string region_name;
             std::getline(istream, region_name, '\0');
             
-            region->hash = hash_t(std::move(region_name));
+            region->hash = mandala::hash(std::move(region_name));
 
             //frame rectangle
             read(istream, region->frame_rectangle.x);
@@ -103,7 +103,7 @@ namespace mandala
         }
     }
 
-    sprite_set_t::sprite_set_t(const boost::shared_ptr<texture_t>& texture) :
+    sprite_set::sprite_set(const boost::shared_ptr<mandala::texture>& texture) :
         texture(texture)
     {
         if (texture == nullptr)
@@ -111,7 +111,7 @@ namespace mandala
             throw std::invalid_argument("");
         }
 
-        auto region = boost::make_shared<region_t>();
+        auto region = boost::make_shared<sprite_set::region>();
         region->frame_rectangle.x = 0;
         region->frame_rectangle.y = 0;
         region->frame_rectangle.width = texture->get_size().x;
@@ -129,12 +129,12 @@ namespace mandala
         region->uv.max.x = 1.0f;
         region->uv.max.y = 1.0f;
 
-        regions.emplace(hash_t(), region);
+        regions.emplace(mandala::hash(), region);
     }
 
-    boost::shared_ptr<sprite_set_t::region_t> sprite_set_t::get_region(const hash_t & region_hash) const
+    boost::shared_ptr<sprite_set::region> sprite_set::get_region(const mandala::hash& region_hash) const
     {
-        boost::shared_ptr<region_t> region;
+        boost::shared_ptr<region> region;
 
         auto regions_itr = regions.find(region_hash);
 

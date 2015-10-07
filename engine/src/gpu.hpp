@@ -20,15 +20,15 @@
 
 namespace mandala
 {
-    struct frame_buffer_t;
-    struct gpu_buffer_t;
-    struct gpu_program_t;
-    struct texture_t;
+    struct frame_buffer;
+    struct gpu_buffer;
+    struct gpu_program;
+    struct texture;
     struct image_t;
 
     struct gpu_t
     {
-        enum class buffer_target_e
+        enum class buffer_target
         {
             ARRAY,
             ATOMIC_COUNTER,
@@ -43,7 +43,7 @@ namespace mandala
             SHADER_STORAGE
         };
 
-        enum class buffer_usage_e
+        enum class buffer_usage
         {
             STREAM_DRAW,
             STREAM_READ,
@@ -56,7 +56,7 @@ namespace mandala
             DYNAMIC_COPY
         };
 
-        enum class primitive_type_e
+        enum class primitive_type
         {
             POINTS,
             LINES,
@@ -70,7 +70,7 @@ namespace mandala
             POLYGON
         };
 
-        enum class blend_factor_e
+        enum class blend_factor
         {
             ZERO,
             ONE,
@@ -90,7 +90,7 @@ namespace mandala
             DEFAULT = ONE
         };
 
-        enum class blend_equation_e
+        enum class blend_equation
         {
             ADD,
             SUBTRACT,
@@ -100,7 +100,7 @@ namespace mandala
             DEFAULT = ADD
         };
 
-        enum class cull_face_e
+        enum class cull_face
         {
             FRONT,
             BACK,
@@ -108,7 +108,7 @@ namespace mandala
             DEFAULT = BACK
         };
 
-        enum class depth_function_e
+        enum class depth_function
         {
             NEVER,
             LESS,
@@ -121,20 +121,20 @@ namespace mandala
             DEFAULT = LESS
         };
 
-        enum class culling_front_face_e
+        enum class culling_front_face
         {
             CW,
             CCW
         };
 
-        enum class culling_mode_e
+        enum class culling_mode
         {
             FRONT,
             BACK,
             FRONT_AND_BACK
         };
 
-        enum clear_flag_e : gpu_clear_flag_type
+        enum clear_flag : gpu_clear_flag_type
         {
             CLEAR_FLAG_COLOR = (1 << 0),
             CLEAR_FLAG_DEPTH = (1 << 1),
@@ -142,7 +142,7 @@ namespace mandala
             CLEAR_FLAG_STENCIL = (1 << 3)
         };
 
-        enum class stencil_function_e
+        enum class stencil_function
         {
             NEVER,
             LESS,
@@ -154,7 +154,7 @@ namespace mandala
             ALWAYS
         };
 
-        enum class stencil_operation_e
+        enum class stencil_operation
         {
             KEEP,
             ZERO,
@@ -166,16 +166,16 @@ namespace mandala
             INVERT
         };
 
-        enum class shader_type_e
+        enum class shader_type
         {
             FRAGMENT,
             VERTEX
         };
 
         //programs
-        struct program_mgr_t
+        struct program_mgr
         {
-            typedef boost::weak_ptr<gpu_program_t> weak_type;
+            typedef boost::weak_ptr<gpu_program> weak_type;
 
             boost::optional<weak_type> top() const;
             void push(const weak_type& data);
@@ -186,10 +186,10 @@ namespace mandala
         } programs;
 
         //frame buffers
-        struct frame_buffer_mgr_t
+        struct frame_buffer_mgr
         {
-            typedef boost::weak_ptr<frame_buffer_t> weak_type;
-            typedef boost::shared_ptr<frame_buffer_t> shared_type;
+            typedef boost::weak_ptr<frame_buffer> weak_type;
+            typedef boost::shared_ptr<frame_buffer> shared_type;
 
             boost::optional<weak_type> top() const;
             void push(const shared_type& frame_buffer);
@@ -200,12 +200,12 @@ namespace mandala
         } frame_buffers;
 
         //textures
-        struct texture_mgr_t
+        struct texture_mgr
         {
             const static auto texture_count = 32;
 
-            typedef boost::weak_ptr<texture_t> weak_type;
-            typedef boost::shared_ptr<texture_t> shared_type;
+            typedef boost::weak_ptr<texture> weak_type;
+            typedef boost::shared_ptr<texture> shared_type;
             typedef index_type<texture_count>::type index_type;
 
             weak_type get(index_type index) const;
@@ -217,7 +217,7 @@ namespace mandala
         } textures;
 
         //viewports
-        struct viewport_mgr_t
+        struct viewport_mgr
         {
             gpu_viewport_type top() const;
             void push(const gpu_viewport_type& viewport);
@@ -228,121 +228,121 @@ namespace mandala
         } viewports;
 
         //buffers
-        struct buffer_mgr_t
+        struct buffer_mgr
         {
-            typedef boost::shared_ptr<gpu_buffer_t> buffer_type;
+            typedef boost::shared_ptr<gpu_buffer> buffer_type;
 
             void put(buffer_type& buffer);
             void erase(buffer_type& buffer);
-            void push(buffer_target_e target, buffer_type buffer);
-            buffer_type pop(buffer_target_e target);
-            buffer_type top(buffer_target_e target) const;
-            void data(buffer_target_e target, const void* data, size_t size, buffer_usage_e usage);
+            void push(buffer_target target, buffer_type buffer);
+            buffer_type pop(buffer_target target);
+            buffer_type top(buffer_target target) const;
+            void data(buffer_target target, const void* data, size_t size, buffer_usage usage);
 
         private:
-            std::map<buffer_target_e, std::stack<buffer_type>> target_buffers;
+            std::map<buffer_target, std::stack<buffer_type>> target_buffers;
             std::set<buffer_type> buffers;
         } buffers;
 
         //blend
-        struct blend_t
+        struct blend
         {
-            struct state_t
+            struct state
             {
                 bool is_enabled = false;
-                blend_factor_e src_factor = blend_factor_e::ONE;
-                blend_factor_e dst_factor = blend_factor_e::ZERO;
-                blend_equation_e equation = blend_equation_e::ADD;
+                blend_factor src_factor = blend_factor::ONE;
+                blend_factor dst_factor = blend_factor::ZERO;
+                blend_equation equation = blend_equation::ADD;
             };
 
-            state_t get_state() const;
-            void push_state(const state_t& state);
+            state get_state() const;
+            void push_state(const state& state);
             void pop_state();
         private:
-            std::stack<state_t> states;
+            std::stack<state> states;
 
-            void apply_state(const state_t& state);
+            void apply_state(const state& state);
         } blend;
 
         //depth
-        struct depth_t
+        struct depth
         {
-            struct state_t
+            struct state
             {
                 bool should_test = false;
                 bool should_write_mask = true;
-                depth_function_e function = depth_function_e::DEFAULT;
+                depth_function function = depth_function::DEFAULT;
             };
 
-            state_t get_state() const;
-            void push_state(const state_t& state);
+            state get_state() const;
+            void push_state(const state& state);
             void pop_state();
 
         private:
-            std::stack<state_t> states;
+            std::stack<state> states;
 
-            void apply_state(const state_t& state);
+            void apply_state(const state& state);
         } depth;
 
-        struct culling_t
+        struct culling
         {
-            struct state_t
+            struct state
             {
                 bool is_enabled = false;
-                culling_front_face_e front_face = culling_front_face_e::CCW;
-                culling_mode_e mode = culling_mode_e::BACK;
+                culling_front_face front_face = culling_front_face::CCW;
+                culling_mode mode = culling_mode::BACK;
             };
 
-            state_t get_state() const;
-            void push_state(const state_t& state);
+            state get_state() const;
+            void push_state(const state& state);
             void pop_state();
 
         private:
-            std::stack<state_t> states;
+            std::stack<state> states;
 
-            void apply_state(const state_t& state);
+            void apply_state(const state& state);
         } culling;
 
         //stencil
-        struct stencil_t
+        struct stencil
         {
-            struct state_t
+            struct state
             {
-                struct function_t
+                struct function
                 {
-                    stencil_function_e func = stencil_function_e::ALWAYS;
+                    stencil_function func = stencil_function::ALWAYS;
                     i32 ref = 0;
                     u32 mask = 0xFFFFFFFF;
                 };
 
-                struct operations_t
+                struct operations
                 {
-                    stencil_operation_e fail = stencil_operation_e::KEEP;
-                    stencil_operation_e zfail = stencil_operation_e::KEEP;
-                    stencil_operation_e zpass = stencil_operation_e::KEEP;
+                    stencil_operation fail = stencil_operation::KEEP;
+                    stencil_operation zfail = stencil_operation::KEEP;
+                    stencil_operation zpass = stencil_operation::KEEP;
                 };
 
-                function_t function;
-                operations_t operations;
+                function function;
+                operations operations;
                 bool is_enabled = false;
                 u32 mask = 0xFFFFFFFF;
             };
 
-            state_t get_state() const;
-            void push_state(const state_t& state);
+            state get_state() const;
+            void push_state(const state& state);
             void pop_state();
         private:
-            std::stack<state_t> states;
+            std::stack<state> states;
 
-            void apply_state(const state_t& state);
+            void apply_state(const state& state);
         } stencil;
 
         //color
-        struct color_t
+        struct color
         {
-            struct state_t
+            struct state
             {
-                struct mask_t
+                struct mask
                 {
                     bool r = true;
                     bool g = true;
@@ -350,41 +350,41 @@ namespace mandala
                     bool a = true;
                 };
 
-                mask_t mask;
+                mask mask;
             };
 
-            state_t get_state() const;
-            void push_state(const state_t& state);
+            state get_state() const;
+            void push_state(const state& state);
             void pop_state();
         private:
-            std::stack<state_t> states;
+            std::stack<state> states;
 
-            void apply_state(const state_t& state);
+            void apply_state(const state& state);
         } color;
 
         void clear(const gpu_clear_flag_type clear_flags) const;
-        void draw_elements(primitive_type_e primitive_type, size_t count, gpu_data_type_e index_data_type, size_t offset) const;
+        void draw_elements(primitive_type primitive_type, size_t count, gpu_data_type index_data_type, size_t offset) const;
 
-        gpu_id_t create_program(const std::string& vertex_shader_source, const std::string& fragment_shader_source) const;
-        void destroy_program(gpu_id_t id);
+        gpu_id create_program(const std::string& vertex_shader_source, const std::string& fragment_shader_source) const;
+        void destroy_program(gpu_id id);
 
-        gpu_id_t create_buffer();
-        void destroy_buffer(gpu_id_t id);
+        gpu_id create_buffer();
+        void destroy_buffer(gpu_id id);
 
-        gpu_id_t create_frame_buffer(gpu_frame_buffer_type_e type, const gpu_frame_buffer_size_type& size, boost::shared_ptr<texture_t>& color_texture, boost::shared_ptr<texture_t>& depth_stencil_texture, boost::shared_ptr<texture_t>& depth_texture);
-        void destroy_frame_buffer(gpu_id_t id);
+        gpu_id create_frame_buffer(gpu_frame_buffer_type type, const gpu_frame_buffer_size_type& size, boost::shared_ptr<texture>& color_texture, boost::shared_ptr<texture>& depth_stencil_texture, boost::shared_ptr<texture>& depth_texture);
+        void destroy_frame_buffer(gpu_id id);
 
-        gpu_id_t create_texture(color_type_e color_type, vec2_u32 size, const void* data);
-        void resize_texture(const boost::shared_ptr<texture_t>& texture, vec2_u32 size);
-        void destroy_texture(gpu_id_t id);
+        gpu_id create_texture(color_type color_type, vec2_u32 size, const void* data);
+        void resize_texture(const boost::shared_ptr<texture>& texture, vec2_u32 size);
+        void destroy_texture(gpu_id id);
 
-        gpu_location_t get_uniform_location(gpu_id_t program_id, const char* name) const;
-        gpu_location_t get_attribute_location(gpu_id_t program_id, const char* name) const;
+        gpu_location get_uniform_location(gpu_id program_id, const char* name) const;
+        gpu_location get_attribute_location(gpu_id program_id, const char* name) const;
 
-        void enable_vertex_attribute_array(gpu_location_t location);
-        void disable_vertex_attribute_array(gpu_location_t location);
-        void set_vertex_attrib_pointer(gpu_location_t location, i32 size, gpu_data_type_e data_type, bool is_normalized, i32 stride, const void* pointer);
-        void set_vertex_attrib_pointer(gpu_location_t location, i32 size, gpu_data_type_e data_type, i32 stride, const void* pointer);
+        void enable_vertex_attribute_array(gpu_location location);
+        void disable_vertex_attribute_array(gpu_location location);
+        void set_vertex_attrib_pointer(gpu_location location, i32 size, gpu_data_type data_type, bool is_normalized, i32 stride, const void* pointer);
+        void set_vertex_attrib_pointer(gpu_location location, i32 size, gpu_data_type data_type, i32 stride, const void* pointer);
         void set_uniform(const char* name, const mat3& value, bool should_tranpose = false) const;
         void set_uniform(const char* name, const mat4& value, bool should_tranpose = false) const;
         void set_uniform(const char* name, i32 value) const;
@@ -394,13 +394,13 @@ namespace mandala
         void set_uniform(const char* name, const vec3& value) const;
         void set_uniform(const char* name, const vec4& value) const;
         void set_uniform(const char* name, const std::vector<mat4>& value, bool should_transpose = false) const;
-        void set_uniform_subroutine(shader_type_e shader_type, gpu_index_t index);
+        void set_uniform_subroutine(shader_type shader_type, gpu_index index);
 
         void set_clear_color(vec4& color);
         vec4 get_clear_color();
 
-        gpu_location_t get_subroutine_uniform_location(gpu_id_t program_id, shader_type_e shader_type, const std::string& name);
-        gpu_index_t get_subroutine_index(gpu_id_t program_id, shader_type_e shader_type, const std::string& name);
+        gpu_location get_subroutine_uniform_location(gpu_id program_id, shader_type shader_type, const std::string& name);
+        gpu_index get_subroutine_index(gpu_id program_id, shader_type shader_type, const std::string& name);
 
         const std::string& get_vendor() const;
         const std::string& get_renderer() const;
@@ -408,7 +408,7 @@ namespace mandala
         const std::string& get_shading_language_version() const;
         const std::string& get_extensions() const;
 
-        void get_texture_data(const boost::shared_ptr<texture_t>& texture, std::vector<u8>& data, i32 level = 0);
+        void get_texture_data(const boost::shared_ptr<texture>& texture, std::vector<u8>& data, i32 level = 0);
     };
 
     extern gpu_t gpu;

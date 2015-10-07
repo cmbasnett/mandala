@@ -20,15 +20,15 @@
 
 namespace mandala
 {
-    boost::weak_ptr<gui_canvas_t::index_buffer_type> gui_canvas_t::index_buffer;
-    boost::weak_ptr<gui_canvas_t::vertex_buffer_type> gui_canvas_t::vertex_buffer;
+    boost::weak_ptr<gui_canvas::index_buffer_type> gui_canvas::index_buffer;
+    boost::weak_ptr<gui_canvas::vertex_buffer_type> gui_canvas::vertex_buffer;
 
-    gui_canvas_t::gui_canvas_t()
+    gui_canvas::gui_canvas()
     {
         if (index_buffer.expired())
         {
             index_buffer = gpu_buffers.make<index_buffer_type>().lock();
-            index_buffer.lock()->data({ 0, 1, 2, 3 }, gpu_t::buffer_usage_e::STATIC_DRAW);
+            index_buffer.lock()->data({ 0, 1, 2, 3 }, gpu_t::buffer_usage::STATIC_DRAW);
         }
 
         if (vertex_buffer.expired())
@@ -41,11 +41,11 @@ namespace mandala
                 vertex_type(vec3(0, 1, 0), vec2(0, 1))
             };
             vertex_buffer = gpu_buffers.make<vertex_buffer_type>().lock();
-            vertex_buffer.lock()->data(vertices, gpu_t::buffer_usage_e::STATIC_DRAW);
+            vertex_buffer.lock()->data(vertices, gpu_t::buffer_usage::STATIC_DRAW);
         }
     }
 
-    void gui_canvas_t::on_render_begin(mat4& world_matrix, mat4& view_projection_matrix)
+    void gui_canvas::on_render_begin(mat4& world_matrix, mat4& view_projection_matrix)
     {
         gpu_viewport_type viewport;
         viewport.width = static_cast<gpu_viewport_type::scalar_type>(get_size().x);
@@ -57,7 +57,7 @@ namespace mandala
         //gpu.viewports.push(viewport);
     }
 
-    void gui_canvas_t::on_render_end(mat4& world_matrix, mat4& view_projection_matrix)
+    void gui_canvas::on_render_end(mat4& world_matrix, mat4& view_projection_matrix)
     {
         static const size_t DIFFUSE_TEXTURE_INDEX = 0;
 
@@ -66,10 +66,10 @@ namespace mandala
 
         //TODO: for each render pass, push/pop frame buffer, do gpu program etc.
 
-        gpu.buffers.push(gpu_t::buffer_target_e::ARRAY, vertex_buffer.lock());
-        gpu.buffers.push(gpu_t::buffer_target_e::ELEMENT_ARRAY, index_buffer.lock());
+        gpu.buffers.push(gpu_t::buffer_target::ARRAY, vertex_buffer.lock());
+        gpu.buffers.push(gpu_t::buffer_target::ELEMENT_ARRAY, index_buffer.lock());
 
-        const auto gpu_program = gpu_programs.get<blur_horizontal_gpu_program_t>();
+        const auto gpu_program = gpu_programs.get<blur_horizontal_gpu_program>();
 
         gpu.programs.push(gpu_program);
 
@@ -88,23 +88,23 @@ namespace mandala
 
         gpu.textures.bind(DIFFUSE_TEXTURE_INDEX, frame_buffer->get_color_texture());
 
-        gpu.draw_elements(gpu_t::primitive_type_e::TRIANGLE_FAN, 4, index_buffer_type::DATA_TYPE, 0);
+        gpu.draw_elements(gpu_t::primitive_type::TRIANGLE_FAN, 4, index_buffer_type::DATA_TYPE, 0);
 
         gpu.textures.unbind(DIFFUSE_TEXTURE_INDEX);
 
-        gpu.buffers.pop(gpu_t::buffer_target_e::ELEMENT_ARRAY);
-        gpu.buffers.pop(gpu_t::buffer_target_e::ARRAY);
+        gpu.buffers.pop(gpu_t::buffer_target::ELEMENT_ARRAY);
+        gpu.buffers.pop(gpu_t::buffer_target::ARRAY);
 
         gpu.programs.pop();
     }
 
-    void gui_canvas_t::on_clean_end()
+    void gui_canvas::on_clean_end()
     {
         const auto frame_buffer_size = static_cast<gpu_frame_buffer_size_type>(get_size());
 
         if (!frame_buffer)
         {
-            frame_buffer = boost::make_shared<frame_buffer_t>(gpu_frame_buffer_type_e::COLOR_DEPTH_STENCIL, frame_buffer_size);
+            frame_buffer = boost::make_shared<mandala::frame_buffer>(gpu_frame_buffer_type::COLOR_DEPTH_STENCIL, frame_buffer_size);
         }
         else if(frame_buffer_size != frame_buffer->get_size())
         {

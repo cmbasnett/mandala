@@ -58,9 +58,6 @@
     <ClInclude Include="..\..\src\bsp_entity.hpp">
       <Filter>resources\bsp</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\bsp_state.hpp">
-      <Filter>states</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\camera.hpp">
       <Filter>actors\cameras</Filter>
     </ClInclude>
@@ -352,9 +349,6 @@
     <ClCompile Include="..\..\src\bsp_entity.cpp">
       <Filter>resources\bsp</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\bsp_state.cpp">
-      <Filter>states</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\camera.cpp">
       <Filter>actors\cameras</Filter>
     </ClCompile>
@@ -568,10 +562,5 @@
     <Filter Include="scene">
       <UniqueIdentifier>{8b27e0ed-8a61-45b2-8b57-7bbd4998b8f6}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="literals.hpp">
-      <Filter>core</Filter>
-    </None>
   </ItemGroup>
 </Project>

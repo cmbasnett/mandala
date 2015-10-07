@@ -4,11 +4,11 @@
 #include "io.hpp"
 
 #define LANG_MAGIC_LENGTH    (4)
-#define LANG_MAGIC           (std::array<char, LANG_MAGIC_LENGTH> { 'L', 'A', 'N', 'G' })
+#define LANG_MAGIC           (std::array<char, LANG_MAGIC_LENGTH> { { 'L', 'A', 'N', 'G' } })
 
 namespace mandala
 {
-    string_archive_t::string_archive_t(std::istream& istream)
+    string_archive::string_archive(std::istream& istream)
     {
         //magic
         std::array<char, LANG_MAGIC_LENGTH> magic;
@@ -46,7 +46,7 @@ namespace mandala
             std::string language;
             std::getline(istream, language, '\0');
 
-            language_strings.emplace(language, std::vector<string_t>(key_count));
+            language_strings.emplace(language, std::vector<string>(key_count));
 
             languages.emplace_back(std::move(language));
         }
@@ -68,7 +68,7 @@ namespace mandala
                 auto& strings = language_strings[language];
                 auto& string = strings[i];
                 
-                string.hash = hash_t(key);
+                string.hash = hash(key);
                 read(istream, string.offset);
             }
         }

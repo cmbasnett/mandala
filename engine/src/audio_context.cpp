@@ -7,7 +7,7 @@
 
 namespace mandala
 {
-    audio_context_t::audio_context_t(const boost::shared_ptr<audio_device_t>& device)
+    audio_context::audio_context(const boost::shared_ptr<audio_device>& device)
     {
         if (device == nullptr)
         {
@@ -24,7 +24,7 @@ namespace mandala
         alcProcessContext(pointer); alCheckError();
     }
 
-    audio_context_t::~audio_context_t()
+    audio_context::~audio_context()
     {
         alcDestroyContext(pointer); alCheckError();
     }

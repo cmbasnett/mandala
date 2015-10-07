@@ -8,37 +8,37 @@
 
 namespace mandala
 {
-    struct texture_t;
-    struct gpu_program_t;
+    struct texture;
+    struct gpu_program;
 
-    struct material_t : resource_t
+    struct material : resource
     {
         struct diffuse_t
         {
-            boost::shared_ptr<texture_t> texture;
+            boost::shared_ptr<texture> texture;
             vec4 color = vec4(1.0f);
         };
 
         struct normal_t
         {
-            boost::shared_ptr<texture_t> texture;
+            boost::shared_ptr<texture> texture;
         };
 
         struct specular_t
         {
-            boost::shared_ptr<texture_t> texture;
+            boost::shared_ptr<texture> texture;
             vec4 color = vec4(1);
             f32 intensity = 1.0f;
         };
 
         struct emissive_t
         {
-            boost::shared_ptr<texture_t> texture;
+            boost::shared_ptr<texture> texture;
             vec4 color = vec4(1);
             f32 intensity = 1.0f;
         };
 
-        material_t(std::istream& istream);
+        material(std::istream& istream);
 
         const bool get_is_two_sided() const { return is_two_sided; }
         const bool get_is_lit() const { return is_lit; }
@@ -55,8 +55,8 @@ namespace mandala
         specular_t specular;
         emissive_t emissive;
 
-        material_t(const material_t&) = delete;
-        material_t& operator=(const material_t&) = delete;
+        material(const material&) = delete;
+        material& operator=(const material&) = delete;
 
     };
 }

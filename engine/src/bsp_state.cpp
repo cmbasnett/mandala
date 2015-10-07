@@ -39,7 +39,7 @@ namespace mandala
         std::mt19937 mt19937;
 
         bsp_state_t::bsp_state_t() :
-            model(boost::make_shared<model_instance_t>(hash_t("boblampclean.md5m")))
+            model(boost::make_shared<model_instance>(hash_t("boblampclean.md5m")))
         {
             model->play(hash_t("boblampclean.md5a"));
 

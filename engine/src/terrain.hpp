@@ -13,9 +13,9 @@
 
 namespace mandala
 {
-    struct camera_t;
+    struct camera;
 
-    struct terrain_t
+    struct terrain
     {
         static const auto max_size = 2048;
         typedef index_type<max_size>::type size_type;
@@ -29,25 +29,25 @@ namespace mandala
         static const auto indices_per_chunk = indices_per_strip * chunk_size;
 
         typedef index_type<indices_per_chunk * max_chunks>::type index_type;
-        typedef index_buffer_t<index_type> index_buffer_type;
-        typedef basic_gpu_program_t::vertex_type vertex_type;
-        typedef vertex_buffer_t<vertex_type> vertex_buffer_type;
+        typedef index_buffer<index_type> index_buffer_type;
+        typedef basic_gpu_program::vertex_type vertex_type;
+        typedef vertex_buffer<vertex_type> vertex_buffer_type;
 
         struct chunk_t
         {
             std::bitset<patches_per_chunk> patch_holes;
         };
 
-        terrain_t(size_type width, size_type height);
+        terrain(size_type width, size_type height);
 
-        void render(const camera_t& camera) const;
+        void render(const camera& camera) const;
 
-        const heightmap_t& get_heightmap() const { return heightmap; }
-        const quadtree_t& get_quadtree() const { return quadtree; }
+        const heightmap& get_heightmap() const { return heightmap; }
+        const quadtree& get_quadtree() const { return quadtree; }
 
     private:
-        heightmap_t heightmap;
-        quadtree_t quadtree;
+        heightmap heightmap;
+        quadtree quadtree;
         boost::multi_array<chunk_t, 2> chunks;
         boost::shared_ptr<vertex_buffer_type> vertex_buffer;
         boost::shared_ptr<index_buffer_type> index_buffer;

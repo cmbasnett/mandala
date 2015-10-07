@@ -8,33 +8,33 @@
 
 namespace mandala
 {
-    struct texture_t;
+    struct texture;
 
-    struct sprite_ref_t
+    struct sprite_ref
     {
-        sprite_ref_t(const hash_t& sprite_set_hash, const hash_t& region_hash);
-        sprite_ref_t(sprite_ref_t&& copy);
+        sprite_ref(const hash& sprite_set_hash, const hash& region_hash);
+        sprite_ref(sprite_ref&& copy);
 
-        hash_t sprite_set_hash;
-        hash_t region_hash;
+        hash sprite_set_hash;
+        hash region_hash;
     };
 
-    struct sprite_t
+    struct sprite
     {
-        typedef boost::shared_ptr<sprite_set_t::region_t> region_type;
-        typedef boost::shared_ptr<sprite_set_t> sprite_set_type;
+        typedef boost::shared_ptr<sprite_set::region> region_type;
+        typedef boost::shared_ptr<sprite_set> sprite_set_type;
 
-        sprite_t(const hash_t& sprite_set_hash, const hash_t& region_hash);
-        sprite_t(const sprite_ref_t& sprite_def);
-        sprite_t(const sprite_set_type& sprite_set, const hash_t& region_hash);
+        sprite(const hash& sprite_set_hash, const hash& region_hash);
+        sprite(const sprite_ref& sprite_def);
+        sprite(const sprite_set_type& sprite_set, const hash& region_hash);
 
         const sprite_set_type& get_sprite_set() const { return sprite_set; }
         const region_type& get_region() const { return region; }
         
-        sprite_t& operator=(const sprite_t& rhs);
-        sprite_t& operator=(const sprite_ref_t& rhs);
-        bool operator==(const sprite_ref_t&) const;
-        bool operator!=(const sprite_ref_t&) const;
+        sprite& operator=(const sprite& rhs);
+        sprite& operator=(const sprite_ref& rhs);
+        bool operator==(const sprite_ref&) const;
+        bool operator!=(const sprite_ref&) const;
 
     private:
         sprite_set_type sprite_set;

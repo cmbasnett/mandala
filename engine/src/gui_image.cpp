@@ -18,7 +18,7 @@
 
 namespace mandala
 {
-    gui_image_t::gui_image_t() :
+    gui_image::gui_image() :
         index_buffer(gpu_buffers.make<index_buffer_type>()),
         vertex_buffer(gpu_buffers.make<vertex_buffer_type>())
     {
@@ -37,10 +37,10 @@ namespace mandala
             11, 12, 14, 12, 15, 14,
             12, 13, 15, 13, 2, 15
         };
-        index_buffer->data(indices, gpu_t::buffer_usage_e::STATIC_DRAW);
+        index_buffer->data(indices, gpu_t::buffer_usage::STATIC_DRAW);
     }
 
-    void gui_image_t::on_clean_end()
+    void gui_image::on_clean_end()
     {
         //need to take size into consideration! (size is frame size, don't worry)
         const auto& size = get_size();
@@ -75,10 +75,10 @@ namespace mandala
             vertex_type(vec3(size.x - slice_padding.right, size.y, 0), vec2(1.0f - slice_uv.right, 1.0f)),
         };
 
-        vertex_buffer->data(vertices, gpu_t::buffer_usage_e::STATIC_DRAW);
+        vertex_buffer->data(vertices, gpu_t::buffer_usage::STATIC_DRAW);
     }
 
-    void gui_image_t::set_sprite(boost::optional<sprite_t> sprite)
+    void gui_image::set_sprite(boost::optional<mandala::sprite> sprite)
     {
         this->sprite = sprite;
 
@@ -89,14 +89,14 @@ namespace mandala
         }
     }
 
-    void gui_image_t::set_is_autosized_to_sprite(bool is_autosized_to_sprite)
+    void gui_image::set_is_autosized_to_sprite(bool is_autosized_to_sprite)
     {
         this->is_autosized_to_sprite = is_autosized_to_sprite;
 
         set_sprite(sprite);
     }
 
-    void gui_image_t::on_render_begin(mat4& world_matrix, mat4& view_projection_matrix)
+    void gui_image::on_render_begin(mat4& world_matrix, mat4& view_projection_matrix)
     {
         if (sprite)
         {
@@ -104,16 +104,16 @@ namespace mandala
 
             auto blend_state = gpu.blend.get_state();
             blend_state.is_enabled = true;
-            blend_state.src_factor = gpu_t::blend_factor_e::SRC_ALPHA;
-            blend_state.dst_factor = gpu_t::blend_factor_e::ONE_MINUS_SRC_ALPHA;
+            blend_state.src_factor = gpu_t::blend_factor::SRC_ALPHA;
+            blend_state.dst_factor = gpu_t::blend_factor::ONE_MINUS_SRC_ALPHA;
 
             gpu.blend.push_state(blend_state);
 
             //buffers
-            gpu.buffers.push(gpu_t::buffer_target_e::ARRAY, vertex_buffer);
-            gpu.buffers.push(gpu_t::buffer_target_e::ELEMENT_ARRAY, index_buffer);
+            gpu.buffers.push(gpu_t::buffer_target::ARRAY, vertex_buffer);
+            gpu.buffers.push(gpu_t::buffer_target::ELEMENT_ARRAY, index_buffer);
 
-            const auto& gpu_program = gpu_programs.get<gui_image_gpu_program_t>();
+            const auto& gpu_program = gpu_programs.get<gui_image_gpu_program>();
 
             //program
             gpu.programs.push(gpu_program);
@@ -140,22 +140,22 @@ namespace mandala
             switch (triangle_mode)
             {
             case triangle_mode_e::BOTTOM_RIGHT:
-                gpu.draw_elements(gpu_t::primitive_type_e::TRIANGLES, 3, index_buffer_type::DATA_TYPE, 0);
+                gpu.draw_elements(gpu_t::primitive_type::TRIANGLES, 3, index_buffer_type::DATA_TYPE, 0);
                 break;
             case triangle_mode_e::TOP_LEFT:
-                gpu.draw_elements(gpu_t::primitive_type_e::TRIANGLES, 3, index_buffer_type::DATA_TYPE, 3);
+                gpu.draw_elements(gpu_t::primitive_type::TRIANGLES, 3, index_buffer_type::DATA_TYPE, 3);
                 break;
             case triangle_mode_e::TOP_RIGHT:
-                gpu.draw_elements(gpu_t::primitive_type_e::TRIANGLES, 3, index_buffer_type::DATA_TYPE, 6);
+                gpu.draw_elements(gpu_t::primitive_type::TRIANGLES, 3, index_buffer_type::DATA_TYPE, 6);
                 break;
             case triangle_mode_e::BOTTOM_LEFT:
-                gpu.draw_elements(gpu_t::primitive_type_e::TRIANGLES, 3, index_buffer_type::DATA_TYPE, 9);
+                gpu.draw_elements(gpu_t::primitive_type::TRIANGLES, 3, index_buffer_type::DATA_TYPE, 9);
                 break;
             case triangle_mode_e::BOTH:
-                gpu.draw_elements(gpu_t::primitive_type_e::TRIANGLES, 6, index_buffer_type::DATA_TYPE, 0);
+                gpu.draw_elements(gpu_t::primitive_type::TRIANGLES, 6, index_buffer_type::DATA_TYPE, 0);
                 break;
             case triangle_mode_e::SLICE:
-                gpu.draw_elements(gpu_t::primitive_type_e::TRIANGLES, 54, index_buffer_type::DATA_TYPE, 12);
+                gpu.draw_elements(gpu_t::primitive_type::TRIANGLES, 54, index_buffer_type::DATA_TYPE, 12);
                 break;
             }
 
@@ -163,12 +163,12 @@ namespace mandala
 
             gpu.programs.pop();
 
-            gpu.buffers.pop(gpu_t::buffer_target_e::ELEMENT_ARRAY);
-            gpu.buffers.pop(gpu_t::buffer_target_e::ARRAY);
+            gpu.buffers.pop(gpu_t::buffer_target::ELEMENT_ARRAY);
+            gpu.buffers.pop(gpu_t::buffer_target::ARRAY);
 
             gpu.blend.pop_state();
         }
 
-        gui_node_t::on_render_begin(world_matrix, view_projection_matrix);
+        gui_node::on_render_begin(world_matrix, view_projection_matrix);
     }
 }

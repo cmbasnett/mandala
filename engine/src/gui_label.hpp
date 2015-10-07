@@ -14,9 +14,9 @@
 
 namespace mandala
 {
-    struct bitmap_font_t;
+    struct bitmap_font;
 
-    struct gui_label_t : gui_node_t
+    struct gui_label : gui_node
     {
         typedef std::wstring string_type;
         typedef string_type::iterator string_itr_type;
@@ -36,13 +36,13 @@ namespace mandala
             BOTTOM
         };
 
-        gui_label_t();
+        gui_label();
 
         static string_type& escape_string(string_type& string);
         static string_type& sanitize_string(string_type& string);
 
         const string_type& get_string() const { return string; }
-        const boost::shared_ptr<bitmap_font_t>& get_bitmap_font() const { return bitmap_font; }
+        const boost::shared_ptr<bitmap_font>& get_bitmap_font() const { return bitmap_font; }
         justification_e get_justification() const { return justification; };
         vertical_alignment_e get_vertical_alignment() const { return vertical_alignment; }
         line_height_type get_line_spacing() const { return line_spacing; }
@@ -58,7 +58,7 @@ namespace mandala
         size_t get_line_count() const;
 
         void set_string(const string_type& string);
-        void set_bitmap_font(const boost::shared_ptr<bitmap_font_t>& bitmap_font) { this->bitmap_font = bitmap_font; dirty(); }
+        void set_bitmap_font(const boost::shared_ptr<bitmap_font>& bitmap_font) { this->bitmap_font = bitmap_font; dirty(); }
         void set_justification(justification_e justification) { this->justification = justification; dirty(); }
         void set_vertical_alignment(vertical_alignment_e vertical_alignment) { this->vertical_alignment = vertical_alignment; dirty(); }
         void set_line_spacing(line_height_type line_spacing) { this->line_spacing = line_spacing; dirty(); }
@@ -106,7 +106,7 @@ namespace mandala
         void update_lines();
 
         string_type string;
-        boost::shared_ptr<bitmap_font_t> bitmap_font;
+        boost::shared_ptr<bitmap_font> bitmap_font;
         justification_e justification = justification_e::LEFT;
         vertical_alignment_e vertical_alignment = vertical_alignment_e::TOP;
         line_height_type line_spacing = 0;

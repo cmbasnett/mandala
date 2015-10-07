@@ -25,7 +25,7 @@ def main():
 		gpu_programs = set(map(lambda x: os.path.splitext(x)[0], files))
 
 		for gpu_program in gpu_programs:
-			class_name = '{}_gpu_program_t'.format(gpu_program)
+			class_name = '{}_gpu_program'.format(gpu_program)
 			vertex_attributes = []
 			uniforms = []
 			subroutines = []
@@ -75,11 +75,11 @@ def main():
 			s.append('\n')
 			s.append('namespace mandala\n')
 			s.append('{\n')
-			s.append('    struct {} : gpu_program_t\n'.format(class_name))
+			s.append('    struct {} : gpu_program\n'.format(class_name))
 			s.append('    {\n')
 
 			for subroutine_uniform in subroutine_uniforms:
-				s.append('        enum class {}_subroutine_e\n'.format(subroutine_uniform[0]))
+				s.append('        enum class {}_subroutine\n'.format(subroutine_uniform[0]))
 				s.append('        {\n')
 
 				for subroutine_function in subroutine_functions:
@@ -91,10 +91,10 @@ def main():
 				s.append('        };\n')
 				s.append('\n')
 
-			s.append('        struct vertex_t\n')
+			s.append('        struct vertex\n')
 			s.append('        {\n')
-			s.append('            vertex_t() = default;\n')
-			s.append('            vertex_t(' + ', '.join((' '.join(arg) for arg in vertex_attributes)) + ')\n')
+			s.append('            vertex() = default;\n')
+			s.append('            vertex(' + ', '.join((' '.join(arg) for arg in vertex_attributes)) + ')\n')
 			s.append('            {\n')
 			s.append(                 '\n'.join('this->{0} = {0};'.format(vertex_attribute[1]) for vertex_attribute in vertex_attributes))
 			s.append('            }\n')
@@ -106,10 +106,10 @@ def main():
 
 			s.append('        };\n')
 			s.append('\n')
-			s.append('        typedef vertex_t vertex_type;\n')
+			s.append('        typedef vertex vertex_type;\n')
 			s.append('\n')
 			s.append('        {}() :\n'.format(class_name))
-			s.append('            gpu_program_t(R\"({})\", R\"({})\")\n'.format(vertex_shader_source, fragment_shader_source))
+			s.append('            gpu_program(R\"({})\", R\"({})\")\n'.format(vertex_shader_source, fragment_shader_source))
 			s.append('        {\n')
 
 			for vertex_attribute in vertex_attributes:
@@ -119,13 +119,13 @@ def main():
 			# TODO: this assumes that all subroutine uniforms are in the fragment shader
 			for subroutine_uniform in subroutine_uniforms:
 				subroutine, uniform = subroutine_uniform
-				s.append('            {0}_subroutine_uniform_location = gpu.get_subroutine_uniform_location(get_id(), gpu_t::shader_type_e::FRAGMENT, \"{1}\");\n'.format(subroutine, uniform))
+				s.append('            {0}_subroutine_uniform_location = gpu.get_subroutine_uniform_location(get_id(), gpu_t::shader_type::FRAGMENT, \"{1}\");\n'.format(subroutine, uniform))
 
 				for subroutine_function in subroutine_functions:
 					subroutine, function = subroutine_function
 
 					if uniform == subroutine_uniform:
-						s.append('            {0}_subroutine_index = gpu.get_subroutine_index(get_id(), gpu_t::shader_type_e::FRAGMENT, \"{0}\");\n'.format(function))
+						s.append('            {0}_subroutine_index = gpu.get_subroutine_index(get_id(), gpu_t::shader_type::FRAGMENT, \"{0}\");\n'.format(function))
 
 			s.append('        }\n')
 			s.append('\n')
@@ -153,7 +153,7 @@ def main():
 			s.append('\n')
 
 			for subroutine in subroutines:
-				s.append('        void set_{0}_subroutine({0}_subroutine_e e)\n'.format(subroutine))
+				s.append('        void set_{0}_subroutine({0}_subroutine e)\n'.format(subroutine))
 				s.append('        {\n')
 				s.append('            switch(e)\n')
 				s.append('            {\n')
@@ -162,8 +162,8 @@ def main():
 					sr, function = subroutine_function
 
 					if sr == subroutine:
-						s.append('                case {}_subroutine_e::{}:'.format(sr, function.upper()))
-						s.append('                    gpu.set_uniform_subroutine(gpu_t::shader_type_e::FRAGMENT, {}_subroutine_index);'.format(function))
+						s.append('                case {}_subroutine::{}:'.format(sr, function.upper()))
+						s.append('                    gpu.set_uniform_subroutine(gpu_t::shader_type::FRAGMENT, {}_subroutine_index);'.format(function))
 						s.append('                    break;\n')
 
 				s.append('            }\n')
@@ -175,16 +175,16 @@ def main():
 
 			for vertex_attribute in vertex_attributes:
 				type, name = vertex_attribute
-				s.append('       gpu_location_t {}_location;\n'.format(name))
+				s.append('       gpu_location {}_location;\n'.format(name))
 
 			for subroutine in subroutines:
-				s.append('       gpu_location_t {}_subroutine_uniform_location;\n'.format(subroutine))
+				s.append('       gpu_location {}_subroutine_uniform_location;\n'.format(subroutine))
 
 				for subroutine_function in subroutine_functions:
 					sr, function = subroutine_function
 
 					if sr == subroutine:
-						s.append('       gpu_index_t {}_subroutine_index;\n'.format(function))
+						s.append('       gpu_index {}_subroutine_index;\n'.format(function))
 
 			s.append('    };\n')
 			s.append('}\n')

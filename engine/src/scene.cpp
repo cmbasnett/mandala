@@ -8,7 +8,7 @@
 
 namespace mandala
 {
-    void scene_t::render(const boost::shared_ptr<frame_buffer_t>& frame_buffer, const boost::shared_ptr<camera_t>& camera) const
+    void scene::render(const boost::shared_ptr<frame_buffer>& frame_buffer, const boost::shared_ptr<mandala::camera>& camera) const
     {
         gpu_viewport_type viewport;
         viewport.width = frame_buffer->get_size().x;
@@ -17,7 +17,6 @@ namespace mandala
         gpu.viewports.push(viewport);
         gpu.frame_buffers.push(frame_buffer);
 
-        gpu.set_clear_color(vec4(1, 0, 0, 1));
         gpu.clear(gpu_t::CLEAR_FLAG_COLOR | gpu_t::CLEAR_FLAG_DEPTH);
 
         const auto camera_params = camera->get_params(viewport);
@@ -31,7 +30,7 @@ namespace mandala
         gpu.viewports.pop();
     }
 
-    void scene_t::tick(f32 dt)
+    void scene::tick(f32 dt)
     {
         for (auto& actor : actors)
         {
@@ -39,7 +38,7 @@ namespace mandala
         }
     }
 
-    void scene_t::on_input_event(input_event_t& input_event)
+    void scene::on_input_event(input_event_t& input_event)
     {
         for (auto& actor : actors)
         {

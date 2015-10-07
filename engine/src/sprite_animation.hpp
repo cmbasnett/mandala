@@ -10,13 +10,13 @@
 
 namespace mandala
 {
-    struct sprite_animation_t : resource_t
+    struct sprite_animation : resource
     {
         typedef f32 time_type;
 
-        struct frame_t
+        struct frame
         {
-            sprite_ref_t sprite;
+            sprite_ref sprite;
             time_type time;
 
             //TODO: move to custom std::less somehow
@@ -31,17 +31,17 @@ namespace mandala
             }
         };
 
-        sprite_animation_t(std::istream& istream);
+        sprite_animation(std::istream& istream);
         
         inline const time_type& get_duration() const { return duration; }
 
-        const sprite_ref_t& get_sprite_at_time(const time_type& time) const;
+        const sprite_ref& get_sprite_at_time(const time_type& time) const;
 
     private:
-        std::vector<const frame_t> frames;
+        std::vector<const frame> frames;
         time_type duration;
 
-        sprite_animation_t(const sprite_animation_t&) = delete;
-        sprite_animation_t& operator=(const sprite_animation_t&) = delete;
+        sprite_animation(const sprite_animation&) = delete;
+        sprite_animation& operator=(const sprite_animation&) = delete;
     };
 }

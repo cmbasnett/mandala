@@ -3,9 +3,9 @@
 
 namespace mandala
 {
-    gpu_buffer_mgr_t gpu_buffers;
+    gpu_buffer_mgr gpu_buffers;
 
-    void gpu_buffer_mgr_t::purge()
+    void gpu_buffer_mgr::purge()
     {
 #if defined(DEBUG)
         //TODO: for some reason, python objects are holding on to these buffers causing the assertion to fail

@@ -12,18 +12,18 @@ namespace mandala
     namespace details
     {
         template<typename Value>
-        struct hash_t
+        struct hash
         {
             typedef std::string string_type;
             typedef Value value_type;
-            typedef hash_t<value_type> type;
+            typedef hash<value_type> type;
 
-            hash_t() :
+            hash() :
                 value(0)
             {
             }
 
-            explicit hash_t(const string_type& string) :
+            explicit hash(const string_type& string) :
 #if defined(DEBUG)
                 string(string),
 #endif
@@ -31,7 +31,7 @@ namespace mandala
             {
             }
 
-            hash_t(type&& copy) :
+            hash(type&& copy) :
 #if defined(DEBUG)
                 string(std::move(copy.string)),
 #endif
@@ -58,7 +58,7 @@ namespace mandala
             value_type value = value_type(0);
 
         public:
-            hash_t& operator=(const hash_t& rhs)
+            hash& operator=(const hash& rhs)
             {
 #if defined(DEBUG)
                 string = rhs.string;
@@ -97,13 +97,13 @@ namespace mandala
         };
     }
 
-    typedef details::hash_t<u32> hash32_t;
-    typedef details::hash_t<u64> hash64_t;
-    typedef hash32_t hash_t;
+    typedef details::hash<u32> hash_u32;
+    typedef details::hash<u64> hash_u64;
+    typedef hash_u32 hash;
 }
 
 template<typename T>
-std::ostream& operator<<(std::ostream& ostream, const mandala::details::hash_t<T>& hash)
+std::ostream& operator<<(std::ostream& ostream, const mandala::details::hash<T>& hash)
 {
     return ostream << hash.get_value();
 }

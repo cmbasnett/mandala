@@ -8,31 +8,31 @@
 
 namespace mandala
 {
-    texture_t::texture_t(color_type_e color_type, const size_type& size, const void* data) :
+    texture::texture(mandala::color_type color_type, const size_type& size, const void* data) :
         color_type(color_type),
         size(size)
     {
         id = gpu.create_texture(color_type, size, data);
     }
 
-    texture_t::texture_t(const boost::shared_ptr<image_t>& image) :
-        texture_t(image->get_color_type(),
+    texture::texture(const boost::shared_ptr<image>& image) :
+        texture(image->get_color_type(),
                   image->get_size(),
                   image->get_data().data())
     {
     }
 
-    texture_t::texture_t(std::istream& istream) :
-        texture_t(boost::make_shared<image_t>(istream))
+    texture::texture(std::istream& istream) :
+        texture(boost::make_shared<image>(istream))
     {
     }
 
-    texture_t::~texture_t()
+    texture::~texture()
     {
         gpu.destroy_texture(id);
     }
 
-    void texture_t::set_size(const size_type & size)
+    void texture::set_size(const size_type & size)
     {
         if (size == get_size())
         {

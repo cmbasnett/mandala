@@ -10,14 +10,14 @@
 
 namespace mandala
 {
-    string_mgr_t strings;
+    string_mgr strings;
 
-    void string_mgr_t::mount(const std::string& file)
+    void string_mgr::mount(const std::string& file)
     {
         std::lock_guard<std::recursive_mutex> lock(mutex);
 
-        auto stream = resources.extract(hash_t(file));
-        const auto archive = string_archive_t(*stream);
+        auto stream = resources.extract(hash(file));
+        const auto archive = string_archive(*stream);
 
         streams.push_back(stream);
 
@@ -31,7 +31,7 @@ namespace mandala
 
             for (auto& archive_string : archive_language_string.second)
             {
-                auto strings_itr = strings.emplace_hint(strings.begin(), archive_string.hash, string_t());
+                auto strings_itr = strings.emplace_hint(strings.begin(), archive_string.hash, string());
                 auto& string = strings_itr->second;
 
                 string.hash = std::move(archive_string.hash);
@@ -41,7 +41,7 @@ namespace mandala
         }
     }
 
-    void string_mgr_t::purge()
+    void string_mgr::purge()
     {
         std::lock_guard<std::recursive_mutex> lock(mutex);
 
@@ -49,7 +49,7 @@ namespace mandala
         language_strings.clear();
     }
 
-    size_t string_mgr_t::count() const
+    size_t string_mgr::count() const
     {
         auto language_strings_itr = language_strings.find(language);
 
@@ -61,7 +61,7 @@ namespace mandala
         return language_strings_itr->second.size();
     }
 
-    string_mgr_t::string_type string_mgr_t::get(const hash_t& hash)
+    string_mgr::string_type string_mgr::get(const hash& hash)
     {
         std::wstring_convert<std::codecvt_utf8<wchar_t>> wstring_convert;
 
@@ -83,7 +83,7 @@ namespace mandala
         if (strings_itr == strings.end())
         {
             std::ostringstream oss;
-            oss << "no string \"" << hash << "\" for language \"" << language << "\"";
+            oss << "no string \"" << hash<< "\" for language \"" << language << "\"";
             throw std::out_of_range(oss.str());
         }
 
@@ -120,7 +120,7 @@ namespace mandala
 
             try
             {
-                auto string = wstring_convert.to_bytes(get(hash_t(key)));
+                auto string = wstring_convert.to_bytes(get(mandala::hash(key)));
 
                 buffer.replace(beg, end - beg + 1, string);
 

@@ -2,7 +2,7 @@
 
 namespace mandala
 {
-    bsp_entity_t::bsp_entity_t(const std::string& string)
+    bsp_entity::bsp_entity(const std::string& string)
     {
         std::string::size_type end = -1;
 

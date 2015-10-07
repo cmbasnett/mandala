@@ -10,7 +10,7 @@
 
 namespace mandala
 {
-    void arcball_camera_t::on_tick(f32 dt)
+    void arcball_camera::on_tick(f32 dt)
     {
         const auto smoothing_value = glm::min(dt * (ARCBALL_CAMERA_SMOOTHING_CONSTANT * ARCBALL_CAMERA_DEFAULT_SMOOTHING_STRENGTH), 1.0f);
 
@@ -39,10 +39,10 @@ namespace mandala
         //location
         pose.location = target - (forward * distance);
 
-        camera_t::on_tick(dt);
+        camera::on_tick(dt);
     }
 
-    bool arcball_camera_t::on_input_event(input_event_t& input_event)
+    bool arcball_camera::on_input_event(input_event_t& input_event)
     {
         auto forward = glm::mul(vec3(0, 0, 1), glm::mat3_cast(pose.rotation));
 

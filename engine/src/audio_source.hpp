@@ -9,17 +9,17 @@
 
 namespace mandala
 {
-    struct sound_t;
+    struct sound;
 
-    struct audio_source_t
+    struct audio_source
     {
         typedef u32 id_type;
 
-        audio_source_t();
-        ~audio_source_t();
+        audio_source();
+        ~audio_source();
 
         id_type get_id() const { return id; }
-        audio_source_state_e get_state() const;
+        audio_source_state get_state() const;
         void set_location(const vec3& location);
         void set_velocity(const vec3& velocity);
         void set_gain(f32 gain);
@@ -30,12 +30,12 @@ namespace mandala
         void pause();
         void rewind();
         void stop();
-        void queue_sound(const boost::shared_ptr<sound_t>& sound);
-        void unqueue_sound(const boost::shared_ptr<sound_t>& sound);
+        void queue_sound(const boost::shared_ptr<sound>& sound);
+        void unqueue_sound(const boost::shared_ptr<sound>& sound);
 
     private:
-        audio_source_t(const audio_source_t&) = delete;
-        audio_source_t& operator=(const audio_source_t&) = delete;
+        audio_source(const audio_source&) = delete;
+        audio_source& operator=(const audio_source&) = delete;
 
         id_type id;
     };

@@ -8,12 +8,12 @@
 
 namespace mandala
 {
-    void gui_scroll_t::on_render_begin(mat4& world_matrix, mat4& view_projection_matrix)
+    void gui_scroll::on_render_begin(mat4& world_matrix, mat4& view_projection_matrix)
     {
         world_matrix = glm::translate(world_matrix, vec3(scroll_location, 0));
     }
 
-    bool gui_scroll_t::on_input_event_begin(input_event_t& input_event)
+    bool gui_scroll::on_input_event_begin(input_event_t& input_event)
     {
         //TODO: have some way for layouts to keep track of certain nodes
         //'owning' touch events by id so that they get exclusive rights
@@ -27,7 +27,7 @@ namespace mandala
             input_event.touch.location -= scroll_location;
         }
 
-        auto base_result = gui_node_t::on_input_event(input_event);
+        auto base_result = gui_node::on_input_event(input_event);
         
         if (input_event.device_type == input_event_t::device_type_e::TOUCH)
         {
@@ -72,14 +72,14 @@ namespace mandala
         return false;
     }
 
-    void gui_scroll_t::on_tick_end(f32 dt)
+    void gui_scroll::on_tick_end(f32 dt)
     {
         //TODO: figure out a proper algorithm for this smoothing
         scroll_location += (scroll_location_target - scroll_location) * dt * 30.0f;
         scroll_location = glm::clamp(scroll_location, scroll_extents.min, scroll_extents.max);
     }
 
-    void gui_scroll_t::set_scroll_location(const scroll_location_type & scroll_location, bool should_interpolate)
+    void gui_scroll::set_scroll_location(const scroll_location_type & scroll_location, bool should_interpolate)
     {
         scroll_location_target = scroll_location;
 
@@ -89,7 +89,7 @@ namespace mandala
         }
     }
 
-    void gui_scroll_t::on_clean_end()
+    void gui_scroll::on_clean_end()
     {
         aabb2 scroll_extents;
         const auto bounds = get_bounds();

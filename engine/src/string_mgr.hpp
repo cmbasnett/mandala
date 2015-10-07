@@ -15,26 +15,26 @@
 
 namespace mandala
 {
-    struct string_mgr_t
+    struct string_mgr
     {
         typedef std::wstring string_type;
         typedef std::string language_type;
 
-        struct string_t
+        struct string
         {
             u32 stream_index = 0;
-            hash_t hash;
+            hash hash;
             u32 offset = 0;
         };
 
-        typedef std::map<const hash_t, string_t> strings_type;
+        typedef std::map<const hash, string> strings_type;
         
         void mount(const std::string& file);
         void purge();
         size_t count() const;
 
         //TODO: template this function to allow returning of string or wstring
-        string_type get(const hash_t& hash);
+        string_type get(const hash& hash);
 
         language_type language; //TODO: language should be determined elsewhere (needs to be shared for other asset swapping)
 
@@ -44,5 +44,5 @@ namespace mandala
         std::map<language_type, strings_type> language_strings;
     };
 
-    extern string_mgr_t strings;
+    extern string_mgr strings;
 }

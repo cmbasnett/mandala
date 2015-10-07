@@ -12,31 +12,31 @@
 
 namespace mandala
 {
-    struct pack_t
+    struct pack
     {
-        struct file_t
+        struct file
         {
-            hash_t pack_hash;
+            hash pack_hash;
             std::string name;
             u32 offset = 0;
             u32 length = 0;
             u32 crc32 = 0;
         };
 
-        typedef std::map<const hash_t, file_t> files_type;
+        typedef std::map<const hash, file> files_type;
 
-        pack_t(const std::string& path);
-        pack_t(pack_t&& rhs);
+        pack(const std::string& path);
+        pack(pack&& rhs);
 
         std::string path;
         files_type files;
         boost::iostreams::mapped_file_source mapped_file_source;
 
-        pack_t& operator=(pack_t&& rhs);
+        pack& operator=(pack&& rhs);
 
     private:
 
-        pack_t(const pack_t&) = delete;
-        pack_t& operator=(const pack_t&) = delete;
+        pack(const pack&) = delete;
+        pack& operator=(const pack&) = delete;
     };
 }

@@ -9,9 +9,9 @@
 
 namespace mandala
 {
-    state_mgr_t states;
+    state_mgr states;
 
-    void state_mgr_t::tick(f32 dt)
+    void state_mgr::tick(f32 dt)
     {
         bool did_nodes_change = !operations.empty();
 
@@ -216,7 +216,7 @@ namespace mandala
         }
     }
 
-    void state_mgr_t::render()
+    void state_mgr::render()
     {
         for (auto& node : nodes)
         {
@@ -227,7 +227,7 @@ namespace mandala
         }
     }
 
-    bool state_mgr_t::on_input_event(input_event_t& input_event)
+    bool state_mgr::on_input_event(input_event_t& input_event)
     {
         for (auto nodes_itr = nodes.rbegin(); nodes_itr != nodes.rend(); ++nodes_itr)
         {
@@ -248,7 +248,7 @@ namespace mandala
     }
 
 #if defined(MANDALA_PC)
-    void state_mgr_t::on_window_event(window_event_t& window_event)
+    void state_mgr::on_window_event(window_event& window_event)
     {
         for (auto& node : nodes)
         {
@@ -258,7 +258,7 @@ namespace mandala
 #endif
 
     //push a state onto the stack
-    void state_mgr_t::push(const state_type& state, state_flags_type link_flags, i32 weight)
+    void state_mgr::push(const state_type& state, state_flags_type link_flags, i32 weight)
     {
         if (state == nullptr)
         {
@@ -275,7 +275,7 @@ namespace mandala
     }
 
     //pop a specific state off of the stack
-    void state_mgr_t::pop(const state_type& state)
+    void state_mgr::pop(const state_type& state)
     {
         if (state == nullptr)
         {
@@ -319,7 +319,7 @@ namespace mandala
         operations.push_back(operation);
     }
 
-    void state_mgr_t::change_link_flags(const state_type& state, state_flags_type link_flags)
+    void state_mgr::change_link_flags(const state_type& state, state_flags_type link_flags)
     {
         if (state == nullptr)
         {
@@ -364,7 +364,7 @@ namespace mandala
         nodes_itr->flags |= STATE_FLAG_CHANGING_LINK_FLAGS;
     }
 
-    void state_mgr_t::change_weight(const state_type& state, i32 weight = 0)
+    void state_mgr::change_weight(const state_type& state, i32 weight = 0)
     {
         if (state == nullptr)
         {
@@ -404,7 +404,7 @@ namespace mandala
         operations.push_back(operation);
     }
 
-    void state_mgr_t::purge()
+    void state_mgr::purge()
     {
         operation_t operation;
         operation.type = operation_t::type_e::PURGE;
@@ -412,12 +412,12 @@ namespace mandala
         operations.push_back(operation);
     }
 
-    size_t state_mgr_t::count() const
+    size_t state_mgr::count() const
     {
         return nodes.size();
     }
 
-    state_mgr_t::state_type state_mgr_t::at(size_t index) const
+    state_mgr::state_type state_mgr::at(size_t index) const
     {
         if (index >= nodes.size())
         {
@@ -437,7 +437,7 @@ namespace mandala
         return nodes_reverse_itr->state;
     }
 
-    boost::optional<size_t> state_mgr_t::index_of(const state_type& state) const
+    boost::optional<size_t> state_mgr::index_of(const state_type& state) const
     {
         boost::optional<size_t> index;
 
@@ -454,7 +454,7 @@ namespace mandala
         return index;
     }
 
-    state_flags_type state_mgr_t::get_link_flags(const state_type& state) const
+    state_flags_type state_mgr::get_link_flags(const state_type& state) const
     {
         const auto nodes_itr = std::find_if(nodes.begin(), nodes.end(), [&](const node_t& node)
         {
@@ -469,7 +469,7 @@ namespace mandala
         return nodes_itr->link_flags;
     }
 
-    state_flags_type state_mgr_t::get_flags(const state_type& state) const
+    state_flags_type state_mgr::get_flags(const state_type& state) const
     {
         const auto nodes_itr = std::find_if(nodes.begin(), nodes.end(), [&](const node_t& node)
         {
@@ -484,7 +484,7 @@ namespace mandala
         return nodes_itr->flags;
     }
 
-    i32 state_mgr_t::get_weight(const state_type& state) const
+    i32 state_mgr::get_weight(const state_type& state) const
     {
         const auto nodes_itr = std::find_if(nodes.begin(), nodes.end(), [&](const node_t& node)
         {
@@ -499,27 +499,27 @@ namespace mandala
         return nodes_itr->weight;
     }
 
-    bool state_mgr_t::is_state_rendering(const state_type& state) const
+    bool state_mgr::is_state_rendering(const state_type& state) const
     {
         return (get_flags(state) & STATE_FLAG_RENDER) == STATE_FLAG_RENDER;
     }
 
-    bool state_mgr_t::is_state_ticking(const state_type& state) const
+    bool state_mgr::is_state_ticking(const state_type& state) const
     {
         return (get_flags(state) & STATE_FLAG_TICK) == STATE_FLAG_TICK;
     }
 
-    bool state_mgr_t::is_state_handling_input(const state_type& state) const
+    bool state_mgr::is_state_handling_input(const state_type& state) const
     {
         return (get_flags(state) & STATE_FLAG_INPUT) == STATE_FLAG_INPUT;
     }
 
-    bool state_mgr_t::is_state_popping(const state_type& state) const
+    bool state_mgr::is_state_popping(const state_type& state) const
     {
         return (get_flags(state) & STATE_FLAG_POPPING) == STATE_FLAG_POPPING;
     }
 
-    bool state_mgr_t::is_state_changing_link_flags(const state_type& state) const
+    bool state_mgr::is_state_changing_link_flags(const state_type& state) const
     {
         return (get_flags(state) & STATE_FLAG_CHANGING_LINK_FLAGS) == STATE_FLAG_CHANGING_LINK_FLAGS;
     }

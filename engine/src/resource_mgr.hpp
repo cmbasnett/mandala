@@ -17,9 +17,9 @@
 
 namespace mandala
 {
-    struct resource_mgr_t : public pack_mgr_t
+    struct resource_mgr : public pack_mgr
     {
-        typedef std::map<hash_t, boost::shared_ptr<resource_t>> resource_map_type;
+        typedef std::map<hash, boost::shared_ptr<resource>> resource_map_type;
 
         size_t count() const;
 
@@ -41,7 +41,7 @@ namespace mandala
         }
 
         template<typename T = std::enable_if<is_resource<T>::value, T>::type>
-        boost::shared_ptr<T> get(const hash_t& hash)
+        boost::shared_ptr<T> get(const hash& hash)
         {
             static const std::type_index TYPE_INDEX = typeid(T);
 
@@ -64,9 +64,9 @@ namespace mandala
                 //resource already exists
                 auto& resource = resources_itr->second;
 
-                resource->last_access_time = resource_t::clock_type::now();
+                resource->last_access_time = resource::clock_type::now();
 
-                return boost::static_pointer_cast<T, resource_t>(resource);
+                return boost::static_pointer_cast<T, mandala::resource>(resource);
             }
 
             auto istream = extract(hash);
@@ -81,7 +81,7 @@ namespace mandala
         }
 
         template<typename T = std::enable_if<is_resource<T>::value, T>::type>
-        void put(boost::shared_ptr<T> resource, const hash_t& hash)
+        void put(boost::shared_ptr<T> resource, const hash& hash)
         {
             static const std::type_index TYPE_INDEX = typeid(T);
 
@@ -97,7 +97,7 @@ namespace mandala
 
             auto& resources = type_resources[TYPE_INDEX];
 
-            const auto resources_itr = std::find_if(resources.begin(), resources.end(), [&](const std::pair<hash_t, boost::shared_ptr<resource_t>>& pair)
+            const auto resources_itr = std::find_if(resources.begin(), resources.end(), [&](const std::pair<hash, boost::shared_ptr<resource>>& pair)
             {
                 return resource == pair.second;
             });
@@ -106,7 +106,7 @@ namespace mandala
             {
                 std::ostringstream ostringstream;
 
-                ostringstream << "resource " << hash << " already exists";
+                ostringstream << "resource " << hash<< " already exists";
 
                 throw std::exception(ostringstream.str().c_str());
             }
@@ -125,5 +125,5 @@ namespace mandala
         std::map<std::type_index, resource_map_type> type_resources;
     };
 
-    extern resource_mgr_t resources;
+    extern resource_mgr resources;
 }

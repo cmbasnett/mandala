@@ -7,7 +7,7 @@
 
 namespace mandala
 {
-    image_t::image_t(std::istream& istream)
+    image::image(std::istream& istream)
     {
         //TODO: determine what the stream actually contains (don't assume PNG!)
         auto png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
@@ -50,20 +50,20 @@ namespace mandala
 
         png_get_IHDR(png_ptr, info_ptr, &size.x, &size.y, &bit_depth, &png_color_type, &interlace_method, nullptr, nullptr);
 
-        auto get_color_type = [](int png_color_type) -> color_type_e
+        auto get_color_type = [](int png_color_type) -> mandala::color_type
         {
             switch (png_color_type)
             {
             case PNG_COLOR_TYPE_GRAY:
-                return color_type_e::g;
+                return color_type::G;
             case PNG_COLOR_TYPE_RGB:
-                return color_type_e::rgb;
+                return color_type::RGB;
             case PNG_COLOR_TYPE_PALETTE:
-                return color_type_e::palette;
+                return color_type::PALETTE;
             case PNG_COLOR_TYPE_GA:
-                return color_type_e::ga;
+                return color_type::GA;
             case PNG_COLOR_TYPE_RGBA:
-                return color_type_e::rgba;
+                return color_type::RGBA;
             default:
                 throw std::exception();
             }
@@ -86,7 +86,7 @@ namespace mandala
         png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
     }
 
-    image_t::image_t(const size_type& size, bit_depth_type bit_depth, color_type_e color_type, const data_type::value_type* data_ptr, size_t data_size) :
+    image::image(const size_type& size, bit_depth_type bit_depth, mandala::color_type color_type, const data_type::value_type* data_ptr, size_t data_size) :
         size(size),
         bit_depth(bit_depth),
         color_type(color_type)
@@ -97,7 +97,7 @@ namespace mandala
     }
 }
 
-std::ostream& operator<<(std::ostream& ostream, mandala::image_t& image)
+std::ostream& operator<<(std::ostream& ostream, mandala::image& image)
 {
     using namespace mandala;
 
@@ -125,21 +125,21 @@ std::ostream& operator<<(std::ostream& ostream, mandala::image_t& image)
     //TODO: get this thing working with different color types other than rgb
     static const auto PIXEL_SIZE = 3;
 
-    auto get_png_color_type = [](color_type_e color_type) -> int
+    auto get_png_color_type = [](color_type color_type) -> int
     {
         switch (color_type)
         {
-        case color_type_e::g:
+        case color_type::G:
             return PNG_COLOR_TYPE_GRAY;
-        case color_type_e::rgb:
+        case color_type::RGB:
             return PNG_COLOR_TYPE_RGB;
-        case color_type_e::palette:
+        case color_type::PALETTE:
             return PNG_COLOR_TYPE_PALETTE;
-        case color_type_e::ga:
+        case color_type::GA:
             return PNG_COLOR_TYPE_GA;
-        case color_type_e::rgba:
+        case color_type::RGBA:
             return PNG_COLOR_TYPE_RGBA;
-        case color_type_e::depth_stencil:
+        case color_type::DEPTH_STENCIL:
             return PNG_COLOR_TYPE_RGBA;
         default:
             throw std::exception();

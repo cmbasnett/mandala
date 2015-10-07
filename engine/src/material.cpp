@@ -15,13 +15,20 @@
 
 namespace mandala
 {
-    material_t::material_t(std::istream& istream)
+    material::material(std::istream& istream)
     {
         using namespace boost::property_tree;
 
         ptree ptree_;
         
-        read_json(istream, ptree_);
+        try
+        {
+            read_json(istream, ptree_);
+        }
+        catch (json_parser_error e)
+        {
+            std::cout << e.what() << std::endl;
+        }
 
         //is two sided
         is_two_sided = ptree_.get<bool>("is_two_sided", is_two_sided);
@@ -37,9 +44,9 @@ namespace mandala
             const auto diffuse_ptree = diffuse_optional.get();
 
             //texture
-            const auto texture_hash = diffuse_ptree.get<hash_t>("texture");
+            const auto texture_hash = diffuse_ptree.get<mandala::hash>("texture");
 
-            diffuse.texture = resources.get<texture_t>(texture_hash);
+            diffuse.texture = resources.get<texture>(texture_hash);
 
             //color
             const auto color_optional = diffuse_ptree.get_child_optional("color");
@@ -70,9 +77,9 @@ namespace mandala
             const auto normal_ptree = normal_optional.get();
 
             //texture
-            const auto texture_hash = normal_ptree.get<hash_t>("texture");
+            const auto texture_hash = normal_ptree.get<mandala::hash>("texture");
 
-            normal.texture = resources.get<texture_t>(texture_hash);
+            normal.texture = resources.get<texture>(texture_hash);
         }
 
         //specular
@@ -83,9 +90,9 @@ namespace mandala
             const auto specular_ptree = specular_optional.get();
 
             //texture
-            const auto texture_hash = specular_ptree.get<hash_t>("texture");
+            const auto texture_hash = specular_ptree.get<mandala::hash>("texture");
 
-            specular.texture = resources.get<texture_t>(texture_hash);
+            specular.texture = resources.get<texture>(texture_hash);
 
             //color
             const auto color_optional = specular_ptree.get_child_optional("color");
@@ -124,9 +131,9 @@ namespace mandala
             const auto emissive_ptree = emissive_optional.get();
 
             //texture
-            const auto texture_hash = emissive_ptree.get<hash_t>("texture");
+            const auto texture_hash = emissive_ptree.get<mandala::hash>("texture");
 
-            emissive.texture = resources.get<texture_t>(texture_hash);
+            emissive.texture = resources.get<texture>(texture_hash);
 
             //color
             const auto color_optional = emissive_ptree.get_child_optional("color");

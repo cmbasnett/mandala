@@ -10,9 +10,9 @@
 
 namespace mandala
 {
-    struct image_t;
+    struct image;
 
-    struct texture_t : resource_t, boost::enable_shared_from_this<texture_t>
+    struct texture : resource, boost::enable_shared_from_this<texture>
     {
         typedef u32 size_value_type;
         typedef glm::detail::tvec2<size_value_type> size_type;
@@ -20,23 +20,23 @@ namespace mandala
         typedef i32 format_type;
         typedef i32 type_type;
 
-        texture_t(color_type_e color_type, const size_type& size, const void* data);
-        texture_t(const boost::shared_ptr<image_t>& image);
-        texture_t(std::istream& istream);
-        virtual ~texture_t();
+        texture(color_type color_type, const size_type& size, const void* data);
+        texture(const boost::shared_ptr<image>& image);
+        texture(std::istream& istream);
+        virtual ~texture();
 
-        color_type_e get_color_type() const { return color_type; }
+        color_type get_color_type() const { return color_type; }
         const size_type& get_size() const { return size; }
         id_type get_id() const { return id; }
 
         void set_size(const size_type& size);
 
     private:
-        color_type_e color_type;
+        color_type color_type;
         size_type size;
         id_type id = 0;
 
-        texture_t(texture_t&) = delete;
-        texture_t& operator=(texture_t&) = delete;
+        texture(texture&) = delete;
+        texture& operator=(texture&) = delete;
     };
 }

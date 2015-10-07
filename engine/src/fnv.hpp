@@ -10,10 +10,10 @@ namespace mandala
         namespace detail
         {
             template<typename Value>
-            struct fnv1a_t;
+            struct fnv1a;
 
             template<>
-            struct fnv1a_t<u32>
+            struct fnv1a<u32>
             {
                 typedef u32 value_type;
 
@@ -22,7 +22,7 @@ namespace mandala
             };
 
             template<>
-            struct fnv1a_t<u64>
+            struct fnv1a<u64>
             {
                 typedef u64 value_type;
 
@@ -34,14 +34,14 @@ namespace mandala
         template<typename Value>
         Value fnv1a(void* ptr, size_t length)
         {
-            Value hash = detail::fnv1a_t<Value>::OFFSET_BASIS;
+            Value hash = detail::fnv1a<Value>::OFFSET_BASIS;
             auto current = static_cast<u8*>(ptr);
             auto end = current + length;
 
             while(current < end)
             {
-                hash ^= *(current++);
-                hash *= detail::fnv1a_t<Value>::PRIME;
+                hash^= *(current++);
+                hash*= detail::fnv1a<Value>::PRIME;
             }
 
             return hash;

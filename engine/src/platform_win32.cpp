@@ -14,7 +14,7 @@
 
 namespace mandala
 {
-    platform_win32_t platform;
+    platform_win32 platform;
 
     static inline void on_keyboard_key(GLFWwindow* window, int key, int scancode, int action, int mods)
     {
@@ -145,9 +145,9 @@ namespace mandala
         }
 
         //TODO: a less verbose solution is possible
-        auto window_events_itr = std::find_if(platform.window.events.begin(), platform.window.events.end(), [](const window_event_t& window_event)
+        auto window_events_itr = std::find_if(platform.window.events.begin(), platform.window.events.end(), [](const window_event& window_event)
         {
-            return window_event.type == window_event_t::type_e::RESIZE;
+            return window_event.type == window_event_type::RESIZE;
         });
 
         if (window_events_itr != platform.window.events.end())
@@ -157,8 +157,8 @@ namespace mandala
         }
         else
         {
-            window_event_t window_event;
-            window_event.type = window_event_t::type_e::RESIZE;
+            window_event window_event;
+            window_event.type = window_event_type::RESIZE;
             window_event.rectangle.width = width;
             window_event.rectangle.height = height;
 
@@ -172,9 +172,9 @@ namespace mandala
     static inline void on_window_move(GLFWwindow* window, int x, int y)
     {
         //TODO: a less vebose solution is possible
-        auto window_events_itr = std::find_if(platform.window.events.begin(), platform.window.events.end(), [](const window_event_t& window_event)
+        auto window_events_itr = std::find_if(platform.window.events.begin(), platform.window.events.end(), [](const window_event& window_event)
         {
-            return window_event.type == window_event_t::type_e::MOVE;
+            return window_event.type == window_event_type::MOVE;
         });
 
         if (window_events_itr != platform.window.events.end())
@@ -184,8 +184,8 @@ namespace mandala
         }
         else
         {
-            window_event_t window_event;
-            window_event.type = window_event_t::type_e::MOVE;
+            window_event window_event;
+            window_event.type = window_event_type::MOVE;
             window_event.rectangle.x = x;
             window_event.rectangle.y = y;
 
@@ -274,7 +274,7 @@ namespace mandala
         throw std::exception(message);
     }
 
-    void platform_win32_t::app_run_start()
+    void platform_win32::app_run_start()
     {
         //glfw
         glfwInit();
@@ -312,7 +312,7 @@ namespace mandala
         }
     }
 
-    void platform_win32_t::app_run_end()
+    void platform_win32::app_run_end()
     {
         glfwDestroyWindow(window_ptr);
         glfwTerminate();
@@ -320,7 +320,7 @@ namespace mandala
         window_ptr = nullptr;
     }
 
-    void platform_win32_t::app_tick_start(f32 dt)
+    void platform_win32::app_tick_start(f32 dt)
     {
         glfwPollEvents();
 
@@ -375,25 +375,25 @@ namespace mandala
         }
     }
 
-    void platform_win32_t::app_tick_end(f32 dt)
+    void platform_win32::app_tick_end(f32 dt)
     {
     }
 
-    void platform_win32_t::app_render_start()
+    void platform_win32::app_render_start()
     {
     }
 
-    void platform_win32_t::app_render_end()
+    void platform_win32::app_render_end()
     {
         glfwSwapBuffers(window_ptr);
     }
 
-    bool platform_win32_t::should_exit() const
+    bool platform_win32::should_exit() const
     {
         return glfwWindowShouldClose(window_ptr) != 0;
     }
 
-    platform_t::screen_size_type platform_win32_t::get_screen_size() const
+    platform_t::screen_size_type platform_win32::get_screen_size() const
     {
         screen_size_type screen_size;
 
@@ -402,18 +402,18 @@ namespace mandala
         return screen_size;
     }
     
-    void platform_win32_t::set_screen_size(const screen_size_type& screen_size) const
+    void platform_win32::set_screen_size(const screen_size_type& screen_size) const
     {
         glfwSetWindowSize(window_ptr, screen_size.x, screen_size.y);
     }
 
     //fullscreen
-    bool platform_win32_t::is_fullscreen() const
+    bool platform_win32::is_fullscreen() const
     {
         return window_ptr != nullptr && glfwGetWindowMonitor(window_ptr) != nullptr;
     }
 
-    void platform_win32_t::set_is_fullscreen(bool is_fullscreen)
+    void platform_win32::set_is_fullscreen(bool is_fullscreen)
     {
         if (window_ptr == nullptr)
         {
@@ -465,7 +465,7 @@ namespace mandala
         on_window_resize(window_ptr, window_size.x, window_size.y);
     }
 
-    bool platform_win32_t::pop_input_event(input_event_t& input_event)
+    bool platform_win32::pop_input_event(input_event_t& input_event)
     {
         if (input.events.empty())
         {
@@ -482,7 +482,7 @@ namespace mandala
         return true;
     }
 
-    bool platform_win32_t::pop_window_event(window_event_t& window_event)
+    bool platform_win32::pop_window_event(window_event& window_event)
     {
         if (window.events.empty())
         {
@@ -496,7 +496,7 @@ namespace mandala
         return true;
     }
 
-    platform_t::cursor_location_type platform_win32_t::get_cursor_location() const
+    platform_t::cursor_location_type platform_win32::get_cursor_location() const
     {
         cursor_location_type cursor_location;
 
@@ -505,33 +505,33 @@ namespace mandala
         return cursor_location;
     }
 
-    void platform_win32_t::set_cursor_location(const cursor_location_type& cursor_location) const
+    void platform_win32::set_cursor_location(const cursor_location_type& cursor_location) const
     {
         glfwSetCursorPos(window_ptr, cursor_location.x, cursor_location.y);
     }
 
-    bool platform_win32_t::is_cursor_hidden() const
+    bool platform_win32::is_cursor_hidden() const
     {
         return glfwGetInputMode(window_ptr, GLFW_CURSOR) == GLFW_CURSOR_HIDDEN;
     }
 
-    void platform_win32_t::set_cursor_hidden(bool is_hidden) const
+    void platform_win32::set_cursor_hidden(bool is_hidden) const
     {
         glfwSetInputMode(window_ptr, GLFW_CURSOR, is_hidden ? GLFW_CURSOR_HIDDEN : GLFW_CURSOR_NORMAL);
     }
 
-    platform_t::window_title_type platform_win32_t::get_window_title() const
+    platform_t::window_title_type platform_win32::get_window_title() const
     {
         //TODO: implement this
         return std::string();
     }
 
-    void platform_win32_t::set_window_title(const window_title_type& window_title) const
+    void platform_win32::set_window_title(const window_title_type& window_title) const
     {
         glfwSetWindowTitle(window_ptr, window_title.c_str());
     }
 
-    platform_t::window_size_type platform_win32_t::get_window_size() const
+    platform_t::window_size_type platform_win32::get_window_size() const
     {
         window_size_type window_size;
 
@@ -540,12 +540,12 @@ namespace mandala
         return window_size;
     }
 
-    void platform_win32_t::set_window_size(const window_size_type& window_size) const
+    void platform_win32::set_window_size(const window_size_type& window_size) const
     {
         glfwSetWindowSize(window_ptr, window_size.x, window_size.y);
     }
 
-    platform_t::window_size_type platform_win32_t::get_window_location() const
+    platform_t::window_size_type platform_win32::get_window_location() const
     {
         vec2_i32 window_location;
 
@@ -554,17 +554,17 @@ namespace mandala
         return window_location;
     }
 
-    void platform_win32_t::set_window_location(const window_size_type& window_location) const
+    void platform_win32::set_window_location(const window_size_type& window_location) const
     {
         glfwSetWindowPos(window_ptr, window_location.x, window_location.y);
     }
 
-    std::string platform_win32_t::get_clipboard_string() const
+    std::string platform_win32::get_clipboard_string() const
     {
         return glfwGetClipboardString(window_ptr);
     }
 
-    void platform_win32_t::set_clipboard_string(const std::string& clipboard_string) const
+    void platform_win32::set_clipboard_string(const std::string& clipboard_string) const
     {
         glfwSetClipboardString(window_ptr, clipboard_string.c_str());
     }

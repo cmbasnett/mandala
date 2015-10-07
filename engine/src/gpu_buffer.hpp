@@ -8,17 +8,17 @@
 
 namespace mandala
 {
-    struct gpu_buffer_t : boost::enable_shared_from_this<gpu_buffer_t>
+    struct gpu_buffer : boost::enable_shared_from_this<gpu_buffer>
     {
-        gpu_id_t get_id() const { return id; }
+        gpu_id get_id() const { return id; }
 
-        virtual ~gpu_buffer_t();
+        virtual ~gpu_buffer();
 
     protected:
-        gpu_buffer_t();
+        gpu_buffer();
 
     private:
-        gpu_id_t id;
+        gpu_id id;
     };
 
     template<typename T, typename Enable = void>
@@ -27,7 +27,7 @@ namespace mandala
     };
 
     template<typename T>
-    struct is_gpu_buffer<T, typename std::enable_if<std::is_base_of<gpu_buffer_t, T>::value>::type> : std::true_type
+    struct is_gpu_buffer<T, typename std::enable_if<std::is_base_of<gpu_buffer, T>::value>::type> : std::true_type
     {
     };
 }

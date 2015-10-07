@@ -7,22 +7,22 @@ using namespace glm;
 
 namespace mandala
 {
-    struct position_gpu_program_t : gpu_program_t
+    struct position_gpu_program : gpu_program
     {
-        struct vertex_t
+        struct vertex
         {
-            vertex_t() = default;
-            vertex_t(vec3 location)
+            vertex() = default;
+            vertex(vec3 location)
             {
 this->location = location;            }
 
             vec3 location;
         };
 
-        typedef vertex_t vertex_type;
+        typedef vertex vertex_type;
 
-        position_gpu_program_t() :
-            gpu_program_t(R"(#version 400
+        position_gpu_program() :
+            gpu_program(R"(#version 400
 
 uniform mat4 world_matrix;
 uniform mat4 view_projection_matrix;
@@ -65,6 +65,6 @@ void main()
 
 
     private:
-       gpu_location_t location_location;
+       gpu_location location_location;
     };
 }

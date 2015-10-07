@@ -5,19 +5,19 @@
 
 namespace mandala
 {
-    frame_buffer_t::frame_buffer_t(gpu_frame_buffer_type_e type, const gpu_frame_buffer_size_type& size) :
+    frame_buffer::frame_buffer(gpu_frame_buffer_type type, const gpu_frame_buffer_size_type& size) :
         type(type),
         size(size)
     {
         id = gpu.create_frame_buffer(type, size, color_texture, depth_stencil_texture, depth_texture);
     }
 
-    frame_buffer_t::~frame_buffer_t()
+    frame_buffer::~frame_buffer()
     {
         gpu.destroy_frame_buffer(id);
     }
 
-    void frame_buffer_t::on_bind() const
+    void frame_buffer::on_bind() const
     {
         //NOTE: setting these flags on binding could have unforseen consequences
         auto gpu_color_state = gpu.color.get_state();
@@ -53,7 +53,7 @@ namespace mandala
         //TODO: stencil mask
     }
 
-    void frame_buffer_t::set_size(const gpu_frame_buffer_size_type& size)
+    void frame_buffer::set_size(const gpu_frame_buffer_size_type& size)
     {
         if (size == get_size())
         {

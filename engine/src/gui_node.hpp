@@ -18,7 +18,7 @@
 namespace mandala
 {
     struct input_event_t;
-    struct gui_layout_t;
+    struct gui_layout;
 
     typedef u8 gui_anchor_flags_type;
 
@@ -51,15 +51,15 @@ namespace mandala
         VISIBLE
     };
 
-    struct gui_node_t : public boost::enable_shared_from_this<gui_node_t>
+    struct gui_node : public boost::enable_shared_from_this<gui_node>
     {
         typedef aabb2 bounds_type;
         typedef vec2 size_type;
         typedef vec4 color_type;
 
-        const hash_t& get_id() const { return id; }
-        const boost::shared_ptr<gui_node_t>& get_root() const { return root; }
-        const boost::shared_ptr<gui_node_t>& get_parent() const { return parent; }
+        const hash& get_id() const { return id; }
+        const boost::shared_ptr<gui_node>& get_root() const { return root; }
+        const boost::shared_ptr<gui_node>& get_parent() const { return parent; }
         gui_dock_mode_e get_dock_mode() const { return dock_mode; }
         gui_anchor_flags_type get_anchor_flags() const { return anchor_flags; }
         const vec2& get_anchor_offset() const { return anchor_offset; }
@@ -75,7 +75,7 @@ namespace mandala
         bool get_is_dirty() const { return is_dirty; }
         gui_visiblity_e get_visibility() const { return visibility; }
         bool get_should_clip() const { return should_clip; }
-        const std::vector<boost::shared_ptr<gui_node_t>>& get_children() const { return children; }
+        const std::vector<boost::shared_ptr<gui_node>>& get_children() const { return children; }
 
         void set_dock_mode(gui_dock_mode_e dock_mode) { this->dock_mode = dock_mode; dirty(); }
         void set_anchor_flags(gui_anchor_flags_type anchor_flags) { this->anchor_flags = anchor_flags; dirty(); }
@@ -108,13 +108,13 @@ namespace mandala
 
         void dirty();
         void orphan();
-        void adopt(const boost::shared_ptr<gui_node_t>& child);
+        void adopt(const boost::shared_ptr<gui_node>& child);
 
     private:
-        hash_t id;
-        boost::shared_ptr<gui_node_t> root;
-        boost::shared_ptr<gui_node_t> parent;
-        std::vector<boost::shared_ptr<gui_node_t>> children;
+        hash id;
+        boost::shared_ptr<gui_node> root;
+        boost::shared_ptr<gui_node> parent;
+        std::vector<boost::shared_ptr<gui_node>> children;
         gui_dock_mode_e dock_mode = gui_dock_mode_e::NONE;
         gui_anchor_flags_type anchor_flags = (GUI_ANCHOR_FLAG_TOP | GUI_ANCHOR_FLAG_LEFT);
         size_type anchor_offset;
@@ -128,7 +128,7 @@ namespace mandala
         bool should_clip = false;
         bool has_focus = false;
         gui_size_modes_t size_modes;
-        boost::shared_ptr<gui_layout_t> layout;
+        boost::shared_ptr<gui_layout> layout;
 
     protected:
         bool is_dirty = true;

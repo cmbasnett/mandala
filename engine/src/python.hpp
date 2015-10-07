@@ -15,10 +15,10 @@
 
 namespace mandala
 {
-    struct python_t
+    struct python
     {
-        python_t();
-        ~python_t();
+        python();
+        ~python();
 
         boost::python::api::object exec(const char* string);
         boost::python::api::object MANDALA_API_ENTRY exec_file(const char* file);
@@ -33,5 +33,5 @@ namespace mandala
         boost::python::object main_module;
     };
 
-    MANDALA_API_ENTRY extern python_t py;
+    MANDALA_API_ENTRY extern python py;
 }

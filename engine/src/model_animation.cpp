@@ -15,7 +15,7 @@
 
 namespace mandala
 {
-    model_animation_t::model_animation_t(std::istream& istream)
+    model_animation::model_animation(std::istream& istream)
     {
         //magic
         std::array<char, 4> magic;
@@ -42,14 +42,14 @@ namespace mandala
         read(istream, bone_count);
 
         //bones
-        std::vector<bone_t> bones;
+        std::vector<bone> bones;
         bones.resize(bone_count);
 
         for(auto& bone : bones)
         {
             std::string bone_name;
             std::getline(istream, bone_name, '\0');
-            bone.hash = hash_t(bone_name);
+            bone.hash = mandala::hash(bone_name);
 
             read(istream, bone.parent_index);
             read(istream, bone.flags);
@@ -119,32 +119,32 @@ namespace mandala
 
                 auto frame_data_start_index = (frame_data_count * i) + bone.data_start_index;
 
-                if (bone.flags & bone_t::flags_t::LOCATION_X)
+                if (bone.flags & bone::flags::LOCATION_X)
                 {
                     skeleton_bone.pose.location.x = frame_data[frame_data_start_index + k++];
                 }
 
-                if(bone.flags & bone_t::flags_t::LOCATION_Y)
+                if(bone.flags & bone::flags::LOCATION_Y)
                 {
                     skeleton_bone.pose.location.z = -frame_data[frame_data_start_index + k++];
                 }
 
-                if(bone.flags & bone_t::flags_t::LOCATION_Z)
+                if(bone.flags & bone::flags::LOCATION_Z)
                 {
                     skeleton_bone.pose.location.y = frame_data[frame_data_start_index + k++];
                 }
 
-                if(bone.flags & bone_t::flags_t::ROTATION_X)
+                if(bone.flags & bone::flags::ROTATION_X)
                 {
                     skeleton_bone.pose.rotation.x = frame_data[frame_data_start_index + k++];
                 }
 
-                if(bone.flags & bone_t::flags_t::ROTATION_Y)
+                if(bone.flags & bone::flags::ROTATION_Y)
                 {
                     skeleton_bone.pose.rotation.z = -frame_data[frame_data_start_index + k++];
                 }
 
-                if(bone.flags & bone_t::flags_t::ROTATION_Z)
+                if(bone.flags & bone::flags::ROTATION_Z)
                 {
                     skeleton_bone.pose.rotation.y = frame_data[frame_data_start_index + k++];
                 }

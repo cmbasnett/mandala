@@ -9,6 +9,6 @@ namespace mandala
         mat4 view_matrix;
         mat4 projection_matrix;
         vec3 location;
-        frustum_f32 frustum;
+        frustum frustum;
     };
 }

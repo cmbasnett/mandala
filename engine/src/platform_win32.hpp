@@ -12,9 +12,9 @@ struct GLFWmonitor;
 
 namespace mandala
 {
-    struct platform_win32_t : platform_t
+    struct platform_win32 : platform_t
     {
-        platform_win32_t() = default;
+        platform_win32() = default;
 
         //run
         virtual void app_run_start() override;
@@ -42,7 +42,7 @@ namespace mandala
         //pop_input_event
         virtual bool pop_input_event(input_event_t& input_event) override;
 
-        virtual bool pop_window_event(window_event_t& window_event) override;
+        virtual bool pop_window_event(window_event& window_event) override;
 
         //cursor_location
         virtual cursor_location_type get_cursor_location() const override;
@@ -74,9 +74,9 @@ namespace mandala
         GLFWwindow* window_ptr = nullptr;
         window_size_type old_window_size;
 
-        platform_win32_t(const platform_win32_t&) = delete;
-        platform_win32_t& operator=(const platform_win32_t&) = delete;
+        platform_win32(const platform_win32&) = delete;
+        platform_win32& operator=(const platform_win32&) = delete;
     };
 
-    extern platform_win32_t platform;
+    extern platform_win32 platform;
 }

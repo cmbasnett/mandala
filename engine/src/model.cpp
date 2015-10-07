@@ -29,23 +29,23 @@
 
 namespace mandala
 {
-    struct bone_info_t
+    struct bone_info
     {
         std::string name;
         u8 parent_index = 0;
         pose3 pose;
     };
 
-    struct mesh_info_t
+    struct mesh_info
     {
-        struct vertex_t
+        struct vertex
         {
             vec2 texcoord;
             u16 weight_index_start = 0;
             u8 weight_count = 0;
         };
 
-        struct weight_t
+        struct weight
         {
             u8 bone_index = 0;
             f32 bias = 0;
@@ -53,12 +53,12 @@ namespace mandala
         };
 
         std::string shader;
-        std::vector<vertex_t> vertices;
+        std::vector<vertex> vertices;
         std::vector<u16> indices;
-        std::vector<weight_t> weights;
+        std::vector<weight> weights;
     };
 
-    model_t::model_t(std::istream& istream)
+    model::model(std::istream& istream)
     {
         //magic
         std::array<char, MD5M_MAGIC_LENGTH> magic;
@@ -83,7 +83,7 @@ namespace mandala
         read(istream, bone_count);
 
         //bones
-        std::vector<bone_info_t> bone_infos;
+        std::vector<bone_info> bone_infos;
 
         bone_infos.resize(bone_count);
 
@@ -95,7 +95,7 @@ namespace mandala
 
             bone_names.push_back(bone_info.name);
 
-            bone_indices.insert(std::make_pair(hash_t(bone_info.name), i));
+            bone_indices.insert(std::make_pair(mandala::hash(bone_info.name), i));
 
             read(istream, bone_info.parent_index);
             read(istream, bone_info.pose.location.x);
@@ -112,7 +112,7 @@ namespace mandala
         u8 mesh_count = 0;
         read(istream, mesh_count);
 
-        std::vector<mesh_info_t> mesh_infos;
+        std::vector<mesh_info> mesh_infos;
         mesh_infos.resize(mesh_count);
 
         for (auto& mesh : mesh_infos)
@@ -162,16 +162,16 @@ namespace mandala
 
         for (auto& mesh_info : mesh_infos)
         {
-            auto mesh = boost::make_shared<mesh_t>();
+            auto mesh = boost::make_shared<model::mesh>();
 
             //index count
             mesh->index_count = mesh_info.indices.size();
 
             //material
-            mesh->material = resources.get<material_t>(hash_t(mesh_info.shader));
+            mesh->material = resources.get<material>(mandala::hash(mesh_info.shader));
 
             //vertices
-            std::vector<mesh_t::vertex_type> vertices;
+            std::vector<mesh::vertex_type> vertices;
             vertices.resize(mesh_info.vertices.size());
 
             for (size_t j = 0; j < mesh_info.vertices.size(); ++j)
@@ -265,11 +265,11 @@ namespace mandala
             }
             */
 
-            mesh->vertex_buffer = boost::make_shared<mesh_t::vertex_buffer_type>();
-            mesh->vertex_buffer->data(vertices, gpu_t::buffer_usage_e::STATIC_DRAW);
+            mesh->vertex_buffer = boost::make_shared<mesh::vertex_buffer_type>();
+            mesh->vertex_buffer->data(vertices, gpu_t::buffer_usage::STATIC_DRAW);
 
-            mesh->index_buffer = boost::make_shared<mesh_t::index_buffer_type>();
-            mesh->index_buffer->data(mesh_info.indices, gpu_t::buffer_usage_e::STATIC_DRAW);
+            mesh->index_buffer = boost::make_shared<mesh::index_buffer_type>();
+            mesh->index_buffer->data(mesh_info.indices, gpu_t::buffer_usage::STATIC_DRAW);
 
             meshes.push_back(mesh);
         }
@@ -287,13 +287,13 @@ namespace mandala
         }
     }
 
-    void model_t::render(const vec3& camera_location, const mat4& world_matrix, const mat4& view_projection_matrix, const std::vector<mat4>& bone_matrices, const vec3& light_location, const std::vector<boost::shared_ptr<material_instance_t>>& mesh_materials) const
+    void model::render(const vec3& camera_location, const mat4& world_matrix, const mat4& view_projection_matrix, const std::vector<mat4>& bone_matrices, const vec3& light_location, const std::vector<boost::shared_ptr<material_instance>>& mesh_materials) const
     {
         //blend
         auto blend_state = gpu.blend.get_state();
         blend_state.is_enabled = true;
-        blend_state.src_factor = gpu_t::blend_factor_e::SRC_ALPHA;
-        blend_state.dst_factor = gpu_t::blend_factor_e::ONE_MINUS_SRC_ALPHA;
+        blend_state.src_factor = gpu_t::blend_factor::SRC_ALPHA;
+        blend_state.dst_factor = gpu_t::blend_factor::ONE_MINUS_SRC_ALPHA;
 
         gpu.blend.push_state(blend_state);
 
@@ -314,10 +314,10 @@ namespace mandala
 
             gpu.culling.push_state(culling_state);
 
-            gpu.buffers.push(gpu_t::buffer_target_e::ARRAY, mesh->vertex_buffer);
-            gpu.buffers.push(gpu_t::buffer_target_e::ELEMENT_ARRAY, mesh->index_buffer);
+            gpu.buffers.push(gpu_t::buffer_target::ARRAY, mesh->vertex_buffer);
+            gpu.buffers.push(gpu_t::buffer_target::ELEMENT_ARRAY, mesh->index_buffer);
 
-            const auto gpu_program = gpu_programs.get<model_gpu_program_t>();
+            const auto gpu_program = gpu_programs.get<model_gpu_program>();
 
             gpu.programs.push(gpu_program);
 
@@ -329,15 +329,15 @@ namespace mandala
             gpu.set_uniform("camera_location", camera_location);
 
             gpu_program->set_calculate_lighting_subroutine(mesh_materials[i]->get_is_lit() ?
-                model_gpu_program_t::calculate_lighting_subroutine_e::CALCULATE_LIGHTING_LIT :
-                model_gpu_program_t::calculate_lighting_subroutine_e::CALCULATE_LIGHTING_UNLIT);
+                model_gpu_program::calculate_lighting_subroutine::CALCULATE_LIGHTING_LIT :
+                model_gpu_program::calculate_lighting_subroutine::CALCULATE_LIGHTING_UNLIT);
 
             mesh->render(world_matrix, view_projection_matrix, bone_matrices, mesh_materials[i]);
 
             gpu.programs.pop();
 
-            gpu.buffers.pop(gpu_t::buffer_target_e::ELEMENT_ARRAY);
-            gpu.buffers.pop(gpu_t::buffer_target_e::ARRAY);
+            gpu.buffers.pop(gpu_t::buffer_target::ELEMENT_ARRAY);
+            gpu.buffers.pop(gpu_t::buffer_target::ARRAY);
 
             gpu.culling.pop_state();
         }
@@ -347,7 +347,7 @@ namespace mandala
         gpu.blend.pop_state();
     }
 
-    boost::optional<size_t> model_t::get_bone_index(const hash_t & bone_hash) const
+    boost::optional<size_t> model::get_bone_index(const mandala::hash& bone_hash) const
     {
         auto bone_indices_itr = bone_indices.find(bone_hash);
 
@@ -359,14 +359,14 @@ namespace mandala
         return boost::none;
     }
 
-    void model_t::mesh_t::render(const mat4& world_matrix, const mat4& view_projection_matrix, const std::vector<mat4>& bone_matrices, const boost::shared_ptr<material_instance_t>& material) const
+    void model::mesh::render(const mat4& world_matrix, const mat4& view_projection_matrix, const std::vector<mat4>& bone_matrices, const boost::shared_ptr<material_instance>& material) const
     {
         static const auto DIFFUSE_TEXTURE_INDEX = 0;
         static const auto NORMAL_TEXTURE_INDEX = 1;
         static const auto SPECULAR_TEXTURE_INDEX = 2;
         static const auto EMISSIVE_TEXTURE_INDEX = 3;
 
-        const auto gpu_program = gpu_programs.get<model_gpu_program_t>();
+        const auto gpu_program = gpu_programs.get<model_gpu_program>();
 
         //material
         if (material != nullptr)
@@ -408,7 +408,7 @@ namespace mandala
             gpu.set_uniform("emissive.intensity", emissive.intensity);
         }
 
-        gpu.draw_elements(gpu_t::primitive_type_e::TRIANGLES, index_count, index_buffer_type::DATA_TYPE, 0);
+        gpu.draw_elements(gpu_t::primitive_type::TRIANGLES, index_count, index_buffer_type::DATA_TYPE, 0);
 
         //unbind textures
         gpu.textures.unbind(EMISSIVE_TEXTURE_INDEX);

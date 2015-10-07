@@ -15,17 +15,17 @@
 
 namespace mandala
 {
-    model_instance_t::model_instance_t(boost::shared_ptr<model_t> model)
+    model_instance::model_instance(boost::shared_ptr<mandala::model> model)
     {
         set_model(model);
     }
 
-    model_instance_t::model_instance_t(const hash_t& model_hash) :
-        model_instance_t(resources.get<model_t>(model_hash))
+    model_instance::model_instance(const hash& model_hash) :
+        model_instance(resources.get<mandala::model>(model_hash))
     {
     }
 
-    void model_instance_t::tick(f32 dt)
+    void model_instance::tick(f32 dt)
     {
         if (animation != nullptr)
         {
@@ -39,7 +39,7 @@ namespace mandala
             auto& frame_skeleton_0 = animation->frame_skeletons[frame_0_index];
             auto& frame_skeleton_1 = animation->frame_skeletons[frame_1_index];
 
-            model_skeleton_t::interpolate(skeleton, frame_skeleton_0, frame_skeleton_1, interpolate_t);
+            model_skeleton::interpolate(skeleton, frame_skeleton_0, frame_skeleton_1, interpolate_t);
         }
 
         //TODO: the AABB is not calculated if there is no animation
@@ -55,7 +55,7 @@ namespace mandala
         sphere.radius = glm::length(aabb.extents());
     }
 
-    void model_instance_t::render(const camera_params& camera_params, const vec3& light_location) const
+    void model_instance::render(const camera_params& camera_params, const vec3& light_location) const
     {
         if (model == nullptr)
         {
@@ -80,7 +80,7 @@ namespace mandala
 #endif
     }
     
-    pose3 model_instance_t::get_bone_pose(const hash_t& bone_hash) const
+    pose3 model_instance::get_bone_pose(const hash& bone_hash) const
     {
         auto bone_index = model->get_bone_index(bone_hash);
 
@@ -94,7 +94,7 @@ namespace mandala
 		return pose * skeleton.bones[*bone_index].pose;
     }
 
-    void model_instance_t::set_model(const boost::shared_ptr<model_t>& model)
+    void model_instance::set_model(const boost::shared_ptr<mandala::model>& model)
     {
         this->model = model;
 
@@ -115,12 +115,12 @@ namespace mandala
 
         for (const auto& mesh : model->get_meshes())
         {
-            mesh_materials.push_back(boost::make_shared<material_instance_t>(mesh->material));
+            mesh_materials.push_back(boost::make_shared<material_instance>(mesh->material));
         }
     }
 
-    void model_instance_t::play(const hash_t& animation_hash)
+    void model_instance::play(const hash& animation_hash)
     {
-        animation = resources.get<model_animation_t>(animation_hash);
+        animation = resources.get<model_animation>(animation_hash);
     }
 }

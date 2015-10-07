@@ -6,7 +6,7 @@
 
 namespace mandala
 {
-    void model_skeleton_t::interpolate(model_skeleton_t& skeleton, const model_skeleton_t& a, const model_skeleton_t& b, f32 t)
+    void model_skeleton::interpolate(model_skeleton& skeleton, const model_skeleton& a, const model_skeleton& b, f32 t)
     {
 #if defined(DEBUG)
         assert(skeleton.bone_matrices.size() == a.bone_matrices.size());

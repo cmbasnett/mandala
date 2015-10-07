@@ -6,7 +6,7 @@
 
 namespace mandala
 {
-    struct gui_scroll_t : gui_node_t
+    struct gui_scroll : gui_node
     {
         typedef vec2 scroll_location_type;
         typedef aabb2 scroll_extents_type;

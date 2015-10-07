@@ -20,18 +20,18 @@
 
 namespace mandala
 {
-    state_t::state_t()
+    state::state()
     {
-        layout = boost::make_shared<gui_layout_t>();
+        layout = boost::make_shared<gui_layout>();
         layout->set_dock_mode(gui_dock_mode_e::FILL);
     }
 
-    void state_t::tick(f32 dt)
+    void state::tick(f32 dt)
     {
         on_tick(dt);
 
         //TODO: get child nodes to tell layout about cleanliness, recursing every tick is expensive!
-        std::function<bool(const boost::shared_ptr<gui_node_t>&)> is_dirty = [&](const boost::shared_ptr<gui_node_t>& node)
+        std::function<bool(const boost::shared_ptr<gui_node>&)> is_dirty = [&](const boost::shared_ptr<gui_node>& node)
         {
             if (node->get_is_dirty())
             {
@@ -57,7 +57,7 @@ namespace mandala
         layout->tick(dt);
     }
 
-    void state_t::render()
+    void state::render()
     {
         const auto screen_size = platform.get_screen_size();
         auto view_projection_matrix = glm::ortho(0.0f, static_cast<f32>(screen_size.x), 0.0f, static_cast<f32>(screen_size.y));
@@ -72,22 +72,22 @@ namespace mandala
         gpu.depth.pop_state();
     }
 
-    bool state_t::on_input_event(input_event_t& input_event)
+    bool state::on_input_event(input_event_t& input_event)
     {
         return layout->on_input_event(input_event);
     }
 
-    void state_t::on_enter()
+    void state::on_enter()
     {
-        layout->set_bounds(gui_node_t::bounds_type(vec2(), static_cast<vec2>(platform.get_screen_size())));
+        layout->set_bounds(gui_node::bounds_type(vec2(), static_cast<vec2>(platform.get_screen_size())));
     }
 
 #if defined(MANDALA_PC)
-    void state_t::on_window_event(window_event_t& window_event)
+    void state::on_window_event(window_event& window_event)
     {
-        if (window_event.type == window_event_t::type_e::RESIZE)
+        if (window_event.type == window_event_type::RESIZE)
         {
-            layout->set_bounds(gui_node_t::bounds_type(vec2(), static_cast<vec2>(window_event.rectangle.size())));
+            layout->set_bounds(gui_node::bounds_type(vec2(), static_cast<vec2>(window_event.rectangle.size())));
         }
     }
 #endif

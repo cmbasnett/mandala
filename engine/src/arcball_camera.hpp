@@ -6,7 +6,7 @@
 
 namespace mandala
 {
-    struct arcball_camera_t : camera_t
+    struct arcball_camera : camera
     {
         virtual void on_tick(f32 dt) override;
         bool on_input_event(input_event_t& input_event);

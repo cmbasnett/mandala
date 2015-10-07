@@ -7,18 +7,18 @@ using namespace glm;
 
 namespace mandala
 {
-    struct model_gpu_program_t : gpu_program_t
+    struct model_gpu_program : gpu_program
     {
-        enum class calculate_lighting_subroutine_e
+        enum class calculate_lighting_subroutine
         {
              CALCULATE_LIGHTING_LIT,
              CALCULATE_LIGHTING_UNLIT,
         };
 
-        struct vertex_t
+        struct vertex
         {
-            vertex_t() = default;
-            vertex_t(vec3 location, vec3 normal, vec3 tangent, vec2 texcoord, ivec4 bone_indices_0, ivec4 bone_indices_1, vec4 bone_weights_0, vec4 bone_weights_1)
+            vertex() = default;
+            vertex(vec3 location, vec3 normal, vec3 tangent, vec2 texcoord, ivec4 bone_indices_0, ivec4 bone_indices_1, vec4 bone_weights_0, vec4 bone_weights_1)
             {
 this->location = location;
 this->normal = normal;
@@ -39,10 +39,10 @@ this->bone_weights_1 = bone_weights_1;            }
             vec4 bone_weights_1;
         };
 
-        typedef vertex_t vertex_type;
+        typedef vertex vertex_type;
 
-        model_gpu_program_t() :
-            gpu_program_t(R"(#version 400
+        model_gpu_program() :
+            gpu_program(R"(#version 400
 
 uniform mat4 world_matrix;
 uniform mat3 normal_matrix;
@@ -199,7 +199,7 @@ void main()
             bone_indices_1_location = gpu.get_attribute_location(get_id(), "bone_indices_1");
             bone_weights_0_location = gpu.get_attribute_location(get_id(), "bone_weights_0");
             bone_weights_1_location = gpu.get_attribute_location(get_id(), "bone_weights_1");
-            calculate_lighting_subroutine_uniform_location = gpu.get_subroutine_uniform_location(get_id(), gpu_t::shader_type_e::FRAGMENT, "calculate_lighting_function");
+            calculate_lighting_subroutine_uniform_location = gpu.get_subroutine_uniform_location(get_id(), gpu_t::shader_type::FRAGMENT, "calculate_lighting_function");
         }
 
         void on_bind() override
@@ -234,26 +234,26 @@ void main()
             gpu.disable_vertex_attribute_array(bone_weights_1_location);
         }
 
-        void set_calculate_lighting_subroutine(calculate_lighting_subroutine_e e)
+        void set_calculate_lighting_subroutine(calculate_lighting_subroutine e)
         {
             switch(e)
             {
-                case calculate_lighting_subroutine_e::CALCULATE_LIGHTING_LIT:                    gpu.set_uniform_subroutine(gpu_t::shader_type_e::FRAGMENT, calculate_lighting_lit_subroutine_index);                    break;
-                case calculate_lighting_subroutine_e::CALCULATE_LIGHTING_UNLIT:                    gpu.set_uniform_subroutine(gpu_t::shader_type_e::FRAGMENT, calculate_lighting_unlit_subroutine_index);                    break;
+                case calculate_lighting_subroutine::CALCULATE_LIGHTING_LIT:                    gpu.set_uniform_subroutine(gpu_t::shader_type::FRAGMENT, calculate_lighting_lit_subroutine_index);                    break;
+                case calculate_lighting_subroutine::CALCULATE_LIGHTING_UNLIT:                    gpu.set_uniform_subroutine(gpu_t::shader_type::FRAGMENT, calculate_lighting_unlit_subroutine_index);                    break;
             }
         }
 
     private:
-       gpu_location_t location_location;
-       gpu_location_t normal_location;
-       gpu_location_t tangent_location;
-       gpu_location_t texcoord_location;
-       gpu_location_t bone_indices_0_location;
-       gpu_location_t bone_indices_1_location;
-       gpu_location_t bone_weights_0_location;
-       gpu_location_t bone_weights_1_location;
-       gpu_location_t calculate_lighting_subroutine_uniform_location;
-       gpu_index_t calculate_lighting_lit_subroutine_index;
-       gpu_index_t calculate_lighting_unlit_subroutine_index;
+       gpu_location location_location;
+       gpu_location normal_location;
+       gpu_location tangent_location;
+       gpu_location texcoord_location;
+       gpu_location bone_indices_0_location;
+       gpu_location bone_indices_1_location;
+       gpu_location bone_weights_0_location;
+       gpu_location bone_weights_1_location;
+       gpu_location calculate_lighting_subroutine_uniform_location;
+       gpu_index calculate_lighting_lit_subroutine_index;
+       gpu_index calculate_lighting_unlit_subroutine_index;
     };
 }

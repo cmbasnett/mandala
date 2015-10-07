@@ -15,19 +15,19 @@
 
 namespace mandala
 {
-    struct texture_t;
+    struct texture;
 
-    struct sprite_set_t : resource_t
+    struct sprite_set : resource
     {
-        struct region_t
+        struct region
         {
-            typedef rectangle_i16 rectangleype;
+            typedef rectangle_i16 rectangle_type;
             typedef vec2_i16 size_type;
             typedef aabb2 uv_type;
 
-            hash_t hash;
-            rectangleype frame_rectangle;
-            rectangleype rectangle;
+            mandala::hash hash;
+            rectangle_type frame_rectangle;
+            rectangle_type rectangle;
             size_type source_size;
             bool is_rotated = false;
             bool is_trimmed = false;
@@ -35,21 +35,21 @@ namespace mandala
             uv_type uv;
         };
 
-        typedef std::map<const hash_t, boost::shared_ptr<region_t>> regions_type;
+        typedef std::map<const mandala::hash, boost::shared_ptr<region>> regions_type;
 
-        sprite_set_t(std::istream& istream);
-        sprite_set_t(const boost::shared_ptr<texture_t>& texture);    //TODO: ugly, feels like this needs to be elsewhere in a helper class
+        sprite_set(std::istream& istream);
+        sprite_set(const boost::shared_ptr<texture>& texture);    //TODO: ugly, feels like this needs to be elsewhere in a helper class
 
-        const boost::shared_ptr<texture_t>& get_texture() const { return texture; }
+        const boost::shared_ptr<texture>& get_texture() const { return texture; }
         const regions_type& get_regions() const { return regions; }
 
-        boost::shared_ptr<region_t> get_region(const hash_t& region_hash) const;
+        boost::shared_ptr<region> get_region(const mandala::hash& region_hash) const;
 
     private:
-        boost::shared_ptr<texture_t> texture;
+        boost::shared_ptr<texture> texture;
         regions_type regions;
 
-        sprite_set_t(const sprite_set_t&) = delete;
-        sprite_set_t& operator=(const sprite_set_t&) = delete;
+        sprite_set(const sprite_set&) = delete;
+        sprite_set& operator=(const sprite_set&) = delete;
     };
 }

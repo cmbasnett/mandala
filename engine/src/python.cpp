@@ -7,9 +7,9 @@
 
 namespace mandala
 {
-    MANDALA_API_ENTRY python_t py;
+    MANDALA_API_ENTRY python py;
 
-    python_t::python_t()
+    python::python()
     {
         PyImport_AppendInittab("mandala", &initmandala);
 
@@ -19,11 +19,11 @@ namespace mandala
         main_namespace = main_module.attr("__dict__");
     }
 
-    python_t::~python_t()
+    python::~python()
     {
     }
 
-    void python_t::finalize()
+    void python::finalize()
     {
         main_module = boost::python::object();
         main_namespace = boost::python::object();
@@ -31,7 +31,7 @@ namespace mandala
         Py_Finalize();
     }
 
-    boost::python::api::object python_t::exec(const char* string)
+    boost::python::api::object python::exec(const char* string)
     {
         try
         {
@@ -60,7 +60,7 @@ namespace mandala
         }
     }
 
-    boost::python::api::object MANDALA_API_ENTRY python_t::exec_file(const char* file)
+    boost::python::api::object MANDALA_API_ENTRY python::exec_file(const char* file)
     {
         try
         {
@@ -85,7 +85,7 @@ namespace mandala
         }
     }
 
-    boost::python::api::object python_t::eval(const char* string)
+    boost::python::api::object python::eval(const char* string)
     {
         try
         {
@@ -113,7 +113,7 @@ namespace mandala
         }
     }
 
-    std::string python_t::handle_pyerr()
+    std::string python::handle_pyerr()
     {
         PyObject* exc;
         PyObject* val;
