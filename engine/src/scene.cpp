@@ -17,7 +17,7 @@ namespace mandala
         gpu.viewports.push(viewport);
         gpu.frame_buffers.push(frame_buffer);
 
-        gpu.clear(gpu_t::CLEAR_FLAG_COLOR | gpu_t::CLEAR_FLAG_DEPTH);
+        gpu.clear(gpu_t::CLEAR_FLAG_COLOR | gpu_t::CLEAR_FLAG_DEPTH | gpu_t::CLEAR_FLAG_STENCIL);
 
         const auto camera_params = camera->get_params(viewport);
 

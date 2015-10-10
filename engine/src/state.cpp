@@ -23,7 +23,7 @@ namespace mandala
     state::state()
     {
         layout = boost::make_shared<gui_layout>();
-        layout->set_dock_mode(gui_dock_mode_e::FILL);
+        layout->set_dock_mode(gui_dock_mode::FILL);
     }
 
     void state::tick(f32 dt)

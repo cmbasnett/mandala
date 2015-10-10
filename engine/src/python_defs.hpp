@@ -30,6 +30,7 @@
 #include "io.hpp"
 #include "material.hpp"
 #include "model.hpp"
+#include "model_animation.hpp"
 #include "model_instance.hpp"
 #include "padding.hpp"
 #include "pose.hpp"
@@ -704,19 +705,19 @@ BOOST_PYTHON_MODULE(mandala)
         .value("RELATIVE", gui_size_mode_e::RELATIVE)
         .export_values();
 
-    enum_<gui_dock_mode_e>("GuiDockMode")
-        .value("NONE", gui_dock_mode_e::NONE)
-        .value("BOTTOM", gui_dock_mode_e::BOTTOM)
-        .value("FILL", gui_dock_mode_e::FILL)
-        .value("LEFT", gui_dock_mode_e::LEFT)
-        .value("RIGHT", gui_dock_mode_e::RIGHT)
-        .value("TOP", gui_dock_mode_e::TOP)
+    enum_<gui_dock_mode>("GuiDockMode")
+        .value("NONE", gui_dock_mode::NONE)
+        .value("BOTTOM", gui_dock_mode::BOTTOM)
+        .value("FILL", gui_dock_mode::FILL)
+        .value("LEFT", gui_dock_mode::LEFT)
+        .value("RIGHT", gui_dock_mode::RIGHT)
+        .value("TOP", gui_dock_mode::TOP)
         .export_values();
 
-    enum_<gui_visiblity_e>("GuiVisibility")
-        .value("OMIT", gui_visiblity_e::OMIT)
-        .value("HIDDEN", gui_visiblity_e::HIDDEN)
-        .value("VISIBLE", gui_visiblity_e::VISIBLE)
+    enum_<gui_visiblity>("GuiVisibility")
+        .value("OMIT", gui_visiblity::OMIT)
+        .value("HIDDEN", gui_visiblity::HIDDEN)
+        .value("VISIBLE", gui_visiblity::VISIBLE)
         .export_values();
 
     class_<gui_size_modes_t>("GuiSizeModes", init<gui_size_mode_e, gui_size_mode_e>())
@@ -995,7 +996,10 @@ BOOST_PYTHON_MODULE(mandala)
 
     class_<arcball_camera, bases<camera>, boost::shared_ptr<arcball_camera>, noncopyable>("ArcballCamera", init<>());
 
-    class_<model_instance, boost::shared_ptr<model_instance>, noncopyable>("ModelInstance", init<const mandala::hash&>());
+    class_<model_instance, boost::shared_ptr<model_instance>, noncopyable>("ModelInstance", init<const mandala::hash&>())
+        .def("play", &model_instance::play);
+
+    class_<model_animation, boost::shared_ptr<model_animation>, noncopyable>("ModelAnimation", no_init);
 
     // AUDIO
     class_<audio_mgr, noncopyable>("AudioMgr", no_init);

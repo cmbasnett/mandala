@@ -34,7 +34,7 @@ namespace mandala
         GUI_ANCHOR_FLAG_ALL = (GUI_ANCHOR_FLAG_VERTICAL | GUI_ANCHOR_FLAG_HORIZONTAL)
     };
 
-    enum class gui_dock_mode_e
+    enum class gui_dock_mode
     {
         NONE,
         BOTTOM,
@@ -44,7 +44,7 @@ namespace mandala
         TOP
     };
 
-    enum class gui_visiblity_e
+    enum class gui_visiblity
     {
         OMIT,
         HIDDEN,
@@ -60,7 +60,7 @@ namespace mandala
         const hash& get_id() const { return id; }
         const boost::shared_ptr<gui_node>& get_root() const { return root; }
         const boost::shared_ptr<gui_node>& get_parent() const { return parent; }
-        gui_dock_mode_e get_dock_mode() const { return dock_mode; }
+        gui_dock_mode get_dock_mode() const { return dock_mode; }
         gui_anchor_flags_type get_anchor_flags() const { return anchor_flags; }
         const vec2& get_anchor_offset() const { return anchor_offset; }
         const padding& get_padding() const { return padding; }
@@ -73,11 +73,11 @@ namespace mandala
         const color_type& get_color() const { return color; }
         const bounds_type& get_bounds() const { return bounds; }
         bool get_is_dirty() const { return is_dirty; }
-        gui_visiblity_e get_visibility() const { return visibility; }
+        gui_visiblity get_visibility() const { return visibility; }
         bool get_should_clip() const { return should_clip; }
         const std::vector<boost::shared_ptr<gui_node>>& get_children() const { return children; }
 
-        void set_dock_mode(gui_dock_mode_e dock_mode) { this->dock_mode = dock_mode; dirty(); }
+        void set_dock_mode(gui_dock_mode dock_mode) { this->dock_mode = dock_mode; dirty(); }
         void set_anchor_flags(gui_anchor_flags_type anchor_flags) { this->anchor_flags = anchor_flags; dirty(); }
         void set_anchor_offset(const vec2& anchor_offset) { this->anchor_offset = anchor_offset; dirty(); }
         void set_padding(const padding& padding) { this->padding = padding; dirty(); }
@@ -86,7 +86,7 @@ namespace mandala
         void set_size_modes(const gui_size_modes_t size_modes) { this->size_modes = size_modes; dirty(); }
         void set_color(const color_type& color) { this->color = color; dirty(); }
         void set_bounds(const bounds_type& bounds) { this->bounds = bounds; dirty(); }
-        void set_visibility(gui_visiblity_e visibility) { this->visibility = visibility; dirty(); }
+        void set_visibility(gui_visiblity visibility) { this->visibility = visibility; dirty(); }
         void set_should_clip(bool should_clip) { this->should_clip = should_clip; }
 
         virtual void on_clean_begin() { }
@@ -115,7 +115,7 @@ namespace mandala
         boost::shared_ptr<gui_node> root;
         boost::shared_ptr<gui_node> parent;
         std::vector<boost::shared_ptr<gui_node>> children;
-        gui_dock_mode_e dock_mode = gui_dock_mode_e::NONE;
+        gui_dock_mode dock_mode = gui_dock_mode::NONE;
         gui_anchor_flags_type anchor_flags = (GUI_ANCHOR_FLAG_TOP | GUI_ANCHOR_FLAG_LEFT);
         size_type anchor_offset;
         padding_f32 padding;
@@ -124,7 +124,7 @@ namespace mandala
         size_type desired_size;
         color_type color = color_type(1.0f);
         bounds_type bounds;
-        gui_visiblity_e visibility = gui_visiblity_e::VISIBLE;
+        gui_visiblity visibility = gui_visiblity::VISIBLE;
         bool should_clip = false;
         bool has_focus = false;
         gui_size_modes_t size_modes;

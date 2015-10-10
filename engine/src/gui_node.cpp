@@ -38,7 +38,7 @@ namespace mandala
 
         //TODO: might be able to forego dirtying parent if removing this node doesn't
         //affect positioning of sibling elements or sizing of parent element
-        //if (dock_mode != gui_dock_mode_e::NONE)
+        //if (dock_mode != gui_dock_mode::NONE)
 
         //mark parent as dirty
         parent->dirty();
@@ -95,7 +95,7 @@ namespace mandala
     {
         std::function<void(boost::shared_ptr<gui_node>&, aabb2&)> clean_node = [&clean_node](boost::shared_ptr<gui_node>& node, aabb2& sibling_bounds)
         {
-            if (node->get_visibility() == gui_visiblity_e::OMIT)
+            if (node->get_visibility() == gui_visiblity::OMIT)
             {
                 return;
             }
@@ -132,11 +132,11 @@ namespace mandala
             {
                 switch (node->dock_mode)
                 {
-                case gui_dock_mode_e::LEFT:
-                case gui_dock_mode_e::RIGHT:
+                case gui_dock_mode::LEFT:
+                case gui_dock_mode::RIGHT:
                     absolute_desired_size.x = sibling_bounds.height() * node->desired_size.x;
                     break;
-                case gui_dock_mode_e::NONE:
+                case gui_dock_mode::NONE:
                     absolute_desired_size.x *= absolute_desired_size.y;
                     break;
                 default:
@@ -147,11 +147,11 @@ namespace mandala
             {
                 switch (node->dock_mode)
                 {
-                case gui_dock_mode_e::BOTTOM:
-                case gui_dock_mode_e::TOP:
+                case gui_dock_mode::BOTTOM:
+                case gui_dock_mode::TOP:
                     absolute_desired_size.y = sibling_bounds.width() * node->desired_size.y;
                     break;
-                case gui_dock_mode_e::NONE:
+                case gui_dock_mode::NONE:
                     absolute_desired_size.y *= absolute_desired_size.x;
                     break;
                 default:
@@ -161,7 +161,7 @@ namespace mandala
 
             switch (node->dock_mode)
             {
-            case gui_dock_mode_e::BOTTOM:
+            case gui_dock_mode::BOTTOM:
                 node->bounds.min = sibling_bounds.min;
                 node->bounds.max.x = sibling_bounds.max.x;
                 node->bounds.max.y = sibling_bounds.min.y + absolute_desired_size.y + node->padding.vertical();
@@ -171,11 +171,11 @@ namespace mandala
                 sibling_bounds.min.y += node->bounds.height() + node->margin.vertical();
 
                 break;
-            case gui_dock_mode_e::FILL:
+            case gui_dock_mode::FILL:
                 node->bounds = sibling_bounds - node->margin;
 
                 break;
-            case gui_dock_mode_e::LEFT:
+            case gui_dock_mode::LEFT:
                 node->bounds.min = sibling_bounds.min;
                 node->bounds.max.x = sibling_bounds.min.x + absolute_desired_size.x + node->padding.horizontal();
                 node->bounds.max.y = sibling_bounds.max.y;
@@ -185,7 +185,7 @@ namespace mandala
                 sibling_bounds.min.x += node->bounds.width() + node->margin.horizontal();
 
                 break;
-            case gui_dock_mode_e::RIGHT:
+            case gui_dock_mode::RIGHT:
                 node->bounds.min.x = sibling_bounds.max.x - absolute_desired_size.x - node->padding.horizontal();
                 node->bounds.min.y = sibling_bounds.min.y;
                 node->bounds.max = sibling_bounds.max;
@@ -195,7 +195,7 @@ namespace mandala
                 sibling_bounds.max.x -= node->bounds.width() + node->margin.horizontal();
 
                 break;
-            case gui_dock_mode_e::TOP:
+            case gui_dock_mode::TOP:
                 node->bounds.min.x = sibling_bounds.min.x;
                 node->bounds.min.y = sibling_bounds.max.y - absolute_desired_size.y - node->padding.vertical();
                 node->bounds.max = sibling_bounds.max;
@@ -316,7 +316,7 @@ namespace mandala
 
     bool gui_node::on_input_event(input_event_t& input_event)
     {
-        if (visibility == gui_visiblity_e::OMIT)
+        if (visibility == gui_visiblity::OMIT)
         {
             return false;
         }
@@ -390,7 +390,7 @@ namespace mandala
 
     void gui_node::render(mat4 world_matrix, mat4 view_projection_matrix)
     {
-        if (visibility != gui_visiblity_e::VISIBLE)
+        if (visibility != gui_visiblity::VISIBLE)
         {
             return;
         }

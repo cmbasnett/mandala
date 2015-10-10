@@ -567,7 +567,7 @@ namespace mandala
 
     void gpu_t::set_uniform(const char* name, const std::vector<mat4>& matrices, bool should_transpose) const
     {
-        glUniformMatrix4fv(get_uniform_location(programs.top()->lock()->get_id(), name), static_cast<GLsizei>(matrices.size()), false, reinterpret_cast<const float*>(matrices.data())); glCheckError();
+        glUniformMatrix4fv(get_uniform_location(programs.top()->lock()->get_id(), name), static_cast<GLsizei>(matrices.size()), GL_FALSE, reinterpret_cast<const GLfloat*>(matrices.data())); glCheckError();
     }
 
     void gpu_t::set_uniform_subroutine(shader_type shader_type, gpu_index index)
