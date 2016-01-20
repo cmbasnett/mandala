@@ -7,12 +7,12 @@
 //boost
 #include <boost\shared_ptr.hpp>
 
-//mandala
+//naga
 #include "gui_node.hpp"
 #include "vertex_buffer.hpp"
 #include "index_buffer.hpp"
 
-namespace mandala
+namespace naga
 {
     struct bitmap_font;
 

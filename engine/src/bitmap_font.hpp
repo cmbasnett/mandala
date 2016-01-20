@@ -1,6 +1,6 @@
 #pragma once
 
-//mandala
+//naga
 #include "resource.hpp"
 #include "vertex_buffer.hpp"
 #include "index_buffer.hpp"
@@ -17,7 +17,7 @@
 //boost
 #include <boost\shared_ptr.hpp>
 
-namespace mandala
+namespace naga
 {
     struct texture;
 

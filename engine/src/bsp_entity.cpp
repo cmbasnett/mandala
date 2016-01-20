@@ -1,6 +1,6 @@
 #include "bsp_entity.hpp"
 
-namespace mandala
+namespace naga
 {
     bsp_entity::bsp_entity(const std::string& string)
     {

@@ -4,7 +4,7 @@
 #include <exception>
 #include <sstream>
 
-namespace mandala
+namespace naga
 {
     template<typename T>
     struct bad_value : std::exception

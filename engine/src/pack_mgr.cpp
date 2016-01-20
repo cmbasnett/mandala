@@ -1,4 +1,4 @@
-//mandala
+//naga
 #include "pack_mgr.hpp"
 #include "pack.hpp"
 
@@ -10,7 +10,7 @@
 #include <boost\filesystem\path.hpp>
 #include <boost\make_shared.hpp>
 
-namespace mandala
+namespace naga
 {
     void pack_mgr::mount(const std::string& path)
     {

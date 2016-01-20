@@ -1,17 +1,17 @@
 #pragma once
 
-//mandala
+//naga
 #include "platform_defs.hpp"
 #include "types.hpp"
 
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
 #include "window_event.hpp"
 #endif
 
 //boost
 #include <boost\enable_shared_from_this.hpp>
 
-namespace mandala
+namespace naga
 {
     struct input_event_t;
     struct state_mgr;
@@ -24,7 +24,7 @@ namespace mandala
         virtual void tick(f32 dt);
         virtual void render();
         virtual bool on_input_event(input_event_t& input_event);
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
         virtual void on_window_event(window_event& window_event);
 #endif
         virtual void on_active() { }

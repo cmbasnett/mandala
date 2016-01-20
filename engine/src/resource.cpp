@@ -1,7 +1,7 @@
-//mandala
+//naga
 #include "resource.hpp"
 
-namespace mandala
+namespace naga
 {
     resource::resource() :
         creation_time(clock_type::now()),

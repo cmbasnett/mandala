@@ -8,12 +8,12 @@
 #include <boost\shared_ptr.hpp>
 #include <boost\weak_ptr.hpp>
 
-//mandala
+//naga
 #include "gui_node.hpp"
 #include "hash.hpp"
 #include "input_event.hpp"
 
-namespace mandala
+namespace naga
 {
     struct gui_layout : gui_node
     {

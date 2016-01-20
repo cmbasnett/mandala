@@ -7,13 +7,13 @@
 //glm
 #include <glm\ext.hpp>
 
-//mandala
+//naga
 #include "resource_mgr.hpp"
 #include "texture.hpp"
 #include "material.hpp"
 #include "boost.hpp"
 
-namespace mandala
+namespace naga
 {
     material::material(std::istream& istream)
     {
@@ -44,7 +44,7 @@ namespace mandala
             const auto diffuse_ptree = diffuse_optional.get();
 
             //texture
-            const auto texture_hash = diffuse_ptree.get<mandala::hash>("texture");
+            const auto texture_hash = diffuse_ptree.get<naga::hash>("texture");
 
             diffuse.texture = resources.get<texture>(texture_hash);
 
@@ -77,7 +77,7 @@ namespace mandala
             const auto normal_ptree = normal_optional.get();
 
             //texture
-            const auto texture_hash = normal_ptree.get<mandala::hash>("texture");
+            const auto texture_hash = normal_ptree.get<naga::hash>("texture");
 
             normal.texture = resources.get<texture>(texture_hash);
         }
@@ -90,7 +90,7 @@ namespace mandala
             const auto specular_ptree = specular_optional.get();
 
             //texture
-            const auto texture_hash = specular_ptree.get<mandala::hash>("texture");
+            const auto texture_hash = specular_ptree.get<naga::hash>("texture");
 
             specular.texture = resources.get<texture>(texture_hash);
 
@@ -131,7 +131,7 @@ namespace mandala
             const auto emissive_ptree = emissive_optional.get();
 
             //texture
-            const auto texture_hash = emissive_ptree.get<mandala::hash>("texture");
+            const auto texture_hash = emissive_ptree.get<naga::hash>("texture");
 
             emissive.texture = resources.get<texture>(texture_hash);
 

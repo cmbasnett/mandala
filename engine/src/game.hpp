@@ -1,13 +1,13 @@
 #pragma once
 
-//mandala
+//naga
 #include "types.hpp"
 #include "platform_defs.hpp"
 
-namespace mandala
+namespace naga
 {
     struct input_event_t;
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
     struct window_event;
 #endif
 
@@ -20,7 +20,7 @@ namespace mandala
         virtual void on_render_start() = 0;
         virtual void on_render_end() = 0;
         virtual bool on_input_event(input_event_t& input_event) = 0;
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
         virtual void on_window_event(window_event& window_event) = 0;
 #endif
     };

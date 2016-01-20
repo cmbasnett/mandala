@@ -1,9 +1,9 @@
-//mandala
+//naga
 #include "gui_button.hpp"
 #include "collision.hpp"
 #include "input_event.hpp"
 
-namespace mandala
+namespace naga
 {
     bool gui_button::on_input_event_begin(input_event_t& input_event)
     {
@@ -43,7 +43,7 @@ namespace mandala
                 switch (state)
                 {
                 case state_t::IDLE:
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
                     if (is_contained)
                     {
                         state = state_t::HOVER;
@@ -57,7 +57,7 @@ namespace mandala
                     }
 #endif
                     break;
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
                 case state_t::HOVER:
                 case state_t::PRESSED:
                     if (!is_contained)

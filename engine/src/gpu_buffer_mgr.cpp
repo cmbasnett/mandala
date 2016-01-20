@@ -1,7 +1,7 @@
-//mandala
+//naga
 #include "gpu_buffer_mgr.hpp"
 
-namespace mandala
+namespace naga
 {
     gpu_buffer_mgr gpu_buffers;
 

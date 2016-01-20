@@ -3,11 +3,11 @@
 //std
 #include <iostream>
 
-//mandala
+//naga
 #include "types.hpp"
 #include "aabb.hpp"
 
-namespace mandala
+namespace naga
 {
     namespace details
     {

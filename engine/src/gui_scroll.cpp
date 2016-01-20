@@ -1,4 +1,4 @@
-//mandala
+//naga
 #include "gui_scroll.hpp"
 #include "input_event.hpp"
 #include "collision.hpp"
@@ -6,7 +6,7 @@
 //glm
 #include <glm\gtc\matrix_transform.hpp>
 
-namespace mandala
+namespace naga
 {
     void gui_scroll::on_render_begin(mat4& world_matrix, mat4& view_projection_matrix)
     {

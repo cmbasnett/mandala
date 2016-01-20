@@ -1,8 +1,8 @@
-//mandala
+//naga
 #include "gpu_program.hpp"
 #include "gpu.hpp"
 
-namespace mandala
+namespace naga
 {
     gpu_program::gpu_program(const std::string& vertex_shader_source, const std::string& fragment_shader_source)
     {

@@ -3,7 +3,7 @@
 //std
 #include <type_traits>
 
-namespace mandala
+namespace naga
 {
     template<typename T, T N, typename Enable = void>
     struct factorial;

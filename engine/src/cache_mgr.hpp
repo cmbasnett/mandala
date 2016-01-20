@@ -8,10 +8,10 @@
 //boost
 #include <boost\shared_ptr.hpp>
 
-//mandala
+//naga
 #include "types.hpp"
 
-namespace mandala
+namespace naga
 {
     struct cache_mgr
     {

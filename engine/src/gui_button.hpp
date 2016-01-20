@@ -3,18 +3,18 @@
 //boost
 #include <boost\function.hpp>
 
-//mandala
+//naga
 #include "gui_node.hpp"
 #include "platform_defs.hpp"
 
-namespace mandala
+namespace naga
 {
     struct gui_button : gui_node
     {
         enum class state_t
         {
             IDLE,
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
             HOVER,
 #endif
             PRESSED

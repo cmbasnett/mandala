@@ -6,10 +6,10 @@
 //boost
 #include <boost\make_shared.hpp>
 
-//mandala
+//naga
 #include "gpu_buffer.hpp"
 
-namespace mandala
+namespace naga
 {
     struct gpu_buffer_mgr
     {
@@ -20,7 +20,7 @@ namespace mandala
 
             auto buffers_itr = buffers.insert(buffers.begin(), std::make_pair(gpu_buffer->get_id(), gpu_buffer));
 
-            return boost::static_pointer_cast<T, mandala::gpu_buffer>(buffers_itr->second);
+            return boost::static_pointer_cast<T, naga::gpu_buffer>(buffers_itr->second);
         }
 
         void purge();

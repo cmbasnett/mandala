@@ -5,11 +5,11 @@
 #include <vector>
 #include <type_traits>
 
-//mandala
+//naga
 #include "types.hpp"
 #include "gpu_buffer.hpp"
 
-namespace mandala
+namespace naga
 {
     template<typename T, typename Enable = void>
     struct index_buffer;

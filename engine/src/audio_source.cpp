@@ -1,12 +1,12 @@
 //glm
 #include <glm\gtc\type_ptr.hpp>
 
-//mandala
+//naga
 #include "audio_source.hpp"
 #include "sound.hpp"
 #include "audio_mgr.hpp"
 
-namespace mandala
+namespace naga
 {
     audio_source::audio_source()
     {

@@ -1,14 +1,14 @@
-//mandala
+//naga
 #include "scene.hpp"
-#include "camera.hpp"
-#include "actor.hpp"
+#include "camera_component.hpp"
+#include "game_object.hpp"
 #include "gpu.hpp"
 #include "frame_buffer.hpp"
 #include "camera_params.hpp"
 
-namespace mandala
+namespace naga
 {
-    void scene::render(const boost::shared_ptr<frame_buffer>& frame_buffer, const boost::shared_ptr<mandala::camera>& camera) const
+    void scene::render(const boost::shared_ptr<frame_buffer>& frame_buffer, const boost::shared_ptr<game_object>& camera) const
     {
         gpu_viewport_type viewport;
         viewport.width = frame_buffer->get_size().x;
@@ -17,14 +17,18 @@ namespace mandala
         gpu.viewports.push(viewport);
         gpu.frame_buffers.push(frame_buffer);
 
+        auto& depth_state = gpu.depth.get_state();
+        depth_state.should_test = true;
+        depth_state.should_write_mask = true;
+        gpu.depth.push_state(depth_state);
+
         gpu.clear(gpu_t::CLEAR_FLAG_COLOR | gpu_t::CLEAR_FLAG_DEPTH | gpu_t::CLEAR_FLAG_STENCIL);
 
-        const auto camera_params = camera->get_params(viewport);
+        //auto camera_component = camera->get_component<camera_component>();
 
-        for (const auto& actor : actors)
-        {
-            actor->render(camera_params);
-        }
+        //const auto camera_params = camera_component->get_params(viewport);
+
+        gpu.depth.pop_state();
 
         gpu.frame_buffers.pop();
         gpu.viewports.pop();
@@ -32,17 +36,17 @@ namespace mandala
 
     void scene::tick(f32 dt)
     {
-        for (auto& actor : actors)
+        for (auto& game_object : game_objects)
         {
-            actor->on_tick(dt);
+            game_object->on_tick(dt);
         }
     }
 
     void scene::on_input_event(input_event_t& input_event)
     {
-        for (auto& actor : actors)
+        for (auto& game_object : game_objects)
         {
-            actor->on_input_event(input_event);
+            game_object->on_input_event(input_event);
         }
     }
 }

@@ -7,11 +7,11 @@
 // boost
 #include <boost/multi_array.hpp>
 
-// mandala
+// naga
 #include "types.hpp"
 #include "collision.hpp"
 
-namespace mandala
+namespace naga
 {
     struct heightmap
     {

@@ -3,11 +3,11 @@
 //std
 #include <mutex>
 
-//mandala
+//naga
 #include "hash.hpp"
 #include "pack.hpp"
 
-namespace mandala
+namespace naga
 {
     struct pack_mgr
     {

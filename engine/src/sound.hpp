@@ -3,10 +3,10 @@
 //std
 #include <vector>
 
-//mandala
+//naga
 #include "resource.hpp"
 
-namespace mandala
+namespace naga
 {
     struct sound : resource
     {

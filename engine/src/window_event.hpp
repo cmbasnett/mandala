@@ -1,11 +1,11 @@
 #pragma once
 
-#if defined(MANDALA_PC)
-//mandala
+#if defined(NAGA_PC)
+//naga
 #include "types.hpp"
 #include "rectangle.hpp"
 
-namespace mandala
+namespace naga
 {
     enum class window_event_type : u8
     {

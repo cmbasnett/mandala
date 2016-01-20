@@ -4,7 +4,7 @@
 #include <type_traits>
 #include <exception>
 
-namespace mandala
+namespace naga
 {
     enum class axis_e
     {

@@ -8,7 +8,7 @@
 #include <boost\crc.hpp>
 #include <boost\filesystem.hpp>
 
-//mandala
+//naga
 #include "opengl.hpp"
 #include "gpu.hpp"
 #include "gpu_program.hpp"
@@ -22,7 +22,7 @@
 //glm
 #include <glm\gtc\type_ptr.hpp>
 
-namespace mandala
+namespace naga
 {
     gpu_t gpu;
 

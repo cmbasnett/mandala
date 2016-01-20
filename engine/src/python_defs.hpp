@@ -6,8 +6,9 @@
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 #include <boost/python/suite/indexing/map_indexing_suite.hpp>
 
-//mandala
-#include "actor.hpp"
+//naga
+#include "game_object.hpp"
+#include "game_component.hpp"
 #include "app.hpp"
 #include "arcball_camera.hpp"
 #include "audio_mgr.hpp"
@@ -15,7 +16,7 @@
 #include "bitmap_font.hpp"
 #include "bsp.hpp"
 #include "cache_mgr.hpp"
-#include "camera.hpp"
+#include "camera_component.hpp"
 #include "closure_traits.hpp"
 #include "frame_buffer.hpp"
 #include "game.hpp"
@@ -50,7 +51,7 @@
 
 using namespace boost;
 using namespace boost::python;
-using namespace mandala;
+using namespace naga;
 
 //generate "type _#"
 #define PARAMS(z,n,data) BOOST_PP_TUPLE_ELEM(n,data) _##n
@@ -84,9 +85,9 @@ return_type name##_wrapper()\
 //void foo_wrapper( char _0 , short _1 , int _2){ return foo( _0 , _1 , _2);}
 //int bar_wrapper(){ return bar();}
 
-#define MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(name) struct name##_wrapper : name, wrapper<name>
+#define NAGA_PYTHON_DECLARE_WRAPPER_CLASS(name) struct name##_wrapper : name, wrapper<name>
 
-#define MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(return_type, name, ...)\
+#define NAGA_PYTHON_DEFINE_WRAPPER_FUNCTION(return_type, name, ...)\
 return_type name(__VA_ARGS__) override\
 {\
     auto override_ = get_override(BOOST_PP_STRINGIZE(name));\
@@ -106,7 +107,7 @@ return_type name##_base(__VA_ARGS__)\
     return _wrapper_wrapped_type_::name();\
 }\
 
-#define MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION_VIRTUAL(return_type, name, ...)\
+#define NAGA_PYTHON_DEFINE_WRAPPER_FUNCTION_VIRTUAL(return_type, name, ...)\
 return_type name(__VA_ARGS__) override\
 {\
     auto override_ = get_override(BOOST_PP_STRINGIZE(name));\
@@ -117,10 +118,10 @@ return_type name(__VA_ARGS__) override\
     }\
 }\
 
-MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(game)
+NAGA_PYTHON_DECLARE_WRAPPER_CLASS(game)
 {
-    MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION_VIRTUAL(void, on_run_start)
-    MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION_VIRTUAL(void, on_run_end)
+    NAGA_PYTHON_DEFINE_WRAPPER_FUNCTION_VIRTUAL(void, on_run_start)
+    NAGA_PYTHON_DEFINE_WRAPPER_FUNCTION_VIRTUAL(void, on_run_end)
 
     void on_tick_start(f32 dt) override
     {
@@ -142,8 +143,8 @@ MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(game)
         }
     }
 
-    MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION_VIRTUAL(void, on_render_start)
-    MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION_VIRTUAL(void, on_render_end)
+    NAGA_PYTHON_DEFINE_WRAPPER_FUNCTION_VIRTUAL(void, on_render_start)
+    NAGA_PYTHON_DEFINE_WRAPPER_FUNCTION_VIRTUAL(void, on_render_end)
 
     bool on_input_event(input_event_t& input_event) override
     {
@@ -157,7 +158,7 @@ MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(game)
         return false;
     }
 
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
     void on_window_event(window_event& window_event) override
     {
         auto override_ = get_override("on_window_event");
@@ -170,7 +171,7 @@ MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(game)
 #endif
 };
 
-MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(state)
+NAGA_PYTHON_DECLARE_WRAPPER_CLASS(state)
 {
     void on_tick(f32 dt) override
     {
@@ -210,32 +211,32 @@ MANDALA_PYTHON_DECLARE_WRAPPER_CLASS(state)
         return _wrapper_wrapped_type_::on_input_event(input_event);
     }
 
-    MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, render)
-    MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, on_active)
-    MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, on_passive)
-    MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, on_enter)
-    MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, on_exit)
-    MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, on_stop_tick)
-    MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, on_start_tick)
-    MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, on_stop_render)
-    MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, on_start_render)
-    MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, on_stop_input)
-    MANDALA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, on_start_input)
+    NAGA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, render)
+    NAGA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, on_active)
+    NAGA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, on_passive)
+    NAGA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, on_enter)
+    NAGA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, on_exit)
+    NAGA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, on_stop_tick)
+    NAGA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, on_start_tick)
+    NAGA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, on_stop_render)
+    NAGA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, on_start_render)
+    NAGA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, on_stop_input)
+    NAGA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, on_start_input)
 };
 
-#define MANDALA_DEFINE_RESOURCE_GET_FUNCTION(name)\
-boost::shared_ptr<name> resources_get_##name(resource_mgr& resources, const std::string& hash) { return resources.get<name>(mandala::hash(hash)); }
+#define NAGA_DEFINE_RESOURCE_GET_FUNCTION(name)\
+boost::shared_ptr<name> resources_get_##name(resource_mgr& resources, const std::string& hash) { return resources.get<name>(naga::hash(hash)); }
 
-MANDALA_DEFINE_RESOURCE_GET_FUNCTION(bitmap_font)
-MANDALA_DEFINE_RESOURCE_GET_FUNCTION(bsp)
-MANDALA_DEFINE_RESOURCE_GET_FUNCTION(image)
-MANDALA_DEFINE_RESOURCE_GET_FUNCTION(material)
-MANDALA_DEFINE_RESOURCE_GET_FUNCTION(model)
-MANDALA_DEFINE_RESOURCE_GET_FUNCTION(sound)
-MANDALA_DEFINE_RESOURCE_GET_FUNCTION(sprite_set)
-MANDALA_DEFINE_RESOURCE_GET_FUNCTION(texture)
+NAGA_DEFINE_RESOURCE_GET_FUNCTION(bitmap_font)
+NAGA_DEFINE_RESOURCE_GET_FUNCTION(bsp)
+NAGA_DEFINE_RESOURCE_GET_FUNCTION(image)
+NAGA_DEFINE_RESOURCE_GET_FUNCTION(material)
+NAGA_DEFINE_RESOURCE_GET_FUNCTION(model)
+NAGA_DEFINE_RESOURCE_GET_FUNCTION(sound)
+NAGA_DEFINE_RESOURCE_GET_FUNCTION(sprite_set)
+NAGA_DEFINE_RESOURCE_GET_FUNCTION(texture)
 
-#define MANDALA_PYTHON_DEFINE_VEC2(name, value_type)\
+#define NAGA_PYTHON_DEFINE_VEC2(name, value_type)\
 class_<glm::detail::tvec2<value_type>>(name, init<value_type, value_type>())\
     .def_readwrite("x", &glm::detail::tvec2<value_type>::x)\
     .def_readwrite("y", &glm::detail::tvec2<value_type>::y)\
@@ -246,7 +247,7 @@ class_<glm::detail::tvec2<value_type>>(name, init<value_type, value_type>())\
     .def(self_ns::str(self_ns::self))\
     .def(self_ns::repr(self_ns::self));\
 
-#define MANDALA_PYTHON_DEFINE_VEC3(name, value_type)\
+#define NAGA_PYTHON_DEFINE_VEC3(name, value_type)\
 class_<glm::detail::tvec3<value_type>>(name, init<value_type, value_type, value_type>())\
     .def_readwrite("x", &glm::detail::tvec3<value_type>::x)\
     .def_readwrite("y", &glm::detail::tvec3<value_type>::y)\
@@ -257,7 +258,7 @@ class_<glm::detail::tvec3<value_type>>(name, init<value_type, value_type, value_
     .def(self_ns::self -= self_ns::self)\
     .def(self_ns::str(self_ns::self));\
 
-#define MANDALA_PYTHON_DEFINE_VEC4(name, value_type)\
+#define NAGA_PYTHON_DEFINE_VEC4(name, value_type)\
 class_<glm::detail::tvec4<value_type>>(name, init<value_type, value_type, value_type, value_type>())\
     .def_readwrite("x", &glm::detail::tvec4<value_type>::x)\
     .def_readwrite("y", &glm::detail::tvec4<value_type>::y)\
@@ -269,50 +270,50 @@ class_<glm::detail::tvec4<value_type>>(name, init<value_type, value_type, value_
     .def(self_ns::self -= self_ns::self)\
     .def(self_ns::str(self_ns::self));\
 
-#define MANDALA_PYTHON_DEFINE_AABB2(name, scalar_type)\
-class_<mandala::details::aabb2<scalar_type>>(name, init<>())\
-.def_readwrite("min", &mandala::details::aabb2<scalar_type>::min)\
-.def_readwrite("max", &mandala::details::aabb2<scalar_type>::max)\
-.add_property("width", &mandala::details::aabb2<scalar_type>::width)\
-.add_property("height", &mandala::details::aabb2<scalar_type>::height)\
-.add_property("size", make_function(&mandala::details::aabb2<scalar_type>::size, return_value_policy<return_by_value>()))\
-.add_property("center", make_function(&mandala::details::aabb2<scalar_type>::center, return_value_policy<return_by_value>()))\
-.def(self_ns::self + other<mandala::details::aabb2<scalar_type>::value_type>())\
-.def(self_ns::self += other<mandala::details::aabb2<scalar_type>::value_type>())\
-.def(self_ns::self - other<mandala::details::aabb2<scalar_type>::value_type>())\
-.def(self_ns::self -= other<mandala::details::aabb2<scalar_type>::value_type>())\
+#define NAGA_PYTHON_DEFINE_AABB2(name, scalar_type)\
+class_<naga::details::aabb2<scalar_type>>(name, init<>())\
+.def_readwrite("min", &naga::details::aabb2<scalar_type>::min)\
+.def_readwrite("max", &naga::details::aabb2<scalar_type>::max)\
+.add_property("width", &naga::details::aabb2<scalar_type>::width)\
+.add_property("height", &naga::details::aabb2<scalar_type>::height)\
+.add_property("size", make_function(&naga::details::aabb2<scalar_type>::size, return_value_policy<return_by_value>()))\
+.add_property("center", make_function(&naga::details::aabb2<scalar_type>::center, return_value_policy<return_by_value>()))\
+.def(self_ns::self + other<naga::details::aabb2<scalar_type>::value_type>())\
+.def(self_ns::self += other<naga::details::aabb2<scalar_type>::value_type>())\
+.def(self_ns::self - other<naga::details::aabb2<scalar_type>::value_type>())\
+.def(self_ns::self -= other<naga::details::aabb2<scalar_type>::value_type>())\
 .def(self_ns::str(self_ns::self));\
 
-#define MANDALA_PYTHON_DEFINE_AABB3(name, scalar_type)\
-class_<mandala::details::aabb3<scalar_type>>(name, init<>())\
-.def_readwrite("min", &mandala::details::aabb3<scalar_type>::min)\
-.def_readwrite("max", &mandala::details::aabb3<scalar_type>::max)\
-.add_property("width", &mandala::details::aabb3<scalar_type>::width)\
-.add_property("height", &mandala::details::aabb3<scalar_type>::height)\
-.add_property("depth", &mandala::details::aabb3<scalar_type>::depth)\
-.add_property("size", make_function(&mandala::details::aabb3<scalar_type>::size, return_value_policy<return_by_value>()))\
-.add_property("center", make_function(&mandala::details::aabb3<scalar_type>::center, return_value_policy<return_by_value>()))\
-.def(self_ns::self + other<mandala::details::aabb3<scalar_type>::value_type>())\
-.def(self_ns::self += other<mandala::details::aabb3<scalar_type>::value_type>())\
-.def(self_ns::self - other<mandala::details::aabb3<scalar_type>::value_type>())\
-.def(self_ns::self -= other<mandala::details::aabb3<scalar_type>::value_type>());\
+#define NAGA_PYTHON_DEFINE_AABB3(name, scalar_type)\
+class_<naga::details::aabb3<scalar_type>>(name, init<>())\
+.def_readwrite("min", &naga::details::aabb3<scalar_type>::min)\
+.def_readwrite("max", &naga::details::aabb3<scalar_type>::max)\
+.add_property("width", &naga::details::aabb3<scalar_type>::width)\
+.add_property("height", &naga::details::aabb3<scalar_type>::height)\
+.add_property("depth", &naga::details::aabb3<scalar_type>::depth)\
+.add_property("size", make_function(&naga::details::aabb3<scalar_type>::size, return_value_policy<return_by_value>()))\
+.add_property("center", make_function(&naga::details::aabb3<scalar_type>::center, return_value_policy<return_by_value>()))\
+.def(self_ns::self + other<naga::details::aabb3<scalar_type>::value_type>())\
+.def(self_ns::self += other<naga::details::aabb3<scalar_type>::value_type>())\
+.def(self_ns::self - other<naga::details::aabb3<scalar_type>::value_type>())\
+.def(self_ns::self -= other<naga::details::aabb3<scalar_type>::value_type>());\
 
-#define MANDALA_PYTHON_DEFINE_RECTANGLE(name, scalar_type)\
-class_<mandala::details::rectangle<scalar_type>>(name, init<>())\
-.def_readwrite("x", &mandala::details::rectangle<scalar_type>::x)\
-.def_readwrite("y", &mandala::details::rectangle<scalar_type>::y)\
-.def_readwrite("width", &mandala::details::rectangle<scalar_type>::width)\
-.def_readwrite("height", &mandala::details::rectangle<scalar_type>::height);\
+#define NAGA_PYTHON_DEFINE_RECTANGLE(name, scalar_type)\
+class_<naga::details::rectangle<scalar_type>>(name, init<>())\
+.def_readwrite("x", &naga::details::rectangle<scalar_type>::x)\
+.def_readwrite("y", &naga::details::rectangle<scalar_type>::y)\
+.def_readwrite("width", &naga::details::rectangle<scalar_type>::width)\
+.def_readwrite("height", &naga::details::rectangle<scalar_type>::height);\
 
-#define MANDALA_PYTHON_DEFINE_PADDING(name, scalar_type)\
-class_<mandala::details::padding<scalar_type>>(name, init<scalar_type, scalar_type, scalar_type, scalar_type>())\
-.def_readwrite("bottom", &mandala::details::padding<scalar_type>::bottom)\
-.def_readwrite("left", &mandala::details::padding<scalar_type>::left)\
-.def_readonly("top", &mandala::details::padding<scalar_type>::top)\
-.def_readonly("right", &mandala::details::padding<scalar_type>::right)\
-.add_property("vertical", &mandala::details::padding<scalar_type>::vertical)\
-.add_property("horizontal", &mandala::details::padding<scalar_type>::horizontal)\
-.add_property("size", &mandala::details::padding<scalar_type>::size)\
+#define NAGA_PYTHON_DEFINE_PADDING(name, scalar_type)\
+class_<naga::details::padding<scalar_type>>(name, init<scalar_type, scalar_type, scalar_type, scalar_type>())\
+.def_readwrite("bottom", &naga::details::padding<scalar_type>::bottom)\
+.def_readwrite("left", &naga::details::padding<scalar_type>::left)\
+.def_readonly("top", &naga::details::padding<scalar_type>::top)\
+.def_readonly("right", &naga::details::padding<scalar_type>::right)\
+.add_property("vertical", &naga::details::padding<scalar_type>::vertical)\
+.add_property("horizontal", &naga::details::padding<scalar_type>::horizontal)\
+.add_property("size", &naga::details::padding<scalar_type>::size)\
 .def(self_ns::self + self_ns::self)\
 .def(self_ns::self += self_ns::self)\
 .def(self_ns::self - self_ns::self)\
@@ -321,14 +322,14 @@ class_<mandala::details::padding<scalar_type>>(name, init<scalar_type, scalar_ty
 
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(state_mgr_push_overloads, state_mgr::push, 2, 3)
 
-BOOST_PYTHON_MODULE(mandala)
+BOOST_PYTHON_MODULE(naga)
 {
     python_optional<sprite>();
     python_optional<size_t>();
 
-    class_<mandala::python, noncopyable>("Python", no_init)
-        .def("execute", &mandala::python::exec)
-        .def("exec_file", &mandala::python::exec_file);
+    class_<naga::python, noncopyable>("Python", no_init)
+        .def("execute", &naga::python::exec)
+        .def("exec_file", &naga::python::exec_file);
 
     scope().attr("py") = boost::ref(py);
 
@@ -340,43 +341,43 @@ BOOST_PYTHON_MODULE(mandala)
         .def("on_render_start", pure_virtual(&game::on_render_start))
         .def("on_render_end", pure_virtual(&game::on_render_end));
 
-    class_<mandala::hash>("Hash", init<std::string>());
+    class_<naga::hash>("Hash", init<std::string>());
 
     //MATH
-    MANDALA_PYTHON_DEFINE_AABB2("AABB2I", i32);
-    MANDALA_PYTHON_DEFINE_AABB2("AABB2F", f32);
+    NAGA_PYTHON_DEFINE_AABB2("AABB2I", i32);
+    NAGA_PYTHON_DEFINE_AABB2("AABB2F", f32);
 
-    MANDALA_PYTHON_DEFINE_AABB3("AABB3I", i32);
-    MANDALA_PYTHON_DEFINE_AABB3("AABB3F", f32);
+    NAGA_PYTHON_DEFINE_AABB3("AABB3I", i32);
+    NAGA_PYTHON_DEFINE_AABB3("AABB3F", f32);
 
     //move to GLM module?
-    MANDALA_PYTHON_DEFINE_VEC2("Vec2I", i32);
-    MANDALA_PYTHON_DEFINE_VEC2("Vec2F", f32);
-    MANDALA_PYTHON_DEFINE_VEC2("Vec2D", f64);
+    NAGA_PYTHON_DEFINE_VEC2("Vec2I", i32);
+    NAGA_PYTHON_DEFINE_VEC2("Vec2F", f32);
+    NAGA_PYTHON_DEFINE_VEC2("Vec2D", f64);
 
-    MANDALA_PYTHON_DEFINE_VEC3("Vec3I", i32);
-    MANDALA_PYTHON_DEFINE_VEC3("Vec3F", f32);
+    NAGA_PYTHON_DEFINE_VEC3("Vec3I", i32);
+    NAGA_PYTHON_DEFINE_VEC3("Vec3F", f32);
 
-    MANDALA_PYTHON_DEFINE_VEC4("Vec4I", i32);
-    MANDALA_PYTHON_DEFINE_VEC4("Vec4F", f32);
+    NAGA_PYTHON_DEFINE_VEC4("Vec4I", i32);
+    NAGA_PYTHON_DEFINE_VEC4("Vec4F", f32);
 
-    MANDALA_PYTHON_DEFINE_RECTANGLE("RectangleI", i32);
-    MANDALA_PYTHON_DEFINE_RECTANGLE("RectangleF", f32);
+    NAGA_PYTHON_DEFINE_RECTANGLE("RectangleI", i32);
+    NAGA_PYTHON_DEFINE_RECTANGLE("RectangleF", f32);
 
-    MANDALA_PYTHON_DEFINE_PADDING("PaddingI", i32);
-    MANDALA_PYTHON_DEFINE_PADDING("PaddingF", f32);
+    NAGA_PYTHON_DEFINE_PADDING("PaddingI", i32);
+    NAGA_PYTHON_DEFINE_PADDING("PaddingF", f32);
 
     //PLATFORM
     //TODO: remove specialized platform structs, have only 1 platform_t per platform
     {
         scope platform_scope = 
-#if defined(MANDALA_WINDOWS)
+#if defined(NAGA_WINDOWS)
         class_<platform_win32, noncopyable>("Platform", no_init)
-#elif defined(MANDALA_OSX)
+#elif defined(NAGA_OSX)
         class_<platform_osx_t, noncopyable>("Platform", no_init)
 #endif
             .add_property("screen_size", &platform_t::get_screen_size, &platform_t::set_screen_size)
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
             .add_property("cursor_location", &platform_t::get_cursor_location, &platform_t::set_cursor_location)
             .add_property("window_size", &platform_t::get_window_size, &platform_t::set_window_size)
             .add_property("window_location", &platform_t::get_window_location, &platform_t::set_window_location)
@@ -402,7 +403,7 @@ BOOST_PYTHON_MODULE(mandala)
             .add_property("device_type", &input_event_t::device_type)
             .add_property("touch", &input_event_t::touch)
             .add_property("keyboard", &input_event_t::keyboard)
-            //#if defined(MANDALA_PC)
+            //#if defined(NAGA_PC)
             //.def_readonly("gamepad", &input_event_t::gamepad)
             //#endif
             ;
@@ -416,7 +417,7 @@ BOOST_PYTHON_MODULE(mandala)
             .value("NONE", input_event_t::device_type_e::NONE)
             .value("TOUCH", input_event_t::device_type_e::TOUCH)
             .value("KEYBOARD", input_event_t::device_type_e::KEYBOARD)
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
             .value("GAMEPAD", input_event_t::device_type_e::GAMEPAD)
 #endif
             .value("COUNT", input_event_t::device_type_e::COUNT)
@@ -426,7 +427,7 @@ BOOST_PYTHON_MODULE(mandala)
             scope touch_scope = class_<input_event_t::touch_t, noncopyable>("Touch", no_init)
                 .def_readonly("id", &input_event_t::touch_t::id)
                 .def_readonly("type", &input_event_t::touch_t::type)
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
                 .def_readonly("button", &input_event_t::touch_t::button)
 #endif
                 .def_readonly("location", &input_event_t::touch_t::location)
@@ -441,7 +442,7 @@ BOOST_PYTHON_MODULE(mandala)
                 .value("MOVE", input_event_t::touch_t::type_e::MOVE)
                 .export_values();
 
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
             enum_<input_event_t::touch_t::button_e>("Button")
                 .value("NONE", input_event_t::touch_t::button_e::NONE)
                 .value("LEFT", input_event_t::touch_t::button_e::LEFT)
@@ -457,7 +458,7 @@ BOOST_PYTHON_MODULE(mandala)
 #endif
         }
 
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
         {
             scope keyboard_scope = class_<input_event_t::keyboard_t, noncopyable>("Keyboard", no_init)
                 .def_readonly("type", &input_event_t::keyboard_t::type)
@@ -600,7 +601,7 @@ BOOST_PYTHON_MODULE(mandala)
 #endif
     }
 
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
     enum_<window_event_type>("WindowEventType")
         .value("MOVE", window_event_type::MOVE)
         .value("RESIZE", window_event_type::RESIZE)
@@ -758,7 +759,7 @@ BOOST_PYTHON_MODULE(mandala)
 
         enum_<gui_button::state_t>("State")
             .value("IDLE", gui_button::state_t::IDLE)
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
             .value("HOVER", gui_button::state_t::HOVER)
 #endif
             .value("PRESSED", gui_button::state_t::PRESSED)
@@ -827,7 +828,7 @@ BOOST_PYTHON_MODULE(mandala)
         .def("tick", &state_wrapper::tick)
         .def("on_input_event", &state_wrapper::on_input_event)
         .def("on_input_event_base", &state_wrapper::on_input_event_base)
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
         .def("on_window_event", &state_wrapper::on_window_event)
 #endif
         .def("on_active", &state_wrapper::on_active)
@@ -870,8 +871,8 @@ BOOST_PYTHON_MODULE(mandala)
         .add_property("green_channel", &bitmap_font::get_green_channel)
         .add_property("blue_channel", &bitmap_font::get_blue_channel);
 
-    class_<std::map<const mandala::hash, boost::shared_ptr<sprite_set::region>>>("SpriteSetRegionMap")
-        .def(map_indexing_suite<std::map<const mandala::hash, boost::shared_ptr<sprite_set::region>>>());
+    class_<std::map<const naga::hash, boost::shared_ptr<sprite_set::region>>>("SpriteSetRegionMap")
+        .def(map_indexing_suite<std::map<const naga::hash, boost::shared_ptr<sprite_set::region>>>());
 
     class_<texture, bases<resource>, boost::shared_ptr<texture>, noncopyable>("Texture", no_init)
         .add_property("size", make_function(&texture::get_size, return_value_policy<copy_const_reference>()))
@@ -895,7 +896,7 @@ BOOST_PYTHON_MODULE(mandala)
             ;
     }
 
-    class_<sprite, noncopyable>("Sprite", init<const mandala::hash&, const mandala::hash&>())
+    class_<sprite, noncopyable>("Sprite", init<const naga::hash&, const naga::hash&>())
         .add_property("region", make_function(&sprite::get_region, return_value_policy<copy_const_reference>()))
         .add_property("sprite_set", make_function(&sprite::get_sprite_set, return_value_policy<copy_const_reference>()));
 
@@ -935,7 +936,7 @@ BOOST_PYTHON_MODULE(mandala)
         .add_property("type", &frame_buffer::get_type)
         ;
 
-    def("bezier", mandala::bezier3<f32>, args("point0", "point1", "point2", "t"));
+    def("bezier", naga::bezier3<f32>, args("point0", "point1", "point2", "t"));
 
     class_<pose2>("Pose2")
         .def_readwrite("location", &pose2::location)
@@ -947,41 +948,34 @@ BOOST_PYTHON_MODULE(mandala)
         .def_readwrite("rotation", &pose3::rotation)
         ;
 
-    enum_<actor_draw_type>("ActorDrawType")
-        .value("NONE", actor_draw_type::NONE)
-        .value("BSP", actor_draw_type::BSP)
-        .value("MODEL", actor_draw_type::MODEL)
-        .export_values();
-
-    class_<actor, boost::shared_ptr<actor>>("Actor")
-        .add_property("model", make_function(&actor::get_model, return_value_policy<copy_const_reference>()), &actor::set_model)
-        .add_property("bsp", make_function(&actor::get_bsp, return_value_policy<copy_const_reference>()), &actor::set_bsp)
-        .add_property("draw_type", &actor::get_draw_type, &actor::set_draw_type)
-        .def_readwrite("pose", &actor::pose)
+    class_<game_object, boost::shared_ptr<game_object>>("GameObject")
+        .def_readwrite("pose", &game_object::pose)
         ;
 
-    class_<std::vector<boost::shared_ptr<actor>>>("ActorVec")
-        .def(vector_indexing_suite<std::vector<boost::shared_ptr<actor>>>());
+    class_<game_component, boost::shared_ptr<game_component>>("GameComponent", no_init)
+        ;
+
+    class_<std::vector<boost::shared_ptr<game_object>>>("GameObjectVec")
+        .def(vector_indexing_suite<std::vector<boost::shared_ptr<game_object>>>());
 
     class_<scene, boost::shared_ptr<scene>, noncopyable>("Scene")
-        //.add_property("actors", make_function(&scene_t::get_actors, return_value_policy<copy_const_reference>()))
-        .def("add_actor", &scene::add_actor)
+        .def("add_game_object", &scene::add_game_object)
         .def("render", &scene::render)
         .def("tick", &scene::tick)
         .def("on_input_event", &scene::on_input_event)
         ;
 
     {
-        auto camera_scope = class_<camera, bases<actor>, boost::shared_ptr<camera>>("Camera")
-            .def_readwrite("near", &camera::near)
-            .def_readwrite("far", &camera::far)
-            .def_readwrite("fov", &camera::fov)
-            .def_readwrite("projection_type", &camera::projection_type)
+        auto camera_scope = class_<camera_component, bases<game_component>, boost::shared_ptr<camera_component>>("CameraComponent")
+            .def_readwrite("near", &camera_component::near)
+            .def_readwrite("far", &camera_component::far)
+            .def_readwrite("fov", &camera_component::fov)
+            .def_readwrite("projection_type", &camera_component::projection_type)
             ;
 
-        enum_<camera::projection_type_e>("ProjectionType")
-            .value("ORTHOGRAPHIC", camera::projection_type_e::ORTHOGRAPHIC)
-            .value("PERSPECTIVE", camera::projection_type_e::PERSPECTIVE)
+        enum_<camera_component::projection_type_e>("ProjectionType")
+            .value("ORTHOGRAPHIC", camera_component::projection_type_e::ORTHOGRAPHIC)
+            .value("PERSPECTIVE", camera_component::projection_type_e::PERSPECTIVE)
             .export_values();
     }
 
@@ -992,11 +986,7 @@ BOOST_PYTHON_MODULE(mandala)
         .add_property("bits_per_sample", &sound::get_bits_per_sample)
         .add_property("duration", &sound::get_duration);
 
-    class_<quake_camera, bases<camera>, boost::shared_ptr<quake_camera>, noncopyable>("QuakeCamera", init<>());
-
-    class_<arcball_camera, bases<camera>, boost::shared_ptr<arcball_camera>, noncopyable>("ArcballCamera", init<>());
-
-    class_<model_instance, boost::shared_ptr<model_instance>, noncopyable>("ModelInstance", init<const mandala::hash&>())
+    class_<model_instance, boost::shared_ptr<model_instance>, noncopyable>("ModelInstance", init<const naga::hash&>())
         .def("play", &model_instance::play);
 
     class_<model_animation, boost::shared_ptr<model_animation>, noncopyable>("ModelAnimation", no_init);

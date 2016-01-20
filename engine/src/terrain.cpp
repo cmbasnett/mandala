@@ -1,7 +1,7 @@
 #include "terrain.hpp"
 #include "gpu_buffer_mgr.hpp"
 
-namespace mandala
+namespace naga
 {
     terrain::terrain(size_type width, size_type depth) :
         heightmap(width, depth),

@@ -1,11 +1,11 @@
 //openal
 #include "openal.hpp"
 
-//mandala
+//naga
 #include "audio_device.hpp"
 #include "audio_context.hpp"
 
-namespace mandala
+namespace naga
 {
     audio_context::audio_context(const boost::shared_ptr<audio_device>& device)
     {

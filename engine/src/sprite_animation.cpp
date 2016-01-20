@@ -1,11 +1,11 @@
-//mandala
+//naga
 #include "sprite_animation.hpp"
 #include "bisect.hpp"
 
 //boost
 #include <boost\property_tree\json_parser.hpp>
 
-namespace mandala
+namespace naga
 {
     sprite_animation::sprite_animation(std::istream& istream)
     {

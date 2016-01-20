@@ -7,7 +7,7 @@
 #include <boost\shared_ptr.hpp>
 #include <boost\enable_shared_from_this.hpp>
 
-//mandala
+//naga
 #include "aabb.hpp"
 #include "circle.hpp"
 #include "padding.hpp"
@@ -15,7 +15,7 @@
 #include "gui_size.hpp"
 #include "hash.hpp"
 
-namespace mandala
+namespace naga
 {
     struct input_event_t;
     struct gui_layout;

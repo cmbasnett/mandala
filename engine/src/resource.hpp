@@ -4,10 +4,10 @@
 #include <chrono>
 #include <type_traits>
 
-//mandala
+//naga
 #include "hash.hpp"
 
-namespace mandala
+namespace naga
 {
     struct resource
     {

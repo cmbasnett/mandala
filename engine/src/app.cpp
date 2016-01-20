@@ -4,7 +4,7 @@
 //boost
 #include <boost\property_tree\json_parser.hpp>
 
-//mandala
+//naga
 #include "app.hpp"
 #include "platform.hpp"
 #include "game.hpp"
@@ -25,7 +25,7 @@
 #include "gpu_buffer_mgr.hpp"
 #include "python.hpp"
 
-namespace mandala
+namespace naga
 {
     app app_;
 
@@ -52,7 +52,7 @@ namespace mandala
         //TODO: make this execute a .pyc file instead (more secure?)
         py.exec_file("app.py");
 
-        this->game = extract<shared_ptr<mandala::game>>(py.eval((game_class + "()").c_str()))();
+        this->game = extract<shared_ptr<naga::game>>(py.eval((game_class + "()").c_str()))();
 
         begin:
 
@@ -74,7 +74,7 @@ namespace mandala
             auto real_time = high_resolution_clock::now();
 
             handle_input_events();
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
             handle_window_events();
 #endif
 
@@ -172,7 +172,7 @@ namespace mandala
 
         while (platform.pop_input_event(input_event))
         {
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
             if (input_event.device_type == input_event_t::device_type_e::KEYBOARD &&
                 input_event.keyboard.key == input_event_t::keyboard_t::key_e::F11 &&
                 input_event.keyboard.type == input_event_t::keyboard_t::type_e::KEY_PRESS)
@@ -194,7 +194,7 @@ namespace mandala
         }
     }
 
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
     void app::handle_window_events()
     {
         window_event window_event;

@@ -1,4 +1,4 @@
-//mandala
+//naga
 #include "python.hpp"
 #include "app.hpp"
 #include "game.hpp"
@@ -6,7 +6,7 @@
 
 int main()
 {
-    using namespace mandala;
+    using namespace naga;
     using namespace boost;
     using namespace boost::python;
 
@@ -22,7 +22,7 @@ int main()
     //TODO: needing to handle this type of exception is a tad annoying, search for a better way
     catch (boost::python::error_already_set&)
     {
-        std::cout << mandala::python::handle_pyerr();
+        std::cout << naga::python::handle_pyerr();
         system("pause");
     }
 }

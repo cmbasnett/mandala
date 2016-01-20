@@ -3,7 +3,7 @@
 //std
 #include <type_traits>
 
-namespace mandala
+namespace naga
 {
     template<size_t N>
     struct is_pow2

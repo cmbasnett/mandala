@@ -7,10 +7,10 @@
 //glm
 #include <glm\ext.hpp>
 
-//mandala
+//naga
 #include "types.hpp"
 
-namespace mandala
+namespace naga
 {
     inline u32 rgb_to_u32(const vec3& rgb)
     {
@@ -198,17 +198,17 @@ namespace mandala
 }
 
 template<typename Char>
-std::basic_ostringstream<Char>& operator<<(std::basic_ostringstream<Char>& oss, const mandala::color_push& push)
+std::basic_ostringstream<Char>& operator<<(std::basic_ostringstream<Char>& oss, const naga::color_push& push)
 {
-    oss << mandala::color_push_character<Char>::value << mandala::rgb_to_hex<Char>(push.color);
+    oss << naga::color_push_character<Char>::value << naga::rgb_to_hex<Char>(push.color);
 
     return oss;
 }
 
 template<typename Char>
-std::basic_ostringstream<Char>& operator<<(std::basic_ostringstream<Char>& oss, const mandala::details::color_pop_t& pop)
+std::basic_ostringstream<Char>& operator<<(std::basic_ostringstream<Char>& oss, const naga::details::color_pop_t& pop)
 {
-    oss << mandala::color_pop_character<Char>::value;
+    oss << naga::color_pop_character<Char>::value;
 
     return oss;
 }

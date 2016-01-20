@@ -1,6 +1,6 @@
 #pragma once
 
-//mandala
+//naga
 #include "md5b.hpp"
 #include "aabb.hpp"
 #include "hash.hpp"
@@ -9,7 +9,7 @@
 //std
 #include <vector>
 
-namespace mandala
+namespace naga
 {
     struct model_skeleton
     {

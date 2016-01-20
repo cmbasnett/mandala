@@ -2,7 +2,7 @@
 #include <AL\al.h>
 #include <iostream>
 
-//mandala
+//naga
 #include "sound.hpp"
 #include "io.hpp"
 
@@ -16,7 +16,7 @@
 #define WAV_SUBCHUNK1_ID        (std::array<char, WAV_SUBCHUNK_ID_LENGTH> { { 'f', 'm', 't', ' ' } })
 #define WAV_SUBCHUNK2_ID        (std::array<char, WAV_SUBCHUNK_ID_LENGTH> { { 'd', 'a', 't', 'a' } })
 
-namespace mandala
+namespace naga
 {
     //https://ccrma.stanford.edu/courses/422/projects/WaveFormat/
     sound::sound(std::istream& istream)

@@ -3,7 +3,7 @@
 //std
 #include <array>
 
-//mandala
+//naga
 #include "types.hpp"
 #include "plane.hpp"
 #include "aabb.hpp"
@@ -12,7 +12,7 @@
 //glm
 #include <glm\gtc\matrix_access.hpp>
 
-namespace mandala
+namespace naga
 {
     enum
     {

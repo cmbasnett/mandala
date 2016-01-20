@@ -2,10 +2,10 @@
 #include <png.h>
 #include <iostream>
 
-//mandala
+//naga
 #include "image.hpp"
 
-namespace mandala
+namespace naga
 {
     image::image(std::istream& istream)
     {
@@ -50,7 +50,7 @@ namespace mandala
 
         png_get_IHDR(png_ptr, info_ptr, &size.x, &size.y, &bit_depth, &png_color_type, &interlace_method, nullptr, nullptr);
 
-        auto get_color_type = [](int png_color_type) -> mandala::color_type
+        auto get_color_type = [](int png_color_type) -> naga::color_type
         {
             switch (png_color_type)
             {
@@ -86,7 +86,7 @@ namespace mandala
         png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
     }
 
-    image::image(const size_type& size, bit_depth_type bit_depth, mandala::color_type color_type, const data_type::value_type* data_ptr, size_t data_size) :
+    image::image(const size_type& size, bit_depth_type bit_depth, naga::color_type color_type, const data_type::value_type* data_ptr, size_t data_size) :
         size(size),
         bit_depth(bit_depth),
         color_type(color_type)
@@ -97,9 +97,9 @@ namespace mandala
     }
 }
 
-std::ostream& operator<<(std::ostream& ostream, mandala::image& image)
+std::ostream& operator<<(std::ostream& ostream, naga::image& image)
 {
-    using namespace mandala;
+    using namespace naga;
 
     auto png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 

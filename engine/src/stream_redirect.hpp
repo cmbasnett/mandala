@@ -4,7 +4,7 @@
 #include <iostream>
 #include <functional>
 
-namespace mandala
+namespace naga
 {
     struct stream_redirect
     {

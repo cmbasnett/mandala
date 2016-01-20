@@ -1,16 +1,16 @@
 #pragma once
 
-//mandala
+//naga
 #include "platform_defs.hpp"
 #include "types.hpp"
 
-namespace mandala
+namespace naga
 {
     struct input_event_t
     {
         typedef size_t id_type;
 
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
         typedef u8 mod_flags_type;
 
         enum : mod_flags_type
@@ -27,7 +27,7 @@ namespace mandala
             NONE = -1,
             TOUCH,
             KEYBOARD,
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
             GAMEPAD,
 #endif
             COUNT
@@ -47,7 +47,7 @@ namespace mandala
                 MOVE
             };
 
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
             enum class button_e : i8
             {
                 NONE = -1,
@@ -65,7 +65,7 @@ namespace mandala
 
             touch_id_type id = 0;
             type_e type = type_e::NONE;
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
             button_e button = button_e::NONE;
 #endif
             location_type location;
@@ -215,7 +215,7 @@ namespace mandala
             wchar_t character = L'\0';
         };
 
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
         struct gamepad_t
         {
             typedef u8 index_type;
@@ -242,7 +242,7 @@ namespace mandala
         device_type_e device_type = device_type_e::NONE;
         touch_t touch;
         keyboard_t keyboard;
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
         gamepad_t gamepad;
 #endif
     };

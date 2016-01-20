@@ -6,7 +6,7 @@
 //boost
 #include <boost\optional.hpp>
 
-namespace mandala
+namespace naga
 {
     struct bsp_entity
     {

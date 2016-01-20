@@ -1,14 +1,14 @@
-//mandala
+//naga
 #include "texture.hpp"
 #include "image.hpp"
 #include "gpu.hpp"
 
-//mandala
+//naga
 #include <boost\make_shared.hpp>
 
-namespace mandala
+namespace naga
 {
-    texture::texture(mandala::color_type color_type, const size_type& size, const void* data) :
+    texture::texture(naga::color_type color_type, const size_type& size, const void* data) :
         color_type(color_type),
         size(size)
     {

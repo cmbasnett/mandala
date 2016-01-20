@@ -3,10 +3,10 @@
 //std
 #include <array>
 
-//mandala
+//naga
 #include "aabb.hpp"
 
-namespace mandala
+namespace naga
 {
     struct quadtree
     {

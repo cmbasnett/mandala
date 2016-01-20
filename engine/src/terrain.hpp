@@ -3,7 +3,7 @@
 //std
 #include <bitset>
 
-//mandala
+//naga
 #include "types.hpp"
 #include "heightmap.hpp"
 #include "quadtree.hpp"
@@ -11,7 +11,7 @@
 #include "index_buffer.hpp"
 #include "basic_gpu_program.hpp"
 
-namespace mandala
+namespace naga
 {
     struct camera;
 

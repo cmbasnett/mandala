@@ -5,10 +5,10 @@
 #include <vector>
 #include <map>
 
-//mandala
+//naga
 #include "hash.hpp"
 
-namespace mandala
+namespace naga
 {
     struct string_archive
     {

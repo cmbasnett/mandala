@@ -8,11 +8,11 @@
 //boost
 #include <boost\shared_ptr.hpp>
 
-//mandala
+//naga
 #include "index_type.hpp"
 #include "audio_defs.hpp"
 
-namespace mandala
+namespace naga
 {
     struct sound;
     struct audio_source;

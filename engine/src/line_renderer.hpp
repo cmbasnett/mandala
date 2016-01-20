@@ -1,6 +1,6 @@
 #pragma once
 
-//mandala
+//naga
 #include "types.hpp"
 #include "vertex_buffer.hpp"
 #include "index_buffer.hpp"
@@ -12,7 +12,7 @@
 
 #include "gpu_buffer_mgr.hpp"
 
-namespace mandala
+namespace naga
 {
     inline void render_line_loop(const mat4& world_matrix, const mat4& view_projection_matrix, const std::vector<vec3>& points, const vec4& color)
     {

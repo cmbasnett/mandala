@@ -1,7 +1,7 @@
-//mandala
+//naga
 #include "gpu_program_mgr.hpp"
 
-namespace mandala
+namespace naga
 {
     gpu_program_mgr gpu_programs;
 

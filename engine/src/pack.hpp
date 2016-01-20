@@ -3,14 +3,14 @@
 //std
 #include <map>
 
-//mandala
+//naga
 #include "hash.hpp"
 
 //boost
 #include <boost\shared_ptr.hpp>
 #include <boost\iostreams\device\mapped_file.hpp>
 
-namespace mandala
+namespace naga
 {
     struct pack
     {

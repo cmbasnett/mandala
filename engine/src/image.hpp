@@ -8,11 +8,11 @@
 //boost
 #include <boost\shared_ptr.hpp>
 
-//mandala
+//naga
 #include "resource.hpp"
 #include "color_types.hpp"
 
-namespace mandala
+namespace naga
 {
     struct image : resource
     {
@@ -42,4 +42,4 @@ namespace mandala
     };
 }
 
-std::ostream& operator<<(std::ostream& ostream, mandala::image& image);
+std::ostream& operator<<(std::ostream& ostream, naga::image& image);

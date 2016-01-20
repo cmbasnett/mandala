@@ -7,7 +7,7 @@
 #include <map>
 #include <set>
 
-//mandala
+//naga
 #include "rectangle.hpp"
 #include "index_type.hpp"
 #include "gpu_defs.hpp"
@@ -18,7 +18,7 @@
 #include <boost\shared_ptr.hpp>
 #include <boost\weak_ptr.hpp>
 
-namespace mandala
+namespace naga
 {
     struct frame_buffer;
     struct gpu_buffer;

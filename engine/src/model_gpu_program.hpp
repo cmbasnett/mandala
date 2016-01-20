@@ -5,7 +5,7 @@
 
 using namespace glm;
 
-namespace mandala
+namespace naga
 {
     struct model_gpu_program : gpu_program
     {

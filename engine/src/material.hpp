@@ -1,12 +1,12 @@
 #pragma once
 
-//mandala
+//naga
 #include "resource.hpp"
 
 //std
 #include <memory>
 
-namespace mandala
+namespace naga
 {
     struct texture;
     struct gpu_program;

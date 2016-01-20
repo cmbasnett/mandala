@@ -1,10 +1,10 @@
-//mandala
+//naga
 #include "audio_device.hpp"
 
 //openal
 #include "openal.hpp"
 
-namespace mandala
+namespace naga
 {
     audio_device::audio_device()
     {

@@ -1,6 +1,6 @@
 #pragma once
 
-//mandala
+//naga
 #include "input_event.hpp"
 
 //std
@@ -12,12 +12,12 @@
 #include <boost\optional.hpp>
 #include <boost\shared_ptr.hpp>
 
-namespace mandala
+namespace naga
 {
     struct app;
     struct state;
 
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
     struct window_event;
 #endif
 
@@ -72,7 +72,7 @@ namespace mandala
         void tick(f32 dt);
         void render();
         bool on_input_event(input_event_t& input_event);
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
         void on_window_event(window_event& window_event);
 #endif
 

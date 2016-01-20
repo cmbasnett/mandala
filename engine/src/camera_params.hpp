@@ -1,8 +1,9 @@
 #pragma once
 
 #include "types.hpp"
+#include "frustum.hpp"
 
-namespace mandala
+namespace naga
 {
     struct camera_params
     {

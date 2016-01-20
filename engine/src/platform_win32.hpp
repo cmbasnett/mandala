@@ -3,14 +3,14 @@
 //std
 #include <map>
 
-//mandala
+//naga
 #include "platform.hpp"
 #include "monitor.hpp"
 
 struct GLFWwindow;
 struct GLFWmonitor;
 
-namespace mandala
+namespace naga
 {
     struct platform_win32 : platform_t
     {

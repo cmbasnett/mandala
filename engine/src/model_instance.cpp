@@ -1,7 +1,7 @@
 //std
 #include <sstream>
 
-//mandala
+//naga
 #include "model.hpp"
 #include "model_instance.hpp"
 #include "model_animation.hpp"
@@ -13,15 +13,15 @@
 //glm
 #include <glm\glm.hpp>
 
-namespace mandala
+namespace naga
 {
-    model_instance::model_instance(boost::shared_ptr<mandala::model> model)
+    model_instance::model_instance(boost::shared_ptr<naga::model> model)
     {
         set_model(model);
     }
 
     model_instance::model_instance(const hash& model_hash) :
-        model_instance(resources.get<mandala::model>(model_hash))
+        model_instance(resources.get<naga::model>(model_hash))
     {
     }
 
@@ -75,8 +75,7 @@ namespace mandala
 
 #if defined (DEBUG)
         render_aabb(pose.to_matrix(), view_projection_matrix, skeleton.aabb, vec4(1, 0, 0, 1));
-        render_aabb(mat4(), view_projection_matrix, aabb, vec4(0, 1, 0, 1));
-        render_sphere(mat4(), view_projection_matrix, sphere);
+        render_sphere(pose.to_matrix(), view_projection_matrix, sphere);
 #endif
     }
     
@@ -94,7 +93,7 @@ namespace mandala
 		return pose * skeleton.bones[*bone_index].pose;
     }
 
-    void model_instance::set_model(const boost::shared_ptr<mandala::model>& model)
+    void model_instance::set_model(const boost::shared_ptr<naga::model>& model)
     {
         this->model = model;
 

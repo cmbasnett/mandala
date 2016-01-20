@@ -3,10 +3,10 @@
 //boost
 #include <boost\shared_ptr.hpp>
 
-//mandala
+//naga
 #include "material.hpp"
 
-namespace mandala
+namespace naga
 {
     struct material_instance
     {

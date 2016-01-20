@@ -1,13 +1,13 @@
 //std
 #include <sstream>
 
-//mandala
+//naga
 #include "state_mgr.hpp"
 #include "state.hpp"
 
 #include "line_renderer.hpp"
 
-namespace mandala
+namespace naga
 {
     state_mgr states;
 
@@ -23,7 +23,7 @@ namespace mandala
         }
 
         std::vector<state_type> pushed_states;
-        std::vector<std::pair<state_type, mandala::state_flags_type>> popped_states;
+        std::vector<std::pair<state_type, naga::state_flags_type>> popped_states;
 
         //process stack operations
         while (!operations.empty())
@@ -247,7 +247,7 @@ namespace mandala
         return false;
     }
 
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
     void state_mgr::on_window_event(window_event& window_event)
     {
         for (auto& node : nodes)

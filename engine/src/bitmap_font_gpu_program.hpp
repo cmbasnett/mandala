@@ -5,7 +5,7 @@
 
 using namespace glm;
 
-namespace mandala
+namespace naga
 {
     struct bitmap_font_gpu_program : gpu_program
     {

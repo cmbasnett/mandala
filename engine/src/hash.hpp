@@ -1,13 +1,13 @@
 #pragma once
 
-//mandala
+//naga
 #include "types.hpp"
 #include "fnv.hpp"
 
 //std
 #include <string>
 
-namespace mandala
+namespace naga
 {
     namespace details
     {
@@ -103,7 +103,7 @@ namespace mandala
 }
 
 template<typename T>
-std::ostream& operator<<(std::ostream& ostream, const mandala::details::hash<T>& hash)
+std::ostream& operator<<(std::ostream& ostream, const naga::details::hash<T>& hash)
 {
     return ostream << hash.get_value();
 }

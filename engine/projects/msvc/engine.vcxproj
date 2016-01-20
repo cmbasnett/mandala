@@ -235,7 +235,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\bsp_entity.hpp" />
     <ClInclude Include="..\..\src\bsp_gpu_program.hpp" />
     <ClInclude Include="..\..\src\cache_mgr.hpp" />
-    <ClInclude Include="..\..\src\camera.hpp" />
+    <ClInclude Include="..\..\src\camera_component.hpp" />
     <ClInclude Include="..\..\src\camera_params.hpp" />
     <ClInclude Include="..\..\src\circle.hpp" />
     <ClInclude Include="..\..\src\closure_traits.hpp" />
@@ -248,6 +248,9 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\frame_buffer.hpp" />
     <ClInclude Include="..\..\src\frustum.hpp" />
     <ClInclude Include="..\..\src\game.hpp" />
+    <ClInclude Include="..\..\src\game_component.hpp" />
+    <ClInclude Include="..\..\src\game_component_collection.hpp" />
+    <ClInclude Include="..\..\src\game_object.hpp" />
     <ClInclude Include="..\..\src\glm.hpp" />
     <ClInclude Include="..\..\src\gpu.hpp" />
     <ClInclude Include="..\..\src\gpu_buffer.hpp" />
@@ -266,6 +269,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\gui_size.hpp" />
     <ClInclude Include="..\..\src\hash.hpp" />
     <ClInclude Include="..\..\src\heightmap.hpp" />
+    <ClInclude Include="..\..\src\monitor.hpp" />
     <ClInclude Include="..\..\src\terrain.hpp" />
     <ClInclude Include="..\..\src\octtree.hpp" />
     <ClInclude Include="..\..\src\image.hpp" />
@@ -335,7 +339,7 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="..\..\src\bsp.cpp" />
     <ClCompile Include="..\..\src\bsp_entity.cpp" />
     <ClCompile Include="..\..\src\cache_mgr.cpp" />
-    <ClCompile Include="..\..\src\camera.cpp" />
+    <ClCompile Include="..\..\src\camera_component.cpp" />
     <ClCompile Include="..\..\src\frame_buffer.cpp" />
     <ClCompile Include="..\..\src\gpu.cpp" />
     <ClCompile Include="..\..\src\gpu_buffer.cpp" />

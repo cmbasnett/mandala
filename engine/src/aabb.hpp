@@ -3,12 +3,12 @@
 //std
 #include <array>
 
-//mandala
+//naga
 #include "types.hpp"
 #include "plane.hpp"
 #include "range.hpp"
 
-namespace mandala
+namespace naga
 {
     namespace details
     {

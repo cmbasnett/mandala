@@ -7,7 +7,7 @@
 #include <glm\glm.hpp>
 #include <glm\ext.hpp>
 
-//mandala
+//naga
 #include "types.hpp"
 #include "aabb.hpp"
 #include "line.hpp"
@@ -16,7 +16,7 @@
 #include "frustum.hpp"
 #include "sphere.hpp"
 
-namespace mandala
+namespace naga
 {
     enum class intersect_type_e
     {

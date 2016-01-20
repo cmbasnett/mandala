@@ -6,7 +6,7 @@
 //openal
 #include <AL\alc.h>
 
-namespace mandala
+namespace naga
 {
     struct audio_device;
 

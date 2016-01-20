@@ -8,7 +8,7 @@
 //std
 #include <exception>
 
-namespace mandala
+namespace naga
 {
     inline void alCheckError()
     {

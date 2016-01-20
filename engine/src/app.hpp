@@ -9,11 +9,11 @@
 #include <boost\shared_ptr.hpp>
 #include <boost\weak_ptr.hpp>
 
-//mandala
+//naga
 #include "platform.hpp"
 #include "api.hpp"
 
-namespace mandala
+namespace naga
 {
     struct game;
     struct input_event_t;
@@ -66,7 +66,7 @@ namespace mandala
         void tick(f32 dt);
         void render();
         void handle_input_events();
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
         void handle_window_events();
 #endif
         bool should_keep_running();

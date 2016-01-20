@@ -6,7 +6,7 @@
 //glew
 #include "GL\glew.h"
 
-namespace mandala
+namespace naga
 {
     //TODO: get rid of this
     inline void glCheckError()

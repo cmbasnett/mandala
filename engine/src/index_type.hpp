@@ -1,13 +1,13 @@
 #pragma once
 
-//mandala
+//naga
 #include "types.hpp"
 
 //std
 #include <type_traits>
 #include <cstdint>
 
-namespace mandala
+namespace naga
 {
     template <std::uintmax_t N>
     struct index_type

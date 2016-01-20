@@ -2,7 +2,7 @@
 
 #include <vector>
 
-namespace mandala
+namespace naga
 {
     template<typename T, typename V>
     size_t bisect_left(const std::vector<T>& a, V x, size_t start, size_t end)

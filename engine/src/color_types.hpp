@@ -1,6 +1,6 @@
 #pragma once
 
-namespace mandala
+namespace naga
 {
     enum class color_type
     {

@@ -4,7 +4,7 @@
 
 #include "gui_button.hpp"
 
-namespace mandala
+namespace naga
 {
     #define REM_CTOR(...) __VA_ARGS__
 

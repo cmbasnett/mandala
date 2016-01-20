@@ -6,10 +6,10 @@
 //boost
 #include <boost/make_shared.hpp>
 
-//mandala
+//naga
 #include "aabb.hpp"
 
-namespace mandala
+namespace naga
 {
     namespace details
     {

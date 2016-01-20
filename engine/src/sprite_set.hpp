@@ -5,7 +5,7 @@
 #include <map>
 #include <memory>
 
-//mandala
+//naga
 #include "resource.hpp"
 #include "rectangle.hpp"
 #include "aabb.hpp"
@@ -13,7 +13,7 @@
 //boost
 #include <boost/optional.hpp>
 
-namespace mandala
+namespace naga
 {
     struct texture;
 
@@ -25,7 +25,7 @@ namespace mandala
             typedef vec2_i16 size_type;
             typedef aabb2 uv_type;
 
-            mandala::hash hash;
+            naga::hash hash;
             rectangle_type frame_rectangle;
             rectangle_type rectangle;
             size_type source_size;
@@ -35,7 +35,7 @@ namespace mandala
             uv_type uv;
         };
 
-        typedef std::map<const mandala::hash, boost::shared_ptr<region>> regions_type;
+        typedef std::map<const naga::hash, boost::shared_ptr<region>> regions_type;
 
         sprite_set(std::istream& istream);
         sprite_set(const boost::shared_ptr<texture>& texture);    //TODO: ugly, feels like this needs to be elsewhere in a helper class
@@ -43,7 +43,7 @@ namespace mandala
         const boost::shared_ptr<texture>& get_texture() const { return texture; }
         const regions_type& get_regions() const { return regions; }
 
-        boost::shared_ptr<region> get_region(const mandala::hash& region_hash) const;
+        boost::shared_ptr<region> get_region(const naga::hash& region_hash) const;
 
     private:
         boost::shared_ptr<texture> texture;

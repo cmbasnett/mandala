@@ -1,16 +1,16 @@
 #pragma once
 
-//mandala
+//naga
 #include "types.hpp"
 #include "line.hpp"
 #include "frustum.hpp"
-#include "actor.hpp"
+#include "game_component.hpp"
 #include "camera_params.hpp"
 #include "gpu_defs.hpp"
 
-namespace mandala
+namespace naga
 {
-    struct camera : actor
+    struct camera_component : game_component
     {
         enum class projection_type_e
         {
@@ -26,6 +26,8 @@ namespace mandala
 
         line3 get_ray(const vec2_f64& screen_location) const;
         camera_params get_params(const gpu_viewport_type& viewport) const;
+
+        camera_component() = default;
 
     private:
         mat4 view_matrix;

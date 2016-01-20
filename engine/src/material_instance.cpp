@@ -1,7 +1,7 @@
-//mandala
+//naga
 #include "material_instance.hpp"
 
-namespace mandala
+namespace naga
 {
     material_instance::material_instance(const boost::shared_ptr<material>& material)
     {

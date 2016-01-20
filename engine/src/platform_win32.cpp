@@ -3,7 +3,7 @@
 #include <chrono>
 #include <iostream>
 
-//mandala
+//naga
 #include "platform_win32.hpp"
 
 //glew
@@ -12,7 +12,7 @@
 //glfw
 #include <GLFW\glfw3.h>
 
-namespace mandala
+namespace naga
 {
     platform_win32 platform;
 
@@ -290,7 +290,7 @@ namespace mandala
             }
         }
 
-        window_ptr = glfwCreateWindow(1, 1, "mandala", nullptr, nullptr);
+        window_ptr = glfwCreateWindow(1, 1, "naga", nullptr, nullptr);
 
         glfwMakeContextCurrent(window_ptr);
 
@@ -446,7 +446,7 @@ namespace mandala
             window_size = old_window_size;
         }
 
-        auto new_window_ptr = glfwCreateWindow(window_size.x, window_size.y, "mandala", is_fullscreen ? glfwGetPrimaryMonitor() : nullptr, window_ptr);
+        auto new_window_ptr = glfwCreateWindow(window_size.x, window_size.y, "naga", is_fullscreen ? glfwGetPrimaryMonitor() : nullptr, window_ptr);
         glfwDestroyWindow(window_ptr);
 
         window_ptr = new_window_ptr;

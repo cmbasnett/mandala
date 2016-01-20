@@ -10,12 +10,12 @@
 #include <boost\shared_ptr.hpp>
 #include <boost\make_shared.hpp>
 
-//mandala
+//naga
 #include "hash.hpp"
 #include "pack_mgr.hpp"
 #include "resource.hpp"
 
-namespace mandala
+namespace naga
 {
     struct resource_mgr : public pack_mgr
     {
@@ -66,7 +66,7 @@ namespace mandala
 
                 resource->last_access_time = resource::clock_type::now();
 
-                return boost::static_pointer_cast<T, mandala::resource>(resource);
+                return boost::static_pointer_cast<T, naga::resource>(resource);
             }
 
             auto istream = extract(hash);

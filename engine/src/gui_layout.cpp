@@ -1,9 +1,9 @@
-//mandala
+//naga
 #include "gui_layout.hpp"
 #include "input_event.hpp"
 #include "platform.hpp"
 
-namespace mandala
+namespace naga
 {
     bool gui_layout::on_input_event_begin(input_event_t& input_event)
     {

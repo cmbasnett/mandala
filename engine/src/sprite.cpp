@@ -1,10 +1,10 @@
-//mandala
+//naga
 #include "resource_mgr.hpp"
 #include "sprite.hpp"
 #include "sprite_set.hpp"
 #include "texture.hpp"
 
-namespace mandala
+namespace naga
 {
     sprite_ref::sprite_ref(const hash& sprite_set_hash, const hash& region_hash) :
         sprite_set_hash(sprite_set_hash),
@@ -19,7 +19,7 @@ namespace mandala
     }
 
     sprite::sprite(const hash& sprite_set_hash, const hash& region_hash) :
-        sprite(resources.get<mandala::sprite_set>(sprite_set_hash), region_hash)
+        sprite(resources.get<naga::sprite_set>(sprite_set_hash), region_hash)
     {
     }
 
@@ -54,7 +54,7 @@ namespace mandala
 
     sprite& sprite::operator=(const sprite_ref& rhs)
     {
-        sprite_set = resources.get<mandala::sprite_set>(rhs.sprite_set_hash);
+        sprite_set = resources.get<naga::sprite_set>(rhs.sprite_set_hash);
 
         auto region = sprite_set->get_region(rhs.region_hash);
 

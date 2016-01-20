@@ -73,7 +73,7 @@ def main():
 			s.append('\n')
 			s.append('using namespace glm;\n')
 			s.append('\n')
-			s.append('namespace mandala\n')
+			s.append('namespace naga\n')
 			s.append('{\n')
 			s.append('    struct {} : gpu_program\n'.format(class_name))
 			s.append('    {\n')

@@ -58,9 +58,6 @@
     <ClInclude Include="..\..\src\bsp_entity.hpp">
       <Filter>resources\bsp</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\camera.hpp">
-      <Filter>actors\cameras</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\circle.hpp">
       <Filter>math</Filter>
     </ClInclude>
@@ -320,6 +317,13 @@
     <ClInclude Include="..\..\src\camera_params.hpp">
       <Filter>scene</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\monitor.hpp">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\game_object.hpp" />
+    <ClInclude Include="..\..\src\game_component.hpp" />
+    <ClInclude Include="..\..\src\camera_component.hpp" />
+    <ClInclude Include="..\..\src\game_component_collection.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\app.cpp">
@@ -348,9 +352,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\bsp_entity.cpp">
       <Filter>resources\bsp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\camera.cpp">
-      <Filter>actors\cameras</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\frame_buffer.cpp">
       <Filter>gpu</Filter>
@@ -473,6 +474,7 @@
     <ClCompile Include="..\..\src\state.cpp">
       <Filter>states</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\camera_component.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="app">

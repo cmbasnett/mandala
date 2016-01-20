@@ -8,7 +8,7 @@
 //glm
 #include <glm\ext.hpp>
 
-//mandala
+//naga
 #include "gui_canvas.hpp"
 #include "gpu.hpp"
 #include "gpu_program_mgr.hpp"
@@ -18,7 +18,7 @@
 #include "texture.hpp"
 #include "image.hpp"
 
-namespace mandala
+namespace naga
 {
     boost::weak_ptr<gui_canvas::index_buffer_type> gui_canvas::index_buffer;
     boost::weak_ptr<gui_canvas::vertex_buffer_type> gui_canvas::vertex_buffer;
@@ -104,7 +104,7 @@ namespace mandala
 
         if (!frame_buffer)
         {
-            frame_buffer = boost::make_shared<mandala::frame_buffer>(gpu_frame_buffer_type::COLOR_DEPTH_STENCIL, frame_buffer_size);
+            frame_buffer = boost::make_shared<naga::frame_buffer>(gpu_frame_buffer_type::COLOR_DEPTH_STENCIL, frame_buffer_size);
         }
         else if(frame_buffer_size != frame_buffer->get_size())
         {

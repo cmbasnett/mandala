@@ -8,7 +8,7 @@
 //glm
 #include <glm\glm.hpp>
 
-//mandala
+//naga
 #include "types.hpp"
 #include "range.hpp"
 
@@ -94,7 +94,7 @@ namespace glm
     }
 }
 
-namespace mandala
+namespace naga
 {
     template<typename T>
     std::ostream& operator<<(std::ostream& ostream, const range_<T>& aabb)

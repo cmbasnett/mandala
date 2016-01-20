@@ -1,14 +1,14 @@
 #pragma once
 
-//mandala
+//naga
 #include "pose.hpp"
 #include "model_skeleton.hpp"
-#include "camera.hpp"
+#include "camera_params.hpp"
 
 //boost
 #include <boost\shared_ptr.hpp>
 
-namespace mandala
+namespace naga
 {
     struct model;
     struct model_animation;

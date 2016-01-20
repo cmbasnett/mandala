@@ -8,7 +8,7 @@
 #include <boost\crc.hpp>
 #include <boost\property_tree\json_parser.hpp>
 
-//mandala
+//naga
 #include "cache_mgr.hpp"
 #include "io.hpp"
 
@@ -16,7 +16,7 @@
 #define CACHE_FILENAME  ".cache"
 #define CACHE_PATH      CACHE_DIRECTORY "/" CACHE_FILENAME
 
-namespace mandala
+namespace naga
 {
     cache_mgr cache;
 

@@ -1,6 +1,6 @@
 #pragma once
 
-//mandala
+//naga
 #include "resource.hpp"
 #include "color_types.hpp"
 
@@ -8,7 +8,7 @@
 #include <boost\shared_ptr.hpp>
 #include <boost\enable_shared_from_this.hpp>
 
-namespace mandala
+namespace naga
 {
     struct image;
 

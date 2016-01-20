@@ -1,10 +1,10 @@
 #pragma once
 
-//mandala
+//naga
 #include "gui_node.hpp"
 #include "input_event.hpp"
 
-namespace mandala
+namespace naga
 {
     struct gui_scroll : gui_node
     {

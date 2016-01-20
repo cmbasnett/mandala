@@ -7,7 +7,7 @@
 #include <glm\glm.hpp>
 #include <glm\ext.hpp>
 
-//mandala
+//naga
 #include "collision.hpp"
 #include "input_event.hpp"
 #include "gui_node.hpp"
@@ -17,7 +17,7 @@
 #include "line_renderer.hpp"
 #endif
 
-namespace mandala
+namespace naga
 {
     void gui_node::orphan()
     {

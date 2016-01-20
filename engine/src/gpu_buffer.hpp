@@ -3,10 +3,10 @@
 //boost
 #include <boost/enable_shared_from_this.hpp>
 
-//mandala
+//naga
 #include "gpu_defs.hpp"
 
-namespace mandala
+namespace naga
 {
     struct gpu_buffer : boost::enable_shared_from_this<gpu_buffer>
     {

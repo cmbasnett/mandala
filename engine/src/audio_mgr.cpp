@@ -7,7 +7,7 @@
 //glm
 #include <glm\ext.hpp>
 
-//mandala
+//naga
 #include "openal.hpp"
 #include "audio_source.hpp"
 #include "audio_device.hpp"
@@ -15,7 +15,7 @@
 #include "audio_mgr.hpp"
 #include "sound.hpp"
 
-namespace mandala
+namespace naga
 {
     audio_mgr audio;
 

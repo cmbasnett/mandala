@@ -1,8 +1,8 @@
-//mandala
+//naga
 #include "gpu_buffer.hpp"
 #include "gpu.hpp"
 
-namespace mandala
+namespace naga
 {
     gpu_buffer::gpu_buffer()
     {

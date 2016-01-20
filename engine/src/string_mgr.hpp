@@ -6,14 +6,14 @@
 #include <string>
 #include <mutex>
 
-//mandala
+//naga
 #include "types.hpp"
 #include "hash.hpp"
 
 //boost
 #include <boost\shared_ptr.hpp>
 
-namespace mandala
+namespace naga
 {
     struct string_mgr
     {

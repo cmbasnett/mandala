@@ -4,10 +4,10 @@
 #include <array>
 #include <type_traits>
 
-//mandala
+//naga
 #include "types.hpp"
 
-namespace mandala
+namespace naga
 {
     namespace details
     {

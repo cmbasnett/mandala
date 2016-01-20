@@ -3,11 +3,11 @@
 //boost
 #include <boost\enable_shared_from_this.hpp>
 
-//mandala
+//naga
 #include "types.hpp"
 #include "gpu.hpp"
 
-namespace mandala
+namespace naga
 {
     struct gpu_program : boost::enable_shared_from_this<gpu_program>
     {

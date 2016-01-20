@@ -10,10 +10,10 @@
 //boost
 #include <boost\python.hpp>
 
-//mandala
+//naga
 #include "api.hpp"
 
-namespace mandala
+namespace naga
 {
     struct python
     {
@@ -21,7 +21,7 @@ namespace mandala
         ~python();
 
         boost::python::api::object exec(const char* string);
-        boost::python::api::object MANDALA_API_ENTRY exec_file(const char* file);
+        boost::python::api::object NAGA_API_ENTRY exec_file(const char* file);
         boost::python::api::object eval(const char* string);
 
         void finalize();
@@ -33,5 +33,5 @@ namespace mandala
         boost::python::object main_module;
     };
 
-    MANDALA_API_ENTRY extern python py;
+    NAGA_API_ENTRY extern python py;
 }

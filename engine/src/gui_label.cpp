@@ -11,7 +11,7 @@
 //boost
 #include <boost\algorithm\string.hpp>
 
-//mandala
+//naga
 #include "bitmap_font.hpp"
 #include "gui_label.hpp"
 #include "color.hpp"
@@ -25,7 +25,7 @@
 #include "line_renderer.hpp"
 #endif
 
-namespace mandala
+namespace naga
 {
     gui_label::string_type& gui_label::sanitize_string(string_type& string)
     {

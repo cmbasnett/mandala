@@ -4,7 +4,7 @@
 //boost
 #include <boost/iostreams/read.hpp>
 
-//mandala
+//naga
 #include "model_animation.hpp"
 #include "io.hpp"
 
@@ -13,7 +13,7 @@
 #define MD5A_VERSION            (1)
 #define MD5A_BONE_INDEX_NULL    (255)
 
-namespace mandala
+namespace naga
 {
     model_animation::model_animation(std::istream& istream)
     {
@@ -49,7 +49,7 @@ namespace mandala
         {
             std::string bone_name;
             std::getline(istream, bone_name, '\0');
-            bone.hash = mandala::hash(bone_name);
+            bone.hash = naga::hash(bone_name);
 
             read(istream, bone.parent_index);
             read(istream, bone.flags);

@@ -4,14 +4,14 @@
 #include <vector>
 #include <map>
 
-//mandala
+//naga
 #include "pose.hpp"
 #include "resource.hpp"
 #include "vertex_buffer.hpp"
 #include "index_buffer.hpp"
 #include "model_gpu_program.hpp"
 
-namespace mandala
+namespace naga
 {
     struct material;
     struct material_instance;
@@ -49,7 +49,7 @@ namespace mandala
 
         void render(const vec3& camera_location, const mat4& world_matrix, const mat4& view_projection_matrix, const std::vector<mat4>& bone_matrices, const vec3& light_location, const std::vector<boost::shared_ptr<material_instance>>& mesh_materials) const;
 
-        boost::optional<size_t> get_bone_index(const mandala::hash& bone_hash) const;
+        boost::optional<size_t> get_bone_index(const naga::hash& bone_hash) const;
 
         const std::vector<boost::shared_ptr<const mesh>> get_meshes() const { return meshes; }
         const std::vector<const bone>& get_bones() const { return bones; }
@@ -57,7 +57,7 @@ namespace mandala
 
     private:
         std::vector<boost::shared_ptr<const mesh>> meshes;
-        std::map<const mandala::hash, const u8> bone_indices;
+        std::map<const naga::hash, const u8> bone_indices;
         std::vector<const bone> bones;
         std::vector<const std::string> bone_names;
 

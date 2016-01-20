@@ -10,7 +10,7 @@
 #include <glm\gtx\transform.hpp>
 #include <glm\gtc\type_ptr.hpp>    
 
-//mandala
+//naga
 #include "model.hpp"
 #include "resource_mgr.hpp"
 #include "gpu_program_mgr.hpp"
@@ -27,7 +27,7 @@
 #define MD5M_MAGIC              (std::array<char, MD5M_MAGIC_LENGTH> { { 'M', 'D', '5', 'M' } })
 #define MD5M_VERSION            (1)
 
-namespace mandala
+namespace naga
 {
     struct bone_info
     {
@@ -95,7 +95,7 @@ namespace mandala
 
             bone_names.push_back(bone_info.name);
 
-            bone_indices.insert(std::make_pair(mandala::hash(bone_info.name), i));
+            bone_indices.insert(std::make_pair(naga::hash(bone_info.name), i));
 
             read(istream, bone_info.parent_index);
             read(istream, bone_info.pose.location.x);
@@ -168,7 +168,7 @@ namespace mandala
             mesh->index_count = mesh_info.indices.size();
 
             //material
-            mesh->material = resources.get<material>(mandala::hash(mesh_info.shader));
+            mesh->material = resources.get<material>(naga::hash(mesh_info.shader));
 
             //vertices
             std::vector<mesh::vertex_type> vertices;
@@ -310,7 +310,7 @@ namespace mandala
             //culling
             auto culling_state = gpu.culling.get_state();
 
-            culling_state.is_enabled = !mesh->material->get_is_two_sided();
+            //culling_state.is_enabled = !mesh->material->get_is_two_sided();
 
             gpu.culling.push_state(culling_state);
 
@@ -347,7 +347,7 @@ namespace mandala
         gpu.blend.pop_state();
     }
 
-    boost::optional<size_t> model::get_bone_index(const mandala::hash& bone_hash) const
+    boost::optional<size_t> model::get_bone_index(const naga::hash& bone_hash) const
     {
         auto bone_indices_itr = bone_indices.find(bone_hash);
 

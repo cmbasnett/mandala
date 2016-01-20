@@ -6,10 +6,10 @@
 #include <boost\weak_ptr.hpp>
 #endif
 
-//mandala
+//naga
 #include "resource_mgr.hpp"
 
-namespace mandala
+namespace naga
 {
     resource_mgr resources;
 

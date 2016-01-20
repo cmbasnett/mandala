@@ -4,11 +4,11 @@
 #include <vector>
 #include <chrono>
 
-//mandala
+//naga
 #include "resource.hpp"
 #include "sprite.hpp"
 
-namespace mandala
+namespace naga
 {
     struct sprite_animation : resource
     {

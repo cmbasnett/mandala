@@ -4,7 +4,7 @@
 //glm
 #include <glm\ext.hpp>
 
-//mandala
+//naga
 #include "bitmap_font.hpp"
 #include "resource_mgr.hpp"
 #include "hash.hpp"
@@ -20,7 +20,7 @@
 #define BMF_MAGIC           (std::array<char, BMF_MAGIC_LENGTH> { { 'B', 'M', 'F' } })
 #define BMF_VERSION         (3)
 
-namespace mandala
+namespace naga
 {
     bitmap_font::bitmap_font(std::istream& istream)
     {
@@ -108,7 +108,7 @@ namespace mandala
 
             page_texture_names_length -= static_cast<u32>(page_texture_name.length() + 1);
 
-            auto page_texture = resources.get<texture>(mandala::hash(page_texture_name));
+            auto page_texture = resources.get<texture>(naga::hash(page_texture_name));
 
             page_textures.push_back(page_texture);
         }

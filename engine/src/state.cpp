@@ -4,21 +4,21 @@
 //glm
 #include "glm\ext.hpp"
 
-//mandala
+//naga
 #include "opengl.hpp"
 #include "state.hpp"
 #include "platform.hpp"
 #include "gpu.hpp"
 #include "gui_layout.hpp"
 
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
 #include "window_event.hpp"
 #endif
 
 #include "line_renderer.hpp"
 #include "interpolation.hpp"
 
-namespace mandala
+namespace naga
 {
     state::state()
     {
@@ -82,7 +82,7 @@ namespace mandala
         layout->set_bounds(gui_node::bounds_type(vec2(), static_cast<vec2>(platform.get_screen_size())));
     }
 
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
     void state::on_window_event(window_event& window_event)
     {
         if (window_event.type == window_event_type::RESIZE)

@@ -1,9 +1,9 @@
 #pragma once
 
-//mandala
+//naga
 #include "types.hpp"
 
-namespace mandala
+namespace naga
 {
     namespace details
     {

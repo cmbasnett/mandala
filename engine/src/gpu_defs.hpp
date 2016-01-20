@@ -1,10 +1,10 @@
 #pragma once
 
-//mandala
+//naga
 #include "types.hpp"
 #include "rectangle.hpp"
 
-namespace mandala
+namespace naga
 {
     namespace details
     {

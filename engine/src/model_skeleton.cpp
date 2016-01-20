@@ -1,10 +1,10 @@
-//mandala
+//naga
 #include "model_skeleton.hpp"
 
 //glm
 #include <glm\gtx\transform.hpp>
 
-namespace mandala
+namespace naga
 {
     void model_skeleton::interpolate(model_skeleton& skeleton, const model_skeleton& a, const model_skeleton& b, f32 t)
     {

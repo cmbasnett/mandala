@@ -1,11 +1,11 @@
 #pragma once
 
-//mandala
+//naga
 #include "md5b.hpp"
 #include "resource.hpp"
 #include "model_skeleton.hpp"
 
-namespace mandala
+namespace naga
 {
     struct model_animation : resource
     {
@@ -21,7 +21,7 @@ namespace mandala
                 ROTATION_Z    = (1 << 5),
             };
             
-            mandala::hash hash;
+            naga::hash hash;
             u8 parent_index = 0;
             u8 flags = 0;
             i32 data_start_index = 0;

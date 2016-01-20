@@ -6,11 +6,11 @@
 //boost
 #include <boost\shared_ptr.hpp>
 
-//mandala
+//naga
 #include "types.hpp"
 #include "gpu_defs.hpp"
 
-namespace mandala
+namespace naga
 {
     struct texture;
 

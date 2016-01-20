@@ -3,10 +3,10 @@
 //boost
 #include <boost\shared_ptr.hpp>
 
-//mandala
+//naga
 #include "sprite_set.hpp"
 
-namespace mandala
+namespace naga
 {
     struct texture;
 

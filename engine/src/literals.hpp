@@ -3,7 +3,7 @@
 //std
 #include <ratio>
 
-namespace mandala
+namespace naga
 {
     constexpr long double operator"" _deg(long double deg)
     {

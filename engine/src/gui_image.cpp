@@ -1,7 +1,7 @@
 //glm
 #include "glm\ext.hpp"
 
-//mandala
+//naga
 #include "gpu_program_mgr.hpp"
 #include "gpu_buffer_mgr.hpp"
 #include "gpu_program.hpp"
@@ -16,7 +16,7 @@
 
 #include "line_renderer.hpp"
 
-namespace mandala
+namespace naga
 {
     gui_image::gui_image() :
         index_buffer(gpu_buffers.make<index_buffer_type>()),
@@ -78,7 +78,7 @@ namespace mandala
         vertex_buffer->data(vertices, gpu_t::buffer_usage::STATIC_DRAW);
     }
 
-    void gui_image::set_sprite(boost::optional<mandala::sprite> sprite)
+    void gui_image::set_sprite(boost::optional<naga::sprite> sprite)
     {
         this->sprite = sprite;
 

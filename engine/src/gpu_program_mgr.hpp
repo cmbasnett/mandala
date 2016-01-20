@@ -8,10 +8,10 @@
 #include <boost\shared_ptr.hpp>
 #include <boost\make_shared.hpp>
 
-//mandala
+//naga
 #include "gpu_program.hpp"
 
-namespace mandala
+namespace naga
 {
     struct gpu_program_mgr
     {

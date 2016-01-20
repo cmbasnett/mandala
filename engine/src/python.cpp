@@ -1,17 +1,17 @@
 //boost
 #include <boost\python.hpp>
 
-//mandala
+//naga
 #include "python.hpp"
 #include "python_defs.hpp"
 
-namespace mandala
+namespace naga
 {
-    MANDALA_API_ENTRY python py;
+    NAGA_API_ENTRY python py;
 
     python::python()
     {
-        PyImport_AppendInittab("mandala", &initmandala);
+        PyImport_AppendInittab("naga", &initnaga);
 
         Py_Initialize();
 
@@ -60,7 +60,7 @@ namespace mandala
         }
     }
 
-    boost::python::api::object MANDALA_API_ENTRY python::exec_file(const char* file)
+    boost::python::api::object NAGA_API_ENTRY python::exec_file(const char* file)
     {
         try
         {

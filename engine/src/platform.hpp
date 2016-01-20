@@ -6,12 +6,12 @@
 #include <vector>
 #include <memory>
 
-//mandala
+//naga
 #include "types.hpp"
 #include "platform_defs.hpp"
 #include "input_event.hpp"
 
-#if defined (MANDALA_PC)
+#if defined (NAGA_PC)
 #include "window_event.hpp"
 #endif
 
@@ -19,13 +19,13 @@
 #include <boost/units/systems/si/length.hpp>
 #include <boost/units/base_units/imperial/inch.hpp>
 
-namespace mandala
+namespace naga
 {
     struct platform_t
     {
         struct input_mgr_t
         {
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
             struct gamepad_state_t
             {
                 std::array<f32, 16> axes;
@@ -40,7 +40,7 @@ namespace mandala
             input_event_t::touch_t::touch_id_type touch_id = 1;
         } input;
 
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
         struct window_mgr_t
         {
             std::deque<window_event> events;
@@ -92,7 +92,7 @@ namespace mandala
         virtual std::string get_clipboard_string() const = 0;
         virtual void set_clipboard_string(const std::string& clipboard) const = 0;
 
-#if defined(MANDALA_PC)
+#if defined(NAGA_PC)
         typedef vec2_f64 cursor_location_type;
         typedef vec2_i32 window_size_type;
         typedef std::string window_title_type;
@@ -130,8 +130,8 @@ namespace mandala
     };
 }
 
-#if defined(MANDALA_WINDOWS)
+#if defined(NAGA_WINDOWS)
 #include "platform_win32.hpp"
-#elif defined(MANDALA_OSX)
+#elif defined(NAGA_OSX)
 #include "platform_osx.hpp"
 #endif

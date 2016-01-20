@@ -1,17 +1,19 @@
 //glm
 #include "glm\ext.hpp"
 
-//mandala
-#include "camera.hpp"
+//naga
+#include "camera_component.hpp"
 #include "platform.hpp"
 #include "gpu.hpp"
 #include "collision.hpp"
+#include "game_object.hpp"
 
-namespace mandala
+namespace naga
 {
-    camera_params camera::get_params(const gpu_viewport_type& viewport) const
+    camera_params camera_component::get_params(const gpu_viewport_type& viewport) const
     {
         const auto aspect = static_cast<f32>(viewport.width) / glm::max(static_cast<f32>(viewport.height), 1.0f);
+        const auto& pose = get_owner()->pose;
 
         camera_params params;
         params.location = pose.location;
@@ -41,7 +43,7 @@ namespace mandala
         return params;
     }
     
-    line3 camera::get_ray(const vec2_f64& screen_location) const
+    line3 camera_component::get_ray(const vec2_f64& screen_location) const
     {
         vec4 viewport = gpu.viewports.top();
 

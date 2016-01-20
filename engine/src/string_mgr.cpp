@@ -3,12 +3,12 @@
 #include <sstream>
 #include <codecvt>
 
-//mandala
+//naga
 #include "string_mgr.hpp"
 #include "resource_mgr.hpp"
 #include "string_archive.hpp"
 
-namespace mandala
+namespace naga
 {
     string_mgr strings;
 
@@ -120,7 +120,7 @@ namespace mandala
 
             try
             {
-                auto string = wstring_convert.to_bytes(get(mandala::hash(key)));
+                auto string = wstring_convert.to_bytes(get(naga::hash(key)));
 
                 buffer.replace(beg, end - beg + 1, string);
 

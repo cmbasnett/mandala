@@ -1,4 +1,4 @@
-//mandala
+//naga
 #include "string_archive.hpp"
 #include "exceptions.hpp"
 #include "io.hpp"
@@ -6,7 +6,7 @@
 #define LANG_MAGIC_LENGTH    (4)
 #define LANG_MAGIC           (std::array<char, LANG_MAGIC_LENGTH> { { 'L', 'A', 'N', 'G' } })
 
-namespace mandala
+namespace naga
 {
     string_archive::string_archive(std::istream& istream)
     {

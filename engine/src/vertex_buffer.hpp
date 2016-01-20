@@ -4,12 +4,12 @@
 #include <array>
 #include <vector>
 
-//mandala
+//naga
 #include "types.hpp"
 #include "gpu_buffer.hpp"
 #include "gpu.hpp"
 
-namespace mandala
+namespace naga
 {
     template<typename Vertex>
     struct vertex_buffer : gpu_buffer

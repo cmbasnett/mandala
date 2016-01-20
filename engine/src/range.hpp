@@ -1,6 +1,6 @@
 #pragma once
 
-namespace mandala
+namespace naga
 {
     template<typename T>
     struct range_

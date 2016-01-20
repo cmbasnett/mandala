@@ -1,9 +1,9 @@
-//mandala
+//naga
 #include "frame_buffer.hpp"
 #include "texture.hpp"
 #include "gpu.hpp"
 
-namespace mandala
+namespace naga
 {
     frame_buffer::frame_buffer(gpu_frame_buffer_type type, const gpu_frame_buffer_size_type& size) :
         type(type),

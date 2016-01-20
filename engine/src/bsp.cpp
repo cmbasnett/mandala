@@ -1,9 +1,9 @@
 //glm
 #include "glm\ext.hpp"
 
-//mandala
+//naga
 #include "bsp.hpp"
-#include "camera.hpp"
+#include "camera_params.hpp"
 #include "image.hpp"
 #include "gpu.hpp"
 #include "collision.hpp"
@@ -17,7 +17,7 @@
 //boost
 #include <boost\algorithm\string.hpp>
 
-namespace mandala
+namespace naga
 {
     struct bsp_chunk_t
     {
@@ -379,7 +379,7 @@ namespace mandala
 
             try
             {
-                texture = resources.get<mandala::texture>(mandala::hash(texture_name));
+                texture = resources.get<naga::texture>(naga::hash(texture_name));
             }
             catch (...)
             {
@@ -544,7 +544,7 @@ namespace mandala
 
                 auto lighting_data_size = 3 * static_cast<i32>(texture_size.x) * static_cast<i32>(texture_size.y);
 
-                auto image = boost::make_shared<mandala::image>(
+                auto image = boost::make_shared<naga::image>(
                     static_cast<image::size_type>(texture_size),
                     8,
                     color_type::RGB,

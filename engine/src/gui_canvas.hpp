@@ -1,13 +1,13 @@
 #pragma once
 
-//mandala
+//naga
 #include "gui_node.hpp"
 #include "frame_buffer.hpp"
 #include "vertex_buffer.hpp"
 #include "index_buffer.hpp"
 #include "blur_horizontal_gpu_program.hpp"
 
-namespace mandala
+namespace naga
 {
     struct gui_canvas : gui_node
     {

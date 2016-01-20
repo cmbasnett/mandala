@@ -3,9 +3,9 @@
 //mandala
 #include "rectangle.hpp"
 
-namespace mandala
+namespace naga
 {
-    struct monitor_t
+    struct monitor
     {
         const char* name = nullptr;
         vec2_i32 physical_size;

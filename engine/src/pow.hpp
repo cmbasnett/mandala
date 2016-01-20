@@ -3,7 +3,7 @@
 //std
 #include <type_traits>
 
-namespace mandala
+namespace naga
 {
     namespace type_traits
     {

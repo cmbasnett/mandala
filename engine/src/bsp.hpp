@@ -4,7 +4,7 @@
 #include <vector>
 #include <map>
 
-//mandala
+//naga
 #include "resource.hpp"
 #include "aabb.hpp"
 #include "texture.hpp"
@@ -21,7 +21,7 @@
 #include <boost\lexical_cast.hpp>
 #include <boost\optional.hpp>
 
-namespace mandala
+namespace naga
 {
     struct camera_params;
 

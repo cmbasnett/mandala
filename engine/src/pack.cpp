@@ -1,4 +1,4 @@
-//mandala
+//naga
 #include "pack.hpp"
 #include "io.hpp"
 
@@ -14,7 +14,7 @@
 #define PACK_MAGIC          (std::array<char, PACK_MAGIC_LENGTH> { { 'P', 'A', 'C', 'K' } })
 #define PACK_VERSION        (1)
 
-namespace mandala
+namespace naga
 {
     pack::pack(const std::string& path) :
         path(path)

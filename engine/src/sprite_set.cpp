@@ -1,7 +1,7 @@
 //std
 #include <fstream>
 
-//mandala
+//naga
 #include "io.hpp"
 #include "resource_mgr.hpp"
 #include "sprite_set.hpp"
@@ -11,7 +11,7 @@
 #define TPSB_MAGIC          (std::array<char, 4> { { 'T', 'P', 'S', 'B' } })
 #define TPSB_VERSION        (1)
 
-namespace mandala
+namespace naga
 {
     sprite_set::sprite_set(std::istream& istream)
     {
@@ -37,7 +37,7 @@ namespace mandala
         std::string texture_name;
         std::getline(istream, texture_name, '\0');
 
-        texture = resources.get<mandala::texture>(mandala::hash(texture_name));
+        texture = resources.get<naga::texture>(naga::hash(texture_name));
 
         //region count
         u16 region_count = 0;
@@ -52,7 +52,7 @@ namespace mandala
             std::string region_name;
             std::getline(istream, region_name, '\0');
             
-            region->hash = mandala::hash(std::move(region_name));
+            region->hash = naga::hash(std::move(region_name));
 
             //frame rectangle
             read(istream, region->frame_rectangle.x);
@@ -103,7 +103,7 @@ namespace mandala
         }
     }
 
-    sprite_set::sprite_set(const boost::shared_ptr<mandala::texture>& texture) :
+    sprite_set::sprite_set(const boost::shared_ptr<naga::texture>& texture) :
         texture(texture)
     {
         if (texture == nullptr)
@@ -129,10 +129,10 @@ namespace mandala
         region->uv.max.x = 1.0f;
         region->uv.max.y = 1.0f;
 
-        regions.emplace(mandala::hash(), region);
+        regions.emplace(naga::hash(), region);
     }
 
-    boost::shared_ptr<sprite_set::region> sprite_set::get_region(const mandala::hash& region_hash) const
+    boost::shared_ptr<sprite_set::region> sprite_set::get_region(const naga::hash& region_hash) const
     {
         boost::shared_ptr<region> region;
 

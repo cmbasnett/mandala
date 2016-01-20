@@ -4,7 +4,7 @@
 #include <glm\glm.hpp>
 #include <glm\gtx\quaternion.hpp>
 
-namespace mandala
+namespace naga
 {
     typedef char                i8;
     typedef unsigned char       u8;
