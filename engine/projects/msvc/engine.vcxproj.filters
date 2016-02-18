@@ -326,9 +326,6 @@
     <ClInclude Include="..\..\src\game_component.hpp">
       <Filter>components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\game_component_defs.hpp">
-      <Filter>components</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\game_object.hpp">
       <Filter>objects</Filter>
     </ClInclude>

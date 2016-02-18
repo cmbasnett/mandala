@@ -34,6 +34,8 @@ namespace naga
 
         auto camera_comp = camera->get_component<camera_component>();
 
+        auto b = camera->get_component_by_name("QuakeCameraControlComponent");
+
         if (camera_comp)
         {
             const auto camera_params = camera_comp->get_params(viewport);

@@ -1145,7 +1145,7 @@ BOOST_PYTHON_MODULE(naga)
         ;
 
     {
-        auto camera_scope = class_<camera_component, bases<game_component>, boost::shared_ptr<camera_component>>("CameraComponent", init<>())
+        auto camera_scope = class_<camera_component, bases<game_component>, boost::shared_ptr<camera_component>>(camera_component::component_name, init<>())
             .def_readwrite("near", &camera_component::near)
             .def_readwrite("far", &camera_component::far)
             .def_readwrite("fov", &camera_component::fov)

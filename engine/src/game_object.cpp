@@ -2,6 +2,7 @@
 #include "game_object.hpp"
 #include "python.hpp"
 #include "game_component.hpp"
+#include "camera_component.hpp"
 
 namespace naga
 {
@@ -9,7 +10,7 @@ namespace naga
     {
         for (auto& component : components)
         {
-            component.second->on_tick(dt);
+            component->on_tick(dt);
         }
     }
 
@@ -17,7 +18,7 @@ namespace naga
     {
         for (auto& component : components)
         {
-            if (component.second->on_input_event(input_event))
+            if (component->on_input_event(input_event))
             {
                 return true;
             }
@@ -26,10 +27,13 @@ namespace naga
         return false;
     }
 
-    void game_object::add_component_by_type(type_object type)
+    boost::python::object game_object::add_component_by_type(type_object type)
     {
-        const boost::python::object component_object = type();
+        static auto inspect = boost::python::import("inspect");
 
+        boost::python::object component_object = type();
+
+        // ensure type is convertible to GameComponent
         auto component_extract = boost::python::extract<boost::shared_ptr<game_component>>(component_object.ptr());
 
         if (!component_extract.check())
@@ -37,19 +41,53 @@ namespace naga
             throw std::exception("type is not convertible to GameComponent");
         }
 
-        auto name = boost::python::extract<std::string>(type.attr("__name__"))();
+        // method resolution order
+        // we slice away the last 3 entries because they are inconsequential ([GameComponent, instance, object])
+        // TODO: this may not always be the case, GameComponent might be elevated higher up a more complex hierarchy.
+        //       it might be wise to determine the hierarchy (once) at runtime to see where GameComponent sits in
+        //       the MRO list.
+        auto mro = inspect.attr("getmro")(boost::python::object(type)).slice(0, -3);
+        
+        std::vector<hash> base_names;
+
+        for (auto i = 0; i < boost::python::len(mro); ++i)
+        {
+            auto base = mro[i];
+
+            auto base_name = boost::python::extract<std::string>(base.attr("__name__"));
+
+            if (base_name.check())
+            {
+                base_names.push_back(hash(base_name()));
+            }
+        }
+
         auto component = component_extract();
 
         component->owner = shared_from_this();
 
-        components.insert(std::make_pair(name, component));
+        for (auto& base_name : base_names)
+        {
+            auto type_components_itr = type_components.find(base_name);
+
+            if (type_components_itr == type_components.end())
+            {
+                type_components_itr = type_components.insert(type_components.begin(), std::make_pair(base_name, std::vector<boost::shared_ptr<game_component>>()));
+            }
+
+            type_components_itr->second.push_back(component);
+        }
+
+        components.push_back(component);
+
+        return component_object;
     }
 
-    void game_object::add_component_by_name(const std::string& name)
+    boost::python::object game_object::add_component_by_name(const std::string& name)
     {
         auto type = py.eval(name.c_str());
 
-        add_component_by_type(type_object(type));
+        return add_component_by_type(type_object(type));
     }
 
     boost::shared_ptr<game_component> game_object::get_component_by_type(type_object type)
@@ -66,13 +104,14 @@ namespace naga
 
     boost::shared_ptr<game_component> game_object::get_component_by_name(const std::string& type) const
     {
-        auto components_itr = components.find(type);
+        auto type_components_itr = type_components.find(hash(type));
 
-        if (components_itr == components.end())
+        if (type_components_itr == type_components.end())
         {
             return boost::shared_ptr<game_component>();
         }
 
-        return components_itr->second;
+        // return the last component added
+        return *type_components_itr->second.rbegin();
     }
 }

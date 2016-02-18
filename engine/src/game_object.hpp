@@ -13,6 +13,7 @@
 // naga
 #include "pose.hpp"
 #include "type_object.hpp"
+#include "hash.hpp"
 
 namespace naga
 {
@@ -30,35 +31,43 @@ namespace naga
         virtual void on_tick(f32 dt);
         virtual void render(const camera_params& camera) { }
 
-        void add_component_by_type(type_object type);
-        void add_component_by_name(const std::string& type);
+        boost::python::object add_component_by_type(type_object type);
+        boost::python::object add_component_by_name(const std::string& type);
 
         template<typename T = std::enable_if<std::is_base_of<game_component, T>::value>::type>
-        void add_component()
+        boost::shared_ptr<T> add_component()
         {
-            auto component = boost::make_shared<T>();
+            auto component_extract = boost::python::extract<boost::shared_ptr<T>>(add_component_by_name(T::component_name));
 
-            components.insert(std::make_pair(component->get_type_name(), component));
+            if (!component_extract.check())
+            {
+                return boost::shared_ptr<T>();
+            }
+
+            return component_extract();
         }
 
         template<typename T = std::enable_if<std::is_base_of<game_component, T>::value>::type>
         boost::shared_ptr<T> get_component() const
         {
-            //TODO: component name is not guaranteed to be the same as the Python name.
-            auto components_itr = components.find(T::component_name);
+            static hash component_name_hash = hash(T::component_name);
 
-            if (components_itr == components.end())
+            //TODO: component name is not guaranteed to be the same as the Python name.
+            auto type_components_itr = type_components.find(component_name_hash);
+
+            if (type_components_itr == type_components.end())
             {
                 return boost::shared_ptr<T>();
             }
 
-            return boost::static_pointer_cast<T, game_component>(components_itr->second);
+            return boost::static_pointer_cast<T, game_component>(*(type_components_itr->second.rbegin()));
         }
 
         boost::shared_ptr<game_component> get_component_by_type(type_object type_object);
         boost::shared_ptr<game_component> get_component_by_name(const std::string& type) const;
 
     private:
-        std::map<std::string, boost::shared_ptr<game_component>> components;
+        std::map<hash, std::vector<boost::shared_ptr<game_component>>> type_components;
+        std::vector<boost::shared_ptr<game_component>> components;
     };
 }
