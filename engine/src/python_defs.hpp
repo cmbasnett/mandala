@@ -34,6 +34,7 @@
 #include "model_animation.hpp"
 #include "model_instance.hpp"
 #include "padding.hpp"
+#include "physics_simulation.hpp"
 #include "pose.hpp"
 #include "python.hpp"
 #include "python_optional.hpp"
@@ -86,6 +87,10 @@ return_type name##_wrapper()\
 //int bar_wrapper(){ return bar();}
 
 #define NAGA_PYTHON_DECLARE_WRAPPER_CLASS(name) struct name##_wrapper : name, wrapper<name>
+
+#define NAGA_PYTHON_DECLARE_WRAPPER_CLASS_T1(name)\
+template<typename T0>\
+struct name##_wrapper<T0> : name<T0>, wrapper<name>
 
 #define NAGA_PYTHON_DEFINE_WRAPPER_FUNCTION(return_type, name, ...)\
 return_type name(__VA_ARGS__) override\
@@ -224,6 +229,48 @@ NAGA_PYTHON_DECLARE_WRAPPER_CLASS(state)
     NAGA_PYTHON_DEFINE_WRAPPER_FUNCTION(void, on_start_input)
 };
 
+// GAME COMPONENT
+NAGA_PYTHON_DECLARE_WRAPPER_CLASS(game_component)
+{
+    void on_tick(f32 dt) override
+    {
+        auto override_ = get_override("on_tick");
+
+        if (override_)
+        {
+            override_(dt);
+        }
+        else
+        {
+            _wrapper_wrapped_type_::on_tick(dt);
+        }
+    }
+
+    void on_tick_base(f32 dt)
+    {
+        _wrapper_wrapped_type_::on_tick(dt);
+    }
+
+    bool on_input_event(input_event_t& input_event) override
+    {
+        auto override_ = get_override("on_input_event");
+
+        if (override_)
+        {
+            return override_(input_event);
+        }
+        else
+        {
+            return _wrapper_wrapped_type_::on_input_event(input_event);
+        }
+    }
+
+    bool on_input_event_base(input_event_t& input_event)
+    {
+        return _wrapper_wrapped_type_::on_input_event(input_event);
+    }
+};
+
 #define NAGA_DEFINE_RESOURCE_GET_FUNCTION(name)\
 boost::shared_ptr<name> resources_get_##name(resource_mgr& resources, const std::string& hash) { return resources.get<name>(naga::hash(hash)); }
 
@@ -236,6 +283,35 @@ NAGA_DEFINE_RESOURCE_GET_FUNCTION(sound)
 NAGA_DEFINE_RESOURCE_GET_FUNCTION(sprite_set)
 NAGA_DEFINE_RESOURCE_GET_FUNCTION(texture)
 
+template<typename V>
+struct vec3_wrapper : glm::detail::tvec3<V>, wrapper<glm::detail::tvec3<V>>
+{
+    vec3_wrapper(V x, V y, V z) :
+        _wrapper_wrapped_type_(x, y, z)
+    {
+    }
+
+    vec3_wrapper(const _wrapper_wrapped_type_& other) :
+        _wrapper_wrapped_type_(other)
+    {
+    }
+
+    f32 __length__() const
+    {
+        return glm::length(*reinterpret_cast<const _wrapper_wrapped_type_*>(this));
+    }
+
+    _wrapper_wrapped_type_ normalize() const
+    {
+        return glm::normalize(*this);
+    }
+
+    operator _wrapper_wrapped_type_()
+    {
+        return _wrapper_wrapped_type_(x, y, z);
+    }
+};
+
 #define NAGA_PYTHON_DEFINE_VEC2(name, value_type)\
 class_<glm::detail::tvec2<value_type>>(name, init<value_type, value_type>())\
     .def_readwrite("x", &glm::detail::tvec2<value_type>::x)\
@@ -245,18 +321,33 @@ class_<glm::detail::tvec2<value_type>>(name, init<value_type, value_type>())\
     .def(self_ns::self - self_ns::self)\
     .def(self_ns::self -= self_ns::self)\
     .def(self_ns::str(self_ns::self))\
-    .def(self_ns::repr(self_ns::self));\
+    .def(self_ns::repr(self_ns::self));
 
-#define NAGA_PYTHON_DEFINE_VEC3(name, value_type)\
-class_<glm::detail::tvec3<value_type>>(name, init<value_type, value_type, value_type>())\
-    .def_readwrite("x", &glm::detail::tvec3<value_type>::x)\
-    .def_readwrite("y", &glm::detail::tvec3<value_type>::y)\
-    .def_readwrite("z", &glm::detail::tvec3<value_type>::z)\
+//#define NAGA_PYTHON_DEFINE_VEC3(name, V)\
+//class_<glm::detail::tvec3<V>, noncopyab>(BOOST_PP_CAT(name, "Base"), no_init)\
+//    .def_readwrite("x", &glm::detail::tvec3<V>::x)\
+//    .def_readwrite("y", &glm::detail::tvec3<V>::y)\
+//    .def_readwrite("z", &glm::detail::tvec3<V>::z)\
+//    .def(self_ns::self + self_ns::self)\
+//    .def(self_ns::self += self_ns::self)\
+//    .def(self_ns::self - self_ns::self)\
+//    .def(self_ns::self -= self_ns::self)\
+//    .def(self_ns::self * 0.0f)\
+//    .def(self_ns::str(self_ns::self));\
+//class_<vec3_wrapper<V>, bases<glm::detail::tvec3<V>>>(name, init<V, V, V>())\
+//    .def("length", &vec3_wrapper<V>::__length__);
+
+#define NAGA_PYTHON_DEFINE_VEC3(name, V)\
+class_<glm::detail::tvec3<V>>(name, init<V, V, V>())\
+    .def_readwrite("x", &glm::detail::tvec3<V>::x)\
+    .def_readwrite("y", &glm::detail::tvec3<V>::y)\
+    .def_readwrite("z", &glm::detail::tvec3<V>::z)\
     .def(self_ns::self + self_ns::self)\
     .def(self_ns::self += self_ns::self)\
     .def(self_ns::self - self_ns::self)\
     .def(self_ns::self -= self_ns::self)\
-    .def(self_ns::str(self_ns::self));\
+    .def(self_ns::self * 0.0f)\
+    .def(self_ns::str(self_ns::self));
 
 #define NAGA_PYTHON_DEFINE_VEC4(name, value_type)\
 class_<glm::detail::tvec4<value_type>>(name, init<value_type, value_type, value_type, value_type>())\
@@ -268,64 +359,125 @@ class_<glm::detail::tvec4<value_type>>(name, init<value_type, value_type, value_
     .def(self_ns::self += self_ns::self)\
     .def(self_ns::self - self_ns::self)\
     .def(self_ns::self -= self_ns::self)\
-    .def(self_ns::str(self_ns::self));\
+    .def(self_ns::str(self_ns::self));
+
+#define NAGA_PYTHON_DEFINE_QUAT(name, value_type)\
+class_<glm::detail::tquat<value_type>>(name, init<value_type, value_type, value_type, value_type>())\
+    .def_readwrite("x", &glm::detail::tquat<value_type>::x)\
+    .def_readwrite("y", &glm::detail::tquat<value_type>::y)\
+    .def_readwrite("z", &glm::detail::tquat<value_type>::z)\
+    .def_readwrite("w", &glm::detail::tquat<value_type>::w)\
+    .def("__len__", &glm::detail::tquat<value_type>::length)\
+    .def(self_ns::self * self_ns::self)\
+    .def(self_ns::self * glm::detail::tvec3<value_type>())\
+    .def(self_ns::str(self_ns::self));
 
 #define NAGA_PYTHON_DEFINE_AABB2(name, scalar_type)\
 class_<naga::details::aabb2<scalar_type>>(name, init<>())\
-.def_readwrite("min", &naga::details::aabb2<scalar_type>::min)\
-.def_readwrite("max", &naga::details::aabb2<scalar_type>::max)\
-.add_property("width", &naga::details::aabb2<scalar_type>::width)\
-.add_property("height", &naga::details::aabb2<scalar_type>::height)\
-.add_property("size", make_function(&naga::details::aabb2<scalar_type>::size, return_value_policy<return_by_value>()))\
-.add_property("center", make_function(&naga::details::aabb2<scalar_type>::center, return_value_policy<return_by_value>()))\
-.def(self_ns::self + other<naga::details::aabb2<scalar_type>::value_type>())\
-.def(self_ns::self += other<naga::details::aabb2<scalar_type>::value_type>())\
-.def(self_ns::self - other<naga::details::aabb2<scalar_type>::value_type>())\
-.def(self_ns::self -= other<naga::details::aabb2<scalar_type>::value_type>())\
-.def(self_ns::str(self_ns::self));\
+    .def_readwrite("min", &naga::details::aabb2<scalar_type>::min)\
+    .def_readwrite("max", &naga::details::aabb2<scalar_type>::max)\
+    .add_property("width", &naga::details::aabb2<scalar_type>::width)\
+    .add_property("height", &naga::details::aabb2<scalar_type>::height)\
+    .add_property("size", make_function(&naga::details::aabb2<scalar_type>::size, return_value_policy<return_by_value>()))\
+    .add_property("center", make_function(&naga::details::aabb2<scalar_type>::center, return_value_policy<return_by_value>()))\
+    .def(self_ns::self + other<naga::details::aabb2<scalar_type>::value_type>())\
+    .def(self_ns::self += other<naga::details::aabb2<scalar_type>::value_type>())\
+    .def(self_ns::self - other<naga::details::aabb2<scalar_type>::value_type>())\
+    .def(self_ns::self -= other<naga::details::aabb2<scalar_type>::value_type>())\
+    .def(self_ns::str(self_ns::self));
 
 #define NAGA_PYTHON_DEFINE_AABB3(name, scalar_type)\
 class_<naga::details::aabb3<scalar_type>>(name, init<>())\
-.def_readwrite("min", &naga::details::aabb3<scalar_type>::min)\
-.def_readwrite("max", &naga::details::aabb3<scalar_type>::max)\
-.add_property("width", &naga::details::aabb3<scalar_type>::width)\
-.add_property("height", &naga::details::aabb3<scalar_type>::height)\
-.add_property("depth", &naga::details::aabb3<scalar_type>::depth)\
-.add_property("size", make_function(&naga::details::aabb3<scalar_type>::size, return_value_policy<return_by_value>()))\
-.add_property("center", make_function(&naga::details::aabb3<scalar_type>::center, return_value_policy<return_by_value>()))\
-.def(self_ns::self + other<naga::details::aabb3<scalar_type>::value_type>())\
-.def(self_ns::self += other<naga::details::aabb3<scalar_type>::value_type>())\
-.def(self_ns::self - other<naga::details::aabb3<scalar_type>::value_type>())\
-.def(self_ns::self -= other<naga::details::aabb3<scalar_type>::value_type>());\
+    .def_readwrite("min", &naga::details::aabb3<scalar_type>::min)\
+    .def_readwrite("max", &naga::details::aabb3<scalar_type>::max)\
+    .add_property("width", &naga::details::aabb3<scalar_type>::width)\
+    .add_property("height", &naga::details::aabb3<scalar_type>::height)\
+    .add_property("depth", &naga::details::aabb3<scalar_type>::depth)\
+    .add_property("size", make_function(&naga::details::aabb3<scalar_type>::size, return_value_policy<return_by_value>()))\
+    .add_property("center", make_function(&naga::details::aabb3<scalar_type>::center, return_value_policy<return_by_value>()))\
+    .def(self_ns::self + other<naga::details::aabb3<scalar_type>::value_type>())\
+    .def(self_ns::self += other<naga::details::aabb3<scalar_type>::value_type>())\
+    .def(self_ns::self - other<naga::details::aabb3<scalar_type>::value_type>())\
+    .def(self_ns::self -= other<naga::details::aabb3<scalar_type>::value_type>());
 
 #define NAGA_PYTHON_DEFINE_RECTANGLE(name, scalar_type)\
 class_<naga::details::rectangle<scalar_type>>(name, init<>())\
-.def_readwrite("x", &naga::details::rectangle<scalar_type>::x)\
-.def_readwrite("y", &naga::details::rectangle<scalar_type>::y)\
-.def_readwrite("width", &naga::details::rectangle<scalar_type>::width)\
-.def_readwrite("height", &naga::details::rectangle<scalar_type>::height);\
+    .def_readwrite("x", &naga::details::rectangle<scalar_type>::x)\
+    .def_readwrite("y", &naga::details::rectangle<scalar_type>::y)\
+    .def_readwrite("width", &naga::details::rectangle<scalar_type>::width)\
+    .def_readwrite("height", &naga::details::rectangle<scalar_type>::height);
 
 #define NAGA_PYTHON_DEFINE_PADDING(name, scalar_type)\
 class_<naga::details::padding<scalar_type>>(name, init<scalar_type, scalar_type, scalar_type, scalar_type>())\
-.def_readwrite("bottom", &naga::details::padding<scalar_type>::bottom)\
-.def_readwrite("left", &naga::details::padding<scalar_type>::left)\
-.def_readonly("top", &naga::details::padding<scalar_type>::top)\
-.def_readonly("right", &naga::details::padding<scalar_type>::right)\
-.add_property("vertical", &naga::details::padding<scalar_type>::vertical)\
-.add_property("horizontal", &naga::details::padding<scalar_type>::horizontal)\
-.add_property("size", &naga::details::padding<scalar_type>::size)\
-.def(self_ns::self + self_ns::self)\
-.def(self_ns::self += self_ns::self)\
-.def(self_ns::self - self_ns::self)\
-.def(self_ns::self -= self_ns::self)\
-.def(self_ns::str(self_ns::self));\
+    .def_readwrite("bottom", &naga::details::padding<scalar_type>::bottom)\
+    .def_readwrite("left", &naga::details::padding<scalar_type>::left)\
+    .def_readonly("top", &naga::details::padding<scalar_type>::top)\
+    .def_readonly("right", &naga::details::padding<scalar_type>::right)\
+    .add_property("vertical", &naga::details::padding<scalar_type>::vertical)\
+    .add_property("horizontal", &naga::details::padding<scalar_type>::horizontal)\
+    .add_property("size", &naga::details::padding<scalar_type>::size)\
+    .def(self_ns::self + self_ns::self)\
+    .def(self_ns::self += self_ns::self)\
+    .def(self_ns::self - self_ns::self)\
+    .def(self_ns::self -= self_ns::self)\
+    .def(self_ns::str(self_ns::self));
 
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(state_mgr_push_overloads, state_mgr::push, 2, 3)
 
+inline naga::quat angle_axis(f32 angle, const naga::vec3& axis)
+{
+    return glm::angleAxis(angle, axis);
+}
+
+inline f32 length(const boost::python::object& other)
+{
+    auto result = boost::python::extract<glm::detail::tvec3<f32>>(other);
+
+    if (result.check())
+    {
+        return glm::length(result());
+    }
+
+    throw std::invalid_argument("length cannot be calculated");
+}
+
+inline boost::python::object inverse(const boost::python::object& other)
+{
+    auto result = boost::python::extract<glm::detail::tquat<f32>>(other);
+
+    if (result.check())
+    {
+        return boost::python::object(glm::inverse(result()));
+    }
+
+    throw std::invalid_argument("invalid argument for 'inverse'");
+}
+
+inline boost::python::object normalize(const boost::python::object& other)
+{
+    auto result = boost::python::extract<glm::detail::tvec3<f32>>(other);
+
+    if (result.check())
+    {
+        return boost::python::object(glm::normalize(result()));
+    }
+
+    throw std::invalid_argument("invalid argument for 'normalize'");
+}
+
 BOOST_PYTHON_MODULE(naga)
 {
+    def("percent_rank", &glm::percent_rank<f32>);
+    def("angle_axis", &angle_axis);
+    def("bezier", naga::bezier3<f32>, args("point0", "point1", "point2", "t"));
+    def("length", &length);
+    def("inverse", &inverse);
+    def("normalize", &normalize);
+
     python_optional<sprite>();
     python_optional<size_t>();
+
+    enable_type_object();
 
     class_<naga::python, noncopyable>("Python", no_init)
         .def("execute", &naga::python::exec)
@@ -355,11 +507,13 @@ BOOST_PYTHON_MODULE(naga)
     NAGA_PYTHON_DEFINE_VEC2("Vec2F", f32);
     NAGA_PYTHON_DEFINE_VEC2("Vec2D", f64);
 
-    NAGA_PYTHON_DEFINE_VEC3("Vec3I", i32);
+    //NAGA_PYTHON_DEFINE_VEC3("Vec3I", i32);
     NAGA_PYTHON_DEFINE_VEC3("Vec3F", f32);
 
     NAGA_PYTHON_DEFINE_VEC4("Vec4I", i32);
     NAGA_PYTHON_DEFINE_VEC4("Vec4F", f32);
+
+    NAGA_PYTHON_DEFINE_QUAT("Quat", f32);
 
     NAGA_PYTHON_DEFINE_RECTANGLE("RectangleI", i32);
     NAGA_PYTHON_DEFINE_RECTANGLE("RectangleF", f32);
@@ -393,7 +547,6 @@ BOOST_PYTHON_MODULE(naga)
             .def_readonly("name", &platform_t::display_t::name)
             .def_readonly("position", &platform_t::display_t::position)
             .def_readonly("ppi", &platform_t::display_t::position)
-            //.add_property("ppi", make_getter(&platform_t::display_t::ppi, return_value_policy<copy_const_reference>()))
             ;
     }
 
@@ -403,9 +556,9 @@ BOOST_PYTHON_MODULE(naga)
             .add_property("device_type", &input_event_t::device_type)
             .add_property("touch", &input_event_t::touch)
             .add_property("keyboard", &input_event_t::keyboard)
-            //#if defined(NAGA_PC)
-            //.def_readonly("gamepad", &input_event_t::gamepad)
-            //#endif
+#if defined(NAGA_PC)
+            .add_property("gamepad", &input_event_t::gamepad)
+#endif
             ;
 
         scope().attr("MOD_FLAG_SHIFT") = input_event_t::mod_flags_type(input_event_t::MOD_FLAG_SHIFT);
@@ -459,6 +612,23 @@ BOOST_PYTHON_MODULE(naga)
         }
 
 #if defined(NAGA_PC)
+        {
+            scope gamepad_scope = class_<input_event_t::gamepad_t, noncopyable>("Gamepad", no_init)
+                .def_readonly("axis_index", &input_event_t::gamepad_t::axis_index)
+                .def_readonly("axis_value", &input_event_t::gamepad_t::axis_value)
+                .def_readonly("axis_value_delta", &input_event_t::gamepad_t::axis_value_delta)
+                .def_readonly("button_index", &input_event_t::gamepad_t::button_index)
+                .def_readonly("index", &input_event_t::gamepad_t::index)
+                .def_readonly("type", &input_event_t::gamepad_t::type);
+
+            enum_<input_event_t::gamepad_t::type_e>("Type")
+                .value("AXIS_MOVE", input_event_t::gamepad_t::type_e::AXIS_MOVE)
+                .value("NONE", input_event_t::gamepad_t::type_e::NONE)
+                .value("PRESS", input_event_t::gamepad_t::type_e::PRESS)
+                .value("RELEASE", input_event_t::gamepad_t::type_e::RELEASE)
+                .export_values();
+        }
+
         {
             scope keyboard_scope = class_<input_event_t::keyboard_t, noncopyable>("Keyboard", no_init)
                 .def_readonly("type", &input_event_t::keyboard_t::type)
@@ -936,8 +1106,6 @@ BOOST_PYTHON_MODULE(naga)
         .add_property("type", &frame_buffer::get_type)
         ;
 
-    def("bezier", naga::bezier3<f32>, args("point0", "point1", "point2", "t"));
-
     class_<pose2>("Pose2")
         .def_readwrite("location", &pose2::location)
         .def_readwrite("rotation", &pose2::rotation)
@@ -950,10 +1118,21 @@ BOOST_PYTHON_MODULE(naga)
 
     class_<game_object, boost::shared_ptr<game_object>>("GameObject")
         .def_readwrite("pose", &game_object::pose)
+        .def("add_component", &game_object::add_component_by_type)
+        .def("add_component_by_name", &game_object::add_component_by_name)
+        .def("get_component", &game_object::get_component_by_type)
         ;
 
-    class_<game_component, boost::shared_ptr<game_component>>("GameComponent", no_init)
+    // COMPONENTS
+    class_<game_component, boost::shared_ptr<game_component>>("GameComponentBase", no_init)
+        .add_property("owner", make_function(&game_component::get_owner, return_value_policy<copy_const_reference>()))
         ;
+
+    class_<game_component_wrapper, boost::shared_ptr<game_component_wrapper>, noncopyable>("GameComponent", init<>())
+        .def("on_tick", &game_component_wrapper::on_tick)
+        .def("on_input_event", &game_component_wrapper::on_input_event)
+        .def("on_input_event_base", &game_component_wrapper::on_input_event_base)
+        .add_property("owner", make_function(&game_component_wrapper::get_owner, return_value_policy<copy_const_reference>()));
 
     class_<std::vector<boost::shared_ptr<game_object>>>("GameObjectVec")
         .def(vector_indexing_suite<std::vector<boost::shared_ptr<game_object>>>());
@@ -966,7 +1145,7 @@ BOOST_PYTHON_MODULE(naga)
         ;
 
     {
-        auto camera_scope = class_<camera_component, bases<game_component>, boost::shared_ptr<camera_component>>("CameraComponent")
+        auto camera_scope = class_<camera_component, bases<game_component>, boost::shared_ptr<camera_component>>("CameraComponent", init<>())
             .def_readwrite("near", &camera_component::near)
             .def_readwrite("far", &camera_component::far)
             .def_readwrite("fov", &camera_component::fov)
@@ -998,4 +1177,7 @@ BOOST_PYTHON_MODULE(naga)
         //.add_property("state", &audio_source::get_state);
         //.add_property("location", &audio_source::get_location)
         //;
+
+    // PHYSICS
+    class_<physics_simulation, boost::shared_ptr<physics_simulation>, noncopyable>("PhysicsSimulation");
 }

@@ -30,8 +30,8 @@ inline void read(std::istream& istream, std::array<T, N>& data)
     istream.read(reinterpret_cast<char*>(data.data()), sizeof(T) * N);
 }
 
-//TODO: not the most efficient thing in the world, ask on SO how this might be done better
-//drawbacks:
+// TODO: not the most efficient thing in the world, ask on SO how this might be done better
+// drawbacks:
 // T must have a default constructor
 template<typename T>
 inline void read(std::istream& istream, std::vector<T>& data, size_t count)
@@ -90,6 +90,12 @@ namespace glm
         std::ostream& operator<<(std::ostream& ostream, const tvec4<T>& v)
         {
             return ostream << "(" << v.x << "," << v.y << "," << v.z << "," << v.w << ")";
+        }
+
+        template<typename T>
+        std::ostream& operator<<(std::ostream& ostream, const tquat<T>& q)
+        {
+            return ostream << "(" << q.x << "," << q.y << "," << q.z << "," << q.w << ")";
         }
     }
 }

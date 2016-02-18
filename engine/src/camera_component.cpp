@@ -10,6 +10,8 @@
 
 namespace naga
 {
+    const char* camera_component::component_name = "CameraComponent";
+
     camera_params camera_component::get_params(const gpu_viewport_type& viewport) const
     {
         const auto aspect = static_cast<f32>(viewport.width) / glm::max(static_cast<f32>(viewport.height), 1.0f);
@@ -21,13 +23,11 @@ namespace naga
         switch (projection_type)
         {
         case projection_type_e::ORTHOGRAPHIC:
-        {
             params.projection_matrix = glm::ortho(viewport.x, viewport.x + viewport.width, viewport.y + viewport.height, viewport.y);
-        }
+            break;
         case projection_type_e::PERSPECTIVE:
-        {
             params.projection_matrix = glm::perspective(fov, aspect, near, far);
-        }
+            break;
         }
 
         const auto forward = vec3(0, 0, 1) * glm::mat3_cast(pose.rotation);

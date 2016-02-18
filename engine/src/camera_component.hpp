@@ -7,11 +7,14 @@
 #include "game_component.hpp"
 #include "camera_params.hpp"
 #include "gpu_defs.hpp"
+#include "game_component_defs.hpp"
 
 namespace naga
 {
     struct camera_component : game_component
     {
+        static const char* component_name;
+
         enum class projection_type_e
         {
             ORTHOGRAPHIC,
@@ -27,7 +30,8 @@ namespace naga
         line3 get_ray(const vec2_f64& screen_location) const;
         camera_params get_params(const gpu_viewport_type& viewport) const;
 
-        camera_component() = default;
+        camera_component() { }
+        ~camera_component() { }
 
     private:
         mat4 view_matrix;

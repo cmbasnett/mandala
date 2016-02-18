@@ -5,9 +5,17 @@
 #include "gpu.hpp"
 #include "frame_buffer.hpp"
 #include "camera_params.hpp"
+#include "physics_simulation.hpp"
+#include "resource_mgr.hpp"
+#include "bsp.hpp"
 
 namespace naga
 {
+    scene::scene()
+    {
+        bsp = resources.get<naga::bsp>(hash("dod_flash.bsp"));
+    }
+
     void scene::render(const boost::shared_ptr<frame_buffer>& frame_buffer, const boost::shared_ptr<game_object>& camera) const
     {
         gpu_viewport_type viewport;
@@ -17,16 +25,21 @@ namespace naga
         gpu.viewports.push(viewport);
         gpu.frame_buffers.push(frame_buffer);
 
-        auto& depth_state = gpu.depth.get_state();
+        auto depth_state = gpu.depth.get_state();
         depth_state.should_test = true;
         depth_state.should_write_mask = true;
         gpu.depth.push_state(depth_state);
 
         gpu.clear(gpu_t::CLEAR_FLAG_COLOR | gpu_t::CLEAR_FLAG_DEPTH | gpu_t::CLEAR_FLAG_STENCIL);
 
-        //auto camera_component = camera->get_component<camera_component>();
+        auto camera_comp = camera->get_component<camera_component>();
 
-        //const auto camera_params = camera_component->get_params(viewport);
+        if (camera_comp)
+        {
+            const auto camera_params = camera_comp->get_params(viewport);
+
+            bsp->render(camera_params);
+        }
 
         gpu.depth.pop_state();
 
@@ -48,5 +61,11 @@ namespace naga
         {
             game_object->on_input_event(input_event);
         }
+    }
+
+    void scene::add_game_object(const boost::shared_ptr<game_object>& game_object)
+    {
+        //TODO: the same actor can be added twice (double tick etc.)
+        game_objects.push_back(game_object);
     }
 }

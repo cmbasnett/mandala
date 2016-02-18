@@ -283,9 +283,6 @@
     <ClInclude Include="..\..\src\game.hpp">
       <Filter>app</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\actor.hpp">
-      <Filter>actors</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\stream_redirect.hpp">
       <Filter>io</Filter>
     </ClInclude>
@@ -320,10 +317,27 @@
     <ClInclude Include="..\..\src\monitor.hpp">
       <Filter>platform</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\game_object.hpp" />
-    <ClInclude Include="..\..\src\game_component.hpp" />
-    <ClInclude Include="..\..\src\camera_component.hpp" />
-    <ClInclude Include="..\..\src\game_component_collection.hpp" />
+    <ClInclude Include="..\..\src\physics_simulation.hpp">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\camera_component.hpp">
+      <Filter>components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\game_component.hpp">
+      <Filter>components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\game_component_defs.hpp">
+      <Filter>components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\game_object.hpp">
+      <Filter>objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\mesh_component.hpp">
+      <Filter>components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\type_object.hpp">
+      <Filter>python</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\app.cpp">
@@ -468,13 +482,18 @@
     <ClCompile Include="..\..\src\terrain.cpp">
       <Filter>resources\terrain</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\actor.cpp">
-      <Filter>actors</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\state.cpp">
       <Filter>states</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\camera_component.cpp" />
+    <ClCompile Include="..\..\src\physics_simulation.cpp">
+      <Filter>physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\camera_component.cpp">
+      <Filter>components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\game_object.cpp">
+      <Filter>objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="app">
@@ -563,6 +582,15 @@
     </Filter>
     <Filter Include="scene">
       <UniqueIdentifier>{8b27e0ed-8a61-45b2-8b57-7bbd4998b8f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="physics">
+      <UniqueIdentifier>{7cf10140-c73b-4e04-9c01-1f781fec0d47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="components">
+      <UniqueIdentifier>{fb8c91d5-8dc7-4b5b-99db-aba8c8375775}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="objects">
+      <UniqueIdentifier>{db3dda54-204e-49d7-94ce-d3a0a2df262f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
