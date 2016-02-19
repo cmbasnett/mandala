@@ -354,6 +354,7 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="..\..\src\gui_layout.cpp" />
     <ClCompile Include="..\..\src\gui_node.cpp" />
     <ClCompile Include="..\..\src\gui_scroll.cpp" />
+    <ClCompile Include="..\..\src\heightmap.cpp" />
     <ClCompile Include="..\..\src\image.cpp" />
     <ClCompile Include="..\..\src\physics_simulation.cpp" />
     <ClCompile Include="..\..\src\scene.cpp" />

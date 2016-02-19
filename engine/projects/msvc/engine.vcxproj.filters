@@ -491,6 +491,9 @@
     <ClCompile Include="..\..\src\game_object.cpp">
       <Filter>objects</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\heightmap.cpp">
+      <Filter>resources\terrain</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="app">
