@@ -71,10 +71,15 @@ namespace naga
 
         color_type = get_color_type(png_color_type);
 
+        channel_count = png_get_channels(png_ptr, info_ptr);
+
         auto row_bytes = png_get_rowbytes(png_ptr, info_ptr);
+
+        pixel_stride = row_bytes / size.x;
+
         auto data_length = row_bytes * size.y;
 
-        data.reserve(data_length);
+        data.resize(data_length);
 
         auto row_pointers = png_get_rows(png_ptr, info_ptr);
 

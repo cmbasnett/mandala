@@ -19,9 +19,9 @@ namespace naga
         {
             static const size_t POINT_COUNT = 3;
 
-            typedef glm::detail::tvec2<T> point_type;
+            typedef glm::detail::tvec3<T> point_type;
             typedef std::array<point_type, POINT_COUNT> points_type;
-            typedef glm::detail::tvec2<f32> normal_type;
+            typedef glm::detail::tvec3<f32> normal_type;
             typedef triangle3<T> type;
 
             triangle3() = default;
@@ -93,19 +93,19 @@ namespace naga
         };
     }
 
-    typedef detail::triangle2<i8> triangle2_i8;
-    typedef detail::triangle2<i16> triangle2_i16;
-    typedef detail::triangle2<i32> triangle2_i32;
-    typedef detail::triangle2<i64> triangle2_i64;
-    typedef detail::triangle2<f32> triangle2_f32;
-    typedef detail::triangle2<f64> triangle2_f64;
+    typedef details::triangle2<i8> triangle2_i8;
+    typedef details::triangle2<i16> triangle2_i16;
+    typedef details::triangle2<i32> triangle2_i32;
+    typedef details::triangle2<i64> triangle2_i64;
+    typedef details::triangle2<f32> triangle2_f32;
+    typedef details::triangle2<f64> triangle2_f64;
     typedef triangle2_f32 triangle2;
 
-    typedef detail::triangle3<i8> triangle3_i8;
-    typedef detail::triangle3<i16> triangle3_i16;
-    typedef detail::triangle3<i32> triangle3_i32;
-    typedef detail::triangle3<i64> triangle3_i64;
-    typedef detail::triangle3<f32> triangle3_f32;
-    typedef detail::triangle3<f64> triangle3_f64;
+    typedef details::triangle3<i8> triangle3_i8;
+    typedef details::triangle3<i16> triangle3_i16;
+    typedef details::triangle3<i32> triangle3_i32;
+    typedef details::triangle3<i64> triangle3_i64;
+    typedef details::triangle3<f32> triangle3_f32;
+    typedef details::triangle3<f64> triangle3_f64;
     typedef triangle3_f32 triangle3;
 }

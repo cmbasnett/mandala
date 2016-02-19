@@ -43,6 +43,24 @@ namespace naga
         return params;
     }
     
+    // TODO: there is an inherent problem here in that get_ray will likely be called before
+    // the parameters have been calculated properly, and will cause the results of this
+    // function to lag one frame behind what's actually on the screen.
+    // 
+    // one solution would be to have components know when their pose (eg. on_pose_changed)
+    // has been changed. in this case, we would listen for on_pose_changed, and then, if
+    // necessary, we would recalculate the parameters (by calling get_params)
+    // and then get the ray as normal. this would be problematic because it would 
+    // probably add thousands of calls to components that have no business responding
+    // to pose changes.
+    //
+    // the other solution would be to always recalculate the matrices every frame.
+    // the calculations are negligible and would only be happening once per frame.
+    //
+    // another option is to simply have @get_ray accept a viewport, and calculate the 
+    // matrices before we use them in the unProject functions. this would probably be
+    // perfectly acceptable since get_ray wouldn't likely be happening more than
+    // once per frame.
     line3 camera_component::get_ray(const vec2_f64& screen_location) const
     {
         vec4 viewport = gpu.viewports.top();

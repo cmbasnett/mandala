@@ -18,7 +18,7 @@ namespace naga
     {
         typedef std::vector<u8> data_type;
         typedef i32 bit_depth_type;
-        typedef glm::detail::tvec2<u32> size_type;
+        typedef vec2_u32 size_type;
 
         image() = default;
         image(std::istream& istream);
@@ -28,6 +28,10 @@ namespace naga
         color_type get_color_type() const { return color_type; }
         const data_type& get_data() const { return data; }
         const size_type& get_size() const { return size; }
+        u32 get_width() const { return size.x; }
+        u32 get_height() const { return size.y; }
+        size_t get_pixel_stride() const { return pixel_stride; }
+        size_t get_channel_count() const { return channel_count; }
         std::mutex& get_data_mutex() { return data_mutex; }
 
     private:
@@ -38,6 +42,8 @@ namespace naga
         i32 bit_depth = 0;
         color_type color_type = color_type::G;
         data_type data;
+        size_t pixel_stride = 1;
+        size_t channel_count = 1;
         std::mutex data_mutex;
     };
 }

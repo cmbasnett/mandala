@@ -13,12 +13,12 @@
 
 namespace naga
 {
-    struct camera;
+    struct camera_params;
 
     struct terrain
     {
         static const auto MAX_SIZE = 2048;
-        static const auto CHUNK_SIZE = 8;
+        static const auto CHUNK_SIZE = 16;
         static const auto MAX_CHUNKS = (MAX_SIZE / CHUNK_SIZE) * (MAX_SIZE / CHUNK_SIZE);
         static const auto PATCHES_PER_CHUNK = (CHUNK_SIZE * CHUNK_SIZE);
         static const auto VERTICES_PER_CHUNK = (CHUNK_SIZE * CHUNK_SIZE) + ((CHUNK_SIZE + 1) * (CHUNK_SIZE + 1));
@@ -38,11 +38,12 @@ namespace naga
             std::bitset<PATCHES_PER_CHUNK> patch_holes;
         };
 
+        terrain(const boost::shared_ptr<image>& image);
         terrain(size_type width, size_type height);
 
-		void render(const camera& camera) const;
+		void render(const camera_params& camera) const;
 		f32 get_height(const vec2& location) const;
-		vec3 trace(const line3& ray) const;
+		//vec3 trace(const line3& ray) const;
 
         const heightmap& get_heightmap() const { return heightmap; }
         const quadtree& get_quadtree() const { return quadtree; }
@@ -54,5 +55,6 @@ namespace naga
         boost::multi_array<chunk_t, 2> chunks;
         boost::shared_ptr<vertex_buffer_type> vertex_buffer;
         boost::shared_ptr<index_buffer_type> index_buffer;
+        size_t chunk_count;
     };
 }

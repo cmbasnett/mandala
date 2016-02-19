@@ -8,12 +8,15 @@
 #include "physics_simulation.hpp"
 #include "resource_mgr.hpp"
 #include "bsp.hpp"
+#include "terrain.hpp"
+#include "image.hpp"
 
 namespace naga
 {
     scene::scene()
     {
-        bsp = resources.get<naga::bsp>(hash("dod_flash.bsp"));
+        //bsp = resources.get<naga::bsp>(hash("dod_flash.bsp"));
+        terrain = boost::make_shared<naga::terrain>(resources.get<image>(hash("mountains512.png")));
     }
 
     void scene::render(const boost::shared_ptr<frame_buffer>& frame_buffer, const boost::shared_ptr<game_object>& camera) const
@@ -34,13 +37,12 @@ namespace naga
 
         auto camera_comp = camera->get_component<camera_component>();
 
-        auto b = camera->get_component_by_name("QuakeCameraControlComponent");
-
         if (camera_comp)
         {
             const auto camera_params = camera_comp->get_params(viewport);
 
-            bsp->render(camera_params);
+            //bsp->render(camera_params);
+            terrain->render(camera_params);
         }
 
         gpu.depth.pop_state();

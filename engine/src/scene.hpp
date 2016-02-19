@@ -16,6 +16,7 @@ namespace naga
     struct input_event_t;
     struct physics_simulation;
     struct bsp;
+    struct terrain;
 
     struct scene
     {
@@ -34,5 +35,6 @@ namespace naga
         boost::shared_ptr<physics_simulation> physics;
         octree octree;
         boost::shared_ptr<bsp> bsp;
+        boost::shared_ptr<terrain> terrain;
     };
 }
