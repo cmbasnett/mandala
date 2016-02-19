@@ -25,6 +25,7 @@ namespace naga
         state_t get_state() const { return state; }
 
         boost::function<void(boost::shared_ptr<gui_node>&)> on_state_changed;
+		boost::function<void(boost::shared_ptr<gui_node>&)> on_press;
 
     private:
         state_t state = state_t::IDLE;

@@ -15,7 +15,7 @@ namespace naga
 
         struct node
         {
-            typedef std::array<std::unique_ptr<node>, 4> children_type;
+			typedef std::array<std::shared_ptr<node>, 4> children_type;
 
             node(const bounds_type& bounds) :
                 bounds(bounds)
@@ -27,10 +27,10 @@ namespace naga
                 const auto child_bounds = bounds_type(bounds.min, bounds.center());
                 const auto child_bounds_size = child_bounds.size();
 
-                children[0] = std::make_unique<node>(child_bounds);
-                children[1] = std::make_unique<node>(child_bounds + bounds_type::value_type(child_bounds_size.x, 0));
-                children[1] = std::make_unique<node>(child_bounds + bounds_type::value_type(0, child_bounds_size.y));
-                children[3] = std::make_unique<node>(child_bounds + child_bounds_size);
+                children[0] = std::make_shared<node>(child_bounds);
+				children[1] = std::make_shared<node>(child_bounds + bounds_type::value_type(child_bounds_size.x, 0));
+				children[1] = std::make_shared<node>(child_bounds + bounds_type::value_type(0, child_bounds_size.y));
+				children[3] = std::make_shared<node>(child_bounds + child_bounds_size);
             }
 
             bool is_leaf() const
@@ -42,6 +42,11 @@ namespace naga
             {
                 return bounds;
             }
+
+			const children_type& get_children() const
+			{
+				return children;
+			}
 
         private:
             bounds_type bounds;
@@ -55,13 +60,14 @@ namespace naga
                 throw std::invalid_argument("size cannot be 0");
             }
 
-            root = std::make_unique<node>(bounds_type(bounds_type::value_type(-size / 2), bounds_type::value_type(size / 2)));
+            root = std::make_shared<node>(bounds_type(bounds_type::value_type(-size / 2), bounds_type::value_type(size / 2)));
             root->branch();
         }
 
         const bounds_type& get_bounds() const { return root->get_bounds(); }
+		const std::shared_ptr<node>& get_root() const { return root; }
 
     private:
-        std::unique_ptr<node> root;
+        std::shared_ptr<node> root;
     };
 }

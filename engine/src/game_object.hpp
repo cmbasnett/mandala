@@ -41,7 +41,7 @@ namespace naga
 
             if (!component_extract.check())
             {
-                return boost::shared_ptr<T>();
+				return nullptr;
             }
 
             return component_extract();
@@ -50,17 +50,9 @@ namespace naga
         template<typename T = std::enable_if<std::is_base_of<game_component, T>::value>::type>
         boost::shared_ptr<T> get_component() const
         {
-            static hash component_name_hash = hash(T::component_name);
+			auto component = get_component_by_name(T::component_name);
 
-            //TODO: component name is not guaranteed to be the same as the Python name.
-            auto type_components_itr = type_components.find(component_name_hash);
-
-            if (type_components_itr == type_components.end())
-            {
-                return boost::shared_ptr<T>();
-            }
-
-            return boost::static_pointer_cast<T, game_component>(*(type_components_itr->second.rbegin()));
+            return boost::static_pointer_cast<T, game_component>(component);
         }
 
         boost::shared_ptr<game_component> get_component_by_type(type_object type_object);

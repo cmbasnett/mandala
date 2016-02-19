@@ -17,58 +17,58 @@ namespace naga
             throw std::invalid_argument("height cannot be 0");
         }
 
-        if (width > max_size)
+        if (width > MAX_SIZE)
         {
             std::ostringstream oss;
-            oss << "width cannot exceed " << max_size;
+            oss << "width cannot exceed " << MAX_SIZE;
             throw std::invalid_argument(oss.str());
         }
 
-        if (depth > max_size)
+        if (depth > MAX_SIZE)
         {
             std::ostringstream oss;
-            oss << "width cannot exceed " << max_size;
+            oss << "width cannot exceed " << MAX_SIZE;
             throw std::invalid_argument(oss.str());
         }
 
-        if (width % chunk_size != 0)
+        if (width % CHUNK_SIZE != 0)
         {
             std::ostringstream oss;
-            oss << "width must be multiple of " << chunk_size;
+            oss << "width must be multiple of " << CHUNK_SIZE;
             throw std::invalid_argument(oss.str());
         }
 
-        if (depth % chunk_size != 0)
+        if (depth % CHUNK_SIZE != 0)
         {
             std::ostringstream oss;
-            oss << "height must be multiple of " << chunk_size;
+            oss << "height must be multiple of " << CHUNK_SIZE;
             throw std::invalid_argument(oss.str());
         }
 
-        const chunk_index_type chunk_x_count = width / chunk_size;
-        const chunk_index_type chunk_z_count = depth / chunk_size;
+        const chunk_index_type chunk_x_count = width / CHUNK_SIZE;
+        const chunk_index_type chunk_z_count = depth / CHUNK_SIZE;
         const auto chunk_count = chunk_x_count * chunk_z_count;
 
         std::vector<vertex_type> vertices;
-        vertices.reserve(chunk_count * vertices_per_chunk);
+        vertices.reserve(chunk_count * VERTICES_PER_CHUNK);
 
         // build vertex buffer
         for (chunk_index_type chunk_z = 0; chunk_z < chunk_z_count; ++chunk_z)
         {
             for (chunk_index_type chunk_x = 0; chunk_x < chunk_x_count; ++chunk_x)
             {
-                for (auto patch_z = 0; patch_z <= chunk_size; ++patch_z)
+                for (auto patch_z = 0; patch_z <= CHUNK_SIZE; ++patch_z)
                 {
-                    for (auto patch_x = 0; patch_x <= chunk_size; ++patch_x)
+                    for (auto patch_x = 0; patch_x <= CHUNK_SIZE; ++patch_x)
                     {
-                        vertices.push_back(vertex_type(glm::vec3((chunk_x * chunk_size) + patch_x, 0, (chunk_z * chunk_size) + patch_z), glm::vec4(1)));
+						vertices.push_back(vertex_type(glm::vec3((chunk_x * CHUNK_SIZE) + patch_x, 0, (chunk_z * CHUNK_SIZE) + patch_z), glm::vec4(1)));
                     }
 
-                    if (patch_z < chunk_size)
+                    if (patch_z < CHUNK_SIZE)
                     {
-                        for (auto patch_x = 0; patch_x < chunk_size; ++patch_x)
+						for (auto patch_x = 0; patch_x < CHUNK_SIZE; ++patch_x)
                         {
-                            vertices.push_back(vertex_type(glm::vec3((chunk_x * chunk_size) + patch_x + 0.5f, 0, (chunk_z * chunk_size) + patch_z + 0.5f), glm::vec4(1)));
+							vertices.push_back(vertex_type(glm::vec3((chunk_x * CHUNK_SIZE) + patch_x + 0.5f, 0, (chunk_z * CHUNK_SIZE) + patch_z + 0.5f), glm::vec4(1)));
                         }
                     }
                 }
@@ -79,19 +79,19 @@ namespace naga
 
         // index buffer
         std::vector<index_type> indices;
-        indices.reserve(chunk_count * indices_per_chunk);
+        indices.reserve(chunk_count * INDICES_PER_CHUNK);
 
         for (chunk_index_type chunk_x = 0; chunk_x < chunk_x_count; ++chunk_x)
         {
             for (chunk_index_type chunk_z = 0; chunk_z < chunk_z_count; ++chunk_z)
             {
-                const auto chunk_index_start = (chunk_z * chunk_x_count) * indices_per_chunk;
+                const auto chunk_index_start = (chunk_z * chunk_x_count) * INDICES_PER_CHUNK;
 
-                for (auto patch_z = 0; patch_z <= chunk_size; ++patch_z)
+				for (auto patch_z = 0; patch_z <= CHUNK_SIZE; ++patch_z)
                 {
-                    const auto strip_index_start = chunk_index_start + (indices_per_strip * patch_z);
+                    const auto strip_index_start = chunk_index_start + (INDICES_PER_STRIP * patch_z);
 
-                    for (auto patch_x = 0; patch_x < chunk_size; ++patch_x)
+                    for (auto patch_x = 0; patch_x < CHUNK_SIZE; ++patch_x)
                     {
                         // z
                         // ^ 3---4
@@ -99,7 +99,7 @@ namespace naga
                         // | 0---1
                         // +---- > x
                         static const auto local_patch_indices = { 2, 0, 1, 2, 1, 4, 2, 4, 3, 2, 3, 0 };
-                        const auto patch_index_start = strip_index_start + (indices_per_patch * patch_x);
+                        const auto patch_index_start = strip_index_start + (INDICES_PER_PATCH * patch_x);
 
                         const index_type patch_indices[5] = {
                             patch_index_start + 0,
@@ -120,5 +120,49 @@ namespace naga
 
         index_buffer = gpu_buffers.make<index_buffer_type>().lock();
         index_buffer->data(indices, gpu_t::buffer_usage::STATIC_DRAW);
-    }
+	}
+
+	void terrain::render(const camera& camera) const
+	{
+	}
+
+	f32 terrain::get_height(const vec2& location) const
+	{
+		std::function<bool(const boost::shared_ptr<quadtree::node>)> traverse_quadtree = [&](const boost::shared_ptr<quadtree::node> node)
+		{
+			if (!contains(node->get_bounds(), location))
+			{
+				return false;
+			}
+
+			if (node->is_leaf())
+			{
+
+				return true;
+			}
+			else
+			{
+				for (const auto child : node->get_children())
+				{
+					if (traverse_quadtree(child))
+					{
+						return true;
+					}
+				}
+
+				return false;
+			}
+		};
+		
+		f32 height = 0.0f;
+
+		traverse_quadtree(quadtree.get_root(), height);
+
+		return height;
+	}
+
+	vec3 terrain::trace(const line3& ray) const
+	{
+		return vec3();
+	}
 }

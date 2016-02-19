@@ -36,6 +36,11 @@ namespace naga
                         on_state_changed(shared_from_this());
                     }
 
+					if (on_press)
+					{
+						on_press(shared_from_this());
+					}
+
                     return true;
                 }
                 break;

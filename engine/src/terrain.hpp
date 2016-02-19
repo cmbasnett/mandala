@@ -17,33 +17,36 @@ namespace naga
 
     struct terrain
     {
-        static const auto max_size = 2048;
-        typedef index_type<max_size>::type size_type;
-        static const auto chunk_size = 8;
-        static const auto max_chunks = (max_size / chunk_size) * (max_size / chunk_size);
-        typedef index_type<max_chunks>::type chunk_index_type;
-        static const auto patches_per_chunk = (chunk_size * chunk_size);
-        static const auto vertices_per_chunk = (chunk_size * chunk_size) + ((chunk_size + 1) * (chunk_size + 1));
-        static const auto indices_per_patch = 12;
-        static const auto indices_per_strip = indices_per_patch * chunk_size;
-        static const auto indices_per_chunk = indices_per_strip * chunk_size;
+        static const auto MAX_SIZE = 2048;
+        static const auto CHUNK_SIZE = 8;
+        static const auto MAX_CHUNKS = (MAX_SIZE / CHUNK_SIZE) * (MAX_SIZE / CHUNK_SIZE);
+        static const auto PATCHES_PER_CHUNK = (CHUNK_SIZE * CHUNK_SIZE);
+        static const auto VERTICES_PER_CHUNK = (CHUNK_SIZE * CHUNK_SIZE) + ((CHUNK_SIZE + 1) * (CHUNK_SIZE + 1));
+        static const auto INDICES_PER_PATCH = 12;
+        static const auto INDICES_PER_STRIP = INDICES_PER_PATCH * CHUNK_SIZE;
+        static const auto INDICES_PER_CHUNK = INDICES_PER_STRIP * CHUNK_SIZE;
 
-        typedef index_type<indices_per_chunk * max_chunks>::type index_type;
+		typedef index_type<MAX_SIZE>::type size_type;
+		typedef index_type<MAX_CHUNKS>::type chunk_index_type;
+		typedef index_type<INDICES_PER_CHUNK * MAX_CHUNKS>::type index_type;
         typedef index_buffer<index_type> index_buffer_type;
         typedef basic_gpu_program::vertex_type vertex_type;
         typedef vertex_buffer<vertex_type> vertex_buffer_type;
 
         struct chunk_t
         {
-            std::bitset<patches_per_chunk> patch_holes;
+            std::bitset<PATCHES_PER_CHUNK> patch_holes;
         };
 
         terrain(size_type width, size_type height);
 
-        void render(const camera& camera) const;
+		void render(const camera& camera) const;
+		f32 get_height(const vec2& location) const;
+		vec3 trace(const line3& ray) const;
 
         const heightmap& get_heightmap() const { return heightmap; }
         const quadtree& get_quadtree() const { return quadtree; }
+
 
     private:
         heightmap heightmap;
