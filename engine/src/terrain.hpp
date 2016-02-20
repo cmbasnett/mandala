@@ -33,7 +33,7 @@ namespace naga
         typedef basic_gpu_program::vertex_type vertex_type;
         typedef vertex_buffer<vertex_type> vertex_buffer_type;
 
-        struct chunk_t
+        struct chunk
         {
             std::bitset<PATCHES_PER_CHUNK> patch_holes;
         };
@@ -52,7 +52,7 @@ namespace naga
     private:
         heightmap heightmap;
         quadtree quadtree;
-        boost::multi_array<chunk_t, 2> chunks;
+        boost::multi_array<chunk, 2> chunks;
         boost::shared_ptr<vertex_buffer_type> vertex_buffer;
         boost::shared_ptr<index_buffer_type> index_buffer;
         size_t chunk_count;

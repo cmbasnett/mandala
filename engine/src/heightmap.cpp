@@ -14,23 +14,35 @@ namespace naga
     {
         auto data_iter = image->get_data().begin();
 
-        for (size_t y = 0; y < image->get_height(); ++y)
+        for (u32 y = 0; y < image->get_height(); ++y)
         {
-            for (size_t x = 0; x < image->get_width(); ++x)
+			for (u32 x = 0; x < image->get_width(); ++x)
             {
                 inner[y][x] = (static_cast<f32>(*data_iter) / 255.0f) * 32.0f;
 
                 data_iter += image->get_pixel_stride();
             }
         }
+
+		for (u32 y = 1; y < image->get_height() - 1; ++y)
+		{
+			for (u32 x = 1; x < image->get_width() - 1; ++x)
+			{
+				outer[y][x] = (
+					inner[y - 1][x - 1] +
+					inner[y - 1][x + 0] +
+					inner[y + 0][x - 1] +
+					inner[y + 0][x + 0]) / 4;
+			}
+		}
     }
 
-    f32 heightmap::get_outer_height(i32 x, i32 z) const
+	f32 heightmap::get_outer_height(u32 x, u32 z) const
     {
         return outer[x][z];
     }
 
-    f32 heightmap::get_inner_height(i32 x, i32 z) const
+	f32 heightmap::get_inner_height(u32 x, u32 z) const
     {
         return inner[x][z];
     }
@@ -78,16 +90,18 @@ namespace naga
             triangle3(vertices[3], vertices[0], vertices[2])
         };
 
-        auto x_whole = 1.0f;
-        auto z_whole = 1.0f;
+        auto x_whole = 0.0f;
+        auto z_whole = 0.0f;
         const auto x_fractional = glm::modf(x, x_whole);
         const auto z_fractional = glm::modf(z, z_whole);
 
         const auto fractional = vec2(x_fractional, z_fractional);
-        const auto fractional_normalized = glm::normalize(fractional);
 
         if (fractional.x > fractional.y)
         {
+			static auto t = triangle2(vec2(0), vec2(1, 0), vec2(1, 1));
+
+			auto bary = barycentric(fractional, t);
         }
         else
         {

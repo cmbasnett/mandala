@@ -27,8 +27,8 @@ namespace naga
 
         size_t get_width() const { return width; }
         size_t get_depth() const { return depth; }
-        f32 get_outer_height(i32 x, i32 z) const;
-        f32 get_inner_height(i32 x, i32 z) const;
+		f32 get_outer_height(u32 x, u32 z) const;
+		f32 get_inner_height(u32 x, u32 z) const;
         f32 get_height(f32 x, f32 z) const;
         f32 get_height(const vec2& location) const;
 

@@ -292,9 +292,6 @@
     <ClInclude Include="..\..\src\octtree.hpp">
       <Filter>scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\quadtree.hpp">
-      <Filter>scene</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\cache_mgr.hpp">
       <Filter>cache</Filter>
     </ClInclude>
@@ -334,6 +331,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\type_object.hpp">
       <Filter>python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\quadtree.hpp">
+      <Filter>resources\terrain</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

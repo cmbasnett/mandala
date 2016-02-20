@@ -9,7 +9,7 @@ namespace naga
 {
     terrain::terrain(const boost::shared_ptr<image>& image) :
         heightmap(image),
-        quadtree(static_cast<f32>(std::max(image->get_size().x, image->get_size().y)))
+        quadtree(static_cast<f32>(std::max(image->get_size().x, image->get_size().y)), CHUNK_SIZE)
     {
         auto width = image->get_width();
         auto depth = image->get_height();;
