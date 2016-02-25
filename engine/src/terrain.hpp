@@ -1,8 +1,5 @@
 #pragma once
 
-//std
-#include <bitset>
-
 //naga
 #include "types.hpp"
 #include "heightmap.hpp"
@@ -10,6 +7,11 @@
 #include "vertex_buffer.hpp"
 #include "index_buffer.hpp"
 #include "basic_gpu_program.hpp"
+#include "line.hpp"
+#include "terrain_chunk.hpp"
+
+//bullet
+#include <BulletCollision\CollisionShapes\btHeightfieldTerrainShape.h>
 
 namespace naga
 {
@@ -33,26 +35,22 @@ namespace naga
         typedef basic_gpu_program::vertex_type vertex_type;
         typedef vertex_buffer<vertex_type> vertex_buffer_type;
 
-        struct chunk
-        {
-            std::bitset<PATCHES_PER_CHUNK> patch_holes;
-        };
-
         terrain(const boost::shared_ptr<image>& image);
         terrain(size_type width, size_type height);
 
 		void render(const camera_params& camera) const;
 		f32 get_height(const vec2& location) const;
-		//vec3 trace(const line3& ray) const;
+		vec3 trace(const line3& ray) const;
 
         const heightmap& get_heightmap() const { return heightmap; }
         const quadtree& get_quadtree() const { return quadtree; }
 
-
     private:
+        void update_chunks(const rectangle_u64& rectangle);
+
         heightmap heightmap;
         quadtree quadtree;
-        boost::multi_array<chunk, 2> chunks;
+        boost::multi_array<terrain_chunk, 2> chunks;
         boost::shared_ptr<vertex_buffer_type> vertex_buffer;
         boost::shared_ptr<index_buffer_type> index_buffer;
         size_t chunk_count;

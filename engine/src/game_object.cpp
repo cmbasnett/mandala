@@ -80,6 +80,8 @@ namespace naga
 
         components.push_back(component);
 
+        component->on_create();
+
         return component_object;
     }
 

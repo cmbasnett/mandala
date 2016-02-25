@@ -90,53 +90,53 @@ namespace naga
             triangle3(vertices[3], vertices[0], vertices[2])
         };
 
-        auto x_whole = 0.0f;
-        auto z_whole = 0.0f;
-        const auto x_fractional = glm::modf(x, x_whole);
-        const auto z_fractional = glm::modf(z, z_whole);
+   //     auto x_whole = 0.0f;
+   //     auto z_whole = 0.0f;
+   //     const auto x_fractional = glm::modf(x, x_whole);
+   //     const auto z_fractional = glm::modf(z, z_whole);
 
-        const auto fractional = vec2(x_fractional, z_fractional);
+   //     const auto fractional = vec2(x_fractional, z_fractional);
 
-        if (fractional.x > fractional.y)
-        {
-			static auto t = triangle2(vec2(0), vec2(1, 0), vec2(1, 1));
+   //     if (fractional.x > fractional.y)
+   //     {
+			//static auto t = triangle2(vec2(0), vec2(1, 0), vec2(1, 1));
 
-			auto bary = barycentric(fractional, t);
-        }
-        else
-        {
-            // 2 or 3
-        }
+			//auto bary = barycentric(fractional, t);
+   //     }
+   //     else
+   //     {
+   //         // 2 or 3
+   //     }
 
-        // Determine which triangle the location is in by getting the angle
-        // between the point and the [0,4] vector.
-        const auto theta = glm::acos(glm::dot(fractional_normalized, glm::normalize(vec2( 1.0f))));
-        const auto iota  = glm::acos(glm::dot(fractional_normalized, glm::normalize(vec2(-1.0f))));
+   //     // Determine which triangle the location is in by getting the angle
+   //     // between the point and the [0,4] vector.
+   //     const auto theta = glm::acos(glm::dot(fractional_normalized, glm::normalize(vec2( 1.0f))));
+   //     const auto iota  = glm::acos(glm::dot(fractional_normalized, glm::normalize(vec2(-1.0f))));
 
-        size_t triangle_index = 0;
+   //     size_t triangle_index = 0;
 
-        if (theta > 0.0f)
-        {
-            if (iota > 0.0f)
-            {
-                triangle_index = 0;
-            }
-            else
-            {
-                triangle_index = 1;
-            }
-        }
-        else
-        {
-            if (iota > 0.0f)
-            {
-                triangle_index = 2;
-            }
-            else
-            {
-                triangle_index = 3;
-            }
-        }
+   //     if (theta > 0.0f)
+   //     {
+   //         if (iota > 0.0f)
+   //         {
+   //             triangle_index = 0;
+   //         }
+   //         else
+   //         {
+   //             triangle_index = 1;
+   //         }
+   //     }
+   //     else
+   //     {
+   //         if (iota > 0.0f)
+   //         {
+   //             triangle_index = 2;
+   //         }
+   //         else
+   //         {
+   //             triangle_index = 3;
+   //         }
+   //     }
         
         return 0.0f;
 	}

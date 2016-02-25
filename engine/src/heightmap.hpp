@@ -32,8 +32,6 @@ namespace naga
         f32 get_height(f32 x, f32 z) const;
         f32 get_height(const vec2& location) const;
 
-		//TODO: get height @ location
-
     private:
 		size_t width;
 		size_t depth;

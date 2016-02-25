@@ -269,6 +269,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\heightmap.hpp" />
     <ClInclude Include="..\..\src\mesh_component.hpp" />
     <ClInclude Include="..\..\src\monitor.hpp" />
+    <ClInclude Include="..\..\src\rigid_body_component.hpp" />
     <ClInclude Include="..\..\src\physics_simulation.hpp" />
     <ClInclude Include="..\..\src\terrain.hpp" />
     <ClInclude Include="..\..\src\octtree.hpp" />
@@ -321,6 +322,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\stream_redirect.hpp" />
     <ClInclude Include="..\..\src\string_archive.hpp" />
     <ClInclude Include="..\..\src\string_mgr.hpp" />
+    <ClInclude Include="..\..\src\terrain_chunk.hpp" />
     <ClInclude Include="..\..\src\texture.hpp" />
     <ClInclude Include="..\..\src\triangle.hpp" />
     <ClInclude Include="..\..\src\types.hpp" />
@@ -356,7 +358,9 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="..\..\src\gui_scroll.cpp" />
     <ClCompile Include="..\..\src\heightmap.cpp" />
     <ClCompile Include="..\..\src\image.cpp" />
+    <ClCompile Include="..\..\src\rigid_body_component.cpp" />
     <ClCompile Include="..\..\src\physics_simulation.cpp" />
+    <ClCompile Include="..\..\src\quadtree.cpp" />
     <ClCompile Include="..\..\src\scene.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\material.cpp" />

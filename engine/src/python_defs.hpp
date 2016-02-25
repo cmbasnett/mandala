@@ -41,6 +41,7 @@
 #include "quake_camera.hpp"
 #include "rectangle.hpp"
 #include "resource_mgr.hpp"
+#include "rigid_body_component.hpp"
 #include "scene.hpp"
 #include "sound.hpp"
 #include "sprite_set.hpp"
@@ -1138,6 +1139,7 @@ BOOST_PYTHON_MODULE(naga)
         .def(vector_indexing_suite<std::vector<boost::shared_ptr<game_object>>>());
 
     class_<scene, boost::shared_ptr<scene>, noncopyable>("Scene")
+        .add_property("physics", make_function(&scene::get_physics, return_value_policy<copy_const_reference>()))
         .def("add_game_object", &scene::add_game_object)
         .def("render", &scene::render)
         .def("tick", &scene::tick)
@@ -1179,5 +1181,11 @@ BOOST_PYTHON_MODULE(naga)
         //;
 
     // PHYSICS
-    class_<physics_simulation, boost::shared_ptr<physics_simulation>, noncopyable>("PhysicsSimulation");
+    class_<physics_simulation, boost::shared_ptr<physics_simulation>, noncopyable>("PhysicsSimulation")
+        .add_property("gravity", &physics_simulation::get_gravity, &physics_simulation::set_gravity);
+
+    class_<rigid_body_component, bases<game_component>, boost::shared_ptr<rigid_body_component>, noncopyable>(rigid_body_component::component_name)
+        .add_property("mass", &rigid_body_component::get_mass, &rigid_body_component::set_mass)
+        .add_property("center_of_mass", &rigid_body_component::get_center_of_mass, &rigid_body_component::set_center_of_mass)
+        .add_property("aabb", &rigid_body_component::get_aabb);
 }

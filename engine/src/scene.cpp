@@ -17,6 +17,7 @@ namespace naga
     {
         //bsp = resources.get<naga::bsp>(hash("dod_flash.bsp"));
         terrain = boost::make_shared<naga::terrain>(resources.get<image>(hash("mountains512.png")));
+        physics = boost::make_shared<physics_simulation>();
     }
 
     void scene::render(const boost::shared_ptr<frame_buffer>& frame_buffer, const boost::shared_ptr<game_object>& camera) const
@@ -42,7 +43,10 @@ namespace naga
             const auto camera_params = camera_comp->get_params(viewport);
 
             //bsp->render(camera_params);
-            terrain->render(camera_params);
+            if (terrain)
+            {
+                terrain->render(camera_params);
+            }
         }
 
         gpu.depth.pop_state();
@@ -53,6 +57,8 @@ namespace naga
 
     void scene::tick(f32 dt)
     {
+        physics->step(dt);
+
         for (auto& game_object : game_objects)
         {
             game_object->on_tick(dt);
@@ -71,5 +77,7 @@ namespace naga
     {
         //TODO: the same actor can be added twice (double tick etc.)
         game_objects.push_back(game_object);
+
+        game_object->scene = shared_from_this();
     }
 }

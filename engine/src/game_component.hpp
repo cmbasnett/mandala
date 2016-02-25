@@ -4,6 +4,7 @@
 #include <boost/shared_ptr.hpp>
 
 // naga
+#include "types.hpp"
 #include "game_component_defs.hpp"
 
 namespace naga

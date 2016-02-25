@@ -93,43 +93,43 @@ namespace naga
         };
 	}
 
-	template<typename P, typename T>
-	vec2 barycentric(const glm::detail::tvec2<P>& p, const details::triangle2<T>& t)
-	{
-		auto v0 = static_cast<vec2>(t[1] - t[0]);
-		auto v1 = static_cast<vec2>(t[2] - t[0]);
-		auto v2 = static_cast<vec2>(p)-static_cast<vec2>(t[0]);
-		auto d00 = glm::dot(v0, v0);
-		auto d01 = glm::dot(v0, v1);
-		auto d11 = glm::dot(v1, v1);
-		auto d20 = glm::dot(v2, v0);
-		auto d21 = glm::dot(v2, v1);
-		auto denom = d00 * d11 - d01 * d01;
-		vec3 b;
-		b.y = (d11 * d20 - d01 * d21) / denom;
-		b.z = (d00 * d21 - d01 * d20) / denom;
-		b.x = 1.0f - r.y - r.z;
-		return b;
-	}
+	//template<typename P, typename T>
+	//vec2 barycentric(const glm::detail::tvec2<P>& p, const details::triangle2<T>& t)
+	//{
+	//	auto v0 = static_cast<vec2>(t[1] - t[0]);
+	//	auto v1 = static_cast<vec2>(t[2] - t[0]);
+	//	auto v2 = static_cast<vec2>(p)-static_cast<vec2>(t[0]);
+	//	auto d00 = glm::dot(v0, v0);
+	//	auto d01 = glm::dot(v0, v1);
+	//	auto d11 = glm::dot(v1, v1);
+	//	auto d20 = glm::dot(v2, v0);
+	//	auto d21 = glm::dot(v2, v1);
+	//	auto denom = d00 * d11 - d01 * d01;
+	//	vec3 b;
+	//	b.y = (d11 * d20 - d01 * d21) / denom;
+	//	b.z = (d00 * d21 - d01 * d20) / denom;
+	//	b.x = 1.0f - r.y - r.z;
+	//	return b;
+	//}
 
-	template<typename P, typename T>
-	vec3 barycentric(const details::triangle3<P>::point_type& p, const details::triangle3<T>& t)
-	{
-		auto v0 = static_cast<vec3>(t[1] - t[0]);
-		auto v1 = static_cast<vec3>(t[2] - t[0]);
-		auto v2 = static_cast<vec3>(p) - static_cast<vec3>(t[0]);
-		auto d00 = glm::dot(v0, v0);
-		auto d01 = glm::dot(v0, v1);
-		auto d11 = glm::dot(v1, v1);
-		auto d20 = glm::dot(v2, v0);
-		auto d21 = glm::dot(v2, v1);
-		auto denom = d00 * d11 - d01 * d01;
-		vec3 b;
-		b.y = (d11 * d20 - d01 * d21) / denom;
-		b.z = (d00 * d21 - d01 * d20) / denom;
-		b.x = 1.0f - r.y - r.z;
-		return b;
-	}
+	//template<typename P, typename T>
+	//vec3 barycentric(const details::triangle3<P>::point_type& p, const details::triangle3<T>& t)
+	//{
+	//	auto v0 = static_cast<vec3>(t[1] - t[0]);
+	//	auto v1 = static_cast<vec3>(t[2] - t[0]);
+	//	auto v2 = static_cast<vec3>(p) - static_cast<vec3>(t[0]);
+	//	auto d00 = glm::dot(v0, v0);
+	//	auto d01 = glm::dot(v0, v1);
+	//	auto d11 = glm::dot(v1, v1);
+	//	auto d20 = glm::dot(v2, v0);
+	//	auto d21 = glm::dot(v2, v1);
+	//	auto denom = d00 * d11 - d01 * d01;
+	//	vec3 b;
+	//	b.y = (d11 * d20 - d01 * d21) / denom;
+	//	b.z = (d00 * d21 - d01 * d20) / denom;
+	//	b.x = 1.0f - r.y - r.z;
+	//	return b;
+	//}
 
     typedef details::triangle2<i8> triangle2_i8;
     typedef details::triangle2<i16> triangle2_i16;

@@ -9,7 +9,7 @@ namespace naga
 {
     terrain::terrain(const boost::shared_ptr<image>& image) :
         heightmap(image),
-        quadtree(static_cast<f32>(std::max(image->get_size().x, image->get_size().y)), CHUNK_SIZE)
+        quadtree(std::max(image->get_size().x, image->get_size().y), CHUNK_SIZE)
     {
         auto width = image->get_width();
         auto depth = image->get_height();;
@@ -141,8 +141,9 @@ namespace naga
 
     terrain::terrain(size_type width, size_type depth) :
         heightmap(width, depth),
-        quadtree(std::max(width, depth))
+        quadtree(std::max(width, depth), CHUNK_SIZE)
     {
+        //TODO: construct chunks, figure out 
 	}
 
 	void terrain::render(const camera_params& camera_params) const
@@ -158,7 +159,11 @@ namespace naga
         gpu.set_uniform("view_projection_matrix", camera_params.projection_matrix * camera_params.view_matrix);
         gpu.set_uniform("color", vec4(1.0f));
 
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
         gpu.draw_elements(gpu_t::primitive_type::TRIANGLES, INDICES_PER_CHUNK * chunk_count, index_buffer_type::DATA_TYPE, 0);
+
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         gpu.programs.pop();
 
@@ -171,8 +176,13 @@ namespace naga
         return heightmap.get_height(location);
 	}
 
-	//vec3 terrain::trace(const line3& ray) const
-	//{
-	//	return vec3();
-	//}
+	vec3 terrain::trace(const line3& ray) const
+	{
+        return vec3();
+    }
+
+    void terrain::update_chunks(const rectangle_u64& rectangle)
+    {
+        //TODO: get all affected chunks in this rectangle
+    }
 }

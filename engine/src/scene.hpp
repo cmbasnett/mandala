@@ -5,6 +5,7 @@
 
 //boost
 #include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 //naga
 #include "octtree.hpp"
@@ -18,7 +19,7 @@ namespace naga
     struct bsp;
     struct terrain;
 
-    struct scene
+    struct scene : boost::enable_shared_from_this<scene>
     {
         scene();
 
@@ -30,7 +31,11 @@ namespace naga
 
         void add_game_object(const boost::shared_ptr<game_object>& game_object);
 
+        const boost::shared_ptr<physics_simulation>& get_physics() const { return physics; }
+
     private:
+        friend struct game_object;
+
         std::vector<boost::shared_ptr<game_object>> game_objects;
         boost::shared_ptr<physics_simulation> physics;
         octree octree;

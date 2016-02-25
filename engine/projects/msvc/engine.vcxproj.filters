@@ -335,6 +335,12 @@
     <ClInclude Include="..\..\src\quadtree.hpp">
       <Filter>resources\terrain</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\terrain_chunk.hpp">
+      <Filter>resources\terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rigid_body_component.hpp">
+      <Filter>physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\app.cpp">
@@ -493,6 +499,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\heightmap.cpp">
       <Filter>resources\terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\quadtree.cpp">
+      <Filter>resources\terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rigid_body_component.cpp">
+      <Filter>physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

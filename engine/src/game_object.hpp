@@ -11,15 +11,16 @@
 #include <boost\enable_shared_from_this.hpp>
 
 // naga
-#include "pose.hpp"
 #include "type_object.hpp"
 #include "hash.hpp"
+#include "pose.hpp"
 
 namespace naga
 {
     struct game_component;
     struct camera_params;
     struct input_event_t;
+    struct scene;
 
     struct game_object : boost::enable_shared_from_this<game_object>
     {
@@ -58,8 +59,13 @@ namespace naga
         boost::shared_ptr<game_component> get_component_by_type(type_object type_object);
         boost::shared_ptr<game_component> get_component_by_name(const std::string& type) const;
 
+        const boost::shared_ptr<scene>& get_scene() const { return scene; }
+
     private:
+        friend struct scene;
+
         std::map<hash, std::vector<boost::shared_ptr<game_component>>> type_components;
         std::vector<boost::shared_ptr<game_component>> components;
+        boost::shared_ptr<scene> scene;
     };
 }
