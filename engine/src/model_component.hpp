@@ -3,7 +3,8 @@
 //naga
 #include "pose.hpp"
 #include "model_skeleton.hpp"
-#include "camera_params.hpp"
+#include "game_component.hpp"
+#include "sphere.hpp"
 
 //boost
 #include <boost\shared_ptr.hpp>
@@ -13,14 +14,10 @@ namespace naga
     struct model;
     struct model_animation;
     struct material_instance;
+    struct camera_params;
 
-    struct model_instance
+    struct model_component : game_component
     {
-        model_instance(boost::shared_ptr<model> model);
-        model_instance(const hash& model_hash);
-
-        pose3 pose;
-
         void tick(f32 dt);
         void render(const camera_params& camera_params, const vec3& light_location) const;
 

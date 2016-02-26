@@ -32,7 +32,7 @@
 #include "material.hpp"
 #include "model.hpp"
 #include "model_animation.hpp"
-#include "model_instance.hpp"
+#include "model_component.hpp"
 #include "padding.hpp"
 #include "physics_simulation.hpp"
 #include "pose.hpp"
@@ -1167,8 +1167,9 @@ BOOST_PYTHON_MODULE(naga)
         .add_property("bits_per_sample", &sound::get_bits_per_sample)
         .add_property("duration", &sound::get_duration);
 
-    class_<model_instance, boost::shared_ptr<model_instance>, noncopyable>("ModelInstance", init<const naga::hash&>())
-        .def("play", &model_instance::play);
+    class_<model_component, bases<game_component>, boost::shared_ptr<model_component>, noncopyable>("ModelComponent")
+        .add_property("model", make_function(&model_component::get_model, return_value_policy<copy_const_reference>()), &model_component::set_model)
+        .def("play", &model_component::play);
 
     class_<model_animation, boost::shared_ptr<model_animation>, noncopyable>("ModelAnimation", no_init);
 

@@ -160,9 +160,6 @@
     <ClInclude Include="..\..\src\model_animation.hpp">
       <Filter>resources\model</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\model_instance.hpp">
-      <Filter>resources\model</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\model_skeleton.hpp">
       <Filter>resources\model</Filter>
     </ClInclude>
@@ -341,6 +338,9 @@
     <ClInclude Include="..\..\src\rigid_body_component.hpp">
       <Filter>physics</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\model_component.hpp">
+      <Filter>resources\model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\app.cpp">
@@ -442,9 +442,6 @@
     <ClCompile Include="..\..\src\model_animation.cpp">
       <Filter>resources\model</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\model_instance.cpp">
-      <Filter>resources\model</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\model_skeleton.cpp">
       <Filter>resources\model</Filter>
     </ClCompile>
@@ -505,6 +502,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\rigid_body_component.cpp">
       <Filter>physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\model_component.cpp">
+      <Filter>resources\model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -3,29 +3,21 @@
 
 //naga
 #include "model.hpp"
-#include "model_instance.hpp"
+#include "model_component.hpp"
 #include "model_animation.hpp"
 #include "collision.hpp"
 #include "resource_mgr.hpp"
 #include "material_instance.hpp"
 #include "line_renderer.hpp"
+#include "game_object.hpp"
+#include "camera_params.hpp"
 
 //glm
 #include <glm\glm.hpp>
 
 namespace naga
 {
-    model_instance::model_instance(boost::shared_ptr<naga::model> model)
-    {
-        set_model(model);
-    }
-
-    model_instance::model_instance(const hash& model_hash) :
-        model_instance(resources.get<naga::model>(model_hash))
-    {
-    }
-
-    void model_instance::tick(f32 dt)
+    void model_component::tick(f32 dt)
     {
         if (animation != nullptr)
         {
@@ -49,13 +41,13 @@ namespace naga
             bone_matrices[i] = skeleton.bone_matrices[i] * model->get_bones()[i].inverse_bind_pose_matrix;
         }
 
-        aabb = skeleton.aabb << pose.to_matrix();
+        aabb = skeleton.aabb << get_owner()->pose.to_matrix();
 
         sphere.origin = aabb.center();
         sphere.radius = glm::length(aabb.extents());
     }
 
-    void model_instance::render(const camera_params& camera_params, const vec3& light_location) const
+    void model_component::render(const camera_params& camera_params, const vec3& light_location) const
     {
         if (model == nullptr)
         {
@@ -69,17 +61,18 @@ namespace naga
             //return;
         }
 
+        const auto world_matrix = get_owner()->pose.to_matrix();
         auto view_projection_matrix = camera_params.projection_matrix * camera_params.view_matrix;
 
-        model->render(camera_params.location, pose.to_matrix(), view_projection_matrix, bone_matrices, light_location, mesh_materials);
+        model->render(camera_params.location, world_matrix, view_projection_matrix, bone_matrices, light_location, mesh_materials);
 
 #if defined (DEBUG)
-        render_aabb(pose.to_matrix(), view_projection_matrix, skeleton.aabb, vec4(1, 0, 0, 1));
-        render_sphere(pose.to_matrix(), view_projection_matrix, sphere);
+        render_aabb(world_matrix, view_projection_matrix, skeleton.aabb, vec4(1, 0, 0, 1));
+        render_sphere(world_matrix, view_projection_matrix, sphere);
 #endif
     }
     
-    pose3 model_instance::get_bone_pose(const hash& bone_hash) const
+    pose3 model_component::get_bone_pose(const hash& bone_hash) const
     {
         auto bone_index = model->get_bone_index(bone_hash);
 
@@ -90,10 +83,10 @@ namespace naga
             throw std::invalid_argument(oss.str().c_str());
         }
 
-		return pose * skeleton.bones[*bone_index].pose;
+        return get_owner()->pose * skeleton.bones[*bone_index].pose;
     }
 
-    void model_instance::set_model(const boost::shared_ptr<naga::model>& model)
+    void model_component::set_model(const boost::shared_ptr<naga::model>& model)
     {
         this->model = model;
 
@@ -118,7 +111,7 @@ namespace naga
         }
     }
 
-    void model_instance::play(const hash& animation_hash)
+    void model_component::play(const hash& animation_hash)
     {
         animation = resources.get<model_animation>(animation_hash);
     }

@@ -290,7 +290,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\model.hpp" />
     <ClInclude Include="..\..\src\model_animation.hpp" />
     <ClInclude Include="..\..\src\model_gpu_program.hpp" />
-    <ClInclude Include="..\..\src\model_instance.hpp" />
+    <ClInclude Include="..\..\src\model_component.hpp" />
     <ClInclude Include="..\..\src\model_skeleton.hpp" />
     <ClInclude Include="..\..\src\openal.hpp" />
     <ClInclude Include="..\..\src\opengl.hpp" />
@@ -367,7 +367,7 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="..\..\src\material_instance.cpp" />
     <ClCompile Include="..\..\src\model.cpp" />
     <ClCompile Include="..\..\src\model_animation.cpp" />
-    <ClCompile Include="..\..\src\model_instance.cpp" />
+    <ClCompile Include="..\..\src\model_component.cpp" />
     <ClCompile Include="..\..\src\model_skeleton.cpp" />
     <ClCompile Include="..\..\src\pack.cpp" />
     <ClCompile Include="..\..\src\pack_mgr.cpp" />
