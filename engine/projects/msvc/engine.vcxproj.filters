@@ -296,12 +296,6 @@
       <Filter>type_traits</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\bisect.hpp" />
-    <ClInclude Include="..\..\src\terrain.hpp">
-      <Filter>resources\terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\heightmap.hpp">
-      <Filter>resources\terrain</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\scene.hpp">
       <Filter>scene</Filter>
     </ClInclude>
@@ -314,32 +308,38 @@
     <ClInclude Include="..\..\src\physics_simulation.hpp">
       <Filter>physics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\camera_component.hpp">
-      <Filter>components</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\game_component.hpp">
-      <Filter>components</Filter>
+      <Filter>game components</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\game_object.hpp">
-      <Filter>objects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\mesh_component.hpp">
-      <Filter>components</Filter>
+      <Filter>game objects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\type_object.hpp">
       <Filter>python</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\quadtree.hpp">
-      <Filter>resources\terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\terrain_chunk.hpp">
-      <Filter>resources\terrain</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\rigid_body_component.hpp">
       <Filter>physics</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\terrain_component.hpp">
+      <Filter>game components\terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\heightmap.hpp">
+      <Filter>game components\terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\quadtree.hpp">
+      <Filter>game components\terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\camera_component.hpp">
+      <Filter>game components\camera</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\model_component.hpp">
-      <Filter>resources\model</Filter>
+      <Filter>game components\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\http_request.hpp">
+      <Filter>network\http</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\http_manager.hpp">
+      <Filter>network\http</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -479,32 +479,35 @@
     <ClCompile Include="..\..\src\scene.cpp">
       <Filter>scene</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\terrain.cpp">
-      <Filter>resources\terrain</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\state.cpp">
       <Filter>states</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\physics_simulation.cpp">
       <Filter>physics</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\camera_component.cpp">
-      <Filter>components</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\game_object.cpp">
-      <Filter>objects</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\heightmap.cpp">
-      <Filter>resources\terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\quadtree.cpp">
-      <Filter>resources\terrain</Filter>
+      <Filter>game objects</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\rigid_body_component.cpp">
       <Filter>physics</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\terrain_component.cpp">
+      <Filter>game components\terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\heightmap.cpp">
+      <Filter>game components\terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\quadtree.cpp">
+      <Filter>game components\terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\camera_component.cpp">
+      <Filter>game components\camera</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\model_component.cpp">
-      <Filter>resources\model</Filter>
+      <Filter>game components\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\http_manager.cpp">
+      <Filter>network\http</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -589,20 +592,32 @@
     <Filter Include="type_traits">
       <UniqueIdentifier>{5b1bbda6-a2c0-4e47-86db-e2113661cf61}</UniqueIdentifier>
     </Filter>
-    <Filter Include="resources\terrain">
-      <UniqueIdentifier>{d1f15da3-3f4a-49ec-8968-3457fae518db}</UniqueIdentifier>
-    </Filter>
     <Filter Include="scene">
       <UniqueIdentifier>{8b27e0ed-8a61-45b2-8b57-7bbd4998b8f6}</UniqueIdentifier>
     </Filter>
     <Filter Include="physics">
       <UniqueIdentifier>{7cf10140-c73b-4e04-9c01-1f781fec0d47}</UniqueIdentifier>
     </Filter>
-    <Filter Include="components">
+    <Filter Include="game components">
       <UniqueIdentifier>{fb8c91d5-8dc7-4b5b-99db-aba8c8375775}</UniqueIdentifier>
     </Filter>
-    <Filter Include="objects">
+    <Filter Include="game components\terrain">
+      <UniqueIdentifier>{2fed7f86-8093-4cec-8bed-486c0bfbb2cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game objects">
       <UniqueIdentifier>{db3dda54-204e-49d7-94ce-d3a0a2df262f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game components\camera">
+      <UniqueIdentifier>{bd7d0c5a-8e65-4889-8e01-c1329f6f0680}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game components\model">
+      <UniqueIdentifier>{b52dd1ce-5fe7-4ea7-88bd-d2fb66f2b598}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="network">
+      <UniqueIdentifier>{c24a0441-ca7e-4b3a-bd7d-1c623ba39466}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="network\http">
+      <UniqueIdentifier>{454ed85c-1eb2-4648-8af7-3df7bf74be57}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

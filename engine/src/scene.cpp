@@ -8,7 +8,7 @@
 #include "physics_simulation.hpp"
 #include "resource_mgr.hpp"
 #include "bsp.hpp"
-#include "terrain.hpp"
+#include "terrain_component.hpp"
 #include "image.hpp"
 
 namespace naga
@@ -16,7 +16,6 @@ namespace naga
     scene::scene()
     {
         //bsp = resources.get<naga::bsp>(hash("dod_flash.bsp"));
-        terrain = boost::make_shared<naga::terrain>(resources.get<image>(hash("mountains512.png")));
         physics = boost::make_shared<physics_simulation>();
     }
 
@@ -40,12 +39,15 @@ namespace naga
 
         if (camera_comp)
         {
-            const auto camera_params = camera_comp->get_params(viewport);
+            auto camera_params = camera_comp->get_params(viewport);
 
-            //bsp->render(camera_params);
-            if (terrain)
+            // TODO: this is inefficient, have components
+            // register themselves with the scene
+            // and only iterate over components that can
+            // be drawn
+            for (auto& game_object : game_objects)
             {
-                terrain->render(camera_params);
+                game_object->render(camera_params);
             }
         }
 
@@ -73,11 +75,22 @@ namespace naga
         }
     }
 
-    void scene::add_game_object(const boost::shared_ptr<game_object>& game_object)
+    boost::shared_ptr<game_object> scene::create_game_object()
     {
-        //TODO: the same actor can be added twice (double tick etc.)
+        auto game_object = boost::make_shared<naga::game_object>();
+        game_object->scene = shared_from_this();
+
         game_objects.push_back(game_object);
 
-        game_object->scene = shared_from_this();
+        return game_object;
+    }
+
+
+    void scene::remove_game_object(const boost::shared_ptr<game_object>& game_object)
+    {
+        if (game_object->get_scene() != shared_from_this())
+        {
+            throw std::exception("");
+        }
     }
 }

@@ -78,6 +78,8 @@ namespace naga
             handle_window_events();
 #endif
 
+            // TODO: call serialized callbacks
+
             while (simulation_time < real_time)
             {
                 static const auto SIMULATION_INTERVAL_DURATION = milliseconds(16);

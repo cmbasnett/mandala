@@ -28,29 +28,38 @@ this->color = color;            }
 
 uniform mat4 world_matrix;
 uniform mat4 view_projection_matrix;
+uniform float texture_scale;
 
 in vec3 location;
 in vec4 color;
 
 out vec4 out_color;
+out vec2 out_texcoord;
 
-void main() 
+void main()
 {
     gl_Position = view_projection_matrix * (world_matrix * vec4(location, 1));
 
-    out_color = color;
-})", R"(#version 400
+    out_texcoord.x = location.x * texture_scale;
+    out_texcoord.y = location.z * texture_scale;
 
+    out_color = color;
+}
+)", R"(#version 400
+
+uniform sampler2D diffuse_texture;
 uniform vec4 color;
 
 in vec4 out_color;
+in vec2 out_texcoord;
 
 out vec4 fragment;
 
-void main() 
+void main()
 {
-    fragment = out_color * color;
-}  )")
+    fragment = texture2D(diffuse_texture, out_texcoord) * out_color;
+}
+)")
         {
             location_location = gpu.get_attribute_location(get_id(), "location");
             color_location = gpu.get_attribute_location(get_id(), "color");

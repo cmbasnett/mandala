@@ -9,6 +9,7 @@
 #include "aabb.hpp"
 
 class btRigidBody;
+class btCollisionShape;
 
 namespace naga
 {
@@ -30,6 +31,9 @@ namespace naga
         void set_pose(const pose3& pose);
         void set_mass(f32 mass);
         void set_center_of_mass(const vec3& center_of_mass);
+
+        //TODO: not 
+        void set_collision_shape(btCollisionShape* collision_shape);
 
         btRigidBody* get_ptr() const { return ptr; }
 

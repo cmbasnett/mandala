@@ -112,4 +112,9 @@ namespace naga
 
         return aabb3(vec3(min.x(), min.y(), min.z()), vec3(max.x(), max.y(), max.z()));
     }
+
+    void rigid_body_component::set_collision_shape(btCollisionShape* collision_shape)
+    {
+        ptr->setCollisionShape(collision_shape);
+    }
 }

@@ -50,6 +50,7 @@
 #include "state_mgr.hpp"
 #include "string_mgr.hpp"
 #include "texture.hpp"
+#include "terrain_component.hpp"
 
 using namespace boost;
 using namespace boost::python;
@@ -1049,6 +1050,13 @@ BOOST_PYTHON_MODULE(naga)
         .add_property("size", make_function(&texture::get_size, return_value_policy<copy_const_reference>()))
         .add_property("id", &texture::get_id);
 
+    class_<image, bases<resource>, boost::shared_ptr<image>, noncopyable>("Image", no_init)
+        .add_property("bit_depth", &image::get_bit_depth)
+        //.add_property("color_type", &image::get_color_type)
+        .add_property("width", &image::get_width)
+        .add_property("height", &image::get_height)
+        .add_property("channel_count", &image::get_channel_count);
+
     class_<sprite_set::region, boost::shared_ptr<sprite_set::region>, noncopyable>("SpriteSetRegion", no_init)
         .add_property("hash", &sprite_set::region::hash)
         .add_property("frame_rectangle", &sprite_set::region::frame_rectangle)
@@ -1117,7 +1125,7 @@ BOOST_PYTHON_MODULE(naga)
         .def_readwrite("rotation", &pose3::rotation)
         ;
 
-    class_<game_object, boost::shared_ptr<game_object>>("GameObject")
+    class_<game_object, boost::shared_ptr<game_object>, noncopyable>("GameObject", no_init)
         .def_readwrite("pose", &game_object::pose)
         .def("add_component", &game_object::add_component_by_type)
         .def("add_component_by_name", &game_object::add_component_by_name)
@@ -1140,7 +1148,8 @@ BOOST_PYTHON_MODULE(naga)
 
     class_<scene, boost::shared_ptr<scene>, noncopyable>("Scene")
         .add_property("physics", make_function(&scene::get_physics, return_value_policy<copy_const_reference>()))
-        .def("add_game_object", &scene::add_game_object)
+        .def("create_game_object", &scene::create_game_object)
+        .def("remove_game_object", &scene::remove_game_object)
         .def("render", &scene::render)
         .def("tick", &scene::tick)
         .def("on_input_event", &scene::on_input_event)
@@ -1189,4 +1198,8 @@ BOOST_PYTHON_MODULE(naga)
         .add_property("mass", &rigid_body_component::get_mass, &rigid_body_component::set_mass)
         .add_property("center_of_mass", &rigid_body_component::get_center_of_mass, &rigid_body_component::set_center_of_mass)
         .add_property("aabb", &rigid_body_component::get_aabb);
+
+    // TERRAIN
+    class_<terrain_component, bases<game_component>, boost::shared_ptr<terrain_component>, noncopyable>(terrain_component::component_name)
+        .def("set_heightmap", &terrain_component::set_heightmap);
 }

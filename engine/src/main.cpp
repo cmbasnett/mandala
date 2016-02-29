@@ -1,8 +1,7 @@
 //naga
 #include "python.hpp"
 #include "app.hpp"
-#include "game.hpp"
-#include "octtree.hpp"
+#include "http_manager.hpp"
 
 int main()
 {

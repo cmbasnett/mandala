@@ -3,28 +3,27 @@
 //naga
 #include "types.hpp"
 #include "heightmap.hpp"
-#include "quadtree.hpp"
 #include "vertex_buffer.hpp"
 #include "index_buffer.hpp"
 #include "basic_gpu_program.hpp"
 #include "line.hpp"
-#include "terrain_chunk.hpp"
-
-//bullet
-#include <BulletCollision\CollisionShapes\btHeightfieldTerrainShape.h>
+#include "game_component.hpp"
 
 namespace naga
 {
     struct camera_params;
 
-    struct terrain
+    struct terrain_component : game_component
     {
+        static const char* component_name;
+
         static const auto MAX_SIZE = 2048;
-        static const auto CHUNK_SIZE = 16;
+        static const auto CHUNK_SIZE = 8;
         static const auto MAX_CHUNKS = (MAX_SIZE / CHUNK_SIZE) * (MAX_SIZE / CHUNK_SIZE);
         static const auto PATCHES_PER_CHUNK = (CHUNK_SIZE * CHUNK_SIZE);
-        static const auto VERTICES_PER_CHUNK = (CHUNK_SIZE * CHUNK_SIZE) + ((CHUNK_SIZE + 1) * (CHUNK_SIZE + 1));
-        static const auto INDICES_PER_PATCH = 12;
+        static const auto VERTICES_PER_CHUNK = ((CHUNK_SIZE + 1) * (CHUNK_SIZE + 1));
+        static const auto TRIANGLES_PER_PATCH = 2;
+        static const auto INDICES_PER_PATCH = TRIANGLES_PER_PATCH * 3;
         static const auto INDICES_PER_STRIP = INDICES_PER_PATCH * CHUNK_SIZE;
         static const auto INDICES_PER_CHUNK = INDICES_PER_STRIP * CHUNK_SIZE;
 
@@ -35,24 +34,25 @@ namespace naga
         typedef basic_gpu_program::vertex_type vertex_type;
         typedef vertex_buffer<vertex_type> vertex_buffer_type;
 
-        terrain(const boost::shared_ptr<image>& image);
-        terrain(size_type width, size_type height);
+        // overrides
+        void on_render(camera_params& camera) override;
 
-		void render(const camera_params& camera) const;
 		f32 get_height(const vec2& location) const;
 		vec3 trace(const line3& ray) const;
 
-        const heightmap& get_heightmap() const { return heightmap; }
-        const quadtree& get_quadtree() const { return quadtree; }
+        // getters
+        const boost::shared_ptr<heightmap>& get_heightmap() const { return heightmap; }
+
+        // setters
+        void set_heightmap(const boost::shared_ptr<image>& image);
 
     private:
         void update_chunks(const rectangle_u64& rectangle);
 
-        heightmap heightmap;
-        quadtree quadtree;
-        boost::multi_array<terrain_chunk, 2> chunks;
+        boost::shared_ptr<heightmap> heightmap;
         boost::shared_ptr<vertex_buffer_type> vertex_buffer;
         boost::shared_ptr<index_buffer_type> index_buffer;
         size_t chunk_count;
+        boost::shared_ptr<texture> texture;
     };
 }

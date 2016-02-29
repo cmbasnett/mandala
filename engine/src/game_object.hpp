@@ -24,13 +24,17 @@ namespace naga
 
     struct game_object : boost::enable_shared_from_this<game_object>
     {
+        typedef size_t id_type;
+
         pose3 pose;
+
+        game_object();
 
         virtual void on_create() { }
         virtual void on_destroy() { }
         virtual bool on_input_event(input_event_t& input_event);
         virtual void on_tick(f32 dt);
-        virtual void render(const camera_params& camera) { }
+        virtual void render(camera_params& camera);
 
         boost::python::object add_component_by_type(type_object type);
         boost::python::object add_component_by_name(const std::string& type);
@@ -60,9 +64,12 @@ namespace naga
         boost::shared_ptr<game_component> get_component_by_name(const std::string& type) const;
 
         const boost::shared_ptr<scene>& get_scene() const { return scene; }
+        id_type get_id() const { return id; }
 
     private:
         friend struct scene;
+
+        id_type id;
 
         std::map<hash, std::vector<boost::shared_ptr<game_component>>> type_components;
         std::vector<boost::shared_ptr<game_component>> components;

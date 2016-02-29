@@ -6,6 +6,21 @@
 
 namespace naga
 {
+    game_object::game_object()
+    {
+        static const id_type next_id = 1;
+
+        id = next_id;
+    }
+
+    void game_object::render(camera_params& params)
+    {
+        for (auto& component : components)
+        {
+            component->on_render(params);
+        }
+    }
+
     void game_object::on_tick(f32 dt)
     {
         for (auto& component : components)

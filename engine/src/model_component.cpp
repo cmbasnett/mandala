@@ -17,7 +17,7 @@
 
 namespace naga
 {
-    void model_component::tick(f32 dt)
+    void model_component::on_tick(f32 dt)
     {
         if (animation != nullptr)
         {
@@ -47,7 +47,7 @@ namespace naga
         sphere.radius = glm::length(aabb.extents());
     }
 
-    void model_component::render(const camera_params& camera_params, const vec3& light_location) const
+    void model_component::on_render(camera_params& camera_params)
     {
         if (model == nullptr)
         {
@@ -60,6 +60,9 @@ namespace naga
             //skeleton aabb does not intersect camera frustum
             //return;
         }
+
+        // TODO: need to figure out a better way to feed light data into the shaders
+        vec3 light_location;
 
         const auto world_matrix = get_owner()->pose.to_matrix();
         auto view_projection_matrix = camera_params.projection_matrix * camera_params.view_matrix;

@@ -18,8 +18,8 @@ namespace naga
 
     struct model_component : game_component
     {
-        void tick(f32 dt);
-        void render(const camera_params& camera_params, const vec3& light_location) const;
+        void on_tick(f32 dt) override;
+        void on_render(camera_params& camera_params) override;
 
         void play(const hash& animation_hash);
 
