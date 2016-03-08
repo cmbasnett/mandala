@@ -269,6 +269,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\gui_size.hpp" />
     <ClInclude Include="..\..\src\hash.hpp" />
     <ClInclude Include="..\..\src\heightmap.hpp" />
+    <ClInclude Include="..\..\src\http.hpp" />
     <ClInclude Include="..\..\src\http_manager.hpp" />
     <ClInclude Include="..\..\src\http_request.hpp" />
     <ClInclude Include="..\..\src\monitor.hpp" />
@@ -360,6 +361,7 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="..\..\src\gui_scroll.cpp" />
     <ClCompile Include="..\..\src\heightmap.cpp" />
     <ClCompile Include="..\..\src\http_manager.cpp" />
+    <ClCompile Include="..\..\src\http_response.hpp" />
     <ClCompile Include="..\..\src\image.cpp" />
     <ClCompile Include="..\..\src\rigid_body_component.cpp" />
     <ClCompile Include="..\..\src\physics_simulation.cpp" />

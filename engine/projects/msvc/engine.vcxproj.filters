@@ -341,6 +341,9 @@
     <ClInclude Include="..\..\src\http_manager.hpp">
       <Filter>network\http</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\http.hpp">
+      <Filter>network\http</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\app.cpp">
@@ -507,6 +510,9 @@
       <Filter>game components\model</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\http_manager.cpp">
+      <Filter>network\http</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\http_response.hpp">
       <Filter>network\http</Filter>
     </ClCompile>
   </ItemGroup>

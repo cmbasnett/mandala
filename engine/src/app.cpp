@@ -8,6 +8,7 @@
 #include "app.hpp"
 #include "platform.hpp"
 #include "game.hpp"
+#include "http_manager.hpp"
 
 //HACK: this doesn't seem like the right place to put this
 #include "model_gpu_program.hpp"
@@ -52,7 +53,7 @@ namespace naga
         //TODO: make this execute a .pyc file instead (more secure?)
         py.exec_file("app.py");
 
-        this->game = extract<shared_ptr<naga::game>>(py.eval((game_class + "()").c_str()))();
+        this->game = extract<boost::shared_ptr<naga::game>>(py.eval((game_class + "()").c_str()))();
 
         begin:
 
@@ -139,6 +140,8 @@ namespace naga
         platform.app_tick_start(dt);
 
         game->on_tick_start(dt);
+
+        http.tick();
 
         states.tick(dt);
         audio.tick(dt);

@@ -25,6 +25,9 @@
 #include "gui_image.hpp"
 #include "gui_label.hpp"
 #include "gui_layout.hpp"
+#include "http_response.hpp"
+#include "http_request.hpp"
+#include "http_manager.hpp"
 #include "image.hpp"
 #include "input_event.hpp"
 #include "interpolation.hpp"
@@ -425,6 +428,7 @@ class_<naga::details::padding<scalar_type>>(name, init<scalar_type, scalar_type,
     .def(self_ns::str(self_ns::self));
 
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(state_mgr_push_overloads, state_mgr::push, 2, 3)
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(http_manager_get_async_overloads, http_manager::get_async, 1, 5)
 
 inline naga::quat angle_axis(f32 angle, const naga::vec3& axis)
 {
@@ -1202,4 +1206,22 @@ BOOST_PYTHON_MODULE(naga)
     // TERRAIN
     class_<terrain_component, bases<game_component>, boost::shared_ptr<terrain_component>, noncopyable>(terrain_component::component_name)
         .def("set_heightmap", &terrain_component::set_heightmap);
+
+    // HTTP
+    class_<http_response, boost::shared_ptr<http_response>, noncopyable>("HttpResponse", no_init)
+        .add_property("content", make_function(&http_response::get_content, return_value_policy<copy_const_reference>()))
+        .add_property("content_type", make_function(&http_response::get_content_type, return_value_policy<copy_const_reference>()))
+        .add_property("has_error", &http_response::has_error);
+        ;
+
+    class_<http_manager, noncopyable>("HttpManager", no_init)
+        //.def("get", &http_manager::get)
+        .def("get_async", &http_manager::get_async, http_manager_get_async_overloads(args("url", "headers", "data", "on_response", "on_write")))
+        ;
+
+    scope().attr("http") = boost::ref(http);
+
+    //class_<std::map<std::string, std::string>>("StringStringMap")
+    //    .def(map_indexing_suite<std::map<std::string, std::string>>());
 }
+    
