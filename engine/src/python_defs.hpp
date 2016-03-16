@@ -54,6 +54,7 @@
 #include "string_mgr.hpp"
 #include "texture.hpp"
 #include "terrain_component.hpp"
+#include "python_pair.hpp"
 
 using namespace boost;
 using namespace boost::python;
@@ -428,6 +429,7 @@ class_<naga::details::padding<scalar_type>>(name, init<scalar_type, scalar_type,
     .def(self_ns::str(self_ns::self));
 
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(state_mgr_push_overloads, state_mgr::push, 2, 3)
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(http_manager_get_overloads, http_manager::get, 1, 4)
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(http_manager_get_async_overloads, http_manager::get_async, 1, 5)
 
 inline naga::quat angle_axis(f32 angle, const naga::vec3& axis)
@@ -482,6 +484,8 @@ BOOST_PYTHON_MODULE(naga)
 
     python_optional<sprite>();
     python_optional<size_t>();
+
+	python_pair<std::string, std::string>();
 
     enable_type_object();
 
@@ -1129,7 +1133,7 @@ BOOST_PYTHON_MODULE(naga)
         .def_readwrite("rotation", &pose3::rotation)
         ;
 
-    class_<game_object, boost::shared_ptr<game_object>, noncopyable>("GameObject", no_init)
+    class_<game_object, boost::shared_ptr<game_object>, noncopyable>("GameObject")
         .def_readwrite("pose", &game_object::pose)
         .def("add_component", &game_object::add_component_by_type)
         .def("add_component_by_name", &game_object::add_component_by_name)
@@ -1208,20 +1212,50 @@ BOOST_PYTHON_MODULE(naga)
         .def("set_heightmap", &terrain_component::set_heightmap);
 
     // HTTP
+	enum_<http_method>("HttpMethod")
+		.value("GET")
+
+	class_<http_request, boost::shared_ptr<http_request>, noncopyable>("HttpRequest", no_init)
+		.add_property("url", make_function(&http_request::get_url, return_value_policy<copy_const_reference>()))
+		.add_property("method", make_function(&http_request::get_method, return_value_policy<copy_const_reference>()))
+		.add_property("headers", make_function(&http_request::get_headers, return_value_policy<copy_const_reference>()))
+		;
+	;
+
     class_<http_response, boost::shared_ptr<http_response>, noncopyable>("HttpResponse", no_init)
         .add_property("content", make_function(&http_response::get_content, return_value_policy<copy_const_reference>()))
         .add_property("content_type", make_function(&http_response::get_content_type, return_value_policy<copy_const_reference>()))
-        .add_property("has_error", &http_response::has_error);
-        ;
+        .add_property("has_error", &http_response::has_error)
+		.add_property("elapsed", &http_response::get_elapsed)
+		;
+	;
+
+	// TODO: would be nice to just make a converter instead of having to give this a name
+	// and legitimize it as an instantiable type.
+	class_<std::vector<std::pair<std::string, std::string>>>("StringPairList")
+		.def(vector_indexing_suite<std::vector<std::pair<std::string, std::string>>>());
 
     class_<http_manager, noncopyable>("HttpManager", no_init)
-        //.def("get", &http_manager::get)
-        .def("get_async", &http_manager::get_async, http_manager_get_async_overloads(args("url", "headers", "data", "on_response", "on_write")))
-        ;
+		.def("get", &http_manager::get,
+		http_manager_get_overloads((
+				boost::python::arg("url"),
+				boost::python::arg("headers") = http_headers_type(),
+				boost::python::arg("data") = http_data_type(),
+				boost::python::arg("on_write") = make_function<void(size_t)>(nullptr)
+			))
+			)
+        .def("get_async", &http_manager::get_async, 
+			http_manager_get_async_overloads(
+				(
+					boost::python::arg("url"),
+					boost::python::arg("headers") = http_headers_type(),
+					boost::python::arg("data") = http_data_type(),
+					boost::python::arg("on_response") = make_function<void(boost::shared_ptr<http_response>)>(nullptr),
+					boost::python::arg("on_write") = make_function<void(size_t)>(nullptr)
+				)
+			)
+		);
 
     scope().attr("http") = boost::ref(http);
-
-    //class_<std::map<std::string, std::string>>("StringStringMap")
-    //    .def(map_indexing_suite<std::map<std::string, std::string>>());
 }
     

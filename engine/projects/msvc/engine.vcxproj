@@ -93,7 +93,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\ext\glm-0.9.4.4;$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)..\..\ext\glew-1.10.0\include;$(SolutionDir)..\..\ext\zlib-1.2.8\include;$(SolutionDir)..\..\ext\libpng-1.6.3;$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\include;C:\boost_1_55_0;$(SolutionDir)..\..\ext\Python27\include;$(SolutionDir)..\..\ext\cpp-netlib-0.11.1-final;$(SolutionDir)..\..\ext\openssl-0.9.8k_WIN32\include;$(SolutionDir)..\..\ext\bullet3-master\src;$(SolutionDir)..\..\ext\curl-7.47.1\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\ext\glm-0.9.4.4;$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)..\..\ext\glew-1.10.0\include;$(SolutionDir)..\..\ext\zlib-1.2.8\include;$(SolutionDir)..\..\ext\libpng-1.6.3;$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\include;C:\boost_1_55_0;$(SolutionDir)..\..\ext\Python27\include;$(SolutionDir)..\..\ext\cpp-netlib-0.11.1-final;$(SolutionDir)..\..\ext\openssl-0.9.8k_WIN32\include;$(SolutionDir)..\..\ext\bullet3-2.83.7\src;$(SolutionDir)..\..\ext\curl-7.47.1\include</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;_WIN32_WINNT=0x0501;DEBUG;_WINSOCK_DEPRECATED_NO_WARNINGS;BOOST_PYTHON_STATIC_LIB;GLFW_DLL;BOOST_NETWORK_ENABLE_HTTPS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -103,15 +103,15 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\boost_1_55_0\stage\lib;$(SolutionDir)..\..\ext\glew-1.10.0\lib\Release\Win32;$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\lib-msvc110;$(SolutionDir)..\..\ext\zlib-1.2.8\lib;$(SolutionDir)..\..\ext\libpng-1.6.3\projects\vstudio\Release Library;$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\lib\Win32;$(SolutionDir)..\..\ext\Python27\libs;$(SolutionDir)..\..\ext\bullet3-master\lib\Debug;$(SolutionDir)..\..\ext\curl-7.47.1\lib\RelWithDebInfo</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3dll.lib;zlib.lib;libpng16.lib;libOpenAL32.dll.a;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;libcurl_imp.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\boost_1_55_0\stage\lib;$(SolutionDir)..\..\ext\glew-1.10.0\lib\Release\Win32;$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\lib-msvc110;$(SolutionDir)..\..\ext\zlib-1.2.8\lib;$(SolutionDir)..\..\ext\libpng-1.6.3\projects\vstudio\Release Library;$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\lib\Win32;$(SolutionDir)..\..\ext\Python27\libs;$(SolutionDir)..\..\ext\bullet3-2.83.7\lib\Debug;$(SolutionDir)..\..\ext\curl-7.47.1\build\Win32\VC12\DLL Release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3dll.lib;zlib.lib;libpng16.lib;libOpenAL32.dll.a;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;libcurl.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\lib-msvc110\*.dll" "$(OutDir)" /y
 xcopy "$(SolutionDir)..\..\ext\glew-1.10.0\bin\Release\Win32\*.dll" "$(OutDir)" /y
 xcopy "$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\lib\Win32\*.dll" "$(OutDir)" /y
-xcopy "$(SolutionDir)..\..\ext\curl-7.47.1\lib\RelWithDebInfo\*.dll" "$(OutDir)" /y</Command>
+xcopy "$(SolutionDir)..\..\ext\curl-7.47.1\build\Win32\VC12\DLL Release\*.dll" "$(OutDir)" /y</Command>
     </PostBuildEvent>
     <CustomBuildStep>
       <Command>python "$(SolutionDir)..\..\tools\deploy.py" "$(SolutionDir)..\..\..\testapp\resources_src"
@@ -273,6 +273,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\http_manager.hpp" />
     <ClInclude Include="..\..\src\http_request.hpp" />
     <ClInclude Include="..\..\src\monitor.hpp" />
+    <ClInclude Include="..\..\src\python_pair.hpp" />
     <ClInclude Include="..\..\src\rigid_body_component.hpp" />
     <ClInclude Include="..\..\src\physics_simulation.hpp" />
     <ClInclude Include="..\..\src\terrain_component.hpp" />

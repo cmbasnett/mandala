@@ -23,7 +23,7 @@ struct python_optional : private boost::noncopyable
 
     static void constructor(PyObject *obj, boost::python::converter::rvalue_from_python_stage1_data *data)
     {
-        void *const storage = reinterpret_cast<converter::rvalue_from_python_storage<boost::optional<T>>*>(data)->storage.bytes;
+        void* const storage = reinterpret_cast<converter::rvalue_from_python_storage<boost::optional<T>>*>(data)->storage.bytes;
 
         if (obj == Py_None)
         {

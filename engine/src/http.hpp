@@ -7,7 +7,7 @@
 namespace naga
 {
     typedef std::vector<std::pair<std::string, std::string>> http_headers_type;
-    typedef std::map<std::string, std::string> http_data_type;
+	typedef std::vector<std::pair<std::string, std::string>> http_data_type;
 
     enum http_method
     {

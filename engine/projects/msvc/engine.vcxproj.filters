@@ -344,6 +344,9 @@
     <ClInclude Include="..\..\src\http.hpp">
       <Filter>network\http</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\python_pair.hpp">
+      <Filter>python</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\app.cpp">

@@ -11,8 +11,6 @@
 // naga
 #include "http.hpp"
 
-using namespace std;
-
 namespace naga
 {
     struct http_response;
@@ -20,41 +18,41 @@ namespace naga
 
     struct http_manager
     {
-        typedef function<void(boost::shared_ptr<http_response>)> response_callback_type;
-        typedef function<void(size_t)> write_callback_type;
+        typedef std::function<void(boost::shared_ptr<http_response>)> response_function_type;
+		typedef std::function<void(size_t)> write_function_type;
 
         boost::shared_ptr<http_response> get(
-            const string& url,
-            const http_headers_type& headers = http_headers_type(),
-            const http_data_type& data = http_data_type(),
-            write_callback_type on_write = nullptr
+            std::string url,
+            http_headers_type headers = http_headers_type(),
+            http_data_type data = http_data_type(),
+			write_function_type on_write = nullptr
             );
 
-        void get_async(
-            const string& url,
+		boost::shared_ptr<http_request> get_async(
+			const std::string& url,
             const http_headers_type& headers = http_headers_type(),
             const http_data_type& data = http_data_type(),
-            response_callback_type on_response = nullptr,
-            write_callback_type on_write = nullptr
+			response_function_type on_response = nullptr,
+			write_function_type on_write = nullptr
             );
 
         void tick();
 
         struct request_object
         {
-            request_object(const boost::shared_ptr<http_request>& request, response_callback_type on_response) :
+			request_object(const boost::shared_ptr<http_request>& request, response_function_type on_response) :
                 request(request),
                 on_response(on_response)
             {
             }
 
             boost::shared_ptr<http_request> request;
-            response_callback_type on_response;
+			response_function_type on_response;
         };
 
     private:
-        list<request_object> request_objects;
-        mutex request_objects_mutex;
+        std::list<request_object> request_objects;
+		std::mutex request_objects_mutex;
     };
 
     extern http_manager http;

@@ -18,12 +18,28 @@ namespace naga
 {
     http_manager http;
 
-    boost::shared_ptr<http_response> http_manager::get(const string& url, const http_headers_type& headers, const http_data_type& data, write_callback_type write_callback)
+	size_t write_function(char* ptr, size_t size, size_t nmemb, void* userdata)
+	{
+		auto stream = static_cast<std::ostringstream*>(userdata);
+		size_t count = size * nmemb;
+
+		stream->write(ptr, count);
+
+		//if (on_write)
+		//{
+		//	on_write(nmemb);
+		//}
+
+		return count;
+	}
+
+	boost::shared_ptr<http_response> http_manager::get(std::string url, http_headers_type headers, http_data_type data, write_function_type on_write)
     {
-        ostringstream stream;
+		std::ostringstream stream;
         long response_code = 404;
         const char* content_type = nullptr;
         curl_slist* headers_list = nullptr;
+		f64 elapsed = 0.0;
         char error_buffer[CURL_ERROR_SIZE];
 
         memset(error_buffer, '\0', sizeof(error_buffer));
@@ -39,21 +55,8 @@ namespace naga
 
         assert(curl);
 
-        curl_easy_setopt(curl, CURLOPT_URL, url);
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, [&](char* ptr, size_t size, size_t nmemb, void* userdata)
-        {
-            auto stream = static_cast<ostringstream*>(userdata);
-            auto count = size * nmemb;
-
-            stream->write(ptr, count);
-
-            if (write_callback)
-            {
-                write_callback(nmemb);
-            }
-
-            return count;
-        });
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_function);
         curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, error_buffer);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &stream);
 
@@ -64,6 +67,7 @@ namespace naga
 
         curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
         curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &content_type);
+		curl_easy_getinfo(curl, CURLINFO_TOTAL_TIME, &elapsed);
         curl_slist_free_all(headers_list);
         curl_easy_cleanup(curl);
 
@@ -71,17 +75,18 @@ namespace naga
         response->content = stream.str();
         response->content_type = content_type;
         response->status = static_cast<http_status>(response_code);
+		response->elapsed = elapsed;
         //TODO: link request
 
         return response;
     }
 
-    void http_manager::get_async(
-        const string& url,
+    boost::shared_ptr<http_request> http_manager::get_async(
+        const std::string& url,
         const http_headers_type& headers,
         const http_data_type& data,
-        response_callback_type on_response,
-        write_callback_type on_write)
+        response_function_type on_response,
+		write_function_type on_write)
     {
         auto request = boost::make_shared<http_request>();
         request->method = http_method::get;
@@ -90,13 +95,15 @@ namespace naga
         request->data = data;
         request->response = async(&http_manager::get, this, url, headers, data, on_write);
 
-        lock_guard<mutex> lock(request_objects_mutex);
+		std::lock_guard<std::mutex> lock(request_objects_mutex);
         request_objects.emplace_back(request, on_response);
+
+		return request;
     }
 
     void http_manager::tick()
     {
-        lock_guard<mutex> lock(request_objects_mutex);
+		std::lock_guard<std::mutex> lock(request_objects_mutex);
 
         auto itr = request_objects.begin();
 

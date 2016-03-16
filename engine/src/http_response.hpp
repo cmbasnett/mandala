@@ -3,6 +3,7 @@
 // std
 #include <string>
 
+#include "types.hpp"
 #include "http.hpp"
 
 namespace naga
@@ -29,13 +30,15 @@ namespace naga
 
             return "";
         }
+		const f64 get_elapsed() const { return elapsed; }
 
     private:
         friend struct http_manager;
 
         http_status status = http_status::unknown;
         std::string content;
-        std::string content_type;
+		std::string content_type;
+		f64 elapsed = 0.0;
         std::exception_ptr exception_ptr;
     };
 }

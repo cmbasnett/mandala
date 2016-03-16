@@ -35,21 +35,24 @@ namespace naga
 
         gpu.clear(gpu_t::CLEAR_FLAG_COLOR | gpu_t::CLEAR_FLAG_DEPTH | gpu_t::CLEAR_FLAG_STENCIL);
 
-        auto camera_comp = camera->get_component<camera_component>();
+		if (camera)
+		{
+			auto camera_comp = camera->get_component<camera_component>();
 
-        if (camera_comp)
-        {
-            auto camera_params = camera_comp->get_params(viewport);
+			if (camera_comp)
+			{
+				auto camera_params = camera_comp->get_params(viewport);
 
-            // TODO: this is inefficient, have components
-            // register themselves with the scene
-            // and only iterate over components that can
-            // be drawn
-            for (auto& game_object : game_objects)
-            {
-                game_object->render(camera_params);
-            }
-        }
+				// TODO: this is inefficient, have components
+				// register themselves with the scene
+				// and only iterate over components that can
+				// be drawn
+				for (auto& game_object : game_objects)
+				{
+					game_object->render(camera_params);
+				}
+			}
+		}
 
         gpu.depth.pop_state();
 
