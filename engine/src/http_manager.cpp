@@ -94,7 +94,7 @@ namespace naga
         request->url = url;
         //request->headers = headers;
         //request->data = data;
-        request->response = async(&http_manager::get, this, url/*, headers, data, on_write*/);
+        request->response = async(std::launch::async, &http_manager::get, this, url/*, headers, data, on_write*/);
 
 		std::lock_guard<std::mutex> lock(request_objects_mutex);
         request_objects.emplace_back(request, on_response);
@@ -115,7 +115,7 @@ namespace naga
 
             boost::shared_ptr<http_response> response;
 
-            if (request->response.valid())
+            if (request->response._Is_ready())
             {
                 try
                 {
