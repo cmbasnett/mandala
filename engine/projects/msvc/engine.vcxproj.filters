@@ -347,6 +347,9 @@
     <ClInclude Include="..\..\src\python_pair.hpp">
       <Filter>python</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\python_function_from_callable.hpp">
+      <Filter>python</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\app.cpp">

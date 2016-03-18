@@ -255,6 +255,7 @@ namespace naga
                 break;
             }
 
+			// TODO: size to children:
             node->size = node->bounds.size();
 
             auto children_bounds = node->bounds - node->padding;

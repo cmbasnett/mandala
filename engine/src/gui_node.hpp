@@ -129,6 +129,7 @@ namespace naga
         bool has_focus = false;
         gui_size_modes_t size_modes;
         boost::shared_ptr<gui_layout> layout;
+		bool should_wrap_to_content_width;
 
     protected:
         bool is_dirty = true;

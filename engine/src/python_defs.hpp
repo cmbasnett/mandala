@@ -55,6 +55,7 @@
 #include "texture.hpp"
 #include "terrain_component.hpp"
 #include "python_pair.hpp"
+#include "python_function_from_callable.hpp"
 
 using namespace boost;
 using namespace boost::python;
@@ -429,8 +430,8 @@ class_<naga::details::padding<scalar_type>>(name, init<scalar_type, scalar_type,
     .def(self_ns::str(self_ns::self));
 
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(state_mgr_push_overloads, state_mgr::push, 2, 3)
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(http_manager_get_overloads, http_manager::get, 1, 4)
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(http_manager_get_async_overloads, http_manager::get_async, 1, 5)
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(http_manager_get_overloads, http_manager::get, 1, 1)
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(http_manager_get_async_overloads, http_manager::get_async, 1, 2)
 
 inline naga::quat angle_axis(f32 angle, const naga::vec3& axis)
 {
@@ -484,6 +485,7 @@ BOOST_PYTHON_MODULE(naga)
 
     python_optional<sprite>();
     python_optional<size_t>();
+	python_function_from_callable<void(boost::shared_ptr<http_response>)>();
 
 	python_pair<std::string, std::string>();
 
@@ -1213,11 +1215,17 @@ BOOST_PYTHON_MODULE(naga)
 
     // HTTP
 	enum_<http_method>("HttpMethod")
-		.value("GET")
+		.value("GET", http_method::GET)
+		.value("POST", http_method::POST)
+		.value("PUT", http_method::PUT)
+		.value("DELETE", http_method::DELETE_)
+		.value("HEAD", http_method::HEAD)
+		.value("OPTIONS", http_method::OPTIONS)
+		.export_values();
 
 	class_<http_request, boost::shared_ptr<http_request>, noncopyable>("HttpRequest", no_init)
 		.add_property("url", make_function(&http_request::get_url, return_value_policy<copy_const_reference>()))
-		.add_property("method", make_function(&http_request::get_method, return_value_policy<copy_const_reference>()))
+		.add_property("method", &http_request::get_method)
 		.add_property("headers", make_function(&http_request::get_headers, return_value_policy<copy_const_reference>()))
 		;
 	;
@@ -1238,24 +1246,23 @@ BOOST_PYTHON_MODULE(naga)
     class_<http_manager, noncopyable>("HttpManager", no_init)
 		.def("get", &http_manager::get,
 		http_manager_get_overloads((
-				boost::python::arg("url"),
-				boost::python::arg("headers") = http_headers_type(),
-				boost::python::arg("data") = http_data_type(),
-				boost::python::arg("on_write") = make_function<void(size_t)>(nullptr)
+				boost::python::arg("url")
+				//boost::python::arg("headers") = http_headers_type(),
+				//boost::python::arg("data") = http_data_type(),
+				//boost::python::arg("on_write") = make_function<void(size_t)>(nullptr)
 			))
 			)
         .def("get_async", &http_manager::get_async, 
 			http_manager_get_async_overloads(
 				(
 					boost::python::arg("url"),
-					boost::python::arg("headers") = http_headers_type(),
-					boost::python::arg("data") = http_data_type(),
-					boost::python::arg("on_response") = make_function<void(boost::shared_ptr<http_response>)>(nullptr),
-					boost::python::arg("on_write") = make_function<void(size_t)>(nullptr)
+					//boost::python::arg("headers") = http_headers_type(),
+					//boost::python::arg("data") = http_data_type(),
+					boost::python::arg("on_response") = boost::python::make_function<void(boost::shared_ptr<http_response>)>(nullptr)
+					//boost::python::arg("on_write") = make_function<void(size_t)>(nullptr)
 				)
 			)
 		);
 
     scope().attr("http") = boost::ref(http);
 }
-    

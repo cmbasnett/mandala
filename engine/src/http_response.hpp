@@ -35,7 +35,7 @@ namespace naga
     private:
         friend struct http_manager;
 
-        http_status status = http_status::unknown;
+        http_status status = http_status::UNKNOWN;
         std::string content;
 		std::string content_type;
 		f64 elapsed = 0.0;

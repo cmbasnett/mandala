@@ -15,9 +15,6 @@
 #include "window_event.hpp"
 #endif
 
-#include "line_renderer.hpp"
-#include "interpolation.hpp"
-
 namespace naga
 {
     state::state()

@@ -33,7 +33,7 @@ namespace naga
 		return count;
 	}
 
-	boost::shared_ptr<http_response> http_manager::get(std::string url, http_headers_type headers, http_data_type data, write_function_type on_write)
+	boost::shared_ptr<http_response> http_manager::get(std::string url/*, http_headers_type headers, http_data_type data, write_function_type on_write*/)
     {
 		std::ostringstream stream;
         long response_code = 404;
@@ -44,12 +44,12 @@ namespace naga
 
         memset(error_buffer, '\0', sizeof(error_buffer));
 
-        for (const auto& header : headers)
-        {
-            auto header_line = header.first + ": " + header.second;
+        //for (const auto& header : headers)
+        //{
+        //    auto header_line = header.first + ": " + header.second;
 
-            curl_slist_append(headers_list, header_line.c_str());
-        }
+        //    curl_slist_append(headers_list, header_line.c_str());
+        //}
 
         auto curl = curl_easy_init();
 
@@ -83,17 +83,18 @@ namespace naga
 
     boost::shared_ptr<http_request> http_manager::get_async(
         const std::string& url,
-        const http_headers_type& headers,
-        const http_data_type& data,
-        response_function_type on_response,
-		write_function_type on_write)
+        //const http_headers_type& headers,
+        //const http_data_type& data,
+        response_function_type on_response
+		//write_function_type on_write
+		)
     {
         auto request = boost::make_shared<http_request>();
-        request->method = http_method::get;
+        request->method = http_method::GET;
         request->url = url;
-        request->headers = headers;
-        request->data = data;
-        request->response = async(&http_manager::get, this, url, headers, data, on_write);
+        //request->headers = headers;
+        //request->data = data;
+        request->response = async(&http_manager::get, this, url/*, headers, data, on_write*/);
 
 		std::lock_guard<std::mutex> lock(request_objects_mutex);
         request_objects.emplace_back(request, on_response);

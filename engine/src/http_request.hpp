@@ -24,7 +24,7 @@ namespace naga
 		friend struct http_manager;
 
         std::string url;
-		http_method method = http_method::get;
+		http_method method = http_method::GET;
         http_headers_type headers;
         http_data_type data;
         std::future<boost::shared_ptr<http_response>> response;

@@ -149,6 +149,10 @@ namespace naga
                 text_size.x = std::max(text_size.x, line.rectangle.width);
             }
 
+			// TODO: setting the size mode is probably not what we want to happen, we want an
+			// "internal" size mode, that is hidden from the user. the user would probably
+			// not like it if the size mode was being overridden as a result of
+			// is_autosized_to_text being true.
             set_size_modes(gui_size_modes_t(gui_size_mode_e::ABSOLUTE, gui_size_mode_e::ABSOLUTE));
             set_size(text_size);
         }
@@ -198,7 +202,8 @@ namespace naga
 
         base_translation = glm::round(base_translation);
 
-        //add base translation to all line rectangles
+		// TODO: this is 
+        // add base translation to all line rectangles
         for (auto& line : lines)
         {
             line.rectangle.x += base_translation.x;
@@ -230,6 +235,8 @@ namespace naga
 
             bitmap_font->render_string(line.render_string, line_world_matrix, view_projection_matrix, get_color(), color_stack, line.colors_pushes, line.color_pop_indices);
         }
+
+		//TODO: render selection boxes for each line
 
         //render cursor
         if (!is_read_only)
@@ -621,7 +628,7 @@ namespace naga
                     //adding another line would exceed maximum height or line count
                     auto& line_string = lines.back().render_string;
 
-                    if (should_use_ellipses && !line_string.empty())
+                    if (is_read_only && should_use_ellipses && !line_string.empty())
                     {
                         //attempt to add ellipses to the end of the last line
                         const auto ellipse_width = bitmap_font->get_characters().at(ELLIPSE_CHARACTER).advance_x;
@@ -643,7 +650,6 @@ namespace naga
                             ++string_reverse_itr;
                         }
 
-                        //TODO: this has an undesired effect on cursor, will need to be fixed
                         line_string.erase(string_reverse_itr.base() + 1, line_string.end());
                         line_string.append(ellipse_count, ELLIPSE_CHARACTER);
                     }

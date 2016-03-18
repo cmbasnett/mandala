@@ -273,6 +273,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\http_manager.hpp" />
     <ClInclude Include="..\..\src\http_request.hpp" />
     <ClInclude Include="..\..\src\monitor.hpp" />
+    <ClInclude Include="..\..\src\python_function_from_callable.hpp" />
     <ClInclude Include="..\..\src\python_pair.hpp" />
     <ClInclude Include="..\..\src\rigid_body_component.hpp" />
     <ClInclude Include="..\..\src\physics_simulation.hpp" />
