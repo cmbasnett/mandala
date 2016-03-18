@@ -68,8 +68,6 @@ namespace naga
         curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
         curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &content_type);
 		curl_easy_getinfo(curl, CURLINFO_TOTAL_TIME, &elapsed);
-        curl_slist_free_all(headers_list);
-        curl_easy_cleanup(curl);
 
         auto response = boost::make_shared<http_response>();
         response->content = stream.str();
@@ -77,6 +75,9 @@ namespace naga
         response->status = static_cast<http_status>(response_code);
 		response->elapsed = elapsed;
         //TODO: link request
+
+        curl_slist_free_all(headers_list);
+        curl_easy_cleanup(curl);
 
         return response;
     }
