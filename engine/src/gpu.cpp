@@ -1002,7 +1002,7 @@ namespace naga
         write(stringstream, program_binary_data);
         auto data = stringstream.str();
 
-        cache.put(std::to_string(source_checksum), data.data(), data.size());
+        cache.put_buffer(std::to_string(source_checksum), data.data(), data.size());
 
         return id;
     }

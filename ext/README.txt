@@ -1,0 +1,9 @@
+bullet3-2.83.7
+curl-7.47.1
+glew-1.10.0
+glfw-30.1.bin.WIN64
+glm-0.9.4.4
+libpng-1.6.3
+openssl-0.9.8k_WIN32
+Python27
+zlib-1.2.5

@@ -25,6 +25,7 @@
 #include "gui_image.hpp"
 #include "gui_label.hpp"
 #include "gui_layout.hpp"
+#include "gui_scroll.hpp"
 #include "http_response.hpp"
 #include "http_request.hpp"
 #include "http_manager.hpp"
@@ -867,7 +868,8 @@ BOOST_PYTHON_MODULE(naga)
 
     //CACHE
     class_<cache_mgr, noncopyable>("CacheMgr", no_init)
-        .def("purge", &cache_mgr::purge);
+        .def("purge", &cache_mgr::purge)
+        .def("put", &cache_mgr::put);
 
     scope().attr("cache") = boost::ref(cache);
 
@@ -1000,6 +1002,10 @@ BOOST_PYTHON_MODULE(naga)
             .value("BOTH", gui_image::triangle_mode_e::BOTH)
             .value("SLICE", gui_image::triangle_mode_e::SLICE);
     }
+
+    class_<gui_scroll, bases<gui_node>, boost::shared_ptr<gui_scroll>, noncopyable>("GuiScroll")
+        .add_property("scroll_extents", make_getter(&gui_scroll::scroll_extents, return_value_policy<copy_non_const_reference>()), make_setter(&gui_scroll::scroll_extents))
+        .def("set_scroll_location", &gui_scroll::set_scroll_location);
 
     class_<gui_layout, bases<gui_node>, boost::shared_ptr<gui_layout>, noncopyable>("GuiLayout", no_init);
 

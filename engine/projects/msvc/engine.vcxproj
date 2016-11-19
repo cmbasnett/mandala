@@ -103,15 +103,15 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\boost_1_55_0\stage\lib;$(SolutionDir)..\..\ext\glew-1.10.0\lib\Release\Win32;$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\lib-msvc110;$(SolutionDir)..\..\ext\zlib-1.2.8\lib;$(SolutionDir)..\..\ext\libpng-1.6.3\projects\vstudio\Release Library;$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\lib\Win32;$(SolutionDir)..\..\ext\Python27\libs;$(SolutionDir)..\..\ext\bullet3-2.83.7\lib\Debug;$(SolutionDir)..\..\ext\curl-7.47.1\build\Win32\VC12\DLL Release</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3dll.lib;zlib.lib;libpng16.lib;libOpenAL32.dll.a;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;libcurl.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\boost_1_55_0\stage\lib;$(SolutionDir)..\..\ext\glew-1.10.0\lib\Release\Win32;$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\lib-msvc110;$(SolutionDir)..\..\ext\zlib-1.2.8\lib;$(SolutionDir)..\..\ext\libpng-1.6.3\projects\vstudio\Release Library;$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\lib\Win32;$(SolutionDir)..\..\ext\Python27\libs;$(SolutionDir)..\..\ext\bullet3-2.83.7\lib\Debug;$(SolutionDir)..\..\ext\curl-7.47.1\lib\RelWithDebInfo</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3dll.lib;zlib.lib;libpng16.lib;libOpenAL32.dll.a;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;libcurl_imp.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\lib-msvc110\*.dll" "$(OutDir)" /y
 xcopy "$(SolutionDir)..\..\ext\glew-1.10.0\bin\Release\Win32\*.dll" "$(OutDir)" /y
 xcopy "$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\lib\Win32\*.dll" "$(OutDir)" /y
-xcopy "$(SolutionDir)..\..\ext\curl-7.47.1\build\Win32\VC12\DLL Release\*.dll" "$(OutDir)" /y</Command>
+xcopy "$(SolutionDir)..\..\ext\curl-7.47.1\lib\RelWithDebInfo\*.dll" "$(OutDir)" /y</Command>
     </PostBuildEvent>
     <CustomBuildStep>
       <Command>python "$(SolutionDir)..\..\tools\deploy.py" "$(SolutionDir)..\..\..\testapp\resources_src"
@@ -220,7 +220,6 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\aabb.hpp" />
     <ClInclude Include="..\..\src\api.hpp" />
     <ClInclude Include="..\..\src\app.hpp" />
-    <ClInclude Include="..\..\src\arcball_camera.hpp" />
     <ClInclude Include="..\..\src\audio_context.hpp" />
     <ClInclude Include="..\..\src\audio_defs.hpp" />
     <ClInclude Include="..\..\src\audio_device.hpp" />
@@ -243,6 +242,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\collision.hpp" />
     <ClInclude Include="..\..\src\color.hpp" />
     <ClInclude Include="..\..\src\color_types.hpp" />
+    <ClInclude Include="..\..\src\dispatch.hpp" />
     <ClInclude Include="..\..\src\exceptions.hpp" />
     <ClInclude Include="..\..\src\factorial.hpp" />
     <ClInclude Include="..\..\src\fnv.hpp" />
@@ -313,7 +313,6 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\python.hpp" />
     <ClInclude Include="..\..\src\python_optional.hpp" />
     <ClInclude Include="..\..\src\quadtree.hpp" />
-    <ClInclude Include="..\..\src\quake_camera.hpp" />
     <ClInclude Include="..\..\src\range.hpp" />
     <ClInclude Include="..\..\src\rectangle.hpp" />
     <ClInclude Include="..\..\src\resource.hpp" />
@@ -337,7 +336,6 @@ echo $(PlatformTarget)</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\app.cpp" />
-    <ClCompile Include="..\..\src\arcball_camera.cpp" />
     <ClCompile Include="..\..\src\audio_context.cpp" />
     <ClCompile Include="..\..\src\audio_device.cpp" />
     <ClCompile Include="..\..\src\audio_mgr.cpp" />
@@ -380,7 +378,6 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="..\..\src\pack_mgr.cpp" />
     <ClCompile Include="..\..\src\platform_win32.cpp" />
     <ClCompile Include="..\..\src\python.cpp" />
-    <ClCompile Include="..\..\src\quake_camera.cpp" />
     <ClCompile Include="..\..\src\resource.cpp" />
     <ClCompile Include="..\..\src\resource_mgr.cpp" />
     <ClCompile Include="..\..\src\sound.cpp" />

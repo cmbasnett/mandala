@@ -27,7 +27,7 @@ namespace naga
             input_event.touch.location -= scroll_location;
         }
 
-        auto base_result = gui_node::on_input_event(input_event);
+        auto base_result = gui_node::on_input_event_begin(input_event);
         
         if (input_event.device_type == input_event_t::device_type_e::TOUCH)
         {
@@ -67,6 +67,14 @@ namespace naga
                 return true;
             }
             break;
+        case input_event_t::touch_t::type_e::SCROLL:
+            if (contains(get_bounds(), input_event.touch.location))
+            {
+                scroll_location_target += (input_event.touch.location_delta * 32.0);
+                scroll_location_target = glm::clamp(scroll_location_target, scroll_extents.min, scroll_extents.max);
+                return true;
+            }
+            break;
         }
 
         return false;
@@ -76,10 +84,11 @@ namespace naga
     {
         //TODO: figure out a proper algorithm for this smoothing
         scroll_location += (scroll_location_target - scroll_location) * dt * 30.0f;
+        scroll_location = scroll_location_target;
         scroll_location = glm::clamp(scroll_location, scroll_extents.min, scroll_extents.max);
     }
 
-    void gui_scroll::set_scroll_location(const scroll_location_type & scroll_location, bool should_interpolate)
+    void gui_scroll::set_scroll_location(const scroll_location_type& scroll_location, bool should_interpolate)
     {
         scroll_location_target = scroll_location;
 
@@ -108,6 +117,6 @@ namespace naga
         scroll_extents.min *= -1;
         scroll_extents.max *= -1;
 
-        set_scroll_extents(scroll_extents);
+        this->scroll_extents = scroll_extents;
     }
 }

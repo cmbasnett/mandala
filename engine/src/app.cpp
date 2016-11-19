@@ -42,7 +42,7 @@ namespace naga
 
         if (!ifstream.is_open())
         {
-            throw std::exception();
+            throw std::exception(".app file not found");
         }
 
         //TODO: not injection-proof, particularly dangerous if we don't want end-users running python commands
@@ -51,11 +51,10 @@ namespace naga
         auto game_class = _ptree.get<std::string>("game_class");
 
         //TODO: make this execute a .pyc file instead (more secure?)
+    begin:
         py.exec_file("app.py");
 
         this->game = extract<boost::shared_ptr<naga::game>>(py.eval((game_class + "()").c_str()))();
-
-        begin:
 
         platform.app_run_start();
 

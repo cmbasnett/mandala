@@ -19,7 +19,8 @@ namespace naga
         ~cache_mgr();
 
         std::unique_ptr<std::ifstream> get(const std::string& file_name) const;
-        i32 put(const std::string& file_name, const void* buffer, size_t count);
+        i32 put_buffer(const std::string& file_name, const void* buffer, size_t count);
+        i32 put(const std::string& file_name, const std::string& contents);
         void erase(const std::string& file_name);
         i32 checksum(const std::string& file_name) const;
         void purge();

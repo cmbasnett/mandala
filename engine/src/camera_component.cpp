@@ -34,7 +34,7 @@ namespace naga
         const auto left = glm::normalize(glm::cross(vec3(0, 1, 0), forward));
         auto up = glm::normalize(glm::cross(forward, left));
 
-        //rotate up matrix along forward axis
+        // rotate up matrix along forward axis
         up = glm::rotate(glm::angleAxis(roll, forward), up);
 
         params.frustum.set(pose.location, left, up, forward, fov, near, far, aspect);

@@ -35,7 +35,7 @@ namespace naga
 
             if (!nodes_pair.second)
             {
-                throw std::exception("node hashalready exists for type");
+                throw std::exception("node hash already exists for type");
             }
         }
 
@@ -48,14 +48,14 @@ namespace naga
 
             if (type_nodes_itr == type_nodes.end())
             {
-                throw std::out_of_range("node hashdoesn't exist for type");
+                throw std::out_of_range("node hash doesn't exist for type");
             }
 
             auto nodes_itr = type_nodes_itr->second.find(hash);
 
             if (nodes_itr == type_nodes_itr->second.end())
             {
-                throw std::out_of_range("node hashdoesn't exist for type");
+                throw std::out_of_range("node hash doesn't exist for type");
             }
 
             return boost::static_pointer_cast<T, gui_node>(nodes_itr->second);

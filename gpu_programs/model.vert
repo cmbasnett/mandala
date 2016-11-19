@@ -26,14 +26,14 @@ mat4 create_bone_transform()
 {
     mat4 bone_transform = mat4(0.0);
     
-    bone_transform += bone_matrices[bone_indices_0[0]] * bone_weights_0[0];
-    bone_transform += bone_matrices[bone_indices_0[1]] * bone_weights_0[1];
-    bone_transform += bone_matrices[bone_indices_0[2]] * bone_weights_0[2];
-    bone_transform += bone_matrices[bone_indices_0[3]] * bone_weights_0[3];
-    bone_transform += bone_matrices[bone_indices_1[0]] * bone_weights_1[0];
-    bone_transform += bone_matrices[bone_indices_1[1]] * bone_weights_1[1];
-    bone_transform += bone_matrices[bone_indices_1[2]] * bone_weights_1[2];
-    bone_transform += bone_matrices[bone_indices_1[3]] * bone_weights_1[3];
+    bone_transform += (bone_matrices[bone_indices_0[0]] * bone_weights_0[0]);
+    bone_transform += (bone_matrices[bone_indices_0[1]] * bone_weights_0[1]);
+    bone_transform += (bone_matrices[bone_indices_0[2]] * bone_weights_0[2]);
+    bone_transform += (bone_matrices[bone_indices_0[3]] * bone_weights_0[3]);
+    bone_transform += (bone_matrices[bone_indices_1[0]] * bone_weights_1[0]);
+    bone_transform += (bone_matrices[bone_indices_1[1]] * bone_weights_1[1]);
+    bone_transform += (bone_matrices[bone_indices_1[2]] * bone_weights_1[2]);
+    bone_transform += (bone_matrices[bone_indices_1[3]] * bone_weights_1[3]);
     
     return bone_transform;
 }

@@ -52,6 +52,15 @@ namespace naga
         slice_uv.top /= sprite->get_region()->source_size.y;
 
         //TODO: find a better way to generalize this so it's less of a mess
+        //TODO: the UVs are not tiling here, they should be!
+
+        // 3--E----F--2
+        // |  |    |  |
+        // A--B----C--D
+        // |  |    |  |
+        // 6--7----8--9
+        // |  |    |  |
+        // 0--4----5--1
         auto vertices = {
             vertex_type(vec3(0, 0, 0), vec2(0, 0)),
             vertex_type(vec3(size.x, 0, 0), vec2(1, 0)),

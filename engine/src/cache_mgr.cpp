@@ -38,7 +38,7 @@ namespace naga
         return std::make_unique<std::ifstream>(file_path.string());
     }
 
-    i32 cache_mgr::put(const std::string& file_name, const void* data, size_t count)
+    i32 cache_mgr::put_buffer(const std::string& file_name, const void* data, size_t count)
     {
         boost::crc_32_type crc32;
 
@@ -55,6 +55,11 @@ namespace naga
         file_checksums.insert(std::make_pair(file_name, checksum));
 
         return checksum;
+    }
+
+    i32 cache_mgr::put(const std::string& file_name, const std::string& contents)
+    {
+        return put_buffer(file_name, contents.data(), contents.size());
     }
 
     void cache_mgr::erase(const std::string& file_name)

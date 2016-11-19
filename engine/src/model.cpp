@@ -306,19 +306,19 @@ namespace naga
         for (size_t i = 0; i < meshes.size(); ++i)
         {
             const auto& mesh = meshes[i];
-
+             
             //culling
             auto culling_state = gpu.culling.get_state();
 
-            //culling_state.is_enabled = !mesh->material->get_is_two_sided();
+            culling_state.is_enabled = !mesh->material->get_is_two_sided();
 
             gpu.culling.push_state(culling_state);
-
+            
             gpu.buffers.push(gpu_t::buffer_target::ARRAY, mesh->vertex_buffer);
             gpu.buffers.push(gpu_t::buffer_target::ELEMENT_ARRAY, mesh->index_buffer);
 
             const auto gpu_program = gpu_programs.get<model_gpu_program>();
-
+            
             gpu.programs.push(gpu_program);
 
             gpu.set_uniform("world_matrix", world_matrix);

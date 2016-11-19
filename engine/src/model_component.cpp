@@ -32,7 +32,7 @@ namespace naga
             auto& frame_skeleton_1 = animation->frame_skeletons[frame_1_index];
 
             model_skeleton::interpolate(skeleton, frame_skeleton_0, frame_skeleton_1, interpolate_t);
-        }
+        } 
 
         //TODO: the AABB is not calculated if there is no animation
 
@@ -60,7 +60,7 @@ namespace naga
             //skeleton aabb does not intersect camera frustum
             //return;
         }
-
+        
         // TODO: need to figure out a better way to feed light data into the shaders
         vec3 light_location;
 

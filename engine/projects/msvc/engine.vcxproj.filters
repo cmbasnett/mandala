@@ -7,9 +7,6 @@
     <ClInclude Include="..\..\src\app.hpp">
       <Filter>app</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\arcball_camera.hpp">
-      <Filter>actors\cameras</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\audio_context.hpp">
       <Filter>audio</Filter>
     </ClInclude>
@@ -229,9 +226,6 @@
     <ClInclude Include="..\..\src\line.hpp">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\quake_camera.hpp">
-      <Filter>actors\cameras</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\rectangle.hpp">
       <Filter>math</Filter>
     </ClInclude>
@@ -350,13 +344,13 @@
     <ClInclude Include="..\..\src\python_function_from_callable.hpp">
       <Filter>python</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\dispatch.hpp">
+      <Filter>dispatch</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\app.cpp">
       <Filter>app</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\arcball_camera.cpp">
-      <Filter>actors\cameras</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\audio_context.cpp">
       <Filter>audio</Filter>
@@ -471,9 +465,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\platform_win32.cpp">
       <Filter>platform\win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\quake_camera.cpp">
-      <Filter>actors\cameras</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\state_mgr.cpp">
       <Filter>states</Filter>
@@ -592,12 +583,6 @@
     <Filter Include="resources\packs">
       <UniqueIdentifier>{a8e04df4-77fd-473d-976d-5cef064397cd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="actors">
-      <UniqueIdentifier>{9405043a-219c-4989-9ee8-797a1fc2ee78}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="actors\cameras">
-      <UniqueIdentifier>{b532d2e6-b0a2-4d46-ae45-576a997d8c63}</UniqueIdentifier>
-    </Filter>
     <Filter Include="cache">
       <UniqueIdentifier>{e57cce02-57ae-485f-b0fa-5d6da1f1ab15}</UniqueIdentifier>
     </Filter>
@@ -630,6 +615,9 @@
     </Filter>
     <Filter Include="network\http">
       <UniqueIdentifier>{454ed85c-1eb2-4648-8af7-3df7bf74be57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dispatch">
+      <UniqueIdentifier>{8deb7d76-b8b0-4699-afe9-b8a51e8f4c4f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
