@@ -21,7 +21,7 @@ namespace naga
         void on_tick(f32 dt) override;
         void on_render(camera_params& camera_params) override;
 
-        void play(const hash& animation_hash);
+        void play(const std::string& animation_name);
 
         const boost::shared_ptr<model>& get_model() const { return model; }
         pose3 get_bone_pose(const hash& bone_hash) const;

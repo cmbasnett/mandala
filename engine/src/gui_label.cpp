@@ -245,7 +245,7 @@ namespace naga
 
             if (should_show_cursor)
             {
-                render_rectangle(world_matrix, view_projection_matrix, cursor.rectangle, vec4(1, 0, 0, 1), true);
+                render_rectangle(world_matrix, view_projection_matrix, cursor.rectangle, vec4(1, 1, 1, 1), true);
             }
         }
 

@@ -9,6 +9,8 @@
 #include "rectangle.hpp"
 #include "line.hpp"
 #include "sphere.hpp"
+#include "texture.hpp"
+#include "resource_mgr.hpp"
 
 #include "gpu_buffer_mgr.hpp"
 
@@ -67,11 +69,17 @@ namespace naga
 
         gpu.programs.push(gpu_program);
 
+		// TODO: have this as some sort of constant somewhere!
+		auto texture = resources.get<naga::texture>("white.png");
+		gpu.textures.bind(0, texture);
+
         gpu.set_uniform("world_matrix", world_matrix);
         gpu.set_uniform("view_projection_matrix", view_projection_matrix);
         gpu.set_uniform("color", color);
 
         gpu.draw_elements(gpu_t::primitive_type::LINE_STRIP, points.size(), index_buffer_type::DATA_TYPE, 0);
+
+		gpu.textures.unbind(0);
 
         gpu.programs.pop();
 
@@ -111,13 +119,19 @@ namespace naga
 
         const auto gpu_program = gpu_programs.get<basic_gpu_program>();
 
-        gpu.programs.push(gpu_program);
+		gpu.programs.push(gpu_program);
+
+		// TODO: have this as some sort of constant somewhere!
+		auto texture = resources.get<naga::texture>("white.png");
+		gpu.textures.bind(0, texture);
 
         gpu.set_uniform("world_matrix", world_matrix * glm::translate(rectangle.x, rectangle.y, T(0)) * glm::scale(rectangle.width, rectangle.height, T(0)));
         gpu.set_uniform("view_projection_matrix", view_projection_matrix);
         gpu.set_uniform("color", color);
 
         gpu.draw_elements(is_filled ? gpu_t::primitive_type::TRIANGLE_FAN : gpu_t::primitive_type::LINE_LOOP, 4, index_buffer_type::DATA_TYPE, 0);
+
+		gpu.textures.unbind(0);
 
         gpu.programs.pop();
 
@@ -167,7 +181,13 @@ namespace naga
         gpu.set_uniform("view_projection_matrix", view_projection_matrix);
         gpu.set_uniform("color", color);
 
+		// TODO: have this as some sort of constant somewhere!
+		auto texture = resources.get<naga::texture>("white.png");
+		gpu.textures.bind(0, texture);
+
         gpu.draw_elements(gpu_t::primitive_type::LINES, 24, index_buffer_type::DATA_TYPE, 0);
+
+		gpu.textures.unbind(0);
 
         gpu.programs.pop();
 
@@ -176,7 +196,7 @@ namespace naga
     }
 
     template<typename T>
-    void render_sphere(const mat4& world_matrix, const mat4& view_projection_matrix, const details::sphere<T>& sphere)
+    void render_sphere(const mat4& world_matrix, const mat4& view_projection_matrix, const details::sphere<T>& sphere, const vec4& color)
     {
         typedef vertex_buffer<basic_gpu_program::vertex_type> vertex_buffer_type;
         typedef index_buffer<u8> index_buffer_type;
@@ -242,10 +262,17 @@ namespace naga
 
         gpu.set_uniform("world_matrix", world_matrix * glm::translate(sphere.origin) * glm::scale(vec3(sphere.radius)));
         gpu.set_uniform("view_projection_matrix", view_projection_matrix);
+		gpu.set_uniform("color", color);
+
+		// TODO: have this as some sort of constant somewhere!
+		auto texture = resources.get<naga::texture>("white.png");
+		gpu.textures.bind(0, texture);
 
         gpu.draw_elements(gpu_t::primitive_type::LINE_LOOP, SPHERE_SIDES, index_buffer_type::DATA_TYPE, SPHERE_SIDES * 0);
         gpu.draw_elements(gpu_t::primitive_type::LINE_LOOP, SPHERE_SIDES, index_buffer_type::DATA_TYPE, SPHERE_SIDES * 1);
         gpu.draw_elements(gpu_t::primitive_type::LINE_LOOP, SPHERE_SIDES, index_buffer_type::DATA_TYPE, SPHERE_SIDES * 2);
+
+		gpu.textures.unbind(0);
 
         gpu.programs.pop();
 

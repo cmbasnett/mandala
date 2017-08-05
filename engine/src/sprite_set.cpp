@@ -37,7 +37,7 @@ namespace naga
         std::string texture_name;
         std::getline(istream, texture_name, '\0');
 
-        texture = resources.get<naga::texture>(naga::hash(texture_name));
+        texture = resources.get<naga::texture>(texture_name);
 
         //region count
         u16 region_count = 0;

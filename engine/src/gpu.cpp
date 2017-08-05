@@ -567,7 +567,8 @@ namespace naga
 
     void gpu_t::set_uniform(const char* name, const std::vector<mat4>& matrices, bool should_transpose) const
     {
-        glUniformMatrix4fv(get_uniform_location(programs.top()->lock()->get_id(), name), static_cast<GLsizei>(matrices.size()), GL_FALSE, reinterpret_cast<const GLfloat*>(matrices.data())); glCheckError();
+		const GLfloat* f = reinterpret_cast<const GLfloat*>(matrices.data());
+		glUniformMatrix4fv(get_uniform_location(programs.top()->lock()->get_id(), name), static_cast<GLsizei>(matrices.size()), should_transpose ? GL_TRUE : GL_FALSE, f); glCheckError();
     }
 
     void gpu_t::set_uniform_subroutine(shader_type shader_type, gpu_index index)

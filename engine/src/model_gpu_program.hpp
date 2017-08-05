@@ -42,7 +42,7 @@ this->bone_weights_1 = bone_weights_1;            }
         typedef vertex vertex_type;
 
         model_gpu_program() :
-            gpu_program(R"(#version 400
+            gpu_program(R"(#version 450
 
 uniform mat4 world_matrix;
 uniform mat3 normal_matrix;
@@ -107,7 +107,7 @@ void main()
     out_view_direction = normalize(camera_location - out_location);
     
     gl_Position = final_location;    
-})", R"(#version 400
+})", R"(#version 450
 
 struct diffuse_t
 {

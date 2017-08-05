@@ -1,16 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Windows Desktop
+# Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "engine", "..\..\engine\projects\msvc\engine.vcxproj", "{FEE27E9B-79E9-4666-A0A4-88E089142538}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "naga", "..\..\engine\projects\msvc\engine.vcxproj", "{FEE27E9B-79E9-4666-A0A4-88E089142538}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "client", "..\..\client\projects\msvc\client.vcxproj", "{5D4DE016-F14B-4127-8594-B098D63FF40E}"
-	ProjectSection(ProjectDependencies) = postProject
-		{FEE27E9B-79E9-4666-A0A4-88E089142538} = {FEE27E9B-79E9-4666-A0A4-88E089142538}
-	EndProjectSection
-EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "testapp", "..\..\..\testapp\testapp.pyproj", "{70E92F31-995B-4097-ACF4-CFFF501E7FF9}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "window", "..\..\examples\window\window\window.pyproj", "{BD2FB802-24C6-407B-A5D8-86CE2E45E939}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,32 +43,18 @@ Global
 		{FEE27E9B-79E9-4666-A0A4-88E089142538}.Release|Win64.Build.0 = Release|x64
 		{FEE27E9B-79E9-4666-A0A4-88E089142538}.Release|x64.ActiveCfg = Release|x64
 		{FEE27E9B-79E9-4666-A0A4-88E089142538}.Release|x64.Build.0 = Release|x64
-		{5D4DE016-F14B-4127-8594-B098D63FF40E}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{5D4DE016-F14B-4127-8594-B098D63FF40E}.Debug|ARM.ActiveCfg = Debug|Win32
-		{5D4DE016-F14B-4127-8594-B098D63FF40E}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{5D4DE016-F14B-4127-8594-B098D63FF40E}.Debug|Win32.ActiveCfg = Debug|Win32
-		{5D4DE016-F14B-4127-8594-B098D63FF40E}.Debug|Win32.Build.0 = Debug|Win32
-		{5D4DE016-F14B-4127-8594-B098D63FF40E}.Debug|Win64.ActiveCfg = Debug|Win32
-		{5D4DE016-F14B-4127-8594-B098D63FF40E}.Debug|x64.ActiveCfg = Debug|Win32
-		{5D4DE016-F14B-4127-8594-B098D63FF40E}.Release|Any CPU.ActiveCfg = Release|Win32
-		{5D4DE016-F14B-4127-8594-B098D63FF40E}.Release|ARM.ActiveCfg = Release|Win32
-		{5D4DE016-F14B-4127-8594-B098D63FF40E}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{5D4DE016-F14B-4127-8594-B098D63FF40E}.Release|Win32.ActiveCfg = Release|Win32
-		{5D4DE016-F14B-4127-8594-B098D63FF40E}.Release|Win32.Build.0 = Release|Win32
-		{5D4DE016-F14B-4127-8594-B098D63FF40E}.Release|Win64.ActiveCfg = Release|Win32
-		{5D4DE016-F14B-4127-8594-B098D63FF40E}.Release|x64.ActiveCfg = Release|Win32
-		{70E92F31-995B-4097-ACF4-CFFF501E7FF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{70E92F31-995B-4097-ACF4-CFFF501E7FF9}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{70E92F31-995B-4097-ACF4-CFFF501E7FF9}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{70E92F31-995B-4097-ACF4-CFFF501E7FF9}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{70E92F31-995B-4097-ACF4-CFFF501E7FF9}.Debug|Win64.ActiveCfg = Debug|Any CPU
-		{70E92F31-995B-4097-ACF4-CFFF501E7FF9}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{70E92F31-995B-4097-ACF4-CFFF501E7FF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{70E92F31-995B-4097-ACF4-CFFF501E7FF9}.Release|ARM.ActiveCfg = Release|Any CPU
-		{70E92F31-995B-4097-ACF4-CFFF501E7FF9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{70E92F31-995B-4097-ACF4-CFFF501E7FF9}.Release|Win32.ActiveCfg = Release|Any CPU
-		{70E92F31-995B-4097-ACF4-CFFF501E7FF9}.Release|Win64.ActiveCfg = Release|Any CPU
-		{70E92F31-995B-4097-ACF4-CFFF501E7FF9}.Release|x64.ActiveCfg = Release|Any CPU
+		{BD2FB802-24C6-407B-A5D8-86CE2E45E939}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD2FB802-24C6-407B-A5D8-86CE2E45E939}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{BD2FB802-24C6-407B-A5D8-86CE2E45E939}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{BD2FB802-24C6-407B-A5D8-86CE2E45E939}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{BD2FB802-24C6-407B-A5D8-86CE2E45E939}.Debug|Win64.ActiveCfg = Debug|Any CPU
+		{BD2FB802-24C6-407B-A5D8-86CE2E45E939}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BD2FB802-24C6-407B-A5D8-86CE2E45E939}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD2FB802-24C6-407B-A5D8-86CE2E45E939}.Release|ARM.ActiveCfg = Release|Any CPU
+		{BD2FB802-24C6-407B-A5D8-86CE2E45E939}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{BD2FB802-24C6-407B-A5D8-86CE2E45E939}.Release|Win32.ActiveCfg = Release|Any CPU
+		{BD2FB802-24C6-407B-A5D8-86CE2E45E939}.Release|Win64.ActiveCfg = Release|Any CPU
+		{BD2FB802-24C6-407B-A5D8-86CE2E45E939}.Release|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -37,6 +37,7 @@
 #include "model.hpp"
 #include "model_animation.hpp"
 #include "model_component.hpp"
+#include "monitor.hpp"
 #include "padding.hpp"
 #include "physics_simulation.hpp"
 #include "pose.hpp"
@@ -57,6 +58,8 @@
 #include "terrain_component.hpp"
 #include "python_pair.hpp"
 #include "python_function_from_callable.hpp"
+
+#include "psk.hpp"
 
 using namespace boost;
 using namespace boost::python;
@@ -280,7 +283,7 @@ NAGA_PYTHON_DECLARE_WRAPPER_CLASS(game_component)
 };
 
 #define NAGA_DEFINE_RESOURCE_GET_FUNCTION(name)\
-boost::shared_ptr<name> resources_get_##name(resource_mgr& resources, const std::string& hash) { return resources.get<name>(naga::hash(hash)); }
+boost::shared_ptr<name> resources_get_##name(resource_mgr& resources, const std::string& hash) { return resources.get<name>(hash); }
 
 NAGA_DEFINE_RESOURCE_GET_FUNCTION(bitmap_font)
 NAGA_DEFINE_RESOURCE_GET_FUNCTION(bsp)
@@ -504,7 +507,8 @@ BOOST_PYTHON_MODULE(naga)
         .def("on_tick_start", pure_virtual(&game::on_tick_start))
         .def("on_tick_end", pure_virtual(&game::on_tick_end))
         .def("on_render_start", pure_virtual(&game::on_render_start))
-        .def("on_render_end", pure_virtual(&game::on_render_end));
+        .def("on_render_end", pure_virtual(&game::on_render_end))
+		.def("on_input_event", pure_virtual(&game::on_input_event));
 
     class_<naga::hash>("Hash", init<std::string>());
 
@@ -1091,7 +1095,7 @@ BOOST_PYTHON_MODULE(naga)
             ;
     }
 
-    class_<sprite, noncopyable>("Sprite", init<const naga::hash&, const naga::hash&>())
+    class_<sprite, noncopyable>("Sprite", init<const std::string&, const naga::hash&>())
         .add_property("region", make_function(&sprite::get_region, return_value_policy<copy_const_reference>()))
         .add_property("sprite_set", make_function(&sprite::get_sprite_set, return_value_policy<copy_const_reference>()));
 
@@ -1217,7 +1221,11 @@ BOOST_PYTHON_MODULE(naga)
 
     // TERRAIN
     class_<terrain_component, bases<game_component>, boost::shared_ptr<terrain_component>, noncopyable>(terrain_component::component_name)
+		.add_property("scale", &terrain_component::get_scale, &terrain_component::set_scale)
         .def("set_heightmap", &terrain_component::set_heightmap);
+
+	// PSK (TEMP)
+	class_<PSK, boost::shared_ptr<PSK>, noncopyable>("PSK", init<const std::string&>());
 
     // HTTP
 	enum_<http_method>("HttpMethod")

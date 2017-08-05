@@ -44,9 +44,7 @@ namespace naga
             const auto diffuse_ptree = diffuse_optional.get();
 
             //texture
-            const auto texture_hash = diffuse_ptree.get<naga::hash>("texture");
-
-            diffuse.texture = resources.get<texture>(texture_hash);
+			diffuse.texture = resources.get<texture>(diffuse_ptree.get<std::string>("texture"));
 
             //color
             const auto color_optional = diffuse_ptree.get_child_optional("color");
@@ -77,9 +75,7 @@ namespace naga
             const auto normal_ptree = normal_optional.get();
 
             //texture
-            const auto texture_hash = normal_ptree.get<naga::hash>("texture");
-
-            normal.texture = resources.get<texture>(texture_hash);
+			normal.texture = resources.get<texture>(normal_ptree.get<std::string>("texture"));
         }
 
         //specular
@@ -90,9 +86,7 @@ namespace naga
             const auto specular_ptree = specular_optional.get();
 
             //texture
-            const auto texture_hash = specular_ptree.get<naga::hash>("texture");
-
-            specular.texture = resources.get<texture>(texture_hash);
+			specular.texture = resources.get<texture>(specular_ptree.get<std::string>("texture"));
 
             //color
             const auto color_optional = specular_ptree.get_child_optional("color");
@@ -131,9 +125,7 @@ namespace naga
             const auto emissive_ptree = emissive_optional.get();
 
             //texture
-            const auto texture_hash = emissive_ptree.get<naga::hash>("texture");
-
-            emissive.texture = resources.get<texture>(texture_hash);
+			emissive.texture = resources.get<texture>(emissive_ptree.get<std::string>("texture"));
 
             //color
             const auto color_optional = emissive_ptree.get_child_optional("color");

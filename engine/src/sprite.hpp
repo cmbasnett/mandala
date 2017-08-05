@@ -12,10 +12,10 @@ namespace naga
 
     struct sprite_ref
     {
-        sprite_ref(const hash& sprite_set_hash, const hash& region_hash);
+		sprite_ref(const std::string& sprite_set_name, const hash& region_hash);
         sprite_ref(sprite_ref&& copy);
 
-        hash sprite_set_hash;
+        std::string sprite_set_name;
         hash region_hash;
     };
 
@@ -24,7 +24,7 @@ namespace naga
         typedef boost::shared_ptr<sprite_set::region> region_type;
         typedef boost::shared_ptr<sprite_set> sprite_set_type;
 
-        sprite(const hash& sprite_set_hash, const hash& region_hash);
+        sprite(const std::string& sprite_set_name, const hash& region_hash);
         sprite(const sprite_ref& sprite_def);
         sprite(const sprite_set_type& sprite_set, const hash& region_hash);
 

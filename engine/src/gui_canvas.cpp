@@ -45,24 +45,23 @@ namespace naga
         }
     }
 
-    void gui_canvas::on_render_begin(mat4& world_matrix, mat4& view_projection_matrix)
-    {
-        gpu_viewport_type viewport;
-        viewport.width = static_cast<gpu_viewport_type::scalar_type>(get_size().x);
-        viewport.height = static_cast<gpu_viewport_type::scalar_type>(get_size().y);
-        viewport.x = static_cast<gpu_viewport_type::scalar_type>(get_bounds().min.x);
-        viewport.y = static_cast<gpu_viewport_type::scalar_type>(get_bounds().min.y);
-
-        gpu.frame_buffers.push(frame_buffer);
-        //gpu.viewports.push(viewport);
-    }
+	void gui_canvas::on_render_begin(mat4& world_matrix, mat4& view_projection_matrix)
+	{
+		//gpu_viewport_type viewport;
+		//viewport.width = static_cast<gpu_viewport_type::scalar_type>(get_size().x);
+		//viewport.height = static_cast<gpu_viewport_type::scalar_type>(get_size().y);
+		//viewport.x = static_cast<gpu_viewport_type::scalar_type>(get_bounds().min.x);
+		//viewport.y = static_cast<gpu_viewport_type::scalar_type>(get_bounds().min.y);
+		//gpu.frame_buffers.push(frame_buffer);
+		//gpu.viewports.push(viewport);
+	}
 
     void gui_canvas::on_render_end(mat4& world_matrix, mat4& view_projection_matrix)
     {
         static const size_t DIFFUSE_TEXTURE_INDEX = 0;
 
         //gpu.viewports.pop();
-        gpu.frame_buffers.pop();
+        //gpu.frame_buffers.pop();
 
         //TODO: for each render pass, push/pop frame buffer, do gpu program etc.
 

@@ -1,3 +1,6 @@
+//glm
+#include <glm/ext.hpp>
+
 //naga
 #include "terrain_component.hpp"
 #include "gpu_buffer_mgr.hpp"
@@ -66,8 +69,6 @@ namespace naga
 
         chunk_count = chunk_x_count * chunk_z_count;
 
-        const auto terrain_scale = 128.0f;
-
         std::vector<vertex_type> vertices;
         vertices.reserve(chunk_count * VERTICES_PER_CHUNK);
 
@@ -84,7 +85,7 @@ namespace naga
                         auto z = (chunk_z * CHUNK_SIZE) + patch_z;
                         auto y = heightmap->get_data(x, z);
 
-                        vertices.push_back(vertex_type(vec3(x, y * terrain_scale, z), vec4(y, y, y, 1)));
+						vertices.push_back(vertex_type(vec3(x, y, z) * scale, vec4(y, y, y, 1)));
                     }
                 }
             }
@@ -149,23 +150,21 @@ namespace naga
         index_buffer = gpu_buffers.make<index_buffer_type>().lock();
         index_buffer->data(indices, gpu_t::buffer_usage::STATIC_DRAW);
 
-        const auto HEIGHTFIELD_SCALE = 64.0f;
-
         btHeightfieldTerrainShape* heightfield_terrain_shape = new btHeightfieldTerrainShape(
             image->get_size().x,
             image->get_size().y,
             heightmap->get_data(),
-            HEIGHTFIELD_SCALE,
-            -HEIGHTFIELD_SCALE / 2,
-            HEIGHTFIELD_SCALE / 2,
+            scale.x,
+            -scale.y / 2,
+            scale.z / 2,
             1,
             PHY_FLOAT,
             false);
 
         auto rigid_body = boost::make_shared<rigid_body_component>();
-        rigid_body->set_collision_shape(heightfield_terrain_shape);
+		rigid_body->set_collision_shape(heightfield_terrain_shape);
 
-        texture = resources.get<naga::texture>(hash("white.png"));
+        texture = resources.get<naga::texture>("white.png");
     }
 
     void terrain_component::on_render(camera_params& camera_params)
@@ -177,7 +176,7 @@ namespace naga
 
         gpu.programs.push(gpu_program);
 
-        gpu.set_uniform("world_matrix", mat4());
+		gpu.set_uniform("world_matrix", glm::scale(scale));
         gpu.set_uniform("view_projection_matrix", camera_params.projection_matrix * camera_params.view_matrix);
         gpu.set_uniform("diffuse_texture", 0);
         gpu.set_uniform("color", vec4(1.0f));
@@ -202,6 +201,9 @@ namespace naga
 
     vec3 terrain_component::trace(const line3& ray) const
 	{
+
+		// TODO: trace octree down to leafs then trace the individual triangles within the leaves
+
         return vec3();
     }
 
@@ -209,4 +211,9 @@ namespace naga
     {
         //TODO: get all affected chunks in this rectangle
     }
+
+	void terrain_component::set_scale(const vec3& scale)
+	{
+		this->scale = scale;
+	}
 }

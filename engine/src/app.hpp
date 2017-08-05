@@ -46,7 +46,7 @@ namespace naga
 
         app() = default;
 
-        void run();
+        void run(const boost::shared_ptr<game>& game);
         void exit();
         void reset();
         void screenshot();

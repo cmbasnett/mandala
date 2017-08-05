@@ -379,12 +379,12 @@ namespace naga
 
             try
             {
-                texture = resources.get<naga::texture>(naga::hash(texture_name));
+                texture = resources.get<naga::texture>(texture_name);
             }
-            catch (...)
-            {
-                std::cerr << "couldn't load " << texture_name << std::endl;
-            }
+			catch (...)
+			{
+				std::cerr << "couldn't load " << texture_name << std::endl;
+			}
 
             textures.push_back(texture);
         }

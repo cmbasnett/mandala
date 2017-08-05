@@ -30,32 +30,14 @@ namespace naga
 {
     app app_;
 
-    void app::run()
+	void app::run(const boost::shared_ptr<naga::game>& game)
     {
         using namespace std::chrono;
         using namespace boost;
         using namespace boost::python;
 
         run_time_point = std::chrono::system_clock::now();
-
-        std::ifstream ifstream(".app");
-
-        if (!ifstream.is_open())
-        {
-            throw std::exception(".app file not found");
-        }
-
-        //TODO: not injection-proof, particularly dangerous if we don't want end-users running python commands
-        boost::property_tree::ptree _ptree;
-        boost::property_tree::read_json(ifstream, _ptree);
-        auto game_class = _ptree.get<std::string>("game_class");
-
-        //TODO: make this execute a .pyc file instead (more secure?)
     begin:
-        py.exec_file("app.py");
-
-        this->game = extract<boost::shared_ptr<naga::game>>(py.eval((game_class + "()").c_str()))();
-
         platform.app_run_start();
 
         gpu_programs.make<gui_image_gpu_program>();
@@ -65,6 +47,7 @@ namespace naga
         gpu_programs.make<blur_horizontal_gpu_program>();
         gpu_programs.make<basic_gpu_program>();
 
+		this->game = game;
         this->game->on_run_start();
 
         auto simulation_time = high_resolution_clock::now();

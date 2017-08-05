@@ -41,7 +41,7 @@ namespace naga
         }
 
         template<typename T = std::enable_if<is_resource<T>::value, T>::type>
-        boost::shared_ptr<T> get(const hash& hash)
+        boost::shared_ptr<T> get(const std::string& path)
         {
             static const std::type_index TYPE_INDEX = typeid(T);
 
@@ -49,14 +49,14 @@ namespace naga
 
             const auto type_resources_itr = type_resources.find(TYPE_INDEX);
 
-            if (type_resources_itr == type_resources.end())
-            {
-                //no resources of this type have yet been allocated
-                type_resources.insert(std::make_pair(TYPE_INDEX, resource_map_type()));
-            }
+			if (type_resources_itr == type_resources.end())
+			{
+				//no resources of this type have yet been allocated
+				type_resources.insert(std::make_pair(TYPE_INDEX, resource_map_type()));
+			}
 
             auto& resources = type_resources[TYPE_INDEX];
-
+			auto hash = naga::hash(path);
             auto resources_itr = resources.find(hash);
 
             if (resources_itr != resources.end())
@@ -69,7 +69,17 @@ namespace naga
                 return boost::static_pointer_cast<T, naga::resource>(resource);
             }
 
-            auto istream = extract(hash);
+			boost::shared_ptr<std::istream> istream;
+
+			try
+			{
+				istream = extract(hash);
+			}
+			catch (const std::out_of_range&)
+			{
+				// TODO: not in the packs, check the file system!
+				istream = boost::make_shared<std::ifstream>(path, std::ios::binary);
+			}
 
             auto resource = boost::make_shared<T>(*istream);
 

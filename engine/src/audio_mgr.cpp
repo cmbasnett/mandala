@@ -23,20 +23,20 @@ namespace naga
     {
         try
         {
-            auto device = boost::make_shared<audio_device>();
-            devices.push_back(device);
+            //auto device = boost::make_shared<audio_device>();
+            //devices.push_back(device);
 
-            context = boost::make_shared<audio_context>(device);
+            //context = boost::make_shared<audio_context>(device);
 
-            if (alcMakeContextCurrent(*context) == ALC_FALSE)
-            {
-                throw std::exception();
-            }
+            //if (alcMakeContextCurrent(*context) == ALC_FALSE)
+            //{
+            //    throw std::exception();
+            //}
 
-            if (alGetError() != ALC_NO_ERROR)
-            {
-                throw std::exception();
-            }
+            //if (alGetError() != ALC_NO_ERROR)
+            //{
+            //    throw std::exception();
+            //}
         }
         catch (std::exception&)
         {

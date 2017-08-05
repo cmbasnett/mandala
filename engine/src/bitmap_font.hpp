@@ -22,7 +22,7 @@ namespace naga
     struct texture;
 
     struct bitmap_font : resource
-    {
+	{
         typedef std::wstring string_type;
         typedef string_type::value_type char_type;
         typedef u32 character_id_type;

@@ -108,7 +108,7 @@ namespace naga
 
             page_texture_names_length -= static_cast<u32>(page_texture_name.length() + 1);
 
-            auto page_texture = resources.get<texture>(naga::hash(page_texture_name));
+            auto page_texture = resources.get<texture>(page_texture_name);
 
             page_textures.push_back(page_texture);
         }

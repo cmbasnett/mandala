@@ -17,7 +17,7 @@ namespace naga
     {
         static const char* component_name;
 
-        static const auto MAX_SIZE = 2048;
+		static const auto MAX_SIZE = 2049;
         static const auto CHUNK_SIZE = 8;
         static const auto MAX_CHUNKS = (MAX_SIZE / CHUNK_SIZE) * (MAX_SIZE / CHUNK_SIZE);
         static const auto PATCHES_PER_CHUNK = (CHUNK_SIZE * CHUNK_SIZE);
@@ -34,21 +34,24 @@ namespace naga
         typedef basic_gpu_program::vertex_type vertex_type;
         typedef vertex_buffer<vertex_type> vertex_buffer_type;
 
-        // overrides
-        void on_render(camera_params& camera) override;
-
 		f32 get_height(const vec2& location) const;
 		vec3 trace(const line3& ray) const;
 
+        // overrides
+        void on_render(camera_params& camera) override;
+
         // getters
-        const boost::shared_ptr<heightmap>& get_heightmap() const { return heightmap; }
+		const boost::shared_ptr<heightmap>& get_heightmap() const { return heightmap; }
+		const vec3 get_scale() const { return scale; }
 
         // setters
-        void set_heightmap(const boost::shared_ptr<image>& image);
+		void set_heightmap(const boost::shared_ptr<image>& image);
+		void set_scale(const vec3& scale);
 
     private:
         void update_chunks(const rectangle_u64& rectangle);
 
+		vec3 scale = vec3(1.0f, 16.0f, 1.0f);
         boost::shared_ptr<heightmap> heightmap;
         boost::shared_ptr<vertex_buffer_type> vertex_buffer;
         boost::shared_ptr<index_buffer_type> index_buffer;

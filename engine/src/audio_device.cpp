@@ -6,15 +6,20 @@
 
 namespace naga
 {
-    audio_device::audio_device()
-    {
-        pointer = alcOpenDevice(nullptr); alCheckError();
+	audio_device::audio_device()
+	{
+		auto b = alcIsExtensionPresent(NULL, "ALC_ENUMERATION_EXT");
 
-        if (pointer == nullptr)
-        {
-            throw std::exception();
-        }
-    }
+		const auto device_name = alcGetString(nullptr, ALC_ALL_DEVICES_SPECIFIER);
+
+		pointer = alcOpenDevice(nullptr);
+		alCheckError();
+
+		if (pointer == nullptr)
+		{
+			throw std::exception();
+		}
+	}
 
     audio_device::audio_device(const std::string& name)
     {

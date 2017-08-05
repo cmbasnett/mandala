@@ -14,7 +14,7 @@ namespace naga
 
     camera_params camera_component::get_params(const gpu_viewport_type& viewport) const
     {
-        const auto aspect = static_cast<f32>(viewport.width) / glm::max(static_cast<f32>(viewport.height), 1.0f);
+		const auto aspect = glm::max(glm::epsilon<f32>(), static_cast<f32>(viewport.width) / glm::max(static_cast<f32>(viewport.height), 1.0f));
         const auto& pose = get_owner()->pose;
 
         camera_params params;

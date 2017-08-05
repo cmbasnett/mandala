@@ -71,7 +71,7 @@ namespace naga
 
 #if defined (DEBUG)
         render_aabb(world_matrix, view_projection_matrix, skeleton.aabb, vec4(1, 0, 0, 1));
-        render_sphere(world_matrix, view_projection_matrix, sphere);
+        render_sphere(world_matrix, view_projection_matrix, sphere, vec4(1, 0, 1, 1));
 #endif
     }
     
@@ -114,8 +114,8 @@ namespace naga
         }
     }
 
-    void model_component::play(const hash& animation_hash)
+    void model_component::play(const std::string& animation_name)
     {
-        animation = resources.get<model_animation>(animation_hash);
+		animation = resources.get<model_animation>(animation_name);
     }
 }

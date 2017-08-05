@@ -1,4 +1,4 @@
-#version 400
+#version 450
 
 uniform mat4 world_matrix;
 uniform mat3 normal_matrix;

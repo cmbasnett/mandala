@@ -168,7 +168,7 @@ namespace naga
             mesh->index_count = mesh_info.indices.size();
 
             //material
-            mesh->material = resources.get<material>(naga::hash(mesh_info.shader));
+            mesh->material = resources.get<material>(mesh_info.shader);
 
             //vertices
             std::vector<mesh::vertex_type> vertices;

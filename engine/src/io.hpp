@@ -36,14 +36,14 @@ inline void read(std::istream& istream, std::array<T, N>& data)
 template<typename T>
 inline void read(std::istream& istream, std::vector<T>& data, size_t count)
 {
-    data.reserve(count);
+	data.reserve(count);
 
-    std::vector<T> buffer;
-    buffer.resize(count);
+	std::vector<T> buffer;
+	buffer.resize(count);
 
-    istream.read(reinterpret_cast<char*>(buffer.data()), sizeof(T) * count);
+	istream.read(reinterpret_cast<char*>(buffer.data()), sizeof(T) * count);
 
-    std::copy(buffer.begin(), buffer.end(), std::back_inserter(data));
+	std::copy(buffer.begin(), buffer.end(), std::back_inserter(data));
 }
 
 template<typename T, size_t N>

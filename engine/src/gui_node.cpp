@@ -454,7 +454,7 @@ namespace naga
 
         //TODO: configure this to be enable-able in-game
 #if defined(DEBUG)
-        //render_rectangle(world_matrix, view_projection_matrix, rectangle(bounds), vec4(1));
+        render_rectangle(world_matrix, view_projection_matrix, rectangle(bounds), vec4(1.0f, 0.0f, 0.0f, 1.0f));
 #endif
 
         on_render_begin(world_matrix, view_projection_matrix);

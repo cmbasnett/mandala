@@ -1,0 +1,7 @@
+{
+	"diffuse": {
+		"texture": "guard1_helmet_color.png"
+	},
+	"is_lit": false,
+	"is_two_sided": false
+}

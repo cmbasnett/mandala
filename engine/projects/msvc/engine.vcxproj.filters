@@ -347,6 +347,15 @@
     <ClInclude Include="..\..\src\dispatch.hpp">
       <Filter>dispatch</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\psk.hpp">
+      <Filter>resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\psa.hpp">
+      <Filter>resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\model_loader.h">
+      <Filter>resources\model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\app.cpp">
@@ -472,7 +481,6 @@
     <ClCompile Include="..\..\src\python.cpp">
       <Filter>python</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\cache_mgr.cpp">
       <Filter>cache</Filter>
     </ClCompile>
@@ -511,6 +519,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\http_response.hpp">
       <Filter>network\http</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\psk.cpp">
+      <Filter>resources\model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -619,5 +630,16 @@
     <Filter Include="dispatch">
       <UniqueIdentifier>{8deb7d76-b8b0-4699-afe9-b8a51e8f4c4f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="dist">
+      <UniqueIdentifier>{cdaa4039-8083-436d-89d5-797e6108bc1f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\dist\setup.py">
+      <Filter>dist</Filter>
+    </None>
+    <None Include="..\..\src\__init__.py">
+      <Filter>dist</Filter>
+    </None>
   </ItemGroup>
 </Project>
