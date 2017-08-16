@@ -49,7 +49,7 @@ namespace naga
 
         void render(const vec3& camera_location, const mat4& world_matrix, const mat4& view_projection_matrix, const std::vector<mat4>& bone_matrices, const vec3& light_location, const std::vector<boost::shared_ptr<material_instance>>& mesh_materials) const;
 
-        boost::optional<size_t> get_bone_index(const naga::hash& bone_hash) const;
+        boost::optional<size_t> get_bone_index(const std::string& bone_name) const;
 
         const std::vector<boost::shared_ptr<const mesh>> get_meshes() const { return meshes; }
         const std::vector<const bone>& get_bones() const { return bones; }
@@ -57,7 +57,7 @@ namespace naga
 
     private:
         std::vector<boost::shared_ptr<const mesh>> meshes;
-        std::map<const naga::hash, const u8> bone_indices;
+        std::map<std::string, const u8> bone_indices;
         std::vector<const bone> bones;
         std::vector<const std::string> bone_names;
 

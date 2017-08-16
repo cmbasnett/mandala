@@ -57,7 +57,7 @@ out vec4 fragment;
 
 void main()
 {
-    fragment = texture2D(diffuse_texture, out_texcoord) * out_color;
+    fragment = texture2D(diffuse_texture, out_texcoord) * out_color * color;
 }
 )")
         {

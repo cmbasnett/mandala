@@ -290,7 +290,14 @@ namespace naga
             }
         }
 
+		glfwSetErrorCallback(on_error);
+
         window_ptr = glfwCreateWindow(1, 1, "naga", nullptr, nullptr);
+
+		if (window_ptr == nullptr)
+		{
+			throw std::exception("Failed to create window!");
+		}
 
         glfwMakeContextCurrent(window_ptr);
 

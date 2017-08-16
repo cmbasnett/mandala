@@ -58,6 +58,7 @@
 #include "terrain_component.hpp"
 #include "python_pair.hpp"
 #include "python_function_from_callable.hpp"
+#include "line.hpp"
 
 #include "psk.hpp"
 
@@ -280,6 +281,25 @@ NAGA_PYTHON_DECLARE_WRAPPER_CLASS(game_component)
     {
         return _wrapper_wrapped_type_::on_input_event(input_event);
     }
+
+	void on_render_base(camera_params& camera_params)
+	{
+		_wrapper_wrapped_type_::on_render(camera_params);
+	}
+
+	void on_render(camera_params& camera_params)
+	{
+		auto override_ = get_override("on_render");
+
+		if (override_)
+		{
+			override_(camera_params);
+		}
+		else
+		{
+			_wrapper_wrapped_type_::on_render(camera_params);
+		}
+	}
 };
 
 #define NAGA_DEFINE_RESOURCE_GET_FUNCTION(name)\
@@ -347,6 +367,11 @@ class_<glm::detail::tvec2<value_type>>(name, init<value_type, value_type>())\
 //    .def(self_ns::str(self_ns::self));\
 //class_<vec3_wrapper<V>, bases<glm::detail::tvec3<V>>>(name, init<V, V, V>())\
 //    .def("length", &vec3_wrapper<V>::__length__);
+
+#define NAGA_PYTHON_DEFINE_LINE3(name, V)\
+class_<naga::details::line3<V>>(name, init<naga::details::line3<V>::value_type, naga::details::line3<V>::value_type>())\
+	.def_readwrite("start", &naga::details::line3<V>::start)\
+	.def_readwrite("end", &naga::details::line3<V>::end);
 
 #define NAGA_PYTHON_DEFINE_VEC3(name, V)\
 class_<glm::detail::tvec3<V>>(name, init<V, V, V>())\
@@ -478,6 +503,30 @@ inline boost::python::object normalize(const boost::python::object& other)
     throw std::invalid_argument("invalid argument for 'normalize'");
 }
 
+inline boost::python::object degrees(const boost::python::object& radians)
+{
+	auto result = boost::python::extract<f32>(radians);
+
+	if (result.check())
+	{
+		return boost::python::object(glm::degrees(result()));
+	}
+
+	throw std::invalid_argument("invalid argument for 'degrees'");
+}
+
+inline boost::python::object radians(const boost::python::object& degrees)
+{
+	auto result = boost::python::extract<f32>(degrees);
+
+	if (result.check())
+	{
+		return boost::python::object(glm::radians(result()));
+	}
+
+	throw std::invalid_argument("invalid argument for 'degrees'");
+}
+
 BOOST_PYTHON_MODULE(naga)
 {
     def("percent_rank", &glm::percent_rank<f32>);
@@ -486,6 +535,8 @@ BOOST_PYTHON_MODULE(naga)
     def("length", &length);
     def("inverse", &inverse);
     def("normalize", &normalize);
+	def("radians", &radians);
+	def("degrees", &degrees);
 
     python_optional<sprite>();
     python_optional<size_t>();
@@ -529,6 +580,8 @@ BOOST_PYTHON_MODULE(naga)
 
     NAGA_PYTHON_DEFINE_VEC4("Vec4I", i32);
     NAGA_PYTHON_DEFINE_VEC4("Vec4F", f32);
+
+	NAGA_PYTHON_DEFINE_LINE3("Line3", f32);
 
     NAGA_PYTHON_DEFINE_QUAT("Quat", f32);
 
@@ -1161,10 +1214,16 @@ BOOST_PYTHON_MODULE(naga)
         .def("on_tick", &game_component_wrapper::on_tick)
         .def("on_input_event", &game_component_wrapper::on_input_event)
         .def("on_input_event_base", &game_component_wrapper::on_input_event_base)
+		.def("on_render", &game_component_wrapper::on_render)
         .add_property("owner", make_function(&game_component_wrapper::get_owner, return_value_policy<copy_const_reference>()));
 
     class_<std::vector<boost::shared_ptr<game_object>>>("GameObjectVec")
         .def(vector_indexing_suite<std::vector<boost::shared_ptr<game_object>>>());
+
+	class_<camera_params>("CameraParameters")
+		.def_readonly("location", &camera_params::location)
+		.def_readonly("projection_matrix", &camera_params::projection_matrix)
+		.def_readonly("view_matrix", &camera_params::view_matrix);
 
     class_<scene, boost::shared_ptr<scene>, noncopyable>("Scene")
         .add_property("physics", make_function(&scene::get_physics, return_value_policy<copy_const_reference>()))
@@ -1181,6 +1240,7 @@ BOOST_PYTHON_MODULE(naga)
             .def_readwrite("far", &camera_component::far)
             .def_readwrite("fov", &camera_component::fov)
             .def_readwrite("projection_type", &camera_component::projection_type)
+			.def("get_ray", &camera_component::get_ray)
             ;
 
         enum_<camera_component::projection_type_e>("ProjectionType")
@@ -1222,10 +1282,12 @@ BOOST_PYTHON_MODULE(naga)
     // TERRAIN
     class_<terrain_component, bases<game_component>, boost::shared_ptr<terrain_component>, noncopyable>(terrain_component::component_name)
 		.add_property("scale", &terrain_component::get_scale, &terrain_component::set_scale)
+		.def("trace", &terrain_component::trace)
         .def("set_heightmap", &terrain_component::set_heightmap);
 
 	// PSK (TEMP)
-	class_<PSK, boost::shared_ptr<PSK>, noncopyable>("PSK", init<const std::string&>());
+	class_<PSK, boost::shared_ptr<PSK>, noncopyable>("PSK", init<const std::string&>())
+		.def("render", &PSK::render);
 
     // HTTP
 	enum_<http_method>("HttpMethod")

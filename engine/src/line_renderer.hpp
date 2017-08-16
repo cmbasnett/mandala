@@ -75,7 +75,8 @@ namespace naga
 
         gpu.set_uniform("world_matrix", world_matrix);
         gpu.set_uniform("view_projection_matrix", view_projection_matrix);
-        gpu.set_uniform("color", color);
+		gpu.set_uniform("color", color);
+		gpu.set_uniform("diffuse_texture", 0);
 
         gpu.draw_elements(gpu_t::primitive_type::LINE_STRIP, points.size(), index_buffer_type::DATA_TYPE, 0);
 

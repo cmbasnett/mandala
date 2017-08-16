@@ -27,7 +27,7 @@ namespace naga
         f32 roll = 0.0f;
         projection_type_e projection_type = projection_type_e::PERSPECTIVE;
 
-        line3 get_ray(const vec2_f64& screen_location) const;
+		line3 get_ray(const gpu_viewport_type& viewport, const vec2& screen_location) const;
         camera_params get_params(const gpu_viewport_type& viewport) const;
 
         camera_component() { }

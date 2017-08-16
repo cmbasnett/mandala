@@ -202,27 +202,27 @@ namespace naga
 
             if (glm::abs(location->x - aabb.min.x) < 0.01f)
             {
-                *normal = glm::detail::tvec3<T>(-1, 0, 0);
+				*normal = glm::detail::tvec3<Scalar>(-1, 0, 0);
             }
             else if (glm::abs(location->x - aabb.max.x) < 0.01f)
             {
-                *normal = glm::detail::tvec3<T>(1, 0, 0);
+				*normal = glm::detail::tvec3<Scalar>(1, 0, 0);
             }
             else if (glm::abs(location->y - aabb.min.y) < 0.01f)
             {
-                *normal = glm::detail::tvec3<T>(0, -1, 0);
+				*normal = glm::detail::tvec3<Scalar>(0, -1, 0);
             }
             else if (glm::abs(location->y - aabb.max.y) < 0.01f)
             {
-                *normal = glm::detail::tvec3<T>(0, 1, 0);
+				*normal = glm::detail::tvec3<Scalar>(0, 1, 0);
             }
             else if (glm::abs(location->z - aabb.min.z) < 0.01f)
             {
-                *normal = glm::detail::tvec3<T>(0, 0, -1);
+				*normal = glm::detail::tvec3<Scalar>(0, 0, -1);
             }
             else if (glm::abs(location->z - aabb.max.z) < 0.01f)
             {
-                *normal = glm::detail::tvec3<T>(0, 0, 1);
+				*normal = glm::detail::tvec3<Scalar>(0, 0, 1);
             }
         }
 

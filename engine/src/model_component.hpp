@@ -24,7 +24,7 @@ namespace naga
         void play(const std::string& animation_name);
 
         const boost::shared_ptr<model>& get_model() const { return model; }
-        pose3 get_bone_pose(const hash& bone_hash) const;
+        pose3 get_bone_pose(const std::string& bone_name) const;
         const aabb3& get_aabb() const { return aabb; }
         const sphere& get_sphere() const { return sphere; }
 

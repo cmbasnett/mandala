@@ -38,7 +38,7 @@ namespace naga
                 points[2] = point2;
             }
 
-            point_type& operator[](size_t index) const
+            point_type& operator[](size_t index)
             {
                 return points[index];
             }

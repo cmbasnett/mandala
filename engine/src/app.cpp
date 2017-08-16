@@ -155,7 +155,7 @@ namespace naga
 
     void app::handle_input_events()
     {
-        input_event_t input_event;
+		input_event_t input_event;
 
         while (platform.pop_input_event(input_event))
         {

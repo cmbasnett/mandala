@@ -31,7 +31,7 @@ namespace naga
         }
 
         const auto forward = vec3(0, 0, 1) * glm::mat3_cast(pose.rotation);
-        const auto left = glm::normalize(glm::cross(vec3(0, 1, 0), forward));
+        const auto left = glm::normalize(glm::cross(vec3(0, 1, 0), forward));	// TODO: this can cause a crash if they are parallel!!
         auto up = glm::normalize(glm::cross(forward, left));
 
         // rotate up matrix along forward axis
@@ -61,14 +61,13 @@ namespace naga
     // matrices before we use them in the unProject functions. this would probably be
     // perfectly acceptable since get_ray wouldn't likely be happening more than
     // once per frame.
-    line3 camera_component::get_ray(const vec2_f64& screen_location) const
-    {
-        vec4 viewport = gpu.viewports.top();
-
-        line3 ray;
-        ray.start = glm::unProject(vec3(screen_location, 0), view_matrix, projection_matrix, viewport);
-        ray.end = glm::unProject(vec3(screen_location, 1), view_matrix, projection_matrix, viewport);
-
-        return ray;
-    }
+	line3 camera_component::get_ray(const gpu_viewport_type& viewport, const vec2& screen_location) const
+	{
+		// TODO: this is problematic because the viewport isn't necessarily going to be stacked on top, maybe we need to pass in the viewport here?
+		line3 ray;
+		auto camera_params = get_params(viewport);
+		ray.start = glm::unProject(vec3(screen_location, 0), camera_params.view_matrix, camera_params.projection_matrix, vec4(viewport.x, viewport.y, viewport.width, viewport.height));
+		ray.end = glm::unProject(vec3(screen_location, 1), camera_params.view_matrix, camera_params.projection_matrix, vec4(viewport.x, viewport.y, viewport.width, viewport.height));
+		return ray;
+	}
 }

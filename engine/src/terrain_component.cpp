@@ -11,6 +11,9 @@
 #include "rigid_body_component.hpp"
 #include "texture.hpp"
 #include "resource_mgr.hpp"
+#include "collision.hpp"
+#include "line_renderer.hpp"
+#include "quadtree.hpp"
 
 //bullet
 #include <BulletCollision\CollisionShapes\btHeightfieldTerrainShape.h>
@@ -23,8 +26,8 @@ namespace naga
     {
         heightmap = boost::make_shared<naga::heightmap>(image);
 
-        auto width = image->get_width();
-        auto depth = image->get_height();
+		width = static_cast<i32>(image->get_width());
+		depth = static_cast<i32>(image->get_height());
 
         if (width == 0)
         {
@@ -34,7 +37,7 @@ namespace naga
         if (depth == 0)
         {
             throw std::invalid_argument("height cannot be 0");
-        }
+		}
 
         if (width > MAX_SIZE)
         {
@@ -50,8 +53,11 @@ namespace naga
             throw std::invalid_argument(oss.str());
         }
 
-        const chunk_index_type chunk_x_count = (width - 1) / CHUNK_SIZE;
-        const chunk_index_type chunk_z_count = (depth - 1) / CHUNK_SIZE;
+		width -= 1;
+		depth -= 1;
+
+        const chunk_index_type chunk_x_count = width / CHUNK_SIZE;
+        const chunk_index_type chunk_z_count = depth / CHUNK_SIZE;
 
         if (chunk_x_count % CHUNK_SIZE != 0)
         {
@@ -69,8 +75,12 @@ namespace naga
 
         chunk_count = chunk_x_count * chunk_z_count;
 
-        std::vector<vertex_type> vertices;
         vertices.reserve(chunk_count * VERTICES_PER_CHUNK);
+
+		auto half_width = static_cast<i32>(width / 2);
+		auto half_depth = static_cast<i32>(depth / 2);
+
+		std::vector<vertex_type> vertices;
 
         // vertex buffer
         for (chunk_index_type chunk_z = 0; chunk_z < chunk_z_count; ++chunk_z)
@@ -81,11 +91,15 @@ namespace naga
                 {
                     for (auto patch_x = 0; patch_x <= CHUNK_SIZE; ++patch_x)
                     {
-                        auto x = (chunk_x * CHUNK_SIZE) + patch_x;
-                        auto z = (chunk_z * CHUNK_SIZE) + patch_z;
+						auto x = (chunk_x * CHUNK_SIZE) + patch_x;
+						auto z = (chunk_z * CHUNK_SIZE) + patch_z;
                         auto y = heightmap->get_data(x, z);
 
-						vertices.push_back(vertex_type(vec3(x, y, z) * scale, vec4(y, y, y, 1)));
+						auto vertex = vec3(static_cast<i32>(x) - half_width, y, static_cast<i32>(z) - half_depth) * scale;
+
+						this->vertices.push_back(vertex);
+
+						vertices.push_back(vertex_type(vertex, vec4(y, y, y, 1)));
                     }
                 }
             }
@@ -126,17 +140,22 @@ namespace naga
                             patch_index_start + CHUNK_SIZE + 2
                         };
 
-                        std::initializer_list<index_type> local_patch_indices;
+                        std::vector<index_type> local_patch_indices;
 
                         //TODO: figure out local patch indices based on patch
                         if ((patch_x % 2 == 0) ^ (patch_z % 2 == 0))
                         {
                             local_patch_indices = { 0, 1, 3, 0, 3, 2 };
                         }
-                        else
-                        {
-                            local_patch_indices = { 0, 1, 2, 1, 3, 2 };
-                        }
+						else
+						{
+							local_patch_indices = { 0, 1, 2, 1, 3, 2 };
+						}
+						
+						// add the triangles
+						// TODO: do a better job of this!
+						triangles.push_back(triangle3(this->vertices[patch_indices[local_patch_indices[0]]], this->vertices[patch_indices[local_patch_indices[1]]], this->vertices[patch_indices[local_patch_indices[2]]]));
+						triangles.push_back(triangle3(this->vertices[patch_indices[local_patch_indices[3]]], this->vertices[patch_indices[local_patch_indices[4]]], this->vertices[patch_indices[local_patch_indices[5]]]));
 
                         for (auto local_patch_index : local_patch_indices)
                         {
@@ -150,21 +169,22 @@ namespace naga
         index_buffer = gpu_buffers.make<index_buffer_type>().lock();
         index_buffer->data(indices, gpu_t::buffer_usage::STATIC_DRAW);
 
-        btHeightfieldTerrainShape* heightfield_terrain_shape = new btHeightfieldTerrainShape(
-            image->get_size().x,
-            image->get_size().y,
-            heightmap->get_data(),
-            scale.x,
-            -scale.y / 2,
-            scale.z / 2,
-            1,
-            PHY_FLOAT,
-            false);
+  //      btHeightfieldTerrainShape* heightfield_terrain_shape = new btHeightfieldTerrainShape(
+  //          image->get_size().x,
+  //          image->get_size().y,
+  //          heightmap->get_data(),
+  //          scale.x,
+  //          -scale.y / 2,
+  //          scale.z / 2,
+  //          1,
+  //          PHY_FLOAT,
+  //          false);
 
-        auto rigid_body = boost::make_shared<rigid_body_component>();
-		rigid_body->set_collision_shape(heightfield_terrain_shape);
+  //      auto rigid_body = boost::make_shared<rigid_body_component>();
+		//rigid_body->set_collision_shape(heightfield_terrain_shape);
 
-        texture = resources.get<naga::texture>("white.png");
+        texture = resources.get<naga::texture>("white.png");		
+		quadtree = boost::make_shared<naga::quadtree>(static_cast<f32>(width), scale.y, static_cast<f32>(CHUNK_SIZE));
     }
 
     void terrain_component::on_render(camera_params& camera_params)
@@ -191,7 +211,30 @@ namespace naga
         gpu.programs.pop();
 
         gpu.buffers.pop(gpu_t::buffer_target::ELEMENT_ARRAY);
-        gpu.buffers.pop(gpu_t::buffer_target::ARRAY);
+		gpu.buffers.pop(gpu_t::buffer_target::ARRAY);
+
+#ifdef DEBUG
+		std::function<void(const quadtree::node*)> render_quadtree_node = [&](const quadtree::node* node) {
+			if (node == nullptr)
+			{
+				return;
+			}
+
+			auto is_traced = std::find(traced_nodes.begin(), traced_nodes.end(), node) != traced_nodes.end();
+			auto color = is_traced ? vec4(1) : vec4(1, 0, 0, 1);
+
+			if (node->is_leaf() && is_traced)
+			{
+				render_aabb(mat4(), camera_params.projection_matrix * camera_params.view_matrix, node->get_bounds(), color);
+			}
+
+			for (auto& child : node->get_children())
+			{
+				render_quadtree_node(child);
+			}
+		};
+		render_quadtree_node(quadtree->get_root());
+#endif
 	}
 
     f32 terrain_component::get_height(const vec2& location) const
@@ -199,10 +242,45 @@ namespace naga
         return heightmap->get_height(location);
 	}
 
-    vec3 terrain_component::trace(const line3& ray) const
+    vec3 terrain_component::trace(const line3& ray)
 	{
+		traced_nodes.clear();
 
-		// TODO: trace octree down to leafs then trace the individual triangles within the leaves
+		auto nodes = quadtree->trace(ray);
+
+		std::copy(nodes.begin(), nodes.end(), std::back_inserter(traced_nodes));
+
+		vec3 hit_location;
+
+		std::cout << nodes.size() << std::endl;
+
+		const auto chunks_per_strip = width / CHUNK_SIZE;
+
+		for (auto& node : nodes)
+		{
+			// TODO: get chunk indices index from node!
+			const auto& bounds = node->get_bounds() + vec3(quadtree->get_bounds().width() / 2, 0, quadtree->get_bounds().depth() / 2);
+			const auto x = static_cast<i32>(bounds.min.x / scale.x / CHUNK_SIZE);
+			const auto z = static_cast<i32>(bounds.min.z / scale.z / CHUNK_SIZE);
+			const auto chunk_index = (z * chunks_per_strip + x);
+			const auto triangle_start_index = chunk_index * TRIANGLES_PER_CHUNK;
+
+			for (i32 i = triangle_start_index; i < triangle_start_index + TRIANGLES_PER_CHUNK; ++i)
+			{
+				auto triangle = triangles[i];
+				vec3 v1 = triangle[0];
+				vec3 v2 = triangle[1];
+				vec3 v3 = triangle[2];
+
+				if (intersectLineTriangle(ray.start, ray.direction(), v1, v2, v3, hit_location))
+				{
+					hit_location = ray.start + (ray.direction() * hit_location.x);
+					// TODO: convert from bary to world
+
+					return hit_location;
+				}
+			}
+		}
 
         return vec3();
     }

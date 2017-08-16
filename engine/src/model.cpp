@@ -95,7 +95,7 @@ namespace naga
 
             bone_names.push_back(bone_info.name);
 
-            bone_indices.insert(std::make_pair(naga::hash(bone_info.name), i));
+            bone_indices.insert(std::make_pair(bone_info.name, i));
 
             read(istream, bone_info.parent_index);
             read(istream, bone_info.pose.location.x);
@@ -347,9 +347,9 @@ namespace naga
         gpu.blend.pop_state();
     }
 
-    boost::optional<size_t> model::get_bone_index(const naga::hash& bone_hash) const
+    boost::optional<size_t> model::get_bone_index(const std::string& bone_name) const
     {
-        auto bone_indices_itr = bone_indices.find(bone_hash);
+		auto bone_indices_itr = bone_indices.find(bone_name);
 
         if (bone_indices_itr != bone_indices.end())
         {

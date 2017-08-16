@@ -8,6 +8,8 @@
 #include "basic_gpu_program.hpp"
 #include "line.hpp"
 #include "game_component.hpp"
+#include "quadtree.hpp"
+#include "triangle.hpp"
 
 namespace naga
 {
@@ -23,6 +25,7 @@ namespace naga
         static const auto PATCHES_PER_CHUNK = (CHUNK_SIZE * CHUNK_SIZE);
         static const auto VERTICES_PER_CHUNK = ((CHUNK_SIZE + 1) * (CHUNK_SIZE + 1));
         static const auto TRIANGLES_PER_PATCH = 2;
+		static const auto TRIANGLES_PER_CHUNK = PATCHES_PER_CHUNK * TRIANGLES_PER_PATCH;
         static const auto INDICES_PER_PATCH = TRIANGLES_PER_PATCH * 3;
         static const auto INDICES_PER_STRIP = INDICES_PER_PATCH * CHUNK_SIZE;
         static const auto INDICES_PER_CHUNK = INDICES_PER_STRIP * CHUNK_SIZE;
@@ -35,7 +38,7 @@ namespace naga
         typedef vertex_buffer<vertex_type> vertex_buffer_type;
 
 		f32 get_height(const vec2& location) const;
-		vec3 trace(const line3& ray) const;
+		vec3 trace(const line3& ray);
 
         // overrides
         void on_render(camera_params& camera) override;
@@ -55,7 +58,14 @@ namespace naga
         boost::shared_ptr<heightmap> heightmap;
         boost::shared_ptr<vertex_buffer_type> vertex_buffer;
         boost::shared_ptr<index_buffer_type> index_buffer;
+		i32 width;
+		i32 depth;
         size_t chunk_count;
         boost::shared_ptr<texture> texture;
+		boost::shared_ptr<quadtree> quadtree;
+		std::vector<vec3> vertices;
+		std::vector<triangle3> triangles;
+
+		std::vector<const quadtree::node*> traced_nodes;
     };
 }

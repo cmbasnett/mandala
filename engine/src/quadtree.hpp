@@ -3,11 +3,9 @@
 //std
 #include <array>
 
-//boost
-#include <boost\shared_ptr.hpp>
-
 //naga
 #include "aabb.hpp"
+#include "line.hpp"
 
 namespace naga
 {
@@ -17,31 +15,34 @@ namespace naga
         typedef details::aabb3<scalar_type> bounds_type;
 
         struct node
-        {
-			typedef std::array<boost::shared_ptr<node>, 4> children_type;
+		{
+			typedef std::array<node*, 4> children_type;
 
 			node(const bounds_type& bounds) :
-                bounds(bounds)
-            {
-            }
+				bounds(bounds)
+			{
+				children.fill(nullptr);
+			}
 
             void branch(size_t iterations);
 
-            bool is_leaf() const { return children[0] != nullptr; }
+            bool is_leaf() const { return children[0] == nullptr; }
             const bounds_type& get_bounds() const { return bounds; }
 			const children_type& get_children() const { return children; }
 
         private:
             bounds_type bounds;
-            children_type children;
+			children_type children;
         };
 
-        quadtree(size_t size, size_t leaf_size);
+        quadtree(scalar_type size, scalar_type height, scalar_type leaf_size);
 
         const bounds_type& get_bounds() const { return root->get_bounds(); }
-		std::weak_ptr<node> get_root() const { return root; }
+		const node* get_root() const { return root; }
+
+		std::vector<const node*> trace(const line3& ray) const;
 
     private:
-        std::shared_ptr<node> root;
+		node* root = nullptr;
     };
 }

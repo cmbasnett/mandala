@@ -58,7 +58,7 @@ namespace naga
             intersects(camera_params.frustum, aabb) == intersect_type_e::DISJOINT)
         {
             //skeleton aabb does not intersect camera frustum
-            //return;
+            return;
         }
         
         // TODO: need to figure out a better way to feed light data into the shaders
@@ -71,18 +71,30 @@ namespace naga
 
 #if defined (DEBUG)
         render_aabb(world_matrix, view_projection_matrix, skeleton.aabb, vec4(1, 0, 0, 1));
-        render_sphere(world_matrix, view_projection_matrix, sphere, vec4(1, 0, 1, 1));
+		render_sphere(world_matrix, view_projection_matrix, sphere, vec4(1, 0, 1, 1));
+
+		for (size_t i = 0; i < model->get_bones().size(); ++i)
+		{
+			if (skeleton.bones[i].parent_index != 255)
+			{
+				const auto& a = skeleton.bones[i].pose.location;
+				const auto& b = skeleton.bones[skeleton.bones[i].parent_index].pose.location;
+				render_line_loop(world_matrix, view_projection_matrix, std::vector<vec3>({ a, b }), vec4(0.5f));
+			}
+
+			render_sphere(glm::translate(skeleton.bones[i].pose.location) * world_matrix, view_projection_matrix, naga::sphere(vec3(), 0.5f), vec4(1));
+		}
 #endif
     }
     
-    pose3 model_component::get_bone_pose(const hash& bone_hash) const
+    pose3 model_component::get_bone_pose(const std::string& bone_name) const
     {
-        auto bone_index = model->get_bone_index(bone_hash);
+		auto bone_index = model->get_bone_index(bone_name);
 
         if (!bone_index)
         {
             std::ostringstream oss;
-            oss << "model contains no bone " << bone_hash.get_value();
+            oss << "model contains no bone " << bone_name;
             throw std::invalid_argument(oss.str().c_str());
         }
 
