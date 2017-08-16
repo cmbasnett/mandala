@@ -82,6 +82,11 @@ class FreeLookComponent(naga.GameComponent):
 
 
 class ExampleState(naga.State):
+
+    def __init__(self):
+        super(ExampleState, self).__init__()
+        self.is_tracing = False
+
     def on_enter(self):
         # TODO: this should be done by the underlying state logic!
         bounds = naga.AABB2F()
@@ -116,23 +121,15 @@ class ExampleState(naga.State):
         model_component = self.model.add_component(naga.ModelComponent)
         model_component.model = naga.resources.get_model('boblampclean.md5m')
         model_component.play('boblampclean.md5a')
-        self.model.add_component(PskComponent)
+        #self.model.add_component(PskComponent)
 
     def on_input_event(self, e):
         super(ExampleState, self).on_input_event_base(e)
         if e.device_type == naga.InputEvent.TOUCH:
             if e.touch.type == naga.InputEvent.Touch.Type.PRESS:
-                camera_component = self.camera.get_component(naga.CameraComponent)
-                # TODO: this is cumbersome!
-                viewport = naga.RectangleI()
-                viewport.width = naga.platform.screen_size.x
-                viewport.height = naga.platform.screen_size.y
-                ray = camera_component.get_ray(viewport, naga.Vec2F(naga.platform.cursor_location.x, naga.platform.cursor_location.y))
-                terrain_component = self.terrain.get_component(naga.TerrainComponent)
-                if terrain_component is not None:
-                    hit_location = terrain_component.trace(ray)
-                    print hit_location
-                    self.model.pose.location = hit_location
+                self.is_tracing = True
+            if e.touch.type == naga.InputEvent.Touch.Type.RELEASE:
+                self.is_tracing = False
         self.scene.on_input_event(e)
 
     def render(self):
@@ -141,6 +138,18 @@ class ExampleState(naga.State):
 
     # TODO: not sure why this is necessary?
     def on_tick(self, dt):
+        if self.is_tracing:
+            camera_component = self.camera.get_component(naga.CameraComponent)
+            # TODO: this is cumbersome!
+            viewport = naga.RectangleI()
+            viewport.width = naga.platform.screen_size.x
+            viewport.height = naga.platform.screen_size.y
+            ray = camera_component.get_ray(viewport, naga.Vec2F(naga.platform.cursor_location.x, naga.platform.cursor_location.y))
+            terrain_component = self.terrain.get_component(naga.TerrainComponent)
+            if terrain_component is not None:
+                hit_location = terrain_component.trace(ray)
+                print hit_location
+                self.model.pose.location = hit_location
         self.label.string = '\n'.join([naga.gpu.vendor, naga.gpu.renderer, naga.gpu.version, str(naga.app.performance.fps)])
         self.scene.tick(dt)
 

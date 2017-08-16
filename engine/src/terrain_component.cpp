@@ -252,8 +252,6 @@ namespace naga
 
 		vec3 hit_location;
 
-		std::cout << nodes.size() << std::endl;
-
 		const auto chunks_per_strip = width / CHUNK_SIZE;
 
 		for (auto& node : nodes)
@@ -274,8 +272,10 @@ namespace naga
 
 				if (intersectLineTriangle(ray.start, ray.direction(), v1, v2, v3, hit_location))
 				{
-					hit_location = ray.start + (ray.direction() * hit_location.x);
 					// TODO: convert from bary to world
+					// TODO: hit loc may end up incorrect since the distance traces may be huge resulting in precision errors
+					// USE BARY
+					hit_location = ray.start + (ray.direction() * hit_location.x);
 
 					return hit_location;
 				}

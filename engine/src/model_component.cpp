@@ -54,6 +54,7 @@ namespace naga
             throw std::exception();
         }
 
+		// TODO: problem here is that the frustum/sphere/aabb are not 
         if (intersects(camera_params.frustum, sphere) == intersect_type_e::DISJOINT ||
             intersects(camera_params.frustum, aabb) == intersect_type_e::DISJOINT)
         {

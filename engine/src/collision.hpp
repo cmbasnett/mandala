@@ -124,114 +124,41 @@ namespace naga
     template<typename Scalar>
     intersect_type_e intersects(const details::line3<Scalar>& line, const details::aabb3<Scalar>& aabb, Scalar* t = nullptr, glm::detail::tvec3<Scalar>* location = nullptr, glm::detail::tvec3<Scalar>* normal = nullptr)
     {
-        //http://www.scratchapixel.com/lessons/3d-basic-lessons/lesson-7-intersecting-simple-shapes/ray-box-intersection/
-        if (line.start == line.end)
-        {
-            return intersect_type_e::DISJOINT;
-        }
+		// r.dir is unit direction vector of ray
+		vec3 dirfrac;
+		dirfrac.x = 1.0f / line.direction().x;
+		dirfrac.y = 1.0f / line.direction().y;
+		dirfrac.z = 1.0f / line.direction().z;
+		// lb is the corner of AABB with minimal coordinates - left bottom, rt is maximal corner
+		// r.org is origin of ray
+		f32 t1 = (aabb.min.x - line.start.x) * dirfrac.x;
+		f32 t2 = (aabb.max.x - line.start.x) * dirfrac.x;
+		f32 t3 = (aabb.min.y - line.start.y) * dirfrac.y;
+		f32 t4 = (aabb.max.y - line.start.y) * dirfrac.y;
+		f32 t5 = (aabb.min.z - line.start.z) * dirfrac.z;
+		f32 t6 = (aabb.max.z - line.start.z) * dirfrac.z;
+		f32 tmin = glm::max(glm::max(glm::min(t1, t2), glm::min(t3, t4)), glm::min(t5, t6));
+		f32 tmax = glm::min(glm::min(glm::max(t1, t2), glm::max(t3, t4)), glm::max(t5, t6));
 
-        auto d = line.direction();
+		// if tmax < 0, ray (line) is intersecting AABB, but the whole AABB is behind us
+		if (tmax < 0) {
+			if (t != nullptr) {
+				*t = tmax;
+			}
+			return intersect_type_e::DISJOINT;
+		}
 
-        auto tmin = (aabb.min.x - line.start.x) / d.x;
-        auto tmax = (aabb.max.x - line.start.x) / d.x;
-
-        if (tmin > tmax)
-        {
-            std::swap(tmin, tmax);
-        }
-
-        auto tymin = (aabb.min.y - line.start.y) / d.y;
-        auto tymax = (aabb.max.y - line.start.y) / d.y;
-
-        if (tymin > tymax)
-        {
-            std::swap(tymin, tymax);
-        }
-
-        if ((tmin > tymax) || (tymin > tmax))
-        {
-            return intersect_type_e::DISJOINT;
-        }
-
-        if (tymin > tmin)
-        {
-            tmin = tymin;
-        }
-
-        if (tymax < tmax)
-        {
-            tmax = tymax;
-        }
-
-        auto tzmin = (aabb.min.z - line.start.z) / d.z;
-        auto tzmax = (aabb.max.z - line.start.z) / d.z;
-
-        if (tzmin > tzmax)
-        {
-            std::swap(tzmin, tzmax);
-        }
-
-        if (tmin > tzmax || tzmin > tmax)
-        {
-            return intersect_type_e::DISJOINT;
-        }
-
-        if (tzmin > tmin)
-        {
-            tmin = tzmin;
-        }
-
-        if (tzmax < tmax)
-        {
-            tmax = tzmax;
-        }
-
-        if (tmin < 0.0f)
-        {
-            return intersect_type_e::CONTAIN;
-        }
-
-        if (t != nullptr)
-        {
-            *t = tmin;
-        }
-
-        if (normal != nullptr)
-        {
-            *location = line.start + (d * tmin);
-
-            if (glm::abs(location->x - aabb.min.x) < 0.01f)
-            {
-				*normal = glm::detail::tvec3<Scalar>(-1, 0, 0);
-            }
-            else if (glm::abs(location->x - aabb.max.x) < 0.01f)
-            {
-				*normal = glm::detail::tvec3<Scalar>(1, 0, 0);
-            }
-            else if (glm::abs(location->y - aabb.min.y) < 0.01f)
-            {
-				*normal = glm::detail::tvec3<Scalar>(0, -1, 0);
-            }
-            else if (glm::abs(location->y - aabb.max.y) < 0.01f)
-            {
-				*normal = glm::detail::tvec3<Scalar>(0, 1, 0);
-            }
-            else if (glm::abs(location->z - aabb.min.z) < 0.01f)
-            {
-				*normal = glm::detail::tvec3<Scalar>(0, 0, -1);
-            }
-            else if (glm::abs(location->z - aabb.max.z) < 0.01f)
-            {
-				*normal = glm::detail::tvec3<Scalar>(0, 0, 1);
-            }
-        }
-
-        if (normal == nullptr && location != nullptr)
-        {
-            *location = line.start + (d * tmin);
-        }
-
-        return intersect_type_e::INTERSECT;
+		// if tmin > tmax, ray doesn't intersect AABB
+		if (tmin > tmax) {
+			if (t != nullptr) {
+				*t = tmax;
+			}
+			return intersect_type_e::DISJOINT;
+		}
+		if (t != nullptr) {
+			*t = tmin;
+		}
+		return intersect_type_e::INTERSECT;
     }
 
     template<typename Scalar = std::enable_if<std::is_floating_point<Scalar>::value>::type>

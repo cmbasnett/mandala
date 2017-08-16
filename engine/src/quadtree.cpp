@@ -63,8 +63,15 @@ namespace naga
         }
     }
 
-	std::vector<const quadtree::node*> quadtree::trace(const line3& ray) const {
-		std::vector<const quadtree::node*> nodes;
+	std::vector<const quadtree::node*> quadtree::trace(const line3& ray) const
+	{
+		// We will store calculate the distance along the ray when it is determined to be "hit", and store it alongside the node for sorting efficiency.
+		struct TraceNode
+		{
+			const quadtree::node* node = nullptr;
+			f32 distance = 0.0f;
+		};
+		std::vector<TraceNode> trace_nodes;
 		std::function<void(const quadtree::node*)> trace_node_recursive = [&](const quadtree::node* node)
 		{
 			if (node == nullptr)
@@ -72,11 +79,14 @@ namespace naga
 				return;
 			}
 
-			if (intersects(ray, node->get_bounds()) != naga::intersect_type_e::DISJOINT)
+			if (intersects(ray, node->get_bounds()) != intersect_type_e::DISJOINT)
 			{
 				if (node->is_leaf())
 				{
-					nodes.push_back(node);
+					TraceNode trace_node;
+					trace_node.node = node;
+					trace_node.distance = glm::dot(node->get_bounds().center(), ray.end - ray.start);
+					trace_nodes.push_back(trace_node);
 				}
 				else
 				{
@@ -87,10 +97,14 @@ namespace naga
 				}
 			}
 		};
-		trace_node_recursive(get_root());
-		// TODO: sort nodes by distance along input ray?
-		std::sort(nodes.begin(), nodes.end(), [&](const node* lhs, const node* rhs) {
-			return false;
+		trace_node_recursive(this->get_root());
+		// Sort the trace nodes by distance along the ray (closest first) [VERIFY CORRECTNESS]
+		std::sort(trace_nodes.begin(), trace_nodes.end(), [&](const TraceNode& lhs, const TraceNode& rhs) {
+			return lhs.distance < rhs.distance;
+		});
+		std::vector<const quadtree::node*> nodes;
+		std::transform(trace_nodes.begin(), trace_nodes.end(), std::back_inserter(nodes), [](const TraceNode& trace_node) {
+			return trace_node.node;
 		});
 		return nodes;
 	}
