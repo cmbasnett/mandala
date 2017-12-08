@@ -8,38 +8,38 @@ namespace naga
     namespace details
     {
         template<typename Scalar, typename Enable = void>
-        struct line2;
+        struct Line2;
 
         template<typename Scalar>
-        struct line2<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
+        struct Line2<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
         {
-            typedef Scalar scalar_type;
-            typedef line2<scalar_type> type;
-            typedef glm::detail::tvec2<scalar_type> value_type;
-            typedef line2<f32> real_type;
+            typedef Scalar ScalarType;
+            typedef Line2<ScalarType> Type;
+            typedef glm::detail::tvec2<ScalarType> VectorType;
+            typedef Line2<f32> RealType;
 
-            value_type start;
-            value_type end;
+            VectorType start;
+            VectorType end;
 
-            line2() = default;
+            Line2() = default;
 
-            line2(const value_type& start, const value_type& end) :
+            Line2(const VectorType& start, const VectorType& end) :
                 start(start),
                 end(end)
             {
             }
 
-            real_type::value_type direction() const
+            RealType::VectorType direction() const
             {
-                return glm::normalize((real_type::value_type)end - (real_type::value_type)start);
+                return glm::normalize((RealType::VectorType)end - (RealType::VectorType)start);
             }
 
             f32 length() const
             {
-                return glm::length((real_type::value_type)end - (real_type::value_type)start);
+                return glm::length((RealType::VectorType)end - (RealType::VectorType)start);
             }
 
-            type operator-(const value_type& t) const
+            Type operator-(const VectorType& t) const
             {
                 type sum;
                 sum.start = start - t;
@@ -47,21 +47,21 @@ namespace naga
                 return sum;
             }
 
-            type& operator-=(const value_type& t)
+			Type& operator-=(const VectorType& t)
             {
                 *this = *this - t;
                 return *this;
             }
 
-            type operator+(const value_type& t) const
+			Type operator+(const VectorType& t) const
             {
-                type sum;
+				Type sum;
                 sum.start = start + t;
                 sum.end = end + t;
                 return sum;
             }
 
-            type& operator+=(const value_type& t)
+			Type& operator+=(const VectorType& t)
             {
                 *this = *this + t;
                 return *this;
@@ -69,60 +69,60 @@ namespace naga
         };
 
         template<typename Scalar, typename Real = void, typename Enable = void>
-        struct line3;
+        struct Line3;
 
         template<typename Scalar>
-        struct line3<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
+        struct Line3<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
         {
-            typedef Scalar scalar_type;
-            typedef line3<scalar_type> type;
-            typedef glm::detail::tvec3<scalar_type> value_type;
-            typedef line3<f32> real_type;
+            typedef Scalar ScalarType;
+            typedef Line3<ScalarType> Type;
+            typedef glm::detail::tvec3<ScalarType> VectorType;
+            typedef Line3<f32> RealType;
 
-            value_type start;
-            value_type end;
+            VectorType start;
+            VectorType end;
 
-            line3() = default;
+            Line3() = default;
 
-            line3(const value_type& start, const value_type& end) :
+            Line3(const VectorType& start, const VectorType& end) :
                 start(start),
                 end(end)
             {
             }
 
-            real_type::value_type direction() const
+            RealType::VectorType direction() const
             {
-                return glm::normalize((real_type::value_type)end - (real_type::value_type)start);
+                return glm::normalize((RealType::VectorType)end - (RealType::VectorType)start);
             }
 
             f32 length() const
             {
-                return glm::length((real_type::value_type)end - (real_type::value_type)start);
+                return glm::length((RealType::VectorType)end - (RealType::VectorType)start);
             }
 
-            type operator-(const value_type& t) const
+			Type operator-(const VectorType& t) const
             {
-                type sum;
+				Type sum;
                 sum.start = start - t;
                 sum.end = end - t;
                 return sum;
             }
 
-            type& operator-=(const value_type& t)
+			Type& operator-=(const VectorType& t)
             {
                 *this = *this - t;
                 return *this;
             }
 
-            type operator+(const value_type& t) const
+			Type operator+(const VectorType& t) const
             {
-                type_t sum;
+				Type sum;
                 sum.start = start + t;
                 sum.end = end + t;
                 return sum;
             }
 
-            type& operator+=(const value_type& t)
+            Type& operator+=(const VectorType& t)
             {
                 *this = *this + t;
                 return *this;
@@ -130,19 +130,6 @@ namespace naga
         };
     }
 
-    typedef details::line2<i8>	line2_i8;
-    typedef details::line2<i16> line2_i16;
-    typedef details::line2<i32> line2_i32;
-    typedef details::line2<i64> line2_i64;
-    typedef details::line2<f32> line2_f32;
-    typedef details::line2<f64> line2_f64;
-    typedef line2_f32			line2;
-
-    typedef details::line3<i8>  line3_i8;
-    typedef details::line3<i16> line3_i16;
-    typedef details::line3<i32> line3_i32;
-    typedef details::line3<i64> line3_i64;
-    typedef details::line3<f32> line3_f32;
-    typedef details::line3<f64> line3_f64;
-    typedef line3_f32			line3;
+	typedef details::Line2<f32> Line2;
+    typedef details::Line3<f32> Line3;
 }

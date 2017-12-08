@@ -13,9 +13,9 @@
 
 namespace naga
 {
-    struct gpu_program_mgr
+    struct GpuProgramManager
     {
-        template<typename T = std::enable_if<is_gpu_program<T>::value, T>::type>
+		template<typename T = std::enable_if<IsGpuProgram<T>::value, T>::type>
         boost::shared_ptr<T> make()
         {
             static const std::type_index TYPE_INDEX = typeid(T);
@@ -27,7 +27,7 @@ namespace naga
             return gpu_program;
         }
 
-        template<typename T = std::enable_if<is_gpu_program<T>::value, T>::type>
+        template<typename T = std::enable_if<IsGpuProgram<T>::value, T>::type>
         boost::shared_ptr<T> get()
         {
             static const std::type_index TYPE_INDEX = typeid(T);
@@ -39,14 +39,14 @@ namespace naga
                 throw std::out_of_range("gpu program does not exist");
             }
 
-            return boost::static_pointer_cast<T, gpu_program>(gpu_programs_itr->second);
+            return boost::static_pointer_cast<T, GpuProgram>(gpu_programs_itr->second);
         }
 
         void purge();
 
     private:
-        std::map<std::type_index, boost::shared_ptr<gpu_program>> gpu_programs;
+        std::map<std::type_index, boost::shared_ptr<GpuProgram>> gpu_programs;
     };
 
-    extern gpu_program_mgr gpu_programs;
+	extern GpuProgramManager gpu_programs;
 }

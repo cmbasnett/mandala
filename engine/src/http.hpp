@@ -6,10 +6,10 @@
 
 namespace naga
 {
-    typedef std::vector<std::pair<std::string, std::string>> http_headers_type;
-	typedef std::vector<std::pair<std::string, std::string>> http_data_type;
+    typedef std::vector<std::pair<std::string, std::string>> HttpHeadersType;
+	typedef std::vector<std::pair<std::string, std::string>> HttpDataType;
 
-    enum http_method
+    enum HttpMethod
     {
         GET,
         POST,
@@ -19,7 +19,7 @@ namespace naga
         OPTIONS
     };
 
-    enum http_status : long
+    enum HttpStatus : long
     {
         UNKNOWN,
         CONTINUE_ = 100,

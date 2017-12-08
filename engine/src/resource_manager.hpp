@@ -5,25 +5,27 @@
 #include <map>
 #include <mutex>
 #include <typeindex>
+#include <sstream>
 
 //boost
 #include <boost\shared_ptr.hpp>
 #include <boost\make_shared.hpp>
+#include <boost\uuid\random_generator.hpp>
+#include <boost\uuid\uuid_io.hpp>
 
 //naga
-#include "hash.hpp"
-#include "pack_mgr.hpp"
+#include "package_manager.hpp"
 #include "resource.hpp"
 
 namespace naga
 {
-    struct resource_mgr : public pack_mgr
+    struct ResourceManager : public PackageManager
     {
-        typedef std::map<hash, boost::shared_ptr<resource>> resource_map_type;
+        typedef std::map<std::string, boost::shared_ptr<Resource>> resource_map_type;
 
         size_t count() const;
 
-        template<typename T = std::enable_if<is_resource<T>::value, T>::type>
+        template<typename T = std::enable_if<IsResource<T>::value, T>::type>
         size_t count()
         {
             static const std::type_index TYPE_INDEX = typeid(T);
@@ -40,8 +42,8 @@ namespace naga
             return type_resources_itr->second.size();
         }
 
-        template<typename T = std::enable_if<is_resource<T>::value, T>::type>
-        boost::shared_ptr<T> get(const std::string& path)
+        template<typename T = std::enable_if<IsResource<T>::value, T>::type>
+        boost::shared_ptr<T> get(const std::string& name)
         {
             static const std::type_index TYPE_INDEX = typeid(T);
 
@@ -56,42 +58,48 @@ namespace naga
 			}
 
             auto& resources = type_resources[TYPE_INDEX];
-			auto hash = naga::hash(path);
-            auto resources_itr = resources.find(hash);
+			auto resources_itr = resources.find(name);
 
             if (resources_itr != resources.end())
             {
                 //resource already exists
                 auto& resource = resources_itr->second;
 
-                resource->last_access_time = resource::clock_type::now();
+                resource->last_access_time = Resource::ClockType::now();
 
-                return boost::static_pointer_cast<T, naga::resource>(resource);
+                return boost::static_pointer_cast<T, Resource>(resource);
             }
 
 			boost::shared_ptr<std::istream> istream;
 
 			try
 			{
-				istream = extract(hash);
+				istream = extract(name);
 			}
 			catch (const std::out_of_range&)
 			{
 				// TODO: not in the packs, check the file system!
-				istream = boost::make_shared<std::ifstream>(path, std::ios::binary);
+				istream = boost::make_shared<std::ifstream>(name, std::ios::binary);
 			}
 
             auto resource = boost::make_shared<T>(*istream);
+            resource->name = name;
 
-            resource->hash = hash;
-
-            resources.emplace(hash, resource);
+            resources.emplace(name, resource);
 
             return resource;
-        }
+		}
+		
+		template<typename T, typename... Args>
+		boost::shared_ptr<T> make(Args&&... args)
+		{
+			auto resource = boost::make_shared<T>(args...);
+			put(resource);
+			return resource;
+		}
 
-        template<typename T = std::enable_if<is_resource<T>::value, T>::type>
-        void put(boost::shared_ptr<T> resource, const hash& hash)
+        template<typename T = std::enable_if<IsResource<T>::value, T>::type>
+        void put(boost::shared_ptr<T> resource)
         {
             static const std::type_index TYPE_INDEX = typeid(T);
 
@@ -107,24 +115,27 @@ namespace naga
 
             auto& resources = type_resources[TYPE_INDEX];
 
-            const auto resources_itr = std::find_if(resources.begin(), resources.end(), [&](const std::pair<hash, boost::shared_ptr<resource>>& pair)
+            const auto resources_itr = std::find_if(resources.begin(), resources.end(), [&](const std::pair<std::string, boost::shared_ptr<Resource>>& pair)
             {
                 return resource == pair.second;
             });
 
             if (resources_itr != resources.end())
             {
-                std::ostringstream ostringstream;
+                std::ostringstream oss;
 
-                ostringstream << "resource " << hash<< " already exists";
+				oss << "resource " << resources_itr->first << " already exists";
 
-                throw std::exception(ostringstream.str().c_str());
+				throw std::exception(oss.str().c_str());
             }
 
-            resource->hash = hash;
+			// generate a globally unique identifier for this new resource.
+			static boost::uuids::random_generator random_generator;
+
+			resource->name = boost::uuids::to_string(random_generator());
             resource->last_access_time = std::chrono::system_clock::now();
             
-            resources.emplace(resource->hash, resource);
+            resources.emplace(resource->name, resource);
         }
 
         void prune();
@@ -135,5 +146,5 @@ namespace naga
         std::map<std::type_index, resource_map_type> type_resources;
     };
 
-    extern resource_mgr resources;
+    extern ResourceManager resources;
 }

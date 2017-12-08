@@ -8,33 +8,33 @@ namespace naga
     namespace details
     {
         template<typename Scalar, typename Enable = void>
-        struct plane2;
+        struct Plane2;
 
         template<typename Scalar>
-        struct plane2<Scalar, typename std::enable_if<std::is_floating_point<Scalar>::value>::type>
+        struct Plane2<Scalar, typename std::enable_if<std::is_floating_point<Scalar>::value>::type>
         {
-            typedef Scalar scalar_type;
-            typedef plane2<scalar_type> type;
-            typedef glm::detail::tvec2<scalar_type> vector_type;
+            typedef Scalar ScalarType;
+            typedef Plane2<ScalarType> Type;
+            typedef glm::detail::tvec2<ScalarType> VectorType;
 
-            vector_type normal;
-            scalar_type distance = scalar_type(0);
+            VectorType normal;
+            ScalarType distance = ScalarType(0);
 
-            plane2() = default;
+            Plane2() = default;
 
-            plane2(const vector_type& normal, scalar_type distance) :
+            Plane2(const VectorType& normal, ScalarType distance) :
                 normal(normal),
                 distance(distance)
             {
             }
 
-            plane2(const vector_type& origin, const vector_type& normal) :
+            Plane2(const VectorType& origin, const VectorType& normal) :
                 normal(normal)
             {
                 distance = glm::dot(normal, origin);
             }
 
-            plane2(const glm::detail::tvec3<scalar_type>& vec3) :
+            Plane2(const glm::detail::tvec3<ScalarType>& vec3) :
                 normal(glm::swizzle<glm::X, glm::Y>(vec3)),
                 distance(vec3.z)
             {
@@ -47,52 +47,49 @@ namespace naga
                 distance /= length;
             }
 
-            inline vector_type origin() const
+            inline VectorType origin() const
             {
                 return normal * distance;
             }
 
-            type operator-() const
+			Type operator-() const
             {
-                return type(-plane.normal, -plane.distance);
+				return Type(-plane.normal, -plane.distance);
             }
         };
     }
-
-    typedef details::plane2<f32> plane2_f32;
-    typedef details::plane2<f64> plane2_f64;
-    typedef plane2_f32 plane2;
+    typedef details::Plane2<f32> Plane2;
 
     namespace details
     {
         template<typename Scalar, typename Enable = void>
-        struct plane3;
+        struct Plane3;
 
         template<typename Scalar>
-        struct plane3<Scalar, typename std::enable_if<std::is_floating_point<Scalar>::value>::type>
+        struct Plane3<Scalar, typename std::enable_if<std::is_floating_point<Scalar>::value>::type>
         {
-            typedef Scalar scalar_type;
-            typedef plane3<scalar_type> type;
-            typedef glm::detail::tvec3<scalar_type> vector_type;
+            typedef Scalar ScalarType;
+			typedef Plane3<ScalarType> Type;
+            typedef glm::detail::tvec3<ScalarType> VectorType;
 
-            vector_type normal;
-            scalar_type distance = 0;
+            VectorType normal;
+            ScalarType distance = 0;
 
-            plane3() = default;
+            Plane3() = default;
 
-            plane3(const vector_type& normal, scalar_type distance) :
+            Plane3(const VectorType& normal, ScalarType distance) :
                 normal(normal),
                 distance(distance)
             {
             }
 
-            plane3(const vector_type& origin, const vector_type& normal) :
+            Plane3(const VectorType& origin, const VectorType& normal) :
                 normal(normal),
                 distance(glm::dot(normal, origin))
             {
             }
 
-            plane3(const vector_type& v0, const vector_type& v1, const vector_type& v2)
+            Plane3(const VectorType& v0, const VectorType& v1, const VectorType& v2)
             {
                 const auto a = v1 - v0;
                 const auto b = v2 - v0;
@@ -101,7 +98,7 @@ namespace naga
                 distance = glm::dot(normal, v0);
             }
 
-            plane3(const glm::detail::tvec4<scalar_type>& vec4) :
+            Plane3(const glm::detail::tvec4<ScalarType>& vec4) :
                 normal(glm::swizzle<glm::X, glm::Y, glm::Z>(vec4)),
                 distance(vec4.z)
             {
@@ -114,19 +111,17 @@ namespace naga
                 distance /= length;
             }
 
-            inline vector_type origin() const
+            inline VectorType origin() const
             {
                 return normal * distance;
             }
 
-            type operator-() const
+			Type operator-() const
             {
-                return type(-plane.normal, -plane.distance);
+				return Type(-plane.normal, -plane.distance);
             }
         };
     }
 
-    typedef details::plane3<f32> plane3_f32;
-    typedef details::plane3<f64> plane3_f64;
-    typedef plane3_f32 plane3;
+	typedef details::Plane3<f32> Plane3;
 }

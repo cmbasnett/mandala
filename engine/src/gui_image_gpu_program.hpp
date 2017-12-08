@@ -7,12 +7,12 @@ using namespace glm;
 
 namespace naga
 {
-    struct gui_image_gpu_program : gpu_program
+    struct gui_image_gpu_program : GpuProgram
     {
-        struct vertex
+        struct Vertex
         {
-            vertex() = default;
-            vertex(vec3 location, vec2 texcoord)
+            Vertex() = default;
+            Vertex(vec3 location, vec2 texcoord)
             {
 this->location = location;
 this->texcoord = texcoord;            }
@@ -21,10 +21,10 @@ this->texcoord = texcoord;            }
             vec2 texcoord;
         };
 
-        typedef vertex vertex_type;
+        typedef Vertex VertexType;
 
         gui_image_gpu_program() :
-            gpu_program(R"(#version 400
+            GpuProgram(R"(#version 400
 
 uniform mat4 world_matrix;
 uniform mat4 view_projection_matrix;
@@ -91,8 +91,8 @@ void main()
         {
             gpu.enable_vertex_attribute_array(location_location);
             gpu.enable_vertex_attribute_array(texcoord_location);
-            gpu.set_vertex_attrib_pointer(location_location, sizeof(vec3) / sizeof(vec3::value_type), gpu_data_type_<vec3::value_type>::VALUE, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, location)));
-            gpu.set_vertex_attrib_pointer(texcoord_location, sizeof(vec2) / sizeof(vec2::value_type), gpu_data_type_<vec2::value_type>::VALUE, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, texcoord)));
+            gpu.set_vertex_attrib_pointer(location_location, sizeof(vec3) / sizeof(vec3::value_type), GpuDataType<vec3::value_type>::VALUE, false, sizeof(VertexType), reinterpret_cast<void*>(offsetof(VertexType, location)));
+            gpu.set_vertex_attrib_pointer(texcoord_location, sizeof(vec2) / sizeof(vec2::value_type), GpuDataType<vec2::value_type>::VALUE, false, sizeof(VertexType), reinterpret_cast<void*>(offsetof(VertexType, texcoord)));
         }
 
         void on_unbind() override
@@ -103,7 +103,7 @@ void main()
 
 
     private:
-       gpu_location location_location;
-       gpu_location texcoord_location;
+       GpuLocation location_location;
+       GpuLocation texcoord_location;
     };
 }

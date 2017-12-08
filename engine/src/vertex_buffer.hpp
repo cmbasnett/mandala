@@ -12,33 +12,33 @@
 namespace naga
 {
     template<typename Vertex>
-    struct vertex_buffer : gpu_buffer
+	struct VertexBuffer : GpuBuffer
     {
-        typedef Vertex vertex_type;
+        typedef Vertex VertexType;
         
-        static const auto VERTEX_SIZE = sizeof(vertex_type);
+		static const auto VERTEX_SIZE = sizeof(VertexType);
 
-        vertex_buffer() = default;
+		VertexBuffer() = default;
 
-        void data(const vertex_type* vertices, std::size_t count, gpu_t::buffer_usage usage)
+		void data(const VertexType* vertices, std::size_t count, Gpu::BufferUsage usage)
         {
-            gpu.buffers.push(gpu_t::buffer_target::ARRAY, shared_from_this());
-            gpu.buffers.data(gpu_t::buffer_target::ARRAY, static_cast<const void*>(vertices), VERTEX_SIZE * count, usage);
-            gpu.buffers.pop(gpu_t::buffer_target::ARRAY);
+            gpu.buffers.push(Gpu::BufferTarget::ARRAY, shared_from_this());
+            gpu.buffers.data(Gpu::BufferTarget::ARRAY, static_cast<const void*>(vertices), VERTEX_SIZE * count, usage);
+            gpu.buffers.pop(Gpu::BufferTarget::ARRAY);
         }
 
-        void data(std::initializer_list<vertex_type>& vertices, gpu_t::buffer_usage usage)
+		void data(std::initializer_list<VertexType>& vertices, Gpu::BufferUsage usage)
         {
             data(vertices.begin(), vertices.size(), usage);
         }
 
-        void data(std::vector<vertex_type>& vertices, gpu_t::buffer_usage usage)
+		void data(std::vector<VertexType>& vertices, Gpu::BufferUsage usage)
         {
             data(vertices.data(), vertices.size(), usage);
         }
 
     private:
-        vertex_buffer(const vertex_buffer&) = delete;
-        vertex_buffer& operator=(const vertex_buffer&) = delete;
+		VertexBuffer(const VertexBuffer&) = delete;
+		VertexBuffer& operator=(const VertexBuffer&) = delete;
     };
 }

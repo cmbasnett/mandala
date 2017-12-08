@@ -5,9 +5,9 @@
 
 namespace naga
 {
-    bool gui_layout::on_input_event_begin(input_event_t& input_event)
+    bool GUILayout::on_input_event_begin(InputEvent& input_event)
     {
-        if (input_event.device_type == input_event_t::device_type_e::TOUCH)
+		if (input_event.device_type == InputEvent::DeviceType::TOUCH)
         {
             input_event.touch.location.y = platform.get_screen_size().y - input_event.touch.location.y;
 

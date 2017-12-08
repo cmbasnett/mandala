@@ -13,10 +13,10 @@
 
 namespace naga
 {
-    struct cache_mgr
+    struct Cache
     {
-        cache_mgr();
-        ~cache_mgr();
+		Cache();
+		~Cache();
 
         std::unique_ptr<std::ifstream> get(const std::string& file_name) const;
         i32 put_buffer(const std::string& file_name, const void* buffer, size_t count);
@@ -32,5 +32,5 @@ namespace naga
         std::mutex mutex;
     };
 
-    extern cache_mgr cache;
+	extern Cache cache;
 }

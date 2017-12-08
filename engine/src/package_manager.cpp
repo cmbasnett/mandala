@@ -1,6 +1,6 @@
 //naga
-#include "pack_mgr.hpp"
-#include "pack.hpp"
+#include "package_manager.hpp"
+#include "package.hpp"
 
 //std
 #include <sstream>
@@ -12,21 +12,20 @@
 
 namespace naga
 {
-    void pack_mgr::mount(const std::string& path)
+    void PackageManager::mount(const std::string& path)
     {
         std::lock_guard<std::recursive_mutex> lock(mutex);
 
-        const auto pack_string = boost::filesystem::path(path).filename().string();
-        const auto pack_hash = hash(pack_string);
+        const auto package_name = boost::filesystem::path(path).filename().string();
 
-        packs.erase(pack_hash);
+		packages.erase(package_name);
 
-        auto packs_itr = packs.insert(std::make_pair(pack_hash, pack(path)));
+		auto packs_itr = packages.insert(std::make_pair(package_name, Package(path)));
 
         if (!packs_itr.second)
         {
             std::ostringstream ostringstream;
-            ostringstream << "pack \"" << pack_string << "\" already mounted";
+			ostringstream << "pack \"" << package_name << "\" already mounted";
 
             throw std::exception(ostringstream.str().c_str());
         }
@@ -35,37 +34,37 @@ namespace naga
 
         for (auto& file : pack.files)
         {
-            file.second.pack_hash = pack_hash;
+			file.second.package_name = package_name;
 
             files[file.first] = file.second;
         }
     }
 
-    void pack_mgr::unmount_all()
+    void PackageManager::unmount_all()
     {
         std::lock_guard<std::recursive_mutex> lock(mutex);
 
         files.clear();
-        packs.clear();
+        packages.clear();
     }
 
-    boost::shared_ptr<std::istream> pack_mgr::extract(const hash& hash)
+	boost::shared_ptr<std::istream> PackageManager::extract(const std::string& file_name)
     {
         std::lock_guard<std::recursive_mutex> lock(mutex);
 
-        auto files_itr = files.find(hash);
+		auto files_itr = files.find(file_name);
 
         if (files_itr == files.end())
         {
             std::ostringstream ostringstream;
-            ostringstream << "no such file " << hash;
+			ostringstream << "no such file " << file_name;
 
             throw std::out_of_range(ostringstream.str().c_str());
         }
 
         const auto& file = files_itr->second;
-        const auto& pack = packs.at(file.pack_hash);
+        const auto& package = packages.at(file.package_name);
 
-        return boost::make_shared<std::istrstream>(pack.mapped_file_source.data() + file.offset, file.length);
+		return boost::make_shared<std::istrstream>(package.mapped_file_source.data() + file.offset, file.length);
     }
 }

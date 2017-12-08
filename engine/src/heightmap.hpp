@@ -12,12 +12,12 @@
 
 namespace naga
 {
-    struct image;
+	struct Image;
 
-    struct heightmap
+    struct Heightmap
     {
-        heightmap(const boost::shared_ptr<image>& image);
-        heightmap(size_t width, size_t depth) :
+		Heightmap(const boost::shared_ptr<Image>& image);
+		Heightmap(size_t width, size_t depth) :
 			width(width),
 			depth(depth),
             data(boost::extents[width][depth])

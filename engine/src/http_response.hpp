@@ -8,7 +8,7 @@
 
 namespace naga
 {
-    struct http_response
+    struct HttpResponse
     {
         bool has_error() const { return !exception_ptr; }
         long get_status() const { return status; }
@@ -33,9 +33,9 @@ namespace naga
 		const f64 get_elapsed() const { return elapsed; }
 
     private:
-        friend struct http_manager;
+        friend struct HttpManager;
 
-        http_status status = http_status::UNKNOWN;
+		HttpStatus status = HttpStatus::UNKNOWN;
         std::string content;
 		std::string content_type;
 		f64 elapsed = 0.0;

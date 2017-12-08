@@ -8,20 +8,20 @@
 
 namespace naga
 {
-    struct audio_device
+    struct AudioDevice
     {
-        typedef ALCdevice* pointer_type;
+        typedef ALCdevice* PointerType;
 
-        audio_device();
-        audio_device(const std::string& name);
-        ~audio_device();
+		AudioDevice();
+		AudioDevice(const std::string& name);
+		~AudioDevice();
 
-        operator pointer_type() const { return pointer; }
+		operator PointerType() const { return pointer; }
 
     private:
-        audio_device(const audio_device&) = delete;
-        audio_device& operator=(const audio_device&) = delete;
+		AudioDevice(const AudioDevice&) = delete;
+		AudioDevice& operator=(const AudioDevice&) = delete;
 
-        pointer_type pointer = nullptr;
+		PointerType pointer = nullptr;
     };
 }

@@ -7,58 +7,58 @@
 namespace naga
 {
     namespace details
-    {
-        template<typename Value, Value Default>
-        struct value_wrapper_
+	{
+		template<typename Value, Value Default>
+        struct ValueWrapper
         {
-            typedef Value value_type;
-            typedef value_wrapper_<Value, Default> type;
+            typedef Value ValueType;
+			typedef ValueWrapper<ValueType, Default> Type;
 
-            value_wrapper_() = default;
-            value_wrapper_(const value_type& value) :
+			ValueWrapper() = default;
+			ValueWrapper(const ValueType& value) :
                 value(value)
             {
             }
 
-            operator value_type() const
+			operator Value() const
             {
                 return value;
             }
 
-            type& operator=(value_type value)
+            Type& operator=(ValueType value)
             {
                 this->value = value;
 
                 return *this;
             }
 
-            value_type* operator&()
+			ValueType* operator&()
             {
                 return &value;
             }
 
         private:
-            value_type value = Default;
+            ValueType value = Default;
         };
     }
 
-    typedef details::value_wrapper_<u32, 0>     gpu_id;
-    typedef details::value_wrapper_<i32, -1>    gpu_location;
-    typedef details::value_wrapper_<u32, 0>     gpu_index;
+    typedef details::ValueWrapper<u32, 0>	GpuId;
+	typedef details::ValueWrapper<i32, -1>	GpuLocation;
+	typedef details::ValueWrapper<u32, 0>	GpuIndex;
 
-    typedef rectangle_i32   gpu_viewport_type;
-    typedef u8              gpu_clear_flag_type;
-    typedef vec2_u32        gpu_frame_buffer_size_type;
-    typedef u8              gpu_frame_buffer_type_flags_type;
+    typedef Rectangle		GpuViewportType;
+    typedef u8              GpuClearFlagType;
+    typedef vec2			GpuFrameBufferSizeType;
+    typedef u8              GpuFrameBufferTypeFlagsType;
 
-    enum : gpu_frame_buffer_type_flags_type
+    enum : GpuFrameBufferTypeFlagsType
     {
         GPU_FRAME_BUFFER_TYPE_FLAG_COLOR = (1 << 0),
         GPU_FRAME_BUFFER_TYPE_FLAG_DEPTH = (1 << 1),
         GPU_FRAME_BUFFER_TYPE_FLAG_STENCIL = (1 << 2)
     };
 
-    enum class gpu_frame_buffer_type : gpu_frame_buffer_type_flags_type
+    enum class GpuFrameBufferType : GpuFrameBufferTypeFlagsType
     {
         COLOR = (GPU_FRAME_BUFFER_TYPE_FLAG_COLOR),
         COLOR_DEPTH = (GPU_FRAME_BUFFER_TYPE_FLAG_COLOR | GPU_FRAME_BUFFER_TYPE_FLAG_DEPTH),
@@ -67,7 +67,7 @@ namespace naga
         DEPTH_STENCIL = (GPU_FRAME_BUFFER_TYPE_FLAG_DEPTH | GPU_FRAME_BUFFER_TYPE_FLAG_STENCIL)
     };
 
-    enum class gpu_data_type
+    enum class GpuDataTypes
     {
         BYTE,
         UNSIGNED_BYTE,
@@ -80,53 +80,53 @@ namespace naga
     };
 
     template<typename T>
-    struct gpu_data_type_;
+    struct GpuDataType;
 
     template<>
-    struct gpu_data_type_<i8>
+    struct GpuDataType<i8>
     {
-        static const auto VALUE = gpu_data_type::BYTE;
+		static const auto VALUE = GpuDataTypes::BYTE;
     };
 
     template<>
-    struct gpu_data_type_<u8>
+    struct GpuDataType<u8>
     {
-        static const auto VALUE = gpu_data_type::UNSIGNED_BYTE;
+		static const auto VALUE = GpuDataTypes::UNSIGNED_BYTE;
     };
 
     template<>
-    struct gpu_data_type_<i16>
+    struct GpuDataType<i16>
     {
-        static const auto VALUE = gpu_data_type::SHORT;
+		static const auto VALUE = GpuDataTypes::SHORT;
     };
 
     template<>
-    struct gpu_data_type_<u16>
+    struct GpuDataType<u16>
     {
-        static const auto VALUE = gpu_data_type::UNSIGNED_SHORT;
+		static const auto VALUE = GpuDataTypes::UNSIGNED_SHORT;
     };
 
     template<>
-    struct gpu_data_type_<i32>
+    struct GpuDataType<i32>
     {
-        static const auto VALUE = gpu_data_type::INT;
+		static const auto VALUE = GpuDataTypes::INT;
     };
 
     template<>
-    struct gpu_data_type_<u32>
+    struct GpuDataType<u32>
     {
-        static const auto VALUE = gpu_data_type::UNSIGNED_INT;
+		static const auto VALUE = GpuDataTypes::UNSIGNED_INT;
     };
 
     template<>
-    struct gpu_data_type_<f32>
+    struct GpuDataType<f32>
     {
-        static const auto VALUE = gpu_data_type::FLOAT;
+		static const auto VALUE = GpuDataTypes::FLOAT;
     };
 
     template<>
-    struct gpu_data_type_<f64>
+    struct GpuDataType<f64>
     {
-        static const auto VALUE = gpu_data_type::DOUBLE;
+		static const auto VALUE = GpuDataTypes::DOUBLE;
     };
 }

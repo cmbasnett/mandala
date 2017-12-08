@@ -8,21 +8,21 @@
 
 namespace naga
 {
-    struct audio_device;
+    struct AudioDevice;
 
-    struct audio_context
+    struct AudioContext
     {
-        typedef ALCcontext* pointer_type;
+        typedef ALCcontext* PointerType;
 
-        audio_context(const boost::shared_ptr<audio_device>& device);
-        ~audio_context();
+		AudioContext(const boost::shared_ptr<AudioDevice>& device);
+		~AudioContext();
 
-        operator pointer_type() const { return pointer; }
+		operator PointerType() const { return pointer; }
 
     private:
-        audio_context(const audio_context&) = delete;
-        audio_context& operator=(const audio_context&) = delete;
+		AudioContext(const AudioContext&) = delete;
+		AudioContext& operator=(const AudioContext&) = delete;
 
-        pointer_type pointer = nullptr;
+		PointerType pointer = nullptr;
     };
 }

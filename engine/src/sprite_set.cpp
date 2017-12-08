@@ -3,7 +3,7 @@
 
 //naga
 #include "io.hpp"
-#include "resource_mgr.hpp"
+#include "resource_manager.hpp"
 #include "sprite_set.hpp"
 #include "texture.hpp"
 
@@ -13,7 +13,7 @@
 
 namespace naga
 {
-    sprite_set::sprite_set(std::istream& istream)
+	SpriteSet::SpriteSet(std::istream& istream)
     {
         //magic
         std::array<char, TPSB_MAGIC_LENGTH> magic;
@@ -37,7 +37,7 @@ namespace naga
         std::string texture_name;
         std::getline(istream, texture_name, '\0');
 
-        texture = resources.get<naga::texture>(texture_name);
+        texture = resources.get<Texture>(texture_name);
 
         //region count
         u16 region_count = 0;
@@ -46,103 +46,108 @@ namespace naga
 
         for (u16 i = 0; i < region_count; ++i)
         {
-            auto region = boost::make_shared<sprite_set::region>();
+			Region region;
 
-            //hash
-            std::string region_name;
-            std::getline(istream, region_name, '\0');
-            
-            region->hash = naga::hash(std::move(region_name));
+            //name
+            std::getline(istream, region.name, '\0');
 
             //frame rectangle
-            read(istream, region->frame_rectangle.x);
-            read(istream, region->frame_rectangle.y);
-            read(istream, region->frame_rectangle.width);
-            read(istream, region->frame_rectangle.height);
+            read(istream, region.frame_rectangle.x);
+            read(istream, region.frame_rectangle.y);
+            read(istream, region.frame_rectangle.width);
+            read(istream, region.frame_rectangle.height);
 
             //rectangle
-            read(istream, region->rectangle.x);
-            read(istream, region->rectangle.y);
-            read(istream, region->rectangle.width);
-            read(istream, region->rectangle.height);
+            read(istream, region.rectangle.x);
+            read(istream, region.rectangle.y);
+            read(istream, region.rectangle.width);
+            read(istream, region.rectangle.height);
 
             //source size
-            read(istream, region->source_size.x);
-            read(istream, region->source_size.y);
+            read(istream, region.source_size.x);
+            read(istream, region.source_size.y);
 
             //frame uv
-            read(istream, region->frame_uv.min.x);
-            read(istream, region->frame_uv.min.y);
-            read(istream, region->frame_uv.max.x);
-            read(istream, region->frame_uv.max.y);
+            read(istream, region.frame_uv.min.x);
+            read(istream, region.frame_uv.min.y);
+            read(istream, region.frame_uv.max.x);
+            read(istream, region.frame_uv.max.y);
 
             //uv
-            read(istream, region->uv.min.x);
-            read(istream, region->uv.min.y);
-            read(istream, region->uv.max.x);
-            read(istream, region->uv.max.y);
+            read(istream, region.uv.min.x);
+            read(istream, region.uv.min.y);
+            read(istream, region.uv.max.x);
+            read(istream, region.uv.max.y);
 
             //flags
-            typedef u8 flags_type;
+            typedef u8 FlagsType;
 
-            enum : flags_type
+			enum : FlagsType
             {
-                flag_none = 0,
-                flag_rotated = (1 << 0),
-                flag_trimmed = (1 << 1)
+                FLAG_NONE = 0,
+                FLAG_ROTATED = (1 << 0),
+                FLAG_TRIMMED = (1 << 1)
             };
 
-            flags_type flags = flag_none;
+			FlagsType flags = FLAG_NONE;
 
             read(istream, flags);
 
-            region->is_rotated = ((flags & flag_rotated) == flag_rotated);
-            region->is_trimmed = ((flags & flag_trimmed) == flag_trimmed);
+            region.is_rotated = ((flags & FLAG_ROTATED) == FLAG_ROTATED);
+            region.is_trimmed = ((flags & FLAG_TRIMMED) == FLAG_TRIMMED);
 
-            regions.insert(std::make_pair(region->hash, region));
+            regions.insert(std::make_pair(region.name, region));
         }
     }
 
-    sprite_set::sprite_set(const boost::shared_ptr<naga::texture>& texture) :
-        texture(texture)
+	SpriteSet::SpriteSet(const std::string& texture_name) :
+		SpriteSet(resources.get<Texture>(texture_name))
+	{
+	}
+
+	SpriteSet::SpriteSet(const boost::shared_ptr<Texture>& texture) :
+		texture(texture)
+	{
+		if (texture == nullptr)
+		{
+			throw std::invalid_argument("no texture");
+		}
+
+		Region region;
+		region.frame_rectangle.x = 0;
+		region.frame_rectangle.y = 0;
+		region.frame_rectangle.width = texture->get_size().x;
+		region.frame_rectangle.height = texture->get_size().y;
+		region.name = "A";
+		region.is_rotated = false;
+		region.is_trimmed = false;
+		region.rectangle.x = 0;
+		region.rectangle.y = 0;
+		region.rectangle.width = texture->get_size().x;
+		region.rectangle.height = texture->get_size().y;
+		region.source_size = texture->get_size();
+		region.uv.min.x = 0.0f;
+		region.uv.min.y = 0.0f;
+		region.uv.max.x = 1.0f;
+		region.uv.max.y = 1.0f;
+
+		regions.emplace(region.name, region);
+	}
+
+	bool SpriteSet::has_region(const std::string& region_name) const
+	{
+		return regions.find(region_name) != regions.end();
+	}
+
+	const SpriteSet::Region& SpriteSet::get_region(const std::string& region_name) const
     {
-        if (texture == nullptr)
-        {
-            throw std::invalid_argument("");
-        }
-
-        auto region = boost::make_shared<sprite_set::region>();
-        region->frame_rectangle.x = 0;
-        region->frame_rectangle.y = 0;
-        region->frame_rectangle.width = texture->get_size().x;
-        region->frame_rectangle.height = texture->get_size().y;
-        region->hash = texture->hash;
-        region->is_rotated = false;
-        region->is_trimmed = false;
-        region->rectangle.x = 0;
-        region->rectangle.y = 0;
-        region->rectangle.width = texture->get_size().x;
-        region->rectangle.height = texture->get_size().y;
-        region->source_size = texture->get_size();
-        region->uv.min.x = 0.0f;
-        region->uv.min.y = 0.0f;
-        region->uv.max.x = 1.0f;
-        region->uv.max.y = 1.0f;
-
-        regions.emplace(naga::hash(), region);
-    }
-
-    boost::shared_ptr<sprite_set::region> sprite_set::get_region(const naga::hash& region_hash) const
-    {
-        boost::shared_ptr<region> region;
-
-        auto regions_itr = regions.find(region_hash);
+		auto regions_itr = regions.find(region_name);
 
         if (regions_itr != regions.end())
         {
-            region = regions_itr->second;
+			return regions_itr->second;
         }
 
-        return region;
+		throw std::invalid_argument("region does not exist");
     }
 }

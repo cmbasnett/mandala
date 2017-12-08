@@ -6,14 +6,14 @@
 
 namespace naga
 {
-    enum class axis_e
+    enum class Axis
     {
         X,
         Y,
         Z
     };
 
-    enum class gui_size_mode_e
+    enum class GUISizeMode
     {
         ABSOLUTE,
         RELATIVE,       // Size value is interpreted as a percentage (0.0-1.0) of the parent node's size
@@ -22,29 +22,29 @@ namespace naga
     };
 
     //TODO: make this more generic!
-    struct gui_size_modes_t
+    struct GUISizeModes
     {
-        gui_size_modes_t(gui_size_mode_e x = gui_size_mode_e::ABSOLUTE, gui_size_mode_e y = gui_size_mode_e::ABSOLUTE)
+        GUISizeModes(GUISizeMode x = GUISizeMode::ABSOLUTE, GUISizeMode y = GUISizeMode::ABSOLUTE)
         {
             set_x(x);
             set_y(y);
         }
 
-        gui_size_mode_e get_x() const { return x; }
-        gui_size_mode_e get_y() const { return y; }
+        GUISizeMode get_x() const { return x; }
+        GUISizeMode get_y() const { return y; }
 
-        void set_x(gui_size_mode_e x)
+        void set_x(GUISizeMode x)
         {
             this->x = x;
         }
 
-        void set_y(gui_size_mode_e y)
+        void set_y(GUISizeMode y)
         {
             this->y = y;
         }
 
     private:
-        gui_size_mode_e x = gui_size_mode_e::ABSOLUTE;
-        gui_size_mode_e y = gui_size_mode_e::ABSOLUTE;
+        GUISizeMode x = GUISizeMode::ABSOLUTE;
+        GUISizeMode y = GUISizeMode::ABSOLUTE;
     };
 }

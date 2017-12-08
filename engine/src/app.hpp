@@ -15,53 +15,52 @@
 
 namespace naga
 {
-    struct game;
-    struct input_event_t;
+    struct Game;
+    struct InputEvent;
 
-    struct app
+    struct App
     {
-        struct performance_t
+        struct Performance
         {
-            typedef f32 fps_type;
-
             static const auto FRAME_COUNT = 256;
 
-            struct frame_t
+            struct Frame
             {
-                typedef std::chrono::milliseconds duration_type;
+                typedef std::chrono::milliseconds DurationType;
 
-                duration_type duration;
-                duration_type render_duration;
-                duration_type tick_duration;
-                duration_type input_duration;
+				DurationType duration;
+				DurationType render_duration;
+				DurationType tick_duration;
+				DurationType input_duration;
                 size_t consumed_input_event_count = 0;
                 size_t unconsumed_input_event_count = 0;
             };
 
-            std::deque<frame_t> frames;
-            fps_type fps = fps_type(0);
+            std::deque<Frame> frames;
+			f32 fps = 0.0f;
         };
 
-        const performance_t& get_performance() const { return performance; }
+        const Performance& get_performance() const { return performance; }
 
-        app() = default;
+        App() = default;
 
-        void run(const boost::shared_ptr<game>& game);
+        void run(const boost::shared_ptr<Game>& game);
         void exit();
         void reset();
         void screenshot();
 
-        long long get_uptime() const;
+		f32 get_uptime_seconds() const;
+        i64 get_uptime_milliseconds() const;
 
     private:
         bool is_exiting = false;
         bool is_resetting = false;
-        performance_t performance;
+        Performance performance;
         std::chrono::system_clock::time_point run_time_point;
-        boost::shared_ptr<game> game;
+        boost::shared_ptr<Game> game;
 
-        app(const app&) = delete;
-        app& operator=(const app&) = delete;
+		App(const App&) = delete;
+		App& operator=(const App&) = delete;
 
         void tick(f32 dt);
         void render();
@@ -72,5 +71,5 @@ namespace naga
         bool should_keep_running();
     };
 
-    extern app app_;
+    extern App app;
 }

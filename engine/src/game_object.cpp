@@ -6,22 +6,22 @@
 
 namespace naga
 {
-    game_object::game_object()
+	GameObject::GameObject()
     {
-        static const id_type next_id = 1;
+		static IdType next_id = 1;
 
-        id = next_id;
+		id = next_id++;
     }
 
-    void game_object::render(camera_params& params)
+	void GameObject::render(CameraParameters& camera_parameters)
     {
         for (auto& component : components)
         {
-            component->on_render(params);
+			component->on_render(camera_parameters);
         }
     }
 
-    void game_object::on_tick(f32 dt)
+	void GameObject::on_tick(f32 dt)
     {
         for (auto& component : components)
         {
@@ -29,7 +29,7 @@ namespace naga
         }
     }
 
-    bool game_object::on_input_event(input_event_t& input_event)
+	bool GameObject::on_input_event(InputEvent& input_event)
     {
         for (auto& component : components)
         {
@@ -42,14 +42,14 @@ namespace naga
         return false;
     }
 
-    boost::python::object game_object::add_component_by_type(type_object type)
+	boost::python::object GameObject::add_component_by_type(type_object type)
     {
         static auto inspect = boost::python::import("inspect");
 
         boost::python::object component_object = type();
 
         // ensure type is convertible to GameComponent
-        auto component_extract = boost::python::extract<boost::shared_ptr<game_component>>(component_object.ptr());
+        auto component_extract = boost::python::extract<boost::shared_ptr<GameComponent>>(component_object.ptr());
 
         if (!component_extract.check())
         {
@@ -63,7 +63,7 @@ namespace naga
         //       the MRO list.
         auto mro = inspect.attr("getmro")(boost::python::object(type)).slice(0, -3);
         
-        std::vector<hash> base_names;
+        std::vector<std::string> base_names;
 
         for (auto i = 0; i < boost::python::len(mro); ++i)
         {
@@ -73,7 +73,7 @@ namespace naga
 
             if (base_name.check())
             {
-                base_names.push_back(hash(base_name()));
+                base_names.push_back(base_name());
             }
         }
 
@@ -87,7 +87,7 @@ namespace naga
 
             if (type_components_itr == type_components.end())
             {
-                type_components_itr = type_components.insert(type_components.begin(), std::make_pair(base_name, std::vector<boost::shared_ptr<game_component>>()));
+                type_components_itr = type_components.insert(type_components.begin(), std::make_pair(base_name, std::vector<boost::shared_ptr<GameComponent>>()));
             }
 
             type_components_itr->second.push_back(component);
@@ -100,14 +100,15 @@ namespace naga
         return component_object;
     }
 
-    boost::python::object game_object::add_component_by_name(const std::string& name)
+	boost::python::object GameObject::add_component_by_name(const std::string& name)
     {
-        auto type = py.eval(name.c_str());
+		// TODO: naga.???
+		auto type = py.eval(std::string("naga.").append(name).c_str());
 
         return add_component_by_type(type_object(type));
     }
 
-    boost::shared_ptr<game_component> game_object::get_component_by_type(type_object type)
+	boost::shared_ptr<GameComponent> GameObject::get_component_by_type(type_object type)
     {
         auto name_extract = boost::python::extract<std::string>(type.attr("__name__"));
 
@@ -119,13 +120,13 @@ namespace naga
         return get_component_by_name(name_extract());
     }
 
-    boost::shared_ptr<game_component> game_object::get_component_by_name(const std::string& type) const
+	boost::shared_ptr<GameComponent> GameObject::get_component_by_name(const std::string& type) const
     {
-        auto type_components_itr = type_components.find(hash(type));
+        auto type_components_itr = type_components.find(type);
 
         if (type_components_itr == type_components.end())
         {
-            return boost::shared_ptr<game_component>();
+            return boost::shared_ptr<GameComponent>();
         }
 
         // return the last component added

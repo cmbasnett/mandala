@@ -6,33 +6,35 @@
 #include "model_component.hpp"
 #include "model_animation.hpp"
 #include "collision.hpp"
-#include "resource_mgr.hpp"
+#include "resource_manager.hpp"
 #include "material_instance.hpp"
 #include "line_renderer.hpp"
 #include "game_object.hpp"
 #include "camera_params.hpp"
+#include "bisect.hpp"
 
 //glm
 #include <glm\glm.hpp>
 
 namespace naga
 {
-    void model_component::on_tick(f32 dt)
+    void ModelComponent::on_tick(f32 dt)
     {
-        if (animation != nullptr)
-        {
-            t += dt;
+		if (animation != nullptr)
+		{
+			t += dt;
 
-            auto frame_count = static_cast<f32>(animation->frame_count);
-            auto seconds_per_frame = 1.0f / animation->frames_per_second;
-            auto frame_0_index = static_cast<size_t>(glm::floor(glm::mod(t / seconds_per_frame, frame_count)));
-            auto frame_1_index = (frame_0_index + 1) % animation->frame_count;
-            auto interpolate_t = glm::mod(t, seconds_per_frame) / seconds_per_frame;
-            auto& frame_skeleton_0 = animation->frame_skeletons[frame_0_index];
-            auto& frame_skeleton_1 = animation->frame_skeletons[frame_1_index];
+			// TODO: extract this to a function to get the frame index
+			auto frame_count = static_cast<f32>(animation->frame_count);
+			auto seconds_per_frame = 1.0f / animation->frames_per_second;
+			auto frame_0_index = static_cast<size_t>(glm::floor(glm::mod(t / seconds_per_frame, frame_count)));
+			auto frame_1_index = (frame_0_index + 1) % animation->frame_count;
+			auto interpolate_t = glm::mod(t, seconds_per_frame) / seconds_per_frame;
+			auto& frame_skeleton_0 = animation->frame_skeletons[frame_0_index];
+			auto& frame_skeleton_1 = animation->frame_skeletons[frame_1_index];
 
-            model_skeleton::interpolate(skeleton, frame_skeleton_0, frame_skeleton_1, interpolate_t);
-        } 
+			skeleton.interpolate(frame_skeleton_0, frame_skeleton_1, interpolate_t);
+		}
 
         //TODO: the AABB is not calculated if there is no animation
 
@@ -47,7 +49,7 @@ namespace naga
         sphere.radius = glm::length(aabb.extents());
     }
 
-    void model_component::on_render(camera_params& camera_params)
+	void ModelComponent::on_render(CameraParameters& camera_parameters)
     {
         if (model == nullptr)
         {
@@ -55,8 +57,8 @@ namespace naga
         }
 
 		// TODO: problem here is that the frustum/sphere/aabb are not 
-        if (intersects(camera_params.frustum, sphere) == intersect_type_e::DISJOINT ||
-            intersects(camera_params.frustum, aabb) == intersect_type_e::DISJOINT)
+		if (intersects(camera_parameters.frustum, sphere) == IntersectType::DISJOINT ||
+			intersects(camera_parameters.frustum, aabb) == IntersectType::DISJOINT)
         {
             //skeleton aabb does not intersect camera frustum
             return;
@@ -66,13 +68,13 @@ namespace naga
         vec3 light_location;
 
         const auto world_matrix = get_owner()->pose.to_matrix();
-        auto view_projection_matrix = camera_params.projection_matrix * camera_params.view_matrix;
+		auto view_projection_matrix = camera_parameters.projection_matrix * camera_parameters.view_matrix;
 
-        model->render(camera_params.location, world_matrix, view_projection_matrix, bone_matrices, light_location, mesh_materials);
+		model->render(camera_parameters.location, world_matrix, view_projection_matrix, bone_matrices, light_location, mesh_materials);
 
 #if defined (DEBUG)
-        render_aabb(world_matrix, view_projection_matrix, skeleton.aabb, vec4(1, 0, 0, 1));
-		render_sphere(world_matrix, view_projection_matrix, sphere, vec4(1, 0, 1, 1));
+        render_aabb(mat4(1.0f), view_projection_matrix, aabb, vec4(1, 0, 0, 1));
+		render_sphere(mat4(1.0f), view_projection_matrix, sphere, vec4(1, 0, 1, 1));
 
 		for (size_t i = 0; i < model->get_bones().size(); ++i)
 		{
@@ -83,12 +85,12 @@ namespace naga
 				render_line_loop(world_matrix, view_projection_matrix, std::vector<vec3>({ a, b }), vec4(0.5f));
 			}
 
-			render_sphere(glm::translate(skeleton.bones[i].pose.location) * world_matrix, view_projection_matrix, naga::sphere(vec3(), 0.5f), vec4(1));
+			render_sphere(glm::translate(skeleton.bones[i].pose.location) * world_matrix, view_projection_matrix, Sphere(vec3(), 0.5f), vec4(1));
 		}
 #endif
     }
     
-    pose3 model_component::get_bone_pose(const std::string& bone_name) const
+	Pose3 ModelComponent::get_bone_pose(const std::string& bone_name) const
     {
 		auto bone_index = model->get_bone_index(bone_name);
 
@@ -102,7 +104,7 @@ namespace naga
         return get_owner()->pose * skeleton.bones[*bone_index].pose;
     }
 
-    void model_component::set_model(const boost::shared_ptr<naga::model>& model)
+	void ModelComponent::set_model(const boost::shared_ptr<Model>& model)
     {
         this->model = model;
 
@@ -123,12 +125,14 @@ namespace naga
 
         for (const auto& mesh : model->get_meshes())
         {
-            mesh_materials.push_back(boost::make_shared<material_instance>(mesh->material));
+			mesh_materials.push_back(boost::make_shared<MaterialInstance>(mesh->material));
         }
     }
 
-    void model_component::play(const std::string& animation_name)
+	void ModelComponent::play(const std::string& animation_name)
     {
-		animation = resources.get<model_animation>(animation_name);
+		animation = resources.get<ModelAnimation>(animation_name);
     }
+
+	void pause();
 }

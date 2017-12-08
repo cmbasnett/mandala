@@ -11,33 +11,40 @@
 
 namespace naga
 {
-    struct model;
-    struct model_animation;
-    struct material_instance;
-    struct camera_params;
+	struct Model;
+    struct ModelAnimation;
+	struct MaterialInstance;
+	struct CameraParameters;
 
-    struct model_component : game_component
+	struct ModelAnimationController
+	{
+
+	};
+
+    struct ModelComponent : GameComponent
     {
         void on_tick(f32 dt) override;
-        void on_render(camera_params& camera_params) override;
+		void on_render(CameraParameters& camera_parameters) override;
 
+		// TODO: make some sort of animation controller
         void play(const std::string& animation_name);
 
-        const boost::shared_ptr<model>& get_model() const { return model; }
-        pose3 get_bone_pose(const std::string& bone_name) const;
-        const aabb3& get_aabb() const { return aabb; }
-        const sphere& get_sphere() const { return sphere; }
+		const boost::shared_ptr<Model>& get_model() const { return model; }
+        Pose3 get_bone_pose(const std::string& bone_name) const;
+		const AABB3& get_aabb() const { return aabb; }
+        const Sphere& get_sphere() const { return sphere; }
 
-        void set_model(const boost::shared_ptr<model>& model);
+		void set_model(const boost::shared_ptr<Model>& model);
 
     private:
-        boost::shared_ptr<model> model;
+        boost::shared_ptr<Model> model;
         f32 t = 0.0f;
         std::vector<mat4> bone_matrices;
-        model_skeleton skeleton;
-        boost::shared_ptr<model_animation> animation;
-        std::vector<boost::shared_ptr<material_instance>> mesh_materials;
-        aabb3 aabb;
-        sphere sphere;
+        ModelSkeleton skeleton;
+        boost::shared_ptr<ModelAnimation> animation;
+        std::vector<boost::shared_ptr<MaterialInstance>> mesh_materials;
+		AABB3 aabb;
+		Sphere sphere;
+		ModelAnimationController animation_controller;
     };
 }

@@ -5,19 +5,19 @@
 
 //naga
 #include "string_mgr.hpp"
-#include "resource_mgr.hpp"
+#include "resource_manager.hpp"
 #include "string_archive.hpp"
 
 namespace naga
 {
-    string_mgr strings;
+    StringManager strings;
 
-    void string_mgr::mount(const std::string& file)
+	void StringManager::mount(const std::string& file_name)
     {
         std::lock_guard<std::recursive_mutex> lock(mutex);
 
-        auto stream = resources.extract(hash(file));
-        const auto archive = string_archive(*stream);
+		auto stream = resources.extract(file_name);
+        const auto archive = StringArchive(*stream);
 
         streams.push_back(stream);
 
@@ -25,23 +25,23 @@ namespace naga
         {
             const auto& language = archive_language_string.first;
             
-            auto language_strings_itr = language_strings.emplace_hint(language_strings.begin(), language, strings_type());
+			auto language_strings_itr = language_strings.emplace_hint(language_strings.begin(), language, StringsType());
 
             auto& strings = language_strings_itr->second;
 
             for (auto& archive_string : archive_language_string.second)
             {
-                auto strings_itr = strings.emplace_hint(strings.begin(), archive_string.hash, string());
+                auto strings_itr = strings.emplace_hint(strings.begin(), archive_string.key, String());
                 auto& string = strings_itr->second;
 
-                string.hash = std::move(archive_string.hash);
+                string.key = std::move(archive_string.key);
                 string.stream_index = streams.size() - 1;
                 string.offset = archive_string.offset;
             }
         }
     }
 
-    void string_mgr::purge()
+    void StringManager::purge()
     {
         std::lock_guard<std::recursive_mutex> lock(mutex);
 
@@ -49,7 +49,7 @@ namespace naga
         language_strings.clear();
     }
 
-    size_t string_mgr::count() const
+	size_t StringManager::count() const
     {
         auto language_strings_itr = language_strings.find(language);
 
@@ -61,7 +61,7 @@ namespace naga
         return language_strings_itr->second.size();
     }
 
-    string_mgr::string_type string_mgr::get(const hash& hash)
+	StringManager::StringType StringManager::get(const std::string& key)
     {
         std::wstring_convert<std::codecvt_utf8<wchar_t>> wstring_convert;
 
@@ -78,12 +78,12 @@ namespace naga
 
         auto& strings = language_strings_itr->second;
 
-        const auto strings_itr = strings.find(hash);
+		const auto strings_itr = strings.find(key);
 
         if (strings_itr == strings.end())
         {
             std::ostringstream oss;
-            oss << "no string \"" << hash<< "\" for language \"" << language << "\"";
+			oss << "no string \"" << key << "\" for language \"" << language << "\"";
             throw std::out_of_range(oss.str());
         }
 
@@ -120,7 +120,7 @@ namespace naga
 
             try
             {
-                auto string = wstring_convert.to_bytes(get(naga::hash(key)));
+                auto string = wstring_convert.to_bytes(get(key));
 
                 buffer.replace(beg, end - beg + 1, string);
 

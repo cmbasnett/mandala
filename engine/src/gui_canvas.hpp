@@ -9,26 +9,26 @@
 
 namespace naga
 {
-    struct gui_canvas : gui_node
+	struct GUICanvas : GUINode
     {
-        gui_canvas();
+		GUICanvas();
 
         static const auto INDEX_COUNT = 4;
 
-        typedef blur_horizontal_gpu_program::vertex_type vertex_type;
-        typedef vertex_buffer<vertex_type> vertex_buffer_type;
-        typedef index_type<INDEX_COUNT>::type index_type;
-        typedef index_buffer<index_type> index_buffer_type;
+        typedef blur_horizontal_gpu_program::VertexType VertexType;
+		typedef VertexBuffer<VertexType> VertexBufferType;
+        typedef IndexType<INDEX_COUNT>::Type IndexType;
+		typedef IndexBuffer<IndexType> IndexBufferType;
 
         virtual void on_render_begin(mat4& world_matrix, mat4& view_projection_matrix) override;
         virtual void on_render_end(mat4& world_matrix, mat4& view_projection_matrix) override;
         virtual void on_clean_end() override;
 
-        const boost::shared_ptr<frame_buffer>& get_frame_buffer() const { return frame_buffer; }
+		const boost::shared_ptr<FrameBuffer>& get_frame_buffer() const { return frame_buffer; }
 
     private:
-        boost::shared_ptr<frame_buffer> frame_buffer;
-        static boost::weak_ptr<vertex_buffer_type> vertex_buffer;
-        static boost::weak_ptr<index_buffer_type> index_buffer;
+        boost::shared_ptr<FrameBuffer> frame_buffer;
+		static boost::weak_ptr<VertexBufferType> vertex_buffer;
+		static boost::weak_ptr<IndexBufferType> index_buffer;
     };
 }

@@ -8,9 +8,9 @@
 
 namespace naga
 {
-    struct bsp_entity
+    struct BSPEntity
     {
-        bsp_entity(const std::string& string);
+		BSPEntity(const std::string& string);
 
         const std::string& get_classname() const { return classname; }
 

@@ -20,15 +20,15 @@
 
 namespace naga
 {
-    struct frame_buffer;
-    struct gpu_buffer;
-    struct gpu_program;
-    struct texture;
-    struct image_t;
+	struct FrameBuffer;
+	struct GpuBuffer;
+    struct GpuProgram;
+    struct Texture;
+    struct Image;
 
-    struct gpu_t
+    struct Gpu
     {
-        enum class buffer_target
+        enum class BufferTarget
         {
             ARRAY,
             ATOMIC_COUNTER,
@@ -43,7 +43,7 @@ namespace naga
             SHADER_STORAGE
         };
 
-        enum class buffer_usage
+        enum class BufferUsage
         {
             STREAM_DRAW,
             STREAM_READ,
@@ -56,7 +56,7 @@ namespace naga
             DYNAMIC_COPY
         };
 
-        enum class primitive_type
+        enum class PrimitiveType
         {
             POINTS,
             LINES,
@@ -70,7 +70,7 @@ namespace naga
             POLYGON
         };
 
-        enum class blend_factor
+        enum class BlendFactor
         {
             ZERO,
             ONE,
@@ -90,7 +90,7 @@ namespace naga
             DEFAULT = ONE
         };
 
-        enum class blend_equation
+        enum class BlendEquation
         {
             ADD,
             SUBTRACT,
@@ -100,7 +100,7 @@ namespace naga
             DEFAULT = ADD
         };
 
-        enum class cull_face
+        enum class CullFace
         {
             FRONT,
             BACK,
@@ -108,7 +108,7 @@ namespace naga
             DEFAULT = BACK
         };
 
-        enum class depth_function
+        enum class DepthFunction
         {
             NEVER,
             LESS,
@@ -121,20 +121,20 @@ namespace naga
             DEFAULT = LESS
         };
 
-        enum class culling_front_face
+        enum class CullingFrontFace
         {
             CW,
             CCW
         };
 
-        enum class culling_mode
+        enum class CullingMode
         {
             FRONT,
             BACK,
             FRONT_AND_BACK
         };
 
-        enum clear_flag : gpu_clear_flag_type
+        enum ClearFlag : GpuClearFlagType
         {
             CLEAR_FLAG_COLOR = (1 << 0),
             CLEAR_FLAG_DEPTH = (1 << 1),
@@ -142,7 +142,7 @@ namespace naga
             CLEAR_FLAG_STENCIL = (1 << 3)
         };
 
-        enum class stencil_function
+        enum class StencilFunction
         {
             NEVER,
             LESS,
@@ -154,7 +154,7 @@ namespace naga
             ALWAYS
         };
 
-        enum class stencil_operation
+        enum class StencilOperation
         {
             KEEP,
             ZERO,
@@ -166,102 +166,102 @@ namespace naga
             INVERT
         };
 
-        enum class shader_type
+        enum class ShaderType
         {
             FRAGMENT,
             VERTEX
         };
 
         //programs
-        struct program_mgr
+        struct ProgramManager
         {
-            typedef boost::weak_ptr<gpu_program> weak_type;
+            typedef boost::weak_ptr<GpuProgram> WeakType;
 
-            boost::optional<weak_type> top() const;
-            void push(const weak_type& data);
-            weak_type pop();
+			boost::optional<WeakType> top() const;
+			void push(const WeakType& data);
+			WeakType pop();
 
         private:
-            std::stack<weak_type> programs;
+			std::stack<WeakType> programs;
         } programs;
 
         //frame buffers
-        struct frame_buffer_mgr
+        struct FrameBufferManager
         {
-            typedef boost::weak_ptr<frame_buffer> weak_type;
-            typedef boost::shared_ptr<frame_buffer> shared_type;
+			typedef boost::weak_ptr<FrameBuffer> WeakType;
+			typedef boost::shared_ptr<FrameBuffer> SharedType;
 
-            boost::optional<weak_type> top() const;
-            void push(const shared_type& frame_buffer);
-            weak_type pop();
+            boost::optional<WeakType> top() const;
+			void push(const SharedType& frame_buffer);
+			WeakType pop();
 
         private:
-            std::stack<shared_type> frame_buffers;
+			std::stack<SharedType> frame_buffers;
         } frame_buffers;
 
         //textures
-        struct texture_mgr
+        struct TextureManager
         {
             const static auto texture_count = 32;
 
-            typedef boost::weak_ptr<texture> weak_type;
-            typedef boost::shared_ptr<texture> shared_type;
-            typedef index_type<texture_count>::type index_type;
+            typedef boost::weak_ptr<Texture> WeakType;
+			typedef boost::shared_ptr<Texture> SharedType;
+            typedef IndexType<texture_count>::Type IndexType;
 
-            weak_type get(index_type index) const;
-            weak_type bind(index_type index, const shared_type& texture);
-            weak_type unbind(index_type index);
+			WeakType get(IndexType index) const;
+			WeakType bind(IndexType index, const SharedType& texture);
+			WeakType unbind(IndexType index);
 
         private:
-            std::array<shared_type, texture_count> textures;
+            std::array<SharedType, texture_count> textures;
         } textures;
 
         //viewports
         struct viewport_mgr
         {
-            gpu_viewport_type top() const;
-            void push(const gpu_viewport_type& viewport);
-            gpu_viewport_type pop();
+            GpuViewportType top() const;
+            void push(const GpuViewportType& viewport);
+            GpuViewportType pop();
 
         private:
-            std::stack<gpu_viewport_type> viewports;
+            std::stack<GpuViewportType> viewports;
         } viewports;
 
         //buffers
-        struct buffer_mgr
+        struct BufferManager
         {
-            typedef boost::shared_ptr<gpu_buffer> buffer_type;
+            typedef boost::shared_ptr<GpuBuffer> BufferType;
 
-            void put(buffer_type& buffer);
-            void erase(buffer_type& buffer);
-            void push(buffer_target target, buffer_type buffer);
-            buffer_type pop(buffer_target target);
-            buffer_type top(buffer_target target) const;
-            void data(buffer_target target, const void* data, size_t size, buffer_usage usage);
+			void put(BufferType& buffer);
+			void erase(BufferType& buffer);
+			void push(BufferTarget target, BufferType buffer);
+			BufferType pop(BufferTarget target);
+			BufferType top(BufferTarget target) const;
+			void data(BufferTarget target, const void* data, size_t size, BufferUsage usage);
 
         private:
-            std::map<buffer_target, std::stack<buffer_type>> target_buffers;
-            std::set<buffer_type> buffers;
+			std::map<BufferTarget, std::stack<BufferType>> target_buffers;
+			std::set<BufferType> buffers;
         } buffers;
 
         //blend
-        struct blend
+        struct BlendStateManager
         {
-            struct state
+            struct BlendState
             {
                 bool is_enabled = false;
-                blend_factor src_factor = blend_factor::ONE;
-                blend_factor dst_factor = blend_factor::ZERO;
-                blend_equation equation = blend_equation::ADD;
+				BlendFactor src_factor = BlendFactor::ONE;
+				BlendFactor dst_factor = BlendFactor::ZERO;
+				BlendEquation equation = BlendEquation::ADD;
             };
 
-            state get_state() const;
-            void push_state(const state& state);
+			BlendState get_state() const;
+			void push_state(const BlendState& state);
             void pop_state();
         private:
-            std::stack<state> states;
+			std::stack<BlendState> states;
 
-            void apply_state(const state& state);
+			void apply_state(const BlendState& state);
         } blend;
 
         //depth
@@ -271,7 +271,7 @@ namespace naga
             {
                 bool should_test = false;
                 bool should_write_mask = true;
-                depth_function function = depth_function::DEFAULT;
+				DepthFunction function = DepthFunction::DEFAULT;
             };
 
             state get_state() const;
@@ -284,65 +284,65 @@ namespace naga
             void apply_state(const state& state);
         } depth;
 
-        struct culling
+        struct CullingStateManager
         {
-            struct state
+            struct CullingState
             {
                 bool is_enabled = false;
-                culling_front_face front_face = culling_front_face::CCW;
-                culling_mode mode = culling_mode::BACK;
+				CullingFrontFace front_face = CullingFrontFace::CCW;
+				CullingMode mode = CullingMode::BACK;
             };
 
-            state get_state() const;
-            void push_state(const state& state);
+			CullingState get_state() const;
+			void push_state(const CullingState& state);
             void pop_state();
 
         private:
-            std::stack<state> states;
+			std::stack<CullingState> states;
 
-            void apply_state(const state& state);
+			void apply_state(const CullingState& state);
         } culling;
 
         //stencil
-        struct stencil
+        struct StencilStateManager
         {
-            struct state
+            struct StencilState
             {
-                struct function
+                struct StencilFunctionParameters
                 {
-                    stencil_function func = stencil_function::ALWAYS;
+					StencilFunction func = StencilFunction::ALWAYS;
                     i32 ref = 0;
                     u32 mask = 0xFFFFFFFF;
                 };
 
-                struct operations
+                struct StencilOperations
                 {
-                    stencil_operation fail = stencil_operation::KEEP;
-                    stencil_operation zfail = stencil_operation::KEEP;
-                    stencil_operation zpass = stencil_operation::KEEP;
+					StencilOperation fail = StencilOperation::KEEP;
+					StencilOperation zfail = StencilOperation::KEEP;
+					StencilOperation zpass = StencilOperation::KEEP;
                 };
 
-                function function;
-                operations operations;
+				StencilFunctionParameters function;
+				StencilOperations operations;
                 bool is_enabled = false;
                 u32 mask = 0xFFFFFFFF;
             };
 
-            state get_state() const;
-            void push_state(const state& state);
+			StencilState get_state() const;
+			void push_state(const StencilState& state);
             void pop_state();
         private:
-            std::stack<state> states;
+			std::stack<StencilState> states;
 
-            void apply_state(const state& state);
+			void apply_state(const StencilState& state);
         } stencil;
 
         //color
-        struct color
+        struct ColorStateManager
         {
-            struct state
+            struct ColorState
             {
-                struct mask
+                struct ColorMask
                 {
                     bool r = true;
                     bool g = true;
@@ -350,41 +350,41 @@ namespace naga
                     bool a = true;
                 };
 
-                mask mask;
+				ColorMask mask;
             };
 
-            state get_state() const;
-            void push_state(const state& state);
+			ColorState get_state() const;
+			void push_state(const ColorState& state);
             void pop_state();
         private:
-            std::stack<state> states;
+			std::stack<ColorState> states;
 
-            void apply_state(const state& state);
+			void apply_state(const ColorState& state);
         } color;
 
-        void clear(const gpu_clear_flag_type clear_flags) const;
-        void draw_elements(primitive_type primitive_type, size_t count, gpu_data_type index_data_type, size_t offset) const;
+        void clear(const GpuClearFlagType clear_flags) const;
+        void draw_elements(PrimitiveType primitive_type, size_t count, GpuDataTypes index_data_type, size_t offset) const;
 
-        gpu_id create_program(const std::string& vertex_shader_source, const std::string& fragment_shader_source) const;
-        void destroy_program(gpu_id id);
+        GpuId create_program(const std::string& vertex_shader_source, const std::string& fragment_shader_source) const;
+		void destroy_program(GpuId id);
 
-        gpu_id create_buffer();
-        void destroy_buffer(gpu_id id);
+		GpuId create_buffer();
+		void destroy_buffer(GpuId id);
 
-        gpu_id create_frame_buffer(gpu_frame_buffer_type type, const gpu_frame_buffer_size_type& size, boost::shared_ptr<texture>& color_texture, boost::shared_ptr<texture>& depth_stencil_texture, boost::shared_ptr<texture>& depth_texture);
-        void destroy_frame_buffer(gpu_id id);
+		GpuId create_frame_buffer(GpuFrameBufferType type, const GpuFrameBufferSizeType& size, boost::shared_ptr<Texture>& color_texture, boost::shared_ptr<Texture>& depth_stencil_texture, boost::shared_ptr<Texture>& depth_texture);
+		void destroy_frame_buffer(GpuId id);
 
-        gpu_id create_texture(color_type color_type, vec2_u32 size, const void* data);
-        void resize_texture(const boost::shared_ptr<texture>& texture, vec2_u32 size);
-        void destroy_texture(gpu_id id);
+		GpuId create_texture(ColorType color_type, vec2_u32 size, const void* data);
+		void resize_texture(const boost::shared_ptr<Texture>& texture, vec2_u32 size);
+		void destroy_texture(GpuId id);
 
-        gpu_location get_uniform_location(gpu_id program_id, const char* name) const;
-        gpu_location get_attribute_location(gpu_id program_id, const char* name) const;
+		GpuLocation get_uniform_location(GpuId program_id, const char* name) const;
+		GpuLocation get_attribute_location(GpuId program_id, const char* name) const;
 
-        void enable_vertex_attribute_array(gpu_location location);
-        void disable_vertex_attribute_array(gpu_location location);
-        void set_vertex_attrib_pointer(gpu_location location, i32 size, gpu_data_type data_type, bool is_normalized, i32 stride, const void* pointer);
-        void set_vertex_attrib_pointer(gpu_location location, i32 size, gpu_data_type data_type, i32 stride, const void* pointer);
+        void enable_vertex_attribute_array(GpuLocation location);
+		void disable_vertex_attribute_array(GpuLocation location);
+		void set_vertex_attrib_pointer(GpuLocation location, i32 size, GpuDataTypes data_type, bool is_normalized, i32 stride, const void* pointer);
+		void set_vertex_attrib_pointer(GpuLocation location, i32 size, GpuDataTypes data_type, i32 stride, const void* pointer);
         void set_uniform(const char* name, const mat3& value, bool should_tranpose = false) const;
         void set_uniform(const char* name, const mat4& value, bool should_tranpose = false) const;
         void set_uniform(const char* name, i32 value) const;
@@ -394,13 +394,13 @@ namespace naga
         void set_uniform(const char* name, const vec3& value) const;
         void set_uniform(const char* name, const vec4& value) const;
         void set_uniform(const char* name, const std::vector<mat4>& value, bool should_transpose = false) const;
-        void set_uniform_subroutine(shader_type shader_type, gpu_index index);
+        void set_uniform_subroutine(ShaderType shader_type, GpuIndex index);
 
         void set_clear_color(vec4& color);
         vec4 get_clear_color();
 
-        gpu_location get_subroutine_uniform_location(gpu_id program_id, shader_type shader_type, const std::string& name);
-        gpu_index get_subroutine_index(gpu_id program_id, shader_type shader_type, const std::string& name);
+        GpuLocation get_subroutine_uniform_location(GpuId program_id, ShaderType shader_type, const std::string& name);
+        GpuIndex get_subroutine_index(GpuId program_id, ShaderType shader_type, const std::string& name);
 
         const std::string& get_vendor() const;
         const std::string& get_renderer() const;
@@ -408,8 +408,8 @@ namespace naga
         const std::string& get_shading_language_version() const;
         const std::string& get_extensions() const;
 
-        void get_texture_data(const boost::shared_ptr<texture>& texture, std::vector<u8>& data, i32 level = 0);
+		void get_texture_data(const boost::shared_ptr<Texture>& texture, std::vector<u8>& data, i32 level = 0);
     };
 
-    extern gpu_t gpu;
+    extern Gpu gpu;
 }

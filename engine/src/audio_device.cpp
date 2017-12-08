@@ -6,7 +6,7 @@
 
 namespace naga
 {
-	audio_device::audio_device()
+	AudioDevice::AudioDevice()
 	{
 		auto b = alcIsExtensionPresent(NULL, "ALC_ENUMERATION_EXT");
 
@@ -21,7 +21,7 @@ namespace naga
 		}
 	}
 
-    audio_device::audio_device(const std::string& name)
+	AudioDevice::AudioDevice(const std::string& name)
     {
         pointer = alcOpenDevice(name.c_str()); alCheckError();
 
@@ -31,7 +31,7 @@ namespace naga
         }
     }
 
-    audio_device::~audio_device()
+	AudioDevice::~AudioDevice()
     {
         alcCloseDevice(pointer); alCheckError();
     }

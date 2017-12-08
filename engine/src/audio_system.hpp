@@ -14,45 +14,45 @@
 
 namespace naga
 {
-    struct sound;
-    struct audio_source;
-    struct audio_device;
-    struct audio_context;
+	struct Sound;
+    struct AudioSource;
+    struct AudioDevice;
+    struct AudioContext;
 
-    struct audio_mgr
+    struct AudioSystem
     {
-        struct doppler_t
+		struct Doppler
         {
             f32 factor = 1.0f;
             f32 speed_of_sound = 343.0f;
         };
 
-        struct listener_t
+        struct Listener
         {
             vec3 location;
             vec3 velocity;
         };
 
-        struct channel_t
+        struct Channel
         {
         };
 
         static const int CHANNEL_COUNT = 16;
 
-        typedef index_type<CHANNEL_COUNT>::type channel_index_type;
-        typedef std::map<u32, boost::shared_ptr<audio_source>> sources_type;
+        typedef IndexType<CHANNEL_COUNT>::Type ChannelIndexType;
+		typedef std::map<u32, boost::shared_ptr<AudioSource>> SourcesType;
 
-        audio_mgr();
+		AudioSystem();
 
         void tick(f32 dt);
 
-        listener_t listener;
-        doppler_t doppler;
+        Listener listener;
+		Doppler doppler;
 
         u32 create_source();
         void destroy_source(u32 source_id);
 
-        audio_source_state get_source_state(u32 source_id) const;
+        AudioSourceState get_source_state(u32 source_id) const;
         void set_source_location(u32 source_id, const vec3& velocity) const;
         void set_source_velocity(u32 source_id, const vec3& velocity) const;
         void set_source_gain(u32 source_id, f32 gain) const;
@@ -64,16 +64,16 @@ namespace naga
         void rewind_source(u32 source_id) const;
         void stop_source(u32 source_id) const;
 
-        void source_queue_sound(u32 source_id, const boost::shared_ptr<sound>& sound) const;
-        void source_unqueue_sound(u32 source_id, const boost::shared_ptr<sound>& sound) const;
+		void source_queue_sound(u32 source_id, const boost::shared_ptr<Sound>& sound) const;
+		void source_unqueue_sound(u32 source_id, const boost::shared_ptr<Sound>& sound) const;
 
-        const sources_type& get_sources() const { return sources; }
+		const SourcesType& get_sources() const { return sources; }
 
     private:
-        boost::shared_ptr<audio_context> context;
-        sources_type sources;
-        std::vector<boost::shared_ptr<audio_device>> devices;
+        boost::shared_ptr<AudioContext> context;
+        SourcesType sources;
+        std::vector<boost::shared_ptr<AudioDevice>> devices;
     };
 
-    extern audio_mgr audio;
+    extern AudioSystem audio;
 }

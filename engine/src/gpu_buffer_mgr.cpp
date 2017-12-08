@@ -3,9 +3,9 @@
 
 namespace naga
 {
-    gpu_buffer_mgr gpu_buffers;
+	GpuBufferManager gpu_buffers;
 
-    void gpu_buffer_mgr::purge()
+	void GpuBufferManager::purge()
     {
 #if defined(DEBUG)
         //TODO: for some reason, python objects are holding on to these buffers causing the assertion to fail

@@ -9,8 +9,8 @@
 
 namespace naga
 {
-    heightmap::heightmap(const boost::shared_ptr<image>& image) :
-        heightmap(image->get_size().x, image->get_size().y)
+	Heightmap::Heightmap(const boost::shared_ptr<Image>& image) :
+		Heightmap(image->get_width(), image->get_height())
     {
         auto data_iter = image->get_data().begin();
 
@@ -25,12 +25,12 @@ namespace naga
         }
     }
 
-	f32 heightmap::get_height(f32 x, f32 z) const
+	f32 Heightmap::get_height(f32 x, f32 z) const
     {
         return 0.0f;
 	}
 	
-	f32 heightmap::get_height(const vec2& location) const
+	f32 Heightmap::get_height(const vec2& location) const
 	{
 		return get_height(location.x, location.y);
 	}

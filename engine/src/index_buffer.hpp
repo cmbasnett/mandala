@@ -11,38 +11,38 @@
 
 namespace naga
 {
-    template<typename T, typename Enable = void>
-    struct index_buffer;
+	template<typename Index, typename Enable = void>
+    struct IndexBuffer;
 
     //TODO: is_integral is not actually restrictive enough, since int64s can't be translated to a GL type
-    template<typename T>
-    struct index_buffer<T, typename std::enable_if<std::is_integral<T>::value>::type> : gpu_buffer
+    template<typename Index>
+	struct IndexBuffer<Index, typename std::enable_if<std::is_integral<Index>::value>::type> : GpuBuffer
     {
-        typedef T index_type;
+		typedef Index IndexType;
 
-        static const auto DATA_TYPE = gpu_data_type_<index_type>::VALUE;
+		static const auto DATA_TYPE = GpuDataType<IndexType>::VALUE;
 
-        index_buffer() = default;
+		IndexBuffer() = default;
 
-        void data(const index_type* indices, size_t count, gpu_t::buffer_usage usage)
+		void data(const IndexType* indices, size_t count, Gpu::BufferUsage usage)
         {
-            gpu.buffers.push(gpu_t::buffer_target::ELEMENT_ARRAY, shared_from_this());
-            gpu.buffers.data(gpu_t::buffer_target::ELEMENT_ARRAY, static_cast<const void*>(indices), count * sizeof(index_type), usage);
-            gpu.buffers.pop(gpu_t::buffer_target::ELEMENT_ARRAY);
+            gpu.buffers.push(Gpu::BufferTarget::ELEMENT_ARRAY, shared_from_this());
+			gpu.buffers.data(Gpu::BufferTarget::ELEMENT_ARRAY, static_cast<const void*>(indices), count * sizeof(IndexType), usage);
+            gpu.buffers.pop(Gpu::BufferTarget::ELEMENT_ARRAY);
         }
 
-        void data(const std::initializer_list<index_type> indices, gpu_t::buffer_usage usage)
+		void data(const std::initializer_list<IndexType> indices, Gpu::BufferUsage usage)
         {
             data(indices.begin(), indices.size(), usage);
         }
 
-        void data(const std::vector<index_type> indices, gpu_t::buffer_usage usage)
+		void data(const std::vector<IndexType> indices, Gpu::BufferUsage usage)
         {
             data(indices.data(), indices.size(), usage);
         }
 
     private:
-        index_buffer(const index_buffer&) = delete;
-        index_buffer& operator=(const index_buffer&) = delete;
+		IndexBuffer(const IndexBuffer&) = delete;
+		IndexBuffer& operator=(const IndexBuffer&) = delete;
     };
 }

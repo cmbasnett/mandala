@@ -15,10 +15,10 @@
 
 namespace naga
 {
-    struct python
+    struct Python
     {
-        python();
-        ~python();
+		Python();
+		~Python();
 
         boost::python::api::object exec(const char* string);
         boost::python::api::object NAGA_API_ENTRY exec_file(const char* file);
@@ -33,5 +33,5 @@ namespace naga
         boost::python::object main_module;
     };
 
-    NAGA_API_ENTRY extern python py;
+	NAGA_API_ENTRY extern Python py;
 }

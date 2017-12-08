@@ -16,7 +16,7 @@
 
 namespace naga
 {
-    http_manager http;
+    HttpManager http;
 
 	size_t write_function(char* ptr, size_t size, size_t nmemb, void* userdata)
 	{
@@ -33,7 +33,7 @@ namespace naga
 		return count;
 	}
 
-	boost::shared_ptr<http_response> http_manager::get(std::string url/*, http_headers_type headers, http_data_type data, write_function_type on_write*/)
+	boost::shared_ptr<HttpResponse> HttpManager::get(std::string url/*, http_headers_type headers, http_data_type data, write_function_type on_write*/)
     {
 		std::ostringstream stream;
         long response_code = 404;
@@ -69,10 +69,10 @@ namespace naga
         curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &content_type);
 		curl_easy_getinfo(curl, CURLINFO_TOTAL_TIME, &elapsed);
 
-        auto response = boost::make_shared<http_response>();
+        auto response = boost::make_shared<HttpResponse>();
         response->content = stream.str();
         response->content_type = content_type;
-        response->status = static_cast<http_status>(response_code);
+        response->status = static_cast<HttpStatus>(response_code);
 		response->elapsed = elapsed;
         //TODO: link request
 
@@ -82,20 +82,20 @@ namespace naga
         return response;
     }
 
-    boost::shared_ptr<http_request> http_manager::get_async(
+    boost::shared_ptr<HttpRequest> HttpManager::get_async(
         const std::string& url,
         //const http_headers_type& headers,
         //const http_data_type& data,
-        response_function_type on_response
+        ResponseFunctionType on_response
 		//write_function_type on_write
 		)
     {
-        auto request = boost::make_shared<http_request>();
-        request->method = http_method::GET;
+        auto request = boost::make_shared<HttpRequest>();
+        request->method = HttpMethod::GET;
         request->url = url;
         //request->headers = headers;
         //request->data = data;
-        request->response = async(std::launch::async, &http_manager::get, this, url/*, headers, data, on_write*/);
+        request->response = async(std::launch::async, &HttpManager::get, this, url/*, headers, data, on_write*/);
 
 		std::lock_guard<std::mutex> lock(request_objects_mutex);
         request_objects.emplace_back(request, on_response);
@@ -103,7 +103,7 @@ namespace naga
 		return request;
     }
 
-    void http_manager::tick()
+    void HttpManager::tick()
     {
 		std::lock_guard<std::mutex> lock(request_objects_mutex);
 
@@ -114,7 +114,7 @@ namespace naga
             auto& request_object = *itr;
             auto& request = itr->request;
 
-            boost::shared_ptr<http_response> response;
+            boost::shared_ptr<HttpResponse> response;
 
             if (request->response._Is_ready())
             {
@@ -125,7 +125,7 @@ namespace naga
                 catch (...)
                 {
                     // store exception in response
-                    response = boost::make_shared<http_response>();
+                    response = boost::make_shared<HttpResponse>();
                     response->exception_ptr = std::current_exception();
                 }
 

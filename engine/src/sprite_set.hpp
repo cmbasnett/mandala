@@ -12,44 +12,43 @@
 
 //boost
 #include <boost/optional.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 namespace naga
 {
-    struct texture;
+	struct Texture;
 
-    struct sprite_set : resource
+	struct SpriteSet : Resource, boost::enable_shared_from_this<SpriteSet>
     {
-        struct region
+        struct Region
         {
-            typedef rectangle_i16 rectangle_type;
-            typedef vec2_i16 size_type;
-            typedef aabb2 uv_type;
-
-            naga::hash hash;
-            rectangle_type frame_rectangle;
-            rectangle_type rectangle;
-            size_type source_size;
+            std::string name;
+			Rectangle frame_rectangle;
+			Rectangle rectangle;
+			vec2 source_size;
             bool is_rotated = false;
             bool is_trimmed = false;
-            uv_type frame_uv;
-            uv_type uv;
+			AABB2 frame_uv;
+			AABB2 uv;
         };
 
-        typedef std::map<const naga::hash, boost::shared_ptr<region>> regions_type;
+        typedef std::map<const std::string, Region> RegionsType;
 
-        sprite_set(std::istream& istream);
-        sprite_set(const boost::shared_ptr<texture>& texture);    //TODO: ugly, feels like this needs to be elsewhere in a helper class
+		SpriteSet(std::istream& istream);
+		SpriteSet(const boost::shared_ptr<Texture>& texture);
+		SpriteSet(const std::string& texture_name);
 
-        const boost::shared_ptr<texture>& get_texture() const { return texture; }
-        const regions_type& get_regions() const { return regions; }
+		const boost::shared_ptr<Texture>& get_texture() const { return texture; }
+		const RegionsType& get_regions() const { return regions; }
 
-        boost::shared_ptr<region> get_region(const naga::hash& region_hash) const;
+		bool has_region(const std::string& region_name) const;
+		const SpriteSet::Region& get_region(const std::string& region_name) const;
 
     private:
-        boost::shared_ptr<texture> texture;
-        regions_type regions;
+		boost::shared_ptr<Texture> texture;
+		RegionsType regions;
 
-        sprite_set(const sprite_set&) = delete;
-        sprite_set& operator=(const sprite_set&) = delete;
+		SpriteSet(const SpriteSet&) = delete;
+		SpriteSet& operator=(const SpriteSet&) = delete;
     };
 }

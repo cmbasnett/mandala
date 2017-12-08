@@ -13,9 +13,9 @@
 
 namespace naga
 {
-    struct camera_params;
+    struct CameraParameters;
 
-    struct terrain_component : game_component
+    struct TerrainComponent : GameComponent
     {
         static const char* component_name;
 
@@ -30,42 +30,42 @@ namespace naga
         static const auto INDICES_PER_STRIP = INDICES_PER_PATCH * CHUNK_SIZE;
         static const auto INDICES_PER_CHUNK = INDICES_PER_STRIP * CHUNK_SIZE;
 
-		typedef index_type<MAX_SIZE>::type size_type;
-		typedef index_type<MAX_CHUNKS>::type chunk_index_type;
-		typedef index_type<INDICES_PER_CHUNK * MAX_CHUNKS>::type index_type;
-        typedef index_buffer<index_type> index_buffer_type;
-        typedef basic_gpu_program::vertex_type vertex_type;
-        typedef vertex_buffer<vertex_type> vertex_buffer_type;
+		typedef IndexType<MAX_SIZE>::Type SizeType;
+		typedef IndexType<MAX_CHUNKS>::Type ChunkIndexType;
+		typedef IndexType<INDICES_PER_CHUNK * MAX_CHUNKS>::Type IndexType;
+		typedef IndexBuffer<IndexType> IndexBufferType;
+        typedef basic_gpu_program::VertexType VertexType;
+		typedef VertexBuffer<VertexType> VertexBufferType;
 
 		f32 get_height(const vec2& location) const;
-		vec3 trace(const line3& ray);
+		vec3 trace(const Line3& ray);
 
         // overrides
-        void on_render(camera_params& camera) override;
+		void on_render(CameraParameters& camera_parameters) override;
 
         // getters
-		const boost::shared_ptr<heightmap>& get_heightmap() const { return heightmap; }
+		const boost::shared_ptr<Heightmap>& get_heightmap() const { return heightmap; }
 		const vec3 get_scale() const { return scale; }
 
         // setters
-		void set_heightmap(const boost::shared_ptr<image>& image);
+		void set_heightmap(const boost::shared_ptr<Image>& image);
 		void set_scale(const vec3& scale);
 
     private:
-        void update_chunks(const rectangle_u64& rectangle);
+        void update_chunks(const details::Rectangle<u64>& rectangle);
 
 		vec3 scale = vec3(1.0f, 16.0f, 1.0f);
-        boost::shared_ptr<heightmap> heightmap;
-        boost::shared_ptr<vertex_buffer_type> vertex_buffer;
-        boost::shared_ptr<index_buffer_type> index_buffer;
+        boost::shared_ptr<Heightmap> heightmap;
+        boost::shared_ptr<VertexBufferType> vertex_buffer;
+		boost::shared_ptr<IndexBufferType> index_buffer;
 		i32 width;
 		i32 depth;
         size_t chunk_count;
-        boost::shared_ptr<texture> texture;
-		boost::shared_ptr<quadtree> quadtree;
+        boost::shared_ptr<Texture> texture;
+		boost::shared_ptr<QuadTree> quadtree;
 		std::vector<vec3> vertices;
-		std::vector<triangle3> triangles;
+		std::vector<Triangle3> triangles;
 
-		std::vector<const quadtree::node*> traced_nodes;
+		std::vector<const QuadTree::Node*> traced_nodes;
     };
 }

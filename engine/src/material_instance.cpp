@@ -3,12 +3,12 @@
 
 namespace naga
 {
-    material_instance::material_instance(const boost::shared_ptr<material>& material)
+	MaterialInstance::MaterialInstance(const boost::shared_ptr<Material>& material)
     {
         *this = material;
     }
 
-    material_instance& material_instance::operator=(const boost::shared_ptr<material>& material)
+	MaterialInstance& MaterialInstance::operator=(const boost::shared_ptr<Material>& material)
     {
         is_two_sided = material->get_is_two_sided();
         is_lit = material->get_is_lit();

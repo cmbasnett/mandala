@@ -23,13 +23,13 @@
 
 namespace naga
 {
-    struct camera_params;
+	struct CameraParameters;
 
-    struct bsp : public resource
+	struct BSP : public Resource
     {
-        typedef i32 node_index_type;
+        typedef i32 NodeIndexType;
 
-        enum class content_type : i32
+        enum class ContentType : i32
         {
             EMPTY = -1,
             SOLID = -2,
@@ -48,7 +48,7 @@ namespace naga
             TRANSLUCENT = -15
         };
 
-        enum class render_mode : u8
+        enum class RenderMode : u8
         {
             NORMAL,
             COLOR,
@@ -58,58 +58,58 @@ namespace naga
             ADDITIVE
         };
 
-        struct node
+        struct Node
         {
             static const auto CHILD_COUNT = 2;
 
             u32 plane_index = 0;
             std::array<i16, CHILD_COUNT> child_indices;
-            aabb3_i16 aabb;
+            details::AABB3<i16> aabb;
             u16 face_start_index = 0;
             u16 face_count = 0;
         };
 
-        struct face
+        struct Face
         {
-            typedef u8 lighting_style_type;
+            typedef u8 LightingStyleType;
 
             static const auto LIGHTING_STYLE_COUNT = 4;
-            static const lighting_style_type LIGHTING_STYLE_NONE = 255;
+			static const LightingStyleType LIGHTING_STYLE_NONE = 255;
 
             u16 plane_index = 0;
             u16 plane_side = 0;
             u32 surface_edge_start_index = 0;
             u16 surface_edge_count = 0;
             u16 texture_info_index = 0;
-            std::array<lighting_style_type, LIGHTING_STYLE_COUNT> lighting_styles;
+			std::array<LightingStyleType, LIGHTING_STYLE_COUNT> lighting_styles;
             u32 lightmap_offset = 0;
         };
 
-        struct leaf
+        struct Leaf
         {
             static const auto AMBIENT_SOUND_LEVEL_COUNT = 4;
             
-            typedef u8 ambient_sound_level_type;
-            typedef aabb3_i16 aabb_type;
+            typedef u8 AmbientSoundLevelType;
+            typedef details::AABB3<i16> AABBType;
 
-            content_type content_type = content_type::EMPTY;
+			ContentType content_type = ContentType::EMPTY;
             i32 visibility_offset = 0;
-            aabb_type aabb;
+			AABBType aabb;
             u16 mark_surface_start_index = 0;
             u16 mark_surface_count = 0;
-            std::array<ambient_sound_level_type, AMBIENT_SOUND_LEVEL_COUNT> ambient_sound_levels;
+			std::array<AmbientSoundLevelType, AMBIENT_SOUND_LEVEL_COUNT> ambient_sound_levels;
         };
 
-        struct edge
+        struct Edge
         {
-            typedef u16 vertex_index_type;
+            typedef u16 VertexIndexType;
 
             static const auto VERTEX_INDEX_COUNT = 2;
 
-            std::array<vertex_index_type, VERTEX_INDEX_COUNT> vertex_indices;
+			std::array<VertexIndexType, VERTEX_INDEX_COUNT> vertex_indices;
         };
 
-        struct texture_info
+        struct TextureInfo
         {
             struct
             {
@@ -121,31 +121,29 @@ namespace naga
             u32 flags = 0;
         };
 
-        struct clip_node
+        struct ClipNode
         {
             static const auto CHILD_COUNT = 2;
 
-            typedef i16 child_index_type;
+            typedef i16 ChildIndexType;
 
             i32 plane_index = 0;
-            std::array<child_index_type, CHILD_COUNT> child_indices;
+			std::array<ChildIndexType, CHILD_COUNT> child_indices;
         };
 
-        struct model
+        struct Model
         {
             static const auto HEAD_NODE_INDEX_COUNT = 4;
 
-            typedef i32 head_node_index_type;
-
-            aabb3 aabb;
+            AABB3 aabb;
             vec3 origin;
-            std::array<head_node_index_type, HEAD_NODE_INDEX_COUNT> head_node_indices;
+			std::array<NodeIndexType, HEAD_NODE_INDEX_COUNT> head_node_indices;
             i32 vis_leafs = 0;
             i32 face_start_index = 0;
             i32 face_count = 0;
         };
 
-        struct bsp_texture
+        struct BSPTexture
         {
             static const auto MIPMAP_OFFSET_COUNT = 4;
 
@@ -154,11 +152,11 @@ namespace naga
             u32 mipmap_offsets[MIPMAP_OFFSET_COUNT];
         };
 
-        struct bsp_plane
+        struct BSPPlane
         {
-            typedef plane3 plane_type;
+            typedef Plane3 PlaneType;
 
-            enum class type : u32
+            enum class Type : u32
             {
                 X,
                 Y,
@@ -168,36 +166,36 @@ namespace naga
                 ANY_Z
             };
 
-            plane3 plane;
-            type type = type::X;
+			PlaneType plane;
+			Type type = Type::X;
         };
 
-        typedef bsp_gpu_program::vertex_type vertex_type;
-        typedef vertex_buffer<vertex_type> vertex_buffer_type;
+        typedef bsp_gpu_program::VertexType VertexType;
+        typedef VertexBuffer<VertexType> VertexBufferType;
 
-        typedef u32 index_type;
-        typedef index_buffer<index_type> index_buffer_type;
+        typedef u32 IndexType;
+		typedef IndexBuffer<IndexType> IndexBufferType;
 
-        struct trace_args
+        struct TraceArgs
         {
-            line3 line;
+            Line3 line;
         };
 
-        struct trace_result
+        struct TraceResult
         {
             bool did_hit = false;
             bool is_all_solid = false;
             vec3 location;
-            plane3 plane;
+            Plane3 plane;
             f32 ratio = 0.0f;
         };
 
-        struct render_settings
+        struct RenderSettings
         {
             f32 lightmap_gamma = 1.0f;
         };
 
-        struct render_stats
+        struct RenderStats
         {
             u32 face_count = 0;
             u32 leaf_count = 0;
@@ -211,39 +209,39 @@ namespace naga
             }
         };
 
-        bsp(std::istream& istream);
+        BSP(std::istream& istream);
 
-        void render(const camera_params& camera_params);
+		void render(const CameraParameters& camera_parameters);
 
         i32 get_leaf_index_from_location(const vec3& location) const;
 
-        const render_stats& get_render_stats() const { return render_stats; }
+        const RenderStats& get_render_stats() const { return render_stats; }
 
-        render_settings render_settings;  //TODO: sort this out elsewhere
+        RenderSettings render_settings;  //TODO: sort this out elsewhere
 
     private:
-        std::vector<bsp_plane> planes;
-        std::vector<edge> edges;
-        std::vector<face> faces;
+        std::vector<BSPPlane> planes;
+        std::vector<Edge> edges;
+        std::vector<Face> faces;
         std::vector<i32> surface_edges;
-        std::vector<node> nodes;
-        std::vector<leaf> leafs;
+        std::vector<Node> nodes;
+        std::vector<Leaf> leafs;
         std::vector<u16> mark_surfaces;
-        std::vector<texture_info> texture_infos;
-        std::vector<boost::shared_ptr<texture>> face_lightmap_textures;
-        std::vector<clip_node> clip_nodes;
-        std::vector<model> models;
-        std::vector<bsp_entity> entities;
+        std::vector<TextureInfo> texture_infos;
+        std::vector<boost::shared_ptr<Texture>> face_lightmap_textures;
+        std::vector<ClipNode> clip_nodes;
+        std::vector<Model> models;
+		std::vector<BSPEntity> entities;
         std::vector<size_t> brush_entity_indices;
         std::map<size_t, boost::dynamic_bitset<>> leaf_pvs_map;
         std::vector<size_t> face_start_indices;
         size_t vis_leaf_count = 0;
-        std::vector<boost::shared_ptr<texture>> textures;
-        render_stats render_stats;
-        boost::shared_ptr<vertex_buffer_type> vertex_buffer;
-        boost::shared_ptr<index_buffer_type> index_buffer;
+		std::vector<boost::shared_ptr<Texture>> textures;
+        RenderStats render_stats;
+        boost::shared_ptr<VertexBufferType> vertex_buffer;
+        boost::shared_ptr<IndexBufferType> index_buffer;
 
-        bsp(const bsp&) = delete;
-        bsp& operator=(const bsp&) = delete;
+		BSP(const BSP&) = delete;
+		BSP& operator=(const BSP&) = delete;
     };
 }

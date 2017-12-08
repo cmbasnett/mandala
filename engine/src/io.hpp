@@ -11,6 +11,7 @@
 //naga
 #include "types.hpp"
 #include "range.hpp"
+#include "pose.hpp"
 
 template<typename T>
 inline void read(std::istream& istream, T& t)
@@ -102,9 +103,24 @@ namespace glm
 
 namespace naga
 {
+	namespace details
+	{
+		template<typename T>
+		std::ostream& operator<<(std::ostream& ostream, const Pose2<T>& pose)
+		{
+			return ostream << "(location=" << pose.location << ",rotation=" << pose.rotation << ")";
+		}
+
+		template<typename T>
+		std::ostream& operator<<(std::ostream& ostream, const Pose3<T>& pose)
+		{
+			return ostream << "(location=" << pose.location << ",rotation=" << pose.rotation << ")";
+		}
+	}
+
     template<typename T>
-    std::ostream& operator<<(std::ostream& ostream, const range_<T>& aabb)
+    std::ostream& operator<<(std::ostream& ostream, const Range<T>& range)
     {
-        return ostream << "(min=" << aabb.min << ",max=" << aabb.max << ")";
-    }
+		return ostream << "(min=" << range.min << ",max=" << range.max << ")";
+	}
 }

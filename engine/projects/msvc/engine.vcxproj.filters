@@ -16,9 +16,6 @@
     <ClInclude Include="..\..\src\audio_device.hpp">
       <Filter>audio</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\audio_mgr.hpp">
-      <Filter>audio</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\audio_source.hpp">
       <Filter>audio</Filter>
     </ClInclude>
@@ -133,9 +130,6 @@
     <ClInclude Include="..\..\src\literals.hpp">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\resource_mgr.hpp">
-      <Filter>resources</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\resource.hpp">
       <Filter>resources</Filter>
     </ClInclude>
@@ -174,12 +168,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\openal.hpp">
       <Filter>audio</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\pack.hpp">
-      <Filter>resources\packs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\pack_mgr.hpp">
-      <Filter>resources\packs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\state.hpp">
       <Filter>states</Filter>
@@ -262,9 +250,6 @@
     <ClInclude Include="..\..\src\md5b.hpp">
       <Filter>resources\model</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\state_mgr.hpp">
-      <Filter>states</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\types.hpp">
       <Filter>core</Filter>
     </ClInclude>
@@ -283,11 +268,8 @@
     <ClInclude Include="..\..\src\octtree.hpp">
       <Filter>scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\cache_mgr.hpp">
-      <Filter>cache</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\closure_traits.hpp">
-      <Filter>type_traits</Filter>
+      <Filter>type traits</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\bisect.hpp" />
     <ClInclude Include="..\..\src\scene.hpp">
@@ -350,11 +332,38 @@
     <ClInclude Include="..\..\src\psk.hpp">
       <Filter>resources\model</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\psa.hpp">
-      <Filter>resources\model</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\model_loader.h">
       <Filter>resources\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\trace_result.hpp">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\audio_system.hpp">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\cache.hpp">
+      <Filter>cache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\state_system.hpp">
+      <Filter>states</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\package.hpp">
+      <Filter>resources\packages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\package_manager.hpp">
+      <Filter>resources\packages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\resource_manager.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\convex.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gui_constraints.hpp">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\gui_stack.hpp">
+      <Filter>gui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -365,9 +374,6 @@
       <Filter>audio</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\audio_device.cpp">
-      <Filter>audio</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\audio_mgr.cpp">
       <Filter>audio</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\audio_source.cpp">
@@ -439,9 +445,6 @@
     <ClCompile Include="..\..\src\resource.cpp">
       <Filter>resources</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\resource_mgr.cpp">
-      <Filter>resources</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\string_archive.cpp">
       <Filter>resources\strings</Filter>
     </ClCompile>
@@ -466,23 +469,11 @@
     <ClCompile Include="..\..\src\texture.cpp">
       <Filter>resources\texture</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\pack.cpp">
-      <Filter>resources\packs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\pack_mgr.cpp">
-      <Filter>resources\packs</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\platform_win32.cpp">
       <Filter>platform\win32</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\state_mgr.cpp">
-      <Filter>states</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\python.cpp">
       <Filter>python</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\cache_mgr.cpp">
-      <Filter>cache</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\scene.cpp">
       <Filter>scene</Filter>
@@ -523,16 +514,58 @@
     <ClCompile Include="..\..\src\psk.cpp">
       <Filter>resources\model</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\audio_system.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cache.cpp">
+      <Filter>cache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\state_system.cpp">
+      <Filter>states</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\package.cpp">
+      <Filter>resources\packages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\package_manager.cpp">
+      <Filter>resources\packages</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\resource_manager.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <Filter Include="dist">
+      <UniqueIdentifier>{cdaa4039-8083-436d-89d5-797e6108bc1f}</UniqueIdentifier>
+    </Filter>
     <Filter Include="app">
       <UniqueIdentifier>{58d05419-ee09-429e-9c91-18f40eaf1cd5}</UniqueIdentifier>
     </Filter>
     <Filter Include="audio">
       <UniqueIdentifier>{57b39ba2-1844-4414-a8f6-45581375ee49}</UniqueIdentifier>
     </Filter>
+    <Filter Include="cache">
+      <UniqueIdentifier>{e57cce02-57ae-485f-b0fa-5d6da1f1ab15}</UniqueIdentifier>
+    </Filter>
     <Filter Include="core">
       <UniqueIdentifier>{84748bc8-3ec3-4656-a43a-9c82f8da8903}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dispatch">
+      <UniqueIdentifier>{8deb7d76-b8b0-4699-afe9-b8a51e8f4c4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game components">
+      <UniqueIdentifier>{fb8c91d5-8dc7-4b5b-99db-aba8c8375775}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game components\terrain">
+      <UniqueIdentifier>{2fed7f86-8093-4cec-8bed-486c0bfbb2cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game components\camera">
+      <UniqueIdentifier>{bd7d0c5a-8e65-4889-8e01-c1329f6f0680}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game components\model">
+      <UniqueIdentifier>{b52dd1ce-5fe7-4ea7-88bd-d2fb66f2b598}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game objects">
+      <UniqueIdentifier>{db3dda54-204e-49d7-94ce-d3a0a2df262f}</UniqueIdentifier>
     </Filter>
     <Filter Include="gpu">
       <UniqueIdentifier>{fcc9abfa-e288-478a-974f-74d68eb048f5}</UniqueIdentifier>
@@ -548,6 +581,15 @@
     </Filter>
     <Filter Include="math">
       <UniqueIdentifier>{5355c3c6-a3d2-4bd4-97ae-5bd8c26804ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="network">
+      <UniqueIdentifier>{c24a0441-ca7e-4b3a-bd7d-1c623ba39466}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="network\http">
+      <UniqueIdentifier>{454ed85c-1eb2-4648-8af7-3df7bf74be57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="physics">
+      <UniqueIdentifier>{7cf10140-c73b-4e04-9c01-1f781fec0d47}</UniqueIdentifier>
     </Filter>
     <Filter Include="platform">
       <UniqueIdentifier>{bbb4097b-d933-4dc3-be89-d4c3a95ce7c0}</UniqueIdentifier>
@@ -585,53 +627,20 @@
     <Filter Include="resources\sprite">
       <UniqueIdentifier>{1ce79b84-b9e4-4689-a458-ac57e0a0a69d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="states">
-      <UniqueIdentifier>{4742fbc2-00d4-4394-8cc8-cb1a163b3c2e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="resources\strings">
       <UniqueIdentifier>{3bef8f3c-bc1b-411b-bf5f-3a90528fba0b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="resources\packs">
+    <Filter Include="resources\packages">
       <UniqueIdentifier>{a8e04df4-77fd-473d-976d-5cef064397cd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cache">
-      <UniqueIdentifier>{e57cce02-57ae-485f-b0fa-5d6da1f1ab15}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="type_traits">
-      <UniqueIdentifier>{5b1bbda6-a2c0-4e47-86db-e2113661cf61}</UniqueIdentifier>
     </Filter>
     <Filter Include="scene">
       <UniqueIdentifier>{8b27e0ed-8a61-45b2-8b57-7bbd4998b8f6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="physics">
-      <UniqueIdentifier>{7cf10140-c73b-4e04-9c01-1f781fec0d47}</UniqueIdentifier>
+    <Filter Include="states">
+      <UniqueIdentifier>{4742fbc2-00d4-4394-8cc8-cb1a163b3c2e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="game components">
-      <UniqueIdentifier>{fb8c91d5-8dc7-4b5b-99db-aba8c8375775}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="game components\terrain">
-      <UniqueIdentifier>{2fed7f86-8093-4cec-8bed-486c0bfbb2cb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="game objects">
-      <UniqueIdentifier>{db3dda54-204e-49d7-94ce-d3a0a2df262f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="game components\camera">
-      <UniqueIdentifier>{bd7d0c5a-8e65-4889-8e01-c1329f6f0680}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="game components\model">
-      <UniqueIdentifier>{b52dd1ce-5fe7-4ea7-88bd-d2fb66f2b598}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="network">
-      <UniqueIdentifier>{c24a0441-ca7e-4b3a-bd7d-1c623ba39466}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="network\http">
-      <UniqueIdentifier>{454ed85c-1eb2-4648-8af7-3df7bf74be57}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="dispatch">
-      <UniqueIdentifier>{8deb7d76-b8b0-4699-afe9-b8a51e8f4c4f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="dist">
-      <UniqueIdentifier>{cdaa4039-8083-436d-89d5-797e6108bc1f}</UniqueIdentifier>
+    <Filter Include="type traits">
+      <UniqueIdentifier>{5b1bbda6-a2c0-4e47-86db-e2113661cf61}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

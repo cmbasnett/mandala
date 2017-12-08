@@ -11,11 +11,11 @@
 
 namespace naga
 {
-    struct camera_component : game_component
+    struct CameraComponent : GameComponent
     {
         static const char* component_name;
 
-        enum class projection_type_e
+        enum class ProjectionType
         {
             ORTHOGRAPHIC,
             PERSPECTIVE
@@ -25,17 +25,17 @@ namespace naga
         f32 far = 8192.0f;
         f32 fov = 90.0f;
         f32 roll = 0.0f;
-        projection_type_e projection_type = projection_type_e::PERSPECTIVE;
+		ProjectionType projection_type = ProjectionType::PERSPECTIVE;
 
-		line3 get_ray(const gpu_viewport_type& viewport, const vec2& screen_location) const;
-        camera_params get_params(const gpu_viewport_type& viewport) const;
+		Line3 get_ray(const GpuViewportType& viewport, const vec2& screen_location) const;
+        CameraParameters get_parameters(const GpuViewportType& viewport) const;
 
-        camera_component() { }
-        ~camera_component() { }
+		CameraComponent() { }
+		~CameraComponent() { }
 
     private:
         mat4 view_matrix;
         mat4 projection_matrix;
-        frustum frustum;
+		Frustum frustum;
     };
 }

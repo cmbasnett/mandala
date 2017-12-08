@@ -1,10 +1,10 @@
+//naga
+#include "platform_win32.hpp"
+
 //std
 #include <array>
 #include <chrono>
 #include <iostream>
-
-//naga
-#include "platform_win32.hpp"
 
 //glew
 #include <GL\glew.h>
@@ -14,44 +14,44 @@
 
 namespace naga
 {
-    platform_win32 platform;
+	Platform platform;
 
     static inline void on_keyboard_key(GLFWwindow* window, int key, int scancode, int action, int mods)
     {
-        input_event_t input_event;
-        input_event.device_type = input_event_t::device_type_e::KEYBOARD;
-        input_event.keyboard.key = static_cast<input_event_t::keyboard_t::key_e>(key);
+		InputEvent input_event;
+		input_event.device_type = InputEvent::DeviceType::KEYBOARD;
+		input_event.keyboard.key = static_cast<InputEvent::Keyboard::Key>(key);
 
         if ((mods & GLFW_MOD_SHIFT) == GLFW_MOD_SHIFT)
         {
-            input_event.keyboard.mod_flags |= input_event_t::MOD_FLAG_SHIFT;
+			input_event.keyboard.mod_flags |= InputEvent::MOD_FLAG_SHIFT;
         }
 
         if ((mods & GLFW_MOD_CONTROL) == GLFW_MOD_CONTROL)
         {
-            input_event.keyboard.mod_flags |= input_event_t::MOD_FLAG_CTRL;
+			input_event.keyboard.mod_flags |= InputEvent::MOD_FLAG_CTRL;
         }
 
         if ((mods & GLFW_MOD_ALT) == GLFW_MOD_ALT)
         {
-            input_event.keyboard.mod_flags |= input_event_t::MOD_FLAG_ALT;
+			input_event.keyboard.mod_flags |= InputEvent::MOD_FLAG_ALT;
         }
 
         if ((mods & GLFW_MOD_SUPER) == GLFW_MOD_SUPER)
         {
-            input_event.keyboard.mod_flags |= input_event_t::MOD_FLAG_SUPER;
+			input_event.keyboard.mod_flags |= InputEvent::MOD_FLAG_SUPER;
         }
 
         switch (action)
         {
         case GLFW_RELEASE:
-            input_event.keyboard.type = input_event_t::keyboard_t::type_e::KEY_RELEASE;
+			input_event.keyboard.type = InputEvent::Keyboard::Type::KEY_RELEASE;
             break;
         case GLFW_PRESS:
-            input_event.keyboard.type = input_event_t::keyboard_t::type_e::KEY_PRESS;
+			input_event.keyboard.type = InputEvent::Keyboard::Type::KEY_PRESS;
             break;
         case GLFW_REPEAT:
-            input_event.keyboard.type = input_event_t::keyboard_t::type_e::KEY_REPEAT;
+			input_event.keyboard.type = InputEvent::Keyboard::Type::KEY_REPEAT;
             break;
         }
 
@@ -60,24 +60,24 @@ namespace naga
 
     static inline void on_keyboard_character(GLFWwindow* window, unsigned int character)
     {
-        input_event_t input_event;
-        input_event.device_type = input_event_t::device_type_e::KEYBOARD;
-        input_event.keyboard.type = input_event_t::keyboard_t::type_e::CHARACTER;
+        InputEvent input_event;
+		input_event.device_type = InputEvent::DeviceType::KEYBOARD;
+		input_event.keyboard.type = InputEvent::Keyboard::Type::CHARACTER;
         input_event.keyboard.character = character;
 
-        platform.input.events.push_back(input_event);
+        platform.input.events.emplace_back(input_event);
     }
 
     static inline void on_mouse_button(GLFWwindow* window, int button, int action, int mods)
     {
-        input_event_t input_event;
-        input_event.device_type = input_event_t::device_type_e::TOUCH;
-        input_event.touch.button = static_cast<input_event_t::touch_t::button_e>(button);
+		InputEvent input_event;
+		input_event.device_type = InputEvent::DeviceType::TOUCH;
+		input_event.touch.button = static_cast<InputEvent::Touch::Button>(button);
         input_event.touch.mod_flags = mods;
 
         bool is_press = (action == GLFW_PRESS);
 
-        input_event.touch.type = is_press ? input_event_t::touch_t::type_e::PRESS : input_event_t::touch_t::type_e::RELEASE;
+		input_event.touch.type = is_press ? InputEvent::Touch::Type::PRESS : InputEvent::Touch::Type::RELEASE;
 
         if (is_press)
         {
@@ -99,13 +99,13 @@ namespace naga
     {
         const auto screen_size = platform.get_screen_size();
 
-        input_event_t input_event;
-        input_event.device_type = input_event_t::device_type_e::TOUCH;
-        input_event.touch.type = input_event_t::touch_t::type_e::MOVE;
-        input_event.touch.location.x = x;
-        input_event.touch.location.y = y;
-        input_event.touch.location_delta.x = x - platform.cursor_location.x;
-        input_event.touch.location_delta.y = -(y - platform.cursor_location.y);
+		InputEvent input_event;
+		input_event.device_type = InputEvent::DeviceType::TOUCH;
+		input_event.touch.type = InputEvent::Touch::Type::MOVE;
+		input_event.touch.location.x = static_cast<f32>(x);
+		input_event.touch.location.y = static_cast<f32>(y);
+		input_event.touch.location_delta.x = static_cast<f32>(x) - platform.cursor_location.x;
+		input_event.touch.location_delta.y = -(static_cast<f32>(y) - platform.cursor_location.y);
 
         input_event.touch.id = platform.input.touch_id;
 
@@ -113,7 +113,7 @@ namespace naga
         {
             const auto screen_size = platform.get_screen_size();
 
-            auto cursor_location = glm::floor(static_cast<vec2_f64>(screen_size) / 2.0);
+            auto cursor_location = glm::floor(static_cast<vec2>(screen_size) / 2.0f);
 
             platform.set_cursor_location(cursor_location);
         }
@@ -127,12 +127,12 @@ namespace naga
     {
         const auto screen_size = platform.get_screen_size();
 
-        input_event_t input_event;
-        input_event.device_type = input_event_t::device_type_e::TOUCH;
-        input_event.touch.type = input_event_t::touch_t::type_e::SCROLL;
+		InputEvent input_event;
+		input_event.device_type = InputEvent::DeviceType::TOUCH;
+		input_event.touch.type = InputEvent::Touch::Type::SCROLL;
         input_event.touch.location = platform.get_cursor_location();
-        input_event.touch.location_delta.x = x;
-        input_event.touch.location_delta.y = y;
+		input_event.touch.location_delta.x = static_cast<f32>(x);
+		input_event.touch.location_delta.y = static_cast<f32>(y);
 
         platform.input.events.push_back(input_event);
     }
@@ -145,9 +145,9 @@ namespace naga
         }
 
         //TODO: a less verbose solution is possible
-        auto window_events_itr = std::find_if(platform.window.events.begin(), platform.window.events.end(), [](const window_event& window_event)
+        auto window_events_itr = std::find_if(platform.window.events.begin(), platform.window.events.end(), [](const WindowEvent& window_event)
         {
-            return window_event.type == window_event_type::RESIZE;
+            return window_event.type == WindowEventType::RESIZE;
         });
 
         if (window_events_itr != platform.window.events.end())
@@ -157,12 +157,12 @@ namespace naga
         }
         else
         {
-            window_event window_event;
-            window_event.type = window_event_type::RESIZE;
+			WindowEvent window_event;
+            window_event.type = WindowEventType::RESIZE;
             window_event.rectangle.width = width;
             window_event.rectangle.height = height;
 
-            platform.window.events.push_back(window_event);
+            platform.window.events.emplace_back(window_event);
         }
 
         platform.window.rectangle.width = width;
@@ -172,9 +172,9 @@ namespace naga
     static inline void on_window_move(GLFWwindow* window, int x, int y)
     {
         //TODO: a less vebose solution is possible
-        auto window_events_itr = std::find_if(platform.window.events.begin(), platform.window.events.end(), [](const window_event& window_event)
+		auto window_events_itr = std::find_if(platform.window.events.begin(), platform.window.events.end(), [](const WindowEvent& window_event)
         {
-            return window_event.type == window_event_type::MOVE;
+            return window_event.type == WindowEventType::MOVE;
         });
 
         if (window_events_itr != platform.window.events.end())
@@ -184,12 +184,12 @@ namespace naga
         }
         else
         {
-            window_event window_event;
-            window_event.type = window_event_type::MOVE;
+			WindowEvent window_event;
+			window_event.type = WindowEventType::MOVE;
             window_event.rectangle.x = x;
             window_event.rectangle.y = y;
 
-            platform.window.events.push_back(window_event);
+            platform.window.events.emplace_back(window_event);
         }
 
         platform.window.rectangle.x = x;
@@ -219,7 +219,7 @@ namespace naga
 
             auto& display = (*display_itr);
 
-            display = std::make_unique<platform_t::display_t>();
+            display = std::make_unique<Platform::Display>();
             display->name = glfwGetMonitorName(monitor);
 
             //https://en.wikipedia.org/wiki/Pixel_density#Calculation_of_monitor_PPI
@@ -274,7 +274,7 @@ namespace naga
         throw std::exception(message);
     }
 
-    void platform_win32::app_run_start()
+	void Platform::app_run_start()
     {
         //glfw
         glfwInit();
@@ -319,7 +319,7 @@ namespace naga
         }
     }
 
-    void platform_win32::app_run_end()
+	void Platform::app_run_end()
     {
         glfwDestroyWindow(window_ptr);
         glfwTerminate();
@@ -327,7 +327,7 @@ namespace naga
         window_ptr = nullptr;
     }
 
-    void platform_win32::app_tick_start(f32 dt)
+	void Platform::app_tick_start(f32 dt)
     {
         glfwPollEvents();
 
@@ -347,15 +347,15 @@ namespace naga
             {
                 if (axes[axis_index] != gamepad_state.axes[axis_index])
                 {
-                    input_event_t input_event;
-                    input_event.device_type = input_event_t::device_type_e::GAMEPAD;
+                    InputEvent input_event;
+					input_event.device_type = InputEvent::DeviceType::GAMEPAD;
                     input_event.gamepad.index = gamepad_index;
-                    input_event.gamepad.type = input_event_t::gamepad_t::type_e::AXIS_MOVE;
+					input_event.gamepad.type = InputEvent::Gamepad::Type::AXIS_MOVE;
                     input_event.gamepad.axis_index = axis_index;
                     input_event.gamepad.axis_value = axes[axis_index];
                     input_event.gamepad.axis_value_delta = axes[axis_index] - gamepad_state.axes[axis_index];
 
-                    platform.input.events.push_back(input_event);
+                    platform.input.events.emplace_back(input_event);
                 }
 
                 gamepad_state.axes[axis_index] = axes[axis_index];
@@ -368,10 +368,10 @@ namespace naga
             {
                 if (buttons[button_index] != gamepad_state.buttons[button_index])
                 {
-                    input_event_t input_event;
-                    input_event.device_type = input_event_t::device_type_e::GAMEPAD;
+                    InputEvent input_event;
+					input_event.device_type = InputEvent::DeviceType::GAMEPAD;
                     input_event.gamepad.index = gamepad_index;
-                    input_event.gamepad.type = buttons[button_index] == 0 ? input_event_t::gamepad_t::type_e::RELEASE : input_event_t::gamepad_t::type_e::PRESS;
+					input_event.gamepad.type = buttons[button_index] == 0 ? InputEvent::Gamepad::Type::RELEASE : InputEvent::Gamepad::Type::PRESS;
                     input_event.gamepad.button_index = button_index;
 
                     platform.input.events.push_back(input_event);
@@ -382,52 +382,52 @@ namespace naga
         }
     }
 
-    void platform_win32::app_tick_end(f32 dt)
+	void Platform::app_tick_end(f32 dt)
     {
     }
 
-    void platform_win32::app_render_start()
+	void Platform::app_render_start()
     {
     }
 
-    void platform_win32::app_render_end()
+	void Platform::app_render_end()
     {
         glfwSwapBuffers(window_ptr);
     }
 
-    bool platform_win32::should_exit() const
+	bool Platform::should_exit() const
     {
         return glfwWindowShouldClose(window_ptr) != 0;
     }
 
-    platform_t::screen_size_type platform_win32::get_screen_size() const
+	vec2 Platform::get_screen_size() const
     {
-        screen_size_type screen_size;
+        vec2_i32 screen_size;
 
         glfwGetWindowSize(window_ptr, &screen_size.x, &screen_size.y);
 
-        return screen_size;
+		return static_cast<vec2>(screen_size);
     }
     
-    void platform_win32::set_screen_size(const screen_size_type& screen_size) const
-    {
-        glfwSetWindowSize(window_ptr, screen_size.x, screen_size.y);
-    }
+	void Platform::set_screen_size(const vec2& screen_size) const
+	{
+		glfwSetWindowSize(window_ptr, static_cast<int>(screen_size.x), static_cast<int>(screen_size.y));
+	}
 
     //fullscreen
-    bool platform_win32::is_fullscreen() const
+    bool Platform::is_fullscreen() const
     {
         return window_ptr != nullptr && glfwGetWindowMonitor(window_ptr) != nullptr;
     }
 
-    void platform_win32::set_is_fullscreen(bool is_fullscreen)
+	void Platform::set_is_fullscreen(bool is_fullscreen)
     {
         if (window_ptr == nullptr)
         {
             throw std::exception();
         }
 
-        window_size_type window_size;
+        vec2 window_size;
 
         if (is_fullscreen == this->is_fullscreen())
         {
@@ -445,15 +445,15 @@ namespace naga
 
             old_window_size = get_window_size();
 
-            window_size.x = video_mode->width;
-            window_size.y = video_mode->height;
+			window_size.x = static_cast<f32>(video_mode->width);
+			window_size.y = static_cast<f32>(video_mode->height);
         }
         else
         {
             window_size = old_window_size;
         }
 
-        auto new_window_ptr = glfwCreateWindow(window_size.x, window_size.y, "naga", is_fullscreen ? glfwGetPrimaryMonitor() : nullptr, window_ptr);
+        auto new_window_ptr = glfwCreateWindow(static_cast<int>(window_size.x), static_cast<int>(window_size.y), "naga", is_fullscreen ? glfwGetPrimaryMonitor() : nullptr, window_ptr);
         glfwDestroyWindow(window_ptr);
 
         window_ptr = new_window_ptr;
@@ -469,10 +469,10 @@ namespace naga
         glfwSetWindowPosCallback(window_ptr, on_window_move);
 
         //HACK: would use set_window_size, but the callback doesn't get triggered
-        on_window_resize(window_ptr, window_size.x, window_size.y);
+		on_window_resize(window_ptr, static_cast<int>(window_size.x), static_cast<int>(window_size.y));
     }
 
-    bool platform_win32::pop_input_event(input_event_t& input_event)
+    bool Platform::pop_input_event(InputEvent& input_event)
     {
         if (input.events.empty())
         {
@@ -489,7 +489,7 @@ namespace naga
         return true;
     }
 
-    bool platform_win32::pop_window_event(window_event& window_event)
+	bool Platform::pop_window_event(WindowEvent& window_event)
     {
         if (window.events.empty())
         {
@@ -503,75 +503,75 @@ namespace naga
         return true;
     }
 
-    platform_t::cursor_location_type platform_win32::get_cursor_location() const
+	vec2 Platform::get_cursor_location() const
     {
-        cursor_location_type cursor_location;
+        vec2_f64 cursor_location;
 
         glfwGetCursorPos(window_ptr, &cursor_location.x, &cursor_location.y);
 
-        return cursor_location;
+		return static_cast<vec2>(cursor_location);
     }
 
-    void platform_win32::set_cursor_location(const cursor_location_type& cursor_location) const
+	void Platform::set_cursor_location(const vec2& cursor_location) const
     {
         glfwSetCursorPos(window_ptr, cursor_location.x, cursor_location.y);
     }
 
-    bool platform_win32::is_cursor_hidden() const
+	bool Platform::is_cursor_hidden() const
     {
         return glfwGetInputMode(window_ptr, GLFW_CURSOR) == GLFW_CURSOR_HIDDEN;
     }
 
-    void platform_win32::set_cursor_hidden(bool is_hidden) const
+	void Platform::set_cursor_hidden(bool is_hidden) const
     {
         glfwSetInputMode(window_ptr, GLFW_CURSOR, is_hidden ? GLFW_CURSOR_HIDDEN : GLFW_CURSOR_NORMAL);
     }
 
-    platform_t::window_title_type platform_win32::get_window_title() const
+	std::string Platform::get_window_title() const
     {
         //TODO: implement this
         return std::string();
     }
 
-    void platform_win32::set_window_title(const window_title_type& window_title) const
+	void Platform::set_window_title(const std::string& window_title) const
     {
         glfwSetWindowTitle(window_ptr, window_title.c_str());
     }
 
-    platform_t::window_size_type platform_win32::get_window_size() const
+	vec2 Platform::get_window_size() const
     {
-        window_size_type window_size;
+        vec2_i32 window_size;
 
         glfwGetWindowSize(window_ptr, &window_size.x, &window_size.y);
 
-        return window_size;
+		return static_cast<vec2>(window_size);
     }
 
-    void platform_win32::set_window_size(const window_size_type& window_size) const
+	void Platform::set_window_size(const vec2& window_size) const
     {
-        glfwSetWindowSize(window_ptr, window_size.x, window_size.y);
+		glfwSetWindowSize(window_ptr, static_cast<int>(window_size.x), static_cast<int>(window_size.y));
     }
 
-    platform_t::window_size_type platform_win32::get_window_location() const
+	vec2 Platform::get_window_location() const
     {
         vec2_i32 window_location;
 
         glfwGetWindowPos(window_ptr, &window_location.x, &window_location.y);
 
-        return window_location;
+		return static_cast<vec2>(window_location);
     }
 
-    void platform_win32::set_window_location(const window_size_type& window_location) const
+	void Platform::set_window_location(const vec2& window_location) const
     {
-        glfwSetWindowPos(window_ptr, window_location.x, window_location.y);
+		glfwSetWindowPos(window_ptr, static_cast<int>(window_location.x), static_cast<int>(window_location.y));
     }
 
-    std::string platform_win32::get_clipboard_string() const
+	std::string Platform::get_clipboard_string() const
     {
         return glfwGetClipboardString(window_ptr);
     }
 
-    void platform_win32::set_clipboard_string(const std::string& clipboard_string) const
+	void Platform::set_clipboard_string(const std::string& clipboard_string) const
     {
         glfwSetClipboardString(window_ptr, clipboard_string.c_str());
     }

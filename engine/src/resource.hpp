@@ -3,35 +3,33 @@
 //std
 #include <chrono>
 #include <type_traits>
-
-//naga
-#include "hash.hpp"
+#include <string>
 
 namespace naga
 {
-    struct resource
+    struct Resource
     {
-        typedef std::chrono::system_clock clock_type;
-        typedef clock_type::time_point time_point_type;
+		typedef std::chrono::system_clock ClockType;
+		typedef ClockType::time_point TimePointType;
 
-        hash hash;
-        time_point_type last_access_time;
+		std::string name;
+		TimePointType last_access_time;
 
-        const time_point_type& get_creation_time() const { return creation_time; }
+		const TimePointType& get_creation_time() const { return creation_time; }
 
     protected:
-        resource();
+		Resource();
 
     private:
-        time_point_type creation_time;
+		TimePointType creation_time;
 
-        resource(const resource&) = delete;
-        resource& operator=(const resource&) = delete;
+		Resource(const Resource&) = delete;
+		Resource& operator=(const Resource&) = delete;
     };
 
     template<typename T, typename Enable = void>
-    struct is_resource : std::false_type { };
+    struct IsResource : std::false_type { };
 
     template<typename T>
-    struct is_resource<T, typename std::enable_if<std::is_base_of<resource, T>::value>::type> : std::true_type { };
+	struct IsResource<T, typename std::enable_if<std::is_base_of<Resource, T>::value>::type> : std::true_type{};
 }

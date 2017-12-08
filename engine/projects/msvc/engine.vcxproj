@@ -104,7 +104,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\boost_1_55_0\stage\lib;$(SolutionDir)..\..\ext\glew-1.10.0\lib\Release\Win32;$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\lib-msvc110;$(SolutionDir)..\..\ext\zlib-1.2.8\lib;$(SolutionDir)..\..\ext\libpng-1.6.3\projects\vstudio\Release Library;$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\lib\Win32;C:\Python27\libs;$(SolutionDir)..\..\ext\bullet3-2.83.7\lib\Debug;$(SolutionDir)..\..\ext\curl-7.47.1\lib\RelWithDebInfo</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\boost_1_55_0\stage\lib;$(SolutionDir)..\..\ext\glew-1.10.0\lib\Release\Win32;$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\lib-msvc110;$(SolutionDir)..\..\ext\libpng-1.6.3\projects\vstudio\Release Library;$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\lib\Win32;C:\Python27\libs;$(SolutionDir)..\..\ext\bullet3-2.83.7\lib\Debug;$(SolutionDir)..\..\ext\curl-7.47.1\lib\RelWithDebInfo</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3dll.lib;zlib.lib;libpng16.lib;libOpenAL32.dll.a;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;libcurl_imp.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
@@ -233,7 +233,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\audio_context.hpp" />
     <ClInclude Include="..\..\src\audio_defs.hpp" />
     <ClInclude Include="..\..\src\audio_device.hpp" />
-    <ClInclude Include="..\..\src\audio_mgr.hpp" />
+    <ClInclude Include="..\..\src\audio_system.hpp" />
     <ClInclude Include="..\..\src\audio_source.hpp" />
     <ClInclude Include="..\..\src\basic_gpu_program.hpp" />
     <ClInclude Include="..\..\src\bisect.hpp" />
@@ -244,7 +244,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\bsp.hpp" />
     <ClInclude Include="..\..\src\bsp_entity.hpp" />
     <ClInclude Include="..\..\src\bsp_gpu_program.hpp" />
-    <ClInclude Include="..\..\src\cache_mgr.hpp" />
+    <ClInclude Include="..\..\src\cache.hpp" />
     <ClInclude Include="..\..\src\camera_component.hpp" />
     <ClInclude Include="..\..\src\camera_params.hpp" />
     <ClInclude Include="..\..\src\circle.hpp" />
@@ -252,6 +252,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\collision.hpp" />
     <ClInclude Include="..\..\src\color.hpp" />
     <ClInclude Include="..\..\src\color_types.hpp" />
+    <ClInclude Include="..\..\src\convex.hpp" />
     <ClInclude Include="..\..\src\dispatch.hpp" />
     <ClInclude Include="..\..\src\exceptions.hpp" />
     <ClInclude Include="..\..\src\factorial.hpp" />
@@ -270,6 +271,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\gpu_program_mgr.hpp" />
     <ClInclude Include="..\..\src\gui_button.hpp" />
     <ClInclude Include="..\..\src\gui_canvas.hpp" />
+    <ClInclude Include="..\..\src\gui_constraints.hpp" />
     <ClInclude Include="..\..\src\gui_image.hpp" />
     <ClInclude Include="..\..\src\gui_image_gpu_program.hpp" />
     <ClInclude Include="..\..\src\gui_label.hpp" />
@@ -277,6 +279,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\gui_node.hpp" />
     <ClInclude Include="..\..\src\gui_scroll.hpp" />
     <ClInclude Include="..\..\src\gui_size.hpp" />
+    <ClInclude Include="..\..\src\gui_stack.hpp" />
     <ClInclude Include="..\..\src\hash.hpp" />
     <ClInclude Include="..\..\src\heightmap.hpp" />
     <ClInclude Include="..\..\src\http.hpp" />
@@ -284,7 +287,6 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\http_request.hpp" />
     <ClInclude Include="..\..\src\model_loader.h" />
     <ClInclude Include="..\..\src\monitor.hpp" />
-    <ClInclude Include="..\..\src\psa.hpp" />
     <ClInclude Include="..\..\src\psk.hpp" />
     <ClInclude Include="..\..\src\python_function_from_callable.hpp" />
     <ClInclude Include="..\..\src\python_pair.hpp" />
@@ -313,8 +315,8 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\model_skeleton.hpp" />
     <ClInclude Include="..\..\src\openal.hpp" />
     <ClInclude Include="..\..\src\opengl.hpp" />
-    <ClInclude Include="..\..\src\pack.hpp" />
-    <ClInclude Include="..\..\src\pack_mgr.hpp" />
+    <ClInclude Include="..\..\src\package.hpp" />
+    <ClInclude Include="..\..\src\package_manager.hpp" />
     <ClInclude Include="..\..\src\padding.hpp" />
     <ClInclude Include="..\..\src\plane.hpp" />
     <ClInclude Include="..\..\src\platform.hpp" />
@@ -329,18 +331,19 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\range.hpp" />
     <ClInclude Include="..\..\src\rectangle.hpp" />
     <ClInclude Include="..\..\src\resource.hpp" />
-    <ClInclude Include="..\..\src\resource_mgr.hpp" />
+    <ClInclude Include="..\..\src\resource_manager.hpp" />
     <ClInclude Include="..\..\src\sound.hpp" />
     <ClInclude Include="..\..\src\sphere.hpp" />
     <ClInclude Include="..\..\src\sprite.hpp" />
     <ClInclude Include="..\..\src\sprite_animation.hpp" />
     <ClInclude Include="..\..\src\sprite_set.hpp" />
     <ClInclude Include="..\..\src\state.hpp" />
-    <ClInclude Include="..\..\src\state_mgr.hpp" />
+    <ClInclude Include="..\..\src\state_system.hpp" />
     <ClInclude Include="..\..\src\stream_redirect.hpp" />
     <ClInclude Include="..\..\src\string_archive.hpp" />
     <ClInclude Include="..\..\src\string_mgr.hpp" />
     <ClInclude Include="..\..\src\texture.hpp" />
+    <ClInclude Include="..\..\src\trace_result.hpp" />
     <ClInclude Include="..\..\src\triangle.hpp" />
     <ClInclude Include="..\..\src\types.hpp" />
     <ClInclude Include="..\..\src\type_object.hpp" />
@@ -351,12 +354,12 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="..\..\src\app.cpp" />
     <ClCompile Include="..\..\src\audio_context.cpp" />
     <ClCompile Include="..\..\src\audio_device.cpp" />
-    <ClCompile Include="..\..\src\audio_mgr.cpp" />
+    <ClCompile Include="..\..\src\audio_system.cpp" />
     <ClCompile Include="..\..\src\audio_source.cpp" />
     <ClCompile Include="..\..\src\bitmap_font.cpp" />
     <ClCompile Include="..\..\src\bsp.cpp" />
     <ClCompile Include="..\..\src\bsp_entity.cpp" />
-    <ClCompile Include="..\..\src\cache_mgr.cpp" />
+    <ClCompile Include="..\..\src\cache.cpp" />
     <ClCompile Include="..\..\src\camera_component.cpp" />
     <ClCompile Include="..\..\src\frame_buffer.cpp" />
     <ClCompile Include="..\..\src\game_object.cpp" />
@@ -387,19 +390,19 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="..\..\src\model_animation.cpp" />
     <ClCompile Include="..\..\src\model_component.cpp" />
     <ClCompile Include="..\..\src\model_skeleton.cpp" />
-    <ClCompile Include="..\..\src\pack.cpp" />
-    <ClCompile Include="..\..\src\pack_mgr.cpp" />
+    <ClCompile Include="..\..\src\package.cpp" />
+    <ClCompile Include="..\..\src\package_manager.cpp" />
     <ClCompile Include="..\..\src\platform_win32.cpp" />
     <ClCompile Include="..\..\src\python.cpp" />
     <ClCompile Include="..\..\src\resource.cpp" />
-    <ClCompile Include="..\..\src\resource_mgr.cpp" />
+    <ClCompile Include="..\..\src\resource_manager.cpp" />
     <ClCompile Include="..\..\src\sound.cpp" />
     <ClCompile Include="..\..\src\state.cpp" />
     <ClCompile Include="..\..\src\terrain_component.cpp" />
     <ClCompile Include="..\..\src\sprite.cpp" />
     <ClCompile Include="..\..\src\sprite_animation.cpp" />
     <ClCompile Include="..\..\src\sprite_set.cpp" />
-    <ClCompile Include="..\..\src\state_mgr.cpp" />
+    <ClCompile Include="..\..\src\state_system.cpp" />
     <ClCompile Include="..\..\src\string_archive.cpp" />
     <ClCompile Include="..\..\src\string_mgr.cpp" />
     <ClCompile Include="..\..\src\texture.cpp" />

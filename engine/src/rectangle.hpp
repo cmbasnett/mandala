@@ -9,72 +9,72 @@ namespace naga
     namespace details
     {
         template<typename Scalar, typename Enable = void>
-        struct rectangle;
+        struct Rectangle;
 
         template<typename Scalar>
-        struct rectangle<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
+		struct Rectangle<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
         {
-            typedef Scalar scalar_type;
-            typedef glm::detail::tvec2<scalar_type> vector_type;
-            typedef rectangle<scalar_type> type;
+            typedef Scalar ScalarType;
+			typedef glm::detail::tvec2<ScalarType> VectorType;
+			typedef Rectangle<ScalarType> Type;
 
-            scalar_type x = 0;
-            scalar_type y = 0;
-            scalar_type width = 0;
-            scalar_type height = 0;
+			ScalarType x = 0;
+			ScalarType y = 0;
+			ScalarType width = 0;
+			ScalarType height = 0;
 
-            rectangle() = default;
+			Rectangle() = default;
 
-            template<typename Scalar>
-            rectangle(Scalar x, Scalar y, Scalar width, Scalar height) :
-                x(static_cast<scalar_type>(x)),
-                y(static_cast<scalar_type>(y)),
-                width(static_cast<scalar_type>(width)),
-                height(static_cast<scalar_type>(height))
+			template<typename Scalar>
+			Rectangle(Scalar x, Scalar y, Scalar width, Scalar height) :
+				x(static_cast<ScalarType>(x)),
+				y(static_cast<ScalarType>(y)),
+				width(static_cast<ScalarType>(width)),
+				height(static_cast<ScalarType>(height))
             {
             }
             
-            template<typename Scalar>
-            rectangle(const glm::detail::tvec4<Scalar>& v) :
-                            x(static_cast<scalar_type>(v.x)),
-                            y(static_cast<scalar_type>(v.y)),
-                            width(static_cast<scalar_type>(v.z)),
-                            height(static_cast<scalar_type>(v.w))
+			template<typename Scalar>
+			Rectangle(const glm::detail::tvec4<Scalar>& v) :
+				x(static_cast<ScalarType>(v.x)),
+				y(static_cast<ScalarType>(v.y)),
+				width(static_cast<ScalarType>(v.z)),
+				height(static_cast<ScalarType>(v.w))
             {
             }
 
-            template<typename Scalar>
-            rectangle(const aabb2<Scalar>& aabb)
+			template<typename Scalar>
+			Rectangle(const details::AABB2<Scalar>& aabb)
             {
-                x = static_cast<scalar_type>(aabb.min.x);
-                y = static_cast<scalar_type>(aabb.min.y);
-                width = static_cast<scalar_type>(aabb.width());
-                height = static_cast<scalar_type>(aabb.height());
+				x = static_cast<ScalarType>(aabb.min.x);
+				y = static_cast<ScalarType>(aabb.min.y);
+				width = static_cast<ScalarType>(aabb.width());
+				height = static_cast<ScalarType>(aabb.height());
             }
 
-            scalar_type area() const
+			ScalarType area() const
             {
                 return width * height;
             }
 
-            vector_type center() const
+            VectorType center() const
             {
-                return vector_type(x + (width / 2), y + (height / 2));
+				return VectorType(x + (width / 2), y + (height / 2));
             }
 
-            vector_type size() const
+			VectorType size() const
             {
-                return vector_type(width, height);
+				return VectorType(width, height);
             }
 
-            vector_type min() const
+			VectorType min() const
             {
-                return vector_type(x, y);
+				return VectorType(x, y);
             }
 
-            vector_type max() const
+			VectorType max() const
             {
-                return vector_type(x + width, y + height);
+				return VectorType(x + width, y + height);
             }
 
             template<typename Scalar>
@@ -82,20 +82,14 @@ namespace naga
             {
                 return glm::detail::tvec4<Scalar>(static_cast<Scalar>(x), static_cast<Scalar>(y), static_cast<Scalar>(width), static_cast<Scalar>(height));
             }
+
+			template<typename Scalar>
+			operator Rectangle<Scalar>() const
+			{
+				return Rectangle<Scalar>(static_cast<Scalar>(x), static_cast<Scalar>(y), static_cast<Scalar>(width), static_cast<Scalar>(height));
+			}
         };
     }
 
-    typedef details::rectangle<i8> rectangle_i8;
-    typedef details::rectangle<i16> rectangle_i16;
-    typedef details::rectangle<u16> rectangle_u16;
-    typedef details::rectangle<u8> rectangle_u8;
-    typedef details::rectangle<i16> rectangle_i16;
-    typedef details::rectangle<u16> rectangle_u16;
-    typedef details::rectangle<i32> rectangle_i32;
-    typedef details::rectangle<u32> rectangle_u32;
-    typedef details::rectangle<i64> rectangle_i64;
-    typedef details::rectangle<u64> rectangle_u64;
-    typedef details::rectangle<f32> rectangle_f32;
-    typedef details::rectangle<f64> rectangle_f64;
-    typedef rectangle_f32 rectangle;
+    typedef details::Rectangle<f32> Rectangle;
 }

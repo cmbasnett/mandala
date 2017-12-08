@@ -7,22 +7,22 @@ using namespace glm;
 
 namespace naga
 {
-    struct position_gpu_program : gpu_program
+    struct position_gpu_program : GpuProgram
     {
-        struct vertex
+        struct Vertex
         {
-            vertex() = default;
-            vertex(vec3 location)
+            Vertex() = default;
+            Vertex(vec3 location)
             {
 this->location = location;            }
 
             vec3 location;
         };
 
-        typedef vertex vertex_type;
+        typedef Vertex VertexType;
 
         position_gpu_program() :
-            gpu_program(R"(#version 400
+            GpuProgram(R"(#version 400
 
 uniform mat4 world_matrix;
 uniform mat4 view_projection_matrix;
@@ -55,7 +55,7 @@ void main()
         void on_bind() override
         {
             gpu.enable_vertex_attribute_array(location_location);
-            gpu.set_vertex_attrib_pointer(location_location, sizeof(vec3) / sizeof(vec3::value_type), gpu_data_type_<vec3::value_type>::VALUE, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, location)));
+            gpu.set_vertex_attrib_pointer(location_location, sizeof(vec3) / sizeof(vec3::value_type), GpuDataType<vec3::value_type>::VALUE, false, sizeof(VertexType), reinterpret_cast<void*>(offsetof(VertexType, location)));
         }
 
         void on_unbind() override
@@ -65,6 +65,6 @@ void main()
 
 
     private:
-       gpu_location location_location;
+       GpuLocation location_location;
     };
 }

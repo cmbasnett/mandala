@@ -9,32 +9,32 @@
 
 namespace naga
 {
-    struct gpu_program : boost::enable_shared_from_this<gpu_program>
+	struct GpuProgram : boost::enable_shared_from_this<GpuProgram>
     {
-        virtual ~gpu_program();
+		virtual ~GpuProgram();
 
         virtual void on_bind() = 0;
         virtual void on_unbind() = 0;
 
-        gpu_id get_id() const { return id; }
+        GpuId get_id() const { return id; }
 
     protected:
-        gpu_program(const std::string& vertex_shader_source, const std::string& fragment_shader_source);
+		GpuProgram(const std::string& vertex_shader_source, const std::string& fragment_shader_source);
 
     private:
-        gpu_id id;
+		GpuId id;
 
-        gpu_program(const gpu_program&) = delete;
-        gpu_program& operator=(const gpu_program&) = delete;
+		GpuProgram(const GpuProgram&) = delete;
+		GpuProgram& operator=(const GpuProgram&) = delete;
     };
 
     template<typename T, typename Enable = void>
-    struct is_gpu_program : std::false_type
+    struct IsGpuProgram : std::false_type
     {
     };
 
     template<typename T>
-    struct is_gpu_program<T, typename std::enable_if<std::is_base_of<gpu_program, T>::value>::type> : std::true_type
+	struct IsGpuProgram<T, typename std::enable_if<std::is_base_of<GpuProgram, T>::value>::type> : std::true_type
     {
     };
 }

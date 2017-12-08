@@ -7,7 +7,7 @@ using namespace glm;
 
 namespace naga
 {
-    struct model_gpu_program : gpu_program
+    struct model_gpu_program : GpuProgram
     {
         enum class calculate_lighting_subroutine
         {
@@ -15,10 +15,10 @@ namespace naga
              CALCULATE_LIGHTING_UNLIT,
         };
 
-        struct vertex
+        struct Vertex
         {
-            vertex() = default;
-            vertex(vec3 location, vec3 normal, vec3 tangent, vec2 texcoord, ivec4 bone_indices_0, ivec4 bone_indices_1, vec4 bone_weights_0, vec4 bone_weights_1)
+            Vertex() = default;
+            Vertex(vec3 location, vec3 normal, vec3 tangent, vec2 texcoord, ivec4 bone_indices_0, ivec4 bone_indices_1, vec4 bone_weights_0, vec4 bone_weights_1)
             {
 this->location = location;
 this->normal = normal;
@@ -39,10 +39,10 @@ this->bone_weights_1 = bone_weights_1;            }
             vec4 bone_weights_1;
         };
 
-        typedef vertex vertex_type;
+        typedef Vertex VertexType;
 
         model_gpu_program() :
-            gpu_program(R"(#version 450
+            GpuProgram(R"(#version 450
 
 uniform mat4 world_matrix;
 uniform mat3 normal_matrix;
@@ -199,7 +199,7 @@ void main()
             bone_indices_1_location = gpu.get_attribute_location(get_id(), "bone_indices_1");
             bone_weights_0_location = gpu.get_attribute_location(get_id(), "bone_weights_0");
             bone_weights_1_location = gpu.get_attribute_location(get_id(), "bone_weights_1");
-            calculate_lighting_subroutine_uniform_location = gpu.get_subroutine_uniform_location(get_id(), gpu_t::shader_type::FRAGMENT, "calculate_lighting_function");
+            calculate_lighting_subroutine_uniform_location = gpu.get_subroutine_uniform_location(get_id(), Gpu::ShaderType::FRAGMENT, "calculate_lighting_function");
         }
 
         void on_bind() override
@@ -212,14 +212,14 @@ void main()
             gpu.enable_vertex_attribute_array(bone_indices_1_location);
             gpu.enable_vertex_attribute_array(bone_weights_0_location);
             gpu.enable_vertex_attribute_array(bone_weights_1_location);
-            gpu.set_vertex_attrib_pointer(location_location, sizeof(vec3) / sizeof(vec3::value_type), gpu_data_type_<vec3::value_type>::VALUE, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, location)));
-            gpu.set_vertex_attrib_pointer(normal_location, sizeof(vec3) / sizeof(vec3::value_type), gpu_data_type_<vec3::value_type>::VALUE, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, normal)));
-            gpu.set_vertex_attrib_pointer(tangent_location, sizeof(vec3) / sizeof(vec3::value_type), gpu_data_type_<vec3::value_type>::VALUE, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, tangent)));
-            gpu.set_vertex_attrib_pointer(texcoord_location, sizeof(vec2) / sizeof(vec2::value_type), gpu_data_type_<vec2::value_type>::VALUE, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, texcoord)));
-            gpu.set_vertex_attrib_pointer(bone_indices_0_location, sizeof(ivec4) / sizeof(ivec4::value_type), gpu_data_type_<ivec4::value_type>::VALUE, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, bone_indices_0)));
-            gpu.set_vertex_attrib_pointer(bone_indices_1_location, sizeof(ivec4) / sizeof(ivec4::value_type), gpu_data_type_<ivec4::value_type>::VALUE, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, bone_indices_1)));
-            gpu.set_vertex_attrib_pointer(bone_weights_0_location, sizeof(vec4) / sizeof(vec4::value_type), gpu_data_type_<vec4::value_type>::VALUE, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, bone_weights_0)));
-            gpu.set_vertex_attrib_pointer(bone_weights_1_location, sizeof(vec4) / sizeof(vec4::value_type), gpu_data_type_<vec4::value_type>::VALUE, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, bone_weights_1)));
+            gpu.set_vertex_attrib_pointer(location_location, sizeof(vec3) / sizeof(vec3::value_type), GpuDataType<vec3::value_type>::VALUE, false, sizeof(VertexType), reinterpret_cast<void*>(offsetof(VertexType, location)));
+            gpu.set_vertex_attrib_pointer(normal_location, sizeof(vec3) / sizeof(vec3::value_type), GpuDataType<vec3::value_type>::VALUE, false, sizeof(VertexType), reinterpret_cast<void*>(offsetof(VertexType, normal)));
+            gpu.set_vertex_attrib_pointer(tangent_location, sizeof(vec3) / sizeof(vec3::value_type), GpuDataType<vec3::value_type>::VALUE, false, sizeof(VertexType), reinterpret_cast<void*>(offsetof(VertexType, tangent)));
+            gpu.set_vertex_attrib_pointer(texcoord_location, sizeof(vec2) / sizeof(vec2::value_type), GpuDataType<vec2::value_type>::VALUE, false, sizeof(VertexType), reinterpret_cast<void*>(offsetof(VertexType, texcoord)));
+            gpu.set_vertex_attrib_pointer(bone_indices_0_location, sizeof(ivec4) / sizeof(ivec4::value_type), GpuDataType<ivec4::value_type>::VALUE, false, sizeof(VertexType), reinterpret_cast<void*>(offsetof(VertexType, bone_indices_0)));
+            gpu.set_vertex_attrib_pointer(bone_indices_1_location, sizeof(ivec4) / sizeof(ivec4::value_type), GpuDataType<ivec4::value_type>::VALUE, false, sizeof(VertexType), reinterpret_cast<void*>(offsetof(VertexType, bone_indices_1)));
+            gpu.set_vertex_attrib_pointer(bone_weights_0_location, sizeof(vec4) / sizeof(vec4::value_type), GpuDataType<vec4::value_type>::VALUE, false, sizeof(VertexType), reinterpret_cast<void*>(offsetof(VertexType, bone_weights_0)));
+            gpu.set_vertex_attrib_pointer(bone_weights_1_location, sizeof(vec4) / sizeof(vec4::value_type), GpuDataType<vec4::value_type>::VALUE, false, sizeof(VertexType), reinterpret_cast<void*>(offsetof(VertexType, bone_weights_1)));
         }
 
         void on_unbind() override
@@ -238,22 +238,22 @@ void main()
         {
             switch(e)
             {
-                case calculate_lighting_subroutine::CALCULATE_LIGHTING_LIT:                    gpu.set_uniform_subroutine(gpu_t::shader_type::FRAGMENT, calculate_lighting_lit_subroutine_index);                    break;
-                case calculate_lighting_subroutine::CALCULATE_LIGHTING_UNLIT:                    gpu.set_uniform_subroutine(gpu_t::shader_type::FRAGMENT, calculate_lighting_unlit_subroutine_index);                    break;
+                case calculate_lighting_subroutine::CALCULATE_LIGHTING_LIT:                    gpu.set_uniform_subroutine(Gpu::ShaderType::FRAGMENT, calculate_lighting_lit_subroutine_index);                    break;
+                case calculate_lighting_subroutine::CALCULATE_LIGHTING_UNLIT:                    gpu.set_uniform_subroutine(Gpu::ShaderType::FRAGMENT, calculate_lighting_unlit_subroutine_index);                    break;
             }
         }
 
     private:
-       gpu_location location_location;
-       gpu_location normal_location;
-       gpu_location tangent_location;
-       gpu_location texcoord_location;
-       gpu_location bone_indices_0_location;
-       gpu_location bone_indices_1_location;
-       gpu_location bone_weights_0_location;
-       gpu_location bone_weights_1_location;
-       gpu_location calculate_lighting_subroutine_uniform_location;
-       gpu_index calculate_lighting_lit_subroutine_index;
-       gpu_index calculate_lighting_unlit_subroutine_index;
+       GpuLocation location_location;
+       GpuLocation normal_location;
+       GpuLocation tangent_location;
+       GpuLocation texcoord_location;
+       GpuLocation bone_indices_0_location;
+       GpuLocation bone_indices_1_location;
+       GpuLocation bone_weights_0_location;
+       GpuLocation bone_weights_1_location;
+       GpuLocation calculate_lighting_subroutine_uniform_location;
+       GpuIndex calculate_lighting_lit_subroutine_index;
+       GpuIndex calculate_lighting_unlit_subroutine_index;
     };
 }

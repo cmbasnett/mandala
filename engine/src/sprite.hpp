@@ -8,36 +8,37 @@
 
 namespace naga
 {
-    struct texture;
+    struct Texture;
 
-    struct sprite_ref
+    struct SpriteReference
     {
-		sprite_ref(const std::string& sprite_set_name, const hash& region_hash);
-        sprite_ref(sprite_ref&& copy);
+		SpriteReference(const std::string& sprite_set_name, const std::string& region_name);
+		SpriteReference(SpriteReference&& copy);
 
         std::string sprite_set_name;
-        hash region_hash;
+		std::string region_name;
     };
 
-    struct sprite
+    struct Sprite
     {
-        typedef boost::shared_ptr<sprite_set::region> region_type;
-        typedef boost::shared_ptr<sprite_set> sprite_set_type;
+		typedef SpriteSet::Region RegionType;
+		typedef boost::shared_ptr<SpriteSet> SpriteSetType;
 
-        sprite(const std::string& sprite_set_name, const hash& region_hash);
-        sprite(const sprite_ref& sprite_def);
-        sprite(const sprite_set_type& sprite_set, const hash& region_hash);
+		Sprite(const std::string& sprite_set_name, const std::string& region_name);
+		Sprite(const SpriteReference& sprite_reference);
+		Sprite(const SpriteSetType& sprite_set, const std::string& region_name);
+		Sprite(const boost::shared_ptr<Texture>& texture);
 
-        const sprite_set_type& get_sprite_set() const { return sprite_set; }
-        const region_type& get_region() const { return region; }
+		const RegionType& get_region() const { return region; }
+		const boost::shared_ptr<Texture>& get_texture() const { return texture; }
         
-        sprite& operator=(const sprite& rhs);
-        sprite& operator=(const sprite_ref& rhs);
-        bool operator==(const sprite_ref&) const;
-        bool operator!=(const sprite_ref&) const;
+		Sprite& operator=(const Sprite& rhs);
+		Sprite& operator=(const SpriteReference& rhs);
+		//bool operator==(const SpriteReference&) const;
+		//bool operator!=(const SpriteReference&) const;
 
     private:
-        sprite_set_type sprite_set;
-        region_type region;
+		boost::shared_ptr<Texture> texture;
+		RegionType region;
     };
 }

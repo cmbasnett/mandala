@@ -12,33 +12,33 @@
 
 namespace naga
 {
-    struct texture;
+	struct Texture;
 
-    struct frame_buffer
+    struct FrameBuffer
     {
-        size_t get_id() const { return id; }
-        const boost::shared_ptr<texture>& get_color_texture() const { return color_texture; }
-        const boost::shared_ptr<texture>& get_depth_texture() const { return depth_texture; }
-        const boost::shared_ptr<texture>& get_depth_stencil_texture() const { return depth_stencil_texture; }
-        const gpu_frame_buffer_size_type& get_size() const { return size; }
-        gpu_frame_buffer_type get_type() const { return type; }
+		GpuId get_id() const { return id; }
+        const boost::shared_ptr<Texture>& get_color_texture() const { return color_texture; }
+		const boost::shared_ptr<Texture>& get_depth_texture() const { return depth_texture; }
+		const boost::shared_ptr<Texture>& get_depth_stencil_texture() const { return depth_stencil_texture; }
+        const GpuFrameBufferSizeType& get_size() const { return size; }
+        GpuFrameBufferType get_type() const { return type; }
 
-        void set_size(const gpu_frame_buffer_size_type& size);
+        void set_size(const GpuFrameBufferSizeType& size);
 
-        frame_buffer(gpu_frame_buffer_type type, const gpu_frame_buffer_size_type& size);
-        ~frame_buffer();
+		FrameBuffer(GpuFrameBufferType type, const GpuFrameBufferSizeType& size);
+		~FrameBuffer();
 
         void on_bind() const;
 
     private:
-        gpu_id id;
-        boost::shared_ptr<texture> color_texture;
-        boost::shared_ptr<texture> depth_texture;
-        boost::shared_ptr<texture> depth_stencil_texture;
-        gpu_frame_buffer_size_type size;
-        gpu_frame_buffer_type type;
+        GpuId id;
+		boost::shared_ptr<Texture> color_texture;
+		boost::shared_ptr<Texture> depth_texture;
+		boost::shared_ptr<Texture> depth_stencil_texture;
+        GpuFrameBufferSizeType size;
+        GpuFrameBufferType type;
 
-        frame_buffer(const frame_buffer&) = delete;
-        frame_buffer& operator=(const frame_buffer&) = delete;
+		FrameBuffer(const FrameBuffer&) = delete;
+		FrameBuffer& operator=(const FrameBuffer&) = delete;
     };
 }

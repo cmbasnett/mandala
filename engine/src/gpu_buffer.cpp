@@ -4,12 +4,12 @@
 
 namespace naga
 {
-    gpu_buffer::gpu_buffer()
+	GpuBuffer::GpuBuffer()
     {
         id = gpu.create_buffer();
     }
 
-    gpu_buffer::~gpu_buffer()
+	GpuBuffer::~GpuBuffer()
     {
         gpu.destroy_buffer(id);
     }

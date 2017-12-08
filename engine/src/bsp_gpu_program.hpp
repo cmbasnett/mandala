@@ -7,12 +7,12 @@ using namespace glm;
 
 namespace naga
 {
-    struct bsp_gpu_program : gpu_program
+    struct bsp_gpu_program : GpuProgram
     {
-        struct vertex
+        struct Vertex
         {
-            vertex() = default;
-            vertex(vec3 location, vec2 diffuse_texcoord, vec2 lightmap_texcoord)
+            Vertex() = default;
+            Vertex(vec3 location, vec2 diffuse_texcoord, vec2 lightmap_texcoord)
             {
 this->location = location;
 this->diffuse_texcoord = diffuse_texcoord;
@@ -23,10 +23,10 @@ this->lightmap_texcoord = lightmap_texcoord;            }
             vec2 lightmap_texcoord;
         };
 
-        typedef vertex vertex_type;
+        typedef Vertex VertexType;
 
         bsp_gpu_program() :
-            gpu_program(R"(#version 400
+            GpuProgram(R"(#version 400
 
 precision lowp float;
 
@@ -90,9 +90,9 @@ void main()
             gpu.enable_vertex_attribute_array(location_location);
             gpu.enable_vertex_attribute_array(diffuse_texcoord_location);
             gpu.enable_vertex_attribute_array(lightmap_texcoord_location);
-            gpu.set_vertex_attrib_pointer(location_location, sizeof(vec3) / sizeof(vec3::value_type), gpu_data_type_<vec3::value_type>::VALUE, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, location)));
-            gpu.set_vertex_attrib_pointer(diffuse_texcoord_location, sizeof(vec2) / sizeof(vec2::value_type), gpu_data_type_<vec2::value_type>::VALUE, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, diffuse_texcoord)));
-            gpu.set_vertex_attrib_pointer(lightmap_texcoord_location, sizeof(vec2) / sizeof(vec2::value_type), gpu_data_type_<vec2::value_type>::VALUE, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, lightmap_texcoord)));
+            gpu.set_vertex_attrib_pointer(location_location, sizeof(vec3) / sizeof(vec3::value_type), GpuDataType<vec3::value_type>::VALUE, false, sizeof(VertexType), reinterpret_cast<void*>(offsetof(VertexType, location)));
+            gpu.set_vertex_attrib_pointer(diffuse_texcoord_location, sizeof(vec2) / sizeof(vec2::value_type), GpuDataType<vec2::value_type>::VALUE, false, sizeof(VertexType), reinterpret_cast<void*>(offsetof(VertexType, diffuse_texcoord)));
+            gpu.set_vertex_attrib_pointer(lightmap_texcoord_location, sizeof(vec2) / sizeof(vec2::value_type), GpuDataType<vec2::value_type>::VALUE, false, sizeof(VertexType), reinterpret_cast<void*>(offsetof(VertexType, lightmap_texcoord)));
         }
 
         void on_unbind() override
@@ -104,8 +104,8 @@ void main()
 
 
     private:
-       gpu_location location_location;
-       gpu_location diffuse_texcoord_location;
-       gpu_location lightmap_texcoord_location;
+       GpuLocation location_location;
+       GpuLocation diffuse_texcoord_location;
+       GpuLocation lightmap_texcoord_location;
     };
 }

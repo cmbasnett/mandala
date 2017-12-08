@@ -3,6 +3,7 @@
 //naga
 #include "resource.hpp"
 #include "color_types.hpp"
+#include "gpu_defs.hpp"
 
 //boost
 #include <boost\shared_ptr.hpp>
@@ -10,33 +11,34 @@
 
 namespace naga
 {
-    struct image;
+    struct Image;
 
-    struct texture : resource, boost::enable_shared_from_this<texture>
+	struct Texture : Resource, boost::enable_shared_from_this<Texture>
     {
-        typedef u32 size_value_type;
-        typedef glm::detail::tvec2<size_value_type> size_type;
-        typedef u32 id_type;
-        typedef i32 format_type;
-        typedef i32 type_type;
+		typedef GpuId IdType;
+        typedef i32 FormatType;
+        typedef i32 TypeType;
 
-        texture(color_type color_type, const size_type& size, const void* data);
-        texture(const boost::shared_ptr<image>& image);
-        texture(std::istream& istream);
-        virtual ~texture();
+		Texture(ColorType color_type, const vec2& size, const void* data);
+		Texture(const boost::shared_ptr<Image>& image);
+		Texture(std::istream& istream);
+		virtual ~Texture();
 
-        color_type get_color_type() const { return color_type; }
-        const size_type& get_size() const { return size; }
-        id_type get_id() const { return id; }
+		ColorType get_color_type() const { return color_type; }
+		const vec2& get_size() const { return size; }
+		const u32 get_width() const { return static_cast<u32>(size.x); }
+		const u32 get_height() const { return static_cast<u32>(size.y); }
 
-        void set_size(const size_type& size);
+		IdType get_id() const { return id; }
+
+		void set_size(const vec2& size);
 
     private:
-        color_type color_type;
-        size_type size;
-        id_type id = 0;
+		ColorType color_type;
+		vec2 size;
+		IdType id = 0;
 
-        texture(texture&) = delete;
-        texture& operator=(texture&) = delete;
+		Texture(Texture&) = delete;
+		Texture& operator=(Texture&) = delete;
     };
 }

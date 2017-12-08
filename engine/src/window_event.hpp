@@ -7,18 +7,18 @@
 
 namespace naga
 {
-    enum class window_event_type : u8
+    enum class WindowEventType : u8
     {
         RESIZE,
         MOVE
     };
 
-    struct window_event
+    struct WindowEvent
     {
-        typedef rectangle_u16 rectangle_type;
+        typedef details::Rectangle<u16> RectangleType;
 
-        window_event_type type;
-        rectangle_type rectangle;
+		WindowEventType type;
+		RectangleType rectangle;
     };
 }
 #endif

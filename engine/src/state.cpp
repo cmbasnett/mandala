@@ -17,18 +17,18 @@
 
 namespace naga
 {
-    state::state()
+	State::State()
     {
-        layout = boost::make_shared<gui_layout>();
-        layout->set_dock_mode(gui_dock_mode::FILL);
+        layout = boost::make_shared<GUILayout>();
+        layout->set_dock_mode(GUIDockMode::FILL);
     }
 
-    void state::tick(f32 dt)
+	void State::tick(f32 dt)
     {
         on_tick(dt);
 
         //TODO: get child nodes to tell layout about cleanliness, recursing every tick is expensive!
-        std::function<bool(const boost::shared_ptr<gui_node>&)> is_dirty = [&](const boost::shared_ptr<gui_node>& node)
+		std::function<bool(const boost::shared_ptr<GUINode>&)> is_dirty = [&](const boost::shared_ptr<GUINode>& node)
         {
             if (node->get_is_dirty())
             {
@@ -54,7 +54,7 @@ namespace naga
         layout->tick(dt);
     }
 
-    void state::render()
+	void State::render()
     {
         const auto screen_size = platform.get_screen_size();
         auto view_projection_matrix = glm::ortho(0.0f, static_cast<f32>(screen_size.x), 0.0f, static_cast<f32>(screen_size.y));
@@ -69,22 +69,22 @@ namespace naga
         gpu.depth.pop_state();
     }
 
-    bool state::on_input_event(input_event_t& input_event)
+	bool State::on_input_event(InputEvent& input_event)
     {
         return layout->on_input_event(input_event);
     }
 
-    void state::on_enter()
-    {
-        layout->set_bounds(gui_node::bounds_type(vec2(), static_cast<vec2>(platform.get_screen_size())));
+	void State::on_enter()
+	{
+		layout->set_bounds(GUINode::BoundsType(vec2(), static_cast<vec2>(platform.get_screen_size())));
     }
 
 #if defined(NAGA_PC)
-    void state::on_window_event(window_event& window_event)
+	void State::on_window_event(WindowEvent& window_event)
     {
-        if (window_event.type == window_event_type::RESIZE)
+        if (window_event.type == WindowEventType::RESIZE)
         {
-            layout->set_bounds(gui_node::bounds_type(vec2(), static_cast<vec2>(window_event.rectangle.size())));
+			layout->set_bounds(GUINode::BoundsType(vec2(), static_cast<vec2>(window_event.rectangle.size())));
         }
     }
 #endif

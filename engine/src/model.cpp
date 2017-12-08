@@ -12,7 +12,7 @@
 
 //naga
 #include "model.hpp"
-#include "resource_mgr.hpp"
+#include "resource_manager.hpp"
 #include "gpu_program_mgr.hpp"
 #include "md5b.hpp"
 #include "material.hpp"
@@ -29,23 +29,23 @@
 
 namespace naga
 {
-    struct bone_info
+    struct BoneInfo
     {
         std::string name;
         u8 parent_index = 0;
-        pose3 pose;
+        Pose3 pose;
     };
 
-    struct mesh_info
+    struct MeshInfo
     {
-        struct vertex
+        struct Vertex
         {
             vec2 texcoord;
             u16 weight_index_start = 0;
             u8 weight_count = 0;
         };
 
-        struct weight
+        struct Weight
         {
             u8 bone_index = 0;
             f32 bias = 0;
@@ -53,12 +53,12 @@ namespace naga
         };
 
         std::string shader;
-        std::vector<vertex> vertices;
+        std::vector<Vertex> vertices;
         std::vector<u16> indices;
-        std::vector<weight> weights;
+        std::vector<Weight> weights;
     };
 
-    model::model(std::istream& istream)
+	Model::Model(std::istream& istream)
     {
         //magic
         std::array<char, MD5M_MAGIC_LENGTH> magic;
@@ -83,7 +83,7 @@ namespace naga
         read(istream, bone_count);
 
         //bones
-        std::vector<bone_info> bone_infos;
+        std::vector<BoneInfo> bone_infos;
 
         bone_infos.resize(bone_count);
 
@@ -112,7 +112,7 @@ namespace naga
         u8 mesh_count = 0;
         read(istream, mesh_count);
 
-        std::vector<mesh_info> mesh_infos;
+        std::vector<MeshInfo> mesh_infos;
         mesh_infos.resize(mesh_count);
 
         for (auto& mesh : mesh_infos)
@@ -162,16 +162,16 @@ namespace naga
 
         for (auto& mesh_info : mesh_infos)
         {
-            auto mesh = boost::make_shared<model::mesh>();
+            auto mesh = boost::make_shared<Mesh>();
 
             //index count
             mesh->index_count = mesh_info.indices.size();
 
             //material
-            mesh->material = resources.get<material>(mesh_info.shader);
+            mesh->material = resources.get<Material>(mesh_info.shader);
 
             //vertices
-            std::vector<mesh::vertex_type> vertices;
+            std::vector<Mesh::VertexType> vertices;
             vertices.resize(mesh_info.vertices.size());
 
             for (size_t j = 0; j < mesh_info.vertices.size(); ++j)
@@ -231,7 +231,7 @@ namespace naga
 
                 auto denominator = (t0.x * t1.y) - (t1.x * t0.y);
 
-                if (t0 == mesh_t::vertex_type::texcoord_type(0) || t1 == mesh_t::vertex_type::texcoord_type(0) || denominator == 0.0f)
+                if (t0 == mesh_t::VertexType::texcoord_type(0) || t1 == mesh_t::VertexType::texcoord_type(0) || denominator == 0.0f)
                 {
 #if defined(DEBUG)
                     ++bad_face_count;
@@ -241,7 +241,7 @@ namespace naga
 
                 denominator = 1.0f / denominator;
 
-                mesh_t::vertex_type::normal_type tangent;
+                mesh_t::VertexType::normal_type tangent;
                 tangent.x = denominator * ((v0.x * t1.y) + (v1.x * -t0.y));
                 tangent.y = denominator * ((v0.y * t1.y) + (v1.y * -t0.y));
                 tangent.z = denominator * ((v0.z * t1.y) + (v1.z * -t0.y));
@@ -258,18 +258,18 @@ namespace naga
             {
                 vertex.normal = glm::normalize(vertex.normal);
 
-                if (vertex.tangent != mesh_t::vertex_type::normal_type(0))
+                if (vertex.tangent != mesh_t::VertexType::normal_type(0))
                 {
                     vertex.tangent = glm::normalize(vertex.tangent);
                 }
             }
             */
 
-            mesh->vertex_buffer = boost::make_shared<mesh::vertex_buffer_type>();
-            mesh->vertex_buffer->data(vertices, gpu_t::buffer_usage::STATIC_DRAW);
+            mesh->vertex_buffer = boost::make_shared<Mesh::VertexBufferType>();
+            mesh->vertex_buffer->data(vertices, Gpu::BufferUsage::STATIC_DRAW);
 
-            mesh->index_buffer = boost::make_shared<mesh::index_buffer_type>();
-            mesh->index_buffer->data(mesh_info.indices, gpu_t::buffer_usage::STATIC_DRAW);
+			mesh->index_buffer = boost::make_shared<Mesh::IndexBufferType>();
+            mesh->index_buffer->data(mesh_info.indices, Gpu::BufferUsage::STATIC_DRAW);
 
             meshes.push_back(mesh);
         }
@@ -287,13 +287,13 @@ namespace naga
         }
     }
 
-    void model::render(const vec3& camera_location, const mat4& world_matrix, const mat4& view_projection_matrix, const std::vector<mat4>& bone_matrices, const vec3& light_location, const std::vector<boost::shared_ptr<material_instance>>& mesh_materials) const
+    void Model::render(const vec3& camera_location, const mat4& world_matrix, const mat4& view_projection_matrix, const std::vector<mat4>& bone_matrices, const vec3& light_location, const std::vector<boost::shared_ptr<MaterialInstance>>& mesh_materials) const
     {
         //blend
         auto blend_state = gpu.blend.get_state();
         blend_state.is_enabled = true;
-        blend_state.src_factor = gpu_t::blend_factor::SRC_ALPHA;
-        blend_state.dst_factor = gpu_t::blend_factor::ONE_MINUS_SRC_ALPHA;
+        blend_state.src_factor = Gpu::BlendFactor::SRC_ALPHA;
+        blend_state.dst_factor = Gpu::BlendFactor::ONE_MINUS_SRC_ALPHA;
 
         gpu.blend.push_state(blend_state);
 
@@ -314,8 +314,8 @@ namespace naga
 
             gpu.culling.push_state(culling_state);
             
-            gpu.buffers.push(gpu_t::buffer_target::ARRAY, mesh->vertex_buffer);
-            gpu.buffers.push(gpu_t::buffer_target::ELEMENT_ARRAY, mesh->index_buffer);
+            gpu.buffers.push(Gpu::BufferTarget::ARRAY, mesh->vertex_buffer);
+            gpu.buffers.push(Gpu::BufferTarget::ELEMENT_ARRAY, mesh->index_buffer);
 
             const auto gpu_program = gpu_programs.get<model_gpu_program>();
             
@@ -336,8 +336,8 @@ namespace naga
 
             gpu.programs.pop();
 
-            gpu.buffers.pop(gpu_t::buffer_target::ELEMENT_ARRAY);
-            gpu.buffers.pop(gpu_t::buffer_target::ARRAY);
+            gpu.buffers.pop(Gpu::BufferTarget::ELEMENT_ARRAY);
+            gpu.buffers.pop(Gpu::BufferTarget::ARRAY);
 
             gpu.culling.pop_state();
         }
@@ -347,7 +347,7 @@ namespace naga
         gpu.blend.pop_state();
     }
 
-    boost::optional<size_t> model::get_bone_index(const std::string& bone_name) const
+    boost::optional<size_t> Model::get_bone_index(const std::string& bone_name) const
     {
 		auto bone_indices_itr = bone_indices.find(bone_name);
 
@@ -359,7 +359,7 @@ namespace naga
         return boost::none;
     }
 
-    void model::mesh::render(const mat4& world_matrix, const mat4& view_projection_matrix, const std::vector<mat4>& bone_matrices, const boost::shared_ptr<material_instance>& material) const
+    void Model::Mesh::render(const mat4& world_matrix, const mat4& view_projection_matrix, const std::vector<mat4>& bone_matrices, const boost::shared_ptr<MaterialInstance>& material) const
     {
         static const auto DIFFUSE_TEXTURE_INDEX = 0;
         static const auto NORMAL_TEXTURE_INDEX = 1;
@@ -408,7 +408,7 @@ namespace naga
             gpu.set_uniform("emissive.intensity", emissive.intensity);
         }
 
-        gpu.draw_elements(gpu_t::primitive_type::TRIANGLES, index_count, index_buffer_type::DATA_TYPE, 0);
+        gpu.draw_elements(Gpu::PrimitiveType::TRIANGLES, index_count, IndexBufferType::DATA_TYPE, 0);
 
         //unbind textures
         gpu.textures.unbind(EMISSIVE_TEXTURE_INDEX);

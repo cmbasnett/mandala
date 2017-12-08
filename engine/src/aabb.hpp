@@ -13,85 +13,84 @@ namespace naga
     namespace details
     {
         template<typename Scalar, typename Enable = void>
-        struct aabb2;
+		struct AABB2;
 
         template<typename Scalar>
-        struct aabb2<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type> : range_<glm::detail::tvec2<Scalar>>
+		struct AABB2<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type> : Range<glm::detail::tvec2<Scalar>>
         {
-            typedef Scalar scalar_type;
-            typedef aabb2<scalar_type> type;
+            typedef Scalar ScalarType;
+			typedef AABB2<ScalarType> Type;
+			typedef glm::detail::tvec2<ScalarType> VectorType;
 
-            static const size_t CORNER_COUNT = 4;
-
-            aabb2() = default;
-            aabb2(const value_type& min, const value_type& max) :
-                range_(min, max)
+            AABB2() = default;
+			AABB2(const VectorType& min, const VectorType& max) :
+                Range(min, max)
             {
             }
 
-            inline scalar_type width() const
+			inline ScalarType width() const
             {
                 return max.x - min.x;
             }
 
-            inline scalar_type height() const
+			inline ScalarType height() const
             {
                 return max.y - min.y;
             }
 
-            inline value_type size() const
+			inline VectorType size() const
             {
                 return max - min;
             }
 
-            inline value_type center() const
+			inline VectorType center() const
             {
-                return min + (size() / static_cast<scalar_type>(2));
+				return min + (size() / static_cast<ScalarType>(2));
             }
 
-            inline value_type extents() const
+			inline VectorType extents() const
             {
-                return (max - min) / scalar_type(2);
+                return (max - min) / ScalarType(2);
             }
 
-            std::array<value_type, CORNER_COUNT> get_corners() const
+			std::array<VectorType, 4> get_corners() const
             {
                 return { min,
-                         value_type(min.x, max.y),
-                         value_type(max.x, min.y),
+						 VectorType(min.x, max.y),
+						 VectorType(max.x, min.y),
                          max };
             }
 
-            type operator-(const value_type& rhs) const
+			Type operator-(const VectorType& rhs) const
             {
-                return type(min - rhs, max - rhs);
+				return Type(min - rhs, max - rhs);
             }
 
-            type& operator-=(const value_type& rhs)
+			Type& operator-=(const VectorType& rhs)
             {
                 *this = *this - rhs;
 
                 return *this;
             }
 
-            type operator+(const value_type& rhs) const
+			Type operator+(const VectorType& rhs) const
             {
-                return type(min + rhs, max + rhs);
+                return Type(min + rhs, max + rhs);
             }
 
-            type& operator+=(const value_type& rhs)
+			Type& operator+=(const VectorType& rhs)
             {
                 *this = *this + rhs;
 
                 return *this;
             }
 
-            static type join(const type& lhs, const type& rhs)
+			static Type join(const Type& lhs, const Type& rhs)
             {
-                return type(glm::min(lhs.min, rhs.min), glm::max(lhs.max, rhs.max));
+				return Type(glm::min(lhs.min, rhs.min), glm::max(lhs.max, rhs.max));
             }
 
-            type& join(const type& rhs)
+			Type& join(const Type& rhs)
             {
                 *this = join(*this, rhs);
 
@@ -99,19 +98,19 @@ namespace naga
             }
 
             template<typename Scalar>
-            bool operator==(const aabb2<Scalar>& rhs) const
+			bool operator==(const AABB2<Scalar>& rhs) const
             {
                 return min == rhs.min && max == rhs.max;
             }
 
             template<typename Scalar>
-            bool operator!=(const aabb2<Scalar>& rhs) const
+			bool operator!=(const AABB2<Scalar>& rhs) const
             {
                 return min != rhs.min || max != rhs.max;
             }
 
             template<typename Scalar>
-            type& operator=(const aabb2<Scalar>& rhs) const
+			Type& operator=(const AABB2<Scalar>& rhs) const
             {
                 min = static_cast<vector_type>(rhs.min);
                 max = static_cast<vector_type>(rhs.max);
@@ -120,72 +119,73 @@ namespace naga
             }
 
             template<typename T>
-            operator aabb2<T>()
+            operator AABB2<T>()
             {
-                return aabb2<T>(static_cast<aabb2<T>::value_type>(min), static_cast<aabb2<T>::value_type>(max));
+				return AABB2<T>(static_cast<AABB2<T>::VectorType>(min), static_cast<AABB2<T>::VectorType>(max));
             }
 
-            type operator<<(const type& rhs) const
+			Type operator<<(const Type& rhs) const
             {
                 return join(*this, rhs);
             }
 
-            type& operator<<=(const type& rhs)
+			Type& operator<<=(const Type& rhs)
             {
                 return this->join(rhs);
             }
         };
 
         template<typename T, typename Enable = void>
-        struct aabb3;
+		struct AABB3;
 
         template<typename Scalar>
-        struct aabb3<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type> : range_<glm::detail::tvec3<Scalar>>
+        struct AABB3<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type> : Range<glm::detail::tvec3<Scalar>>
         {
-            typedef Scalar scalar_type;
-            typedef aabb3<scalar_type> type;
-            typedef plane3<f32> plane_type;
+            typedef Scalar ScalarType;
+			typedef AABB3<ScalarType> Type;
+            typedef Plane3<f32> PlaneType;
+			typedef glm::detail::tvec3<ScalarType> VectorType;
 
             static const size_t CORNER_COUNT = 8;
             static const size_t PLANE_COUNT = 6;
 
-            aabb3() = default;
-            aabb3(const value_type& min, const value_type& max) :
-                range_(min, max)
+			AABB3() = default;
+			AABB3(const VectorType& min, const VectorType& max) :
+                Range(min, max)
             {
             }
 
-            inline scalar_type width() const
+			inline ScalarType width() const
             {
                 return max.x - min.x;
             }
 
-            inline scalar_type height() const
+			inline ScalarType height() const
             {
                 return max.y - min.y;
             }
 
-            inline scalar_type depth() const
+			inline ScalarType depth() const
             {
                 return max.z - min.z;
             }
 
-            value_type size() const
+            VectorType size() const
             {
                 return max - min;
             }
 
-            value_type center() const
+            VectorType center() const
             {
-                return min + ((max - min) / scalar_type(2));
+                return min + ((max - min) / ScalarType(2));
             }
 
-            value_type extents() const
+			VectorType extents() const
             {
-                return (max - min) / scalar_type(2);
+				return (max - min) / ScalarType(2);
             }
 
-            std::array<plane_type, PLANE_COUNT> get_planes() const
+            std::array<PlaneType, 6> get_planes() const
             {
                 return { { min, VEC3_RIGHT },
                          { max, VEC3_LEFT },
@@ -195,60 +195,60 @@ namespace naga
                          { max, VEC3_FORWARD } };
             }
 
-            std::array<value_type, CORNER_COUNT> get_corners() const
+            std::array<VectorType, 8> get_corners() const
             {
                 return{ min,
-                        value_type(min.x, min.y, max.z),
-                        value_type(min.x, max.y, min.z),
-                        value_type(min.x, max.y, max.z),
-                        value_type(max.x, min.y, min.z),
-                        value_type(max.x, min.y, max.z),
-                        value_type(max.x, max.y, min.z),
+                        VectorType(min.x, min.y, max.z),
+						VectorType(min.x, max.y, min.z),
+						VectorType(min.x, max.y, max.z),
+						VectorType(max.x, min.y, min.z),
+						VectorType(max.x, min.y, max.z),
+						VectorType(max.x, max.y, min.z),
                         max };
             }
 
-            type operator-(const value_type& rhs) const
+			Type operator-(const VectorType& rhs) const
             {
-                return type(min - rhs, max - rhs);
+                return Type(min - rhs, max - rhs);
             }
 
-            type& operator-=(const value_type& rhs)
+			Type& operator-=(const VectorType& rhs)
             {
                 *this = *this - rhs;
 
                 return *this;
             }
 
-            type operator+(const value_type& rhs) const
+			Type operator+(const VectorType& rhs) const
             {
-                return type(min + rhs, max + rhs);
+                return Type(min + rhs, max + rhs);
             }
 
-            type& operator+=(const value_type& rhs)
+			Type& operator+=(const VectorType& rhs)
             {
                 *this = *this + rhs;
 
                 return *this;
             }
 
-            static type join(const type& lhs, const value_type& rhs)
+			static Type join(const Type& lhs, const VectorType& rhs)
             {
-                return type(glm::min(lhs.min, rhs), glm::max(lhs.max, rhs));
+                return Type(glm::min(lhs.min, rhs), glm::max(lhs.max, rhs));
             }
 
-            static type join(const type& lhs, const type& rhs)
+			static Type join(const Type& lhs, const Type& rhs)
             {
-                return type(glm::min(lhs.min, rhs.min), glm::max(lhs.max, rhs.max));
+                return Type(glm::min(lhs.min, rhs.min), glm::max(lhs.max, rhs.max));
             };
 
-            type& join(const value_type& rhs)
+            Type& join(const VectorType& rhs)
             {
                 *this = join(*this, rhs);
 
                 return *this;
             }
 
-            type& join(const type& rhs)
+			Type& join(const Type& rhs)
             {
                 *this = join(*this, rhs);
 
@@ -256,30 +256,30 @@ namespace naga
             }
 
             template<typename U>
-            bool operator==(const aabb3<U>& rhs) const
+			bool operator==(const AABB3<U>& rhs) const
             {
                 return min == rhs.min && max == rhs.max;
             }
 
             template<typename U>
-            bool operator!=(const aabb3<U>& rhs) const
+			bool operator!=(const AABB3<U>& rhs) const
             {
                 return min != rhs.min || max != rhs.max;
             }
 
             template<typename U>
-            type& operator=(const aabb3<U>& rhs)
+            Type& operator=(const AABB3<U>& rhs)
             {
-                min = static_cast<value_type>(rhs.min);
-                max = static_cast<value_type>(rhs.max);
+				min = static_cast<VectorType>(rhs.min);
+				max = static_cast<VectorType>(rhs.max);
                 return *this;
             }
 
             template<typename PointScalar, size_t N>
-            type& operator=(const std::array<glm::detail::tvec3<PointScalar>, N>& points)
+			Type& operator=(const std::array<glm::detail::tvec3<PointScalar>, N>& points)
             {
-                min = value_type(std::numeric_limits<scalar_type>::max());
-                max = value_type(-std::numeric_limits<scalar_type>::max());
+				min = VectorType(std::numeric_limits<ScalarType>::max());
+				max = VectorType(-std::numeric_limits<ScalarType>::max());
 
                 for (const auto& point : points)
                 {
@@ -289,44 +289,44 @@ namespace naga
                 return *this;
             }
 
-            type operator<<(const type& rhs) const
+			Type operator<<(const Type& rhs) const
             {
                 return join(*this, rhs);
             }
 
-            type operator<<(const value_type& rhs) const
+			Type operator<<(const VectorType& rhs) const
             {
                 return join(*this, rhs);
             }
 
-            type& operator<<=(const value_type& rhs)
+			Type& operator<<=(const VectorType& rhs)
             {
                 return this->join(rhs);
             }
 
-            type& operator<<=(const type& rhs)
+			Type& operator<<=(const Type& rhs)
             {
                 return this->join(rhs);
             }
 
-            type operator<<(const glm::detail::tmat4x4<scalar_type>& rhs) const
+			Type operator<<(const glm::detail::tmat4x4<ScalarType>& rhs) const
             {
-                type aabb;
-                aabb.min = value_type(std::numeric_limits<scalar_type>::max());
-                aabb.max = value_type(-std::numeric_limits<scalar_type>::max());
+				Type aabb;
+				aabb.min = VectorType(std::numeric_limits<ScalarType>::max());
+				aabb.max = VectorType(-std::numeric_limits<ScalarType>::max());
 
                 for (const auto& corner : get_corners())
                 {
-                    auto corner_transformed = glm::detail::tvec4<scalar_type>(corner, scalar_type(0));
+                    auto corner_transformed = glm::detail::tvec4<ScalarType>(corner, 1);
                     corner_transformed = rhs * corner_transformed;
 
-                    aabb <<= value_type(corner_transformed.x, corner_transformed.y, corner_transformed.z);
+					aabb <<= VectorType(corner_transformed.x, corner_transformed.y, corner_transformed.z);
                 }
 
                 return aabb;
             }
 
-            type& operator<<=(const glm::detail::tmat4x4<scalar_type>& rhs)
+            Type& operator<<=(const glm::detail::tmat4x4<ScalarType>& rhs)
             {
                 *this = *this << rhs;
 
@@ -335,19 +335,6 @@ namespace naga
         };
     }
 
-    typedef details::aabb2<i8>	aabb2_i8;
-    typedef details::aabb2<i16> aabb2_i16;
-    typedef details::aabb2<i32> aabb2_i32;
-    typedef details::aabb2<i64> aabb2_i64;
-    typedef details::aabb2<f32> aabb2_f32;
-    typedef details::aabb2<f64> aabb2_f36;
-    typedef aabb2_f32           aabb2;
-
-    typedef details::aabb3<i8>  aabb3_i8;
-    typedef details::aabb3<i16> aabb3_i16;
-    typedef details::aabb3<i32> aabb3_i32;
-    typedef details::aabb3<i64> aabb3_i64;
-    typedef details::aabb3<f32> aabb3_f32;
-    typedef details::aabb3<f64> aabb3_f36;
-    typedef aabb3_f32  			aabb3;
+	typedef details::AABB2<f32> AABB2;
+    typedef details::AABB3<f32> AABB3;
 }

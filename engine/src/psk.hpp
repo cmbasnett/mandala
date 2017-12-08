@@ -16,7 +16,7 @@
 
 namespace naga
 {
-	struct camera_params;
+	struct CameraParameters;
 
 	struct PSK : boost::enable_shared_from_this<PSK>
 	{
@@ -100,7 +100,7 @@ namespace naga
 		const std::vector<Bone>& get_bones() const { return bones; }
 		const std::vector<Weight>& get_weights() const { return weights; }
 
-		virtual void render(camera_params& camera_params);
+		virtual void render(CameraParameters& camera_parameters);
 
 	private:
 		std::vector<vec3> points;
@@ -110,13 +110,13 @@ namespace naga
 		std::vector<Bone> bones;
 		std::vector<Weight> weights;
 
-		typedef basic_gpu_program::vertex_type vertex_type;
-		typedef vertex_buffer<vertex_type> vertex_buffer_type;
+		typedef basic_gpu_program::VertexType vertex_type;
+		typedef VertexBuffer<vertex_type> VertexBufferType;
 		typedef u16 index_type;
-		typedef index_buffer<index_type> index_buffer_type;
+		typedef IndexBuffer<index_type> IndexBufferType;
 
-		boost::shared_ptr<vertex_buffer_type> vertex_buffer;
-		boost::shared_ptr<index_buffer_type> index_buffer;
+		boost::shared_ptr<VertexBufferType> vertex_buffer;
+		boost::shared_ptr<IndexBufferType> index_buffer;
 		u32 index_count;
 	};
 };

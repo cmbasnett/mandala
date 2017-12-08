@@ -8,38 +8,38 @@
 
 namespace naga
 {
-    texture::texture(naga::color_type color_type, const size_type& size, const void* data) :
+	Texture::Texture(ColorType color_type, const vec2& size, const void* data) :
         color_type(color_type),
         size(size)
     {
-        id = gpu.create_texture(color_type, size, data);
+		id = gpu.create_texture(color_type, static_cast<vec2_u32>(size), data);
     }
 
-    texture::texture(const boost::shared_ptr<image>& image) :
-        texture(image->get_color_type(),
-                  image->get_size(),
-                  image->get_data().data())
+	Texture::Texture(const boost::shared_ptr<Image>& image) :
+		Texture(image->get_color_type(),
+				image->get_size(),
+				image->get_data().data())
     {
     }
 
-    texture::texture(std::istream& istream) :
-        texture(boost::make_shared<image>(istream))
+	Texture::Texture(std::istream& istream) :
+		Texture(boost::make_shared<Image>(istream))
     {
     }
 
-    texture::~texture()
+	Texture::~Texture()
     {
         gpu.destroy_texture(id);
     }
 
-    void texture::set_size(const size_type & size)
+	void Texture::set_size(const vec2& size)
     {
         if (size == get_size())
         {
             return;
         }
         
-        gpu.resize_texture(shared_from_this(), size);
+		gpu.resize_texture(shared_from_this(), static_cast<vec2_u32>(size));
 
         this->size = size;
     }

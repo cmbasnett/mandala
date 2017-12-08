@@ -6,22 +6,22 @@
 #include "frame_buffer.hpp"
 #include "camera_params.hpp"
 #include "physics_simulation.hpp"
-#include "resource_mgr.hpp"
+#include "resource_manager.hpp"
 #include "bsp.hpp"
 #include "terrain_component.hpp"
 #include "image.hpp"
 
 namespace naga
 {
-    scene::scene()
+	Scene::Scene()
     {
         //bsp = resources.get<naga::bsp>(hash("dod_flash.bsp"));
-        physics = boost::make_shared<physics_simulation>();
+		physics = boost::make_shared<PhysicsSimulation>();
     }
 
-    void scene::render(const boost::shared_ptr<frame_buffer>& frame_buffer, const boost::shared_ptr<game_object>& camera) const
+	void Scene::render(const boost::shared_ptr<FrameBuffer>& frame_buffer, const boost::shared_ptr<GameObject>& camera) const
     {
-        gpu_viewport_type viewport;
+        GpuViewportType viewport;
         viewport.width = frame_buffer->get_size().x;
         viewport.height = frame_buffer->get_size().y;
 
@@ -33,15 +33,15 @@ namespace naga
         depth_state.should_write_mask = true;
         gpu.depth.push_state(depth_state);
 
-        gpu.clear(gpu_t::CLEAR_FLAG_COLOR | gpu_t::CLEAR_FLAG_DEPTH | gpu_t::CLEAR_FLAG_STENCIL);
+        gpu.clear(Gpu::CLEAR_FLAG_COLOR | Gpu::CLEAR_FLAG_DEPTH | Gpu::CLEAR_FLAG_STENCIL);
 
 		if (camera)
 		{
-			auto camera_comp = camera->get_component<camera_component>();
+			auto camera_comp = camera->get_component<CameraComponent>();
 
 			if (camera_comp)
 			{
-				auto camera_params = camera_comp->get_params(viewport);
+				auto camera_parameters = camera_comp->get_parameters(viewport);
 
 				// TODO: this is inefficient, have components
 				// register themselves with the scene
@@ -49,7 +49,7 @@ namespace naga
 				// be drawn
 				for (auto& game_object : game_objects)
 				{
-					game_object->render(camera_params);
+					game_object->render(camera_parameters);
 				}
 			}
 		}
@@ -60,7 +60,7 @@ namespace naga
         gpu.viewports.pop();
     }
 
-    void scene::tick(f32 dt)
+	void Scene::tick(f32 dt)
     {
         physics->step(dt);
 
@@ -70,7 +70,7 @@ namespace naga
         }
     }
 
-    void scene::on_input_event(input_event_t& input_event)
+	void Scene::on_input_event(InputEvent& input_event)
     {
         for (auto& game_object : game_objects)
         {
@@ -78,22 +78,29 @@ namespace naga
         }
     }
 
-    boost::shared_ptr<game_object> scene::create_game_object()
+	boost::shared_ptr<GameObject> Scene::create_game_object()
     {
-        auto game_object = boost::make_shared<naga::game_object>();
+		auto game_object = boost::make_shared<GameObject>();
         game_object->scene = shared_from_this();
 
-        game_objects.push_back(game_object);
+        game_objects.emplace_back(game_object);
 
         return game_object;
     }
 
 
-    void scene::remove_game_object(const boost::shared_ptr<game_object>& game_object)
+	void Scene::remove_game_object(const boost::shared_ptr<GameObject>& game_object)
     {
         if (game_object->get_scene() != shared_from_this())
         {
             throw std::exception("");
         }
-    }
+	}
+
+	TraceResult Scene::trace(const vec3& start, const vec3& end) const
+	{
+		auto trace_result = physics->trace(start, end);
+
+		return trace_result;
+	}
 }

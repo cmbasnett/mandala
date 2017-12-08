@@ -9,7 +9,7 @@
 #include <boost\property_tree\json_parser.hpp>
 
 //naga
-#include "cache_mgr.hpp"
+#include "cache.hpp"
 #include "io.hpp"
 
 #define CACHE_DIRECTORY "cache"
@@ -18,19 +18,19 @@
 
 namespace naga
 {
-    cache_mgr cache;
+    Cache cache;
 
-    cache_mgr::cache_mgr()
+	Cache::Cache()
     {
         read();
     }
 
-    cache_mgr::~cache_mgr()
+	Cache::~Cache()
     {
         write();
     }
 
-    std::unique_ptr<std::ifstream> cache_mgr::get(const std::string& file_name) const
+	std::unique_ptr<std::ifstream> Cache::get(const std::string& file_name) const
     {
         boost::filesystem::path file_path(CACHE_DIRECTORY);
         file_path /= file_name;
@@ -38,7 +38,7 @@ namespace naga
         return std::make_unique<std::ifstream>(file_path.string());
     }
 
-    i32 cache_mgr::put_buffer(const std::string& file_name, const void* data, size_t count)
+	i32 Cache::put_buffer(const std::string& file_name, const void* data, size_t count)
     {
         boost::crc_32_type crc32;
 
@@ -57,12 +57,12 @@ namespace naga
         return checksum;
     }
 
-    i32 cache_mgr::put(const std::string& file_name, const std::string& contents)
+	i32 Cache::put(const std::string& file_name, const std::string& contents)
     {
         return put_buffer(file_name, contents.data(), contents.size());
     }
 
-    void cache_mgr::erase(const std::string& file_name)
+	void Cache::erase(const std::string& file_name)
     {
         boost::filesystem::path file_path(CACHE_DIRECTORY);
         file_path /= file_name;
@@ -79,7 +79,7 @@ namespace naga
         file_checksums.erase(file_name);
     }
 
-    void cache_mgr::purge()
+	void Cache::purge()
     {
         try
         {
@@ -91,7 +91,7 @@ namespace naga
         }
     }
 
-    i32 cache_mgr::checksum(const std::string& file_name) const
+	i32 Cache::checksum(const std::string& file_name) const
     {
         auto file_checksums_itr = file_checksums.find(file_name);
 
@@ -103,7 +103,7 @@ namespace naga
         return file_checksums_itr->second;
     }
 
-    void cache_mgr::write()
+	void Cache::write()
     {
         using namespace boost::property_tree;
 
@@ -133,7 +133,7 @@ namespace naga
         }
     }
 
-    void cache_mgr::read()
+	void Cache::read()
     {
         using namespace boost::property_tree;
 

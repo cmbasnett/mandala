@@ -1,4 +1,4 @@
-import os
+﻿import os
 import argparse
 import struct
 
@@ -165,7 +165,7 @@ class Animation:
 
             # frame bounds
             for frame in self.frames:
-                s = struct.Struct('ffffff')
+                s = struct.Struct('6f')
                 f.write(s.pack(frame.min.x,
                                frame.min.z,
                                -frame.min.y,
@@ -175,7 +175,7 @@ class Animation:
 
             # base bone frames
             for bone_frame in self.base_bone_frames:
-                s = struct.Struct('ffffff')
+                s = struct.Struct('6f')
                 f.write(s.pack(bone_frame.position.x,
                                bone_frame.position.z,
                                -bone_frame.position.y,
@@ -310,7 +310,7 @@ class Model:
                 s = struct.Struct('B')
                 f.write(s.pack(bone.parent_index))
 
-                s = struct.Struct('ffffff')
+                s = struct.Struct('6f')
                 f.write(s.pack(bone.position.x,
                                bone.position.z,
                                -bone.position.y,

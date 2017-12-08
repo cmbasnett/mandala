@@ -5,21 +5,21 @@
 #include <vector>
 #include <map>
 
-//naga
-#include "hash.hpp"
+// naga
+#include "types.hpp"
 
 namespace naga
 {
-    struct string_archive
+    struct StringArchive
     {
-        struct string
+        struct String
         {
-            hash hash;
+            std::string key;
             u32 offset;
         };
 
-        string_archive(std::istream& istream);
+		StringArchive(std::istream& istream);
 
-        std::map<std::string, std::vector<string>> language_strings;
+		std::map<std::string, std::vector<String>> language_strings;
     };
 }

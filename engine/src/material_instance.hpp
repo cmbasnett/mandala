@@ -8,25 +8,25 @@
 
 namespace naga
 {
-    struct material_instance
+    struct MaterialInstance
     {
-        material_instance(const boost::shared_ptr<material>& material);
+		MaterialInstance(const boost::shared_ptr<Material>& material);
 
         bool get_is_two_sided() const { return is_two_sided; }
         bool get_is_lit() const { return is_lit; }
-        material::diffuse_t& get_diffuse() { return diffuse; }
-        material::normal_t& get_normal() { return normal; }
-        material::specular_t& get_specular() { return specular; }
-        material::emissive_t& get_emissive() { return emissive; }
+		Material::Diffuse& get_diffuse() { return diffuse; }
+		Material::Normal& get_normal() { return normal; }
+		Material::Specular& get_specular() { return specular; }
+        Material::Emissive& get_emissive() { return emissive; }
 
-        material_instance& operator=(const boost::shared_ptr<material>& material);
+		MaterialInstance& operator=(const boost::shared_ptr<Material>& material);
 
     private:
         bool is_two_sided = false;
         bool is_lit = true;
-        material::diffuse_t diffuse;
-        material::normal_t normal;
-        material::specular_t specular;
-        material::emissive_t emissive;
+		Material::Diffuse diffuse;
+		Material::Normal normal;
+		Material::Specular specular;
+		Material::Emissive emissive;
     };
 }

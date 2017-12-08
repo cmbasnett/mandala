@@ -1,5 +1,5 @@
 //naga
-#include "pack.hpp"
+#include "package.hpp"
 #include "io.hpp"
 
 //std
@@ -16,7 +16,7 @@
 
 namespace naga
 {
-    pack::pack(const std::string& path) :
+	Package::Package(const std::string& path) :
         path(path)
     {
         auto istream = std::ifstream(path, std::ios_base::binary);
@@ -45,7 +45,7 @@ namespace naga
 
         for(u32 i = 0; i < file_count; ++i)
         {
-            file file;
+            File file;
 
             std::getline(istream, file.name, '\0');
 
@@ -53,7 +53,7 @@ namespace naga
             read(istream, file.length);
             read(istream, file.crc32);
 
-            auto files_itr = files.emplace(hash(file.name), std::forward<pack::file>(file));
+            auto files_itr = files.emplace(file.name, std::forward<Package::File>(file));
 
             if (!files_itr.second)
             {
@@ -64,14 +64,14 @@ namespace naga
         mapped_file_source = boost::iostreams::mapped_file_source(path);
     }
 
-    pack::pack(pack&& copy) :
+	Package::Package(Package&& copy) :
         path(std::move(copy.path)),
         files(std::move(copy.files)),
         mapped_file_source(std::move(copy.mapped_file_source))
     {
     }
 
-    pack& pack::operator=(pack&& copy)
+	Package& Package::operator=(Package&& copy)
     {
         path = std::move(copy.path);
         files = std::move(copy.files);

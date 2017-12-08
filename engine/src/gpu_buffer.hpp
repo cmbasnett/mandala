@@ -8,26 +8,26 @@
 
 namespace naga
 {
-    struct gpu_buffer : boost::enable_shared_from_this<gpu_buffer>
+	struct GpuBuffer : boost::enable_shared_from_this<GpuBuffer>
     {
-        gpu_id get_id() const { return id; }
+        GpuId get_id() const { return id; }
 
-        virtual ~gpu_buffer();
+		virtual ~GpuBuffer();
 
     protected:
-        gpu_buffer();
+		GpuBuffer();
 
     private:
-        gpu_id id;
+		GpuId id;
     };
 
     template<typename T, typename Enable = void>
-    struct is_gpu_buffer : std::false_type
+    struct IsGpuBuffer : std::false_type
     {
     };
 
     template<typename T>
-    struct is_gpu_buffer<T, typename std::enable_if<std::is_base_of<gpu_buffer, T>::value>::type> : std::true_type
+	struct IsGpuBuffer<T, typename std::enable_if<std::is_base_of<GpuBuffer, T>::value>::type> : std::true_type
     {
     };
 }

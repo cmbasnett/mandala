@@ -12,14 +12,14 @@
 #include "audio_source.hpp"
 #include "audio_device.hpp"
 #include "audio_context.hpp"
-#include "audio_mgr.hpp"
+#include "audio_system.hpp"
 #include "sound.hpp"
 
 namespace naga
 {
-    audio_mgr audio;
+    AudioSystem audio;
 
-    audio_mgr::audio_mgr()
+	AudioSystem::AudioSystem()
     {
         try
         {
@@ -43,7 +43,7 @@ namespace naga
         }
     }
 
-    void audio_mgr::tick(f32 dt)
+	void AudioSystem::tick(f32 dt)
     {
         alDopplerFactor(doppler.factor);
         alDopplerVelocity(doppler.speed_of_sound);
@@ -59,7 +59,7 @@ namespace naga
         {
             const auto& source = sources_itr->second;
 
-            if (source.unique() && source->get_state() == audio_source_state::STOPPED)
+            if (source.unique() && source->get_state() == AudioSourceState::STOPPED)
             {
                 sources_itr = sources.erase(sources_itr);
             }
@@ -70,7 +70,7 @@ namespace naga
         }
     }
 
-    u32 audio_mgr::create_source()
+    u32 AudioSystem::create_source()
     {
         u32 source_id;
 
@@ -79,12 +79,12 @@ namespace naga
         return source_id;
     }
 
-    void audio_mgr::destroy_source(u32 source_id)
+	void AudioSystem::destroy_source(u32 source_id)
     {
         alDeleteSources(1, &source_id); alCheckError();
     }
 
-    audio_source_state audio_mgr::get_source_state(u32 source_id) const
+	AudioSourceState AudioSystem::get_source_state(u32 source_id) const
     {
         ALint state;
 
@@ -93,71 +93,71 @@ namespace naga
         switch (state)
         {
         case AL_INITIAL:
-            return audio_source_state::INITIAL;
+			return AudioSourceState::INITIAL;
         case AL_PLAYING:
-            return audio_source_state::PLAYING;
+			return AudioSourceState::PLAYING;
         case AL_PAUSED:
-            return audio_source_state::PAUSED;
+			return AudioSourceState::PAUSED;
         case AL_STOPPED:
-            return audio_source_state::STOPPED;
+			return AudioSourceState::STOPPED;
         default:
             throw std::exception();
         }
     }
 
-    void audio_mgr::set_source_location(u32 source_id, const vec3 & location) const
+    void AudioSystem::set_source_location(u32 source_id, const vec3 & location) const
     {
         alSourcefv(source_id, AL_POSITION, glm::value_ptr(location)); alCheckError();
     }
 
-    void audio_mgr::set_source_velocity(u32 source_id, const vec3 & velocity) const
+    void AudioSystem::set_source_velocity(u32 source_id, const vec3 & velocity) const
     {
         alSourcefv(source_id, AL_VELOCITY, glm::value_ptr(velocity)); alCheckError();
     }
 
-    void audio_mgr::set_source_gain(u32 source_id, f32 gain) const
+    void AudioSystem::set_source_gain(u32 source_id, f32 gain) const
     {
         alSourcef(source_id, AL_GAIN, gain); alCheckError();
     }
 
-    void audio_mgr::set_source_reference_distance(u32 source_id, f32 reference_distance) const
+    void AudioSystem::set_source_reference_distance(u32 source_id, f32 reference_distance) const
     {
         alSourcef(source_id, AL_REFERENCE_DISTANCE, reference_distance); alCheckError();
     }
 
-    void audio_mgr::set_source_max_distance(u32 source_id, f32 max_distance) const
+    void AudioSystem::set_source_max_distance(u32 source_id, f32 max_distance) const
     {
         alSourcef(source_id, AL_MAX_DISTANCE, max_distance); alCheckError();
     }
 
-    void audio_mgr::play_source(u32 source_id) const
+    void AudioSystem::play_source(u32 source_id) const
     {
         alSourcePlay(source_id); alCheckError();
     }
 
-    void audio_mgr::pause_source(u32 source_id) const
+    void AudioSystem::pause_source(u32 source_id) const
     {
         alSourcePause(source_id); alCheckError();
     }
 
-    void audio_mgr::rewind_source(u32 source_id) const
+    void AudioSystem::rewind_source(u32 source_id) const
     {
         alSourceRewind(source_id); alCheckError();
     }
 
-    void audio_mgr::stop_source(u32 source_id) const
+    void AudioSystem::stop_source(u32 source_id) const
     {
         alSourceStop(source_id); alCheckError();
     }
 
-    void audio_mgr::source_queue_sound(u32 source_id, const boost::shared_ptr<sound>& sound) const
+	void AudioSystem::source_queue_sound(u32 source_id, const boost::shared_ptr<Sound>& sound) const
     {
         auto buffer_id = sound->get_buffer_id();
 
         alSourceQueueBuffers(source_id, 1, &buffer_id); alCheckError();
     }
 
-    void audio_mgr::source_unqueue_sound(u32 source_id, const boost::shared_ptr<sound>& sound) const
+    void AudioSystem::source_unqueue_sound(u32 source_id, const boost::shared_ptr<Sound>& sound) const
     {
         auto buffer_id = sound->get_buffer_id();
 

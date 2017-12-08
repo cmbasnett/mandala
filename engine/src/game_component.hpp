@@ -9,30 +9,30 @@
 
 namespace naga
 {
-    struct game_object;
-    struct camera_params;
-    struct input_event_t;
+    struct GameObject;
+	struct CameraParameters;
+    struct InputEvent;
 
-    struct game_component
+    struct GameComponent
     {
-        const boost::shared_ptr<game_object>& get_owner() const { return owner; }
+		const boost::shared_ptr<GameObject>& get_owner() const { return owner; }
 
         virtual std::string get_component_name() const { return ""; }
 
         virtual void on_create() { }
         virtual void on_destroy() { }
         virtual void on_tick(f32 dt) { }
-        virtual void on_render(camera_params& camera_params) { }
-        virtual bool on_input_event(input_event_t& input_event) { return false; }
+		virtual void on_render(CameraParameters& camera_parameters) { }
+		virtual bool on_input_event(InputEvent& input_event) { return false; }
 
-        virtual ~game_component() = default;
+		virtual ~GameComponent() = default;
 
     protected:
-        game_component() = default;
+		GameComponent() = default;
 
     private:
-        friend struct game_object;
+        friend struct GameObject;
         
-        boost::shared_ptr<game_object> owner;
+		boost::shared_ptr<GameObject> owner;
     };
 }

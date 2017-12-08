@@ -3,40 +3,40 @@
 //std
 #include <map>
 
-//naga
-#include "hash.hpp"
-
 //boost
 #include <boost\shared_ptr.hpp>
 #include <boost\iostreams\device\mapped_file.hpp>
 
+//naga
+#include "types.hpp"
+
 namespace naga
 {
-    struct pack
+    struct Package
     {
-        struct file
+        struct File
         {
-            hash pack_hash;
+			std::string package_name;
             std::string name;
             u32 offset = 0;
             u32 length = 0;
             u32 crc32 = 0;
         };
 
-        typedef std::map<const hash, file> files_type;
+		typedef std::map<const std::string, File> FilesType;
 
-        pack(const std::string& path);
-        pack(pack&& rhs);
+		Package(const std::string& path);
+		Package(Package&& rhs);
 
         std::string path;
-        files_type files;
+        FilesType files;
         boost::iostreams::mapped_file_source mapped_file_source;
 
-        pack& operator=(pack&& rhs);
+		Package& operator=(Package&& rhs);
 
     private:
 
-        pack(const pack&) = delete;
-        pack& operator=(const pack&) = delete;
+		Package(const Package&) = delete;
+		Package& operator=(const Package&) = delete;
     };
 }

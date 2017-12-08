@@ -41,25 +41,24 @@ namespace naga
 
     namespace details
     {
-        template<typename Scalar, typename Enable = void>
-        struct frustum;
+		template<typename ScalarType, typename Enable = void>
+        struct Frustum;
 
-        template<typename Scalar>
-        struct frustum<Scalar, typename std::enable_if<std::is_floating_point<Scalar>::value>::type>
+        template<typename ScalarType>
+		struct Frustum<ScalarType, typename std::enable_if<std::is_floating_point<ScalarType>::value>::type>
         {
-            typedef Scalar scalar_type;
-            typedef glm::detail::tvec3<scalar_type> vector_type;
-            typedef frustum<scalar_type> type;
-            typedef details::plane3<scalar_type> plane_type;
-            typedef glm::detail::tmat4x4<scalar_type> matrix_type;
-            typedef std::array<plane_type, FRUSTUM_PLANE_COUNT> planes_type;
-            typedef std::array<vector_type, FRUSTUM_CORNER_COUNT> corners_type;
-            typedef details::aabb3<scalar_type> aabb_type;
-            typedef details::sphere<scalar_type> sphereype;
+			typedef glm::detail::tvec3<ScalarType> VectorType;
+			typedef Frustum<ScalarType> Type;
+			typedef details::Plane3<ScalarType> PlaneType;
+			typedef glm::detail::tmat4x4<ScalarType> MatrixType;
+            typedef std::array<PlaneType, FRUSTUM_PLANE_COUNT> PlanesType;
+            typedef std::array<VectorType, FRUSTUM_CORNER_COUNT> CornersType;
+			typedef details::AABB3<ScalarType> AABBType;
+			typedef details::Sphere<ScalarType> SphereType;
 
-            frustum() = default;
+            Frustum() = default;
 
-            void set(const vector_type& origin, const vector_type& left, const vector_type& up, const vector_type& forward, scalar_type fov, scalar_type near, scalar_type far, scalar_type aspect)
+			void set(const VectorType& origin, const VectorType& left, const VectorType& up, const VectorType& forward, ScalarType fov, ScalarType near, ScalarType far, ScalarType aspect)
             {
                 const auto tangent = glm::tan(glm::radians(fov) / 2);
                 const auto near_height = near * tangent;
@@ -102,12 +101,12 @@ namespace naga
                 const auto top_plane_normal = -glm::cross(c, left);
                 const auto bottom_plane_normal = -glm::cross(left, d);
 
-                planes[FRUSTUM_PLANE_INDEX_LEFT] = plane_type(origin, left_plane_normal);
-                planes[FRUSTUM_PLANE_INDEX_RIGHT] = plane_type(origin, right_plane_normal);
-                planes[FRUSTUM_PLANE_INDEX_TOP] = plane_type(origin, top_plane_normal);
-                planes[FRUSTUM_PLANE_INDEX_BOTTOM] = plane_type(origin, bottom_plane_normal);
-                planes[FRUSTUM_PLANE_INDEX_NEAR] = plane_type(near_plane_center, forward);
-                planes[FRUSTUM_PLANE_INDEX_FAR] = plane_type(far_plane_center, -forward);
+                planes[FRUSTUM_PLANE_INDEX_LEFT] = PlaneType(origin, left_plane_normal);
+                planes[FRUSTUM_PLANE_INDEX_RIGHT] = PlaneType(origin, right_plane_normal);
+                planes[FRUSTUM_PLANE_INDEX_TOP] = PlaneType(origin, top_plane_normal);
+                planes[FRUSTUM_PLANE_INDEX_BOTTOM] = PlaneType(origin, bottom_plane_normal);
+                planes[FRUSTUM_PLANE_INDEX_NEAR] = PlaneType(near_plane_center, forward);
+                planes[FRUSTUM_PLANE_INDEX_FAR] = PlaneType(far_plane_center, -forward);
 
                 //TODO: verify correctness
                 //sphere
@@ -116,28 +115,28 @@ namespace naga
                 auto far_width = far_height;
 
                 //TODO: simplify
-                auto p = vector_type(scalar_type(0), scalar_type(0), near + (view_length / 2));
-                auto q = vector_type(far_width, far_height, view_length);
+				auto p = VectorType(ScalarType(0), ScalarType(0), near + (view_length / 2));
+                auto q = VectorType(far_width, far_height, view_length);
                 auto r = q - p;
 
                 sphere.radius = glm::length(r);
                 sphere.origin = origin + (forward * (view_length / 2) + near);
             }
 
-            const planes_type& get_planes() const { return planes; }
-            const corners_type& get_corners() const { return corners; }
-            const aabb_type& get_aabb() const { return aabb; }
-            const sphereype& get_sphere() const { return sphere; }
+            const PlanesType& get_planes() const { return planes; }
+            const CornersType& get_corners() const { return corners; }
+            const AABBType& get_aabb() const { return aabb; }
+            const SphereType& get_sphere() const { return sphere; }
 
         private:
-            planes_type planes;
-            corners_type corners;
-            aabb_type aabb;
-            sphereype sphere;
+            PlanesType planes;
+            CornersType corners;
+            AABBType aabb;
+			SphereType sphere;
         };
     }
 
-    typedef details::frustum<f32> frustum_f32;
-    typedef details::frustum<f64> frustum_f64;
-    typedef frustum_f32 frustum;
+    typedef details::Frustum<f32> Frustum_f32;
+    typedef details::Frustum<f64> Frustum_f64;
+    typedef Frustum_f32 Frustum;
 }

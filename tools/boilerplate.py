@@ -1,4 +1,4 @@
-import os
+﻿import os
 import argparse
 import pprint
 import re
@@ -75,7 +75,7 @@ def main():
 			s.append('\n')
 			s.append('namespace naga\n')
 			s.append('{\n')
-			s.append('    struct {} : gpu_program\n'.format(class_name))
+			s.append('    struct {} : GpuProgram\n'.format(class_name))
 			s.append('    {\n')
 
 			for subroutine_uniform in subroutine_uniforms:
@@ -91,10 +91,10 @@ def main():
 				s.append('        };\n')
 				s.append('\n')
 
-			s.append('        struct vertex\n')
+			s.append('        struct Vertex\n')
 			s.append('        {\n')
-			s.append('            vertex() = default;\n')
-			s.append('            vertex(' + ', '.join((' '.join(arg) for arg in vertex_attributes)) + ')\n')
+			s.append('            Vertex() = default;\n')
+			s.append('            Vertex(' + ', '.join((' '.join(arg) for arg in vertex_attributes)) + ')\n')
 			s.append('            {\n')
 			s.append(                 '\n'.join('this->{0} = {0};'.format(vertex_attribute[1]) for vertex_attribute in vertex_attributes))
 			s.append('            }\n')
@@ -106,10 +106,10 @@ def main():
 
 			s.append('        };\n')
 			s.append('\n')
-			s.append('        typedef vertex vertex_type;\n')
+			s.append('        typedef Vertex VertexType;\n')
 			s.append('\n')
 			s.append('        {}() :\n'.format(class_name))
-			s.append('            gpu_program(R\"({})\", R\"({})\")\n'.format(vertex_shader_source, fragment_shader_source))
+			s.append('            GpuProgram(R\"({})\", R\"({})\")\n'.format(vertex_shader_source, fragment_shader_source))
 			s.append('        {\n')
 
 			for vertex_attribute in vertex_attributes:
@@ -119,13 +119,13 @@ def main():
 			# TODO: this assumes that all subroutine uniforms are in the fragment shader
 			for subroutine_uniform in subroutine_uniforms:
 				subroutine, uniform = subroutine_uniform
-				s.append('            {0}_subroutine_uniform_location = gpu.get_subroutine_uniform_location(get_id(), gpu_t::shader_type::FRAGMENT, \"{1}\");\n'.format(subroutine, uniform))
+				s.append('            {0}_subroutine_uniform_location = gpu.get_subroutine_uniform_location(get_id(), Gpu::ShaderType::FRAGMENT, \"{1}\");\n'.format(subroutine, uniform))
 
 				for subroutine_function in subroutine_functions:
 					subroutine, function = subroutine_function
 
 					if uniform == subroutine_uniform:
-						s.append('            {0}_subroutine_index = gpu.get_subroutine_index(get_id(), gpu_t::shader_type::FRAGMENT, \"{0}\");\n'.format(function))
+						s.append('            {0}_subroutine_index = gpu.get_subroutine_index(get_id(), Gpu::ShaderType::FRAGMENT, \"{0}\");\n'.format(function))
 
 			s.append('        }\n')
 			s.append('\n')
@@ -138,7 +138,7 @@ def main():
 
 			for vertex_attribute in vertex_attributes:
 				type, name = vertex_attribute
-				s.append('            gpu.set_vertex_attrib_pointer({0}_location, sizeof({1}) / sizeof({1}::value_type), gpu_data_type_<{1}::value_type>::VALUE, false, sizeof(vertex_type), reinterpret_cast<void*>(offsetof(vertex_type, {0})));\n'.format(name, type))
+				s.append('            gpu.set_vertex_attrib_pointer({0}_location, sizeof({1}) / sizeof({1}::value_type), GpuDataType<{1}::value_type>::VALUE, false, sizeof(VertexType), reinterpret_cast<void*>(offsetof(VertexType, {0})));\n'.format(name, type))
 
 			s.append('        }\n')
 			s.append('\n')
@@ -163,7 +163,7 @@ def main():
 
 					if sr == subroutine:
 						s.append('                case {}_subroutine::{}:'.format(sr, function.upper()))
-						s.append('                    gpu.set_uniform_subroutine(gpu_t::shader_type::FRAGMENT, {}_subroutine_index);'.format(function))
+						s.append('                    gpu.set_uniform_subroutine(Gpu::ShaderType::FRAGMENT, {}_subroutine_index);'.format(function))
 						s.append('                    break;\n')
 
 				s.append('            }\n')
@@ -175,16 +175,16 @@ def main():
 
 			for vertex_attribute in vertex_attributes:
 				type, name = vertex_attribute
-				s.append('       gpu_location {}_location;\n'.format(name))
+				s.append('       GpuLocation {}_location;\n'.format(name))
 
 			for subroutine in subroutines:
-				s.append('       gpu_location {}_subroutine_uniform_location;\n'.format(subroutine))
+				s.append('       GpuLocation {}_subroutine_uniform_location;\n'.format(subroutine))
 
 				for subroutine_function in subroutine_functions:
 					sr, function = subroutine_function
 
 					if sr == subroutine:
-						s.append('       gpu_index {}_subroutine_index;\n'.format(function))
+						s.append('       GpuIndex {}_subroutine_index;\n'.format(function))
 
 			s.append('    };\n')
 			s.append('}\n')

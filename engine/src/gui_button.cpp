@@ -5,18 +5,18 @@
 
 namespace naga
 {
-    bool gui_button::on_input_event_begin(input_event_t& input_event)
+	bool GUIButton::on_input_event_begin(InputEvent& input_event)
     {
-        if (input_event.device_type == input_event_t::device_type_e::TOUCH)
+		if (input_event.device_type == InputEvent::DeviceType::TOUCH)
         {
             auto is_contained = contains(get_bounds(), input_event.touch.location);
 
             switch (input_event.touch.type)
             {
-            case input_event_t::touch_t::type_e::PRESS:
+			case InputEvent::Touch::Type::PRESS:
                 if (is_contained)
                 {
-                    state = state_t::PRESSED;
+                    state = State::PRESSED;
 
                     if (on_state_changed)
                     {
@@ -26,10 +26,10 @@ namespace naga
                     return true;
                 }
                 break;
-            case input_event_t::touch_t::type_e::RELEASE:
-                if (is_contained && state == state_t::PRESSED)
+			case InputEvent::Touch::Type::RELEASE:
+                if (is_contained && state == State::PRESSED)
                 {
-                    state = state_t::HOVER;
+					state = State::HOVER;
 
                     if (on_state_changed)
                     {
@@ -44,14 +44,14 @@ namespace naga
                     return true;
                 }
                 break;
-            case input_event_t::touch_t::type_e::MOVE:
+			case InputEvent::Touch::Type::MOVE:
                 switch (state)
                 {
-                case state_t::IDLE:
+				case State::IDLE:
 #if defined(NAGA_PC)
                     if (is_contained)
                     {
-                        state = state_t::HOVER;
+						state = State::HOVER;
                         
                         if (on_state_changed)
                         {
@@ -63,11 +63,11 @@ namespace naga
 #endif
                     break;
 #if defined(NAGA_PC)
-                case state_t::HOVER:
-                case state_t::PRESSED:
+				case State::HOVER:
+				case State::PRESSED:
                     if (!is_contained)
                     {
-                        state = state_t::IDLE;
+						state = State::IDLE;
 
                         if (on_state_changed)
                         {

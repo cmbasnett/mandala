@@ -12,22 +12,22 @@ namespace naga
     namespace details
     {
         template<typename Scalar, typename Enable = void>
-        struct padding;
+        struct Padding;
 
         template<typename Scalar>
-        struct padding<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
+		struct Padding<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
         {
-            typedef Scalar scalar_type;
-            typedef padding<scalar_type> type;
-            typedef glm::detail::tvec2<scalar_type> size_type;
+            typedef Scalar ScalarType;
+            typedef Padding<ScalarType> Type;
+            typedef glm::detail::tvec2<ScalarType> VectorType;
 
-            scalar_type bottom = 0;
-            scalar_type left = 0;
-            scalar_type top = 0;
-            scalar_type right = 0;
+            ScalarType bottom = 0;
+            ScalarType left = 0;
+            ScalarType top = 0;
+            ScalarType right = 0;
 
-            padding() = default;
-            padding(scalar_type bottom, scalar_type left, scalar_type top, scalar_type right) :
+			Padding() = default;
+			Padding(ScalarType bottom, ScalarType left, ScalarType top, ScalarType right) :
                 bottom(bottom),
                 left(left),
                 top(top),
@@ -35,28 +35,28 @@ namespace naga
             {
             }
 
-            padding(scalar_type all) :
+            Padding(ScalarType all) :
                 padding(all, all, all, all)
             {
             }
 
-            scalar_type vertical() const
+            ScalarType vertical() const
             {
                 return bottom + top;
             }
 
-            scalar_type horizontal() const
+            ScalarType horizontal() const
             {
                 return left + right;
             }
 
-            size_type size() const
+            VectorType size() const
             {
-                return size_type(horizontal(), vertical());
+				return VectorType(horizontal(), vertical());
             }
 
             template<typename U>
-            type operator+(const padding<U>& rhs) const
+            Type operator+(const Padding<U>& rhs) const
             {
                 auto sum = *this;
                 sum += rhs;
@@ -64,7 +64,7 @@ namespace naga
             }
 
             template<typename U>
-            type& operator+=(const padding<U>& rhs)
+			Type& operator+=(const Padding<U>& rhs)
             {
                 bottom += rhs.bottom;
                 left += rhs.left;
@@ -75,7 +75,7 @@ namespace naga
             }
 
             template<typename U>
-            type operator-(const padding<U>& rhs) const
+			Type operator-(const Padding<U>& rhs) const
             {
                 auto sum = *this;
                 sum -= rhs;
@@ -83,7 +83,7 @@ namespace naga
             }
 
             template<typename U>
-            type& operator-=(const padding<U>& rhs)
+			Type& operator-=(const Padding<U>& rhs)
             {
                 bottom -= rhs.bottom;
                 left -= rhs.left;
@@ -94,13 +94,13 @@ namespace naga
             }
 
             template<typename U>
-            bool operator==(const padding<U>& rhs) const
+            bool operator==(const Padding<U>& rhs) const
             {
                 return bottom == rhs.bottom && left == rhs.left && right == rhs.right && top == rhs.top;
             }
 
             template<typename U>
-            bool operator!=(const padding<U>& rhs) const
+			bool operator!=(const Padding<U>& rhs) const
             {
                 return bottom != rhs.bottom || left != rhs.left || right != rhs.right || top != rhs.top;
             }
@@ -113,28 +113,22 @@ namespace naga
         };
 
         template<typename T>
-        std::ostream& operator<<(std::ostream& ostream, const padding<T>& p)
+        std::ostream& operator<<(std::ostream& ostream, const Padding<T>& p)
         {
             return ostream << "(" << p.bottom << "," << p.left << "," << p.top << "," << p.right << ")";
         }
     }
 
-    typedef details::padding<u8>	padding_u8;
-    typedef details::padding<u16>   padding_u16;
-    typedef details::padding<u32>   padding_u32;
-    typedef details::padding<u64>   padding_u64;
-    typedef details::padding<f32>   padding_f32;
-    typedef details::padding<f64>   padding_f64;
-    typedef padding_f32				padding;
+    typedef details::Padding<f32>   Padding;
 
     template<typename T, typename U>
-    details::aabb2<T> operator-(const details::aabb2<T>& aabb, const details::padding<U>& padding)
+	details::AABB2<T> operator-(const details::AABB2<T>& aabb, const details::Padding<U>& padding)
     {
-        return details::aabb2<T>(glm::detail::tvec2<T>(aabb.min.x + padding.left, aabb.min.y + padding.bottom), glm::detail::tvec2<T>(aabb.max.x - padding.right, aabb.max.y - padding.top));
+		return details::AABB2<T>(glm::detail::tvec2<T>(aabb.min.x + padding.left, aabb.min.y + padding.bottom), glm::detail::tvec2<T>(aabb.max.x - padding.right, aabb.max.y - padding.top));
     }
 
     template<typename T, typename U>
-    void operator-=(details::aabb2<T>& aabb, const details::padding<U>& padding)
+	void operator-=(details::AABB2<T>& aabb, const details::Padding<U>& padding)
     {
         //TODO: verify correctness
         aabb.min.x += std::min(padding.left, aabb.width());
@@ -144,13 +138,13 @@ namespace naga
     }
 
     template<typename T, typename U>
-    details::aabb2<T> operator+(const details::aabb2<T>& aabb, const details::padding<U>& padding)
+	details::AABB2<T> operator+(const details::AABB2<T>& aabb, const details::Padding<U>& padding)
     {
-        return details::aabb2<T>(glm::detail::tvec2<T>(aabb.min.x - padding.left, aabb.min.y - padding.bottom), glm::detail::tvec2<T>(aabb.max.x + padding.right, aabb.max.y + padding.top));
+		return details::AABB2<T>(glm::detail::tvec2<T>(aabb.min.x - padding.left, aabb.min.y - padding.bottom), glm::detail::tvec2<T>(aabb.max.x + padding.right, aabb.max.y + padding.top));
     }
 
     template<typename T, typename U>
-    void operator+=(details::aabb2<T>& aabb, const details::padding<U>& padding)
+	void operator+=(details::AABB2<T>& aabb, const details::Padding<U>& padding)
     {
         aabb.min.x -= padding.left;
         aabb.min.y -= padding.bottom;

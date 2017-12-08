@@ -13,19 +13,18 @@
 
 namespace naga
 {
-    struct input_event_t;
-    struct state_mgr;
-    struct gui_layout;
+	struct InputEvent;
+	struct GUILayout;
 
-    struct state : public boost::enable_shared_from_this<state>
+	struct State : public boost::enable_shared_from_this<State>
     {
-        state();
+		State();
 
         virtual void tick(f32 dt);
         virtual void render();
-        virtual bool on_input_event(input_event_t& input_event);
+        virtual bool on_input_event(InputEvent& input_event);
 #if defined(NAGA_PC)
-        virtual void on_window_event(window_event& window_event);
+        virtual void on_window_event(WindowEvent& window_event);
 #endif
         virtual void on_active() { }
         virtual void on_passive() { }
@@ -39,9 +38,9 @@ namespace naga
         virtual void on_start_input() { }
         virtual void on_tick(f32 dt) { }
 
-        const boost::shared_ptr<gui_layout>& get_layout() const { return layout; }
+		const boost::shared_ptr<GUILayout>& get_layout() const { return layout; }
 
     private:
-        boost::shared_ptr<gui_layout> layout;
+        boost::shared_ptr<GUILayout> layout;
     };
 }

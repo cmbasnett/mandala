@@ -2,7 +2,7 @@
 
 namespace naga
 {
-    bsp_entity::bsp_entity(const std::string& string)
+	BSPEntity::BSPEntity(const std::string& string)
     {
         std::string::size_type end = -1;
 

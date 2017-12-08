@@ -11,27 +11,26 @@ namespace naga
 {
     namespace details
     {
-        template<typename Value>
-        struct hash
+        template<typename ValueType>
+        struct Hash
         {
-            typedef std::string string_type;
-            typedef Value value_type;
-            typedef hash<value_type> type;
+            typedef std::string StringType;
+			typedef Hash<ValueType> Type;
 
-            hash() :
+			Hash() :
                 value(0)
             {
             }
 
-            explicit hash(const string_type& string) :
+			explicit Hash(const StringType& string) :
 #if defined(DEBUG)
                 string(string),
 #endif
-                value(fnv::fnv1a<value_type>(reinterpret_cast<string_type::value_type*>(const_cast<string_type::value_type*>(string.c_str())), string.length()))
+				value(fnv1a<ValueType>(reinterpret_cast<StringType::value_type*>(const_cast<StringType::value_type*>(string.c_str())), string.length()))
             {
             }
 
-            hash(type&& copy) :
+			Hash(Type&& copy) :
 #if defined(DEBUG)
                 string(std::move(copy.string)),
 #endif
@@ -40,25 +39,25 @@ namespace naga
             }
 
 #if defined(DEBUG)
-            const string_type& get_string() const
+            const StringType& get_string() const
             {
                 return string;
             }
 #endif
 
-            const value_type& get_value() const
+            const ValueType& get_value() const
             {
                 return value;
             }
 
         private:
 #if defined(DEBUG)
-            string_type string;
+            StringType string;
 #endif
-            value_type value = value_type(0);
+			ValueType value = ValueType(0);
 
         public:
-            hash& operator=(const hash& rhs)
+			Hash& operator=(const Hash& rhs)
             {
 #if defined(DEBUG)
                 string = rhs.string;
@@ -68,17 +67,17 @@ namespace naga
                 return *this;
             }
 
-            type& operator=(string_type&& string)
+			Type& operator=(StringType&& string)
             {
 #if defined(DEBUG)
                 this->string = string;
 #endif
-                value(fnv::fnv1a<value_type>(reinterpret_cast<char*>(const_cast<char*>(string.c_str())), string.length()))
+				value(fnv1a<ValueType>(reinterpret_cast<char*>(const_cast<char*>(string.c_str())), string.length()))
 
                 return *this;
             }
 
-            inline type& operator=(type&& copy)
+			inline Type& operator=(Type&& copy)
             {
 #if defined(DEBUG)
                 string = std::move(copy.string);
@@ -88,22 +87,22 @@ namespace naga
                 return *this;
             }
 
-            inline bool operator==(const type& rhs) const { return value == rhs.value; }
-            inline bool operator!=(const type& rhs) const { return value != rhs.value; }
-            inline bool operator>(const type& rhs) const { return value > rhs.value; }
-            inline bool operator<(const type& rhs) const { return value < rhs.value; }
-            inline bool operator>=(const type& rhs) const { return value >= rhs.value; }
-            inline bool operator<=(const type& rhs) const { return value <= rhs.value; }
+			inline bool operator==(const Type& rhs) const { return value == rhs.value; }
+			inline bool operator!=(const Type& rhs) const { return value != rhs.value; }
+			inline bool operator>(const Type& rhs) const { return value > rhs.value; }
+			inline bool operator<(const Type& rhs) const { return value < rhs.value; }
+			inline bool operator>=(const Type& rhs) const { return value >= rhs.value; }
+			inline bool operator<=(const Type& rhs) const { return value <= rhs.value; }
         };
     }
 
-    typedef details::hash<u32> hash_u32;
-    typedef details::hash<u64> hash_u64;
+    typedef details::Hash<u32> hash_u32;
+	typedef details::Hash<u64> hash_u64;
     typedef hash_u32 hash;
 }
 
 template<typename T>
-std::ostream& operator<<(std::ostream& ostream, const naga::details::hash<T>& hash)
+std::ostream& operator<<(std::ostream& ostream, const naga::details::Hash<T>& hash)
 {
     return ostream << hash.get_value();
 }

@@ -7,7 +7,7 @@
 
 namespace naga
 {
-    image::image(std::istream& istream)
+	Image::Image(std::istream& istream)
     {
         //TODO: determine what the stream actually contains (don't assume PNG!)
         auto png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
@@ -47,23 +47,27 @@ namespace naga
 
         int png_color_type;
         png_int_32 interlace_method;
+		png_uint_32 width, height;
 
-        png_get_IHDR(png_ptr, info_ptr, &size.x, &size.y, &bit_depth, &png_color_type, &interlace_method, nullptr, nullptr);
+        png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &png_color_type, &interlace_method, nullptr, nullptr);
 
-        auto get_color_type = [](int png_color_type) -> naga::color_type
+		size.x = static_cast<float>(width);
+		size.y = static_cast<float>(height);
+
+		auto get_color_type = [](int png_color_type) -> ColorType
         {
             switch (png_color_type)
             {
             case PNG_COLOR_TYPE_GRAY:
-                return color_type::G;
+                return ColorType::G;
             case PNG_COLOR_TYPE_RGB:
-                return color_type::RGB;
+				return ColorType::RGB;
             case PNG_COLOR_TYPE_PALETTE:
-                return color_type::PALETTE;
+				return ColorType::PALETTE;
             case PNG_COLOR_TYPE_GA:
-                return color_type::GA;
+				return ColorType::GA;
             case PNG_COLOR_TYPE_RGBA:
-                return color_type::RGBA;
+				return ColorType::RGBA;
             default:
                 throw std::exception();
             }
@@ -75,9 +79,9 @@ namespace naga
 
         auto row_bytes = png_get_rowbytes(png_ptr, info_ptr);
 
-        pixel_stride = row_bytes / size.x;
+        pixel_stride = row_bytes / get_width();
 
-        auto data_length = row_bytes * size.y;
+        auto data_length = row_bytes * get_height();
 
         data.resize(data_length);
 
@@ -85,13 +89,13 @@ namespace naga
 
         for (u32 i = 0; i < size.y; ++i)
         {
-            memcpy_s(data.data() + (row_bytes * (size.y - 1 - i)), row_bytes, row_pointers[i], row_bytes);
+            memcpy_s(data.data() + (row_bytes * (get_height() - 1 - i)), row_bytes, row_pointers[i], row_bytes);
         }
 
         png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
     }
 
-    image::image(const size_type& size, bit_depth_type bit_depth, naga::color_type color_type, const data_type::value_type* data_ptr, size_t data_size) :
+	Image::Image(const SizeType& size, BitDepthType bit_depth, ColorType color_type, const u8* data_ptr, size_t data_size) :
         size(size),
         bit_depth(bit_depth),
         color_type(color_type)
@@ -102,7 +106,7 @@ namespace naga
     }
 }
 
-std::ostream& operator<<(std::ostream& ostream, naga::image& image)
+std::ostream& operator<<(std::ostream& ostream, naga::Image& image)
 {
     using namespace naga;
 
@@ -130,21 +134,21 @@ std::ostream& operator<<(std::ostream& ostream, naga::image& image)
     //TODO: get this thing working with different color types other than rgb
     static const auto PIXEL_SIZE = 3;
 
-    auto get_png_color_type = [](color_type color_type) -> int
+	auto get_png_color_type = [](ColorType color_type) -> int
     {
         switch (color_type)
         {
-        case color_type::G:
+		case ColorType::G:
             return PNG_COLOR_TYPE_GRAY;
-        case color_type::RGB:
+		case ColorType::RGB:
             return PNG_COLOR_TYPE_RGB;
-        case color_type::PALETTE:
+		case ColorType::PALETTE:
             return PNG_COLOR_TYPE_PALETTE;
-        case color_type::GA:
+		case ColorType::GA:
             return PNG_COLOR_TYPE_GA;
-        case color_type::RGBA:
+		case ColorType::RGBA:
             return PNG_COLOR_TYPE_RGBA;
-        case color_type::DEPTH_STENCIL:
+		case ColorType::DEPTH_STENCIL:
             return PNG_COLOR_TYPE_RGBA;
         default:
             throw std::exception();
@@ -155,8 +159,8 @@ std::ostream& operator<<(std::ostream& ostream, naga::image& image)
 
     png_set_IHDR(png_ptr,
         info_ptr,
-        image.get_size().x,
-        image.get_size().y,
+        image.get_width(),
+        image.get_height(),
         image.get_bit_depth(),
         png_color_type,
         PNG_INTERLACE_NONE,
@@ -166,9 +170,9 @@ std::ostream& operator<<(std::ostream& ostream, naga::image& image)
     std::unique_lock<std::mutex> image_data_lock(image.get_data_mutex());
     auto data_ptr = image.get_data().data();
 
-    png_bytepp rows = static_cast<png_bytepp>(png_malloc(png_ptr, image.get_size().y * sizeof(png_bytep)));
+    png_bytepp rows = static_cast<png_bytepp>(png_malloc(png_ptr, image.get_height() * sizeof(png_bytep)));
 
-    const auto row_size = image.get_size().x * PIXEL_SIZE;
+    const auto row_size = image.get_width() * PIXEL_SIZE;
 
     for (unsigned int y = 0; y < image.get_size().y; ++y)
     {
@@ -179,7 +183,7 @@ std::ostream& operator<<(std::ostream& ostream, naga::image& image)
             memcpy_s(row, row_size, data_ptr + (row_size * y), row_size);
         }
 
-        rows[image.get_size().y - y - 1] = row;
+        rows[image.get_height() - y - 1] = row;
     }
 
     image_data_lock.unlock();

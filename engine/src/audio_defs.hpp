@@ -2,7 +2,7 @@
 
 namespace naga
 {
-    enum class audio_source_state
+    enum class AudioSourceState
     {
         INITIAL,
         PLAYING,

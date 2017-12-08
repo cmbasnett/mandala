@@ -1,78 +1,103 @@
 //naga
-#include "resource_mgr.hpp"
+#include "resource_manager.hpp"
 #include "sprite.hpp"
 #include "sprite_set.hpp"
 #include "texture.hpp"
 
 namespace naga
 {
-	sprite_ref::sprite_ref(const std::string& sprite_set_name, const hash& region_hash) :
+	SpriteReference::SpriteReference(const std::string& sprite_set_name, const std::string& region_name) :
 		sprite_set_name(sprite_set_name),
-        region_hash(region_hash)
+        region_name(region_name)
     {
     }
 
-    sprite_ref::sprite_ref(sprite_ref&& copy) :
+	SpriteReference::SpriteReference(SpriteReference&& copy) :
 		sprite_set_name(std::move(copy.sprite_set_name)),
-        region_hash(std::move(copy.region_hash))
+        region_name(std::move(copy.region_name))
     {
     }
 
-    sprite::sprite(const std::string& sprite_set_name, const hash& region_hash) :
-		sprite(resources.get<naga::sprite_set>(sprite_set_name), region_hash)
+	Sprite::Sprite(const std::string& sprite_set_name, const std::string& region_name) :
+		Sprite(resources.get<SpriteSet>(sprite_set_name), region_name)
     {
     }
 
-    sprite::sprite(const sprite_ref& sprite_ref) :
-		sprite(sprite_ref.sprite_set_name, sprite_ref.region_hash)
+	Sprite::Sprite(const SpriteReference& sprite_reference) :
+		Sprite(sprite_reference.sprite_set_name, sprite_reference.region_name)
     {
     }
 
-    sprite::sprite(const sprite_set_type& sprite_set, const hash& region_hash) :
-        sprite_set(sprite_set)
+	Sprite::Sprite(const SpriteSetType& sprite_set, const std::string& region_name)
     {
         if (sprite_set == nullptr)
         {
             throw std::invalid_argument("sprite set cannot be null");
         }
 
-        region = sprite_set->get_region(region_hash);
-
-        if (!region)
-        {
-            throw std::invalid_argument("region does not exist in sprite set");
-        }
+		texture = sprite_set->get_texture();
+		region = sprite_set->get_region(region_name);
     }
 
-        sprite& sprite::operator=(const sprite& rhs)
-    {
+
+	Sprite::Sprite(const boost::shared_ptr<Texture>& texture) :
+		texture(texture)
+	{
+		if (texture == nullptr)
+		{
+			throw std::invalid_argument("sprite set cannot be null");
+		}
+
+		auto width = static_cast<f32>(texture->get_width());
+		auto height = static_cast<f32>(texture->get_height());
+
+		region.rectangle.width = width;
+		region.rectangle.height = height;
+		region.frame_uv.max.x = 1;
+		region.frame_uv.max.y = 1;
+		region.frame_rectangle.width = width;
+		region.frame_rectangle.height = height;
+		region.source_size.x = width;
+		region.source_size.y = height;
+		region.uv.max.x = 1;
+		region.uv.max.y = 1;
+	}
+
+	Sprite& Sprite::operator=(const Sprite& rhs)
+	{
+		texture = rhs.texture;
         region = rhs.region;
-        sprite_set = rhs.sprite_set;
 
         return *this;
     }
 
-    sprite& sprite::operator=(const sprite_ref& rhs)
+	Sprite& Sprite::operator=(const SpriteReference& ref)
     {
-        sprite_set = resources.get<naga::sprite_set>(rhs.sprite_set_name);
+		auto sprite_set = resources.get<SpriteSet>(ref.sprite_set_name);
 
-        auto region = sprite_set->get_region(rhs.region_hash);
+		texture = sprite_set->get_texture();
 
-        if (!region)
-        {
-            throw std::exception("region does not exist in sprite set");
-        }
+		try
+		{
+			region = sprite_set->get_region(ref.region_name);
+		}
+		catch (std::invalid_argument&)
+		{
+			throw std::exception("region does not exist in sprite set");
+		}
 
         return *this;
     }
 
-    bool sprite::operator==(const sprite_ref& sprite_ref) const
+	/*
+	bool Sprite::operator==(const SpriteReference& sprite_ref) const
     {
-		return region->hash == sprite_ref.region_hash&& sprite_set->hash == hash(sprite_ref.sprite_set_name);
+		return region.name == sprite_ref.region_name && sprite_set->name == sprite_ref.sprite_set_name;
     }
 
-    bool sprite::operator!=(const sprite_ref& sprite_ref) const
+	bool Sprite::operator!=(const SpriteReference& sprite_ref) const
     {
-		return region->hash != sprite_ref.region_hash || sprite_set->hash != hash(sprite_ref.sprite_set_name);
+		return region.name != sprite_ref.region_name || sprite_set->name != sprite_ref.sprite_set_name;
     }
+	*/
 }

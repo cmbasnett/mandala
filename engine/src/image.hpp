@@ -11,41 +11,42 @@
 //naga
 #include "resource.hpp"
 #include "color_types.hpp"
+#include "types.hpp"
 
 namespace naga
 {
-    struct image : resource
+	struct Image : Resource
     {
-        typedef std::vector<u8> data_type;
-        typedef i32 bit_depth_type;
-        typedef vec2_u32 size_type;
+        typedef std::vector<u8> DataType;
+        typedef i32 BitDepthType;
+        typedef vec2 SizeType;
 
-        image() = default;
-        image(std::istream& istream);
-        image(const size_type& size, bit_depth_type bit_depth, color_type color_type, const data_type::value_type* data_ptr, size_t data_size);
+		Image() = default;
+		Image(std::istream& istream);
+		Image(const SizeType& size, BitDepthType bit_depth, ColorType color_type, const u8* data_ptr, size_t data_size);
 
-        bit_depth_type get_bit_depth() const { return bit_depth; }
-        color_type get_color_type() const { return color_type; }
-        const data_type& get_data() const { return data; }
-        const size_type& get_size() const { return size; }
-        u32 get_width() const { return size.x; }
-        u32 get_height() const { return size.y; }
+		BitDepthType get_bit_depth() const { return bit_depth; }
+		ColorType get_color_type() const { return color_type; }
+		const DataType& get_data() const { return data; }
+		const SizeType& get_size() const { return size; }
+		u32 get_width() const { return static_cast<u32>(size.x); }
+        u32 get_height() const { return static_cast<u32>(size.y); }
         size_t get_pixel_stride() const { return pixel_stride; }
         size_t get_channel_count() const { return channel_count; }
         std::mutex& get_data_mutex() { return data_mutex; }
 
     private:
-        image(const image&) = delete;
-        image& operator=(const image&) = delete;
+		Image(const Image&) = delete;
+		Image& operator=(const Image&) = delete;
 
-        size_type size;
-        i32 bit_depth = 0;
-        color_type color_type = color_type::G;
-        data_type data;
+        SizeType size;
+        BitDepthType bit_depth = 0;
+		ColorType color_type = ColorType::G;
+        DataType data;
         size_t pixel_stride = 1;
         size_t channel_count = 1;
         std::mutex data_mutex;
     };
 }
 
-std::ostream& operator<<(std::ostream& ostream, naga::image& image);
+std::ostream& operator<<(std::ostream& ostream, naga::Image& image);

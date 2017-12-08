@@ -2,42 +2,42 @@
 #include <sstream>
 
 //naga
-#include "state_mgr.hpp"
+#include "state_system.hpp"
 #include "state.hpp"
 
 #include "line_renderer.hpp"
 
 namespace naga
 {
-    state_mgr states;
+	StateSystem states;
 
-    void state_mgr::tick(f32 dt)
+    void StateSystem::tick(f32 dt)
     {
         bool did_nodes_change = !operations.empty();
 
-        state_type previous_top_state;
+		StateType previous_top_state;
 
         if (!operations.empty())
         {
             previous_top_state = nodes.empty() ? nullptr : nodes.rbegin()->state;
         }
 
-        std::vector<state_type> pushed_states;
-        std::vector<std::pair<state_type, naga::state_flags_type>> popped_states;
+		std::vector<StateType> pushed_states;
+		std::vector<std::pair<StateType, StateFlagsType>> popped_states;
 
         //process stack operations
         while (!operations.empty())
         {
             const auto& operation = operations.front();
 
-            auto nodes_itr = std::find_if(nodes.begin(), nodes.end(), [&](const node_t& node)
+            auto nodes_itr = std::find_if(nodes.begin(), nodes.end(), [&](const Node& node)
             {
                 return node.state == operation.state;
             });
 
             switch (operation.type)
             {
-            case operation_t::type_e::POP:
+            case Operation::Type::POP:
             {
                 if (nodes_itr == nodes.end())
                 {
@@ -50,7 +50,7 @@ namespace naga
                 nodes.erase(nodes_itr);
             }
                 break;
-            case operation_t::type_e::PUSH:
+			case Operation::Type::PUSH:
             {
                 if (nodes_itr != nodes.end())
                 {
@@ -58,17 +58,17 @@ namespace naga
                 }
 
                 //add state to stack
-                node_t node;
+				Node node;
                 node.link_flags = operation.link_flags;
                 node.state = operation.state;
                 node.weight = operation.weight;
 
                 nodes.push_back(node);
 
-                pushed_states.push_back(operation.state);
+				pushed_states.push_back(operation.state);
             }
                 break;
-            case operation_t::type_e::CHANGE_LINK_FLAGS:
+			case Operation::Type::CHANGE_LINK_FLAGS:
             {
                 if (nodes_itr == nodes.end())
                 {
@@ -82,7 +82,7 @@ namespace naga
                 nodes_itr->flags &= ~STATE_FLAG_CHANGING_LINK_FLAGS;
             }
                 break;
-            case operation_t::type_e::PURGE:
+			case Operation::Type::PURGE:
             {
                 while (!nodes.empty())
                 {
@@ -92,7 +92,7 @@ namespace naga
                 }
             }
                 break;
-            case operation_t::type_e::CHANGE_WEIGHT:
+			case Operation::Type::CHANGE_WEIGHT:
             {
                 if (nodes_itr == nodes.end())
                 {
@@ -118,7 +118,7 @@ namespace naga
         if (did_nodes_change)
         {
             //sort nodes by weight
-            nodes.sort([&](const node_t& lhs, const node_t& rhs)
+			nodes.sort([&](const Node& lhs, const Node& rhs)
             {
                 return lhs.weight > rhs.weight;
             });
@@ -140,7 +140,7 @@ namespace naga
             }
 
             //compare previous node flags to current ones, call start/stop flag events to states if flags changed
-            state_flags_type flags = STATE_FLAG_ALL;
+			StateFlagsType flags = STATE_FLAG_ALL;
 
             for (auto nodes_reverse_itr = nodes.rbegin(); nodes_reverse_itr != nodes.rend(); ++nodes_reverse_itr)
             {
@@ -216,7 +216,7 @@ namespace naga
         }
     }
 
-    void state_mgr::render()
+    void StateSystem::render()
     {
         for (auto& node : nodes)
         {
@@ -227,7 +227,7 @@ namespace naga
         }
     }
 
-    bool state_mgr::on_input_event(input_event_t& input_event)
+    bool StateSystem::on_input_event(InputEvent& input_event)
     {
         for (auto nodes_itr = nodes.rbegin(); nodes_itr != nodes.rend(); ++nodes_itr)
         {
@@ -248,7 +248,7 @@ namespace naga
     }
 
 #if defined(NAGA_PC)
-    void state_mgr::on_window_event(window_event& window_event)
+    void StateSystem::on_window_event(WindowEvent& window_event)
     {
         for (auto& node : nodes)
         {
@@ -258,15 +258,15 @@ namespace naga
 #endif
 
     //push a state onto the stack
-    void state_mgr::push(const state_type& state, state_flags_type link_flags, i32 weight)
+	void StateSystem::push(const StateType& state, StateFlagsType link_flags, WeightType weight)
     {
         if (state == nullptr)
         {
             throw std::invalid_argument("state cannot be null");
         }
 
-        operation_t operation;
-        operation.type = operation_t::type_e::PUSH;
+        Operation operation;
+		operation.type = Operation::Type::PUSH;
         operation.state = state;
         operation.link_flags = link_flags;
         operation.weight = weight;
@@ -275,14 +275,14 @@ namespace naga
     }
 
     //pop a specific state off of the stack
-    void state_mgr::pop(const state_type& state)
+	void StateSystem::pop(const StateType& state)
     {
         if (state == nullptr)
         {
             throw std::invalid_argument("state cannot be null");
         }
 
-        const auto nodes_itr = std::find_if(nodes.begin(), nodes.end(), [&](const node_t& node)
+        const auto nodes_itr = std::find_if(nodes.begin(), nodes.end(), [&](const Node& node)
         {
             return node.state == state;
         });
@@ -291,9 +291,9 @@ namespace naga
         {
             //state does not exist on the stack
             //check operation queue to see if state is about to be pushed
-            const auto operations_itr = std::find_if(operations.begin(), operations.end(), [&](const operation_t& operation)
+            const auto operations_itr = std::find_if(operations.begin(), operations.end(), [&](const Operation& operation)
             {
-                return operation.state == state && operation.type == operation_t::type_e::PUSH;
+				return operation.state == state && operation.type == Operation::Type::PUSH;
             });
 
             if (operations_itr != operations.end())
@@ -312,21 +312,21 @@ namespace naga
         //add popping flag to node flags
         nodes_itr->flags |= STATE_FLAG_POPPING;
 
-        operation_t operation;
-        operation.type = operation_t::type_e::POP;
+        Operation operation;
+		operation.type = Operation::Type::POP;
         operation.state = state;
 
         operations.push_back(operation);
     }
 
-    void state_mgr::change_link_flags(const state_type& state, state_flags_type link_flags)
+	void StateSystem::change_link_flags(const StateType& state, StateFlagsType link_flags)
     {
         if (state == nullptr)
         {
             throw std::invalid_argument("state cannot be null");
         }
 
-        const auto nodes_itr = std::find_if(nodes.begin(), nodes.end(), [&](const node_t& node)
+        const auto nodes_itr = std::find_if(nodes.begin(), nodes.end(), [&](const Node& node)
         {
             return node.state == state;
         });
@@ -335,9 +335,9 @@ namespace naga
         {
             //state does not exist on the stack
             //check operation queue to see if state is about to be pushed
-            const auto operations_itr = std::find_if(operations.begin(), operations.end(), [&](const operation_t& operation)
+            const auto operations_itr = std::find_if(operations.begin(), operations.end(), [&](const Operation& operation)
             {
-                return operation.state == state && operation.type == operation_t::type_e::PUSH;
+                return operation.state == state && operation.type == Operation::Type::PUSH;
             });
 
             if (operations_itr != operations.end())
@@ -353,8 +353,8 @@ namespace naga
             }
         }
 
-        operation_t operation;
-        operation.type = operation_t::type_e::CHANGE_LINK_FLAGS;
+        Operation operation;
+        operation.type = Operation::Type::CHANGE_LINK_FLAGS;
         operation.state = state;
         operation.link_flags = link_flags;
 
@@ -364,23 +364,23 @@ namespace naga
         nodes_itr->flags |= STATE_FLAG_CHANGING_LINK_FLAGS;
     }
 
-    void state_mgr::change_weight(const state_type& state, i32 weight = 0)
+	void StateSystem::change_weight(const StateType& state, WeightType weight = 0)
     {
         if (state == nullptr)
         {
             throw std::invalid_argument("state cannot be null");
         }
 
-        const auto nodes_itr = std::find_if(nodes.begin(), nodes.end(), [&](const node_t& node)
+        const auto nodes_itr = std::find_if(nodes.begin(), nodes.end(), [&](const Node& node)
         {
             return node.state == state;
         });
 
         if (nodes_itr == nodes.end())
         {
-            const auto operations_itr = std::find_if(operations.begin(), operations.end(), [&](const operation_t& operation)
+            const auto operations_itr = std::find_if(operations.begin(), operations.end(), [&](const Operation& operation)
             {
-                return operation.state == state && (operation.type == operation_t::type_e::PUSH || operation.type == operation_t::type_e::CHANGE_WEIGHT);
+                return operation.state == state && (operation.type == Operation::Type::PUSH || operation.type == Operation::Type::CHANGE_WEIGHT);
             });
 
             if (operations_itr != operations.end())
@@ -396,28 +396,28 @@ namespace naga
             }
         }
 
-        operation_t operation;
-        operation.type = operation_t::type_e::CHANGE_WEIGHT;
+        Operation operation;
+        operation.type = Operation::Type::CHANGE_WEIGHT;
         operation.state = state;
         operation.weight = weight;
 
         operations.push_back(operation);
     }
 
-    void state_mgr::purge()
+    void StateSystem::purge()
     {
-        operation_t operation;
-        operation.type = operation_t::type_e::PURGE;
+        Operation operation;
+        operation.type = Operation::Type::PURGE;
 
         operations.push_back(operation);
     }
 
-    size_t state_mgr::count() const
+    size_t StateSystem::count() const
     {
         return nodes.size();
     }
 
-    state_mgr::state_type state_mgr::at(size_t index) const
+	StateSystem::StateType StateSystem::at(size_t index) const
     {
         if (index >= nodes.size())
         {
@@ -437,11 +437,16 @@ namespace naga
         return nodes_reverse_itr->state;
     }
 
-    boost::optional<size_t> state_mgr::index_of(const state_type& state) const
+	bool StateSystem::contains(const StateType& state) const
+	{
+		return std::find_if(nodes.rbegin(), nodes.rend(), [&](const Node& node) { return node.state == state; }) != nodes.rend();
+	}
+
+	boost::optional<size_t> StateSystem::index_of(const StateType& state) const
     {
         boost::optional<size_t> index;
 
-        const auto nodes_reverse_itr = std::find_if(nodes.rbegin(), nodes.rend(), [&](const node_t& node)
+        const auto nodes_reverse_itr = std::find_if(nodes.rbegin(), nodes.rend(), [&](const Node& node)
         {
             return node.state == state;
         });
@@ -454,9 +459,9 @@ namespace naga
         return index;
     }
 
-    state_flags_type state_mgr::get_link_flags(const state_type& state) const
+	StateFlagsType StateSystem::get_link_flags(const StateType& state) const
     {
-        const auto nodes_itr = std::find_if(nodes.begin(), nodes.end(), [&](const node_t& node)
+		const auto nodes_itr = std::find_if(nodes.begin(), nodes.end(), [&](const Node& node)
         {
             return node.state == state;
         });
@@ -469,9 +474,9 @@ namespace naga
         return nodes_itr->link_flags;
     }
 
-    state_flags_type state_mgr::get_flags(const state_type& state) const
+	StateFlagsType StateSystem::get_flags(const StateType& state) const
     {
-        const auto nodes_itr = std::find_if(nodes.begin(), nodes.end(), [&](const node_t& node)
+		const auto nodes_itr = std::find_if(nodes.begin(), nodes.end(), [&](const Node& node)
         {
             return node.state == state;
         });
@@ -484,9 +489,9 @@ namespace naga
         return nodes_itr->flags;
     }
 
-    i32 state_mgr::get_weight(const state_type& state) const
+	i32 StateSystem::get_weight(const StateType& state) const
     {
-        const auto nodes_itr = std::find_if(nodes.begin(), nodes.end(), [&](const node_t& node)
+		const auto nodes_itr = std::find_if(nodes.begin(), nodes.end(), [&](const Node& node)
         {
             return node.state == state;
         });
@@ -499,27 +504,27 @@ namespace naga
         return nodes_itr->weight;
     }
 
-    bool state_mgr::is_state_rendering(const state_type& state) const
+	bool StateSystem::is_state_rendering(const StateType& state) const
     {
         return (get_flags(state) & STATE_FLAG_RENDER) == STATE_FLAG_RENDER;
     }
 
-    bool state_mgr::is_state_ticking(const state_type& state) const
+	bool StateSystem::is_state_ticking(const StateType& state) const
     {
         return (get_flags(state) & STATE_FLAG_TICK) == STATE_FLAG_TICK;
     }
 
-    bool state_mgr::is_state_handling_input(const state_type& state) const
+	bool StateSystem::is_state_handling_input(const StateType& state) const
     {
         return (get_flags(state) & STATE_FLAG_INPUT) == STATE_FLAG_INPUT;
     }
 
-    bool state_mgr::is_state_popping(const state_type& state) const
+	bool StateSystem::is_state_popping(const StateType& state) const
     {
         return (get_flags(state) & STATE_FLAG_POPPING) == STATE_FLAG_POPPING;
     }
 
-    bool state_mgr::is_state_changing_link_flags(const state_type& state) const
+	bool StateSystem::is_state_changing_link_flags(const StateType& state) const
     {
         return (get_flags(state) & STATE_FLAG_CHANGING_LINK_FLAGS) == STATE_FLAG_CHANGING_LINK_FLAGS;
     }

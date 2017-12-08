@@ -7,7 +7,7 @@
 
 namespace naga
 {
-    audio_context::audio_context(const boost::shared_ptr<audio_device>& device)
+	AudioContext::AudioContext(const boost::shared_ptr<AudioDevice>& device)
     {
         if (device == nullptr)
         {
@@ -24,7 +24,7 @@ namespace naga
         alcProcessContext(pointer); alCheckError();
     }
 
-    audio_context::~audio_context()
+	AudioContext::~AudioContext()
     {
         alcDestroyContext(pointer); alCheckError();
     }

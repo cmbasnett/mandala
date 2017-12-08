@@ -19,7 +19,7 @@
 
 namespace naga
 {
-    void gui_node::orphan()
+    void GUINode::orphan()
     {
         if (parent.get() == nullptr)
         {
@@ -38,7 +38,7 @@ namespace naga
 
         //TODO: might be able to forego dirtying parent if removing this node doesn't
         //affect positioning of sibling elements or sizing of parent element
-        //if (dock_mode != gui_dock_mode::NONE)
+        //if (dock_mode != GUIDockMode::NONE)
 
         //mark parent as dirty
         parent->dirty();
@@ -53,7 +53,7 @@ namespace naga
         dirty();
     }
 
-    void gui_node::adopt(const boost::shared_ptr<gui_node>& node)
+    void GUINode::adopt(const boost::shared_ptr<GUINode>& node)
     {
         if (node == nullptr)
         {
@@ -91,11 +91,11 @@ namespace naga
         dirty();
     }
 
-    void gui_node::clean()
+    void GUINode::clean()
     {
-        std::function<void(boost::shared_ptr<gui_node>&, aabb2&)> clean_node = [&clean_node](boost::shared_ptr<gui_node>& node, aabb2& sibling_bounds)
+		std::function<void(boost::shared_ptr<GUINode>&, AABB2&)> clean_node = [&clean_node](boost::shared_ptr<GUINode>& node, AABB2& sibling_bounds)
         {
-            if (node->get_visibility() == gui_visiblity::OMIT)
+            if (node->get_visibility() == GUIVisibility::OMIT)
             {
                 return;
             }
@@ -104,7 +104,7 @@ namespace naga
 
             auto absolute_desired_size = node->desired_size;
 
-            if (node->get_size_modes_real().get_x() == gui_size_mode_e::RELATIVE)
+            if (node->get_size_modes_real().get_x() == GUISizeMode::RELATIVE)
             {
                 if (node->has_parent())
                 {
@@ -116,7 +116,7 @@ namespace naga
                 }
             }
 
-            if (node->get_size_modes_real().get_y() == gui_size_mode_e::RELATIVE)
+            if (node->get_size_modes_real().get_y() == GUISizeMode::RELATIVE)
             {
                 if (node->has_parent())
                 {
@@ -128,30 +128,30 @@ namespace naga
                 }
             }
 
-            if (node->get_size_modes_real().get_x() == gui_size_mode_e::AXIS_SCALE)
+            if (node->get_size_modes_real().get_x() == GUISizeMode::AXIS_SCALE)
             {
                 switch (node->dock_mode)
                 {
-                case gui_dock_mode::LEFT:
-                case gui_dock_mode::RIGHT:
+                case GUIDockMode::LEFT:
+                case GUIDockMode::RIGHT:
                     absolute_desired_size.x = sibling_bounds.height() * node->desired_size.x;
                     break;
-                case gui_dock_mode::NONE:
+                case GUIDockMode::NONE:
                     absolute_desired_size.x *= absolute_desired_size.y;
                     break;
                 default:
                     break;
                 }
             }
-            else if (node->get_size_modes_real().get_y() == gui_size_mode_e::AXIS_SCALE)
+            else if (node->get_size_modes_real().get_y() == GUISizeMode::AXIS_SCALE)
             {
                 switch (node->dock_mode)
                 {
-                case gui_dock_mode::BOTTOM:
-                case gui_dock_mode::TOP:
+                case GUIDockMode::BOTTOM:
+                case GUIDockMode::TOP:
                     absolute_desired_size.y = sibling_bounds.width() * node->desired_size.y;
                     break;
-                case gui_dock_mode::NONE:
+                case GUIDockMode::NONE:
                     absolute_desired_size.y *= absolute_desired_size.x;
                     break;
                 default:
@@ -161,7 +161,7 @@ namespace naga
 
             switch (node->dock_mode)
             {
-            case gui_dock_mode::BOTTOM:
+            case GUIDockMode::BOTTOM:
                 node->bounds.min = sibling_bounds.min;
                 node->bounds.max.x = sibling_bounds.max.x;
                 node->bounds.max.y = sibling_bounds.min.y + absolute_desired_size.y + node->padding.vertical();
@@ -171,11 +171,11 @@ namespace naga
                 sibling_bounds.min.y += node->bounds.height() + node->margin.vertical();
 
                 break;
-            case gui_dock_mode::FILL:
+            case GUIDockMode::FILL:
                 node->bounds = sibling_bounds - node->margin;
 
                 break;
-            case gui_dock_mode::LEFT:
+            case GUIDockMode::LEFT:
                 node->bounds.min = sibling_bounds.min;
                 node->bounds.max.x = sibling_bounds.min.x + absolute_desired_size.x + node->padding.horizontal();
                 node->bounds.max.y = sibling_bounds.max.y;
@@ -185,7 +185,7 @@ namespace naga
                 sibling_bounds.min.x += node->bounds.width() + node->margin.horizontal();
 
                 break;
-            case gui_dock_mode::RIGHT:
+            case GUIDockMode::RIGHT:
                 node->bounds.min.x = sibling_bounds.max.x - absolute_desired_size.x - node->padding.horizontal();
                 node->bounds.min.y = sibling_bounds.min.y;
                 node->bounds.max = sibling_bounds.max;
@@ -195,7 +195,7 @@ namespace naga
                 sibling_bounds.max.x -= node->bounds.width() + node->margin.horizontal();
 
                 break;
-            case gui_dock_mode::TOP:
+            case GUIDockMode::TOP:
                 node->bounds.min.x = sibling_bounds.min.x;
                 node->bounds.min.y = sibling_bounds.max.y - absolute_desired_size.y - node->padding.vertical();
                 node->bounds.max = sibling_bounds.max;
@@ -265,7 +265,7 @@ namespace naga
                 clean_node(child, children_bounds);
             }
 
-            if (node->get_size_modes_real().get_x() == gui_size_mode_e::RELATIVE)
+            if (node->get_size_modes_real().get_x() == GUISizeMode::RELATIVE)
             {
                 if (node->has_parent())
                 {
@@ -277,7 +277,7 @@ namespace naga
                 }
             }
 
-            if (node->get_size_modes_real().get_y() == gui_size_mode_e::RELATIVE)
+            if (node->get_size_modes_real().get_y() == GUISizeMode::RELATIVE)
             {
                 if (node->has_parent())
                 {
@@ -303,7 +303,7 @@ namespace naga
         clean_node(shared_from_this(), padded_bounds);
     }
 
-    void gui_node::tick(f32 dt)
+    void GUINode::tick(f32 dt)
     {
         on_tick_begin(dt);
 
@@ -315,9 +315,9 @@ namespace naga
         on_tick_end(dt);
     }
 
-    bool gui_node::on_input_event(input_event_t& input_event)
+	bool GUINode::on_input_event(InputEvent& input_event)
     {
-        if (visibility == gui_visiblity::OMIT)
+        if (visibility == GUIVisibility::OMIT)
         {
             return false;
         }
@@ -343,11 +343,11 @@ namespace naga
         return false;
     }
 
-    const gui_size_modes_t gui_node::get_size_modes_real() const
+    const GUISizeModes GUINode::get_size_modes_real() const
     {
         auto real_size_modes = size_modes;
 
-        if (real_size_modes.get_x() == gui_size_mode_e::INHERIT)
+        if (real_size_modes.get_x() == GUISizeMode::INHERIT)
         {
             if (parent)
             {
@@ -355,11 +355,11 @@ namespace naga
             }
             else
             {
-                real_size_modes.set_x(gui_size_mode_e::ABSOLUTE);
+                real_size_modes.set_x(GUISizeMode::ABSOLUTE);
             }
         }
 
-        if (real_size_modes.get_y() == gui_size_mode_e::INHERIT)
+        if (real_size_modes.get_y() == GUISizeMode::INHERIT)
         {
             if (parent)
             {
@@ -367,14 +367,14 @@ namespace naga
             }
             else
             {
-                real_size_modes.set_y(gui_size_mode_e::ABSOLUTE);
+                real_size_modes.set_y(GUISizeMode::ABSOLUTE);
             }
         }
 
         return real_size_modes;
     }
 
-    void gui_node::dirty()
+    void GUINode::dirty()
     {
         if (is_dirty)
         {
@@ -389,9 +389,9 @@ namespace naga
         }
     }
 
-    void gui_node::render(mat4 world_matrix, mat4 view_projection_matrix)
+    void GUINode::render(mat4 world_matrix, mat4 view_projection_matrix)
     {
-        if (visibility != gui_visiblity::VISIBLE)
+        if (visibility != GUIVisibility::VISIBLE)
         {
             return;
         }
@@ -407,13 +407,13 @@ namespace naga
 
             gpu_stencil_state.is_enabled = true;
 
-            gpu_stencil_state.function.func = gpu_t::stencil_function::NEVER;
+            gpu_stencil_state.function.func = Gpu::StencilFunction::NEVER;
             gpu_stencil_state.function.ref = 1;
             gpu_stencil_state.function.mask = 0xFF;
 
-            gpu_stencil_state.operations.fail = gpu_t::stencil_operation::REPLACE;
-            gpu_stencil_state.operations.zfail = gpu_t::stencil_operation::KEEP;
-            gpu_stencil_state.operations.zpass = gpu_t::stencil_operation::KEEP;
+            gpu_stencil_state.operations.fail = Gpu::StencilOperation::REPLACE;
+            gpu_stencil_state.operations.zfail = Gpu::StencilOperation::KEEP;
+            gpu_stencil_state.operations.zpass = Gpu::StencilOperation::KEEP;
 
             gpu_stencil_state.mask = 0xFF;
 
@@ -436,15 +436,15 @@ namespace naga
 
             gpu.depth.push_state(gpu_depth_state);
 
-            gpu.clear(gpu_t::CLEAR_FLAG_DEPTH | gpu_t::CLEAR_FLAG_STENCIL);
+            gpu.clear(Gpu::CLEAR_FLAG_DEPTH | Gpu::CLEAR_FLAG_STENCIL);
 
-            render_rectangle(world_matrix, view_projection_matrix, rectangle(bounds), vec4(1), true);
+            render_rectangle(world_matrix, view_projection_matrix, Rectangle(bounds), vec4(1), true);
 
             gpu.color.pop_state();
             gpu.depth.pop_state();
 
             gpu_stencil_state.mask = 0;
-            gpu_stencil_state.function.func = gpu_t::stencil_function::NOTEQUAL;
+            gpu_stencil_state.function.func = Gpu::StencilFunction::NOTEQUAL;
             gpu_stencil_state.function.ref = 0;
             gpu_stencil_state.function.mask = 0xFF;
 
@@ -454,7 +454,7 @@ namespace naga
 
         //TODO: configure this to be enable-able in-game
 #if defined(DEBUG)
-        render_rectangle(world_matrix, view_projection_matrix, rectangle(bounds), vec4(1.0f, 0.0f, 0.0f, 1.0f));
+        render_rectangle(world_matrix, view_projection_matrix, Rectangle(bounds), vec4(1.0f, 0.0f, 0.0f, 1.0f));
 #endif
 
         on_render_begin(world_matrix, view_projection_matrix);

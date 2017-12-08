@@ -10,38 +10,38 @@
 
 namespace naga
 {
-    struct sprite_animation : resource
+    struct SpriteAnimation : Resource
     {
-        typedef f32 time_type;
+        typedef f32 TimeType;
 
-        struct frame
+        struct Frame
         {
-            sprite_ref sprite;
-            time_type time;
+            SpriteReference sprite;
+			TimeType time;
 
             //TODO: move to custom std::less somehow
-            bool operator>(const time_type& rhs) const
+			bool operator>(const TimeType& rhs) const
             {
                 return time > rhs;
             }
 
-            bool operator<(const time_type& rhs) const
+			bool operator<(const TimeType& rhs) const
             {
                 return time < rhs;
             }
         };
 
-        sprite_animation(std::istream& istream);
+		SpriteAnimation(std::istream& istream);
         
-        inline const time_type& get_duration() const { return duration; }
+		inline const TimeType& get_duration() const { return duration; }
 
-        const sprite_ref& get_sprite_at_time(const time_type& time) const;
+		const SpriteReference& get_sprite_at_time(const TimeType& time) const;
 
     private:
-        std::vector<const frame> frames;
-        time_type duration;
+        std::vector<const Frame> frames;
+        TimeType duration;
 
-        sprite_animation(const sprite_animation&) = delete;
-        sprite_animation& operator=(const sprite_animation&) = delete;
+		SpriteAnimation(const SpriteAnimation&) = delete;
+		SpriteAnimation& operator=(const SpriteAnimation&) = delete;
     };
 }

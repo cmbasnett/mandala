@@ -11,85 +11,85 @@ namespace naga
 {
     namespace details
     {
-        template<typename T, typename Enable = void>
-        struct triangle3;
+        template<typename Scalar, typename Enable = void>
+        struct Triangle3;
 
-        template<typename T>
-        struct triangle3<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
+		template<typename Scalar>
+		struct Triangle3<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
         {
-            static const size_t POINT_COUNT = 3;
+			typedef Scalar ScalarType;
+			typedef glm::detail::tvec3<ScalarType> PointType;
+			typedef std::array<PointType, 3> PointsType;
+            typedef vec3 NormalType;
+			typedef Triangle3<ScalarType> Type;
 
-            typedef glm::detail::tvec3<T> point_type;
-            typedef std::array<point_type, POINT_COUNT> points_type;
-            typedef glm::detail::tvec3<f32> normal_type;
-            typedef triangle3<T> type;
+			Triangle3() = default;
 
-            triangle3() = default;
-
-            triangle3(const points_type& points) :
+			Triangle3(const PointsType& points) :
                 points(points)
             {
             }
 
-            triangle3(const point_type& point0, const point_type& point1, const point_type& point2)
+			Triangle3(const PointType& point0, const PointType& point1, const PointType& point2)
             {
                 points[0] = point0;
                 points[1] = point1;
                 points[2] = point2;
             }
 
-            point_type& operator[](size_t index)
+            PointType& operator[](size_t index)
             {
                 return points[index];
             }
 
-            normal_type normal() const
-            {
-				return glm::cross(static_cast<normal_type>(v1 - v0), static_cast<normal_type>(v2 - v0));
-            }
+			NormalType normal() const
+			{
+				return glm::cross(static_cast<NormalType>(points[1] - points[0]), static_cast<NormalType>(points[2] - points[0]));
+			}
 
         private:
-            points_type points;
+            PointsType points;
         };
 
-        template<typename T, typename Enable = void>
-        struct triangle2;
+		template<typename Scalar, typename Enable = void>
+        struct Triangle2;
 
-        template<typename T>
-        struct triangle2<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
+		template<typename Scalar>
+		struct Triangle2<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
         {
-            static const size_t POINT_COUNT = 3;
+			typedef Scalar ScalarType;
+			typedef glm::detail::tvec2<ScalarType> PointType;
+			typedef std::array<PointType, 3> PointsType;
+			typedef Triangle2<ScalarType> Type;
 
-            typedef glm::detail::tvec2<T> point_type;
-            typedef std::array<point_type, POINT_COUNT> points_type;
-            typedef triangle2<T> type;
+			Triangle2() = default;
 
-            triangle2() = default;
-
-            triangle2(const points_type& points) :
+			Triangle2(const PointsType& points) :
                 points(points)
             {
             }
 
-            triangle2(const point_type& point0, const point_type& point1, const point_type& point2)
+			Triangle2(const PointType& point0, const PointType& point1, const PointType& point2)
             {
                 points[0] = point0;
                 points[1] = point1;
                 points[2] = point2;
             }
 
-            point_type& operator[](size_t index)
+			PointType& operator[](size_t index)
             {
                 return points[index];
             }
 
-            explicit operator triangle3<T>() const
+            explicit operator Triangle3<ScalarType>() const
             {
-                return triangle3<T>(static_cast<triangle3<T>::point_type>(points[0]), static_cast<triangle3<T>::point_type>(points[1]), static_cast<triangle3<T>::point_type>(points[2]));
+				return Triangle3<ScalarType>(static_cast<Triangle3<ScalarType>::point_type>(points[0]),
+											 static_cast<Triangle3<ScalarType>::point_type>(points[1]),
+											 static_cast<Triangle3<ScalarType>::point_type>(points[2]));
             }
 
         private:
-            points_type points;
+            PointsType points;
         };
 	}
 
@@ -131,19 +131,6 @@ namespace naga
 	//	return b;
 	//}
 
-    typedef details::triangle2<i8> triangle2_i8;
-    typedef details::triangle2<i16> triangle2_i16;
-    typedef details::triangle2<i32> triangle2_i32;
-    typedef details::triangle2<i64> triangle2_i64;
-    typedef details::triangle2<f32> triangle2_f32;
-    typedef details::triangle2<f64> triangle2_f64;
-    typedef triangle2_f32 triangle2;
-
-    typedef details::triangle3<i8> triangle3_i8;
-    typedef details::triangle3<i16> triangle3_i16;
-    typedef details::triangle3<i32> triangle3_i32;
-    typedef details::triangle3<i64> triangle3_i64;
-    typedef details::triangle3<f32> triangle3_f32;
-    typedef details::triangle3<f64> triangle3_f64;
-    typedef triangle3_f32 triangle3;
+	typedef details::Triangle2<f32> Triangle2;
+	typedef details::Triangle3<f32> Triangle3;
 }

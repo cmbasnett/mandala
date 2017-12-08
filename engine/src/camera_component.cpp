@@ -10,23 +10,23 @@
 
 namespace naga
 {
-    const char* camera_component::component_name = "CameraComponent";
+    const char* CameraComponent::component_name = "CameraComponent";
 
-    camera_params camera_component::get_params(const gpu_viewport_type& viewport) const
+	CameraParameters CameraComponent::get_parameters(const GpuViewportType& viewport) const
     {
 		const auto aspect = glm::max(glm::epsilon<f32>(), static_cast<f32>(viewport.width) / glm::max(static_cast<f32>(viewport.height), 1.0f));
         const auto& pose = get_owner()->pose;
 
-        camera_params params;
-        params.location = pose.location;
+		CameraParameters parameters;
+		parameters.location = pose.location;
 
         switch (projection_type)
         {
-        case projection_type_e::ORTHOGRAPHIC:
-            params.projection_matrix = glm::ortho(viewport.x, viewport.x + viewport.width, viewport.y + viewport.height, viewport.y);
+		case ProjectionType::ORTHOGRAPHIC:
+			parameters.projection_matrix = glm::ortho(viewport.x, viewport.x + viewport.width, viewport.y + viewport.height, viewport.y);
             break;
-        case projection_type_e::PERSPECTIVE:
-            params.projection_matrix = glm::perspective(fov, aspect, near, far);
+		case ProjectionType::PERSPECTIVE:
+			parameters.projection_matrix = glm::perspective(fov, aspect, near, far);
             break;
         }
 
@@ -37,10 +37,10 @@ namespace naga
         // rotate up matrix along forward axis
         up = glm::rotate(glm::angleAxis(roll, forward), up);
 
-        params.frustum.set(pose.location, left, up, forward, fov, near, far, aspect);
-        params.view_matrix = glm::lookAt(pose.location, pose.location + forward, up);
+		parameters.frustum.set(pose.location, left, up, forward, fov, near, far, aspect);
+		parameters.view_matrix = glm::lookAt(pose.location, pose.location + forward, up);
 
-        return params;
+        return parameters;
     }
     
     // TODO: there is an inherent problem here in that get_ray will likely be called before
@@ -61,13 +61,13 @@ namespace naga
     // matrices before we use them in the unProject functions. this would probably be
     // perfectly acceptable since get_ray wouldn't likely be happening more than
     // once per frame.
-	line3 camera_component::get_ray(const gpu_viewport_type& viewport, const vec2& screen_location) const
+	Line3 CameraComponent::get_ray(const GpuViewportType& viewport, const vec2& screen_location) const
 	{
 		// TODO: this is problematic because the viewport isn't necessarily going to be stacked on top, maybe we need to pass in the viewport here?
-		line3 ray;
-		auto camera_params = get_params(viewport);
-		ray.start = glm::unProject(vec3(screen_location, 0), camera_params.view_matrix, camera_params.projection_matrix, vec4(viewport.x, viewport.y, viewport.width, viewport.height));
-		ray.end = glm::unProject(vec3(screen_location, 1), camera_params.view_matrix, camera_params.projection_matrix, vec4(viewport.x, viewport.y, viewport.width, viewport.height));
+		Line3 ray;
+		auto parameters = get_parameters(viewport);
+		ray.start = glm::unProject(vec3(screen_location, 0), parameters.view_matrix, parameters.projection_matrix, vec4(viewport.x, viewport.y, viewport.width, viewport.height));
+		ray.end = glm::unProject(vec3(screen_location, 1), parameters.view_matrix, parameters.projection_matrix, vec4(viewport.x, viewport.y, viewport.width, viewport.height));
 		return ray;
 	}
 }

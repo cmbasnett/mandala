@@ -11,37 +11,40 @@
 //naga
 #include "octtree.hpp"
 #include "game_object_collection.hpp"
+#include "trace_result.hpp"
 
 namespace naga
 {
-    struct game_object;
-    struct frame_buffer;
-    struct input_event_t;
-    struct physics_simulation;
+    struct GameObject;
+	struct FrameBuffer;
+	struct InputEvent;
+    struct PhysicsSimulation;
     struct bsp;
 
-    struct scene : boost::enable_shared_from_this<scene>
+	struct Scene : boost::enable_shared_from_this<Scene>
     {
-        scene();
+		Scene();
 
-        const std::vector<boost::shared_ptr<game_object>>& get_game_objects() const { return game_objects; }
+		const std::vector<boost::shared_ptr<GameObject>>& get_game_objects() const { return game_objects; }
 
         void tick(f32 dt);
-        void render(const boost::shared_ptr<frame_buffer>& frame_buffer, const boost::shared_ptr<game_object>& camera) const;
-        void on_input_event(input_event_t& input_event);
+		void render(const boost::shared_ptr<FrameBuffer>& frame_buffer, const boost::shared_ptr<GameObject>& camera) const;
+		void on_input_event(InputEvent& input_event);
 
-        boost::shared_ptr<game_object> create_game_object();
-        void remove_game_object(const boost::shared_ptr<game_object>& game_object);
+        boost::shared_ptr<GameObject> create_game_object();
+		void remove_game_object(const boost::shared_ptr<GameObject>& game_object);
 
-        const boost::shared_ptr<physics_simulation>& get_physics() const { return physics; }
+		const boost::shared_ptr<PhysicsSimulation>& get_physics() const { return physics; }
+
+		TraceResult trace(const vec3& start, const vec3& end) const;
 
     private:
-        friend struct game_object;
+		friend struct GameObject;
 
-        std::vector<boost::shared_ptr<game_object>> game_objects;
+		std::vector<boost::shared_ptr<GameObject>> game_objects;
 
-        boost::shared_ptr<physics_simulation> physics;
-        octree octree;
+		boost::shared_ptr<PhysicsSimulation> physics;
+        OctTree octtree;
         boost::shared_ptr<bsp> bsp;
     };
 }

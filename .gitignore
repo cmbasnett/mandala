@@ -13,3 +13,7 @@ ext/Python27
 testapp
 ext/cpp-netlib-0.11.1-final
 ext/openssl-0.9.8k_WIN32
+env/
+ext/curl*
+ext/bullet*
+.idea

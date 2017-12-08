@@ -8,18 +8,18 @@
 
 namespace naga
 {
-    void gui_scroll::on_render_begin(mat4& world_matrix, mat4& view_projection_matrix)
+    void GUIScroll::on_render_begin(mat4& world_matrix, mat4& view_projection_matrix)
     {
         world_matrix = glm::translate(world_matrix, vec3(scroll_location, 0));
     }
 
-    bool gui_scroll::on_input_event_begin(input_event_t& input_event)
+	bool GUIScroll::on_input_event_begin(InputEvent& input_event)
     {
         //TODO: have some way for layouts to keep track of certain nodes
         //'owning' touch events by id so that they get exclusive rights
         //to handle future touch events of the same id.
 
-        if (input_event.device_type == input_event_t::device_type_e::TOUCH)
+		if (input_event.device_type == InputEvent::DeviceType::TOUCH)
         {
             //offset the touch location by the scroll location so that
             //touch locations are relative to the internal contents
@@ -27,9 +27,9 @@ namespace naga
             input_event.touch.location -= scroll_location;
         }
 
-        auto base_result = gui_node::on_input_event_begin(input_event);
+		auto base_result = GUINode::on_input_event_begin(input_event);
         
-        if (input_event.device_type == input_event_t::device_type_e::TOUCH)
+		if (input_event.device_type == InputEvent::DeviceType::TOUCH)
         {
             //undo the scroll offset.
             input_event.touch.location += scroll_location;
@@ -43,7 +43,7 @@ namespace naga
 
         switch (input_event.touch.type)
         {
-        case input_event_t::touch_t::type_e::PRESS:
+		case InputEvent::Touch::Type::PRESS:
             if (contains(get_bounds(), input_event.touch.location))
             {
                 is_scrolling = true;
@@ -51,7 +51,7 @@ namespace naga
                 return true;
             }
             break;
-        case input_event_t::touch_t::type_e::RELEASE:
+		case InputEvent::Touch::Type::RELEASE:
             if (is_scrolling && touch_id == input_event.touch.id)
             {
                 is_scrolling = false;
@@ -59,7 +59,7 @@ namespace naga
                 return true;
             }
             break;
-        case input_event_t::touch_t::type_e::MOVE:
+		case InputEvent::Touch::Type::MOVE:
             if (is_scrolling && touch_id == input_event.touch.id)
             {
                 scroll_location_target += input_event.touch.location_delta;
@@ -67,10 +67,10 @@ namespace naga
                 return true;
             }
             break;
-        case input_event_t::touch_t::type_e::SCROLL:
+		case InputEvent::Touch::Type::SCROLL:
             if (contains(get_bounds(), input_event.touch.location))
             {
-                scroll_location_target += (input_event.touch.location_delta * 32.0);
+                scroll_location_target += (input_event.touch.location_delta * 32.0f);
                 scroll_location_target = glm::clamp(scroll_location_target, scroll_extents.min, scroll_extents.max);
                 return true;
             }
@@ -80,7 +80,7 @@ namespace naga
         return false;
     }
 
-    void gui_scroll::on_tick_end(f32 dt)
+    void GUIScroll::on_tick_end(f32 dt)
     {
         //TODO: figure out a proper algorithm for this smoothing
         scroll_location += (scroll_location_target - scroll_location) * dt * 30.0f;
@@ -88,7 +88,7 @@ namespace naga
         scroll_location = glm::clamp(scroll_location, scroll_extents.min, scroll_extents.max);
     }
 
-    void gui_scroll::set_scroll_location(const scroll_location_type& scroll_location, bool should_interpolate)
+    void GUIScroll::set_scroll_location(const vec2& scroll_location, bool should_interpolate)
     {
         scroll_location_target = scroll_location;
 
@@ -98,9 +98,9 @@ namespace naga
         }
     }
 
-    void gui_scroll::on_clean_end()
+    void GUIScroll::on_clean_end()
     {
-        aabb2 scroll_extents;
+        AABB2 scroll_extents;
         const auto bounds = get_bounds();
 
         for (const auto& child : get_children())

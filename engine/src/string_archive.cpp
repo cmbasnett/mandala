@@ -8,7 +8,7 @@
 
 namespace naga
 {
-    string_archive::string_archive(std::istream& istream)
+	StringArchive::StringArchive(std::istream& istream)
     {
         //magic
         std::array<char, LANG_MAGIC_LENGTH> magic;
@@ -46,7 +46,7 @@ namespace naga
             std::string language;
             std::getline(istream, language, '\0');
 
-            language_strings.emplace(language, std::vector<string>(key_count));
+            language_strings.emplace(language, std::vector<String>(key_count));
 
             languages.emplace_back(std::move(language));
         }
@@ -58,17 +58,13 @@ namespace naga
 
         for (u32 i = 0; i < key_count; ++i)
         {
-            std::string key;
-            
-            std::getline(istream, key, '\0');
-
             for (size_t j = 0; j < languages.size(); ++j)
             {
                 const auto& language = languages[j];
                 auto& strings = language_strings[language];
                 auto& string = strings[i];
                 
-                string.hash = hash(key);
+				std::getline(istream, string.key, '\0');
                 read(istream, string.offset);
             }
         }

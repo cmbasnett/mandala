@@ -5,11 +5,11 @@
 
 namespace naga
 {
-    struct camera_params
+    struct CameraParameters
     {
         mat4 view_matrix;
         mat4 projection_matrix;
         vec3 location;
-        frustum frustum;
+		Frustum frustum;
     };
 }

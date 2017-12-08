@@ -19,7 +19,7 @@
 namespace naga
 {
     //https://ccrma.stanford.edu/courses/422/projects/WaveFormat/
-    sound::sound(std::istream& istream)
+	Sound::Sound(std::istream& istream)
     {
         std::array<char, WAV_CHUNK_TAG_LENGTH> chunk_tag;
         read(istream, chunk_tag);
@@ -115,7 +115,7 @@ namespace naga
         duration = data.size() / byte_rate * 1000;
     }
 
-    sound::~sound()
+	Sound::~Sound()
     {
         alDeleteBuffers(1, &buffer_id);
     }

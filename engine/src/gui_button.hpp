@@ -9,9 +9,9 @@
 
 namespace naga
 {
-    struct gui_button : gui_node
+	struct GUIButton : GUINode
     {
-        enum class state_t
+        enum class State
         {
             IDLE,
 #if defined(NAGA_PC)
@@ -20,14 +20,14 @@ namespace naga
             PRESSED
         };
 
-        virtual bool on_input_event_begin(input_event_t& input_event) override;
+		virtual bool on_input_event_begin(InputEvent& input_event) override;
 
-        state_t get_state() const { return state; }
+        State get_state() const { return state; }
 
-        boost::function<void(boost::shared_ptr<gui_node>&)> on_state_changed;
-		boost::function<void(boost::shared_ptr<gui_node>&)> on_press;
+		boost::function<void(boost::shared_ptr<GUINode>&)> on_state_changed;
+		boost::function<void(boost::shared_ptr<GUINode>&)> on_press;
 
     private:
-        state_t state = state_t::IDLE;
+		State state = State::IDLE;
     };
 }

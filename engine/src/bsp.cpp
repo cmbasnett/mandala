@@ -8,7 +8,7 @@
 #include "gpu.hpp"
 #include "collision.hpp"
 #include "bsp_gpu_program.hpp"
-#include "resource_mgr.hpp"
+#include "resource_manager.hpp"
 #include "gpu_program_mgr.hpp"
 #include "gpu_buffer_mgr.hpp"
 #include "io.hpp"
@@ -19,9 +19,9 @@
 
 namespace naga
 {
-    struct bsp_chunk_t
+    struct BSPChunk
     {
-        enum class type_e : u8
+        enum class Type : u8
         {
             ENTITIES,
             PLANES,
@@ -45,7 +45,7 @@ namespace naga
         u32 length = 0;
     };
 
-    bsp::bsp(std::istream& istream)
+	BSP::BSP(std::istream& istream)
     {
         if (!istream.good())
         {
@@ -65,9 +65,9 @@ namespace naga
         }
 
         //chunks
-        std::vector<bsp_chunk_t> chunks;
+        std::vector<BSPChunk> chunks;
 
-        chunks.resize(static_cast<size_t>(bsp_chunk_t::type_e::COUNT));
+		chunks.resize(static_cast<size_t>(BSPChunk::Type::COUNT));
 
         for (auto& chunk : chunks)
         {
@@ -76,10 +76,10 @@ namespace naga
         }
 
         //planes
-        const auto& plane_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::PLANES)];
+		const auto& plane_chunk = chunks[static_cast<size_t>(BSPChunk::Type::PLANES)];
         istream.seekg(plane_chunk.offset, std::ios_base::beg);
 
-        auto plane_count = plane_chunk.length / sizeof(bsp_plane);
+        auto plane_count = plane_chunk.length / sizeof(BSPPlane);
         planes.resize(plane_count);
 
         for (auto& plane : planes)
@@ -94,7 +94,7 @@ namespace naga
         }
 
         //vertex_locations
-        const auto& vertices_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::VERTICES)];
+        const auto& vertices_chunk = chunks[static_cast<size_t>(BSPChunk::Type::VERTICES)];
         istream.seekg(vertices_chunk.offset, std::ios_base::beg);
 
         std::vector<vec3> vertex_locations;
@@ -112,10 +112,10 @@ namespace naga
         }
 
         //edges
-        const auto& edges_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::EDGES)];
+        const auto& edges_chunk = chunks[static_cast<size_t>(BSPChunk::Type::EDGES)];
         istream.seekg(edges_chunk.offset, std::ios_base::beg);
 
-        auto edge_count = edges_chunk.length / sizeof(edge);
+        auto edge_count = edges_chunk.length / sizeof(Edge);
         edges.resize(edge_count);
 
         for (auto& edge : edges)
@@ -125,7 +125,7 @@ namespace naga
         }
 
         //surface_edges
-        const auto& surface_edges_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::SURFACE_EDGES)];
+        const auto& surface_edges_chunk = chunks[static_cast<size_t>(BSPChunk::Type::SURFACE_EDGES)];
         istream.seekg(surface_edges_chunk.offset, std::ios_base::beg);
 
         auto surface_edge_count = surface_edges_chunk.length / sizeof(i32);
@@ -137,10 +137,10 @@ namespace naga
         }
 
         //faces
-        const auto& faces_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::FACES)];
+        const auto& faces_chunk = chunks[static_cast<size_t>(BSPChunk::Type::FACES)];
         istream.seekg(faces_chunk.offset, std::ios_base::beg);
 
-        auto face_count = faces_chunk.length / sizeof(face);
+        auto face_count = faces_chunk.length / sizeof(Face);
         faces.resize(face_count);
 
         for (auto& face : faces)
@@ -158,10 +158,10 @@ namespace naga
         }
 
         //nodes
-        const auto& nodes_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::NODES)];
+        const auto& nodes_chunk = chunks[static_cast<size_t>(BSPChunk::Type::NODES)];
         istream.seekg(nodes_chunk.offset, std::ios_base::beg);
 
-        auto node_count = nodes_chunk.length / sizeof(node);
+        auto node_count = nodes_chunk.length / sizeof(Node);
         nodes.resize(node_count);
 
         for (auto& node : nodes)
@@ -183,10 +183,10 @@ namespace naga
         }
 
         //leaves
-        const auto& leaves_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::LEAVES)];
+        const auto& leaves_chunk = chunks[static_cast<size_t>(BSPChunk::Type::LEAVES)];
         istream.seekg(leaves_chunk.offset, std::ios_base::beg);
 
-        auto leaf_count = leaves_chunk.length / sizeof(leaf);
+        auto leaf_count = leaves_chunk.length / sizeof(Leaf);
         leafs.resize(leaf_count);
 
         for (auto& leaf : leafs)
@@ -211,7 +211,7 @@ namespace naga
         }
 
         //mark_surfaces
-        const auto& mark_surfaces_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::MARK_SURFACES)];
+        const auto& mark_surfaces_chunk = chunks[static_cast<size_t>(BSPChunk::Type::MARK_SURFACES)];
         istream.seekg(mark_surfaces_chunk.offset, std::ios_base::beg);
 
         auto mark_surface_count = mark_surfaces_chunk.length / sizeof(u16);
@@ -223,10 +223,10 @@ namespace naga
         }
 
         //clip_nodes
-        const auto& clip_nodes_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::CLIP_NODES)];
+        const auto& clip_nodes_chunk = chunks[static_cast<size_t>(BSPChunk::Type::CLIP_NODES)];
         istream.seekg(clip_nodes_chunk.offset, std::ios_base::beg);
 
-        auto clip_node_count = clip_nodes_chunk.length / sizeof(clip_node);
+        auto clip_node_count = clip_nodes_chunk.length / sizeof(ClipNode);
         clip_nodes.resize(clip_node_count);
 
         for (auto& clip_node : clip_nodes)
@@ -237,10 +237,10 @@ namespace naga
         }
 
         //models
-        const auto& models_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::MODELS)];
+        const auto& models_chunk = chunks[static_cast<size_t>(BSPChunk::Type::MODELS)];
         istream.seekg(models_chunk.offset, std::ios_base::beg);
 
-        auto model_count = models_chunk.length / sizeof(model);
+        auto model_count = models_chunk.length / sizeof(Model);
         models.resize(model_count);
 
         for (auto& model : models)
@@ -268,7 +268,7 @@ namespace naga
         }
 
         //visibility
-        const auto& visibility_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::VISIBLIITY)];
+        const auto& visibility_chunk = chunks[static_cast<size_t>(BSPChunk::Type::VISIBLIITY)];
         istream.seekg(visibility_chunk.offset, std::ios_base::beg);
 
         if (visibility_chunk.length > 0)
@@ -277,7 +277,7 @@ namespace naga
             {
                 if (node_index < 0)
                 {
-                    if (node_index == -1 || leafs[~node_index].content_type == content_type::SOLID)
+                    if (node_index == -1 || leafs[~node_index].content_type == ContentType::SOLID)
                     {
                         return;
                     }
@@ -339,7 +339,7 @@ namespace naga
         }
 
         //textures
-        const auto& textures_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::TEXTURES)];
+        const auto& textures_chunk = chunks[static_cast<size_t>(BSPChunk::Type::TEXTURES)];
         istream.seekg(textures_chunk.offset, std::ios_base::beg);
 
         u32 texture_count;
@@ -354,7 +354,7 @@ namespace naga
             read(istream, texture_offset);
         }
 
-        std::vector<bsp_texture> bsp_textures;
+        std::vector<BSPTexture> bsp_textures;
 
         for (u32 i = 0; i < texture_count; ++i)
         {
@@ -365,7 +365,7 @@ namespace naga
 
             std::string texture_name = texture_name_bytes;
 
-            bsp_texture bsp_texture;
+			BSPTexture bsp_texture;
 
             read(istream, bsp_texture.width);
             read(istream, bsp_texture.height);
@@ -375,11 +375,11 @@ namespace naga
 
             texture_name.append(".png");
 
-            boost::shared_ptr<texture> texture;
+            boost::shared_ptr<Texture> texture;
 
             try
             {
-                texture = resources.get<naga::texture>(texture_name);
+				texture = resources.get<Texture>(texture_name);
             }
 			catch (...)
 			{
@@ -390,10 +390,10 @@ namespace naga
         }
 
         //texture_info
-        const auto& texture_info_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::TEXTURE_INFO)];
+        const auto& texture_info_chunk = chunks[static_cast<size_t>(BSPChunk::Type::TEXTURE_INFO)];
         istream.seekg(texture_info_chunk.offset, std::ios_base::beg);
 
-        auto texture_info_count = texture_info_chunk.length / sizeof(texture_info);
+        auto texture_info_count = texture_info_chunk.length / sizeof(TextureInfo);
 
         texture_infos.resize(texture_info_count);
 
@@ -414,8 +414,8 @@ namespace naga
             texture_info.t.axis.z = -texture_info.t.axis.z;
         }
 
-        std::vector<index_type> indices;
-        std::vector<vertex_type> vertices;
+        std::vector<IndexType> indices;
+        std::vector<VertexType> vertices;
 
         for (size_t face_index = 0; face_index < faces.size(); ++face_index)
         {
@@ -435,7 +435,7 @@ namespace naga
 
             for (auto i = 0; i < face.surface_edge_count; ++i)
             {
-                vertex_type vertex;
+                VertexType vertex;
 
                 //vertex.normal = normal;
 
@@ -461,7 +461,7 @@ namespace naga
         }
 
         //lighting
-        const auto& lighting_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::LIGHTING)];
+        const auto& lighting_chunk = chunks[static_cast<size_t>(BSPChunk::Type::LIGHTING)];
         istream.seekg(lighting_chunk.offset, std::ios_base::beg);
 
         std::vector<u8> lighting_data;
@@ -544,21 +544,21 @@ namespace naga
 
                 auto lighting_data_size = 3 * static_cast<i32>(texture_size.x) * static_cast<i32>(texture_size.y);
 
-                auto image = boost::make_shared<naga::image>(
-                    static_cast<image::size_type>(texture_size),
+                auto image = boost::make_shared<Image>(
+					static_cast<Image::SizeType>(texture_size),
                     8,
-                    color_type::RGB,
+                    ColorType::RGB,
                     lighting_data.data() + face.lightmap_offset,
                     lighting_data_size);
 
-                auto lightmap_texture = boost::make_shared<texture>(image);
+                auto lightmap_texture = boost::make_shared<Texture>(image);
 
                 face_lightmap_textures[face_index] = lightmap_texture;
             }
         }
 
         //entities
-        const auto& entities_chunk = chunks[static_cast<size_t>(bsp_chunk_t::type_e::ENTITIES)];
+        const auto& entities_chunk = chunks[static_cast<size_t>(BSPChunk::Type::ENTITIES)];
         istream.seekg(entities_chunk.offset, std::ios_base::beg);
 
         std::vector<char> entities_buffer;
@@ -580,7 +580,7 @@ namespace naga
 
             auto entity_string = entities_string.substr(begin + 1, end - begin - 1);
 
-            bsp_entity entity(entity_string);
+            BSPEntity entity(entity_string);
 
             auto model_optional = entity.get_optional<std::string>("model");
 
@@ -597,25 +597,25 @@ namespace naga
             entities.emplace_back(std::move(entity));
         }
 
-        vertex_buffer = gpu_buffers.make<vertex_buffer_type>().lock();
-        vertex_buffer->data(vertices, gpu_t::buffer_usage::STATIC_DRAW);
+        vertex_buffer = gpu_buffers.make<VertexBufferType>().lock();
+        vertex_buffer->data(vertices, Gpu::BufferUsage::STATIC_DRAW);
 
-        index_buffer = gpu_buffers.make<index_buffer_type>().lock();
-        index_buffer->data(indices, gpu_t::buffer_usage::STATIC_DRAW);
+        index_buffer = gpu_buffers.make<IndexBufferType>().lock();
+        index_buffer->data(indices, Gpu::BufferUsage::STATIC_DRAW);
     }
 
-    void bsp::render(const camera_params& camera_params)
+    void BSP::render(const CameraParameters& camera_parameters)
     {
         boost::dynamic_bitset<> faces_rendered = boost::dynamic_bitset<>(faces.size());
 
         faces_rendered.reset();
 
-        auto camera_leaf_index = get_leaf_index_from_location(camera_params.location);
+		auto camera_leaf_index = get_leaf_index_from_location(camera_parameters.location);
 
         //culling
         auto culling_state = gpu.culling.get_state();
         culling_state.is_enabled = true;
-        culling_state.mode = gpu_t::culling_mode::FRONT;
+        culling_state.mode = Gpu::CullingMode::FRONT;
 
         gpu.culling.push_state(culling_state);
 
@@ -629,8 +629,8 @@ namespace naga
         static const auto LIGHTMAP_TEXTURE_INDEX = 1;
 
         //bind buffers
-        gpu.buffers.push(gpu_t::buffer_target::ARRAY, vertex_buffer);
-        gpu.buffers.push(gpu_t::buffer_target::ELEMENT_ARRAY, index_buffer);
+        gpu.buffers.push(Gpu::BufferTarget::ARRAY, vertex_buffer);
+        gpu.buffers.push(Gpu::BufferTarget::ELEMENT_ARRAY, index_buffer);
 
         //bind program
         const auto gpu_program = gpu_programs.get<bsp_gpu_program>();
@@ -638,7 +638,7 @@ namespace naga
         gpu.programs.push(gpu_program);
 
         gpu.set_uniform("world_matrix", mat4());
-        gpu.set_uniform("view_projection_matrix", camera_params.projection_matrix * camera_params.view_matrix);
+		gpu.set_uniform("view_projection_matrix", camera_parameters.projection_matrix * camera_parameters.view_matrix);
         gpu.set_uniform("diffuse_texture", DIFFUSE_TEXTURE_INDEX);
         gpu.set_uniform("lightmap_texture", LIGHTMAP_TEXTURE_INDEX);
         gpu.set_uniform("lightmap_gamma", render_settings.lightmap_gamma);
@@ -652,7 +652,7 @@ namespace naga
 
             const auto& face = faces[face_index];
 
-            if (face.lighting_styles[0] == face::LIGHTING_STYLE_NONE)
+            if (face.lighting_styles[0] == Face::LIGHTING_STYLE_NONE)
             {
                 return;
             }
@@ -663,17 +663,17 @@ namespace naga
             gpu.textures.bind(DIFFUSE_TEXTURE_INDEX, diffuse_texture);
             gpu.textures.bind(LIGHTMAP_TEXTURE_INDEX, lightmap_texture);
 
-            gpu.draw_elements(gpu_t::primitive_type::TRIANGLE_FAN,
+            gpu.draw_elements(Gpu::PrimitiveType::TRIANGLE_FAN,
                 face.surface_edge_count,
-                index_buffer_type::DATA_TYPE,
-                face_start_indices[face_index] * sizeof(index_type));
+                IndexBufferType::DATA_TYPE,
+                face_start_indices[face_index] * sizeof(IndexType));
 
             faces_rendered[face_index] = true;
 
             ++render_stats.face_count;
         };
 
-        auto render_leaf = [&](node_index_type leaf_index)
+        auto render_leaf = [&](NodeIndexType leaf_index)
         {
             const auto& leaf = leafs[leaf_index];
 
@@ -685,7 +685,7 @@ namespace naga
             ++render_stats.leaf_count;
         };
 
-        std::function<void(node_index_type, node_index_type)> render_node = [&](node_index_type node_index, node_index_type camera_leaf_index)
+		std::function<void(NodeIndexType, NodeIndexType)> render_node = [&](NodeIndexType node_index, NodeIndexType camera_leaf_index)
         {
             if (node_index < 0)
             {
@@ -714,17 +714,17 @@ namespace naga
 
             switch (plane.type)
             {
-            case bsp_plane::type::X:
-                distance = camera_params.location.x - plane.plane.distance;
+            case BSPPlane::Type::X:
+				distance = camera_parameters.location.x - plane.plane.distance;
                 break;
-            case bsp_plane::type::Y:
-                distance = camera_params.location.y - plane.plane.distance;
+			case BSPPlane::Type::Y:
+				distance = camera_parameters.location.y - plane.plane.distance;
                 break;
-            case bsp_plane::type::Z:
-                distance = camera_params.location.z - plane.plane.distance;
+			case BSPPlane::Type::Z:
+				distance = camera_parameters.location.z - plane.plane.distance;
                 break;
             default:
-                distance = glm::dot(plane.plane.normal, camera_params.location) - plane.plane.distance;
+				distance = glm::dot(plane.plane.normal, camera_parameters.location) - plane.plane.distance;
             }
 
             if (distance > 0)
@@ -749,12 +749,11 @@ namespace naga
 
             //render mode
             auto render_mode_optional = entity.get_optional<i32>("rendermode");
-
-            render_mode render_mode = render_mode::NORMAL;
+			auto render_mode = RenderMode::NORMAL;
 
             if (render_mode_optional)
             {
-                render_mode = static_cast<bsp::render_mode>(render_mode_optional.get());
+                render_mode = static_cast<RenderMode>(render_mode_optional.get());
             }
 
             //alpha
@@ -806,20 +805,20 @@ namespace naga
 
             switch (render_mode)
             {
-            case render_mode::TEXTURE:
+            case RenderMode::TEXTURE:
                 gpu.set_uniform("alpha", 0.0f);
                 blend_state.is_enabled = true;
-                blend_state.src_factor = gpu_t::blend_factor::SRC_ALPHA;
-                blend_state.dst_factor = gpu_t::blend_factor::ONE;
+                blend_state.src_factor = Gpu::BlendFactor::SRC_ALPHA;
+                blend_state.dst_factor = Gpu::BlendFactor::ONE;
                 break;
-            case render_mode::SOLID:
+			case RenderMode::SOLID:
                 gpu.set_uniform("should_test_alpha", 1);
                 break;
-            case render_mode::ADDITIVE:
+			case RenderMode::ADDITIVE:
                 gpu.set_uniform("alpha", alpha);
                 blend_state.is_enabled = true;
-                blend_state.src_factor = gpu_t::blend_factor::ONE;
-                blend_state.dst_factor = gpu_t::blend_factor::ONE;
+                blend_state.src_factor = Gpu::BlendFactor::ONE;
+                blend_state.dst_factor = Gpu::BlendFactor::ONE;
                 depth_state.should_write_mask = false;
                 break;
             default:
@@ -840,11 +839,11 @@ namespace naga
 
             switch (render_mode)
             {
-            case render_mode::TEXTURE:
-            case render_mode::ADDITIVE:
+			case RenderMode::TEXTURE:
+			case RenderMode::ADDITIVE:
                 gpu.set_uniform("alpha", 1.0f);
                 break;
-            case render_mode::SOLID:
+			case RenderMode::SOLID:
                 gpu.set_uniform("should_test_alpha", 0);
                 break;
             default:
@@ -874,17 +873,17 @@ namespace naga
 
         gpu.programs.pop();
 
-        gpu.buffers.pop(gpu_t::buffer_target::ELEMENT_ARRAY);
-        gpu.buffers.pop(gpu_t::buffer_target::ARRAY);
+        gpu.buffers.pop(Gpu::BufferTarget::ELEMENT_ARRAY);
+        gpu.buffers.pop(Gpu::BufferTarget::ARRAY);
 
         gpu.culling.pop_state();
 
         gpu.blend.pop_state();
     }
 
-    i32 bsp::get_leaf_index_from_location(const vec3& location) const
+    i32 BSP::get_leaf_index_from_location(const vec3& location) const
     {
-        node_index_type node_index = 0;
+        NodeIndexType node_index = 0;
 
         while (node_index >= 0)
         {

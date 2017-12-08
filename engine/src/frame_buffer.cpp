@@ -5,25 +5,25 @@
 
 namespace naga
 {
-    frame_buffer::frame_buffer(gpu_frame_buffer_type type, const gpu_frame_buffer_size_type& size) :
+	FrameBuffer::FrameBuffer(GpuFrameBufferType type, const GpuFrameBufferSizeType& size) :
         type(type),
         size(size)
     {
         id = gpu.create_frame_buffer(type, size, color_texture, depth_stencil_texture, depth_texture);
     }
 
-    frame_buffer::~frame_buffer()
+	FrameBuffer::~FrameBuffer()
     {
         gpu.destroy_frame_buffer(id);
     }
 
-    void frame_buffer::on_bind() const
+	void FrameBuffer::on_bind() const
     {
         //NOTE: setting these flags on binding could have unforseen consequences
         auto gpu_color_state = gpu.color.get_state();
         auto gpu_depth_state = gpu.depth.get_state();
 
-        if ((static_cast<gpu_frame_buffer_type_flags_type>(type) & GPU_FRAME_BUFFER_TYPE_FLAG_COLOR) == GPU_FRAME_BUFFER_TYPE_FLAG_COLOR)
+		if ((static_cast<GpuFrameBufferTypeFlagsType>(type)& GPU_FRAME_BUFFER_TYPE_FLAG_COLOR) == GPU_FRAME_BUFFER_TYPE_FLAG_COLOR)
         {
             gpu_color_state.mask.r = true;
             gpu_color_state.mask.g = true;
@@ -38,7 +38,7 @@ namespace naga
             gpu_color_state.mask.a = false;
         }
 
-        if ((static_cast<gpu_frame_buffer_type_flags_type>(type) & GPU_FRAME_BUFFER_TYPE_FLAG_DEPTH) == GPU_FRAME_BUFFER_TYPE_FLAG_DEPTH)
+		if ((static_cast<GpuFrameBufferTypeFlagsType>(type) & GPU_FRAME_BUFFER_TYPE_FLAG_DEPTH) == GPU_FRAME_BUFFER_TYPE_FLAG_DEPTH)
         {
             gpu_depth_state.should_write_mask = true;
         }
@@ -53,7 +53,7 @@ namespace naga
         //TODO: stencil mask
     }
 
-    void frame_buffer::set_size(const gpu_frame_buffer_size_type& size)
+	void FrameBuffer::set_size(const GpuFrameBufferSizeType& size)
     {
         if (size == get_size())
         {

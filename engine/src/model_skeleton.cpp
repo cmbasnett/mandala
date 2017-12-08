@@ -6,19 +6,19 @@
 
 namespace naga
 {
-    void model_skeleton::interpolate(model_skeleton& skeleton, const model_skeleton& a, const model_skeleton& b, f32 t)
+	void ModelSkeleton::interpolate(const ModelSkeleton& a, const ModelSkeleton& b, f32 t)
     {
 #if defined(DEBUG)
-        assert(skeleton.bone_matrices.size() == a.bone_matrices.size());
-        assert(skeleton.bone_matrices.size() == b.bone_matrices.size());
-        assert(skeleton.bones.size() == a.bones.size());
-        assert(skeleton.bones.size() == b.bones.size());
+        assert(bone_matrices.size() == a.bone_matrices.size());
+        assert(bone_matrices.size() == b.bone_matrices.size());
+        assert(bones.size() == a.bones.size());
+        assert(bones.size() == b.bones.size());
         assert(t >= 0.0f && t <= 1.0f);
 #endif
 
-        for(size_t i = 0; i < skeleton.bones.size(); ++i)
+        for(size_t i = 0; i < bones.size(); ++i)
         {
-            auto& skeleton_bone = skeleton.bones[i];
+            auto& skeleton_bone = bones[i];
             const auto& bone_0 = a.bones[i];
             const auto& bone_1 = b.bones[i];
 
@@ -30,9 +30,9 @@ namespace naga
             skeleton_bone.pose.location = glm::mix(bone_0.pose.location, bone_1.pose.location, t);
             skeleton_bone.pose.rotation = glm::slerp(bone_0.pose.rotation, bone_1.pose.rotation, t);
 
-            skeleton.bone_matrices[i] = skeleton_bone.pose.to_matrix();
+            bone_matrices[i] = skeleton_bone.pose.to_matrix();
         }
 
-        skeleton.aabb = aabb3::join(a.aabb, b.aabb);
+		aabb = AABB3::join(a.aabb, b.aabb);
     }
 }

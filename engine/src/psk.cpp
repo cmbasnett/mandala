@@ -5,7 +5,7 @@
 #include "camera_params.hpp"
 #include "gpu_program_mgr.hpp"
 #include "gpu_buffer_mgr.hpp"
-#include "resource_mgr.hpp"
+#include "resource_manager.hpp"
 #include "texture.hpp"
 #include "opengl.hpp"
 
@@ -98,8 +98,8 @@ namespace naga
 			vertices.push_back(vertex);
 		}
 
-		vertex_buffer = gpu_buffers.make<vertex_buffer_type>().lock();
-		vertex_buffer->data(vertices, gpu_t::buffer_usage::STATIC_DRAW);
+		vertex_buffer = gpu_buffers.make<VertexBufferType>().lock();
+		vertex_buffer->data(vertices, Gpu::BufferUsage::STATIC_DRAW);
 
 		// index buffer
 		std::vector<index_type> indices;
@@ -113,31 +113,31 @@ namespace naga
 
 		index_count = indices.size();
 
-		index_buffer = gpu_buffers.make<index_buffer_type>().lock();
-		index_buffer->data(indices, gpu_t::buffer_usage::STATIC_DRAW);
+		index_buffer = gpu_buffers.make<IndexBufferType>().lock();
+		index_buffer->data(indices, Gpu::BufferUsage::STATIC_DRAW);
 	}
 
-	void PSK::render(camera_params& camera_params)
+	void PSK::render(CameraParameters& camera_parameters)
 	{
-		gpu.buffers.push(gpu_t::buffer_target::ARRAY, vertex_buffer);
-		gpu.buffers.push(gpu_t::buffer_target::ELEMENT_ARRAY, index_buffer);
+		gpu.buffers.push(Gpu::BufferTarget::ARRAY, vertex_buffer);
+		gpu.buffers.push(Gpu::BufferTarget::ELEMENT_ARRAY, index_buffer);
 
 		const auto gpu_program = gpu_programs.get<basic_gpu_program>();
 
 		gpu.programs.push(gpu_program);
 
 		gpu.set_uniform("world_matrix", mat4());
-		gpu.set_uniform("view_projection_matrix", camera_params.projection_matrix * camera_params.view_matrix);
+		gpu.set_uniform("view_projection_matrix", camera_parameters.projection_matrix * camera_parameters.view_matrix);
 		//gpu.set_uniform("diffuse_texture", 0);
 		gpu.set_uniform("color", vec4(1.0f));
 
 
-		const auto texture = resources.get<naga::texture>("white.png");
+		const auto texture = resources.get<Texture>("white.png");
 		gpu.textures.bind(0, texture);
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-		gpu.draw_elements(gpu_t::primitive_type::TRIANGLES, index_count, index_buffer_type::DATA_TYPE, 0);
+		gpu.draw_elements(Gpu::PrimitiveType::TRIANGLES, index_count, IndexBufferType::DATA_TYPE, 0);
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -145,7 +145,7 @@ namespace naga
 
 		gpu.programs.pop();
 
-		gpu.buffers.pop(gpu_t::buffer_target::ELEMENT_ARRAY);
-		gpu.buffers.pop(gpu_t::buffer_target::ARRAY);
+		gpu.buffers.pop(Gpu::BufferTarget::ELEMENT_ARRAY);
+		gpu.buffers.pop(Gpu::BufferTarget::ARRAY);
 	}
 }

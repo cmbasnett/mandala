@@ -6,14 +6,12 @@
 
 namespace naga
 {
-    struct input_event_t
+	struct InputEvent
     {
-        typedef size_t id_type;
-
 #if defined(NAGA_PC)
-        typedef u8 mod_flags_type;
+        typedef u8 ModFlagsType;
 
-        enum : mod_flags_type
+		enum : ModFlagsType
         {
             MOD_FLAG_SHIFT = (1 << 0),
             MOD_FLAG_CTRL = (1 << 1),
@@ -22,7 +20,7 @@ namespace naga
         };
 #endif
 
-        enum class device_type_e : i8
+        enum class DeviceType : i8
         {
             NONE = -1,
             TOUCH,
@@ -33,12 +31,11 @@ namespace naga
             COUNT
         };
 
-        struct touch_t
+        struct Touch
         {
-            typedef size_t touch_id_type;
-            typedef vec2_f64 location_type;
+            typedef vec2 VectorType;
 
-            enum class type_e : i8
+            enum class Type : i8
             {
                 NONE = -1,
                 PRESS,
@@ -48,7 +45,7 @@ namespace naga
             };
 
 #if defined(NAGA_PC)
-            enum class button_e : i8
+            enum class Button : i8
             {
                 NONE = -1,
                 LEFT,
@@ -63,19 +60,19 @@ namespace naga
             };
 #endif
 
-            touch_id_type id = 0;
-            type_e type = type_e::NONE;
+			size_t id = 0;
+			Type type = Type::NONE;
 #if defined(NAGA_PC)
-            button_e button = button_e::NONE;
+			Button button = Button::NONE;
 #endif
-            location_type location;
-            location_type location_delta;
-            mod_flags_type mod_flags = 0;
+			VectorType location;
+			VectorType location_delta;
+            ModFlagsType mod_flags = 0;
         };
 
-        struct keyboard_t
+        struct Keyboard
         {
-            enum class type_e : i8
+            enum class Type : i8
             {
                 NONE = -1,
                 KEY_RELEASE,
@@ -84,7 +81,7 @@ namespace naga
                 CHARACTER
             };
 
-            enum class key_e : i16
+            enum class Key : i16
             {
                 NONE               = -1,
                 SPACE              = 32,
@@ -209,19 +206,19 @@ namespace naga
                 MENU               = 348
             };
 
-            type_e type = type_e::NONE;
-            key_e key = key_e::NONE;
-            mod_flags_type mod_flags = 0;
+			Type type = Type::NONE;
+			Key key = Key::NONE;
+            ModFlagsType mod_flags = 0;
             wchar_t character = L'\0';
         };
 
 #if defined(NAGA_PC)
-        struct gamepad_t
+        struct Gamepad
         {
-            typedef u8 index_type;
-            typedef f32 axis_value_type;
+            typedef u8 IndexType;
+            typedef f32 AxisValueType;
 
-            enum class type_e : i8
+            enum class Type : i8
             {
                 NONE = -1,
                 PRESS,
@@ -229,21 +226,21 @@ namespace naga
                 AXIS_MOVE
             };
 
-            index_type index = 0;
-            index_type button_index = 0;
-            index_type axis_index = 0;
-            axis_value_type axis_value = 0;
-            axis_value_type axis_value_delta = 0;
-            type_e type = type_e::NONE;
+			IndexType index = 0;
+			IndexType button_index = 0;
+			IndexType axis_index = 0;
+			AxisValueType axis_value = 0;
+			AxisValueType axis_value_delta = 0;
+			Type type = Type::NONE;
         };
 #endif
 
-        id_type id = 0;
-        device_type_e device_type = device_type_e::NONE;
-        touch_t touch;
-        keyboard_t keyboard;
+		size_t id = 0;
+		DeviceType device_type = DeviceType::NONE;
+        Touch touch;
+        Keyboard keyboard;
 #if defined(NAGA_PC)
-        gamepad_t gamepad;
+        Gamepad gamepad;
 #endif
     };
 }

@@ -9,16 +9,16 @@
 
 namespace naga
 {
-    struct quadtree
+    struct QuadTree
     {
-        typedef f32 scalar_type;
-        typedef details::aabb3<scalar_type> bounds_type;
+        typedef f32 ScalarType;
+		typedef details::AABB3<ScalarType> BoundsType;
 
-        struct node
+        struct Node
 		{
-			typedef std::array<node*, 4> children_type;
+			typedef std::array<Node*, 4> ChildrenType;
 
-			node(const bounds_type& bounds) :
+			Node(const BoundsType& bounds) :
 				bounds(bounds)
 			{
 				children.fill(nullptr);
@@ -27,22 +27,22 @@ namespace naga
             void branch(size_t iterations);
 
             bool is_leaf() const { return children[0] == nullptr; }
-            const bounds_type& get_bounds() const { return bounds; }
-			const children_type& get_children() const { return children; }
+			const BoundsType& get_bounds() const { return bounds; }
+			const ChildrenType& get_children() const { return children; }
 
         private:
-            bounds_type bounds;
-			children_type children;
+			BoundsType bounds;
+			ChildrenType children;
         };
 
-        quadtree(scalar_type size, scalar_type height, scalar_type leaf_size);
+		QuadTree(ScalarType size, ScalarType height, ScalarType leaf_size);
 
-        const bounds_type& get_bounds() const { return root->get_bounds(); }
-		const node* get_root() const { return root; }
+		const BoundsType& get_bounds() const { return root->get_bounds(); }
+		const Node* get_root() const { return root; }
 
-		std::vector<const node*> trace(const line3& ray) const;
+		std::vector<const Node*> trace(const Line3& ray) const;
 
     private:
-		node* root = nullptr;
+		Node* root = nullptr;
     };
 }

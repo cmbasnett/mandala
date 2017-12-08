@@ -27,18 +27,18 @@
 
 namespace naga
 {
-    gui_label::string_type& gui_label::sanitize_string(string_type& string)
+    GUILabel::StringType& GUILabel::sanitize_string(StringType& string)
     {
         auto string_itr = string.begin();
 
         while (string_itr != string.end())
         {
-            if (*string_itr == color_push_character<gui_label::string_type::value_type>::VALUE)
+            if (*string_itr == color_push_character<GUILabel::StringType::value_type>::VALUE)
             {
                 //encountered color push character
                 string_itr = string.erase(string_itr);
 
-                if (string_itr != string.end() && *string_itr != color_push_character<gui_label::string_type::value_type>::VALUE)
+                if (string_itr != string.end() && *string_itr != color_push_character<GUILabel::StringType::value_type>::VALUE)
                 {
                     //determine how many characters to erase
                     auto erase_count = std::min(std::distance(string_itr, string.end()), rgb_hex_string_length);
@@ -49,7 +49,7 @@ namespace naga
                     continue;
                 }
             }
-            else if (*string_itr == color_pop_character<gui_label::string_type::value_type>::VALUE)
+            else if (*string_itr == color_pop_character<GUILabel::StringType::value_type>::VALUE)
             {
                 //encountered color pop character
                 string_itr = string.erase(string_itr);
@@ -66,19 +66,19 @@ namespace naga
         return string;
     }
 
-    gui_label::string_type& gui_label::escape_string(string_type& string)
+    GUILabel::StringType& GUILabel::escape_string(StringType& string)
     {
         auto string_itr = string.begin();
 
         while (string_itr != string.end())
         {
-            if (*string_itr == color_push_character<string_type::value_type>::VALUE)
+            if (*string_itr == color_push_character<StringType::value_type>::VALUE)
             {
-                string_itr = string.insert(string_itr, color_push_character<string_type::value_type>::VALUE) + 1;
+                string_itr = string.insert(string_itr, color_push_character<StringType::value_type>::VALUE) + 1;
             }
-            else if (*string_itr == color_pop_character<string_type::value_type>::VALUE)
+            else if (*string_itr == color_pop_character<StringType::value_type>::VALUE)
             {
-                string_itr = string.insert(string_itr, color_pop_character<string_type::value_type>::VALUE) + 1;
+                string_itr = string.insert(string_itr, color_pop_character<StringType::value_type>::VALUE) + 1;
             }
 
             if (string_itr != string.end())
@@ -90,24 +90,24 @@ namespace naga
         return string;
     }
 
-    gui_label::gui_label()
+	GUILabel::GUILabel()
     {
         cursor.string_begin = string.begin();
         cursor.string_end = string.end();
         cursor.time_point = cursor_data_t::clock_type::now();
     }
 
-    gui_label::line_height_type gui_label::get_line_height() const
+    GUILabel::LineHeightType GUILabel::get_line_height() const
     {
         return bitmap_font->get_line_height() + line_spacing;
     }
 
-    size_t gui_label::get_line_count() const
+    size_t GUILabel::get_line_count() const
     {
         return lines.size();
     }
 
-    void gui_label::set_string(const string_type& string)
+    void GUILabel::set_string(const StringType& string)
     {
         if (max_length)
         {
@@ -124,7 +124,7 @@ namespace naga
         dirty();
     }
 
-    void gui_label::set_max_length(const boost::optional<size_t>& max_length)
+    void GUILabel::set_max_length(const boost::optional<size_t>& max_length)
     {
         this->max_length = max_length;
 
@@ -134,13 +134,13 @@ namespace naga
         }
     }
 
-    void gui_label::on_clean_begin()
+    void GUILabel::on_clean_begin()
     {
         if (is_autosized_to_text)
         {
             update_lines();
 
-            size_type text_size;
+            SizeType text_size;
 
             text_size.y = static_cast<f32>(lines.size() * get_line_height());
 
@@ -153,12 +153,12 @@ namespace naga
 			// "internal" size mode, that is hidden from the user. the user would probably
 			// not like it if the size mode was being overridden as a result of
 			// is_autosized_to_text being true.
-            set_size_modes(gui_size_modes_t(gui_size_mode_e::ABSOLUTE, gui_size_mode_e::ABSOLUTE));
+            set_size_modes(GUISizeModes(GUISizeMode::ABSOLUTE, GUISizeMode::ABSOLUTE));
             set_size(text_size);
         }
     }
 
-    void gui_label::on_clean_end()
+    void GUILabel::on_clean_end()
     {
         if (!is_autosized_to_text)
         {
@@ -175,13 +175,13 @@ namespace naga
 
         switch (vertical_alignment)
         {
-        case vertical_alignment_e::TOP:
+        case VerticalAlignment::TOP:
             base_translation.y += padded_size.y - bitmap_font->get_base();
             break;
-        case vertical_alignment_e::MIDDLE:
+        case VerticalAlignment::MIDDLE:
             base_translation.y += (padded_size.y / 2) - (bitmap_font->get_base() / 2) + ((line_height * (lines.size() - 1)) / 2);
             break;
-        case vertical_alignment_e::BOTTOM:
+        case VerticalAlignment::BOTTOM:
             base_translation.y += (line_height * lines.size()) - bitmap_font->get_base();
             break;
         default:
@@ -190,10 +190,10 @@ namespace naga
 
         switch (justification)
         {
-        case justification_e::CENTER:
+        case Justification::CENTER:
             base_translation.x += padded_size.x / 2;
             break;
-        case justification_e::RIGHT:
+        case Justification::RIGHT:
             base_translation.x += padded_size.x;
             break;
         default:
@@ -213,7 +213,7 @@ namespace naga
         update_cursor();
     }
 
-    void gui_label::on_render_begin(mat4& world_matrix, mat4& view_projection_matrix)
+    void GUILabel::on_render_begin(mat4& world_matrix, mat4& view_projection_matrix)
     {
         if (bitmap_font == nullptr)
         {
@@ -249,13 +249,13 @@ namespace naga
             }
         }
 
-        gui_node::on_render_begin(world_matrix, view_projection_matrix);
+		GUINode::on_render_begin(world_matrix, view_projection_matrix);
     }
 
-    bool gui_label::on_input_event_begin(input_event_t& input_event)
+	bool GUILabel::on_input_event_begin(InputEvent& input_event)
     {
-        if (input_event.device_type == input_event_t::device_type_e::TOUCH &&
-            input_event.touch.type == input_event_t::touch_t::type_e::PRESS)
+		if (input_event.device_type == InputEvent::DeviceType::TOUCH &&
+			input_event.touch.type == InputEvent::Touch::Type::PRESS)
         {
             if (contains(get_bounds(), input_event.touch.location))
             {
@@ -326,16 +326,16 @@ namespace naga
 
         if (!is_read_only /*&& has_focus()*/)
         {
-            if (input_event.device_type == input_event_t::device_type_e::KEYBOARD)
+			if (input_event.device_type == InputEvent::DeviceType::KEYBOARD)
             {
-                if (input_event.keyboard.type == input_event_t::keyboard_t::type_e::KEY_PRESS ||
-                    input_event.keyboard.type == input_event_t::keyboard_t::type_e::KEY_REPEAT)
+				if (input_event.keyboard.type == InputEvent::Keyboard::Type::KEY_PRESS ||
+					input_event.keyboard.type == InputEvent::Keyboard::Type::KEY_REPEAT)
                 {
                     std::wstring_convert<std::codecvt_utf8<wchar_t>> wstring_convert;
 
                     switch (input_event.keyboard.key)
                     {
-                    case input_event_t::keyboard_t::key_e::BACKSPACE:
+					case InputEvent::Keyboard::Key::BACKSPACE:
                     {
                         if (string.empty())
                         {
@@ -359,12 +359,12 @@ namespace naga
 
                         return true;
                     }
-                    case input_event_t::keyboard_t::key_e::ENTER:
-                    case input_event_t::keyboard_t::key_e::KP_ENTER:
+					case InputEvent::Keyboard::Key::ENTER:
+					case InputEvent::Keyboard::Key::KP_ENTER:
                     {
-                        if (on_enter_function && (input_event.keyboard.mod_flags & input_event_t::MOD_FLAG_SHIFT) == 0)
+						if (on_enter_function && (input_event.keyboard.mod_flags & InputEvent::MOD_FLAG_SHIFT) == 0)
                         {
-                            on_enter_function();
+                            on_enter_function(shared_from_this());
                         }
                         else
                         {
@@ -376,7 +376,7 @@ namespace naga
 
                         return true;
                     }
-                    case input_event_t::keyboard_t::key_e::HOME:
+					case InputEvent::Keyboard::Key::HOME:
                     {
                         //TODO: this is a bit inefficient as it requires iteration over all lines
                         //would be more expedient if we dealt with finding the line the cursor is
@@ -385,7 +385,7 @@ namespace naga
                         {
                             if (cursor.string_begin >= line.string_begin && cursor.string_begin <= line.string_end)
                             {
-                                if (input_event.keyboard.mod_flags == input_event_t::MOD_FLAG_SHIFT)
+								if (input_event.keyboard.mod_flags == InputEvent::MOD_FLAG_SHIFT)
                                 {
                                     cursor.string_end = cursor.string_begin;
                                     cursor.string_begin = line.string_begin;
@@ -404,7 +404,7 @@ namespace naga
 
                         break;
                     }
-                    case input_event_t::keyboard_t::key_e::END:
+					case InputEvent::Keyboard::Key::END:
                     {
                         //TODO: this is a bit inefficient as it requires iteration over all lines
                         //would be more expedient if we dealt with finding the line the cursor is
@@ -413,7 +413,7 @@ namespace naga
                         {
                             if (cursor.string_begin >= line.string_begin && cursor.string_begin <= line.string_end)
                             {
-                                if (input_event.keyboard.mod_flags == input_event_t::MOD_FLAG_SHIFT)
+								if (input_event.keyboard.mod_flags == InputEvent::MOD_FLAG_SHIFT)
                                 {
                                     cursor.string_end = line.string_end;
                                 }
@@ -431,7 +431,7 @@ namespace naga
 
                         break;
                     }
-                    case input_event_t::keyboard_t::key_e::DEL:
+					case InputEvent::Keyboard::Key::DEL:
                     {
                         if (cursor.string_begin != cursor.string_end)
                         {
@@ -448,13 +448,13 @@ namespace naga
 
                         return true;
                     }
-                    case input_event_t::keyboard_t::key_e::LEFT:
+					case InputEvent::Keyboard::Key::LEFT:
                     {
                         if (cursor.string_begin != string.begin())
                         {
                             --cursor.string_begin;
 
-                            if (input_event.keyboard.mod_flags != input_event_t::MOD_FLAG_SHIFT)
+							if (input_event.keyboard.mod_flags != InputEvent::MOD_FLAG_SHIFT)
                             {
                                 cursor.string_end = cursor.string_begin;
                             }
@@ -464,13 +464,13 @@ namespace naga
 
                         return true;
                     }
-                    case input_event_t::keyboard_t::key_e::RIGHT:
+					case InputEvent::Keyboard::Key::RIGHT:
                     {
                         if (cursor.string_begin < string.end())
                         {
                             cursor.string_end = cursor.string_begin + 1;
 
-                            if (input_event.keyboard.mod_flags != input_event_t::MOD_FLAG_SHIFT)
+							if (input_event.keyboard.mod_flags != InputEvent::MOD_FLAG_SHIFT)
                             {
                                 cursor.string_begin = cursor.string_end;
                             }
@@ -480,20 +480,20 @@ namespace naga
 
                         return true;
                     }
-                    case input_event_t::keyboard_t::key_e::DOWN:
+					case InputEvent::Keyboard::Key::DOWN:
                     {
                         //TODO: set cursor to the same column on the next line
 
                         break;
                     }
-                    case input_event_t::keyboard_t::key_e::UP:
+					case InputEvent::Keyboard::Key::UP:
                     {
                         //TODO: set cursor to the same column on the previous line
 
                         break;
                     }
-                    case input_event_t::keyboard_t::key_e::V:   //PASTE
-                        if (input_event.keyboard.mod_flags == input_event_t::MOD_FLAG_CTRL)
+					case InputEvent::Keyboard::Key::V:   //PASTE
+						if (input_event.keyboard.mod_flags == InputEvent::MOD_FLAG_CTRL)
                         {
                             const auto clipboard_string = wstring_convert.from_bytes(platform.get_clipboard_string().c_str());
                             auto paste_length = clipboard_string.length();
@@ -511,10 +511,10 @@ namespace naga
                             return true;
                         }
                         break;
-                    case input_event_t::keyboard_t::key_e::C:   //COPY
-                        if (input_event.keyboard.mod_flags == input_event_t::MOD_FLAG_CTRL)
+					case InputEvent::Keyboard::Key::C:   //COPY
+						if (input_event.keyboard.mod_flags == InputEvent::MOD_FLAG_CTRL)
                         {
-                            string_type string = { cursor.string_begin, cursor.string_end };
+                            StringType string = { cursor.string_begin, cursor.string_end };
                             platform.set_clipboard_string(wstring_convert.to_bytes(string.c_str()));
 
                             //TODO: 
@@ -522,11 +522,11 @@ namespace naga
                             return true;
                         }
                         break;
-                    case input_event_t::keyboard_t::key_e::X:   //CUT
+					case InputEvent::Keyboard::Key::X:   //CUT
                     {
-                        if (input_event.keyboard.mod_flags == input_event_t::MOD_FLAG_CTRL)
+						if (input_event.keyboard.mod_flags == InputEvent::MOD_FLAG_CTRL)
                         {
-                            string_type string = { cursor.string_begin, cursor.string_end };
+                            StringType string = { cursor.string_begin, cursor.string_end };
                             platform.set_clipboard_string(wstring_convert.to_bytes(string.c_str()));
 
                             cursor.string_begin = string.erase(cursor.string_begin, cursor.string_end);
@@ -538,9 +538,9 @@ namespace naga
                         }
                         break;
                     }
-                    case input_event_t::keyboard_t::key_e::A:   //SELECT ALL
+					case InputEvent::Keyboard::Key::A:   //SELECT ALL
                     {
-                        if (input_event.keyboard.mod_flags == input_event_t::MOD_FLAG_CTRL)
+						if (input_event.keyboard.mod_flags == InputEvent::MOD_FLAG_CTRL)
                         {
                             cursor.string_begin = string.begin();
                             cursor.string_end = string.end();
@@ -555,7 +555,7 @@ namespace naga
                         break;
                     }
                 }
-                else if (input_event.keyboard.type == input_event_t::keyboard_t::type_e::CHARACTER)
+				else if (input_event.keyboard.type == InputEvent::Keyboard::Type::CHARACTER)
                 {
                     if (!max_length || max_length.get() > string.length())
                     {
@@ -578,7 +578,7 @@ namespace naga
         return false;
     }
 
-    void gui_label::update_cursor()
+    void GUILabel::update_cursor()
     {
         for (const auto& line : lines)
         {
@@ -600,7 +600,7 @@ namespace naga
         cursor.time_point = cursor_data_t::clock_type::now();
     }
 
-    void gui_label::update_lines()
+    void GUILabel::update_lines()
     {
         static const auto OBSCURE_CHARACTER = L'•';
         static const auto FALLBACK_CHARACTER = L'?';
@@ -664,18 +664,18 @@ namespace naga
             auto was_line_added = false;
             auto string_space_itr = string.end();
 
-            auto parse_color_codes = [&](string_type& string, std::vector<std::pair<size_t, vec4>>& color_pushes, std::vector<size_t>& color_pops)
+            auto parse_color_codes = [&](StringType& string, std::vector<std::pair<size_t, vec4>>& color_pushes, std::vector<size_t>& color_pops)
             {
                 auto string_itr = string.begin();
 
                 while (string_itr != string.end())
                 {
-                    if (*string_itr == color_push_character<string_type::value_type>::VALUE)
+                    if (*string_itr == color_push_character<StringType::value_type>::VALUE)
                     {
                         //encountered color push character
                         string_itr = string.erase(string_itr);
 
-                        if (string_itr != string.end() && *string_itr != color_push_character<string_type::value_type>::VALUE)
+                        if (string_itr != string.end() && *string_itr != color_push_character<StringType::value_type>::VALUE)
                         {
                             //determine how many characters to erase
                             auto erase_count = std::min(std::distance(string_itr, string.end()), rgb_hex_string_length);
@@ -683,7 +683,7 @@ namespace naga
                             if (erase_count == rgb_hex_string_length)
                             {
                                 //try to parse a hex color from string
-                                string_type hex_string = { string_itr, string_itr + rgb_hex_string_length };
+                                StringType hex_string = { string_itr, string_itr + rgb_hex_string_length };
 
                                 try
                                 {
@@ -703,12 +703,12 @@ namespace naga
                             continue;
                         }
                     }
-                    else if (*string_itr == color_pop_character<string_type::value_type>::VALUE)
+                    else if (*string_itr == color_pop_character<StringType::value_type>::VALUE)
                     {
                         //encountered color pop character
                         string_itr = string.erase(string_itr);
 
-                        if (string_itr == string.end() || *string_itr != color_pop_character<string_type::value_type>::VALUE)
+                        if (string_itr == string.end() || *string_itr != color_pop_character<StringType::value_type>::VALUE)
                         {
                             color_pops.push_back(std::distance(string.begin(), string_itr));
 
@@ -723,7 +723,7 @@ namespace naga
                 }
             };
 
-            auto replace_unrecognized_characters = [&](string_type& string)
+            auto replace_unrecognized_characters = [&](StringType& string)
             {
                 auto string_itr = string.begin();
 
@@ -738,13 +738,13 @@ namespace naga
                 }
             };
 
-            auto add_line = [&](string_itr_type string_begin, string_itr_type string_end)
+			auto add_line = [&](StringIteratorType string_begin, StringIteratorType string_end)
             {
                 line_t line;
                 line.string_begin = string_begin;
                 line.string_end = string_end;
 
-                string_type render_string = { string_begin, string_end };
+                StringType render_string = { string_begin, string_end };
 
                 //strip color codes from string
                 if (should_use_color_codes)
@@ -769,10 +769,10 @@ namespace naga
 
                 switch (justification)
                 {
-                case justification_e::CENTER:
+                case Justification::CENTER:
                     line.rectangle.x -= render_string_width / 2;
                     break;
-                case justification_e::RIGHT:
+                case Justification::RIGHT:
                     line.rectangle.x -= render_string_width;
                     break;
                 default:
@@ -809,7 +809,7 @@ namespace naga
 
                 if (should_use_color_codes)
                 {
-                    if (*string_itr == color_push_character<string_type::value_type>::VALUE)
+                    if (*string_itr == color_push_character<StringType::value_type>::VALUE)
                     {
                         //encountered color push character
 
@@ -820,14 +820,14 @@ namespace naga
                         {
                             break;
                         }
-                        else if (*string_itr != color_push_character<string_type::value_type>::VALUE)
+                        else if (*string_itr != color_push_character<StringType::value_type>::VALUE)
                         {
                             string_itr += std::min(std::distance(string_itr, string.end()), rgb_hex_string_length);
 
                             continue;
                         }
                     }
-                    else if (*string_itr == color_pop_character<string_type::value_type>::VALUE)
+                    else if (*string_itr == color_pop_character<StringType::value_type>::VALUE)
                     {
                         //encountered color pop character
                         ++string_itr;
@@ -836,7 +836,7 @@ namespace naga
                         {
                             break;
                         }
-                        else if (*string_itr != color_pop_character<string_type::value_type>::VALUE)
+                        else if (*string_itr != color_pop_character<StringType::value_type>::VALUE)
                         {
                             continue;
                         }

@@ -9,9 +9,9 @@
 
 namespace naga
 {
-    struct gui_image : public gui_node
+	struct GUIImage : public GUINode
     {
-        enum class triangle_mode_e
+        enum class TriangleMode
         {
             BOTTOM_RIGHT,
             TOP_LEFT,
@@ -24,40 +24,40 @@ namespace naga
         static const size_t VERTEX_COUNT = 16;
         static const size_t INDEX_COUNT = 54;
         
-        typedef gui_image_gpu_program::vertex_type vertex_type;
-        typedef index_type<INDEX_COUNT>::type index_type;
-        typedef vertex_buffer<vertex_type> vertex_buffer_type;
-        typedef index_buffer<index_type> index_buffer_type;
+        typedef gui_image_gpu_program::VertexType VertexType;
+        typedef IndexType<INDEX_COUNT>::Type IndexType;
+		typedef VertexBuffer<VertexType> VertexBufferType;
+		typedef IndexBuffer<IndexType> IndexBufferType;
 
-        gui_image();
+        GUIImage();
 
-        const boost::optional<sprite>& get_sprite() const { return sprite; }
+        const boost::optional<Sprite>& get_sprite() const { return sprite; }
         bool get_is_autosized_to_sprite() const { return is_autosized_to_sprite; }
-        triangle_mode_e get_triangle_mode() const { return triangle_mode; }
+        TriangleMode get_triangle_mode() const { return triangle_mode; }
         const vec2& get_texcoord_scale() const { return texcoord_scale; }
         const vec2& get_texcoord_origin() const { return texcoord_origin; }
         f32 get_texcoord_rotation() const { return texcoord_rotation; }
-        const padding_f32& get_slice_padding() const { return slice_padding; }
+		const Padding& get_slice_padding() const { return slice_padding; }
 
-        void set_sprite(boost::optional<sprite> sprite);
+		void set_sprite(boost::optional<Sprite> sprite);
         void set_is_autosized_to_sprite(bool is_autosized_to_sprite);
-        void set_triangle_mode(triangle_mode_e triangle_mode) { this->triangle_mode = triangle_mode; }
+        void set_triangle_mode(TriangleMode triangle_mode) { this->triangle_mode = triangle_mode; }
         void set_texcoord_scale(const vec2& texcoord_scale) { this->texcoord_scale = texcoord_scale; }
         void set_texcoord_origin(const vec2& texcoord_origin) { this->texcoord_origin = texcoord_origin; }
         void set_texcoord_rotation(f32 texcoord_rotation) { this->texcoord_rotation = texcoord_rotation; }
-		void set_slice_padding(const padding_f32& slice_padding) { this->slice_padding = slice_padding; }
+		void set_slice_padding(const Padding& slice_padding) { this->slice_padding = slice_padding; }
 
     private:
-        boost::shared_ptr<vertex_buffer_type> vertex_buffer;
-        boost::shared_ptr<index_buffer_type> index_buffer;
-        boost::optional<sprite> sprite;
+        boost::shared_ptr<VertexBufferType> vertex_buffer;
+        boost::shared_ptr<IndexBufferType> index_buffer;
+		boost::optional<Sprite> sprite;
         bool is_autosized_to_sprite = false;
-        triangle_mode_e triangle_mode = triangle_mode_e::BOTH;
+        TriangleMode triangle_mode = TriangleMode::BOTH;
         vec2 texcoord_scale = vec2(1.0f);
         vec2 texcoord_origin = vec2(0.5f);
         vec2 texcoord_offset;
         f32 texcoord_rotation = 0.0f;
-        padding_f32 slice_padding;
+        Padding slice_padding;
 
         virtual void on_render_begin(mat4& world_matrix, mat4& view_projection_matrix) override;
         virtual void on_clean_end() override;

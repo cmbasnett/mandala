@@ -15,7 +15,7 @@
 
 namespace naga
 {
-    model_animation::model_animation(std::istream& istream)
+	ModelAnimation::ModelAnimation(std::istream& istream)
     {
         //magic
         std::array<char, 4> magic;
@@ -42,15 +42,12 @@ namespace naga
         read(istream, bone_count);
 
         //bones
-        std::vector<bone> bones;
+        std::vector<Bone> bones;
         bones.resize(bone_count);
 
         for(auto& bone : bones)
         {
-            std::string bone_name;
-            std::getline(istream, bone_name, '\0');
-            bone.hash = naga::hash(bone_name);
-
+            std::getline(istream, bone.name, '\0');
             read(istream, bone.parent_index);
             read(istream, bone.flags);
             read(istream, bone.data_start_index);
@@ -60,7 +57,7 @@ namespace naga
         read(istream, frame_count);
 
         //frame bounds
-        std::vector<aabb3> frame_bounds;
+        std::vector<AABB3> frame_bounds;
         frame_bounds.resize(frame_count);
 
         for (auto& frame_bound : frame_bounds)
@@ -74,7 +71,7 @@ namespace naga
         }
 
         //base bone frames
-        std::vector<pose3> base_bone_frames;
+        std::vector<Pose3> base_bone_frames;
         base_bone_frames.resize(bone_count);
 
         for(auto& base_bone_frame : base_bone_frames)
@@ -119,32 +116,32 @@ namespace naga
 
                 auto frame_data_start_index = (frame_data_count * i) + bone.data_start_index;
 
-                if (bone.flags & bone::flags::LOCATION_X)
+                if (bone.flags & Bone::Flags::LOCATION_X)
                 {
                     skeleton_bone.pose.location.x = frame_data[frame_data_start_index + k++];
                 }
 
-                if(bone.flags & bone::flags::LOCATION_Y)
+                if(bone.flags & Bone::Flags::LOCATION_Y)
                 {
                     skeleton_bone.pose.location.z = -frame_data[frame_data_start_index + k++];
                 }
 
-                if(bone.flags & bone::flags::LOCATION_Z)
+                if(bone.flags & Bone::Flags::LOCATION_Z)
                 {
                     skeleton_bone.pose.location.y = frame_data[frame_data_start_index + k++];
                 }
 
-                if(bone.flags & bone::flags::ROTATION_X)
+                if(bone.flags & Bone::Flags::ROTATION_X)
                 {
                     skeleton_bone.pose.rotation.x = frame_data[frame_data_start_index + k++];
                 }
 
-                if(bone.flags & bone::flags::ROTATION_Y)
+                if(bone.flags & Bone::Flags::ROTATION_Y)
                 {
                     skeleton_bone.pose.rotation.z = -frame_data[frame_data_start_index + k++];
                 }
 
-                if(bone.flags & bone::flags::ROTATION_Z)
+                if(bone.flags & Bone::Flags::ROTATION_Z)
                 {
                     skeleton_bone.pose.rotation.y = frame_data[frame_data_start_index + k++];
                 }

@@ -14,47 +14,47 @@
 
 namespace naga
 {
-    struct http_response;
-    struct http_request;
+    struct HttpResponse;
+    struct HttpRequest;
 
-    struct http_manager
+    struct HttpManager
     {
-        typedef boost::function<void(boost::shared_ptr<http_response>)> response_function_type;
-		typedef boost::function<void(size_t)> write_function_type;
+        typedef boost::function<void(boost::shared_ptr<HttpResponse>)> ResponseFunctionType;
+		typedef boost::function<void(size_t)> WriteFunctionType;
 
-        boost::shared_ptr<http_response> get(
+		boost::shared_ptr<HttpResponse> get(
             std::string url
             //http_headers_type headers = http_headers_type(),
             //http_data_type data = http_data_type(),
 			//write_function_type on_write = nullptr
             );
 
-		boost::shared_ptr<http_request> get_async(
+		boost::shared_ptr<HttpRequest> get_async(
 			const std::string& url,
             //const http_headers_type& headers = http_headers_type(),
             //const http_data_type& data = http_data_type(),
-			response_function_type on_response = response_function_type()
+			ResponseFunctionType on_response = ResponseFunctionType()
 			//write_function_type on_write = nullptr
             );
 
         void tick();
 
-        struct request_object
+        struct RequestObject
         {
-			request_object(const boost::shared_ptr<http_request>& request, response_function_type on_response) :
+			RequestObject(const boost::shared_ptr<HttpRequest>& request, ResponseFunctionType on_response) :
                 request(request),
                 on_response(on_response)
             {
             }
 
-            boost::shared_ptr<http_request> request;
-			response_function_type on_response;
+            boost::shared_ptr<HttpRequest> request;
+			ResponseFunctionType on_response;
         };
 
     private:
-        std::list<request_object> request_objects;
+		std::list<RequestObject> request_objects;
 		std::mutex request_objects_mutex;
     };
 
-    extern http_manager http;
+    extern HttpManager http;
 }

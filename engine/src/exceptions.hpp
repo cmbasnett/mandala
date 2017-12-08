@@ -6,22 +6,20 @@
 
 namespace naga
 {
-    template<typename T>
-    struct bad_value : std::exception
+	template<typename ValueType>
+    struct BadValue : std::exception
     {
-        typedef T value_type;
+		ValueType expected;
+		ValueType actual;
 
-        value_type expected;
-        value_type actual;
-
-        bad_value(const value_type& expected, const value_type& actual) :
+		BadValue(const ValueType& expected, const ValueType& actual) :
             expected(expected),
             actual(actual)
         {
         }
     };
 
-    struct bad_version : bad_value<unsigned int>
+	struct BadVersion : BadValue<unsigned int>
     {
         const char* what() const override
         {
@@ -31,7 +29,7 @@ namespace naga
         }
     };
 
-    struct bad_magic : bad_value<std::string>
+	struct BadMagic : BadValue<std::string>
     {
         const char* what() const override
         {

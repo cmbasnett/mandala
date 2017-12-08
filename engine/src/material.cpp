@@ -8,14 +8,14 @@
 #include <glm\ext.hpp>
 
 //naga
-#include "resource_mgr.hpp"
+#include "resource_manager.hpp"
 #include "texture.hpp"
 #include "material.hpp"
 #include "boost.hpp"
 
 namespace naga
 {
-    material::material(std::istream& istream)
+	Material::Material(std::istream& istream)
     {
         using namespace boost::property_tree;
 
@@ -44,7 +44,7 @@ namespace naga
             const auto diffuse_ptree = diffuse_optional.get();
 
             //texture
-			diffuse.texture = resources.get<texture>(diffuse_ptree.get<std::string>("texture"));
+			diffuse.texture = resources.get<Texture>(diffuse_ptree.get<std::string>("texture"));
 
             //color
             const auto color_optional = diffuse_ptree.get_child_optional("color");
@@ -75,7 +75,7 @@ namespace naga
             const auto normal_ptree = normal_optional.get();
 
             //texture
-			normal.texture = resources.get<texture>(normal_ptree.get<std::string>("texture"));
+			normal.texture = resources.get<Texture>(normal_ptree.get<std::string>("texture"));
         }
 
         //specular
@@ -86,7 +86,7 @@ namespace naga
             const auto specular_ptree = specular_optional.get();
 
             //texture
-			specular.texture = resources.get<texture>(specular_ptree.get<std::string>("texture"));
+			specular.texture = resources.get<Texture>(specular_ptree.get<std::string>("texture"));
 
             //color
             const auto color_optional = specular_ptree.get_child_optional("color");
@@ -125,7 +125,7 @@ namespace naga
             const auto emissive_ptree = emissive_optional.get();
 
             //texture
-			emissive.texture = resources.get<texture>(emissive_ptree.get<std::string>("texture"));
+			emissive.texture = resources.get<Texture>(emissive_ptree.get<std::string>("texture"));
 
             //color
             const auto color_optional = emissive_ptree.get_child_optional("color");

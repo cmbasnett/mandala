@@ -8,49 +8,49 @@ namespace naga
     namespace details
     {
         template<typename T>
-        struct pose
+        struct Pose
         {
-            typedef glm::detail::tquat<T> rotation_type;
-            typedef glm::detail::tmat4x4<T> matrix_type;
+            typedef glm::detail::tquat<T> RotationType;
+            typedef glm::detail::tmat4x4<T> MatrixType;
         };
 
         template<typename T>
-        struct pose2 : pose<T>
+		struct Pose2 : Pose<T>
         {
-            typedef glm::detail::tvec2<T> location_type;
+            typedef glm::detail::tvec2<T> LocationType;
 
-            location_type location;
-            rotation_type rotation;
+            LocationType location;
+            RotationType rotation;
 
-            inline matrix_type to_matrix() const
+            inline MatrixType to_matrix() const
             {
                 return glm::translate(location.x location.y, T(0)) * glm::toMat4(rotation);
             }
         };
 
         template<typename T>
-        struct pose3 : pose<T>
+        struct Pose3 : Pose<T>
         {
-            typedef glm::detail::tvec3<T> location_type;
-			typedef pose3<T> type;
+            typedef glm::detail::tvec3<T> LocationType;
+			typedef Pose3<T> Type;
 
-			pose3() = default;
-			pose3(const matrix_type& matrix) :
+			Pose3() = default;
+			Pose3(const MatrixType& matrix) :
 				location(glm::swizzle<glm::X, glm::Y, glm::Z>(glm::column(matrix, 3))),
 				rotation(matrix)
 			{
 				//TODO: verify correctness
 			}
 
-            location_type location;
-            rotation_type rotation;
+            LocationType location;
+            RotationType rotation;
 
-            inline matrix_type to_matrix() const
+            inline MatrixType to_matrix() const
             {
                 return glm::translate(location) * glm::toMat4(rotation);
 			}
 
-			type& operator *=(const type& rhs)
+			Type& operator *=(const Type& rhs)
 			{
 				*this = *this * rhs;
 				return *this;
@@ -59,16 +59,11 @@ namespace naga
 	}
 
 	template<typename T>
-	details::pose3<T> operator *(const details::pose3<T>& lhs, const details::pose3<T>& rhs)
+	details::Pose3<T> operator *(const details::Pose3<T>& lhs, const details::Pose3<T>& rhs)
 	{
-		return details::pose3<T>(lhs.to_matrix() * rhs.to_matrix());
+		return details::Pose3<T>(lhs.to_matrix() * rhs.to_matrix());
 	}
 
-    typedef details::pose2<f32> pose2_f32;
-    typedef details::pose2<f64> pose2_f64;
-    typedef pose2_f32 pose2;
-
-    typedef details::pose3<f32> pose3_f32;
-    typedef details::pose3<f64> pose3_f64;
-    typedef pose3_f32 pose3;
+	typedef details::Pose2<f32> Pose2;
+    typedef details::Pose3<f32> Pose3;
 }

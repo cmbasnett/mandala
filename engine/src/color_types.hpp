@@ -2,7 +2,7 @@
 
 namespace naga
 {
-    enum class color_type
+    enum class ColorType
     {
         G,
         GA,

@@ -18,7 +18,7 @@
 
 namespace naga
 {
-    enum class intersect_type_e
+    enum class IntersectType
     {
         DISJOINT,
         INTERSECT,
@@ -27,7 +27,7 @@ namespace naga
     };
 
     template<typename Scalar>
-    glm::detail::tvec3<Scalar> intersect(const details::plane3<Scalar>& p0, const details::plane3<Scalar>& p1, const details::plane3<Scalar>& p2)
+    glm::detail::tvec3<Scalar> intersect(const details::Plane3<Scalar>& p0, const details::Plane3<Scalar>& p1, const details::Plane3<Scalar>& p2)
     {
         const auto d0 = p0.distance;
         const auto d1 = p1.distance;
@@ -44,7 +44,7 @@ namespace naga
     }
 
     template<typename Scalar>
-    intersect_type_e intersects(const details::circle<Scalar>& circle, const details::aabb2<Scalar>& aabb)
+    IntersectType intersects(const details::Circle<Scalar>& circle, const details::AABB2<Scalar>& aabb)
     {
         const auto aabb_center = aabb.center();
         const auto distance = vec2(glm::abs(circle.origin.x - aabb_center.x), glm::abs(circle.origin.y - aabb_center.y));
@@ -52,77 +52,77 @@ namespace naga
         if (distance.x > ((aabb.width() / 2) + circle.radius) ||
             distance.y > ((aabb.height() / 2) + circle.radius))
         {
-            return intersect_type_e::DISJOINT;
+            return IntersectType::DISJOINT;
         }
 
         if (distance.x <= (aabb.width() / 2) ||
             distance.y <= (aabb.height() / 2))
         {
-            return intersect_type_e::INTERSECT;
+            return IntersectType::INTERSECT;
         }
 
         const auto distance_2 = glm::pow2(distance.x - aabb.width() / 2) + glm::pow2(distance.y - aabb.height() / 2);
 
         if (distance_2 <= glm::pow2(circle.radius))
         {
-            return intersect_type_e::intersect;
+            return IntersectType::intersect;
         }
 
-        return intersect_type_e::disjoint;
+        return IntersectType::disjoint;
     }
 
     template<typename LHSScalar, typename RHSScalar>
-    intersect_type_e intersects(const details::aabb2<LHSScalar>& lhs, const details::aabb2<RHSScalar>& rhs)
+	IntersectType intersects(const details::AABB2<LHSScalar>& lhs, const details::AABB2<RHSScalar>& rhs)
     {
         if (lhs.max.x < rhs.min.x || lhs.min.x > rhs.max.x ||
             lhs.max.y < rhs.min.y || lhs.min.y > rhs.max.y)
         {
-            return intersect_type_e::DISJOINT;
+            return IntersectType::DISJOINT;
         }
 
-        return intersect_type_e::INTERSECT;
+        return IntersectType::INTERSECT;
     }
 
     template<typename AABBScalar, typename PointScalar>
-    bool contains(const details::aabb2<AABBScalar>& aabb, const glm::detail::tvec2<PointScalar>& point)
+	bool contains(const details::AABB2<AABBScalar>& aabb, const glm::detail::tvec2<PointScalar>& point)
     {
         return aabb.min == glm::min(aabb.min, static_cast<glm::detail::tvec2<AABBScalar>>(point)) &&
                aabb.max == glm::max(aabb.max, static_cast<glm::detail::tvec2<AABBScalar>>(point));
     }
 
     template<typename AABBScalar, typename PointScalar>
-    bool contains(const details::aabb3<AABBScalar>& aabb, const glm::detail::tvec3<PointScalar>& point)
+    bool contains(const details::AABB3<AABBScalar>& aabb, const glm::detail::tvec3<PointScalar>& point)
     {
         return aabb.min == glm::min(aabb.min, static_cast<glm::detail::tvec3<AABBScalar>>(point)) &&
                aabb.max == glm::max(aabb.max, static_cast<glm::detail::tvec3<AABBScalar>>(point));
     }
 
     template<typename LHSScalar, typename RHSScalar>
-    bool contains(const details::aabb3<LHSScalar>& lhs, const details::aabb3<RHSScalar>& rhs)
+	bool contains(const details::AABB3<LHSScalar>& lhs, const details::AABB3<RHSScalar>& rhs)
     {
         return contains(lhs, rhs.min) && contains(lhs, rhs.max);
     }
 
     template<typename LHSScalar, typename RHSScalar>
-    intersect_type_e intersects(const details::aabb3<LHSScalar>& lhs, const details::aabb3<RHSScalar>& rhs)
+	IntersectType intersects(const details::AABB3<LHSScalar>& lhs, const details::AABB3<RHSScalar>& rhs)
     {
         if (contains(lhs, rhs))
         {
-            return intersect_type_e::CONTAIN;
+            return IntersectType::CONTAIN;
         }
 
         if (lhs.max.x < rhs.min.x || lhs.min.x > rhs.max.x ||
             lhs.max.y < rhs.min.y || lhs.min.y > rhs.max.y ||
             lhs.max.z < rhs.min.z || lhs.min.z > rhs.max.z)
         {
-            return intersect_type_e::DISJOINT;
+            return IntersectType::DISJOINT;
         }
 
-        return intersect_type_e::INTERSECT;
+        return IntersectType::INTERSECT;
     }
 
     template<typename Scalar>
-    intersect_type_e intersects(const details::line3<Scalar>& line, const details::aabb3<Scalar>& aabb, Scalar* t = nullptr, glm::detail::tvec3<Scalar>* location = nullptr, glm::detail::tvec3<Scalar>* normal = nullptr)
+	IntersectType intersects(const details::Line3<Scalar>& line, const details::AABB3<Scalar>& aabb, Scalar* t = nullptr, glm::detail::tvec3<Scalar>* location = nullptr, glm::detail::tvec3<Scalar>* normal = nullptr)
     {
 		// r.dir is unit direction vector of ray
 		vec3 dirfrac;
@@ -145,7 +145,7 @@ namespace naga
 			if (t != nullptr) {
 				*t = tmax;
 			}
-			return intersect_type_e::DISJOINT;
+			return IntersectType::DISJOINT;
 		}
 
 		// if tmin > tmax, ray doesn't intersect AABB
@@ -153,16 +153,16 @@ namespace naga
 			if (t != nullptr) {
 				*t = tmax;
 			}
-			return intersect_type_e::DISJOINT;
+			return IntersectType::DISJOINT;
 		}
 		if (t != nullptr) {
 			*t = tmin;
 		}
-		return intersect_type_e::INTERSECT;
+		return IntersectType::INTERSECT;
     }
 
     template<typename Scalar = std::enable_if<std::is_floating_point<Scalar>::value>::type>
-    intersect_type_e intersects(const details::line3<Scalar>& line, const details::plane3<Scalar>& plane, Scalar& t)
+    IntersectType intersects(const details::Line3<Scalar>& line, const details::Plane3<Scalar>& plane, Scalar& t)
     {
         const auto u = line.end - line.start;
         const auto w = line.start - plane.normal;
@@ -171,70 +171,70 @@ namespace naga
 
         if (glm::abs(d) < glm::epsilon<Scalar>())
         {
-            return n == 0 ? intersect_type_e::PARALLEL : intersect_type_e::DISJOINT;
+            return n == 0 ? IntersectType::PARALLEL : IntersectType::DISJOINT;
         }
 
         t = n / d;
 
         if (t < 0 || t > 1)
         {
-            return intersect_type_e::DISJOINT;
+            return IntersectType::DISJOINT;
         }
 
-        return intersect_type_e::INTERSECT;
+        return IntersectType::INTERSECT;
     }
 
     template<typename Scalar>
-    Scalar distance_to_plane(const details::plane3<Scalar>& plane, const glm::detail::tvec3<Scalar>& point)
+    Scalar distance_to_plane(const details::Plane3<Scalar>& plane, const glm::detail::tvec3<Scalar>& point)
     {
         return glm::dot(plane.normal, point - plane.origin());
     }
 
     template<typename PlaneScalar, typename PointScalar>
-    PlaneScalar distance_to_plane(const details::plane3<PlaneScalar>& plane, const glm::detail::tvec3<PointScalar>& point)
+    PlaneScalar distance_to_plane(const details::Plane3<PlaneScalar>& plane, const glm::detail::tvec3<PointScalar>& point)
     {
         return glm::dot(plane.normal, static_cast<glm::detail::tvec3<PlaneScalar>>(point)-plane.origin());
     }
 
     template<typename FrustumScalar, typename PointScalar>
-    intersect_type_e intersects(const details::frustum<FrustumScalar>& frustum, const glm::detail::tvec3<PointScalar>& point)
+    IntersectType intersects(const details::Frustum<FrustumScalar>& frustum, const glm::detail::tvec3<PointScalar>& point)
     {
         for (const auto& plane : frustum.planes())
         {
             if (distance_to_plane(plane, point) < 0)
             {
-                return intersect_type_e::disjoint;
+                return IntersectType::disjoint;
             }
         }
 
-        return intersect_type_e::contain;
+        return IntersectType::contain;
     }
 
     template<typename FrustumScalar, typename SphereScalar>
-    intersect_type_e intersects(const details::frustum<FrustumScalar>& frustum, const details::sphere<SphereScalar>& sphere)
+	IntersectType intersects(const details::Frustum<FrustumScalar>& frustum, const details::Sphere<SphereScalar>& sphere)
     {
         for (const auto& plane : frustum.get_planes())
         {
             if (distance_to_plane(plane, sphere.origin) + sphere.radius < 0)
             {
-                return intersect_type_e::DISJOINT;
+                return IntersectType::DISJOINT;
             }
         }
 
-        return intersect_type_e::CONTAIN;
+        return IntersectType::CONTAIN;
     }
 
     template<typename FrustumScalar, typename AABBScalar>
-    intersect_type_e intersects(const details::frustum<FrustumScalar>& frustum, const details::aabb3<AABBScalar>& aabb)
+	IntersectType intersects(const details::Frustum<FrustumScalar>& frustum, const details::AABB3<AABBScalar>& aabb)
     {
-        typedef details::frustum<FrustumScalar> frustumype;
-        typedef details::aabb3<AABBScalar> aabb_type;
+		typedef details::Frustum<FrustumScalar> FrustumType;
+		typedef details::AABB3<AABBScalar> AABBType;
 
         size_t total_in = 0;
 
         for (const auto& plane : frustum.get_planes())
         {
-            auto in_count = aabb_type::CORNER_COUNT;
+			auto in_count = AABBType::CORNER_COUNT;
             bool is_point_inside = false;
 
             for (const auto& corner : aabb.get_corners())
@@ -249,7 +249,7 @@ namespace naga
 
             if (in_count == 0)
             {
-                return intersect_type_e::DISJOINT;
+                return IntersectType::DISJOINT;
             }
             else if (is_point_inside)
             {
@@ -259,14 +259,14 @@ namespace naga
 
         if (total_in == FRUSTUM_PLANE_COUNT)
         {
-            return intersect_type_e::CONTAIN;
+            return IntersectType::CONTAIN;
         }
 
-        return intersect_type_e::INTERSECT;
+        return IntersectType::INTERSECT;
     }
 
     template<typename Scalar = std::enable_if<std::is_floating_point<Scalar>::value>::type>
-    intersect_type_e intersects(const details::aabb3<Scalar> aabb0, const glm::detail::tvec3<Scalar>& d0, const details::aabb3<Scalar>& aabb1, const glm::detail::tvec3<Scalar>& d1, Scalar& u0, Scalar& u1)
+	IntersectType intersects(const details::AABB3<Scalar> aabb0, const glm::detail::tvec3<Scalar>& d0, const details::AABB3<Scalar>& aabb1, const glm::detail::tvec3<Scalar>& d1, Scalar& u0, Scalar& u1)
     {
         typedef glm::detail::tvec3<Scalar> vector_type;
 
@@ -278,11 +278,11 @@ namespace naga
         vector_type u_0(std::numeric_limits<Scalar>::max());
         vector_type u_1(std::numeric_limits<Scalar>::min());
 
-        if (intersects(aabb0, aabb1) != intersect_type_e::DISJOINT)
+        if (intersects(aabb0, aabb1) != IntersectType::DISJOINT)
         {
             u0 = u1 = 0;
 
-            return intersect_type_e::INTERSECT;
+            return IntersectType::INTERSECT;
         }
 
         for (size_t i = 0; i < 3; ++i)
@@ -319,7 +319,7 @@ namespace naga
         u0 = glm::compMax(u_0);
         u1 = glm::compMin(u_1);
 
-        auto result = (u0 >= 0 && u1 <= 1 && u0 <= u1) ? intersect_type_e::INTERSECT : intersect_type_e::DISJOINT;
+        auto result = (u0 >= 0 && u1 <= 1 && u0 <= u1) ? IntersectType::INTERSECT : IntersectType::DISJOINT;
 
         return result;
     }

@@ -8,41 +8,40 @@
 
 //naga
 #include "types.hpp"
-#include "hash.hpp"
 
 //boost
 #include <boost\shared_ptr.hpp>
 
 namespace naga
 {
-    struct string_mgr
+    struct StringManager
     {
-        typedef std::wstring string_type;
-        typedef std::string language_type;
+        typedef std::wstring StringType;
+        typedef std::string LanguageType;
 
-        struct string
+        struct String
         {
             u32 stream_index = 0;
-            hash hash;
+            std::string key;
             u32 offset = 0;
         };
 
-        typedef std::map<const hash, string> strings_type;
+		typedef std::map<const std::string, String> StringsType;
         
-        void mount(const std::string& file);
+		void mount(const std::string& file_name);
         void purge();
         size_t count() const;
 
         //TODO: template this function to allow returning of string or wstring
-        string_type get(const hash& hash);
+		StringType get(const std::string& key);
 
-        language_type language; //TODO: language should be determined elsewhere (needs to be shared for other asset swapping)
+		LanguageType language; //TODO: language should be determined elsewhere (needs to be shared for other asset swapping)
 
     private:
         std::recursive_mutex mutex;
         std::vector<boost::shared_ptr<std::istream>> streams;
-        std::map<language_type, strings_type> language_strings;
+		std::map<LanguageType, StringsType> language_strings;
     };
 
-    extern string_mgr strings;
+    extern StringManager strings;
 }

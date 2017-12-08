@@ -19,18 +19,18 @@
 #include "gui_image_gpu_program.hpp"
 
 #include "gpu_program_mgr.hpp"
-#include "resource_mgr.hpp"
+#include "resource_manager.hpp"
 #include "string_mgr.hpp"
-#include "audio_mgr.hpp"
-#include "state_mgr.hpp"
+#include "audio_system.hpp"
+#include "state_system.hpp"
 #include "gpu_buffer_mgr.hpp"
 #include "python.hpp"
 
 namespace naga
 {
-    app app_;
+    App app;
 
-	void app::run(const boost::shared_ptr<naga::game>& game)
+	void App::run(const boost::shared_ptr<Game>& game)
     {
         using namespace std::chrono;
         using namespace boost;
@@ -38,7 +38,7 @@ namespace naga
 
         run_time_point = std::chrono::system_clock::now();
     begin:
-        platform.app_run_start();
+		platform.app_run_start();
 
         gpu_programs.make<gui_image_gpu_program>();
         gpu_programs.make<model_gpu_program>();
@@ -102,22 +102,29 @@ namespace naga
         }
     }
 
-    void app::exit()
+	void App::exit()
     {
         is_exiting = true;
     }
 
-    void app::reset()
+	void App::reset()
     {
         is_resetting = true;
     }
 
-    long long app::get_uptime() const
+	f32 App::get_uptime_seconds() const
+	{
+		using seconds = std::chrono::duration<f32>;
+
+		return std::chrono::duration_cast<seconds>(std::chrono::system_clock::now() - run_time_point).count();
+	}
+
+	i64 App::get_uptime_milliseconds() const
     {
         return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - run_time_point).count();
     }
 
-    void app::tick(f32 dt)
+	void App::tick(f32 dt)
     {
         platform.app_tick_start(dt);
 
@@ -133,12 +140,12 @@ namespace naga
         platform.app_tick_end(dt);
     }
 
-    void app::render()
+	void App::render()
     {
         const auto screen_size = platform.get_screen_size();
 
-        gpu.viewports.push(gpu_viewport_type(0, 0, screen_size.x, screen_size.y));
-        gpu.clear(gpu_t::CLEAR_FLAG_COLOR | gpu_t::CLEAR_FLAG_DEPTH);
+        gpu.viewports.push(GpuViewportType(0.0f, 0.0f, screen_size.x, screen_size.y));
+        gpu.clear(Gpu::CLEAR_FLAG_COLOR | Gpu::CLEAR_FLAG_DEPTH);
 
         platform.app_render_start();
 
@@ -153,16 +160,16 @@ namespace naga
         gpu.viewports.pop();
     }
 
-    void app::handle_input_events()
+	void App::handle_input_events()
     {
-		input_event_t input_event;
+		InputEvent input_event;
 
         while (platform.pop_input_event(input_event))
         {
 #if defined(NAGA_PC)
-            if (input_event.device_type == input_event_t::device_type_e::KEYBOARD &&
-                input_event.keyboard.key == input_event_t::keyboard_t::key_e::F11 &&
-                input_event.keyboard.type == input_event_t::keyboard_t::type_e::KEY_PRESS)
+			if (input_event.device_type == InputEvent::DeviceType::KEYBOARD &&
+				input_event.keyboard.key == InputEvent::Keyboard::Key::F11 &&
+				input_event.keyboard.type == InputEvent::Keyboard::Type::KEY_PRESS)
             {
                 platform.set_is_fullscreen(!platform.is_fullscreen());
 
@@ -182,9 +189,9 @@ namespace naga
     }
 
 #if defined(NAGA_PC)
-    void app::handle_window_events()
+	void App::handle_window_events()
     {
-        window_event window_event;
+        WindowEvent window_event;
 
         while (platform.pop_window_event(window_event))
         {
@@ -195,7 +202,7 @@ namespace naga
     }
 #endif
 
-    bool app::should_keep_running()
+	bool App::should_keep_running()
     {
         return !is_exiting && !is_resetting && !platform.should_exit();
     }

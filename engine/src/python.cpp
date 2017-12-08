@@ -7,9 +7,9 @@
 
 namespace naga
 {
-    NAGA_API_ENTRY python py;
+	NAGA_API_ENTRY Python py;
 
-    python::python()
+	Python::Python()
     {
         PyImport_AppendInittab("naga", &initnaga);
 
@@ -19,11 +19,11 @@ namespace naga
         main_namespace = main_module.attr("__dict__");
     }
 
-    python::~python()
+	Python::~Python()
     {
     }
 
-    void python::finalize()
+	void Python::finalize()
     {
         main_module = boost::python::object();
         main_namespace = boost::python::object();
@@ -31,7 +31,7 @@ namespace naga
         Py_Finalize();
     }
 
-    boost::python::api::object python::exec(const char* string)
+	boost::python::api::object Python::exec(const char* string)
     {
         try
         {
@@ -60,7 +60,7 @@ namespace naga
         }
     }
 
-    boost::python::api::object NAGA_API_ENTRY python::exec_file(const char* file)
+	boost::python::api::object NAGA_API_ENTRY Python::exec_file(const char* file)
     {
         try
         {
@@ -85,7 +85,7 @@ namespace naga
         }
     }
 
-    boost::python::api::object python::eval(const char* string)
+	boost::python::api::object Python::eval(const char* string)
     {
         try
         {
@@ -113,7 +113,7 @@ namespace naga
         }
     }
 
-    std::string python::handle_pyerr()
+	std::string Python::handle_pyerr()
     {
         PyObject* exc;
         PyObject* val;

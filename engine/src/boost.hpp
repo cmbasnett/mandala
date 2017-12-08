@@ -16,7 +16,7 @@ namespace naga
     struct hash_translator
     {
         typedef std::string internal_type;
-        typedef naga::details::hash<T> external_type;
+        typedef naga::details::Hash<T> external_type;
 
         boost::optional<external_type> get_value(const internal_type& string)
         {
@@ -59,7 +59,7 @@ namespace boost
     namespace property_tree
     {
         template<typename Ch, typename Traits, typename Alloc, typename T>
-        struct translator_between<std::basic_string<Ch, Traits, Alloc>, naga::details::hash<T>>
+        struct translator_between<std::basic_string<Ch, Traits, Alloc>, naga::details::Hash<T>>
         {
             typedef naga::hash_translator<T> type;
         };

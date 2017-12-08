@@ -11,23 +11,23 @@
 
 namespace naga
 {
-    struct gpu_buffer_mgr
+    struct GpuBufferManager
     {
-        template<typename T = std::enable_if<is_gpu_buffer<T>::value, T>::type>
+        template<typename T = std::enable_if<IsGpuBuffer<T>::value, T>::type>
         boost::weak_ptr<T> make()
         {
             auto gpu_buffer = boost::make_shared<T>();
 
             auto buffers_itr = buffers.insert(buffers.begin(), std::make_pair(gpu_buffer->get_id(), gpu_buffer));
 
-            return boost::static_pointer_cast<T, naga::gpu_buffer>(buffers_itr->second);
+			return boost::static_pointer_cast<T, GpuBuffer>(buffers_itr->second);
         }
 
         void purge();
 
     private:
-        std::map<gpu_id, boost::shared_ptr<gpu_buffer>> buffers;
+		std::map<GpuId, boost::shared_ptr<GpuBuffer>> buffers;
     };
 
-    extern gpu_buffer_mgr gpu_buffers;
+	extern GpuBufferManager gpu_buffers;
 }

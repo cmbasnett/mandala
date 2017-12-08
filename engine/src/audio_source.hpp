@@ -9,17 +9,17 @@
 
 namespace naga
 {
-    struct sound;
+	struct Sound;
 
-    struct audio_source
+    struct AudioSource
     {
-        typedef u32 id_type;
+        typedef u32 IdType;
 
-        audio_source();
-        ~audio_source();
+		AudioSource();
+		~AudioSource();
 
-        id_type get_id() const { return id; }
-        audio_source_state get_state() const;
+		IdType get_id() const { return id; }
+		AudioSourceState get_state() const;
         void set_location(const vec3& location);
         void set_velocity(const vec3& velocity);
         void set_gain(f32 gain);
@@ -30,13 +30,13 @@ namespace naga
         void pause();
         void rewind();
         void stop();
-        void queue_sound(const boost::shared_ptr<sound>& sound);
-        void unqueue_sound(const boost::shared_ptr<sound>& sound);
+		void queue_sound(const boost::shared_ptr<Sound>& sound);
+		void unqueue_sound(const boost::shared_ptr<Sound>& sound);
 
     private:
-        audio_source(const audio_source&) = delete;
-        audio_source& operator=(const audio_source&) = delete;
+		AudioSource(const AudioSource&) = delete;
+		AudioSource& operator=(const AudioSource&) = delete;
 
-        id_type id;
+		IdType id;
     };
 }

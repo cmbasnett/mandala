@@ -3,18 +3,18 @@
 namespace naga
 {
     template<typename T>
-    struct range_
+    struct Range
     {
-        typedef T value_type;
+        typedef T ValueType;
 
-        range_() = default;
-        range_(const value_type& min, const value_type& max) :
+		Range() = default;
+		Range(const ValueType& min, const ValueType& max) :
             min(min),
             max(max)
         {
         }
 
-        value_type min;
-        value_type max;
+		ValueType min;
+		ValueType max;
     };
 }

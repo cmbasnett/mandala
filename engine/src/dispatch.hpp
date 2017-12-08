@@ -4,13 +4,13 @@
 
 namespace naga
 {
-    enum class dispatch_protocol
+    enum class DispatchProtocol
     {
-        normal,
-        discretionary
+        NORMAL,
+        DISCRETIONARY
     };
 
-    struct dispatch
+    struct Dispatch
     {
         void queue();
 
@@ -18,5 +18,5 @@ namespace naga
         std::queue<boost::function<void()>> _queue;
     };
 
-    extern struct dispatch dispatch;
+	extern struct Dispatch dispatch;
 }

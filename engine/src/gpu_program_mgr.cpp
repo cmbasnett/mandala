@@ -3,9 +3,9 @@
 
 namespace naga
 {
-    gpu_program_mgr gpu_programs;
+	GpuProgramManager gpu_programs;
 
-    void gpu_program_mgr::purge()
+	void GpuProgramManager::purge()
     {
 #if defined(DEBUG)
         for (auto& gpu_program : gpu_programs)

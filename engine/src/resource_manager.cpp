@@ -7,13 +7,13 @@
 #endif
 
 //naga
-#include "resource_mgr.hpp"
+#include "resource_manager.hpp"
 
 namespace naga
 {
-    resource_mgr resources;
+    ResourceManager resources;
 
-    size_t resource_mgr::count() const
+	size_t ResourceManager::count() const
     {
         //TODO: this could be replaced, whenever a resource is added or removed we can just increment or decrement a counter
         size_t count = 0;
@@ -26,7 +26,7 @@ namespace naga
         return count;
     }
 
-    void resource_mgr::prune()
+	void ResourceManager::prune()
     {
         for (auto& type_resource : type_resources)
         {
@@ -48,10 +48,10 @@ namespace naga
         }
     }
 
-    void resource_mgr::purge()
+	void ResourceManager::purge()
     {
 #if defined(DEBUG)
-        std::vector<boost::weak_ptr<resource>> resources;
+        std::vector<boost::weak_ptr<Resource>> resources;
 
         for (auto& type_resource : type_resources)
         {

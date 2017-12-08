@@ -6,8 +6,7 @@
 
 //naga
 #include "bitmap_font.hpp"
-#include "resource_mgr.hpp"
-#include "hash.hpp"
+#include "resource_manager.hpp"
 #include "texture.hpp"
 #include "gpu_program.hpp"
 #include "gpu_program_mgr.hpp"
@@ -22,7 +21,7 @@
 
 namespace naga
 {
-    bitmap_font::bitmap_font(std::istream& istream)
+	BitmapFont::BitmapFont(std::istream& istream)
     {
         //magic
         std::array<char, BMF_MAGIC_LENGTH> magic;
@@ -48,25 +47,25 @@ namespace naga
 
         enum : u8
         {
-            flag_smooth = (1 << 7),
-            flag_unicode = (1 << 6),
-            flag_italic = (1 << 5),
-            flag_bold = (1 << 4),
-            flag_fixed_height = (1 << 3),
-            flag_reserved0 = (1 << 2),
-            flag_reserved1 = (1 << 1),
-            flag_reserved2 = (1 << 0)
+            FLAG_SMOOTH = (1 << 7),
+            FLAG_UNICODE = (1 << 6),
+            FLAG_ITALIC = (1 << 5),
+            FLAG_BOLD = (1 << 4),
+            FLAG_FIXED_HEIGHT = (1 << 3),
+            FLAG_RESERVED0 = (1 << 2),
+            FLAG_RESERVED1 = (1 << 1),
+            FLAG_RESERVED2 = (1 << 0)
         };
 
         u8 flags;
 
         read(istream, flags);
 
-        is_smooth = (flags & flag_smooth) == flag_smooth;
-        is_unicode = (flags & flag_unicode) == flag_unicode;
-        is_italic = (flags & flag_italic) == flag_italic;
-        is_bold = (flags & flag_bold) == flag_bold;
-        is_fixed_height = (flags & flag_fixed_height) == flag_fixed_height;
+		is_smooth = (flags & FLAG_SMOOTH) == FLAG_SMOOTH;
+		is_unicode = (flags & FLAG_UNICODE) == FLAG_UNICODE;
+		is_italic = (flags & FLAG_ITALIC) == FLAG_ITALIC;
+		is_bold = (flags & FLAG_BOLD) == FLAG_BOLD;
+		is_fixed_height = (flags & FLAG_FIXED_HEIGHT) == FLAG_FIXED_HEIGHT;
 
         read(istream, char_set);
         read(istream, stretch_height);
@@ -108,7 +107,7 @@ namespace naga
 
             page_texture_names_length -= static_cast<u32>(page_texture_name.length() + 1);
 
-            auto page_texture = resources.get<texture>(page_texture_name);
+            auto page_texture = resources.get<Texture>(page_texture_name);
 
             page_textures.push_back(page_texture);
         }
@@ -119,7 +118,7 @@ namespace naga
 
         if (page_textures.size() > static_cast<size_t>(pages_max))
         {
-            throw std::exception();
+            throw std::exception("too many pages");
         }
 
         //characters
@@ -127,11 +126,11 @@ namespace naga
         u32 characters_length;
         read(istream, characters_length);
 
-        auto character_count = characters_length / sizeof(character);
+        auto character_count = characters_length / sizeof(Character);
 
         for (size_t i = 0; i < character_count; ++i)
         {
-            character character;
+            Character character;
 
             read(istream, character.id);
             read(istream, character.rectangle.x);
@@ -157,7 +156,7 @@ namespace naga
             u32 kerning_pairs_length;
             read(istream, kerning_pairs_length);
 
-            auto kerning_pair_count = kerning_pairs_length / sizeof(kerning_pair);
+            auto kerning_pair_count = kerning_pairs_length / sizeof(KerningPair);
             kerning_pairs.resize(kerning_pair_count);
 
             for (auto& kerning_pair : kerning_pairs)
@@ -171,7 +170,7 @@ namespace naga
         //vertex buffer
         auto vertex_count = characters.size() * VERTICES_PER_CHARACTER;
 
-        std::vector<vertex_type> vertices;
+        std::vector<VertexType> vertices;
         vertices.resize(vertex_count);
 
         auto j = 0;
@@ -216,28 +215,28 @@ namespace naga
             j += 4;
         }
 
-        vertex_buffer = gpu_buffers.make<vertex_buffer_type>().lock();
-        vertex_buffer->data(vertices, gpu_t::buffer_usage::STATIC_DRAW);
+        vertex_buffer = gpu_buffers.make<VertexBufferType>().lock();
+        vertex_buffer->data(vertices, Gpu::BufferUsage::STATIC_DRAW);
 
         //index buffer
-        std::vector<index_type> indices;
+        std::vector<IndexType> indices;
         indices.resize(characters.size() * INDICES_PER_CHARACTER);
 
-        const index_type character_index_offsets[INDICES_PER_CHARACTER] = { 0, 1, 2, 0, 2, 3 };
+		const IndexType character_index_offsets[INDICES_PER_CHARACTER] = { 0, 1, 2, 0, 2, 3 };
 
         for (size_t i = 0; i < characters.size(); ++i)
         {
             for (size_t j = 0; j < INDICES_PER_CHARACTER; ++j)
             {
-                indices[(i * INDICES_PER_CHARACTER) + j] = static_cast<index_type>(i) * VERTICES_PER_CHARACTER + character_index_offsets[j];
+				indices[(i * INDICES_PER_CHARACTER) + j] = static_cast<IndexType>(i)* VERTICES_PER_CHARACTER + character_index_offsets[j];
             }
         }
 
-        index_buffer = gpu_buffers.make<index_buffer_type>().lock();
-        index_buffer->data(indices, gpu_t::buffer_usage::STATIC_DRAW);
+        index_buffer = gpu_buffers.make<IndexBufferType>().lock();
+        index_buffer->data(indices, Gpu::BufferUsage::STATIC_DRAW);
     }
 
-    i16 bitmap_font::get_kerning_amount(char_type lhs, char_type rhs) const
+	i16 BitmapFont::get_kerning_amount(CharType lhs, CharType rhs) const
     {
         i16 kerning_amount = 0;
 
@@ -254,13 +253,13 @@ namespace naga
         return kerning_amount;
     }
 
-    void bitmap_font::render_string(const string_type& string, mat4 world_matrix, mat4 view_projection_matrix, const vec4& base_color, std::stack<vec4>& color_stack, const std::vector<std::pair<size_t, vec4>>& color_pushes, const std::vector<size_t>& color_pop_indices) const
+    void BitmapFont::render_string(const StringType& string, mat4 world_matrix, mat4 view_projection_matrix, const vec4& base_color, std::stack<vec4>& color_stack, const std::vector<std::pair<size_t, vec4>>& color_pushes, const std::vector<size_t>& color_pop_indices) const
     {
-        static const auto CHARACTER_INDEX_STRIDE = sizeof(index_type) * INDICES_PER_CHARACTER;
+        static const auto CHARACTER_INDEX_STRIDE = sizeof(IndexType) * INDICES_PER_CHARACTER;
 
         //buffers
-        gpu.buffers.push(gpu_t::buffer_target::ARRAY, vertex_buffer);
-        gpu.buffers.push(gpu_t::buffer_target::ELEMENT_ARRAY, index_buffer);
+        gpu.buffers.push(Gpu::BufferTarget::ARRAY, vertex_buffer);
+        gpu.buffers.push(Gpu::BufferTarget::ELEMENT_ARRAY, index_buffer);
 
         const auto gpu_program = gpu_programs.get<bitmap_font_gpu_program>();
 
@@ -270,8 +269,8 @@ namespace naga
         //states
         auto blend_state = gpu.blend.get_state();
         blend_state.is_enabled = true;
-        blend_state.src_factor = gpu_t::blend_factor::SRC_ALPHA;
-        blend_state.dst_factor = gpu_t::blend_factor::ONE_MINUS_SRC_ALPHA;
+        blend_state.src_factor = Gpu::BlendFactor::SRC_ALPHA;
+        blend_state.dst_factor = Gpu::BlendFactor::ONE_MINUS_SRC_ALPHA;
 
         gpu.blend.push_state(blend_state);
 
@@ -353,7 +352,7 @@ namespace naga
                 gpu.set_uniform("color_bottom", color);
             }
 
-            gpu.draw_elements(gpu_t::primitive_type::TRIANGLES, INDICES_PER_CHARACTER, index_buffer_type::DATA_TYPE, character_index * CHARACTER_INDEX_STRIDE);
+            gpu.draw_elements(Gpu::PrimitiveType::TRIANGLES, INDICES_PER_CHARACTER, IndexBufferType::DATA_TYPE, character_index * CHARACTER_INDEX_STRIDE);
 
             const auto next = (c + 1);
 
@@ -398,13 +397,13 @@ namespace naga
         gpu.programs.pop();
 
         //buffers
-        gpu.buffers.pop(gpu_t::buffer_target::ELEMENT_ARRAY);
-        gpu.buffers.pop(gpu_t::buffer_target::ARRAY);
+        gpu.buffers.pop(Gpu::BufferTarget::ELEMENT_ARRAY);
+        gpu.buffers.pop(Gpu::BufferTarget::ARRAY);
     }
 
-    void bitmap_font::get_string_pages(std::vector<u8>& pages, const string_type& string) const
+	void BitmapFont::get_string_pages(std::vector<PageIndexType>& pages, const StringType& string) const
     {
-        std::set<u8> pages_set;
+		std::set<PageIndexType> pages_set;
 
         for (const auto c : string)
         {
@@ -416,7 +415,7 @@ namespace naga
         std::copy(pages_set.begin(), pages_set.end(), std::back_inserter(pages));
     }
 
-    i16 bitmap_font::get_string_width(const string_type& string) const
+	i16 BitmapFont::get_string_width(const StringType& string) const
     {
         i16 width = 0;
 

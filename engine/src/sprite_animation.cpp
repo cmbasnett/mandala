@@ -7,7 +7,7 @@
 
 namespace naga
 {
-    sprite_animation::sprite_animation(std::istream& istream)
+	SpriteAnimation::SpriteAnimation(std::istream& istream)
     {
         using namespace boost::property_tree;
         using namespace boost::property_tree::json_parser;
@@ -19,7 +19,7 @@ namespace naga
         _ptree.get<f32>("duration");
     }
 
-    const sprite_ref& sprite_animation::get_sprite_at_time(const time_type& time) const
+	const SpriteReference& SpriteAnimation::get_sprite_at_time(const TimeType& time) const
     {
         return frames[bisect_left(frames, time, 0, frames.size() - 1)].sprite;
     }

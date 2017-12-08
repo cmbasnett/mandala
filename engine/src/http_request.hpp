@@ -11,22 +11,22 @@
 
 namespace naga
 {
-    struct http_response;
+    struct HttpResponse;
 
-    struct http_request
+    struct HttpRequest
     {
 		const std::string& get_url() const { return url; }
-		const http_method get_method() const { return method; }
-		const http_headers_type& get_headers() const { return headers; }
-		const http_data_type& get_data() const { return data; }
+		const HttpMethod get_method() const { return method; }
+		const HttpHeadersType& get_headers() const { return headers; }
+		const HttpDataType& get_data() const { return data; }
 
 	private:
-		friend struct http_manager;
+		friend struct HttpManager;
 
         std::string url;
-		http_method method = http_method::GET;
-        http_headers_type headers;
-        http_data_type data;
-        std::future<boost::shared_ptr<http_response>> response;
+		HttpMethod method = HttpMethod::GET;
+		HttpHeadersType headers;
+		HttpDataType data;
+        std::future<boost::shared_ptr<HttpResponse>> response;
     };
 }
