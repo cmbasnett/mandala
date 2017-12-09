@@ -1,6 +1,4 @@
-﻿#pragma once
-
-//std
+﻿//std
 #include <sstream>
 #include <codecvt>
 
@@ -20,10 +18,7 @@
 #include "platform.hpp"
 #include "gpu_program_mgr.hpp"
 #include "basic_gpu_program.hpp"
-
-#if defined(DEBUG)
-#include "line_renderer.hpp"
-#endif
+#include "debug_renderer.hpp"
 
 namespace naga
 {

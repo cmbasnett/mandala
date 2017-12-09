@@ -28,11 +28,8 @@ def on_input_label_enter(label):
 
 class ConsoleState(State):
 
-
     def __init__(self):
         super(ConsoleState, self).__init__()
-        
-        # TODO: this should be done by the underlying state logic!
 
         self.root = GuiNode()
         self.root.anchor_flags = GUI_ANCHOR_FLAG_HORIZONTAL | GUI_ANCHOR_FLAG_TOP
@@ -66,14 +63,6 @@ class ConsoleState(State):
                 if e.keyboard.type == InputEvent.Keyboard.Type.KEY_PRESS:
                     states.pop(self)
             return True
-
-class PskComponent(GameComponent):
-    def __init__(self):
-        self.psk = PSK('C:\Users\Colin\Desktop\m3\m16_body.psk')
-        return super(PskComponent, self).__init__()
-
-    def on_render(self, camera_parameters):
-        self.psk.render(camera_parameters)
 
 
 class FreeLookComponent(GameComponent):
@@ -168,7 +157,6 @@ class ExampleState(State):
         model_component = self.model.add_component(ModelComponent)
         model_component.model = resources.get_model('boblampclean.md5m')
         model_component.play('boblampclean.md5a')
-        #self.model.add_component(PskComponent)
 
     def on_input_event(self, e):
         super(ExampleState, self).on_input_event_base(e)
@@ -184,20 +172,13 @@ class ExampleState(State):
         self.scene.render(self.canvas.frame_buffer, self.camera)
         super(ExampleState, self).render_base()
 
-    # TODO: not sure why this is necessary?
     def on_tick(self, dt):
         if self.is_tracing:
-            camera_component = self.camera.get_component(CameraComponent)
-            viewport = Rectangle()
-            viewport.width = platform.screen_size.x
-            viewport.height = platform.screen_size.y
-            ray = camera_component.get_ray(viewport, Vec2(platform.cursor_location.x, platform.cursor_location.y))
+            ray = self.camera.get_component(CameraComponent).get_ray(platform.viewport, Vec2(platform.cursor_location.x, platform.cursor_location.y))
             trace_result = self.scene.trace(ray.start, ray.end)
             if trace_result.did_hit:
                 self.model.pose.location = trace_result.location
-        #self.label.string = '\n'.join([gpu.vendor, gpu.renderer, gpu.version, str(app.performance.fps)])
-        model_component = self.model.get_component(ModelComponent)
-        self.label.string = str(model_component.aabb)
+        self.label.string = '\n'.join([gpu.vendor, gpu.renderer, gpu.version, str(app.performance.fps)])
         self.scene.tick(dt)
 
 

@@ -8,7 +8,7 @@
 #include "collision.hpp"
 #include "resource_manager.hpp"
 #include "material_instance.hpp"
-#include "line_renderer.hpp"
+#include "debug_renderer.hpp"
 #include "game_object.hpp"
 #include "camera_params.hpp"
 #include "bisect.hpp"
@@ -74,7 +74,7 @@ namespace naga
 
 #if defined (DEBUG)
         render_aabb(mat4(1.0f), view_projection_matrix, aabb, vec4(1, 0, 0, 1));
-		render_sphere(mat4(1.0f), view_projection_matrix, sphere, vec4(1, 0, 1, 1));
+		render_sphere(mat4(1.0f), view_projection_matrix, sphere, vec4(1));
 
 		for (size_t i = 0; i < model->get_bones().size(); ++i)
 		{
@@ -85,7 +85,8 @@ namespace naga
 				render_line_loop(world_matrix, view_projection_matrix, std::vector<vec3>({ a, b }), vec4(0.5f));
 			}
 
-			render_sphere(glm::translate(skeleton.bones[i].pose.location) * world_matrix, view_projection_matrix, Sphere(vec3(), 0.5f), vec4(1));
+			render_axes(skeleton.bones[i].pose.to_matrix() * world_matrix, view_projection_matrix);
+			//render_sphere(, view_projection_matrix, Sphere(vec3(), 0.5f), vec4(1));
 		}
 #endif
     }

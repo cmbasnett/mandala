@@ -414,6 +414,15 @@ namespace naga
 		glfwSetWindowSize(window_ptr, static_cast<int>(screen_size.x), static_cast<int>(screen_size.y));
 	}
 
+	// viewport
+	Rectangle Platform::get_viewport() const
+	{
+		Rectangle viewport;
+		viewport.width = get_screen_size().x;
+		viewport.height = get_screen_size().y;
+		return viewport;
+	}
+
     //fullscreen
     bool Platform::is_fullscreen() const
     {

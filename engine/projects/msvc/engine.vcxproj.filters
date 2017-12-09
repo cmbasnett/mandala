@@ -244,9 +244,6 @@
     <ClInclude Include="..\..\src\glm.hpp">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\line_renderer.hpp">
-      <Filter>gpu</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\md5b.hpp">
       <Filter>resources\model</Filter>
     </ClInclude>
@@ -364,6 +361,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\gui_stack.hpp">
       <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\debug_renderer.hpp">
+      <Filter>gpu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -531,6 +531,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\resource_manager.cpp">
       <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\debug_renderer.cpp">
+      <Filter>gpu</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -12,7 +12,7 @@
 #include "texture.hpp"
 #include "resource_manager.hpp"
 #include "collision.hpp"
-#include "line_renderer.hpp"
+#include "debug_renderer.hpp"
 #include "quadtree.hpp"
 #include "game_object.hpp"
 

@@ -303,7 +303,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\is_pow2.hpp" />
     <ClInclude Include="..\..\src\scene.hpp" />
     <ClInclude Include="..\..\src\line.hpp" />
-    <ClInclude Include="..\..\src\line_renderer.hpp" />
+    <ClInclude Include="..\..\src\debug_renderer.hpp" />
     <ClInclude Include="..\..\src\literals.hpp" />
     <ClInclude Include="..\..\src\material.hpp" />
     <ClInclude Include="..\..\src\material_instance.hpp" />
@@ -361,6 +361,7 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="..\..\src\bsp_entity.cpp" />
     <ClCompile Include="..\..\src\cache.cpp" />
     <ClCompile Include="..\..\src\camera_component.cpp" />
+    <ClCompile Include="..\..\src\debug_renderer.cpp" />
     <ClCompile Include="..\..\src\frame_buffer.cpp" />
     <ClCompile Include="..\..\src\game_object.cpp" />
     <ClCompile Include="..\..\src\gpu.cpp" />

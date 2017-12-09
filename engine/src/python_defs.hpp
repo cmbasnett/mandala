@@ -596,10 +596,10 @@ BOOST_PYTHON_MODULE(naga)
     NAGA_PYTHON_DEFINE_PADDING("Padding", f32);
 
     //PLATFORM
-    //TODO: remove specialized platform structs, have only 1 platform_t per platform
     {
         scope platform_scope =  class_<Platform, noncopyable>("Platform", no_init)
 			.add_property("screen_size", &Platform::get_screen_size, &Platform::set_screen_size)
+			.add_property("viewport", &Platform::get_viewport)
 	#if defined(NAGA_PC)
 			.add_property("cursor_location", &Platform::get_cursor_location, &Platform::set_cursor_location)
 			.add_property("window_size", &Platform::get_window_size, &Platform::set_window_size)

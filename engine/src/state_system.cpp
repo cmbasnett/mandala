@@ -5,7 +5,7 @@
 #include "state_system.hpp"
 #include "state.hpp"
 
-#include "line_renderer.hpp"
+#include "debug_renderer.hpp"
 
 namespace naga
 {

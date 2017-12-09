@@ -14,8 +14,6 @@
 #include "collision.hpp"
 #include "input_event.hpp"
 
-#include "line_renderer.hpp"
-
 namespace naga
 {
 	GUIImage::GUIImage() :

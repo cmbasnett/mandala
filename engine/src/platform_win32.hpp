@@ -39,6 +39,9 @@ namespace naga
 		virtual vec2 get_screen_size() const override;
 		virtual void set_screen_size(const vec2& screen_size) const override;
 
+		//viewport
+		virtual Rectangle get_viewport() const override;
+
         //fullscreen
         virtual bool is_fullscreen() const override;
         virtual void set_is_fullscreen(bool is_fullscreen) override;

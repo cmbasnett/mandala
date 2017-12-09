@@ -83,6 +83,9 @@ namespace naga
 		virtual vec2 get_screen_size() const = 0;
 		virtual void set_screen_size(const vec2& screen_size) const = 0;
 
+		//viewport
+		virtual Rectangle get_viewport() const = 0;
+
         //pop_input_event
 		virtual bool pop_input_event(InputEvent& input_event) = 0;
 

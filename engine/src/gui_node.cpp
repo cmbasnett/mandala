@@ -14,7 +14,7 @@
 #include "gpu.hpp"
 
 #if defined(DEBUG)
-#include "line_renderer.hpp"
+#include "debug_renderer.hpp"
 #endif
 
 namespace naga
