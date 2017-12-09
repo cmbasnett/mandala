@@ -87,7 +87,6 @@ namespace naga
 
         states.purge();
         states.tick(0); //TODO: hack to avoid exceptions throwing on close due to unreleased state objects, find a better solution later
-        py.finalize();
         resources.purge();
         strings.purge();
         gpu_programs.purge();
@@ -101,6 +100,8 @@ namespace naga
 
             goto begin;
         }
+		
+		py.finalize();
     }
 
 	void App::exit()
