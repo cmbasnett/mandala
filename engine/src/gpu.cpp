@@ -1281,4 +1281,14 @@ namespace naga
 
         textures.unbind(0);
     }
+
+	std::unique_ptr<u8[]> Gpu::get_backbuffer_pixels(i32& width, i32& height)
+	{
+		auto viewport = viewports.top();
+		width = static_cast<i32>(viewport.width);
+		height = static_cast<i32>(viewport.height);
+		std::unique_ptr<u8[]> pixels(new u8[width * height * 4]);
+		glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, static_cast<GLvoid*>(pixels.get()));
+		return pixels;
+	}
 }

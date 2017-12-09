@@ -75,8 +75,6 @@ namespace naga
 
         color_type = get_color_type(png_color_type);
 
-        channel_count = png_get_channels(png_ptr, info_ptr);
-
         auto row_bytes = png_get_rowbytes(png_ptr, info_ptr);
 
         pixel_stride = row_bytes / get_width();
@@ -102,9 +100,32 @@ namespace naga
     {
         data.resize(data_size);
 
+		// TODO: 
+
         memcpy_s(data.data(), data.size(), data_ptr, data_size);
     }
+
+
+	size_t Image::get_channel_count() const
+	{
+		switch (color_type)
+		{
+		case ColorType::G:
+		case ColorType::PALETTE:
+			return 1;
+		case ColorType::GA:
+			return 2;
+		case ColorType::RGB:
+			return 3;
+		case ColorType::RGBA:
+			return 4;
+		default:
+			return 0;
+		}
+	}
 }
+
+std::string png_error_message;
 
 std::ostream& operator<<(std::ostream& ostream, naga::Image& image)
 {
@@ -112,7 +133,7 @@ std::ostream& operator<<(std::ostream& ostream, naga::Image& image)
 
     auto png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 
-    if (png_ptr == nullptr)
+    if (!png_ptr)
     {
         throw std::exception();
     }
@@ -126,13 +147,20 @@ std::ostream& operator<<(std::ostream& ostream, naga::Image& image)
         throw std::exception();
     }
 
+	std::exception exception;
+
+	png_error_ptr error_fn = [](png_structp png_ptr, png_const_charp message) {
+		png_error_message = message;
+	};
+
+	png_set_error_fn(png_ptr, png_get_error_ptr(png_ptr), error_fn, NULL);
+
     if (setjmp(png_jmpbuf(png_ptr)))
     {
-        throw std::exception();
+		auto error_ptr = png_get_error_ptr(png_ptr);
+		png_destroy_write_struct(&png_ptr, &info_ptr);
+		throw std::exception(png_error_message.c_str());
     }
-
-    //TODO: get this thing working with different color types other than rgb
-    static const auto PIXEL_SIZE = 3;
 
 	auto get_png_color_type = [](ColorType color_type) -> int
     {
@@ -172,7 +200,8 @@ std::ostream& operator<<(std::ostream& ostream, naga::Image& image)
 
     png_bytepp rows = static_cast<png_bytepp>(png_malloc(png_ptr, image.get_height() * sizeof(png_bytep)));
 
-    const auto row_size = image.get_width() * PIXEL_SIZE;
+	const auto bytes_per_pixel = (image.get_bit_depth() * image.get_channel_count() / 8);
+	const auto row_size = (image.get_width() * bytes_per_pixel);
 
     for (unsigned int y = 0; y < image.get_size().y; ++y)
     {

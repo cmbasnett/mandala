@@ -409,6 +409,8 @@ namespace naga
         const std::string& get_extensions() const;
 
 		void get_texture_data(const boost::shared_ptr<Texture>& texture, std::vector<u8>& data, i32 level = 0);
+
+		std::unique_ptr<u8[]> get_backbuffer_pixels(i32& width, i32& height);
     };
 
     extern Gpu gpu;

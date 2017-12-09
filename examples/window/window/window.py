@@ -13,6 +13,8 @@ class ExampleGame(Game):
         if e.device_type == InputEvent.KEYBOARD and e.keyboard.type == InputEvent.Keyboard.Type.KEY_PRESS:
             if e.keyboard.key == InputEvent.Keyboard.Key.ESCAPE:
                 app.exit()
+            elif e.keyboard.key == InputEvent.Keyboard.Key.F12:
+                app.screenshot()
             elif e.keyboard.key == InputEvent.Keyboard.Key.GRAVE_ACCENT:
                 # toggle console
                 if states.contains(self.console):

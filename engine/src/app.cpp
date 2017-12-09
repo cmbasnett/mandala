@@ -25,6 +25,7 @@
 #include "state_system.hpp"
 #include "gpu_buffer_mgr.hpp"
 #include "python.hpp"
+#include "image.hpp"
 
 namespace naga
 {
@@ -111,6 +112,20 @@ namespace naga
     {
         is_resetting = true;
     }
+
+
+	void App::screenshot()
+	{
+		i32 width, height;
+		auto pixels = gpu.get_backbuffer_pixels(width, height);
+		auto image = boost::make_shared<Image>(Image::SizeType(width, height), 8, ColorType::RGBA, pixels.get(), width * height * 4);
+		auto filename = "test.png";
+		std::ofstream ofstream(filename, std::ios_base::binary);
+		if (ofstream.is_open())
+		{
+			ofstream << *image;
+		}
+	}
 
 	f32 App::get_uptime_seconds() const
 	{

@@ -32,7 +32,7 @@ namespace naga
 		u32 get_width() const { return static_cast<u32>(size.x); }
         u32 get_height() const { return static_cast<u32>(size.y); }
         size_t get_pixel_stride() const { return pixel_stride; }
-        size_t get_channel_count() const { return channel_count; }
+		size_t get_channel_count() const;
         std::mutex& get_data_mutex() { return data_mutex; }
 
     private:
@@ -44,7 +44,6 @@ namespace naga
 		ColorType color_type = ColorType::G;
         DataType data;
         size_t pixel_stride = 1;
-        size_t channel_count = 1;
         std::mutex data_mutex;
     };
 }
