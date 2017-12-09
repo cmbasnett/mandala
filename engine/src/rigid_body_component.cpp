@@ -113,6 +113,14 @@ namespace naga
         return AABB3(vec3(min.x(), min.y(), min.z()), vec3(max.x(), max.y(), max.z()));
     }
 
+	void RigidBodyComponent::set_pose(const Pose3& pose)
+	{
+		const auto& q = pose.rotation;
+		const auto& c = pose.location;
+		auto worldTrans = btTransform(btQuaternion(q.x, q.y, q.z, q.w), btVector3(c.x, c.y, c.z));
+		ptr->setWorldTransform(worldTrans);
+	}
+
 	void RigidBodyComponent::set_collision_shape(btCollisionShape* collision_shape)
     {
         ptr->setCollisionShape(collision_shape);

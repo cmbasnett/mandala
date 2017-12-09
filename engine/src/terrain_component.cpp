@@ -25,7 +25,7 @@ namespace naga
 
 	void TerrainComponent::set_heightmap(const boost::shared_ptr<Image>& image)
     {
-        heightmap = boost::make_shared<naga::Heightmap>(image);
+        heightmap = boost::make_shared<Heightmap>(image);
 		width = static_cast<i32>(image->get_width());
 		depth = static_cast<i32>(image->get_height());
 
@@ -175,12 +175,13 @@ namespace naga
             heightmap->get_data(),
             0.0f,
             0.0f,
-            scale.y,
+            1.0f,
             1,
             PHY_FLOAT,
             false);
 		heightfield_terrain_shape->setLocalScaling(btVector3(1.0f, scale.y, 1.0f));
 		auto rigid_body = get_owner()->add_component<RigidBodyComponent>();
+		rigid_body->set_pose(Pose3(glm::translate(vec3(0, scale.y / 2, 0))));
 		rigid_body->set_collision_shape(heightfield_terrain_shape);
 
         texture = resources.get<Texture>("white.png");		
