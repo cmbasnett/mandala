@@ -58,7 +58,11 @@ class ConsoleState(State):
         self.layout.adopt(self.root)
 
     def on_input_label_enter(self, label):
-        print(label.string)
+        try:
+            py.execute(str(label.string))
+        except Exception as e:
+            print(e)
+        label.string = ''
         return True
 
     def on_input_event(self, e):
