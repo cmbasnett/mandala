@@ -200,7 +200,7 @@ std::ostream& operator<<(std::ostream& ostream, naga::Image& image)
 
     png_bytepp rows = static_cast<png_bytepp>(png_malloc(png_ptr, image.get_height() * sizeof(png_bytep)));
 
-	const auto bytes_per_pixel = (image.get_bit_depth() * image.get_channel_count() / 8);
+	const auto bytes_per_pixel = glm::max(1u, (image.get_bit_depth() * image.get_channel_count() / 8));
 	const auto row_size = (image.get_width() * bytes_per_pixel);
 
     for (unsigned int y = 0; y < image.get_size().y; ++y)

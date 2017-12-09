@@ -24,9 +24,6 @@ class ExampleGame(Game):
 
     def on_window_event(self, e):
         pass
-    
-def on_input_label_enter(label):
-    print(label.text)
 
 class ConsoleState(State):
 
@@ -42,21 +39,27 @@ class ConsoleState(State):
         self.background = GUIImage()
         self.background.sprite = Sprite(resources.get_texture('white.png'))
         self.background.dock_mode = GuiDockMode.FILL
-        self.background.color = Vec4(1.0, 1.0, 1.0, 1.0)
+        self.background.color = Vec4(0.0, 0.0, 0.0, 0.5)
 
-        self.input_label = GUILabel()
+        self.input_label = GuiLabel()
         self.input_label.bitmap_font = resources.get_bitmap_font('Fantasque Sans Mono.fnt')
         self.input_label.is_read_only = False
         self.input_label.anchor_flags = GUI_ANCHOR_FLAG_BOTTOM
         self.input_label.size_modes = GuiSizeModes(GuiSizeMode.RELATIVE, GuiSizeMode.ABSOLUTE)
         self.input_label.size = Vec2(1.0, 32.0)
         self.input_label.should_clip = True
-        #self.input_label.on_enter_function = on_input_label_enter
+        self.input_label.on_enter_function = GuiLabel.on_enter_fn.from_callable(self.on_input_label_enter)
 
-        self.root.adopt(self.input_label)
+        print(self.input_label.on_enter_function)
+
         self.root.adopt(self.background)
+        self.root.adopt(self.input_label)
 
         self.layout.adopt(self.root)
+
+    def on_input_label_enter(self, label):
+        print(label.string)
+        return True
 
     def on_input_event(self, e):
         super(ConsoleState, self).on_input_event_base(e)
@@ -149,7 +152,7 @@ class ExampleState(State):
         self.canvas.dock_mode = GuiDockMode.FILL
         self.layout.adopt(self.canvas)
 
-        self.label = GUILabel()
+        self.label = GuiLabel()
         self.label.bitmap_font = resources.get_bitmap_font('Fantasque Sans Mono.fnt')
         self.label.dock_mode = GuiDockMode.FILL
         self.label.is_multiline = True
@@ -180,7 +183,7 @@ class ExampleState(State):
             trace_result = self.scene.trace(ray.start, ray.end)
             if trace_result.did_hit:
                 self.model.pose.location = trace_result.location
-        self.label.string = '\n'.join([gpu.vendor, gpu.renderer, gpu.version, str(app.performance.fps)])
+        self.label.string = '\n'.join([gpu.vendor, gpu.renderer, gpu.version, str(int(app.performance.fps))])
         self.scene.tick(dt)
 
 

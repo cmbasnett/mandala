@@ -290,6 +290,7 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\psk.hpp" />
     <ClInclude Include="..\..\src\python_function_from_callable.hpp" />
     <ClInclude Include="..\..\src\python_pair.hpp" />
+    <ClInclude Include="..\..\src\py_boost_function.hpp" />
     <ClInclude Include="..\..\src\rigid_body_component.hpp" />
     <ClInclude Include="..\..\src\physics_simulation.hpp" />
     <ClInclude Include="..\..\src\terrain_component.hpp" />

@@ -60,10 +60,9 @@
 #include "python_pair.hpp"
 #include "python_function_from_callable.hpp"
 #include "line.hpp"
-
 #include "psk.hpp"
-
 #include "convex.hpp"
+#include "py_boost_function.hpp"
 
 using namespace boost;
 using namespace boost::python;
@@ -556,7 +555,7 @@ BOOST_PYTHON_MODULE(naga)
     python_optional<Sprite>();
     python_optional<size_t>();
 	python_function_from_callable<void(boost::shared_ptr<HttpResponse>)>();
-	python_function_from_callable<void(boost::shared_ptr<GUINode>)>();
+	python_function_from_callable<bool(boost::shared_ptr<GUINode>)>();
 
 	python_pair<std::string, std::string>();
 
@@ -1014,7 +1013,7 @@ BOOST_PYTHON_MODULE(naga)
         .add_property("frame_buffer", make_function(&GUICanvas::get_frame_buffer, return_value_policy<copy_const_reference>()));
 
     {
-		scope gui_label_scope = class_<GUILabel, bases<GUINode>, boost::shared_ptr<GUILabel>, noncopyable>("GUILabel", init<>())
+		scope gui_label_scope = class_<GUILabel, bases<GUINode>, boost::shared_ptr<GUILabel>, noncopyable>("GuiLabel", init<>())
 			.add_property("bitmap_font", make_function(&GUILabel::get_bitmap_font, return_value_policy<copy_const_reference>()), &GUILabel::set_bitmap_font)
 			.add_property("string", make_function(&GUILabel::get_string, return_value_policy<copy_const_reference>()), &GUILabel::set_string)
 			.add_property("justification", &GUILabel::get_justification, &GUILabel::set_justification)
@@ -1031,6 +1030,7 @@ BOOST_PYTHON_MODULE(naga)
 			.def("escape_string", &GUILabel::escape_string, return_value_policy<copy_non_const_reference>())
             .staticmethod("escape_string");
 
+		def_function<bool(boost::shared_ptr<GUINode>)>("on_enter_fn", "okay");
 
 		enum_<GUILabel::Justification>("Justification")
 			.value("LEFT", GUILabel::Justification::LEFT)

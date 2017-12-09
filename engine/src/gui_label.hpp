@@ -22,6 +22,8 @@ namespace naga
         typedef StringType::iterator StringIteratorType;
         typedef u16 LineHeightType;
 
+		typedef boost::function<bool(boost::shared_ptr<GUINode>)> OnEnterFunctionType;
+
         enum class Justification
         {
             LEFT,
@@ -53,7 +55,7 @@ namespace naga
         boost::optional<size_t> get_max_length() const { return max_length; }
         bool get_is_autosized_to_text() const { return is_autosized_to_text; }
         bool get_is_obscured() const { return is_obscured; }
-		boost::function<void(boost::shared_ptr<GUINode>&)> get_on_enter_function() const { return on_enter_function; }
+		OnEnterFunctionType get_on_enter_function() const { return on_enter_function; }
 
         LineHeightType get_line_height() const;
         size_t get_line_count() const;
@@ -70,7 +72,7 @@ namespace naga
         void set_max_length(const boost::optional<size_t>& max_length);
         void set_is_autosized_to_text(bool is_autosized_to_text) { this->is_autosized_to_text = is_autosized_to_text; dirty(); }
         void set_is_obscured(bool is_obscured) { this->is_obscured = is_obscured; dirty(); }
-		void set_on_enter_function(boost::function<void(boost::shared_ptr<GUINode>&)> on_enter_function) { this->on_enter_function = on_enter_function; }
+		void set_on_enter_function(OnEnterFunctionType on_enter_function) { this->on_enter_function = on_enter_function; }
 
         virtual void on_clean_begin() override;
         virtual void on_clean_end() override;
@@ -120,8 +122,9 @@ namespace naga
         bool is_read_only = true;
         std::vector<line_t> lines;
         boost::optional<size_t> max_length;
-        boost::function<void(boost::shared_ptr<GUINode>&)> on_enter_function;
         bool is_autosized_to_text = false;
-        bool is_obscured = false;
+		bool is_obscured = false;
+
+		OnEnterFunctionType on_enter_function;
     };
 }
