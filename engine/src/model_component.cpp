@@ -85,8 +85,7 @@ namespace naga
 				render_line_loop(world_matrix, view_projection_matrix, std::vector<vec3>({ a, b }), vec4(0.5f));
 			}
 
-			render_axes(skeleton.bones[i].pose.to_matrix() * world_matrix, view_projection_matrix);
-			//render_sphere(, view_projection_matrix, Sphere(vec3(), 0.5f), vec4(1));
+			render_axes(world_matrix * skeleton.bones[i].pose.to_matrix(), view_projection_matrix);
 		}
 #endif
     }
