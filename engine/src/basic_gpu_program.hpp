@@ -14,8 +14,9 @@ namespace naga
             Vertex() = default;
             Vertex(vec3 location, vec4 color)
             {
-this->location = location;
-this->color = color;            }
+                this->location = location;
+                this->color = color;
+            }
 
             vec3 location;
             vec4 color;

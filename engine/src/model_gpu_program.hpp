@@ -20,14 +20,15 @@ namespace naga
             Vertex() = default;
             Vertex(vec3 location, vec3 normal, vec3 tangent, vec2 texcoord, ivec4 bone_indices_0, ivec4 bone_indices_1, vec4 bone_weights_0, vec4 bone_weights_1)
             {
-this->location = location;
-this->normal = normal;
-this->tangent = tangent;
-this->texcoord = texcoord;
-this->bone_indices_0 = bone_indices_0;
-this->bone_indices_1 = bone_indices_1;
-this->bone_weights_0 = bone_weights_0;
-this->bone_weights_1 = bone_weights_1;            }
+                this->location = location;
+                this->normal = normal;
+                this->tangent = tangent;
+                this->texcoord = texcoord;
+                this->bone_indices_0 = bone_indices_0;
+                this->bone_indices_1 = bone_indices_1;
+                this->bone_weights_0 = bone_weights_0;
+                this->bone_weights_1 = bone_weights_1;
+            }
 
             vec3 location;
             vec3 normal;
@@ -55,8 +56,8 @@ in vec3 location;
 in vec3 normal;
 in vec3 tangent;
 in vec2 texcoord;
-in ivec4 bone_indices_0;
-in ivec4 bone_indices_1;
+mediump in ivec4 bone_indices_0;
+mediump in ivec4 bone_indices_1;
 in vec4 bone_weights_0;
 in vec4 bone_weights_1;
 
@@ -65,19 +66,20 @@ out vec3 out_location;
 out vec3 out_light_vector;
 out vec3 out_normal;
 out vec3 out_view_direction;
+out vec4 out_bone_weights;
 
 mat4 create_bone_transform()
 {
-    mat4 bone_transform = mat4(0.0);
+    mat4 bone_transform = mat4(1.0);
     
-    bone_transform += (bone_matrices[bone_indices_0[0]] * bone_weights_0[0]);
-    bone_transform += (bone_matrices[bone_indices_0[1]] * bone_weights_0[1]);
-    bone_transform += (bone_matrices[bone_indices_0[2]] * bone_weights_0[2]);
-    bone_transform += (bone_matrices[bone_indices_0[3]] * bone_weights_0[3]);
-    bone_transform += (bone_matrices[bone_indices_1[0]] * bone_weights_1[0]);
-    bone_transform += (bone_matrices[bone_indices_1[1]] * bone_weights_1[1]);
-    bone_transform += (bone_matrices[bone_indices_1[2]] * bone_weights_1[2]);
-    bone_transform += (bone_matrices[bone_indices_1[3]] * bone_weights_1[3]);
+    bone_transform += bone_weights_0.x * bone_matrices[bone_indices_0.x];
+    bone_transform += bone_weights_0.y * bone_matrices[bone_indices_0.y];
+    bone_transform += bone_weights_0.z * bone_matrices[bone_indices_0.z];
+    bone_transform += bone_weights_0.w * bone_matrices[bone_indices_0.w];
+    bone_transform += bone_weights_1.x * bone_matrices[bone_indices_1.x];
+    bone_transform += bone_weights_1.y * bone_matrices[bone_indices_1.y];
+    bone_transform += bone_weights_1.z * bone_matrices[bone_indices_1.z];
+    bone_transform += bone_weights_1.w * bone_matrices[bone_indices_1.w];
     
     return bone_transform;
 }
@@ -105,51 +107,55 @@ void main()
     vec4 final_location = view_projection_matrix * world_location;
     
     out_view_direction = normalize(camera_location - out_location);
+
+    // TODO: remove later, debug
+    out_bone_weights = bone_weights_0;
     
     gl_Position = final_location;    
 })", R"(#version 450
 
-struct diffuse_t
+struct Diffuse
 {
     sampler2D texture;
     vec4 color;
 };
 
-struct normal_t
+struct Normal
 {
     sampler2D texture;
 };
 
-struct specular_t
-{
-    sampler2D texture;
-    vec4 color;
-    float intensity;
-};
-
-struct emissive_t
+struct Specular
 {
     sampler2D texture;
     vec4 color;
     float intensity;
 };
 
-struct light_t
+struct Emissive
+{
+    sampler2D texture;
+    vec4 color;
+    float intensity;
+};
+
+struct Light
 {
     vec3 ambient_color;
 };
 
-uniform diffuse_t diffuse;
-uniform normal_t normal;
-uniform specular_t specular;
-uniform emissive_t emissive;
-uniform light_t light;
+uniform Diffuse diffuse;
+uniform Normal normal;
+uniform Specular specular;
+uniform Emissive emissive;
+uniform Light light;
 
 in vec3 out_location;
 in vec2 out_texcoord;
 in vec3 out_light_vector;
 in vec3 out_normal;
 in vec3 out_view_direction;
+in vec4 out_bone_weights;
 
 out vec4 frag_color;
 
@@ -188,7 +194,7 @@ void main()
     vec3 diffuse_color = calculate_lighting_function();
     vec3 emissive_color = texture(emissive.texture, out_texcoord).rgb * emissive.color.rgb * emissive.intensity;
     
-    frag_color = vec4((light.ambient_color + diffuse_color) * albedo_color + emissive_color, 1.0);
+    frag_color = vec4((light.ambient_color + diffuse_color) * albedo_color * out_bone_weights[0] + emissive_color, 1.0);
 })")
         {
             location_location = gpu.get_attribute_location(get_id(), "location");
@@ -238,8 +244,12 @@ void main()
         {
             switch(e)
             {
-                case calculate_lighting_subroutine::CALCULATE_LIGHTING_LIT:                    gpu.set_uniform_subroutine(Gpu::ShaderType::FRAGMENT, calculate_lighting_lit_subroutine_index);                    break;
-                case calculate_lighting_subroutine::CALCULATE_LIGHTING_UNLIT:                    gpu.set_uniform_subroutine(Gpu::ShaderType::FRAGMENT, calculate_lighting_unlit_subroutine_index);                    break;
+                case calculate_lighting_subroutine::CALCULATE_LIGHTING_LIT:
+                    gpu.set_uniform_subroutine(Gpu::ShaderType::FRAGMENT, calculate_lighting_lit_subroutine_index);
+                    break;
+                case calculate_lighting_subroutine::CALCULATE_LIGHTING_UNLIT:
+                    gpu.set_uniform_subroutine(Gpu::ShaderType::FRAGMENT, calculate_lighting_unlit_subroutine_index);
+                    break;
             }
         }
 

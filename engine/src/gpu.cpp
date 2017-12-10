@@ -505,6 +505,13 @@ namespace naga
         return attribute_location;
     }
 
+	void Gpu::get_uniform(const char* name, std::vector<mat4>& params, size_t count)
+	{
+		params.resize(count);
+		const auto program_id = programs.top()->lock()->get_id();
+		glGetnUniformfvARB(program_id, get_uniform_location(program_id, name), count * sizeof(mat4), reinterpret_cast<GLfloat*>(&params[0]));
+	}
+
     void Gpu::enable_vertex_attribute_array(GpuLocation location)
     {
         glEnableVertexAttribArray(location); glCheckError();
@@ -568,7 +575,9 @@ namespace naga
     void Gpu::set_uniform(const char* name, const std::vector<mat4>& matrices, bool should_transpose) const
     {
 		const GLfloat* f = reinterpret_cast<const GLfloat*>(matrices.data());
-		glUniformMatrix4fv(get_uniform_location(programs.top()->lock()->get_id(), name), static_cast<GLsizei>(matrices.size()), should_transpose ? GL_TRUE : GL_FALSE, f); glCheckError();
+		auto d = f[17];
+		auto loc = get_uniform_location(programs.top()->lock()->get_id(), name);
+		glUniformMatrix4fv(loc, static_cast<GLsizei>(matrices.size()), should_transpose ? GL_TRUE : GL_FALSE, f); glCheckError();
     }
 
     void Gpu::set_uniform_subroutine(ShaderType shader_type, GpuIndex index)

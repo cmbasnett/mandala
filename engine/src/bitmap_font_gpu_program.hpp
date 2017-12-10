@@ -14,8 +14,9 @@ namespace naga
             Vertex() = default;
             Vertex(vec2 location, vec2 texcoord)
             {
-this->location = location;
-this->texcoord = texcoord;            }
+                this->location = location;
+                this->texcoord = texcoord;
+            }
 
             vec2 location;
             vec2 texcoord;

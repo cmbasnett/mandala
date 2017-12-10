@@ -11,8 +11,8 @@ in vec3 location;
 in vec3 normal;
 in vec3 tangent;
 in vec2 texcoord;
-in ivec4 bone_indices_0;
-in ivec4 bone_indices_1;
+mediump in ivec4 bone_indices_0;
+mediump in ivec4 bone_indices_1;
 in vec4 bone_weights_0;
 in vec4 bone_weights_1;
 
@@ -21,19 +21,20 @@ out vec3 out_location;
 out vec3 out_light_vector;
 out vec3 out_normal;
 out vec3 out_view_direction;
+out vec4 out_bone_weights;
 
 mat4 create_bone_transform()
 {
-    mat4 bone_transform = mat4(0.0);
+    mat4 bone_transform = mat4(1.0);
     
-    bone_transform += (bone_matrices[bone_indices_0[0]] * bone_weights_0[0]);
-    bone_transform += (bone_matrices[bone_indices_0[1]] * bone_weights_0[1]);
-    bone_transform += (bone_matrices[bone_indices_0[2]] * bone_weights_0[2]);
-    bone_transform += (bone_matrices[bone_indices_0[3]] * bone_weights_0[3]);
-    bone_transform += (bone_matrices[bone_indices_1[0]] * bone_weights_1[0]);
-    bone_transform += (bone_matrices[bone_indices_1[1]] * bone_weights_1[1]);
-    bone_transform += (bone_matrices[bone_indices_1[2]] * bone_weights_1[2]);
-    bone_transform += (bone_matrices[bone_indices_1[3]] * bone_weights_1[3]);
+    bone_transform += bone_weights_0.x * bone_matrices[bone_indices_0.x];
+    bone_transform += bone_weights_0.y * bone_matrices[bone_indices_0.y];
+    bone_transform += bone_weights_0.z * bone_matrices[bone_indices_0.z];
+    bone_transform += bone_weights_0.w * bone_matrices[bone_indices_0.w];
+    bone_transform += bone_weights_1.x * bone_matrices[bone_indices_1.x];
+    bone_transform += bone_weights_1.y * bone_matrices[bone_indices_1.y];
+    bone_transform += bone_weights_1.z * bone_matrices[bone_indices_1.z];
+    bone_transform += bone_weights_1.w * bone_matrices[bone_indices_1.w];
     
     return bone_transform;
 }
@@ -61,6 +62,9 @@ void main()
     vec4 final_location = view_projection_matrix * world_location;
     
     out_view_direction = normalize(camera_location - out_location);
+
+    // TODO: remove later, debug
+    out_bone_weights = bone_weights_0;
     
     gl_Position = final_location;    
 }

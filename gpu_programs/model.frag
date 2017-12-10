@@ -1,46 +1,47 @@
 #version 450
 
-struct diffuse_t
+struct Diffuse
 {
     sampler2D texture;
     vec4 color;
 };
 
-struct normal_t
+struct Normal
 {
     sampler2D texture;
 };
 
-struct specular_t
-{
-    sampler2D texture;
-    vec4 color;
-    float intensity;
-};
-
-struct emissive_t
+struct Specular
 {
     sampler2D texture;
     vec4 color;
     float intensity;
 };
 
-struct light_t
+struct Emissive
+{
+    sampler2D texture;
+    vec4 color;
+    float intensity;
+};
+
+struct Light
 {
     vec3 ambient_color;
 };
 
-uniform diffuse_t diffuse;
-uniform normal_t normal;
-uniform specular_t specular;
-uniform emissive_t emissive;
-uniform light_t light;
+uniform Diffuse diffuse;
+uniform Normal normal;
+uniform Specular specular;
+uniform Emissive emissive;
+uniform Light light;
 
 in vec3 out_location;
 in vec2 out_texcoord;
 in vec3 out_light_vector;
 in vec3 out_normal;
 in vec3 out_view_direction;
+in vec4 out_bone_weights;
 
 out vec4 frag_color;
 
@@ -79,5 +80,5 @@ void main()
     vec3 diffuse_color = calculate_lighting_function();
     vec3 emissive_color = texture(emissive.texture, out_texcoord).rgb * emissive.color.rgb * emissive.intensity;
     
-    frag_color = vec4((light.ambient_color + diffuse_color) * albedo_color + emissive_color, 1.0);
+    frag_color = vec4((light.ambient_color + diffuse_color) * albedo_color * out_bone_weights[0] + emissive_color, 1.0);
 }

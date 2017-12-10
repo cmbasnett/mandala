@@ -1,37 +1,21 @@
 #pragma once
 
-//naga
+// std
+#include <string>
+
+// naga
 #include "platform_defs.hpp"
 #include "types.hpp"
+#include "input_device.hpp"
 
 namespace naga
 {
 	struct InputEvent
     {
-#if defined(NAGA_PC)
-        typedef u8 ModFlagsType;
+		InputEvent() = default;
+		InputEvent(const std::string& string);
 
-		enum : ModFlagsType
-        {
-            MOD_FLAG_SHIFT = (1 << 0),
-            MOD_FLAG_CTRL = (1 << 1),
-            MOD_FLAG_ALT = (1 << 2),
-            MOD_FLAG_SUPER = (1 << 3)
-        };
-#endif
-
-        enum class DeviceType : i8
-        {
-            NONE = -1,
-            TOUCH,
-            KEYBOARD,
-#if defined(NAGA_PC)
-            GAMEPAD,
-#endif
-            COUNT
-        };
-
-        struct Touch
+        struct Mouse
         {
             typedef vec2 VectorType;
 
@@ -212,7 +196,6 @@ namespace naga
             wchar_t character = L'\0';
         };
 
-#if defined(NAGA_PC)
         struct Gamepad
         {
             typedef u8 IndexType;
@@ -233,14 +216,14 @@ namespace naga
 			AxisValueType axis_value_delta = 0;
 			Type type = Type::NONE;
         };
-#endif
 
 		size_t id = 0;
-		DeviceType device_type = DeviceType::NONE;
-        Touch touch;
+		InputDeviceType device_type = InputDeviceType::NONE;
+        Mouse mouse;
         Keyboard keyboard;
-#if defined(NAGA_PC)
         Gamepad gamepad;
-#endif
-    };
+
+	private:
+		friend std::ostream& operator<<(std::ostream& ostream, const InputEvent& input_event);
+	};
 }

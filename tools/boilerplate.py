@@ -96,7 +96,7 @@ def main():
 			s.append('            Vertex() = default;\n')
 			s.append('            Vertex(' + ', '.join((' '.join(arg) for arg in vertex_attributes)) + ')\n')
 			s.append('            {\n')
-			s.append(                 '\n'.join('this->{0} = {0};'.format(vertex_attribute[1]) for vertex_attribute in vertex_attributes))
+			s.append(                 '\n'.join('                this->{0} = {0};'.format(vertex_attribute[1]) for vertex_attribute in vertex_attributes) + '\n')
 			s.append('            }\n')
 			s.append('\n')
 
@@ -162,8 +162,8 @@ def main():
 					sr, function = subroutine_function
 
 					if sr == subroutine:
-						s.append('                case {}_subroutine::{}:'.format(sr, function.upper()))
-						s.append('                    gpu.set_uniform_subroutine(Gpu::ShaderType::FRAGMENT, {}_subroutine_index);'.format(function))
+						s.append('                case {}_subroutine::{}:\n'.format(sr, function.upper()))
+						s.append('                    gpu.set_uniform_subroutine(Gpu::ShaderType::FRAGMENT, {}_subroutine_index);\n'.format(function))
 						s.append('                    break;\n')
 
 				s.append('            }\n')

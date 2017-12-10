@@ -14,9 +14,10 @@ namespace naga
             Vertex() = default;
             Vertex(vec3 location, vec2 diffuse_texcoord, vec2 lightmap_texcoord)
             {
-this->location = location;
-this->diffuse_texcoord = diffuse_texcoord;
-this->lightmap_texcoord = lightmap_texcoord;            }
+                this->location = location;
+                this->diffuse_texcoord = diffuse_texcoord;
+                this->lightmap_texcoord = lightmap_texcoord;
+            }
 
             vec3 location;
             vec2 diffuse_texcoord;

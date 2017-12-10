@@ -249,17 +249,17 @@ namespace naga
 
 	bool GUILabel::on_input_event_begin(InputEvent& input_event)
     {
-		if (input_event.device_type == InputEvent::DeviceType::TOUCH &&
-			input_event.touch.type == InputEvent::Touch::Type::PRESS)
+		if (input_event.device_type == InputDeviceType::MOUSE &&
+			input_event.mouse.type == InputEvent::Mouse::Type::PRESS)
         {
-            if (contains(get_bounds(), input_event.touch.location))
+            if (contains(get_bounds(), input_event.mouse.location))
             {
                 for (auto& line : lines)
                 {
-                    if (input_event.touch.location.y >= line.rectangle.y &&
-                        input_event.touch.location.y <= (line.rectangle.y + line.rectangle.height))
+                    if (input_event.mouse.location.y >= line.rectangle.y &&
+                        input_event.mouse.location.y <= (line.rectangle.y + line.rectangle.height))
                     {
-                        if (input_event.touch.location.x <= line.rectangle.x)
+                        if (input_event.mouse.location.x <= line.rectangle.x)
                         {
                             cursor.string_begin = line.string_begin;
                             cursor.string_end = cursor.string_begin;
@@ -268,7 +268,7 @@ namespace naga
 
                             return true;
                         }
-                        else if (input_event.touch.location.x >= (line.rectangle.x + line.rectangle.width))
+                        else if (input_event.mouse.location.x >= (line.rectangle.x + line.rectangle.width))
                         {
                             cursor.string_begin = line.string_end;
                             cursor.string_end = cursor.string_begin;
@@ -290,7 +290,7 @@ namespace naga
                                     characters_itr = bitmap_font->get_characters().find(L'?'); //TODO: get fallback character from somewhere else
                                 }
 
-                                if (input_event.touch.location.x < x + (characters_itr->second.advance_x / 2))
+                                if (input_event.mouse.location.x < x + (characters_itr->second.advance_x / 2))
                                 {
                                     cursor.string_begin = string_itr;
                                     cursor.string_end = cursor.string_begin;
@@ -299,7 +299,7 @@ namespace naga
 
                                     break;
                                 }
-                                else if (input_event.touch.location.x < x + characters_itr->second.advance_x)
+                                else if (input_event.mouse.location.x < x + characters_itr->second.advance_x)
                                 {
                                     cursor.string_begin = string_itr + 1;
                                     cursor.string_end = cursor.string_begin;
@@ -321,7 +321,7 @@ namespace naga
 
         if (!is_read_only /*&& has_focus()*/)
         {
-			if (input_event.device_type == InputEvent::DeviceType::KEYBOARD)
+			if (input_event.device_type == InputDeviceType::KEYBOARD)
             {
 				if (input_event.keyboard.type == InputEvent::Keyboard::Type::KEY_PRESS ||
 					input_event.keyboard.type == InputEvent::Keyboard::Type::KEY_REPEAT)
@@ -373,7 +373,7 @@ namespace naga
                     }
 					case InputEvent::Keyboard::Key::HOME:
                     {
-                        //TODO: this is a bit inefficient as it requires iteration over all lines
+                        // TODO: this is a bit inefficient as it requires iteration over all lines
                         //would be more expedient if we dealt with finding the line the cursor is
                         //on during some sort of cleaning phase?
                         for (auto& line : lines)

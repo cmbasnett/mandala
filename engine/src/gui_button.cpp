@@ -7,13 +7,13 @@ namespace naga
 {
 	bool GUIButton::on_input_event_begin(InputEvent& input_event)
     {
-		if (input_event.device_type == InputEvent::DeviceType::TOUCH)
+		if (input_event.device_type == InputDeviceType::MOUSE)
         {
-            auto is_contained = contains(get_bounds(), input_event.touch.location);
+			auto is_contained = contains(get_bounds(), input_event.mouse.location);
 
-            switch (input_event.touch.type)
+            switch (input_event.mouse.type)
             {
-			case InputEvent::Touch::Type::PRESS:
+			case InputEvent::Mouse::Type::PRESS:
                 if (is_contained)
                 {
                     state = State::PRESSED;
@@ -26,7 +26,7 @@ namespace naga
                     return true;
                 }
                 break;
-			case InputEvent::Touch::Type::RELEASE:
+			case InputEvent::Mouse::Type::RELEASE:
                 if (is_contained && state == State::PRESSED)
                 {
 					state = State::HOVER;
@@ -44,7 +44,7 @@ namespace naga
                     return true;
                 }
                 break;
-			case InputEvent::Touch::Type::MOVE:
+			case InputEvent::Mouse::Type::MOVE:
                 switch (state)
                 {
 				case State::IDLE:

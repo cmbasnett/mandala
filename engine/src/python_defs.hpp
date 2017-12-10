@@ -618,15 +618,22 @@ BOOST_PYTHON_MODULE(naga)
 				;
     }
 
+	enum_<InputDeviceType>("InputDeviceType")
+		.value("NONE", InputDeviceType::NONE)
+		.value("MOUSE", InputDeviceType::MOUSE)
+		.value("KEYBOARD", InputDeviceType::KEYBOARD)
+		.value("GAMEPAD", InputDeviceType::GAMEPAD)
+		.value("COUNT", InputDeviceType::COUNT)
+		.export_values();
+
     {
 		scope input_event_scope = class_<InputEvent>("InputEvent", no_init)
             .add_property("id", &InputEvent::id)
             .add_property("device_type", &InputEvent::device_type)
-            .add_property("touch", &InputEvent::touch)
+            .add_property("mouse", &InputEvent::mouse)
             .add_property("keyboard", &InputEvent::keyboard)
-#if defined(NAGA_PC)
             .add_property("gamepad", &InputEvent::gamepad)
-#endif
+			.def(self_ns::str(self_ns::self));
             ;
 
         scope().attr("MOD_FLAG_SHIFT") = InputEvent::ModFlagsType(InputEvent::MOD_FLAG_SHIFT);
@@ -634,47 +641,37 @@ BOOST_PYTHON_MODULE(naga)
 		scope().attr("MOD_FLAG_ALT") = InputEvent::ModFlagsType(InputEvent::MOD_FLAG_ALT);
 		scope().attr("MOD_FLAG_SUPER") = InputEvent::ModFlagsType(InputEvent::MOD_FLAG_SUPER);
 
-		enum_<InputEvent::DeviceType>("DeviceType")
-			.value("NONE", InputEvent::DeviceType::NONE)
-			.value("TOUCH", InputEvent::DeviceType::TOUCH)
-			.value("KEYBOARD", InputEvent::DeviceType::KEYBOARD)
-#if defined(NAGA_PC)
-			.value("GAMEPAD", InputEvent::DeviceType::GAMEPAD)
-#endif
-			.value("COUNT", InputEvent::DeviceType::COUNT)
-            .export_values();
-
         {
-			scope touch_scope = class_<InputEvent::Touch, noncopyable>("Touch", no_init)
-				.def_readonly("id", &InputEvent::Touch::id)
-				.def_readonly("type", &InputEvent::Touch::type)
+			scope mouse_scope = class_<InputEvent::Mouse, noncopyable>("Mouse", no_init)
+				.def_readonly("id", &InputEvent::Mouse::id)
+				.def_readonly("type", &InputEvent::Mouse::type)
 #if defined(NAGA_PC)
-				.def_readonly("button", &InputEvent::Touch::button)
+				.def_readonly("button", &InputEvent::Mouse::button)
 #endif
-				.def_readonly("location", &InputEvent::Touch::location)
-				.def_readonly("location_delta", &InputEvent::Touch::location_delta)
-				.def_readonly("mod_flags", &InputEvent::Touch::mod_flags);
+				.def_readonly("location", &InputEvent::Mouse::location)
+				.def_readonly("location_delta", &InputEvent::Mouse::location_delta)
+				.def_readonly("mod_flags", &InputEvent::Mouse::mod_flags);
 
-			enum_<InputEvent::Touch::Type>("Type")
-				.value("NONE", InputEvent::Touch::Type::NONE)
-				.value("PRESS", InputEvent::Touch::Type::PRESS)
-				.value("RELEASE", InputEvent::Touch::Type::RELEASE)
-				.value("SCROLL", InputEvent::Touch::Type::SCROLL)
-				.value("MOVE", InputEvent::Touch::Type::MOVE)
+			enum_<InputEvent::Mouse::Type>("Type")
+				.value("NONE", InputEvent::Mouse::Type::NONE)
+				.value("PRESS", InputEvent::Mouse::Type::PRESS)
+				.value("RELEASE", InputEvent::Mouse::Type::RELEASE)
+				.value("SCROLL", InputEvent::Mouse::Type::SCROLL)
+				.value("MOVE", InputEvent::Mouse::Type::MOVE)
                 .export_values();
 
 #if defined(NAGA_PC)
-			enum_<InputEvent::Touch::Button>("Button")
-				.value("NONE", InputEvent::Touch::Button::NONE)
-				.value("LEFT", InputEvent::Touch::Button::LEFT)
-				.value("RIGHT", InputEvent::Touch::Button::RIGHT)
-				.value("MIDDLE", InputEvent::Touch::Button::MIDDLE)
-				.value("FOUR", InputEvent::Touch::Button::FOUR)
-				.value("FIVE", InputEvent::Touch::Button::FIVE)
-				.value("SIX", InputEvent::Touch::Button::SIX)
-				.value("SEVEN", InputEvent::Touch::Button::SEVEN)
-				.value("EIGHT", InputEvent::Touch::Button::EIGHT)
-				.value("COUNT", InputEvent::Touch::Button::COUNT)
+			enum_<InputEvent::Mouse::Button>("Button")
+				.value("NONE", InputEvent::Mouse::Button::NONE)
+				.value("LEFT", InputEvent::Mouse::Button::LEFT)
+				.value("RIGHT", InputEvent::Mouse::Button::RIGHT)
+				.value("MIDDLE", InputEvent::Mouse::Button::MIDDLE)
+				.value("FOUR", InputEvent::Mouse::Button::FOUR)
+				.value("FIVE", InputEvent::Mouse::Button::FIVE)
+				.value("SIX", InputEvent::Mouse::Button::SIX)
+				.value("SEVEN", InputEvent::Mouse::Button::SEVEN)
+				.value("EIGHT", InputEvent::Mouse::Button::EIGHT)
+				.value("COUNT", InputEvent::Mouse::Button::COUNT)
                 .export_values();
 #endif
         }

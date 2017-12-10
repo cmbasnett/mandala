@@ -45,7 +45,7 @@ namespace naga
         DataType data;
         size_t pixel_stride = 1;
         std::mutex data_mutex;
+
+		friend std::ostream& operator<<(std::ostream& ostream, Image& image);
     };
 }
-
-std::ostream& operator<<(std::ostream& ostream, naga::Image& image);

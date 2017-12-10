@@ -226,9 +226,6 @@
     <ClInclude Include="..\..\src\triangle.hpp">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\input_event.hpp">
-      <Filter>platform</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\window_event.hpp">
       <Filter>platform</Filter>
     </ClInclude>
@@ -367,6 +364,24 @@
     </ClInclude>
     <ClInclude Include="..\..\src\py_boost_function.hpp">
       <Filter>python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\input_event.hpp">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\input_device.hpp">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\enum.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\action.hpp">
+      <Filter>actions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\input_event_type.hpp">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\input_event_flags.hpp">
+      <Filter>input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -538,6 +553,12 @@
     <ClCompile Include="..\..\src\debug_renderer.cpp">
       <Filter>gpu</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\input_event.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\input_device.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="dist">
@@ -647,6 +668,12 @@
     </Filter>
     <Filter Include="type traits">
       <UniqueIdentifier>{5b1bbda6-a2c0-4e47-86db-e2113661cf61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="input">
+      <UniqueIdentifier>{3a3d5060-a696-4671-b6ca-fa7ec7d59783}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="actions">
+      <UniqueIdentifier>{83fa5e09-da1b-441a-88f1-5fdf9e8efea6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

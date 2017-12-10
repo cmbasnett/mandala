@@ -381,6 +381,8 @@ namespace naga
 		GpuLocation get_uniform_location(GpuId program_id, const char* name) const;
 		GpuLocation get_attribute_location(GpuId program_id, const char* name) const;
 
+		void get_uniform(const char* name, std::vector<mat4>& params, size_t count);
+
         void enable_vertex_attribute_array(GpuLocation location);
 		void disable_vertex_attribute_array(GpuLocation location);
 		void set_vertex_attrib_pointer(GpuLocation location, i32 size, GpuDataTypes data_type, bool is_normalized, i32 stride, const void* pointer);

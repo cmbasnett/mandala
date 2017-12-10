@@ -10,7 +10,8 @@ class ExampleGame(Game):
         pass
 
     def on_input_event(self, e):
-        if e.device_type == InputEvent.KEYBOARD and e.keyboard.type == InputEvent.Keyboard.Type.KEY_PRESS:
+        print(e)
+        if e.device_type == InputDeviceType.KEYBOARD and e.keyboard.type == InputEvent.Keyboard.Type.KEY_PRESS:
             if e.keyboard.key == InputEvent.Keyboard.Key.ESCAPE:
                 app.exit()
             elif e.keyboard.key == InputEvent.Keyboard.Key.F12:
@@ -50,8 +51,6 @@ class ConsoleState(State):
         self.input_label.should_clip = True
         self.input_label.on_enter_function = GuiLabel.on_enter_fn.from_callable(self.on_input_label_enter)
 
-        print(self.input_label.on_enter_function)
-
         self.root.adopt(self.background)
         self.root.adopt(self.input_label)
 
@@ -67,7 +66,7 @@ class ConsoleState(State):
 
     def on_input_event(self, e):
         super(ConsoleState, self).on_input_event_base(e)
-        if e.device_type == InputEvent.KEYBOARD:
+        if e.device_type == InputDeviceType.KEYBOARD:
             if e.keyboard.key == InputEvent.Keyboard.Key.GRAVE_ACCENT:
                 if e.keyboard.type == InputEvent.Keyboard.Type.KEY_PRESS:
                     states.pop(self)
@@ -88,12 +87,12 @@ class FreeLookComponent(GameComponent):
 
     def on_input_event(self, e):
         super(FreeLookComponent, self).on_input_event_base(e)
-        if e.device_type == InputEvent.TOUCH:
-            if e.touch.type == InputEvent.Touch.Type.MOVE:
-                self.yaw += e.touch.location_delta.x * self.sensitivity
-                self.pitch += e.touch.location_delta.y * self.sensitivity
+        if e.device_type == InputDeviceType.MOUSE:
+            if e.mouse.type == InputEvent.Mouse.Type.MOVE:
+                self.yaw += e.mouse.location_delta.x * self.sensitivity
+                self.pitch += e.mouse.location_delta.y * self.sensitivity
                 self.pitch = min(max(self.pitch, self.pitch_min), self.pitch_max)
-        elif e.device_type == InputEvent.KEYBOARD:
+        elif e.device_type == InputDeviceType.KEYBOARD:
             if e.keyboard.key == InputEvent.Keyboard.Key.W:
                 if e.keyboard.type == InputEvent.Keyboard.Type.KEY_PRESS:
                     self.local_velocity_target.z = 1.0
@@ -169,10 +168,10 @@ class ExampleState(State):
 
     def on_input_event(self, e):
         super(ExampleState, self).on_input_event_base(e)
-        if e.device_type == InputEvent.TOUCH:
-            if e.touch.type == InputEvent.Touch.Type.PRESS:
+        if e.device_type == InputDeviceType.MOUSE:
+            if e.mouse.type == InputEvent.Mouse.Type.PRESS:
                 self.is_tracing = True
-            if e.touch.type == InputEvent.Touch.Type.RELEASE:
+            if e.mouse.type == InputEvent.Mouse.Type.RELEASE:
                 self.is_tracing = False
         self.scene.on_input_event(e)
 

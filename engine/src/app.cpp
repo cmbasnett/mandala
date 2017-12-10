@@ -183,7 +183,7 @@ namespace naga
         while (platform.pop_input_event(input_event))
         {
 #if defined(NAGA_PC)
-			if (input_event.device_type == InputEvent::DeviceType::KEYBOARD &&
+			if (input_event.device_type == InputDeviceType::KEYBOARD &&
 				input_event.keyboard.key == InputEvent::Keyboard::Key::F11 &&
 				input_event.keyboard.type == InputEvent::Keyboard::Type::KEY_PRESS)
             {

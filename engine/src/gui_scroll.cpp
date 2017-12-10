@@ -19,20 +19,20 @@ namespace naga
         //'owning' touch events by id so that they get exclusive rights
         //to handle future touch events of the same id.
 
-		if (input_event.device_type == InputEvent::DeviceType::TOUCH)
+		if (input_event.device_type == InputDeviceType::MOUSE)
         {
             //offset the touch location by the scroll location so that
             //touch locations are relative to the internal contents
             //of the scroll.
-            input_event.touch.location -= scroll_location;
+			input_event.mouse.location -= scroll_location;
         }
 
 		auto base_result = GUINode::on_input_event_begin(input_event);
         
-		if (input_event.device_type == InputEvent::DeviceType::TOUCH)
+		if (input_event.device_type == InputDeviceType::MOUSE)
         {
             //undo the scroll offset.
-            input_event.touch.location += scroll_location;
+			input_event.mouse.location += scroll_location;
         }
 
         if (base_result)
@@ -41,36 +41,36 @@ namespace naga
             return true;
         }
 
-        switch (input_event.touch.type)
+        switch (input_event.mouse.type)
         {
-		case InputEvent::Touch::Type::PRESS:
-            if (contains(get_bounds(), input_event.touch.location))
+		case InputEvent::Mouse::Type::PRESS:
+            if (contains(get_bounds(), input_event.mouse.location))
             {
                 is_scrolling = true;
-                touch_id = input_event.touch.id;
+				touch_id = input_event.mouse.id;
                 return true;
             }
             break;
-		case InputEvent::Touch::Type::RELEASE:
-            if (is_scrolling && touch_id == input_event.touch.id)
+		case InputEvent::Mouse::Type::RELEASE:
+			if (is_scrolling && touch_id == input_event.mouse.id)
             {
                 is_scrolling = false;
                 touch_id = 0;
                 return true;
             }
             break;
-		case InputEvent::Touch::Type::MOVE:
-            if (is_scrolling && touch_id == input_event.touch.id)
+		case InputEvent::Mouse::Type::MOVE:
+			if (is_scrolling && touch_id == input_event.mouse.id)
             {
-                scroll_location_target += input_event.touch.location_delta;
+				scroll_location_target += input_event.mouse.location_delta;
                 scroll_location_target = glm::clamp(scroll_location_target, scroll_extents.min, scroll_extents.max);
                 return true;
             }
             break;
-		case InputEvent::Touch::Type::SCROLL:
-            if (contains(get_bounds(), input_event.touch.location))
+		case InputEvent::Mouse::Type::SCROLL:
+			if (contains(get_bounds(), input_event.mouse.location))
             {
-                scroll_location_target += (input_event.touch.location_delta * 32.0f);
+				scroll_location_target += (input_event.mouse.location_delta * 32.0f);
                 scroll_location_target = glm::clamp(scroll_location_target, scroll_extents.min, scroll_extents.max);
                 return true;
             }

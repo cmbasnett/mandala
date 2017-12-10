@@ -123,106 +123,105 @@ namespace naga
 			return 0;
 		}
 	}
-}
 
-std::string png_error_message;
+	// TODO: ugly implementation
+	std::string png_error_message;
 
-std::ostream& operator<<(std::ostream& ostream, naga::Image& image)
-{
-    using namespace naga;
+	std::ostream& operator<<(std::ostream& ostream, Image& image)
+	{
+		auto png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 
-    auto png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+		if (!png_ptr)
+		{
+			throw std::exception();
+		}
 
-    if (!png_ptr)
-    {
-        throw std::exception();
-    }
+		auto info_ptr = png_create_info_struct(png_ptr);
 
-    auto info_ptr = png_create_info_struct(png_ptr);
+		if (!info_ptr)
+		{
+			png_destroy_write_struct(&png_ptr, nullptr);
 
-    if (!info_ptr)
-    {
-        png_destroy_write_struct(&png_ptr, nullptr);
+			throw std::exception();
+		}
 
-        throw std::exception();
-    }
+		std::exception exception;
 
-	std::exception exception;
+		png_error_ptr error_fn = [](png_structp png_ptr, png_const_charp message) {
+			png_error_message = message;
+		};
 
-	png_error_ptr error_fn = [](png_structp png_ptr, png_const_charp message) {
-		png_error_message = message;
-	};
+		png_set_error_fn(png_ptr, png_get_error_ptr(png_ptr), error_fn, NULL);
 
-	png_set_error_fn(png_ptr, png_get_error_ptr(png_ptr), error_fn, NULL);
+		if (setjmp(png_jmpbuf(png_ptr)))
+		{
+			auto error_ptr = png_get_error_ptr(png_ptr);
+			png_destroy_write_struct(&png_ptr, &info_ptr);
+			throw std::exception(png_error_message.c_str());
+		}
 
-    if (setjmp(png_jmpbuf(png_ptr)))
-    {
-		auto error_ptr = png_get_error_ptr(png_ptr);
-		png_destroy_write_struct(&png_ptr, &info_ptr);
-		throw std::exception(png_error_message.c_str());
-    }
+		auto get_png_color_type = [](ColorType color_type) -> int
+		{
+			switch (color_type)
+			{
+			case ColorType::G:
+				return PNG_COLOR_TYPE_GRAY;
+			case ColorType::RGB:
+				return PNG_COLOR_TYPE_RGB;
+			case ColorType::PALETTE:
+				return PNG_COLOR_TYPE_PALETTE;
+			case ColorType::GA:
+				return PNG_COLOR_TYPE_GA;
+			case ColorType::RGBA:
+				return PNG_COLOR_TYPE_RGBA;
+			case ColorType::DEPTH_STENCIL:
+				return PNG_COLOR_TYPE_RGBA;
+			default:
+				throw std::exception();
+			}
+		};
 
-	auto get_png_color_type = [](ColorType color_type) -> int
-    {
-        switch (color_type)
-        {
-		case ColorType::G:
-            return PNG_COLOR_TYPE_GRAY;
-		case ColorType::RGB:
-            return PNG_COLOR_TYPE_RGB;
-		case ColorType::PALETTE:
-            return PNG_COLOR_TYPE_PALETTE;
-		case ColorType::GA:
-            return PNG_COLOR_TYPE_GA;
-		case ColorType::RGBA:
-            return PNG_COLOR_TYPE_RGBA;
-		case ColorType::DEPTH_STENCIL:
-            return PNG_COLOR_TYPE_RGBA;
-        default:
-            throw std::exception();
-        }
-    };
+		auto png_color_type = get_png_color_type(image.get_color_type());
 
-    auto png_color_type = get_png_color_type(image.get_color_type());
+		png_set_IHDR(png_ptr,
+			info_ptr,
+			image.get_width(),
+			image.get_height(),
+			image.get_bit_depth(),
+			png_color_type,
+			PNG_INTERLACE_NONE,
+			PNG_COMPRESSION_TYPE_DEFAULT,
+			PNG_FILTER_TYPE_DEFAULT);
 
-    png_set_IHDR(png_ptr,
-        info_ptr,
-        image.get_width(),
-        image.get_height(),
-        image.get_bit_depth(),
-        png_color_type,
-        PNG_INTERLACE_NONE,
-        PNG_COMPRESSION_TYPE_DEFAULT,
-        PNG_FILTER_TYPE_DEFAULT);
+		std::unique_lock<std::mutex> image_data_lock(image.get_data_mutex());
+		auto data_ptr = image.get_data().data();
 
-    std::unique_lock<std::mutex> image_data_lock(image.get_data_mutex());
-    auto data_ptr = image.get_data().data();
+		png_bytepp rows = static_cast<png_bytepp>(png_malloc(png_ptr, image.get_height() * sizeof(png_bytep)));
 
-    png_bytepp rows = static_cast<png_bytepp>(png_malloc(png_ptr, image.get_height() * sizeof(png_bytep)));
+		const auto bytes_per_pixel = glm::max(1u, (image.get_bit_depth() * image.get_channel_count() / 8));
+		const auto row_size = (image.get_width() * bytes_per_pixel);
 
-	const auto bytes_per_pixel = glm::max(1u, (image.get_bit_depth() * image.get_channel_count() / 8));
-	const auto row_size = (image.get_width() * bytes_per_pixel);
+		for (unsigned int y = 0; y < image.get_size().y; ++y)
+		{
+			auto row = static_cast<png_bytep>(png_malloc(png_ptr, row_size));
 
-    for (unsigned int y = 0; y < image.get_size().y; ++y)
-    {
-        auto row = static_cast<png_bytep>(png_malloc(png_ptr, row_size));
+			for (unsigned int x = 0; x < image.get_size().x; ++x)
+			{
+				memcpy_s(row, row_size, data_ptr + (row_size * y), row_size);
+			}
 
-        for (unsigned int x = 0; x < image.get_size().x; ++x)
-        {
-            memcpy_s(row, row_size, data_ptr + (row_size * y), row_size);
-        }
+			rows[image.get_height() - y - 1] = row;
+		}
 
-        rows[image.get_height() - y - 1] = row;
-    }
+		image_data_lock.unlock();
 
-    image_data_lock.unlock();
+		png_set_rows(png_ptr, info_ptr, rows);
+		png_set_write_fn(png_ptr, static_cast<png_voidp>(&ostream), [](png_structp png_ptr, png_bytep data, png_size_t size)
+		{
+			static_cast<std::ostream*>(png_get_io_ptr(png_ptr))->write(reinterpret_cast<char*>(data), size);
+		}, nullptr);
+		png_write_png(png_ptr, info_ptr, PNG_TRANSFORM_IDENTITY, nullptr);
 
-    png_set_rows(png_ptr, info_ptr, rows);
-    png_set_write_fn(png_ptr, static_cast<png_voidp>(&ostream), [](png_structp png_ptr, png_bytep data, png_size_t size)
-    {
-        static_cast<std::ostream*>(png_get_io_ptr(png_ptr))->write(reinterpret_cast<char*>(data), size);
-    }, nullptr);
-    png_write_png(png_ptr, info_ptr, PNG_TRANSFORM_IDENTITY, nullptr);
-
-    return ostream;
+		return ostream;
+	}
 }
