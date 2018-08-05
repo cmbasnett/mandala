@@ -5,7 +5,7 @@ import re
 import zlib
 
 def main():
-	print 'boilerplate'
+	print('boilerplate')
 
 	UNIFORMS_PATTERN = '[\;|\n?|\s|}]uniform\s+(\S+)\s+(\S+)\s?\;'
 	VERTEX_ATTRIBUTES_PATTERN = '[\;|\n?|\s|}]in\s+(\S+)\s+(\S+)\s?\;'
@@ -53,7 +53,7 @@ def main():
 
 			try:
 				with open(os.path.join(args.output_dir, gpu_program + '_gpu_program.hpp'), 'r') as f:
-					crc = zlib.crc32(f.read())
+					crc = zlib.crc32(f.read().encode())
 			except IOError:
 				pass
 
@@ -192,10 +192,10 @@ def main():
 			s = ''.join(s)
 
 			# if file contents changed, write new contents to file
-			if (args.force or zlib.crc32(s) != crc):
+			if (args.force or zlib.crc32(s.encode()) != crc):
 				with open(os.path.join(args.output_dir, gpu_program + '_gpu_program.hpp'), 'w+') as f:
-					if crc != zlib.crc32(s):
-						print 'writing ' + gpu_program
+					if crc != zlib.crc32(s.encode()):
+						print('writing ' + gpu_program)
 						f.write(s)
 
 if __name__ == '__main__':

@@ -4,7 +4,6 @@
 #include <memory>
 #include <vector>
 #include <array>
-#include <list>
 
 // type
 #include "voxel_chunk.hpp"
@@ -36,7 +35,7 @@ namespace naga
 		std::shared_ptr<VoxelDataSource> data_source;
 		std::map<size_t, ChunkType> chunks;	// TODO: tack on the currently loaded x/y/z index for the chunk
 		// TODO: 3x vector
-		std::vector<ChunkType> chunk_map;
+		std::vector<std::vector<std::vector<ChunkType>>> chunk_map;
 
 		// TODO: make a 3d mapping of where we are in the currently loaded chunks that is conducive to shifting by an arbitrary amount along a given axis
 		size_t max_chunks = 9;

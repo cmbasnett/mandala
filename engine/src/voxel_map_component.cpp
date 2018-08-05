@@ -14,7 +14,7 @@ namespace naga
 	{
 		if (map != nullptr)
 		{
-			map->render(camera_parameters);
+			//map->render(camera_parameters);
 		}
 	}
 }

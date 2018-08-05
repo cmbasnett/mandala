@@ -14,11 +14,11 @@ namespace naga
 		// TODO: verify correctness
 		for (size_t x = 0; x < max_chunks; ++x)
 		{
-			std::list<std::list<ChunkType>> ylist;
+			std::vector<std::vector<ChunkType>> ylist;
 
 			for (size_t y = 0; y < max_chunks; ++y)
 			{
-				std::list<ChunkType> zlist;
+				std::vector<ChunkType> zlist;
 
 				for (size_t z = 0; z < max_chunks; ++z)
 				{
@@ -84,6 +84,7 @@ namespace naga
 
 	const VoxelMap::ChunkType& VoxelMap::get_chunk(VoxelIndex::IndexType index) const
 	{
+		// TODO: map index to chunk map index??
 		return chunk_map[index.x][index.y][index.z];
 	}
 

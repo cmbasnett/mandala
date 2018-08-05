@@ -24,9 +24,10 @@ namespace naga
 		// TODO: just return random voxels for now!
 		for (auto chunk_id : request.chunk_ids)
 		{
-			VoxelChunk::VoxelsType voxels;
+			VoxelChunk chunk;
+			// TODO: populate chunks with more info!
 
-			for (auto x : voxels)
+			for (auto x : chunk.voxels)
 			{
 				for (auto y : x)
 				{
@@ -37,7 +38,7 @@ namespace naga
 				}
 			}
 
-			response.chunks.emplace(std::make_pair(chunk_id, voxels));
+			response.chunks.emplace(std::make_pair(chunk_id, chunk));
 		}
 
 		return promise.get_future();

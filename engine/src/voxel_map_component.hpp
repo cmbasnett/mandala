@@ -9,6 +9,8 @@ namespace naga
 
 	struct VoxelMapComponent : SceneComponent
 	{
+		VoxelMapComponent();
+
 		// TODO: VBOs for each chunk! have a VBO pool mayhaps
 
 		const std::shared_ptr<VoxelMap>& get_map() const { return map; }

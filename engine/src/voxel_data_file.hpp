@@ -13,7 +13,7 @@ namespace naga
 		VoxelDataFileStream(const std::string& filename);
 
 		virtual std::future<VoxelDataSource::LoadResponse> load_data(VoxelDataSource::LoadRequest request) override;
-		virtual std::future<VoxelDataSource::SaveResponse> save_data(VoxelDataSource::SaveRequest request) override;
+		//virtual std::future<VoxelDataSource::SaveResponse> save_data(VoxelDataSource::SaveRequest request) override;
 
 	private:
 		std::mutex stream_mutex;

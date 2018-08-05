@@ -9,16 +9,16 @@
 #include "index_buffer.hpp"
 #include "basic_gpu_program.hpp"
 #include "voxel_index.hpp"
+#include "voxel.hpp"
 
 namespace naga
 {
-	struct Voxel;
 	struct VoxelMap;
+	struct VoxelType;
 
 	template<typename PointerType>
 	struct VoxelsIterator
 	{
-
 	};
 
 	struct VoxelChunk
@@ -28,7 +28,6 @@ namespace naga
 		typedef std::array<std::array<std::array<Voxel, SIZE>, SIZE>, SIZE> VoxelsType;
 		typedef vec3_i32 VoxelsIndexType;
 
-
 		enum class State	// TODO: when we figure out the exact stages, we can sort this out
 		{
 			UNINITIALIZED,	// Chunk has been allocated but look-up table data has not been initialized.
@@ -36,6 +35,8 @@ namespace naga
 			LOADING,		// Chunk is loading.
 			LOADED,			// Chunk is loaded.
 		};
+
+		VoxelChunk();
 
 		size_t id;
 		VoxelIndex::IndexType index;
