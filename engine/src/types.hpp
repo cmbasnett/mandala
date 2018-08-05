@@ -18,22 +18,16 @@ namespace naga
     typedef double              f64;
 
     typedef glm::vec2           vec2;
-    typedef glm::lowp_ivec2     vec2_i16;
-    typedef glm::lowp_uvec2     vec2_u16;
     typedef glm::ivec2          vec2_i32;
     typedef glm::uvec2          vec2_u32;
     typedef glm::dvec2          vec2_f64;
 
     typedef glm::vec3           vec3;
-    typedef glm::lowp_ivec3     vec3_i16;
-    typedef glm::lowp_uvec3     vec3_u16;
     typedef glm::ivec3          vec3_i32;
     typedef glm::uvec3          vec3_u32;
     typedef glm::dvec3          vec3_f64;
 
     typedef glm::vec4           vec4;
-    typedef glm::lowp_ivec4     vec4_i16;
-    typedef glm::lowp_uvec4     vec4_u16;
     typedef glm::ivec4          vec4_i32;
     typedef glm::uvec4          vec4_u32;
     typedef glm::dvec4          vec4_f64;

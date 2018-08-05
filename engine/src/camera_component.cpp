@@ -10,7 +10,7 @@
 
 namespace naga
 {
-    const char* CameraComponent::component_name = "CameraComponent";
+	const char* CameraComponent::component_name = "CameraComponent";
 
 	CameraParameters CameraComponent::get_parameters(const GpuViewportType& viewport) const
     {

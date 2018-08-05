@@ -74,8 +74,8 @@ namespace naga
         gpu.programs.push(gpu_program);
 
         auto gpu_world_matrix = world_matrix;
-        gpu_world_matrix *= glm::translate(get_bounds().min.x, get_bounds().min.y, 0.0f);
-        gpu_world_matrix *= glm::scale(get_size().x, get_size().y, 1.0f);   //TODO: verify correctness
+        gpu_world_matrix *= glm::translate(vec3(get_bounds().min.x, get_bounds().min.y, 0.0f));
+		gpu_world_matrix *= glm::scale(vec3(get_size().x, get_size().y, 1.0f));   //TODO: verify correctness
 
         gpu.set_uniform("world_matrix", gpu_world_matrix);
         gpu.set_uniform("view_projection_matrix", view_projection_matrix);

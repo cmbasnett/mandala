@@ -25,9 +25,9 @@ namespace naga
     {
         typedef size_t IdType;
 
-        Pose3 pose;
-
 		GameObject();
+
+		Pose3 pose;
 
         virtual void on_create() { }
         virtual void on_destroy() { }

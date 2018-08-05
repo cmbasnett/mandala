@@ -183,9 +183,9 @@ namespace naga
         while (platform.pop_input_event(input_event))
         {
 #if defined(NAGA_PC)
-			if (input_event.device_type == InputDeviceType::KEYBOARD &&
-				input_event.keyboard.key == InputEvent::Keyboard::Key::F11 &&
-				input_event.keyboard.type == InputEvent::Keyboard::Type::KEY_PRESS)
+			if (input_event.type.device == InputDeviceType::KEYBOARD &&
+				input_event.type.key == Key::F11 &&
+				input_event.type.action == InputActionType::PRESS)
             {
                 platform.set_is_fullscreen(!platform.is_fullscreen());
 

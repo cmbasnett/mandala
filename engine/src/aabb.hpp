@@ -16,11 +16,11 @@ namespace naga
 		struct AABB2;
 
         template<typename Scalar>
-		struct AABB2<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type> : Range<glm::detail::tvec2<Scalar>>
+		struct AABB2<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type> : Range<glm::tvec2<Scalar>>
         {
             typedef Scalar ScalarType;
 			typedef AABB2<ScalarType> Type;
-			typedef glm::detail::tvec2<ScalarType> VectorType;
+			typedef glm::tvec2<ScalarType> VectorType;
 
             AABB2() = default;
 			AABB2(const VectorType& min, const VectorType& max) :
@@ -139,12 +139,12 @@ namespace naga
 		struct AABB3;
 
         template<typename Scalar>
-        struct AABB3<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type> : Range<glm::detail::tvec3<Scalar>>
+        struct AABB3<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type> : Range<glm::tvec3<Scalar>>
         {
             typedef Scalar ScalarType;
 			typedef AABB3<ScalarType> Type;
             typedef Plane3<f32> PlaneType;
-			typedef glm::detail::tvec3<ScalarType> VectorType;
+			typedef glm::tvec3<ScalarType> VectorType;
 
             static const size_t CORNER_COUNT = 8;
             static const size_t PLANE_COUNT = 6;
@@ -276,7 +276,7 @@ namespace naga
             }
 
             template<typename PointScalar, size_t N>
-			Type& operator=(const std::array<glm::detail::tvec3<PointScalar>, N>& points)
+			Type& operator=(const std::array<glm::tvec3<PointScalar>, N>& points)
             {
 				min = VectorType(std::numeric_limits<ScalarType>::max());
 				max = VectorType(-std::numeric_limits<ScalarType>::max());
@@ -309,7 +309,7 @@ namespace naga
                 return this->join(rhs);
             }
 
-			Type operator<<(const glm::detail::tmat4x4<ScalarType>& rhs) const
+			Type operator<<(const glm::tmat4x4<ScalarType>& rhs) const
             {
 				Type aabb;
 				aabb.min = VectorType(std::numeric_limits<ScalarType>::max());
@@ -317,7 +317,7 @@ namespace naga
 
                 for (const auto& corner : get_corners())
                 {
-                    auto corner_transformed = glm::detail::tvec4<ScalarType>(corner, 1);
+                    auto corner_transformed = glm::tvec4<ScalarType>(corner, 1);
                     corner_transformed = rhs * corner_transformed;
 
 					aabb <<= VectorType(corner_transformed.x, corner_transformed.y, corner_transformed.z);
@@ -326,7 +326,7 @@ namespace naga
                 return aabb;
             }
 
-            Type& operator<<=(const glm::detail::tmat4x4<ScalarType>& rhs)
+            Type& operator<<=(const glm::tmat4x4<ScalarType>& rhs)
             {
                 *this = *this << rhs;
 

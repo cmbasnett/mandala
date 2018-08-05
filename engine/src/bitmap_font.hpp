@@ -31,7 +31,7 @@ namespace naga
         {
 			CharacterIdType id = 0;
             details::Rectangle<u16> rectangle;
-            vec2_i16 offset;
+            tvec2<i16> offset;
             i16 advance_x = 0;
             u8 texture_index = 0;
             u8 channel = 0;

@@ -123,7 +123,7 @@ namespace naga
 		auto texture = resources.get<Texture>("white.png");
 		gpu.textures.bind(0, texture);
 
-		gpu.set_uniform("world_matrix", world_matrix * glm::translate(rectangle.x, rectangle.y, T(0)) * glm::scale(rectangle.width, rectangle.height, T(0)));
+		gpu.set_uniform("world_matrix", world_matrix * glm::translate(vec3(rectangle.x, rectangle.y, T(0))) * glm::scale(vec3(rectangle.width, rectangle.height, T(0))));
 		gpu.set_uniform("view_projection_matrix", view_projection_matrix);
 		gpu.set_uniform("color", color);
 

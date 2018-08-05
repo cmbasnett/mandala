@@ -383,6 +383,36 @@
     <ClInclude Include="..\..\src\input_event_flags.hpp">
       <Filter>input</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\keyboard.hpp">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\numbered_enum.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\scene_component.hpp">
+      <Filter>game components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\voxel.hpp">
+      <Filter>game components\voxel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\voxel_data.hpp">
+      <Filter>game components\voxel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\voxel_map.hpp">
+      <Filter>game components\voxel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\voxel_type.hpp">
+      <Filter>resources\voxel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\voxel_chunk.hpp">
+      <Filter>game components\voxel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\voxel_map_component.hpp">
+      <Filter>game components\voxel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\voxel_data_file.hpp">
+      <Filter>game components\voxel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\app.cpp">
@@ -559,6 +589,27 @@
     <ClCompile Include="..\..\src\input_device.cpp">
       <Filter>input</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\input_event_type.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\keyboard.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scene_component.cpp">
+      <Filter>game components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\voxel_map.cpp">
+      <Filter>game components\voxel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\voxel_data_file.cpp">
+      <Filter>game components\voxel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\voxel_map_component.cpp">
+      <Filter>game components\voxel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\voxel_chunk.cpp">
+      <Filter>game components\voxel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="dist">
@@ -674,6 +725,12 @@
     </Filter>
     <Filter Include="actions">
       <UniqueIdentifier>{83fa5e09-da1b-441a-88f1-5fdf9e8efea6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources\voxel">
+      <UniqueIdentifier>{0e78a75d-73cc-4e29-a789-d913a7ccdb42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game components\voxel">
+      <UniqueIdentifier>{6486335f-3513-454a-8b6b-5c343546decb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

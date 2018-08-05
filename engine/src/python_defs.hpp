@@ -45,6 +45,7 @@
 #include "python.hpp"
 #include "python_optional.hpp"
 #include "quake_camera.hpp"
+#include "voxel_map_component.hpp"
 #include "rectangle.hpp"
 #include "resource_manager.hpp"
 #include "rigid_body_component.hpp"
@@ -142,7 +143,7 @@ NAGA_PYTHON_DECLARE_WRAPPER_CLASS(Game)
     NAGA_PYTHON_DEFINE_WRAPPER_FUNCTION_VIRTUAL(void, on_run_start)
     NAGA_PYTHON_DEFINE_WRAPPER_FUNCTION_VIRTUAL(void, on_run_end)
 
-    void on_tick_start(f32 dt) override
+	void on_tick_start(naga::f32 dt) override
     {
         auto override_ = get_override("on_tick_start");
 
@@ -152,7 +153,7 @@ NAGA_PYTHON_DECLARE_WRAPPER_CLASS(Game)
         }
     }
 
-    void on_tick_end(f32 dt) override
+	void on_tick_end(naga::f32 dt) override
     {
         auto override_ = get_override("on_tick_end");
 
@@ -211,7 +212,7 @@ NAGA_PYTHON_DECLARE_WRAPPER_CLASS(State)
 		_wrapper_wrapped_type_::render();
 	}
 
-    void on_tick(f32 dt) override
+	void on_tick(naga::f32 dt) override
     {
         auto override_ = get_override("on_tick");
 
@@ -225,7 +226,7 @@ NAGA_PYTHON_DECLARE_WRAPPER_CLASS(State)
         }
     }
 
-    void on_tick_base(f32 dt)
+    void on_tick_base(naga::f32 dt)
     {
         _wrapper_wrapped_type_::on_tick(dt);
     }
@@ -264,7 +265,7 @@ NAGA_PYTHON_DECLARE_WRAPPER_CLASS(State)
 // GAME COMPONENT
 NAGA_PYTHON_DECLARE_WRAPPER_CLASS(GameComponent)
 {
-    void on_tick(f32 dt) override
+	void on_tick(naga::f32 dt) override
     {
         auto override_ = get_override("on_tick");
 
@@ -278,7 +279,7 @@ NAGA_PYTHON_DECLARE_WRAPPER_CLASS(GameComponent)
         }
     }
 
-    void on_tick_base(f32 dt)
+	void on_tick_base(naga::f32 dt)
     {
         _wrapper_wrapped_type_::on_tick(dt);
     }
@@ -366,9 +367,9 @@ NAGA_DEFINE_RESOURCE_GET_FUNCTION(Texture)
 NAGA_DEFINE_RESOURCE_PUT_FUNCTION(SpriteSet)
 
 #define NAGA_PYTHON_DEFINE_VEC2(name, value_type)\
-class_<glm::detail::tvec2<value_type>>(name, init<value_type, value_type>())\
-    .def_readwrite("x", &glm::detail::tvec2<value_type>::x)\
-    .def_readwrite("y", &glm::detail::tvec2<value_type>::y)\
+class_<glm::tvec2<value_type>>(name, init<value_type, value_type>())\
+    .def_readwrite("x", &glm::tvec2<value_type>::x)\
+    .def_readwrite("y", &glm::tvec2<value_type>::y)\
     .def(self_ns::self + self_ns::self)\
     .def(self_ns::self += self_ns::self)\
     .def(self_ns::self - self_ns::self)\
@@ -387,10 +388,10 @@ class_<naga::details::Line3<V>>(name, init<naga::details::Line3<V>::VectorType, 
 	.def_readwrite("end", &naga::details::Line3<V>::end);
 
 #define NAGA_PYTHON_DEFINE_VEC3(name, V)\
-class_<glm::detail::tvec3<V>>(name, init<V, V, V>())\
-    .def_readwrite("x", &glm::detail::tvec3<V>::x)\
-    .def_readwrite("y", &glm::detail::tvec3<V>::y)\
-    .def_readwrite("z", &glm::detail::tvec3<V>::z)\
+class_<glm::tvec3<V>>(name, init<V, V, V>())\
+    .def_readwrite("x", &glm::tvec3<V>::x)\
+    .def_readwrite("y", &glm::tvec3<V>::y)\
+    .def_readwrite("z", &glm::tvec3<V>::z)\
     .def(self_ns::self + self_ns::self)\
     .def(self_ns::self += self_ns::self)\
     .def(self_ns::self - self_ns::self)\
@@ -399,11 +400,11 @@ class_<glm::detail::tvec3<V>>(name, init<V, V, V>())\
     .def(self_ns::str(self_ns::self));
 
 #define NAGA_PYTHON_DEFINE_VEC4(name, value_type)\
-class_<glm::detail::tvec4<value_type>>(name, init<value_type, value_type, value_type, value_type>())\
-    .def_readwrite("x", &glm::detail::tvec4<value_type>::x)\
-    .def_readwrite("y", &glm::detail::tvec4<value_type>::y)\
-    .def_readwrite("z", &glm::detail::tvec4<value_type>::z)\
-    .def_readwrite("w", &glm::detail::tvec4<value_type>::w)\
+class_<glm::tvec4<value_type>>(name, init<value_type, value_type, value_type, value_type>())\
+    .def_readwrite("x", &glm::tvec4<value_type>::x)\
+    .def_readwrite("y", &glm::tvec4<value_type>::y)\
+    .def_readwrite("z", &glm::tvec4<value_type>::z)\
+    .def_readwrite("w", &glm::tvec4<value_type>::w)\
     .def(self_ns::self + self_ns::self)\
     .def(self_ns::self += self_ns::self)\
     .def(self_ns::self - self_ns::self)\
@@ -411,14 +412,14 @@ class_<glm::detail::tvec4<value_type>>(name, init<value_type, value_type, value_
     .def(self_ns::str(self_ns::self));
 
 #define NAGA_PYTHON_DEFINE_QUAT(name, value_type)\
-class_<glm::detail::tquat<value_type>>(name, init<value_type, value_type, value_type, value_type>())\
-    .def_readwrite("x", &glm::detail::tquat<value_type>::x)\
-    .def_readwrite("y", &glm::detail::tquat<value_type>::y)\
-    .def_readwrite("z", &glm::detail::tquat<value_type>::z)\
-    .def_readwrite("w", &glm::detail::tquat<value_type>::w)\
-    .def("__len__", &glm::detail::tquat<value_type>::length)\
+class_<glm::tquat<value_type>>(name, init<value_type, value_type, value_type, value_type>())\
+    .def_readwrite("x", &glm::tquat<value_type>::x)\
+    .def_readwrite("y", &glm::tquat<value_type>::y)\
+    .def_readwrite("z", &glm::tquat<value_type>::z)\
+    .def_readwrite("w", &glm::tquat<value_type>::w)\
+    .def("__len__", &glm::tquat<value_type>::length)\
     .def(self_ns::self * self_ns::self)\
-    .def(self_ns::self * glm::detail::tvec3<value_type>())\
+    .def(self_ns::self * glm::tvec3<value_type>())\
     .def(self_ns::str(self_ns::self));
 
 #define NAGA_PYTHON_DEFINE_AABB2(name, scalar_type)\
@@ -476,14 +477,14 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(state_mgr_push_overloads, StateSystem::pu
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(http_manager_get_overloads, HttpManager::get, 1, 1)
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(http_manager_get_async_overloads, HttpManager::get_async, 1, 2)
 
-inline naga::quat angle_axis(f32 angle, const naga::vec3& axis)
+inline naga::quat angle_axis(naga::f32 angle, const naga::vec3& axis)
 {
-    return glm::angleAxis(angle, axis);
+    return glm::angleAxis(glm::radians(angle), axis);
 }
 
-inline f32 length(const boost::python::object& other)
+inline naga::f32 length(const boost::python::object& other)
 {
-    auto result = boost::python::extract<glm::detail::tvec3<f32>>(other);
+	auto result = boost::python::extract<glm::tvec3<naga::f32>>(other);
 
     if (result.check())
     {
@@ -495,7 +496,7 @@ inline f32 length(const boost::python::object& other)
 
 inline boost::python::object inverse(const boost::python::object& other)
 {
-    auto result = boost::python::extract<glm::detail::tquat<f32>>(other);
+	auto result = boost::python::extract<glm::tquat<naga::f32>>(other);
 
     if (result.check())
     {
@@ -507,7 +508,7 @@ inline boost::python::object inverse(const boost::python::object& other)
 
 inline boost::python::object normalize(const boost::python::object& other)
 {
-    auto result = boost::python::extract<glm::detail::tvec3<f32>>(other);
+	auto result = boost::python::extract<glm::tvec3<naga::f32>>(other);
 
     if (result.check())
     {
@@ -519,7 +520,7 @@ inline boost::python::object normalize(const boost::python::object& other)
 
 inline boost::python::object degrees(const boost::python::object& radians)
 {
-	auto result = boost::python::extract<f32>(radians);
+	auto result = boost::python::extract<naga::f32>(radians);
 
 	if (result.check())
 	{
@@ -531,7 +532,7 @@ inline boost::python::object degrees(const boost::python::object& radians)
 
 inline boost::python::object radians(const boost::python::object& degrees)
 {
-	auto result = boost::python::extract<f32>(degrees);
+	auto result = boost::python::extract<naga::f32>(degrees);
 
 	if (result.check())
 	{
@@ -543,32 +544,32 @@ inline boost::python::object radians(const boost::python::object& degrees)
 
 BOOST_PYTHON_MODULE(naga)
 {
-    def("percent_rank", &glm::percent_rank<f32>);
-    def("angle_axis", &angle_axis);
-    def("bezier", naga::bezier3<f32>, args("point0", "point1", "point2", "t"));
-    def("length", &length);
-    def("inverse", &inverse);
-    def("normalize", &normalize);
+	def("percent_rank", &glm::percent_rank<naga::f32>);
+	def("angle_axis", &angle_axis);
+	def("bezier", naga::bezier3<naga::f32>, args("point0", "point1", "point2", "t"));
+	def("length", &length);
+	def("inverse", &inverse);
+	def("normalize", &normalize);
 	def("radians", &radians);
 	def("degrees", &degrees);
 
-    python_optional<Sprite>();
-    python_optional<size_t>();
+	python_optional<Sprite>();
+	python_optional<size_t>();
 	python_function_from_callable<void(boost::shared_ptr<HttpResponse>)>();
 	python_function_from_callable<bool(boost::shared_ptr<GUINode>)>();
 
 	python_pair<std::string, std::string>();
 
-    enable_type_object();
+	enable_type_object();
 
-    class_<Python, noncopyable>("Python", no_init)
+	class_<Python, noncopyable>("Python", no_init)
 		.def("execute", &Python::exec)
 		.def("exec_file", &Python::exec_file);
 
-    scope().attr("py") = boost::ref(py);
+	scope().attr("py") = boost::ref(py);
 
-    class_<GameWrapper, boost::shared_ptr<GameWrapper>, noncopyable>("Game", init<>())
-        .def("on_run_start", pure_virtual(&Game::on_run_start))
+	class_<GameWrapper, boost::shared_ptr<GameWrapper>, noncopyable>("Game", init<>())
+		.def("on_run_start", pure_virtual(&Game::on_run_start))
 		.def("on_run_end", pure_virtual(&Game::on_run_end))
 		.def("on_tick_start", pure_virtual(&Game::on_tick_start))
 		.def("on_tick_end", pure_virtual(&Game::on_tick_end))
@@ -576,265 +577,223 @@ BOOST_PYTHON_MODULE(naga)
 		.def("on_render_end", pure_virtual(&Game::on_render_end))
 		.def("on_input_event", pure_virtual(&Game::on_input_event));
 
-    //MATH
-    NAGA_PYTHON_DEFINE_AABB2("AABB2", f32);
-    NAGA_PYTHON_DEFINE_AABB3("AABB3", f32);
+	//MATH
+	NAGA_PYTHON_DEFINE_AABB2("AABB2", naga::f32);
+	NAGA_PYTHON_DEFINE_AABB3("AABB3", naga::f32);
 
-    //move to GLM module?
-    NAGA_PYTHON_DEFINE_VEC2("Vec2", f32);
-    NAGA_PYTHON_DEFINE_VEC3("Vec3", f32);
-    NAGA_PYTHON_DEFINE_VEC4("Vec4", f32);
+	//move to GLM module?
+	NAGA_PYTHON_DEFINE_VEC2("Vec2", naga::f32);
+	NAGA_PYTHON_DEFINE_VEC3("Vec3", naga::f32);
+	NAGA_PYTHON_DEFINE_VEC4("Vec4", naga::f32);
 
-	NAGA_PYTHON_DEFINE_LINE2("Line2", f32);
-	NAGA_PYTHON_DEFINE_LINE3("Line3", f32);
+	NAGA_PYTHON_DEFINE_LINE2("Line2", naga::f32);
+	NAGA_PYTHON_DEFINE_LINE3("Line3", naga::f32);
 
-    NAGA_PYTHON_DEFINE_QUAT("Quat", f32);
+	NAGA_PYTHON_DEFINE_QUAT("Quat", naga::f32);
 
-    NAGA_PYTHON_DEFINE_RECTANGLE("Rectangle", f32);
+	NAGA_PYTHON_DEFINE_RECTANGLE("Rectangle", naga::f32);
 
-    NAGA_PYTHON_DEFINE_PADDING("Padding", f32);
+	NAGA_PYTHON_DEFINE_PADDING("Padding", naga::f32);
 
-    //PLATFORM
-    {
-        scope platform_scope =  class_<Platform, noncopyable>("Platform", no_init)
+	//PLATFORM
+	{
+		scope platform_scope = class_<Platform, noncopyable>("Platform", no_init)
 			.add_property("screen_size", &Platform::get_screen_size, &Platform::set_screen_size)
 			.add_property("viewport", &Platform::get_viewport)
-	#if defined(NAGA_PC)
+#if defined(NAGA_PC)
 			.add_property("cursor_location", &Platform::get_cursor_location, &Platform::set_cursor_location)
 			.add_property("window_size", &Platform::get_window_size, &Platform::set_window_size)
 			.add_property("window_location", &Platform::get_window_location, &Platform::set_window_location)
-				//.add_property("display", &platform_t::get_display, &platform_t::set_window_location)
-				.add_property("fullscreen", &Platform::is_fullscreen, &Platform::set_is_fullscreen)
-				.def_readwrite("is_cursor_centered", &Platform::is_cursor_centered)
-				.add_property("is_cursor_hidden", &Platform::is_cursor_hidden, &Platform::set_cursor_hidden)
-	#endif
-				.add_property("clipboard_string", &Platform::get_clipboard_string, &Platform::set_clipboard_string)
-				;
+			//.add_property("display", &platform_t::get_display, &platform_t::set_window_location)
+			.add_property("fullscreen", &Platform::is_fullscreen, &Platform::set_is_fullscreen)
+			.def_readwrite("is_cursor_centered", &Platform::is_cursor_centered)
+			.add_property("is_cursor_hidden", &Platform::is_cursor_hidden, &Platform::set_cursor_hidden)
+#endif
+			.add_property("clipboard_string", &Platform::get_clipboard_string, &Platform::set_clipboard_string)
+			;
 
-			class_<Platform::Display, noncopyable>("PlatformDisplay", no_init)
-				.def_readonly("name", &Platform::Display::name)
-				.def_readonly("position", &Platform::Display::position)
-				.def_readonly("ppi", &Platform::Display::ppi)
-				;
-    }
+		class_<Platform::Display, noncopyable>("PlatformDisplay", no_init)
+			.def_readonly("name", &Platform::Display::name)
+			.def_readonly("position", &Platform::Display::position)
+			.def_readonly("ppi", &Platform::Display::ppi)
+			;
+	}
+
+	scope().attr("INPUT_EVENT_FLAG_SHIFT") = InputEventFlagsType(INPUT_EVENT_FLAG_SHIFT);
+	scope().attr("INPUT_EVENT_FLAG_CTRL") = InputEventFlagsType(INPUT_EVENT_FLAG_CTRL);
+	scope().attr("INPUT_EVENT_FLAG_ALT") = InputEventFlagsType(INPUT_EVENT_FLAG_ALT);
+	scope().attr("INPUT_EVENT_FLAG_SUPER") = InputEventFlagsType(INPUT_EVENT_FLAG_SUPER);
 
 	enum_<InputDeviceType>("InputDeviceType")
-		.value("NONE", InputDeviceType::NONE)
 		.value("MOUSE", InputDeviceType::MOUSE)
 		.value("KEYBOARD", InputDeviceType::KEYBOARD)
 		.value("GAMEPAD", InputDeviceType::GAMEPAD)
-		.value("COUNT", InputDeviceType::COUNT)
 		.export_values();
 
-    {
+	enum_<InputActionType>("InputActionType")
+		.value("PRESS", InputActionType::PRESS)
+		.value("RELEASE", InputActionType::RELEASE)
+		.value("REPEAT", InputActionType::REPEAT)
+		.value("MOVE", InputActionType::MOVE)
+		.value("CHARACTER", InputActionType::CHARACTER)
+		.value("SCROLL", InputActionType::SCROLL)
+		.export_values();
+
+	class_<InputEventType>("InputEventType", no_init)
+		.add_property("device", &InputEventType::device)
+		.add_property("action", &InputEventType::action)
+		.add_property("key", &InputEventType::key)
+		.add_property("button", &InputEventType::button)
+		.add_property("axis", &InputEventType::axis)
+		.add_property("character", &InputEventType::character)
+		.add_property("flags", &InputEventType::flags)
+	;
+
+	{
 		scope input_event_scope = class_<InputEvent>("InputEvent", no_init)
-            .add_property("id", &InputEvent::id)
-            .add_property("device_type", &InputEvent::device_type)
-            .add_property("mouse", &InputEvent::mouse)
-            .add_property("keyboard", &InputEvent::keyboard)
-            .add_property("gamepad", &InputEvent::gamepad)
+			.add_property("id", &InputEvent::id)
+			.add_property("type", &InputEvent::type)
+			.add_property("mouse", &InputEvent::mouse)
+			.add_property("gamepad", &InputEvent::gamepad)
 			.def(self_ns::str(self_ns::self));
-            ;
 
-        scope().attr("MOD_FLAG_SHIFT") = InputEvent::ModFlagsType(InputEvent::MOD_FLAG_SHIFT);
-		scope().attr("MOD_FLAG_CTRL") = InputEvent::ModFlagsType(InputEvent::MOD_FLAG_CTRL);
-		scope().attr("MOD_FLAG_ALT") = InputEvent::ModFlagsType(InputEvent::MOD_FLAG_ALT);
-		scope().attr("MOD_FLAG_SUPER") = InputEvent::ModFlagsType(InputEvent::MOD_FLAG_SUPER);
+		class_<InputEvent::Gamepad, noncopyable>("Gamepad", no_init)
+			.def_readonly("value", &InputEvent::Gamepad::value)
+			.def_readonly("delta", &InputEvent::Gamepad::delta)
+			.def_readonly("index", &InputEvent::Gamepad::index);
 
-        {
-			scope mouse_scope = class_<InputEvent::Mouse, noncopyable>("Mouse", no_init)
-				.def_readonly("id", &InputEvent::Mouse::id)
-				.def_readonly("type", &InputEvent::Mouse::type)
-#if defined(NAGA_PC)
-				.def_readonly("button", &InputEvent::Mouse::button)
-#endif
-				.def_readonly("location", &InputEvent::Mouse::location)
-				.def_readonly("location_delta", &InputEvent::Mouse::location_delta)
-				.def_readonly("mod_flags", &InputEvent::Mouse::mod_flags);
+		class_<InputEvent::Mouse, noncopyable>("Mouse", no_init)
+			.def_readonly("id", &InputEvent::Mouse::id)
+			.def_readonly("x", &InputEvent::Mouse::x)
+			.def_readonly("y", &InputEvent::Mouse::y)
+			.def_readonly("dx", &InputEvent::Mouse::dx)
+			.def_readonly("dy", &InputEvent::Mouse::dy)
+			.add_property("location", &InputEvent::Mouse::location)
+			.add_property("location_delta", &InputEvent::Mouse::location_delta);
+	}
 
-			enum_<InputEvent::Mouse::Type>("Type")
-				.value("NONE", InputEvent::Mouse::Type::NONE)
-				.value("PRESS", InputEvent::Mouse::Type::PRESS)
-				.value("RELEASE", InputEvent::Mouse::Type::RELEASE)
-				.value("SCROLL", InputEvent::Mouse::Type::SCROLL)
-				.value("MOVE", InputEvent::Mouse::Type::MOVE)
-                .export_values();
-
-#if defined(NAGA_PC)
-			enum_<InputEvent::Mouse::Button>("Button")
-				.value("NONE", InputEvent::Mouse::Button::NONE)
-				.value("LEFT", InputEvent::Mouse::Button::LEFT)
-				.value("RIGHT", InputEvent::Mouse::Button::RIGHT)
-				.value("MIDDLE", InputEvent::Mouse::Button::MIDDLE)
-				.value("FOUR", InputEvent::Mouse::Button::FOUR)
-				.value("FIVE", InputEvent::Mouse::Button::FIVE)
-				.value("SIX", InputEvent::Mouse::Button::SIX)
-				.value("SEVEN", InputEvent::Mouse::Button::SEVEN)
-				.value("EIGHT", InputEvent::Mouse::Button::EIGHT)
-				.value("COUNT", InputEvent::Mouse::Button::COUNT)
-                .export_values();
-#endif
-        }
-
-#if defined(NAGA_PC)
-        {
-			scope gamepad_scope = class_<InputEvent::Gamepad, noncopyable>("Gamepad", no_init)
-				.def_readonly("axis_index", &InputEvent::Gamepad::axis_index)
-				.def_readonly("axis_value", &InputEvent::Gamepad::axis_value)
-				.def_readonly("axis_value_delta", &InputEvent::Gamepad::axis_value_delta)
-				.def_readonly("button_index", &InputEvent::Gamepad::button_index)
-				.def_readonly("index", &InputEvent::Gamepad::index)
-				.def_readonly("type", &InputEvent::Gamepad::type);
-
-			enum_<InputEvent::Gamepad::Type>("Type")
-				.value("AXIS_MOVE", InputEvent::Gamepad::Type::AXIS_MOVE)
-				.value("NONE", InputEvent::Gamepad::Type::NONE)
-				.value("PRESS", InputEvent::Gamepad::Type::PRESS)
-				.value("RELEASE", InputEvent::Gamepad::Type::RELEASE)
-                .export_values();
-        }
-
-        {
-			scope keyboard_scope = class_<InputEvent::Keyboard, noncopyable>("Keyboard", no_init)
-				.def_readonly("type", &InputEvent::Keyboard::type)
-				.def_readonly("key", &InputEvent::Keyboard::key)
-				.def_readonly("mod_flags", &InputEvent::Keyboard::mod_flags)
-				.def_readonly("character", &InputEvent::Keyboard::character);
-
-			enum_<InputEvent::Keyboard::Type>("Type")
-				.value("NONE", InputEvent::Keyboard::Type::NONE)
-				.value("KEY_RELEASE", InputEvent::Keyboard::Type::KEY_RELEASE)
-				.value("KEY_PRESS", InputEvent::Keyboard::Type::KEY_PRESS)
-				.value("KEY_REPEAT", InputEvent::Keyboard::Type::KEY_REPEAT)
-				.value("CHARACTER", InputEvent::Keyboard::Type::CHARACTER)
-                .export_values();
-
-			enum_<InputEvent::Keyboard::Key>("Key")
-				.value("NONE", InputEvent::Keyboard::Key::NONE)
-				.value("SPACE", InputEvent::Keyboard::Key::SPACE)
-				.value("APOSTROPHE", InputEvent::Keyboard::Key::APOSTROPHE)
-                .value("COMMA", InputEvent::Keyboard::Key::COMMA)
-                .value("MINUS", InputEvent::Keyboard::Key::MINUS)
-                .value("PERIOD", InputEvent::Keyboard::Key::PERIOD)
-                .value("SLASH", InputEvent::Keyboard::Key::SLASH)
-                .value("NR_0", InputEvent::Keyboard::Key::NR_0)
-                .value("NR_1", InputEvent::Keyboard::Key::NR_1)
-                .value("NR_2", InputEvent::Keyboard::Key::NR_2)
-                .value("NR_3", InputEvent::Keyboard::Key::NR_3)
-                .value("NR_4", InputEvent::Keyboard::Key::NR_4)
-                .value("NR_5", InputEvent::Keyboard::Key::NR_5)
-                .value("NR_6", InputEvent::Keyboard::Key::NR_6)
-                .value("NR_7", InputEvent::Keyboard::Key::NR_7)
-                .value("NR_8", InputEvent::Keyboard::Key::NR_8)
-                .value("NR_9", InputEvent::Keyboard::Key::NR_9)
-                .value("SEMICOLON", InputEvent::Keyboard::Key::SEMICOLON)
-                .value("EQUAL", InputEvent::Keyboard::Key::EQUAL)
-                .value("A", InputEvent::Keyboard::Key::A)
-                .value("B", InputEvent::Keyboard::Key::B)
-                .value("C", InputEvent::Keyboard::Key::C)
-                .value("D", InputEvent::Keyboard::Key::D)
-                .value("E", InputEvent::Keyboard::Key::E)
-                .value("F", InputEvent::Keyboard::Key::F)
-                .value("G", InputEvent::Keyboard::Key::G)
-                .value("H", InputEvent::Keyboard::Key::H)
-                .value("I", InputEvent::Keyboard::Key::I)
-                .value("J", InputEvent::Keyboard::Key::J)
-                .value("K", InputEvent::Keyboard::Key::K)
-                .value("L", InputEvent::Keyboard::Key::L)
-                .value("M", InputEvent::Keyboard::Key::M)
-                .value("N", InputEvent::Keyboard::Key::N)
-                .value("O", InputEvent::Keyboard::Key::O)
-                .value("P", InputEvent::Keyboard::Key::P)
-                .value("Q", InputEvent::Keyboard::Key::Q)
-                .value("R", InputEvent::Keyboard::Key::R)
-                .value("S", InputEvent::Keyboard::Key::S)
-                .value("T", InputEvent::Keyboard::Key::T)
-                .value("U", InputEvent::Keyboard::Key::U)
-                .value("V", InputEvent::Keyboard::Key::V)
-                .value("W", InputEvent::Keyboard::Key::W)
-                .value("X", InputEvent::Keyboard::Key::X)
-                .value("Y", InputEvent::Keyboard::Key::Y)
-                .value("Z", InputEvent::Keyboard::Key::Z)
-                .value("LEFT_BRACKET", InputEvent::Keyboard::Key::LEFT_BRACKET)
-                .value("BACKSLASH", InputEvent::Keyboard::Key::BACKSLASH)
-                .value("RIGHT_BRACKET", InputEvent::Keyboard::Key::RIGHT_BRACKET)
-                .value("GRAVE_ACCENT", InputEvent::Keyboard::Key::GRAVE_ACCENT)
-                .value("WORLD_1", InputEvent::Keyboard::Key::WORLD_1)
-                .value("WORLD_2", InputEvent::Keyboard::Key::WORLD_2)
-                .value("ESCAPE", InputEvent::Keyboard::Key::ESCAPE)
-                .value("ENTER", InputEvent::Keyboard::Key::ENTER)
-                .value("TAB", InputEvent::Keyboard::Key::TAB)
-                .value("BACKSPACE", InputEvent::Keyboard::Key::BACKSPACE)
-                .value("INSERT", InputEvent::Keyboard::Key::INSERT)
-                .value("DEL", InputEvent::Keyboard::Key::DEL)
-                .value("RIGHT", InputEvent::Keyboard::Key::RIGHT)
-                .value("LEFT", InputEvent::Keyboard::Key::LEFT)
-                .value("DOWN", InputEvent::Keyboard::Key::DOWN)
-                .value("UP", InputEvent::Keyboard::Key::UP)
-                .value("PAGE_UP", InputEvent::Keyboard::Key::PAGE_UP)
-                .value("PAGE_DOWN", InputEvent::Keyboard::Key::PAGE_DOWN)
-                .value("HOME", InputEvent::Keyboard::Key::HOME)
-                .value("END", InputEvent::Keyboard::Key::END)
-                .value("CAPS_LOCK", InputEvent::Keyboard::Key::CAPS_LOCK)
-                .value("SCROLL_LOCK", InputEvent::Keyboard::Key::SCROLL_LOCK)
-                .value("NUM_LOCK", InputEvent::Keyboard::Key::NUM_LOCK)
-                .value("PRINT_SCREEN", InputEvent::Keyboard::Key::PRINT_SCREEN)
-                .value("PAUSE", InputEvent::Keyboard::Key::PAUSE)
-                .value("F1", InputEvent::Keyboard::Key::F1)
-                .value("F2", InputEvent::Keyboard::Key::F2)
-                .value("F3", InputEvent::Keyboard::Key::F3)
-                .value("F4", InputEvent::Keyboard::Key::F4)
-                .value("F5", InputEvent::Keyboard::Key::F5)
-                .value("F6", InputEvent::Keyboard::Key::F6)
-                .value("F7", InputEvent::Keyboard::Key::F7)
-                .value("F8", InputEvent::Keyboard::Key::F8)
-                .value("F9", InputEvent::Keyboard::Key::F9)
-                .value("F10", InputEvent::Keyboard::Key::F10)
-                .value("F11", InputEvent::Keyboard::Key::F11)
-                .value("F12", InputEvent::Keyboard::Key::F12)
-                .value("F13", InputEvent::Keyboard::Key::F13)
-                .value("F14", InputEvent::Keyboard::Key::F14)
-                .value("F15", InputEvent::Keyboard::Key::F15)
-                .value("F16", InputEvent::Keyboard::Key::F16)
-                .value("F17", InputEvent::Keyboard::Key::F17)
-                .value("F18", InputEvent::Keyboard::Key::F18)
-                .value("F19", InputEvent::Keyboard::Key::F19)
-                .value("F20", InputEvent::Keyboard::Key::F20)
-                .value("F21", InputEvent::Keyboard::Key::F21)
-                .value("F22", InputEvent::Keyboard::Key::F22)
-                .value("F23", InputEvent::Keyboard::Key::F23)
-                .value("F24", InputEvent::Keyboard::Key::F24)
-                .value("F25", InputEvent::Keyboard::Key::F25)
-                .value("KP_0", InputEvent::Keyboard::Key::KP_0)
-                .value("KP_1", InputEvent::Keyboard::Key::KP_1)
-                .value("KP_2", InputEvent::Keyboard::Key::KP_2)
-                .value("KP_3", InputEvent::Keyboard::Key::KP_3)
-                .value("KP_4", InputEvent::Keyboard::Key::KP_4)
-                .value("KP_5", InputEvent::Keyboard::Key::KP_5)
-                .value("KP_6", InputEvent::Keyboard::Key::KP_6)
-                .value("KP_7", InputEvent::Keyboard::Key::KP_7)
-                .value("KP_8", InputEvent::Keyboard::Key::KP_8)
-                .value("KP_9", InputEvent::Keyboard::Key::KP_9)
-                .value("KP_DECIMAL", InputEvent::Keyboard::Key::KP_DECIMAL)
-                .value("KP_DIVIDE", InputEvent::Keyboard::Key::KP_DIVIDE)
-                .value("KP_MULTIPLY", InputEvent::Keyboard::Key::KP_MULTIPLY)
-                .value("KP_SUBTRACT", InputEvent::Keyboard::Key::KP_SUBTRACT)
-                .value("KP_ADD", InputEvent::Keyboard::Key::KP_ADD)
-                .value("KP_ENTER", InputEvent::Keyboard::Key::KP_ENTER)
-                .value("KP_EQUAL", InputEvent::Keyboard::Key::KP_EQUAL)
-                .value("LEFT_SHIFT", InputEvent::Keyboard::Key::LEFT_SHIFT)
-                .value("LEFT_CONTROL", InputEvent::Keyboard::Key::LEFT_CONTROL)
-                .value("LEFT_ALT", InputEvent::Keyboard::Key::LEFT_ALT)
-                .value("LEFT_SUPER", InputEvent::Keyboard::Key::LEFT_SUPER)
-                .value("RIGHT_SHIFT", InputEvent::Keyboard::Key::RIGHT_SHIFT)
-                .value("RIGHT_CONTROL", InputEvent::Keyboard::Key::RIGHT_CONTROL)
-                .value("RIGHT_ALT", InputEvent::Keyboard::Key::RIGHT_ALT)
-                .value("RIGHT_SUPER", InputEvent::Keyboard::Key::RIGHT_SUPER)
-                .value("MENU", InputEvent::Keyboard::Key::MENU)
-                .export_values();
-        }
-#endif
-    }
+	enum_<Key>("Key")
+		.value("SPACE", Key::SPACE)
+		.value("APOSTROPHE", Key::APOSTROPHE)
+        .value("COMMA", Key::COMMA)
+        .value("MINUS", Key::MINUS)
+        .value("PERIOD", Key::PERIOD)
+        .value("SLASH", Key::SLASH)
+        .value("NR_0", Key::NR_0)
+        .value("NR_1", Key::NR_1)
+        .value("NR_2", Key::NR_2)
+        .value("NR_3", Key::NR_3)
+        .value("NR_4", Key::NR_4)
+        .value("NR_5", Key::NR_5)
+        .value("NR_6", Key::NR_6)
+        .value("NR_7", Key::NR_7)
+        .value("NR_8", Key::NR_8)
+        .value("NR_9", Key::NR_9)
+        .value("SEMICOLON", Key::SEMICOLON)
+        .value("EQUAL", Key::EQUAL)
+        .value("A", Key::A)
+        .value("B", Key::B)
+        .value("C", Key::C)
+        .value("D", Key::D)
+        .value("E", Key::E)
+        .value("F", Key::F)
+        .value("G", Key::G)
+        .value("H", Key::H)
+        .value("I", Key::I)
+        .value("J", Key::J)
+        .value("K", Key::K)
+        .value("L", Key::L)
+        .value("M", Key::M)
+        .value("N", Key::N)
+        .value("O", Key::O)
+        .value("P", Key::P)
+        .value("Q", Key::Q)
+        .value("R", Key::R)
+        .value("S", Key::S)
+        .value("T", Key::T)
+        .value("U", Key::U)
+        .value("V", Key::V)
+        .value("W", Key::W)
+        .value("X", Key::X)
+        .value("Y", Key::Y)
+        .value("Z", Key::Z)
+        .value("LEFT_BRACKET", Key::LEFT_BRACKET)
+        .value("BACKSLASH", Key::BACKSLASH)
+        .value("RIGHT_BRACKET", Key::RIGHT_BRACKET)
+        .value("GRAVE_ACCENT", Key::GRAVE_ACCENT)
+        .value("WORLD_1", Key::WORLD_1)
+        .value("WORLD_2", Key::WORLD_2)
+        .value("ESCAPE", Key::ESCAPE)
+        .value("ENTER", Key::ENTER)
+        .value("TAB", Key::TAB)
+        .value("BACKSPACE", Key::BACKSPACE)
+        .value("INSERT", Key::INSERT)
+        .value("DEL", Key::DEL)
+        .value("RIGHT", Key::RIGHT)
+        .value("LEFT", Key::LEFT)
+        .value("DOWN", Key::DOWN)
+        .value("UP", Key::UP)
+        .value("PAGE_UP", Key::PAGE_UP)
+        .value("PAGE_DOWN", Key::PAGE_DOWN)
+        .value("HOME", Key::HOME)
+        .value("END", Key::END)
+        .value("CAPS_LOCK", Key::CAPS_LOCK)
+        .value("SCROLL_LOCK", Key::SCROLL_LOCK)
+        .value("NUM_LOCK", Key::NUM_LOCK)
+        .value("PRINT_SCREEN", Key::PRINT_SCREEN)
+        .value("PAUSE", Key::PAUSE)
+        .value("F1", Key::F1)
+        .value("F2", Key::F2)
+        .value("F3", Key::F3)
+        .value("F4", Key::F4)
+        .value("F5", Key::F5)
+        .value("F6", Key::F6)
+        .value("F7", Key::F7)
+        .value("F8", Key::F8)
+        .value("F9", Key::F9)
+        .value("F10", Key::F10)
+        .value("F11", Key::F11)
+        .value("F12", Key::F12)
+        .value("F13", Key::F13)
+        .value("F14", Key::F14)
+        .value("F15", Key::F15)
+        .value("F16", Key::F16)
+        .value("F17", Key::F17)
+        .value("F18", Key::F18)
+        .value("F19", Key::F19)
+        .value("F20", Key::F20)
+        .value("F21", Key::F21)
+        .value("F22", Key::F22)
+        .value("F23", Key::F23)
+        .value("F24", Key::F24)
+        .value("F25", Key::F25)
+        .value("KP_0", Key::KP_0)
+        .value("KP_1", Key::KP_1)
+        .value("KP_2", Key::KP_2)
+        .value("KP_3", Key::KP_3)
+        .value("KP_4", Key::KP_4)
+        .value("KP_5", Key::KP_5)
+        .value("KP_6", Key::KP_6)
+        .value("KP_7", Key::KP_7)
+        .value("KP_8", Key::KP_8)
+        .value("KP_9", Key::KP_9)
+        .value("KP_DECIMAL", Key::KP_DECIMAL)
+        .value("KP_DIVIDE", Key::KP_DIVIDE)
+        .value("KP_MULTIPLY", Key::KP_MULTIPLY)
+        .value("KP_SUBTRACT", Key::KP_SUBTRACT)
+        .value("KP_ADD", Key::KP_ADD)
+        .value("KP_ENTER", Key::KP_ENTER)
+        .value("KP_EQUAL", Key::KP_EQUAL)
+        .value("LEFT_SHIFT", Key::LEFT_SHIFT)
+        .value("LEFT_CONTROL", Key::LEFT_CONTROL)
+        .value("LEFT_ALT", Key::LEFT_ALT)
+        .value("LEFT_SUPER", Key::LEFT_SUPER)
+        .value("RIGHT_SHIFT", Key::RIGHT_SHIFT)
+        .value("RIGHT_CONTROL", Key::RIGHT_CONTROL)
+        .value("RIGHT_ALT", Key::RIGHT_ALT)
+        .value("RIGHT_SUPER", Key::RIGHT_SUPER)
+        .value("MENU", Key::MENU)
+        .export_values();
 
 #if defined(NAGA_PC)
     enum_<WindowEventType>("WindowEventType")
@@ -1211,6 +1170,7 @@ BOOST_PYTHON_MODULE(naga)
     class_<Pose3>("Pose3")
 		.def_readwrite("location", &Pose3::location)
 		.def_readwrite("rotation", &Pose3::rotation)
+		.def_readwrite("scale", &Pose3::scale)
 		.def(self_ns::str(self_ns::self));
         ;
 
@@ -1233,6 +1193,10 @@ BOOST_PYTHON_MODULE(naga)
 		.def("on_render", &GameComponentWrapper::on_render)
         .add_property("owner", make_function(&GameComponentWrapper::get_owner, return_value_policy<copy_const_reference>()));
 
+	class_<SceneComponent, bases<GameComponent>, boost::shared_ptr<SceneComponent>, noncopyable>("SceneComponent", no_init)
+		.add_property("world_pose", &SceneComponent::get_world_pose, &SceneComponent::set_world_pose)
+		.def_readwrite("relative_pose", &SceneComponent::relative_pose);
+
     class_<std::vector<boost::shared_ptr<game_object>>>("GameObjectVec")
         .def(vector_indexing_suite<std::vector<boost::shared_ptr<game_object>>>());
 
@@ -1252,7 +1216,7 @@ BOOST_PYTHON_MODULE(naga)
         ;
 
     {
-		auto camera_scope = class_<CameraComponent, bases<GameComponent>, boost::shared_ptr<CameraComponent>>(CameraComponent::component_name, init<>())
+		auto camera_scope = class_<CameraComponent, bases<GameComponent>, boost::shared_ptr<CameraComponent>>("CameraComponent", init<>())
 			.def_readwrite("near", &CameraComponent::near)
 			.def_readwrite("far", &CameraComponent::far)
 			.def_readwrite("fov", &CameraComponent::fov)
@@ -1273,10 +1237,12 @@ BOOST_PYTHON_MODULE(naga)
 		.add_property("bits_per_sample", &Sound::get_bits_per_sample)
 		.add_property("duration", &Sound::get_duration);
 
-	class_<ModelComponent, bases<GameComponent>, boost::shared_ptr<ModelComponent>, noncopyable>("ModelComponent")
+	class_<ModelComponent, bases<SceneComponent>, boost::shared_ptr<ModelComponent>, noncopyable>("ModelComponent")
 		.add_property("model", make_function(&ModelComponent::get_model, return_value_policy<copy_const_reference>()), &ModelComponent::set_model)
 		.add_property("aabb", make_function(&ModelComponent::get_aabb, return_value_policy<return_by_value>()))
 		.def("play", &ModelComponent::play);
+
+	class_<VoxelMapComponent, bases<SceneComponent>, boost::shared_ptr<VoxelMapComponent>, noncopyable>("VoxelMapComponent");
 
 	class_<ModelAnimation, boost::shared_ptr<ModelAnimation>, noncopyable>("ModelAnimation", no_init);
 

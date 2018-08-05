@@ -5,7 +5,7 @@
 namespace glm
 {
     // rank
-    template <typename valType>
+	template <typename valType = std::enable_if<std::is_floating_point<valType>::value>::type>
     GLM_FUNC_QUALIFIER valType percent_rank
         (
         valType const & x,
@@ -13,16 +13,13 @@ namespace glm
         valType const & maxVal
         )
     {
-        GLM_STATIC_ASSERT(
-            detail::type<valType>::is_float, "'percent_rank' only accept floating-point numbers");
-
         return clamp((x - minVal) / (maxVal - minVal), valType(0), valType(1));
-    }
+	}
 
-    template<typename T>
-    inline std::istream& operator>>(std::istream& istream, detail::tvec2<T> const& v)
-    {
-        istream >> v.x;
-        istream >> v.y;
-    }
+	template<typename T>
+	inline std::istream& operator>>(std::istream& istream, tvec2<T> const& v)
+	{
+		istream >> v.x;
+		istream >> v.y;
+	}
 }

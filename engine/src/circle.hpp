@@ -14,7 +14,7 @@ namespace naga
 		struct Circle<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
         {
             typedef Scalar ScalarType;
-			typedef glm::detail::tvec2<ScalarType> VectorType;
+			typedef glm::tvec2<ScalarType> VectorType;
 			typedef Circle<Scalar> type;
 
 			VectorType origin;

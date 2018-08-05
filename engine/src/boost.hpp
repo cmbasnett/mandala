@@ -33,7 +33,7 @@ namespace naga
     struct vec2_translator
     {
         typedef std::string internal_type;
-        typedef glm::detail::tvec2<T> external_type;
+        typedef glm::tvec2<T> external_type;
 
         boost::optional<external_type> get_value(const internal_type& string)
         {

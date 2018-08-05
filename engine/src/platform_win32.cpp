@@ -19,39 +19,39 @@ namespace naga
     static inline void on_keyboard_key(GLFWwindow* window, int key, int scancode, int action, int mods)
     {
 		InputEvent input_event;
-		input_event.device_type = InputDeviceType::KEYBOARD;
-		input_event.keyboard.key = static_cast<InputEvent::Keyboard::Key>(key);
+		input_event.type.device = InputDeviceType::KEYBOARD;
+		input_event.type.key = static_cast<Key>(key);
 
         if ((mods & GLFW_MOD_SHIFT) == GLFW_MOD_SHIFT)
         {
-			input_event.keyboard.mod_flags |= InputEvent::MOD_FLAG_SHIFT;
+			input_event.type.flags |= INPUT_EVENT_FLAG_SHIFT;
         }
 
         if ((mods & GLFW_MOD_CONTROL) == GLFW_MOD_CONTROL)
         {
-			input_event.keyboard.mod_flags |= InputEvent::MOD_FLAG_CTRL;
+			input_event.type.flags |= INPUT_EVENT_FLAG_CTRL;
         }
 
         if ((mods & GLFW_MOD_ALT) == GLFW_MOD_ALT)
         {
-			input_event.keyboard.mod_flags |= InputEvent::MOD_FLAG_ALT;
+			input_event.type.flags |= INPUT_EVENT_FLAG_ALT;
         }
 
         if ((mods & GLFW_MOD_SUPER) == GLFW_MOD_SUPER)
         {
-			input_event.keyboard.mod_flags |= InputEvent::MOD_FLAG_SUPER;
+			input_event.type.flags |= INPUT_EVENT_FLAG_SUPER;
         }
 
         switch (action)
         {
         case GLFW_RELEASE:
-			input_event.keyboard.type = InputEvent::Keyboard::Type::KEY_RELEASE;
+			input_event.type.action = InputActionType::RELEASE;
             break;
         case GLFW_PRESS:
-			input_event.keyboard.type = InputEvent::Keyboard::Type::KEY_PRESS;
+			input_event.type.action = InputActionType::PRESS;
             break;
         case GLFW_REPEAT:
-			input_event.keyboard.type = InputEvent::Keyboard::Type::KEY_REPEAT;
+			input_event.type.action = InputActionType::REPEAT;
             break;
         }
 
@@ -61,9 +61,9 @@ namespace naga
     static inline void on_keyboard_character(GLFWwindow* window, unsigned int character)
     {
         InputEvent input_event;
-		input_event.device_type = InputDeviceType::KEYBOARD;
-		input_event.keyboard.type = InputEvent::Keyboard::Type::CHARACTER;
-        input_event.keyboard.character = character;
+		input_event.type.device = InputDeviceType::KEYBOARD;
+		input_event.type.action = InputActionType::CHARACTER;
+        input_event.type.character = character;
 
         platform.input.events.emplace_back(input_event);
     }
@@ -71,13 +71,13 @@ namespace naga
     static inline void on_mouse_button(GLFWwindow* window, int button, int action, int mods)
     {
 		InputEvent input_event;
-		input_event.device_type = InputDeviceType::MOUSE;
-		input_event.mouse.button = static_cast<InputEvent::Mouse::Button>(button);
-		input_event.mouse.mod_flags = mods;
+		input_event.type.device = InputDeviceType::MOUSE;
+		input_event.type.button = button;
+		input_event.type.flags = mods;
 
         bool is_press = (action == GLFW_PRESS);
 
-		input_event.mouse.type = is_press ? InputEvent::Mouse::Type::PRESS : InputEvent::Mouse::Type::RELEASE;
+		input_event.type.action = is_press ? InputActionType::PRESS : InputActionType::RELEASE;
 
         if (is_press)
         {
@@ -90,7 +90,8 @@ namespace naga
             platform.input.touch_id = 0;    //TODO: replace with something better
         }
 
-        input_event.mouse.location = platform.get_cursor_location();
+		input_event.mouse.x = platform.get_cursor_location().x;
+		input_event.mouse.y = platform.get_cursor_location().y;
 
         platform.input.events.push_back(input_event);
     }
@@ -100,12 +101,12 @@ namespace naga
         const auto screen_size = platform.get_screen_size();
 
 		InputEvent input_event;
-		input_event.device_type = InputDeviceType::MOUSE;
-		input_event.mouse.type = InputEvent::Mouse::Type::MOVE;
-		input_event.mouse.location.x = static_cast<f32>(x);
-		input_event.mouse.location.y = static_cast<f32>(y);
-		input_event.mouse.location_delta.x = static_cast<f32>(x)-platform.cursor_location.x;
-		input_event.mouse.location_delta.y = -(static_cast<f32>(y)-platform.cursor_location.y);
+		input_event.type.device = InputDeviceType::MOUSE;
+		input_event.type.action = InputActionType::MOVE;
+		input_event.mouse.x = static_cast<f32>(x);
+		input_event.mouse.y = static_cast<f32>(y);
+		input_event.mouse.dx = static_cast<f32>(x) - platform.cursor_location.x;
+		input_event.mouse.dy = -(static_cast<f32>(y) - platform.cursor_location.y);
 
 		input_event.mouse.id = platform.input.touch_id;
 
@@ -128,11 +129,13 @@ namespace naga
         const auto screen_size = platform.get_screen_size();
 
 		InputEvent input_event;
-		input_event.device_type = InputDeviceType::MOUSE;
-		input_event.mouse.type = InputEvent::Mouse::Type::SCROLL;
-        input_event.mouse.location = platform.get_cursor_location();
-		input_event.mouse.location_delta.x = static_cast<f32>(x);
-		input_event.mouse.location_delta.y = static_cast<f32>(y);
+		input_event.type.device = InputDeviceType::MOUSE;
+		input_event.type.action = InputActionType::SCROLL;
+		input_event.type.axis = static_cast<i32>(glm::sign(x));
+		input_event.mouse.x = platform.get_cursor_location().x;
+		input_event.mouse.y = platform.get_cursor_location().y;
+		input_event.mouse.dx = static_cast<f32>(x);
+		input_event.mouse.dy = static_cast<f32>(y);
 
         platform.input.events.push_back(input_event);
     }
@@ -348,12 +351,12 @@ namespace naga
                 if (axes[axis_index] != gamepad_state.axes[axis_index])
                 {
                     InputEvent input_event;
-					input_event.device_type = InputDeviceType::GAMEPAD;
+					input_event.type.device = InputDeviceType::GAMEPAD;
+					input_event.type.action = InputActionType::MOVE;
+					input_event.type.axis = axis_index;
                     input_event.gamepad.index = gamepad_index;
-					input_event.gamepad.type = InputEvent::Gamepad::Type::AXIS_MOVE;
-                    input_event.gamepad.axis_index = axis_index;
-                    input_event.gamepad.axis_value = axes[axis_index];
-                    input_event.gamepad.axis_value_delta = axes[axis_index] - gamepad_state.axes[axis_index];
+                    input_event.gamepad.value = axes[axis_index];
+                    input_event.gamepad.delta = axes[axis_index] - gamepad_state.axes[axis_index];
 
                     platform.input.events.emplace_back(input_event);
                 }
@@ -369,10 +372,10 @@ namespace naga
                 if (buttons[button_index] != gamepad_state.buttons[button_index])
                 {
                     InputEvent input_event;
-					input_event.device_type = InputDeviceType::GAMEPAD;
+					input_event.type.device = InputDeviceType::GAMEPAD;
+					input_event.type.action = buttons[button_index] == 0 ? InputActionType::RELEASE : InputActionType::PRESS;
+					input_event.type.button = button_index;
                     input_event.gamepad.index = gamepad_index;
-					input_event.gamepad.type = buttons[button_index] == 0 ? InputEvent::Gamepad::Type::RELEASE : InputEvent::Gamepad::Type::PRESS;
-                    input_event.gamepad.button_index = button_index;
 
                     platform.input.events.push_back(input_event);
                 }

@@ -1,3 +1,4 @@
+// naga
 #include "psk.hpp"
 #include "io.hpp"
 #include "model.hpp"
@@ -9,6 +10,7 @@
 #include "texture.hpp"
 #include "opengl.hpp"
 
+// stl
 #include <iostream>
 #include <fstream>
 
@@ -93,7 +95,8 @@ namespace naga
 		{
 			const auto& v = this->vertices[i];
 			vertex_type vertex;
-			vertex.location = points[v.point_index].swizzle(glm::comp::X, glm::comp::Z, glm::comp::Y);
+
+			//vertex.location = points[v.point_index].swizzle(glm::comp::X, glm::comp::Z, glm::comp::Y);
 			vertex.color = vec4(f32(i) / this->vertices.size());
 			vertices.push_back(vertex);
 		}

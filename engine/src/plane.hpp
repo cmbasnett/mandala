@@ -15,7 +15,7 @@ namespace naga
         {
             typedef Scalar ScalarType;
             typedef Plane2<ScalarType> Type;
-            typedef glm::detail::tvec2<ScalarType> VectorType;
+            typedef glm::tvec2<ScalarType> VectorType;
 
             VectorType normal;
             ScalarType distance = ScalarType(0);
@@ -34,7 +34,7 @@ namespace naga
                 distance = glm::dot(normal, origin);
             }
 
-            Plane2(const glm::detail::tvec3<ScalarType>& vec3) :
+            Plane2(const glm::tvec3<ScalarType>& vec3) :
                 normal(glm::swizzle<glm::X, glm::Y>(vec3)),
                 distance(vec3.z)
             {
@@ -70,7 +70,7 @@ namespace naga
         {
             typedef Scalar ScalarType;
 			typedef Plane3<ScalarType> Type;
-            typedef glm::detail::tvec3<ScalarType> VectorType;
+            typedef glm::tvec3<ScalarType> VectorType;
 
             VectorType normal;
             ScalarType distance = 0;
@@ -98,7 +98,7 @@ namespace naga
                 distance = glm::dot(normal, v0);
             }
 
-            Plane3(const glm::detail::tvec4<ScalarType>& vec4) :
+            Plane3(const glm::tvec4<ScalarType>& vec4) :
                 normal(glm::swizzle<glm::X, glm::Y, glm::Z>(vec4)),
                 distance(vec4.z)
             {

@@ -73,31 +73,28 @@ inline void write(std::ostream& ostream, std::vector<T>& data)
 
 namespace glm
 {
-    namespace detail
+    template<typename T>
+    std::ostream& operator<<(std::ostream& ostream, const tvec2<T>& v)
     {
-        template<typename T>
-        std::ostream& operator<<(std::ostream& ostream, const tvec2<T>& v)
-        {
-            return ostream << "(" << v.x << "," << v.y << ")";
-        }
+        return ostream << "(" << v.x << "," << v.y << ")";
+    }
 
-        template<typename T>
-        std::ostream& operator<<(std::ostream& ostream, const tvec3<T>& v)
-        {
-            return ostream << "(" << v.x << "," << v.y << "," << v.z << ")";
-        }
+    template<typename T>
+    std::ostream& operator<<(std::ostream& ostream, const tvec3<T>& v)
+    {
+        return ostream << "(" << v.x << "," << v.y << "," << v.z << ")";
+    }
 
-        template<typename T>
-        std::ostream& operator<<(std::ostream& ostream, const tvec4<T>& v)
-        {
-            return ostream << "(" << v.x << "," << v.y << "," << v.z << "," << v.w << ")";
-        }
+    template<typename T>
+    std::ostream& operator<<(std::ostream& ostream, const tvec4<T>& v)
+    {
+        return ostream << "(" << v.x << "," << v.y << "," << v.z << "," << v.w << ")";
+    }
 
-        template<typename T>
-        std::ostream& operator<<(std::ostream& ostream, const tquat<T>& q)
-        {
-            return ostream << "(" << q.x << "," << q.y << "," << q.z << "," << q.w << ")";
-        }
+    template<typename T>
+    std::ostream& operator<<(std::ostream& ostream, const tquat<T>& q)
+    {
+        return ostream << "(" << q.x << "," << q.y << "," << q.z << "," << q.w << ")";
     }
 }
 

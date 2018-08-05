@@ -6,23 +6,19 @@ class ExampleGame(Game):
         self.console = ConsoleState()
         states.push(ExampleState(), STATE_FLAG_ALL)
 
-    def on_run_end(self):
-        pass
-
     def on_input_event(self, e):
-        print(e)
-        if e.device_type == InputDeviceType.KEYBOARD and e.keyboard.type == InputEvent.Keyboard.Type.KEY_PRESS:
-            if e.keyboard.key == InputEvent.Keyboard.Key.ESCAPE:
+        if e.type.device == InputDeviceType.KEYBOARD and e.type.action == InputActionType.PRESS:
+            if e.type.key == Key.ESCAPE:
                 app.exit()
-            elif e.keyboard.key == InputEvent.Keyboard.Key.F12:
+            elif e.type.key == Key.F12:
                 app.screenshot()
-            elif e.keyboard.key == InputEvent.Keyboard.Key.GRAVE_ACCENT:
+            elif e.type.key == Key.GRAVE_ACCENT:
                 # toggle console
                 if states.contains(self.console):
                     states.pop(self.console)
                 else:
                     states.push(self.console, STATE_FLAG_RENDER | STATE_FLAG_TICK)
-
+    
     def on_window_event(self, e):
         pass
 
@@ -49,7 +45,7 @@ class ConsoleState(State):
         self.input_label.size_modes = GuiSizeModes(GuiSizeMode.RELATIVE, GuiSizeMode.ABSOLUTE)
         self.input_label.size = Vec2(1.0, 32.0)
         self.input_label.should_clip = True
-        self.input_label.on_enter_function = GuiLabel.on_enter_fn.from_callable(self.on_input_label_enter)
+        self.input_label.on_enter_function = GuiLabel.on_enter_fn.from_callable(self.on_input_label_enter) # TODO: this syntax is a bit clunky, come up with something better!
 
         self.root.adopt(self.background)
         self.root.adopt(self.input_label)
@@ -63,14 +59,6 @@ class ConsoleState(State):
             print(e)
         label.string = ''
         return True
-
-    def on_input_event(self, e):
-        super(ConsoleState, self).on_input_event_base(e)
-        if e.device_type == InputDeviceType.KEYBOARD:
-            if e.keyboard.key == InputEvent.Keyboard.Key.GRAVE_ACCENT:
-                if e.keyboard.type == InputEvent.Keyboard.Type.KEY_PRESS:
-                    states.pop(self)
-            return True
 
 
 class FreeLookComponent(GameComponent):
@@ -87,31 +75,31 @@ class FreeLookComponent(GameComponent):
 
     def on_input_event(self, e):
         super(FreeLookComponent, self).on_input_event_base(e)
-        if e.device_type == InputDeviceType.MOUSE:
-            if e.mouse.type == InputEvent.Mouse.Type.MOVE:
+        if e.type.device == InputDeviceType.MOUSE:
+            if e.type.action == InputActionType.MOVE:
                 self.yaw += e.mouse.location_delta.x * self.sensitivity
                 self.pitch += e.mouse.location_delta.y * self.sensitivity
                 self.pitch = min(max(self.pitch, self.pitch_min), self.pitch_max)
-        elif e.device_type == InputDeviceType.KEYBOARD:
-            if e.keyboard.key == InputEvent.Keyboard.Key.W:
-                if e.keyboard.type == InputEvent.Keyboard.Type.KEY_PRESS:
+        elif e.type.device == InputDeviceType.KEYBOARD:
+            if e.type.key == Key.W:
+                if e.type.action == InputActionType.PRESS:
                     self.local_velocity_target.z = 1.0
-                elif e.keyboard.type == InputEvent.Keyboard.Type.KEY_RELEASE:
+                elif e.type.action == InputActionType.RELEASE:
                     self.local_velocity_target.z = 0.0
-            elif e.keyboard.key == InputEvent.Keyboard.Key.S:
-                if e.keyboard.type == InputEvent.Keyboard.Type.KEY_PRESS:
+            elif e.type.key == Key.S:
+                if e.type.action == InputActionType.PRESS:
                     self.local_velocity_target.z = -1.0
-                elif e.keyboard.type == InputEvent.Keyboard.Type.KEY_RELEASE:
+                elif e.type.action == InputActionType.RELEASE:
                     self.local_velocity_target.z = 0.0
-            if e.keyboard.key == InputEvent.Keyboard.Key.A:
-                if e.keyboard.type == InputEvent.Keyboard.Type.KEY_PRESS:
+            if e.type.key == Key.A:
+                if e.type.action == InputActionType.PRESS:
                     self.local_velocity_target.x = 1.0
-                elif e.keyboard.type == InputEvent.Keyboard.Type.KEY_RELEASE:
+                elif e.type.action == InputActionType.RELEASE:
                     self.local_velocity_target.x = 0.0
-            elif e.keyboard.key == InputEvent.Keyboard.Key.D:
-                if e.keyboard.type == InputEvent.Keyboard.Type.KEY_PRESS:
+            elif e.type.key == Key.D:
+                if e.type.action == InputActionType.PRESS:
                     self.local_velocity_target.x = -1.0
-                elif e.keyboard.type == InputEvent.Keyboard.Type.KEY_RELEASE:
+                elif e.type.action == InputActionType.RELEASE:
                     self.local_velocity_target.x = 0.0
 
 
@@ -165,13 +153,14 @@ class ExampleState(State):
         model_component = self.model.add_component(ModelComponent)
         model_component.model = resources.get_model('boblampclean.md5m')
         model_component.play('boblampclean.md5a')
+        model_component.relative_pose.scale = Vec3(0.1, 0.1, 0.1)
 
     def on_input_event(self, e):
         super(ExampleState, self).on_input_event_base(e)
-        if e.device_type == InputDeviceType.MOUSE:
-            if e.mouse.type == InputEvent.Mouse.Type.PRESS:
+        if e.type.device == InputDeviceType.MOUSE:
+            if e.type.action == InputActionType.PRESS:
                 self.is_tracing = True
-            if e.mouse.type == InputEvent.Mouse.Type.RELEASE:
+            if e.type.action == InputActionType.RELEASE:
                 self.is_tracing = False
         self.scene.on_input_event(e)
 

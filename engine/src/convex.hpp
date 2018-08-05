@@ -13,16 +13,16 @@
 namespace naga
 {
 	template<typename T>
-	int ccw(const glm::detail::tvec2<T>& a, const glm::detail::tvec2<T>& b, const glm::detail::tvec2<T>& c)
+	int ccw(const glm::tvec2<T>& a, const glm::tvec2<T>& b, const glm::tvec2<T>& c)
 	{
 		auto area = (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
 		return area > 0 ? -1 : area < 0 ? 1 : 0;
 	}
 
 	template<typename T>
-	std::vector<glm::detail::tvec2<T>> get_convex_hull(std::vector<glm::detail::tvec2<T>> points)
+	std::vector<glm::tvec2<T>> get_convex_hull(std::vector<glm::tvec2<T>> points)
 	{
-		typedef glm::detail::tvec2<T> VectorType;
+		typedef glm::tvec2<T> VectorType;
 
 		if (points.size() < 3)
 		{

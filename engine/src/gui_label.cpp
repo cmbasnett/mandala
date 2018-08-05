@@ -226,7 +226,7 @@ namespace naga
 
         for (const auto& line : lines)
         {
-            const auto line_world_matrix = rounded_world_matrix * glm::translate(line.rectangle.x, line.rectangle.y, 0.0f);
+			const auto line_world_matrix = rounded_world_matrix * glm::translate(vec3(line.rectangle.x, line.rectangle.y, 0.0f));
 
             bitmap_font->render_string(line.render_string, line_world_matrix, view_projection_matrix, get_color(), color_stack, line.colors_pushes, line.color_pop_indices);
         }
@@ -249,17 +249,17 @@ namespace naga
 
 	bool GUILabel::on_input_event_begin(InputEvent& input_event)
     {
-		if (input_event.device_type == InputDeviceType::MOUSE &&
-			input_event.mouse.type == InputEvent::Mouse::Type::PRESS)
+		if (input_event.type.device == InputDeviceType::MOUSE &&
+			input_event.type.action == InputActionType::PRESS)
         {
-            if (contains(get_bounds(), input_event.mouse.location))
+            if (contains(get_bounds(), input_event.mouse.location()))
             {
                 for (auto& line : lines)
                 {
-                    if (input_event.mouse.location.y >= line.rectangle.y &&
-                        input_event.mouse.location.y <= (line.rectangle.y + line.rectangle.height))
+                    if (input_event.mouse.y >= line.rectangle.y &&
+                        input_event.mouse.y <= (line.rectangle.y + line.rectangle.height))
                     {
-                        if (input_event.mouse.location.x <= line.rectangle.x)
+                        if (input_event.mouse.x <= line.rectangle.x)
                         {
                             cursor.string_begin = line.string_begin;
                             cursor.string_end = cursor.string_begin;
@@ -268,7 +268,7 @@ namespace naga
 
                             return true;
                         }
-                        else if (input_event.mouse.location.x >= (line.rectangle.x + line.rectangle.width))
+                        else if (input_event.mouse.x >= (line.rectangle.x + line.rectangle.width))
                         {
                             cursor.string_begin = line.string_end;
                             cursor.string_end = cursor.string_begin;
@@ -290,7 +290,7 @@ namespace naga
                                     characters_itr = bitmap_font->get_characters().find(L'?'); //TODO: get fallback character from somewhere else
                                 }
 
-                                if (input_event.mouse.location.x < x + (characters_itr->second.advance_x / 2))
+                                if (input_event.mouse.x < x + (characters_itr->second.advance_x / 2))
                                 {
                                     cursor.string_begin = string_itr;
                                     cursor.string_end = cursor.string_begin;
@@ -299,7 +299,7 @@ namespace naga
 
                                     break;
                                 }
-                                else if (input_event.mouse.location.x < x + characters_itr->second.advance_x)
+                                else if (input_event.mouse.x < x + characters_itr->second.advance_x)
                                 {
                                     cursor.string_begin = string_itr + 1;
                                     cursor.string_end = cursor.string_begin;
@@ -321,16 +321,16 @@ namespace naga
 
         if (!is_read_only /*&& has_focus()*/)
         {
-			if (input_event.device_type == InputDeviceType::KEYBOARD)
+			if (input_event.type.device == InputDeviceType::KEYBOARD)
             {
-				if (input_event.keyboard.type == InputEvent::Keyboard::Type::KEY_PRESS ||
-					input_event.keyboard.type == InputEvent::Keyboard::Type::KEY_REPEAT)
+				if (input_event.type.action == InputActionType::PRESS ||
+					input_event.type.action == InputActionType::REPEAT)
                 {
                     std::wstring_convert<std::codecvt_utf8<wchar_t>> wstring_convert;
 
-                    switch (input_event.keyboard.key)
+                    switch (input_event.type.key)
                     {
-					case InputEvent::Keyboard::Key::BACKSPACE:
+					case Key::BACKSPACE:
                     {
                         if (string.empty())
                         {
@@ -354,10 +354,10 @@ namespace naga
 
                         return true;
                     }
-					case InputEvent::Keyboard::Key::ENTER:
-					case InputEvent::Keyboard::Key::KP_ENTER:
+					case Key::ENTER:
+					case Key::KP_ENTER:
                     {
-						if (on_enter_function && (input_event.keyboard.mod_flags & InputEvent::MOD_FLAG_SHIFT) == 0)
+						if (on_enter_function && (input_event.type.flags & INPUT_EVENT_FLAG_SHIFT) == 0)
                         {
                             on_enter_function(shared_from_this());
                         }
@@ -371,7 +371,7 @@ namespace naga
 
                         return true;
                     }
-					case InputEvent::Keyboard::Key::HOME:
+					case Key::HOME:
                     {
                         // TODO: this is a bit inefficient as it requires iteration over all lines
                         //would be more expedient if we dealt with finding the line the cursor is
@@ -380,7 +380,7 @@ namespace naga
                         {
                             if (cursor.string_begin >= line.string_begin && cursor.string_begin <= line.string_end)
                             {
-								if (input_event.keyboard.mod_flags == InputEvent::MOD_FLAG_SHIFT)
+								if (input_event.type.flags == INPUT_EVENT_FLAG_SHIFT)
                                 {
                                     cursor.string_end = cursor.string_begin;
                                     cursor.string_begin = line.string_begin;
@@ -399,7 +399,7 @@ namespace naga
 
                         break;
                     }
-					case InputEvent::Keyboard::Key::END:
+					case Key::END:
                     {
                         //TODO: this is a bit inefficient as it requires iteration over all lines
                         //would be more expedient if we dealt with finding the line the cursor is
@@ -408,7 +408,7 @@ namespace naga
                         {
                             if (cursor.string_begin >= line.string_begin && cursor.string_begin <= line.string_end)
                             {
-								if (input_event.keyboard.mod_flags == InputEvent::MOD_FLAG_SHIFT)
+								if (input_event.type.flags == INPUT_EVENT_FLAG_SHIFT)
                                 {
                                     cursor.string_end = line.string_end;
                                 }
@@ -426,7 +426,7 @@ namespace naga
 
                         break;
                     }
-					case InputEvent::Keyboard::Key::DEL:
+					case Key::DEL:
                     {
                         if (cursor.string_begin != cursor.string_end)
                         {
@@ -443,13 +443,13 @@ namespace naga
 
                         return true;
                     }
-					case InputEvent::Keyboard::Key::LEFT:
+					case Key::LEFT:
                     {
                         if (cursor.string_begin != string.begin())
                         {
                             --cursor.string_begin;
 
-							if (input_event.keyboard.mod_flags != InputEvent::MOD_FLAG_SHIFT)
+							if (input_event.type.flags != INPUT_EVENT_FLAG_SHIFT)
                             {
                                 cursor.string_end = cursor.string_begin;
                             }
@@ -459,13 +459,13 @@ namespace naga
 
                         return true;
                     }
-					case InputEvent::Keyboard::Key::RIGHT:
+					case Key::RIGHT:
                     {
                         if (cursor.string_begin < string.end())
                         {
                             cursor.string_end = cursor.string_begin + 1;
 
-							if (input_event.keyboard.mod_flags != InputEvent::MOD_FLAG_SHIFT)
+							if (input_event.type.flags != INPUT_EVENT_FLAG_SHIFT)
                             {
                                 cursor.string_begin = cursor.string_end;
                             }
@@ -475,20 +475,20 @@ namespace naga
 
                         return true;
                     }
-					case InputEvent::Keyboard::Key::DOWN:
+					case Key::DOWN:
                     {
                         //TODO: set cursor to the same column on the next line
 
                         break;
                     }
-					case InputEvent::Keyboard::Key::UP:
+					case Key::UP:
                     {
                         //TODO: set cursor to the same column on the previous line
 
                         break;
                     }
-					case InputEvent::Keyboard::Key::V:   //PASTE
-						if (input_event.keyboard.mod_flags == InputEvent::MOD_FLAG_CTRL)
+					case Key::V:   //PASTE
+						if (input_event.type.flags == INPUT_EVENT_FLAG_CTRL)
                         {
                             const auto clipboard_string = wstring_convert.from_bytes(platform.get_clipboard_string().c_str());
                             auto paste_length = clipboard_string.length();
@@ -506,8 +506,8 @@ namespace naga
                             return true;
                         }
                         break;
-					case InputEvent::Keyboard::Key::C:   //COPY
-						if (input_event.keyboard.mod_flags == InputEvent::MOD_FLAG_CTRL)
+					case Key::C:   //COPY
+						if (input_event.type.flags == INPUT_EVENT_FLAG_CTRL)
                         {
                             StringType string = { cursor.string_begin, cursor.string_end };
                             platform.set_clipboard_string(wstring_convert.to_bytes(string.c_str()));
@@ -517,9 +517,9 @@ namespace naga
                             return true;
                         }
                         break;
-					case InputEvent::Keyboard::Key::X:   //CUT
+					case Key::X:   //CUT
                     {
-						if (input_event.keyboard.mod_flags == InputEvent::MOD_FLAG_CTRL)
+						if (input_event.type.flags == INPUT_EVENT_FLAG_CTRL)
                         {
                             StringType string = { cursor.string_begin, cursor.string_end };
                             platform.set_clipboard_string(wstring_convert.to_bytes(string.c_str()));
@@ -533,9 +533,9 @@ namespace naga
                         }
                         break;
                     }
-					case InputEvent::Keyboard::Key::A:   //SELECT ALL
+					case Key::A:   //SELECT ALL
                     {
-						if (input_event.keyboard.mod_flags == InputEvent::MOD_FLAG_CTRL)
+						if (input_event.type.flags == INPUT_EVENT_FLAG_CTRL)
                         {
                             cursor.string_begin = string.begin();
                             cursor.string_end = string.end();
@@ -550,20 +550,20 @@ namespace naga
                         break;
                     }
                 }
-				else if (input_event.keyboard.type == InputEvent::Keyboard::Type::CHARACTER)
+				else if (input_event.type.action == InputActionType::CHARACTER)
                 {
-                    if (!max_length || max_length.get() > string.length())
-                    {
-                        if (cursor.string_begin != cursor.string_end)
-                        {
-                            cursor.string_begin = string.erase(cursor.string_begin, cursor.string_end);
-                        }
+					if (!max_length || max_length.get() > string.length())
+					{
+						if (cursor.string_begin != cursor.string_end)
+						{
+							cursor.string_begin = string.erase(cursor.string_begin, cursor.string_end);
+						}
 
-                        cursor.string_begin = string.insert(cursor.string_begin, input_event.keyboard.character);
-                        cursor.string_end = ++cursor.string_begin;
+						cursor.string_begin = string.insert(cursor.string_begin, input_event.type.character);
+						cursor.string_end = ++cursor.string_begin;
 
-                        dirty();
-                    }
+						dirty();
+					}
 
                     return true;
                 }

@@ -7,9 +7,9 @@ namespace naga
 {
     bool GUILayout::on_input_event_begin(InputEvent& input_event)
     {
-		if (input_event.device_type == InputDeviceType::MOUSE)
+		if (input_event.type.device == InputDeviceType::MOUSE)
         {
-			input_event.mouse.location.y = platform.get_screen_size().y - input_event.mouse.location.y;
+			input_event.mouse.y = platform.get_screen_size().y - input_event.mouse.y;
 
 			auto touch_nodes_itr = touch_nodes.find(input_event.mouse.id);
 

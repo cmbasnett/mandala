@@ -18,7 +18,7 @@ namespace naga
 		struct Triangle3<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
         {
 			typedef Scalar ScalarType;
-			typedef glm::detail::tvec3<ScalarType> PointType;
+			typedef glm::tvec3<ScalarType> PointType;
 			typedef std::array<PointType, 3> PointsType;
             typedef vec3 NormalType;
 			typedef Triangle3<ScalarType> Type;
@@ -58,7 +58,7 @@ namespace naga
 		struct Triangle2<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
         {
 			typedef Scalar ScalarType;
-			typedef glm::detail::tvec2<ScalarType> PointType;
+			typedef glm::tvec2<ScalarType> PointType;
 			typedef std::array<PointType, 3> PointsType;
 			typedef Triangle2<ScalarType> Type;
 
@@ -94,7 +94,7 @@ namespace naga
 	}
 
 	//template<typename P, typename T>
-	//vec2 barycentric(const glm::detail::tvec2<P>& p, const details::triangle2<T>& t)
+	//vec2 barycentric(const glm::tvec2<P>& p, const details::triangle2<T>& t)
 	//{
 	//	auto v0 = static_cast<vec2>(t[1] - t[0]);
 	//	auto v1 = static_cast<vec2>(t[2] - t[0]);

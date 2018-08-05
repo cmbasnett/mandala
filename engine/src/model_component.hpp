@@ -3,7 +3,7 @@
 //naga
 #include "pose.hpp"
 #include "model_skeleton.hpp"
-#include "game_component.hpp"
+#include "scene_component.hpp"
 #include "sphere.hpp"
 
 //boost
@@ -21,7 +21,7 @@ namespace naga
 
 	};
 
-    struct ModelComponent : GameComponent
+    struct ModelComponent : SceneComponent
     {
         void on_tick(f32 dt) override;
 		void on_render(CameraParameters& camera_parameters) override;

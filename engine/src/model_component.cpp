@@ -37,13 +37,12 @@ namespace naga
 		}
 
         //TODO: the AABB is not calculated if there is no animation
-
         for (size_t i = 0; i < skeleton.bones.size(); ++i)
         {
             bone_matrices[i] = skeleton.bone_matrices[i] * model->get_bones()[i].inverse_bind_pose_matrix;
         }
 
-        aabb = skeleton.aabb << get_owner()->pose.to_matrix();
+		aabb = skeleton.aabb << get_world_pose().to_matrix();
 
         sphere.origin = aabb.center();
         sphere.radius = glm::length(aabb.extents());
@@ -67,7 +66,7 @@ namespace naga
         // TODO: need to figure out a better way to feed light data into the shaders
         vec3 light_location;
 
-        const auto world_matrix = get_owner()->pose.to_matrix();
+		const auto world_matrix = get_world_pose().to_matrix();
 		auto view_projection_matrix = camera_parameters.projection_matrix * camera_parameters.view_matrix;
 
 		model->render(camera_parameters.location, world_matrix, view_projection_matrix, bone_matrices, light_location, mesh_materials);
@@ -101,7 +100,7 @@ namespace naga
             throw std::invalid_argument(oss.str().c_str());
         }
 
-        return get_owner()->pose * skeleton.bones[*bone_index].pose;
+        return get_world_pose() * skeleton.bones[*bone_index].pose;
     }
 
 	void ModelComponent::set_model(const boost::shared_ptr<Model>& model)

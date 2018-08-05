@@ -361,7 +361,7 @@ namespace naga
                 x += get_kerning_amount(*c, *next);
             }
 
-            world_matrix *= glm::translate(x, 0.0f, 0.0f);
+            world_matrix *= glm::translate(vec3(x, 0.0f, 0.0f));
         }
 
         //color push

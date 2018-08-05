@@ -15,7 +15,7 @@ namespace naga
         {
 			typedef Scalar ScalarType;
 			typedef Sphere<ScalarType> Type;
-			typedef glm::detail::tvec3<ScalarType> VectorType;
+			typedef glm::tvec3<ScalarType> VectorType;
 
 			VectorType origin;
 			ScalarType radius = 0;

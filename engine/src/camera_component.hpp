@@ -12,8 +12,8 @@
 namespace naga
 {
     struct CameraComponent : GameComponent
-    {
-        static const char* component_name;
+	{
+		static const char* component_name;
 
         enum class ProjectionType
         {

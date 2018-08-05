@@ -47,10 +47,10 @@ namespace naga
         template<typename ScalarType>
 		struct Frustum<ScalarType, typename std::enable_if<std::is_floating_point<ScalarType>::value>::type>
         {
-			typedef glm::detail::tvec3<ScalarType> VectorType;
+			typedef glm::tvec3<ScalarType> VectorType;
 			typedef Frustum<ScalarType> Type;
 			typedef details::Plane3<ScalarType> PlaneType;
-			typedef glm::detail::tmat4x4<ScalarType> MatrixType;
+			typedef glm::tmat4x4<ScalarType> MatrixType;
             typedef std::array<PlaneType, FRUSTUM_PLANE_COUNT> PlanesType;
             typedef std::array<VectorType, FRUSTUM_CORNER_COUNT> CornersType;
 			typedef details::AABB3<ScalarType> AABBType;

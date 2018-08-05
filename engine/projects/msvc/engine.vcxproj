@@ -94,7 +94,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\ext\glm-0.9.4.4;$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)..\..\ext\glew-1.10.0\include;$(SolutionDir)..\..\ext\zlib-1.2.8\include;$(SolutionDir)..\..\ext\libpng-1.6.3;$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\include;C:\boost_1_55_0;C:\Python27\include;$(SolutionDir)..\..\ext\cpp-netlib-0.11.1-final;$(SolutionDir)..\..\ext\openssl-0.9.8k_WIN32\include;$(SolutionDir)..\..\ext\bullet3-2.83.7\src;$(SolutionDir)..\..\ext\curl-7.47.1\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\ext\glm-0.9.8.5;$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)..\..\ext\glew-1.10.0\include;$(SolutionDir)..\..\ext\zlib-1.2.8\include;$(SolutionDir)..\..\ext\libpng-1.6.3;$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\include;C:\boost_1_55_0;C:\Python27\include;$(SolutionDir)..\..\ext\cpp-netlib-0.11.1-final;$(SolutionDir)..\..\ext\openssl-0.9.8k_WIN32\include;$(SolutionDir)..\..\ext\bullet3-2.83.7\src;$(SolutionDir)..\..\ext\curl-7.47.1\include</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;_WIN32_WINNT=0x0501;DEBUG;_WINSOCK_DEPRECATED_NO_WARNINGS;BOOST_PYTHON_STATIC_LIB;GLFW_DLL;BOOST_NETWORK_ENABLE_HTTPS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -291,14 +291,17 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\input_device.hpp" />
     <ClInclude Include="..\..\src\input_event_flags.hpp" />
     <ClInclude Include="..\..\src\input_event_type.hpp" />
+    <ClInclude Include="..\..\src\keyboard.hpp" />
     <ClInclude Include="..\..\src\model_loader.h" />
     <ClInclude Include="..\..\src\monitor.hpp" />
+    <ClInclude Include="..\..\src\numbered_enum.hpp" />
     <ClInclude Include="..\..\src\psk.hpp" />
     <ClInclude Include="..\..\src\python_function_from_callable.hpp" />
     <ClInclude Include="..\..\src\python_pair.hpp" />
     <ClInclude Include="..\..\src\py_boost_function.hpp" />
     <ClInclude Include="..\..\src\rigid_body_component.hpp" />
     <ClInclude Include="..\..\src\physics_simulation.hpp" />
+    <ClInclude Include="..\..\src\scene_component.hpp" />
     <ClInclude Include="..\..\src\terrain_component.hpp" />
     <ClInclude Include="..\..\src\octtree.hpp" />
     <ClInclude Include="..\..\src\image.hpp" />
@@ -355,6 +358,13 @@ echo $(PlatformTarget)</Command>
     <ClInclude Include="..\..\src\types.hpp" />
     <ClInclude Include="..\..\src\type_object.hpp" />
     <ClInclude Include="..\..\src\vertex_buffer.hpp" />
+    <ClInclude Include="..\..\src\voxel.hpp" />
+    <ClInclude Include="..\..\src\voxel_chunk.hpp" />
+    <ClInclude Include="..\..\src\voxel_data.hpp" />
+    <ClInclude Include="..\..\src\voxel_data_file.hpp" />
+    <ClInclude Include="..\..\src\voxel_map.hpp" />
+    <ClInclude Include="..\..\src\voxel_map_component.hpp" />
+    <ClInclude Include="..\..\src\voxel_type.hpp" />
     <ClInclude Include="..\..\src\window_event.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -389,6 +399,8 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="..\..\src\image.cpp" />
     <ClCompile Include="..\..\src\input_device.cpp" />
     <ClCompile Include="..\..\src\input_event.cpp" />
+    <ClCompile Include="..\..\src\input_event_type.cpp" />
+    <ClCompile Include="..\..\src\keyboard.cpp" />
     <ClCompile Include="..\..\src\psk.cpp" />
     <ClCompile Include="..\..\src\rigid_body_component.cpp" />
     <ClCompile Include="..\..\src\physics_simulation.cpp" />
@@ -406,6 +418,7 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="..\..\src\python.cpp" />
     <ClCompile Include="..\..\src\resource.cpp" />
     <ClCompile Include="..\..\src\resource_manager.cpp" />
+    <ClCompile Include="..\..\src\scene_component.cpp" />
     <ClCompile Include="..\..\src\sound.cpp" />
     <ClCompile Include="..\..\src\state.cpp" />
     <ClCompile Include="..\..\src\terrain_component.cpp" />
@@ -416,6 +429,10 @@ echo $(PlatformTarget)</Command>
     <ClCompile Include="..\..\src\string_archive.cpp" />
     <ClCompile Include="..\..\src\string_mgr.cpp" />
     <ClCompile Include="..\..\src\texture.cpp" />
+    <ClCompile Include="..\..\src\voxel_chunk.cpp" />
+    <ClCompile Include="..\..\src\voxel_data_file.cpp" />
+    <ClCompile Include="..\..\src\voxel_map.cpp" />
+    <ClCompile Include="..\..\src\voxel_map_component.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\dist\setup.py" />

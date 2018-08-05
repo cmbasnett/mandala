@@ -133,7 +133,7 @@ namespace naga
 			auto color = get_color();
 
             gpu.set_uniform("diffuse_texture", DIFFUSE_TEXTURE_INDEX);
-            gpu.set_uniform("world_matrix", world_matrix * glm::translate(min.x, min.y, 0.0f));
+            gpu.set_uniform("world_matrix", world_matrix * glm::translate(vec3(min.x, min.y, 0.0f)));
             gpu.set_uniform("view_projection_matrix", view_projection_matrix);
             gpu.set_uniform("color", color);
             gpu.set_uniform("texcoord_origin", texcoord_origin);

@@ -19,7 +19,7 @@ namespace naga
         {
             typedef Scalar ScalarType;
             typedef Padding<ScalarType> Type;
-            typedef glm::detail::tvec2<ScalarType> VectorType;
+            typedef glm::tvec2<ScalarType> VectorType;
 
             ScalarType bottom = 0;
             ScalarType left = 0;
@@ -106,9 +106,9 @@ namespace naga
             }
 
             template<typename U>
-            operator glm::detail::tvec4<U>() const
+            operator glm::tvec4<U>() const
             {
-                return glm::detail::tvec4<U>(static_cast<U>(bottom), static_cast<U>(left), static_cast<U>(right), static_cast<U>(top));
+                return glm::tvec4<U>(static_cast<U>(bottom), static_cast<U>(left), static_cast<U>(right), static_cast<U>(top));
             }
         };
 
@@ -124,7 +124,7 @@ namespace naga
     template<typename T, typename U>
 	details::AABB2<T> operator-(const details::AABB2<T>& aabb, const details::Padding<U>& padding)
     {
-		return details::AABB2<T>(glm::detail::tvec2<T>(aabb.min.x + padding.left, aabb.min.y + padding.bottom), glm::detail::tvec2<T>(aabb.max.x - padding.right, aabb.max.y - padding.top));
+		return details::AABB2<T>(glm::tvec2<T>(aabb.min.x + padding.left, aabb.min.y + padding.bottom), glm::tvec2<T>(aabb.max.x - padding.right, aabb.max.y - padding.top));
     }
 
     template<typename T, typename U>
@@ -140,7 +140,7 @@ namespace naga
     template<typename T, typename U>
 	details::AABB2<T> operator+(const details::AABB2<T>& aabb, const details::Padding<U>& padding)
     {
-		return details::AABB2<T>(glm::detail::tvec2<T>(aabb.min.x - padding.left, aabb.min.y - padding.bottom), glm::detail::tvec2<T>(aabb.max.x + padding.right, aabb.max.y + padding.top));
+		return details::AABB2<T>(glm::tvec2<T>(aabb.min.x - padding.left, aabb.min.y - padding.bottom), glm::tvec2<T>(aabb.max.x + padding.right, aabb.max.y + padding.top));
     }
 
     template<typename T, typename U>

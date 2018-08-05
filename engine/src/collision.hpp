@@ -27,7 +27,7 @@ namespace naga
     };
 
     template<typename Scalar>
-    glm::detail::tvec3<Scalar> intersect(const details::Plane3<Scalar>& p0, const details::Plane3<Scalar>& p1, const details::Plane3<Scalar>& p2)
+    glm::tvec3<Scalar> intersect(const details::Plane3<Scalar>& p0, const details::Plane3<Scalar>& p1, const details::Plane3<Scalar>& p2)
     {
         const auto d0 = p0.distance;
         const auto d1 = p1.distance;
@@ -84,17 +84,17 @@ namespace naga
     }
 
     template<typename AABBScalar, typename PointScalar>
-	bool contains(const details::AABB2<AABBScalar>& aabb, const glm::detail::tvec2<PointScalar>& point)
+	bool contains(const details::AABB2<AABBScalar>& aabb, const glm::tvec2<PointScalar>& point)
     {
-        return aabb.min == glm::min(aabb.min, static_cast<glm::detail::tvec2<AABBScalar>>(point)) &&
-               aabb.max == glm::max(aabb.max, static_cast<glm::detail::tvec2<AABBScalar>>(point));
+        return aabb.min == glm::min(aabb.min, static_cast<glm::tvec2<AABBScalar>>(point)) &&
+               aabb.max == glm::max(aabb.max, static_cast<glm::tvec2<AABBScalar>>(point));
     }
 
     template<typename AABBScalar, typename PointScalar>
-    bool contains(const details::AABB3<AABBScalar>& aabb, const glm::detail::tvec3<PointScalar>& point)
+    bool contains(const details::AABB3<AABBScalar>& aabb, const glm::tvec3<PointScalar>& point)
     {
-        return aabb.min == glm::min(aabb.min, static_cast<glm::detail::tvec3<AABBScalar>>(point)) &&
-               aabb.max == glm::max(aabb.max, static_cast<glm::detail::tvec3<AABBScalar>>(point));
+        return aabb.min == glm::min(aabb.min, static_cast<glm::tvec3<AABBScalar>>(point)) &&
+               aabb.max == glm::max(aabb.max, static_cast<glm::tvec3<AABBScalar>>(point));
     }
 
     template<typename LHSScalar, typename RHSScalar>
@@ -122,7 +122,7 @@ namespace naga
     }
 
     template<typename Scalar>
-	IntersectType intersects(const details::Line3<Scalar>& line, const details::AABB3<Scalar>& aabb, Scalar* t = nullptr, glm::detail::tvec3<Scalar>* location = nullptr, glm::detail::tvec3<Scalar>* normal = nullptr)
+	IntersectType intersects(const details::Line3<Scalar>& line, const details::AABB3<Scalar>& aabb, Scalar* t = nullptr, glm::tvec3<Scalar>* location = nullptr, glm::tvec3<Scalar>* normal = nullptr)
     {
 		// r.dir is unit direction vector of ray
 		vec3 dirfrac;
@@ -185,19 +185,19 @@ namespace naga
     }
 
     template<typename Scalar>
-    Scalar distance_to_plane(const details::Plane3<Scalar>& plane, const glm::detail::tvec3<Scalar>& point)
+    Scalar distance_to_plane(const details::Plane3<Scalar>& plane, const glm::tvec3<Scalar>& point)
     {
         return glm::dot(plane.normal, point - plane.origin());
     }
 
     template<typename PlaneScalar, typename PointScalar>
-    PlaneScalar distance_to_plane(const details::Plane3<PlaneScalar>& plane, const glm::detail::tvec3<PointScalar>& point)
+    PlaneScalar distance_to_plane(const details::Plane3<PlaneScalar>& plane, const glm::tvec3<PointScalar>& point)
     {
-        return glm::dot(plane.normal, static_cast<glm::detail::tvec3<PlaneScalar>>(point)-plane.origin());
+        return glm::dot(plane.normal, static_cast<glm::tvec3<PlaneScalar>>(point)-plane.origin());
     }
 
     template<typename FrustumScalar, typename PointScalar>
-    IntersectType intersects(const details::Frustum<FrustumScalar>& frustum, const glm::detail::tvec3<PointScalar>& point)
+    IntersectType intersects(const details::Frustum<FrustumScalar>& frustum, const glm::tvec3<PointScalar>& point)
     {
         for (const auto& plane : frustum.planes())
         {
@@ -266,9 +266,9 @@ namespace naga
     }
 
     template<typename Scalar = std::enable_if<std::is_floating_point<Scalar>::value>::type>
-	IntersectType intersects(const details::AABB3<Scalar> aabb0, const glm::detail::tvec3<Scalar>& d0, const details::AABB3<Scalar>& aabb1, const glm::detail::tvec3<Scalar>& d1, Scalar& u0, Scalar& u1)
+	IntersectType intersects(const details::AABB3<Scalar> aabb0, const glm::tvec3<Scalar>& d0, const details::AABB3<Scalar>& aabb1, const glm::tvec3<Scalar>& d1, Scalar& u0, Scalar& u1)
     {
-        typedef glm::detail::tvec3<Scalar> vector_type;
+        typedef glm::tvec3<Scalar> vector_type;
 
         const auto v = glm::value_ptr((d1 - d0));
         const auto amin = glm::value_ptr(aabb0.min);

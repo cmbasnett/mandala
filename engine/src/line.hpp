@@ -15,7 +15,7 @@ namespace naga
         {
             typedef Scalar ScalarType;
             typedef Line2<ScalarType> Type;
-            typedef glm::detail::tvec2<ScalarType> VectorType;
+            typedef glm::tvec2<ScalarType> VectorType;
             typedef Line2<f32> RealType;
 
             VectorType start;
@@ -76,7 +76,7 @@ namespace naga
         {
             typedef Scalar ScalarType;
             typedef Line3<ScalarType> Type;
-            typedef glm::detail::tvec3<ScalarType> VectorType;
+            typedef glm::tvec3<ScalarType> VectorType;
             typedef Line3<f32> RealType;
 
             VectorType start;

@@ -15,7 +15,7 @@ namespace naga
 		struct Rectangle<Scalar, typename std::enable_if<std::is_arithmetic<Scalar>::value>::type>
         {
             typedef Scalar ScalarType;
-			typedef glm::detail::tvec2<ScalarType> VectorType;
+			typedef glm::tvec2<ScalarType> VectorType;
 			typedef Rectangle<ScalarType> Type;
 
 			ScalarType x = 0;
@@ -35,7 +35,7 @@ namespace naga
             }
             
 			template<typename Scalar>
-			Rectangle(const glm::detail::tvec4<Scalar>& v) :
+			Rectangle(const glm::tvec4<Scalar>& v) :
 				x(static_cast<ScalarType>(v.x)),
 				y(static_cast<ScalarType>(v.y)),
 				width(static_cast<ScalarType>(v.z)),
@@ -78,9 +78,9 @@ namespace naga
             }
 
             template<typename Scalar>
-            operator glm::detail::tvec4<Scalar>() const
+            operator glm::tvec4<Scalar>() const
             {
-                return glm::detail::tvec4<Scalar>(static_cast<Scalar>(x), static_cast<Scalar>(y), static_cast<Scalar>(width), static_cast<Scalar>(height));
+                return glm::tvec4<Scalar>(static_cast<Scalar>(x), static_cast<Scalar>(y), static_cast<Scalar>(width), static_cast<Scalar>(height));
             }
 
 			template<typename Scalar>
