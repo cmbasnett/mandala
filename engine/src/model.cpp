@@ -282,7 +282,7 @@ namespace naga
             const auto& bone_info = bone_infos[i];
             auto& bone = bones[i];
 
-            bone.bind_pose_matrix = bone_info.pose.to_matrix();
+			bone.bind_pose_matrix = bone_info.pose.to_matrix();
             bone.inverse_bind_pose_matrix = glm::inverse(bone.bind_pose_matrix);
         }
     }

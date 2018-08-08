@@ -38,7 +38,7 @@ namespace naga
 		const SpriteReference& get_sprite_at_time(const TimeType& time) const;
 
     private:
-        std::vector<const Frame> frames;
+        std::vector<Frame> frames;
         TimeType duration;
 
 		SpriteAnimation(const SpriteAnimation&) = delete;

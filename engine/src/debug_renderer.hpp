@@ -50,7 +50,7 @@ namespace naga
 		{
 			std::array<IndexBufferType::IndexType, INDEX_COUNT> indices;
 
-			for (size_t i = 0; i < INDEX_COUNT; ++i)
+			for (u16 i = 0; i < INDEX_COUNT; ++i)
 			{
 				indices[i] = i;
 			}

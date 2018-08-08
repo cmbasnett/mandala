@@ -52,14 +52,14 @@ namespace naga
         boost::optional<size_t> get_bone_index(const std::string& bone_name) const;
 
         const std::vector<boost::shared_ptr<const Mesh>> get_meshes() const { return meshes; }
-        const std::vector<const Bone>& get_bones() const { return bones; }
-        const std::vector<const std::string>& get_bone_names() const { return bone_names; }
+        const std::vector<Bone>& get_bones() const { return bones; }
+        const std::vector<std::string>& get_bone_names() const { return bone_names; }
 
     private:
         std::vector<boost::shared_ptr<const Mesh>> meshes;
         std::map<std::string, const u8> bone_indices;
-        std::vector<const Bone> bones;
-        std::vector<const std::string> bone_names;
+        std::vector<Bone> bones;
+        std::vector<std::string> bone_names;
 
 		Model(const Model&) = delete;
 		Model& operator=(const Model&) = delete;

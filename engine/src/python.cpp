@@ -5,13 +5,16 @@
 #include "python.hpp"
 #include "python_defs.hpp"
 
+// There is a problem with automatic linking for BoostPython on 1.67
+// A manual fix described here (https://github.com/boostorg/python/issues/193) fixes the issue.
+
 namespace naga
 {
 	NAGA_API_ENTRY Python py;
 
 	Python::Python()
     {
-        PyImport_AppendInittab("naga", &initnaga);
+        PyImport_AppendInittab("naga", &PyInit_naga);
 
         Py_Initialize();
 
@@ -47,7 +50,7 @@ namespace naga
             PyErr_Fetch(&type, &value, &traceback);
             PyErr_NormalizeException(&type, &value, &traceback);
             
-            auto value_as_string = PyString_AsString(PyObject_Str(value));
+            auto value_as_string = PyBytes_AsString(PyObject_Bytes(value));
 
             if (value_as_string)
             {
@@ -100,7 +103,7 @@ namespace naga
 
             PyErr_Fetch(&type, &value, &traceback);
 
-            auto value_as_string = PyString_AsString(PyObject_Str(value));
+            auto value_as_string = PyBytes_AsString(PyObject_Bytes(value));
 
             if (value_as_string)
             {

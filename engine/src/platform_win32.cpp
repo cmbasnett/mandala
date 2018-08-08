@@ -354,7 +354,7 @@ namespace naga
 					input_event.type.device = InputDeviceType::GAMEPAD;
 					input_event.type.action = InputActionType::MOVE;
 					input_event.type.axis = axis_index;
-                    input_event.gamepad.index = gamepad_index;
+					input_event.gamepad.index = static_cast<u8>(gamepad_index);
                     input_event.gamepad.value = axes[axis_index];
                     input_event.gamepad.delta = axes[axis_index] - gamepad_state.axes[axis_index];
 
@@ -375,7 +375,7 @@ namespace naga
 					input_event.type.device = InputDeviceType::GAMEPAD;
 					input_event.type.action = buttons[button_index] == 0 ? InputActionType::RELEASE : InputActionType::PRESS;
 					input_event.type.button = button_index;
-                    input_event.gamepad.index = gamepad_index;
+					input_event.gamepad.index = static_cast<u8>(gamepad_index);
 
                     platform.input.events.push_back(input_event);
                 }

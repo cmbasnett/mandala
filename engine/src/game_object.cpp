@@ -49,7 +49,7 @@ namespace naga
         boost::python::object component_object = type();
 
         // ensure type is convertible to GameComponent
-        auto component_extract = boost::python::extract<boost::shared_ptr<GameComponent>>(component_object.ptr());
+		boost::python::extract<boost::shared_ptr<GameComponent>> component_extract(component_object);
 
         if (!component_extract.check())
         {
@@ -69,7 +69,7 @@ namespace naga
         {
             auto base = mro[i];
 
-            auto base_name = boost::python::extract<std::string>(base.attr("__name__"));
+			boost::python::extract<std::string> base_name(base.attr("__name__"));
 
             if (base_name.check())
             {
@@ -110,7 +110,7 @@ namespace naga
 
 	boost::shared_ptr<GameComponent> GameObject::get_component_by_type(type_object type)
     {
-        auto name_extract = boost::python::extract<std::string>(type.attr("__name__"));
+		boost::python::extract<std::string> name_extract(type.attr("__name__"));
 
         if (!name_extract.check())
         {

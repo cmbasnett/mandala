@@ -484,7 +484,7 @@ inline naga::quat angle_axis(naga::f32 angle, const naga::vec3& axis)
 
 inline naga::f32 length(const boost::python::object& other)
 {
-	auto result = boost::python::extract<glm::tvec3<naga::f32>>(other);
+	boost::python::extract<glm::tvec3<naga::f32>> result(other);
 
     if (result.check())
     {
@@ -496,7 +496,7 @@ inline naga::f32 length(const boost::python::object& other)
 
 inline boost::python::object inverse(const boost::python::object& other)
 {
-	auto result = boost::python::extract<glm::tquat<naga::f32>>(other);
+	boost::python::extract<glm::tquat<naga::f32>> result(other);
 
     if (result.check())
     {
@@ -508,7 +508,7 @@ inline boost::python::object inverse(const boost::python::object& other)
 
 inline boost::python::object normalize(const boost::python::object& other)
 {
-	auto result = boost::python::extract<glm::tvec3<naga::f32>>(other);
+	boost::python::extract<glm::tvec3<naga::f32>> result(other);
 
     if (result.check())
     {
@@ -520,7 +520,7 @@ inline boost::python::object normalize(const boost::python::object& other)
 
 inline boost::python::object degrees(const boost::python::object& radians)
 {
-	auto result = boost::python::extract<naga::f32>(radians);
+	boost::python::extract<naga::f32> result(radians);
 
 	if (result.check())
 	{
@@ -532,7 +532,7 @@ inline boost::python::object degrees(const boost::python::object& radians)
 
 inline boost::python::object radians(const boost::python::object& degrees)
 {
-	auto result = boost::python::extract<naga::f32>(degrees);
+	boost::python::extract<naga::f32> result(degrees);
 
 	if (result.check())
 	{
@@ -867,7 +867,7 @@ BOOST_PYTHON_MODULE(naga)
 		.def("mount", &ResourceManager::mount)
 		.def("unmount_all", &ResourceManager::unmount_all)
 		.def("extract", &ResourceManager::extract)
-		.add_property("count", &ResourceManager::count)
+		//.add_property("count", &ResourceManager::count)	// TODO: count has an overload, which is why this errors out
 		.def("purge", &ResourceManager::purge)
         .def("get_bitmap_font", &resources_get_BitmapFont)
         .def("get_bsp", &resources_get_BSP)
@@ -1118,8 +1118,8 @@ BOOST_PYTHON_MODULE(naga)
 	class_<std::vector<naga::vec2>>("Vec2List")
 		.def(vector_indexing_suite<std::vector<naga::vec2>>());
 
-    class_<std::vector<const std::string>>("StringList")
-        .def(vector_indexing_suite<std::vector<const std::string>>());
+    class_<std::vector<std::string>>("StringList")
+        .def(vector_indexing_suite<std::vector<std::string>>());
 
 	class_<Model, bases<Resource>, boost::shared_ptr<Model>, noncopyable>("Model", no_init)
 		.add_property("bones", make_function(&Model::get_bone_names, return_value_policy<copy_const_reference>()));
@@ -1174,7 +1174,7 @@ BOOST_PYTHON_MODULE(naga)
 		.def(self_ns::str(self_ns::self));
         ;
 
-	class_<GameObject, boost::shared_ptr<GameObject>, noncopyable>("GameObject")
+	class_<GameObject, boost::shared_ptr<GameObject>>("GameObject")
         .def_readwrite("pose", &GameObject::pose)
 		.def("add_component", &GameObject::add_component_by_type)
 		.def("add_component_by_name", &GameObject::add_component_by_name)
@@ -1182,7 +1182,7 @@ BOOST_PYTHON_MODULE(naga)
         ;
 
     // COMPONENTS
-	class_<GameComponent, boost::shared_ptr<GameComponent>>("GameComponentBase", no_init)
+	class_<GameComponent, boost::shared_ptr<GameComponent>, noncopyable>("GameComponentBase", no_init)
         .add_property("owner", make_function(&GameComponent::get_owner, return_value_policy<copy_const_reference>()))
         ;
 
@@ -1193,7 +1193,7 @@ BOOST_PYTHON_MODULE(naga)
 		.def("on_render", &GameComponentWrapper::on_render)
         .add_property("owner", make_function(&GameComponentWrapper::get_owner, return_value_policy<copy_const_reference>()));
 
-	class_<SceneComponent, bases<GameComponent>, boost::shared_ptr<SceneComponent>, noncopyable>("SceneComponent", no_init)
+	class_<SceneComponent, bases<GameComponent>, boost::shared_ptr<SceneComponent>>("SceneComponent", no_init)
 		.add_property("world_pose", &SceneComponent::get_world_pose, &SceneComponent::set_world_pose)
 		.def_readwrite("relative_pose", &SceneComponent::relative_pose);
 
@@ -1237,12 +1237,12 @@ BOOST_PYTHON_MODULE(naga)
 		.add_property("bits_per_sample", &Sound::get_bits_per_sample)
 		.add_property("duration", &Sound::get_duration);
 
-	class_<ModelComponent, bases<SceneComponent>, boost::shared_ptr<ModelComponent>, noncopyable>("ModelComponent")
+	class_<ModelComponent, bases<SceneComponent>, boost::shared_ptr<ModelComponent>>("ModelComponent")
 		.add_property("model", make_function(&ModelComponent::get_model, return_value_policy<copy_const_reference>()), &ModelComponent::set_model)
 		.add_property("aabb", make_function(&ModelComponent::get_aabb, return_value_policy<return_by_value>()))
 		.def("play", &ModelComponent::play);
 
-	class_<VoxelMapComponent, bases<SceneComponent>, boost::shared_ptr<VoxelMapComponent>, noncopyable>("VoxelMapComponent");
+	class_<VoxelMapComponent, bases<SceneComponent>, boost::shared_ptr<VoxelMapComponent>>("VoxelMapComponent");
 
 	class_<ModelAnimation, boost::shared_ptr<ModelAnimation>, noncopyable>("ModelAnimation", no_init);
 
@@ -1258,13 +1258,13 @@ BOOST_PYTHON_MODULE(naga)
 	class_<PhysicsSimulation, boost::shared_ptr<PhysicsSimulation>, noncopyable>("PhysicsSimulation")
 		.add_property("gravity", &PhysicsSimulation::get_gravity, &PhysicsSimulation::set_gravity);
 
-	class_<RigidBodyComponent, bases<GameComponent>, boost::shared_ptr<RigidBodyComponent>, noncopyable>(RigidBodyComponent::component_name)
+	class_<RigidBodyComponent, bases<GameComponent>, boost::shared_ptr<RigidBodyComponent>>(RigidBodyComponent::component_name)
 		.add_property("mass", &RigidBodyComponent::get_mass, &RigidBodyComponent::set_mass)
 		.add_property("center_of_mass", &RigidBodyComponent::get_center_of_mass, &RigidBodyComponent::set_center_of_mass)
 		.add_property("aabb", &RigidBodyComponent::get_aabb);
 
     // TERRAIN
-	class_<TerrainComponent, bases<GameComponent>, boost::shared_ptr<TerrainComponent>, noncopyable>(TerrainComponent::component_name)
+	class_<TerrainComponent, bases<GameComponent>, boost::shared_ptr<TerrainComponent>>(TerrainComponent::component_name)
 		.add_property("scale", &TerrainComponent::get_scale, &TerrainComponent::set_scale)
 		.def("trace", &TerrainComponent::trace)
 		.def("set_heightmap", &TerrainComponent::set_heightmap);

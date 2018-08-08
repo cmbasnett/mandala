@@ -41,7 +41,7 @@ namespace naga
 		template<typename T = std::enable_if<std::is_base_of<GameComponent, T>::value>::type>
         boost::shared_ptr<T> add_component()
         {
-            auto component_extract = boost::python::extract<boost::shared_ptr<T>>(add_component_by_name(T::component_name));
+			boost::python::extract<boost::shared_ptr<T>> component_extract (add_component_by_name(T::component_name));
 
             if (!component_extract.check())
             {

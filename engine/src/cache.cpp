@@ -2,6 +2,7 @@
 #include <fstream>
 #include <memory>
 #include <sstream>
+#include <iostream>
 
 //boost
 #include <boost\filesystem.hpp>

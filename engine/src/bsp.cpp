@@ -1,7 +1,10 @@
-//glm
+// std
+#include <iostream>
+
+// glm
 #include "glm\ext.hpp"
 
-//naga
+// naga
 #include "bsp.hpp"
 #include "camera_params.hpp"
 #include "image.hpp"
@@ -14,7 +17,7 @@
 #include "io.hpp"
 #include "camera_params.hpp"
 
-//boost
+// boost
 #include <boost\algorithm\string.hpp>
 
 namespace naga
