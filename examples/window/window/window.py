@@ -119,11 +119,12 @@ class FreeLookComponent(GameComponent):
 class ExampleState(State):
 
     def __init__(self):
+        print('hey')
         super(ExampleState, self).__init__()
+        print('jude')
         self.is_tracing = False
 
     def on_enter(self):
-        # TODO: this should be done by the underlying state logic!
         super(ExampleState, self).on_enter_base()
 
         platform.is_cursor_centered = True

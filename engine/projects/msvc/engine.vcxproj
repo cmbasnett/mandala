@@ -123,7 +123,7 @@ popd
 pushd "$(SolutionDir)..\..\env\Scripts"
 echo "$(SolutionDir)..\..\env\Scripts"
 call activate.bat
-pip3 install "$(OutDir)..\naga-0.0.1-py3-none-any.whl" --upgrade --force-reinstall
+pip install "$(OutDir)..\naga-0.0.1-py3-none-any.whl" --upgrade --force-reinstall
 call deactivate.bat
 popd</Command>
     </PostBuildEvent>
@@ -144,7 +144,7 @@ python "$(SolutionDir)..\..\tools\pack.py" "$(SolutionDir)..\..\..\testapp\resou
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\ext\glm-0.9.8.5;$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)..\..\ext\glew-1.10.0\include;$(SolutionDir)..\..\ext\zlib-1.2.8\include;$(SolutionDir)..\..\ext\libpng-1.6.3;$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\include;$(SolutionDir)..\..\ext\curl-7.35.0\include;C:\boost_1_67_0;$(SolutionDir)..\..\ext\curl-7.47.1\include;$(SolutionDir)..\..\ext\bullet3-2.83.7\src;C:\Python35\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\ext\glm-0.9.8.5;$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)..\..\ext\glew-1.10.0\include;$(SolutionDir)..\..\ext\zlib-1.2.8\include;$(SolutionDir)..\..\ext\libpng-1.6.3;$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\include;$(SolutionDir)..\..\ext\curl-7.35.0\include;C:\boost_1_67_0;$(SolutionDir)..\..\ext\curl-7.47.1\include;$(SolutionDir)..\..\ext\bullet3-2.87\src;C:\Python35\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PreprocessorDefinitions>_WIN32_WINNT=0x0501;DEBUG;BOOST_PYTHON_STATIC_LIB;GLFW_DLL;BOOST_NETWORK_ENABLE_HTTPS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -162,7 +162,9 @@ python "$(SolutionDir)..\..\tools\pack.py" "$(SolutionDir)..\..\..\testapp\resou
       <Command>xcopy "$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN64\lib-msvc110\*.dll" "$(OutDir)" /y
 xcopy "$(SolutionDir)..\..\ext\glew-1.10.0\bin\Release\x64\*.dll" "$(OutDir)" /y
 xcopy "$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\lib\Win64\*.dll" "$(OutDir)" /y
-xcopy "$(SolutionDir)..\..\ext\curl-7.47.1\lib\build-x64\lib\Debug\*.dll" "$(OutDir)" /y
+xcopy "$(SolutionDir)..\..\ext\curl-7.47.1\build-x64\lib\Debug\*.dll" "$(OutDir)" /y
+xcopy "$(SolutionDir)..\..\ext\libpng-1.6.35\build-x64\Release\*.dll" "$(OutDir)" /y
+xcopy "$(SolutionDir)..\..\ext\zlib-1.2.5\build-x64\Release\*.dll" "$(OutDir)" /y
 pushd "$(OutDir)\.."
 pip wheel .
 popd

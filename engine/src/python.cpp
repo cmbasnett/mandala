@@ -15,7 +15,6 @@ namespace naga
 	Python::Python()
     {
         PyImport_AppendInittab("naga", &PyInit_naga);
-
         Py_Initialize();
 
         main_module = object(handle<>(borrowed(PyImport_AddModule("__main__"))));
@@ -50,7 +49,8 @@ namespace naga
             PyErr_Fetch(&type, &value, &traceback);
             PyErr_NormalizeException(&type, &value, &traceback);
             
-            auto value_as_string = PyBytes_AsString(PyObject_Bytes(value));
+			auto repr = PyObject_Repr(value);
+            auto value_as_string = PyUnicode_AsUTF8(repr);
 
             if (value_as_string)
             {
