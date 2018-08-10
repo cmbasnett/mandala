@@ -123,7 +123,7 @@ popd
 pushd "$(SolutionDir)..\..\env\Scripts"
 echo "$(SolutionDir)..\..\env\Scripts"
 call activate.bat
-pip install "$(OutDir)..\naga-0.0.1-py2-none-any.whl" --upgrade --force-reinstall
+pip3 install "$(OutDir)..\naga-0.0.1-py3-none-any.whl" --upgrade --force-reinstall
 call deactivate.bat
 popd</Command>
     </PostBuildEvent>
@@ -169,10 +169,13 @@ popd
 pushd "$(SolutionDir)..\..\env\Scripts"
 echo "$(SolutionDir)..\..\env\Scripts"
 call activate.bat
-pip install "$(OutDir)..\naga-0.0.1-py2-none-any.whl" --upgrade --force-reinstall
+pip install "$(OutDir)..\naga-0.0.1-py3-none-any.whl" --upgrade --force-reinstall
 call deactivate.bat
 popd</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>python "$(SolutionDir)..\..\tools\boilerplate.py" "$(SolutionDir)..\..\gpu_programs" "$(SolutionDir)..\..\engine\src"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
