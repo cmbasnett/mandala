@@ -509,7 +509,7 @@ namespace naga
 	{
 		params.resize(count);
 		const auto program_id = programs.top()->lock()->get_id();
-		glGetnUniformfvARB(program_id, get_uniform_location(program_id, name), count * sizeof(mat4), reinterpret_cast<GLfloat*>(&params[0]));
+		glGetnUniformfvARB(program_id, get_uniform_location(program_id, name), static_cast<GLsizei>(count * sizeof(mat4)), reinterpret_cast<GLfloat*>(&params[0]));
 	}
 
     void Gpu::enable_vertex_attribute_array(GpuLocation location)
@@ -874,7 +874,7 @@ namespace naga
     //TODO: infer index_data_type from bound index buffer
     void Gpu::draw_elements(PrimitiveType primitive_type, size_t count, GpuDataTypes index_data_type, size_t offset) const
     {
-        glDrawElements(get_primitive_type(primitive_type), count, get_data_type(index_data_type), reinterpret_cast<GLvoid*>(offset)); glCheckError();
+        glDrawElements(get_primitive_type(primitive_type), static_cast<GLsizei>(count), get_data_type(index_data_type), reinterpret_cast<GLvoid*>(offset)); glCheckError();
     }
 
     GpuId Gpu::create_program(const std::string& vertex_shader_source, const std::string& fragment_shader_source) const
@@ -1007,7 +1007,7 @@ namespace naga
         GLenum binary_format = 0;
         std::vector<u8> program_binary_data(binary_length);
 
-        glGetProgramBinary(id, program_binary_data.size(), &binary_length, &binary_format, static_cast<GLvoid*>(program_binary_data.data())); glCheckError();
+        glGetProgramBinary(id, static_cast<GLsizei>(program_binary_data.size()), &binary_length, &binary_format, static_cast<GLvoid*>(program_binary_data.data())); glCheckError();
 
         std::stringstream stringstream;
         write(stringstream, binary_format);

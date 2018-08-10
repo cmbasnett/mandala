@@ -34,6 +34,7 @@ namespace naga
     private:
 		size_t width;
 		size_t depth;
+
         boost::multi_array<f32, 2> data;
     };
 }

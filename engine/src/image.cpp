@@ -198,7 +198,8 @@ namespace naga
 
 		png_bytepp rows = static_cast<png_bytepp>(png_malloc(png_ptr, image.get_height() * sizeof(png_bytep)));
 
-		const auto bytes_per_pixel = glm::max(1u, (image.get_bit_depth() * image.get_channel_count() / 8));
+		auto bytes_per_pixel = image.get_bit_depth() * image.get_channel_count() / 8;
+		bytes_per_pixel = bytes_per_pixel >= 1 ? bytes_per_pixel : 1;
 		const auto row_size = (image.get_width() * bytes_per_pixel);
 
 		for (unsigned int y = 0; y < image.get_size().y; ++y)

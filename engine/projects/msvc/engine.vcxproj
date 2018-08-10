@@ -22,6 +22,7 @@
     <ProjectGuid>{FEE27E9B-79E9-4666-A0A4-88E089142538}</ProjectGuid>
     <RootNamespace>mandala</RootNamespace>
     <ProjectName>naga</ProjectName>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -31,9 +32,9 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -80,9 +81,10 @@
     <CustomBuildBeforeTargets>Run</CustomBuildBeforeTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)\bin\$(Configuration)_$(PlatformTarget)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\bin\$(Configuration)_$(PlatformTarget)\naga\</OutDir>
     <IntDir>$(SolutionDir)\intermediate\$(Configuration)_$(PlatformTarget)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
+    <TargetExt>.pyd</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)\bin\$(Configuration)_$(PlatformTarget)\</OutDir>
@@ -94,7 +96,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\ext\glm-0.9.8.5;$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)..\..\ext\glew-1.10.0\include;$(SolutionDir)..\..\ext\zlib-1.2.8\include;$(SolutionDir)..\..\ext\libpng-1.6.3;$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\include;C:\boost_1_67_0;C:\Python35\include;$(SolutionDir)..\..\ext\cpp-netlib-0.11.1-final;$(SolutionDir)..\..\ext\openssl-0.9.8k_WIN32\include;$(SolutionDir)..\..\ext\bullet3-2.83.7\src;$(SolutionDir)..\..\ext\curl-7.47.1\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\ext\glm-0.9.8.5;$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)..\..\ext\glew-1.10.0\include;$(SolutionDir)..\..\ext\zlib-1.2.8\include;$(SolutionDir)..\..\ext\libpng-1.6.3;$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\include;C:\boost_1_67_0;C:\Python35\include;$(SolutionDir)..\..\ext\cpp-netlib-0.11.1-final;$(SolutionDir)..\..\ext\openssl-0.9.8k_WIN32\include;$(SolutionDir)..\..\ext\bullet3-2.87\src;$(SolutionDir)..\..\ext\curl-7.47.1\include</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;_WIN32_WINNT=0x0501;DEBUG;_WINSOCK_DEPRECATED_NO_WARNINGS;BOOST_PYTHON_STATIC_LIB;GLFW_DLL;BOOST_NETWORK_ENABLE_HTTPS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -105,9 +107,10 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\boost_1_67_0\stage\lib;$(SolutionDir)..\..\ext\glew-1.10.0\lib\Release\Win32;$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\lib-msvc110;$(SolutionDir)..\..\ext\libpng-1.6.3\projects\vstudio\Release Library;$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\lib\Win32;C:\Python35\libs;$(SolutionDir)..\..\ext\bullet3-2.83.7\lib\Debug;$(SolutionDir)..\..\ext\curl-7.47.1\lib\RelWithDebInfo</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\boost_1_67_0\stage\lib;$(SolutionDir)..\..\ext\glew-1.10.0\lib\Release\Win32;$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\lib-msvc110;$(SolutionDir)..\..\ext\libpng-1.6.3\projects\vstudio\Release Library;$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\lib\Win32;C:\Python35\libs;$(SolutionDir)..\..\ext\bullet3-2.87\build-x86\lib\Debug;$(SolutionDir)..\..\ext\curl-7.47.1\lib\RelWithDebInfo</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3dll.lib;zlib.lib;libpng16.lib;libOpenAL32.dll.a;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;libcurl_imp.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\lib-msvc110\*.dll" "$(OutDir)" /y
@@ -141,26 +144,34 @@ python "$(SolutionDir)..\..\tools\pack.py" "$(SolutionDir)..\..\..\testapp\resou
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)ext\glm-0.9.4.4;$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)ext\glew-1.10.0\include;$(SolutionDir)ext\zlib-1.2.8\include;$(SolutionDir)ext\libpng-1.6.3;$(SolutionDir)ext\openal-soft-1.15.1-bin\include;$(SolutionDir)ext\curl-7.35.0\include;C:\boost_1_55_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\ext\glm-0.9.8.5;$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN32\include;$(SolutionDir)..\..\ext\glew-1.10.0\include;$(SolutionDir)..\..\ext\zlib-1.2.8\include;$(SolutionDir)..\..\ext\libpng-1.6.3;$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\include;$(SolutionDir)..\..\ext\curl-7.35.0\include;C:\boost_1_67_0;$(SolutionDir)..\..\ext\curl-7.47.1\include;$(SolutionDir)..\..\ext\bullet3-2.83.7\src;C:\Python35\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <PreprocessorDefinitions>_WIN32_WINNT=0x0501;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0501;DEBUG;BOOST_PYTHON_STATIC_LIB;GLFW_DLL;BOOST_NETWORK_ENABLE_HTTPS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UndefinePreprocessorDefinitions>APIENTRY;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
+      <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS /bigobj %(AdditionalOptions)</AdditionalOptions>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)ext\glew-1.10.0\lib\Release\Win32;$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\lib-msvc110;$(SolutionDir)ext\zlib-1.2.8\lib;$(SolutionDir)ext\libpng-1.6.3\projects\vstudio\Release Library;$(SolutionDir)ext\openal-soft-1.15.1-bin\lib\Win32;C:\boost_1_55_0\stage\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3dll.lib;zlib.lib;libpng16.lib;libOpenAL32.dll.a</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\ext\glew-1.10.0\lib\Release\x64;$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN64\lib-msvc110;$(SolutionDir)..\..\ext\zlib-1.2.5\build-x64\Release;$(SolutionDir)..\..\ext\libpng-1.6.35\build-x64\Release;$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\lib\Win64;$(SolutionDir)..\..\ext\curl-7.47.1\build-x64\lib\Release;C:\boost_1_67_0\stage\lib;$(SolutionDir)..\..\ext\bullet3-2.87\build-x64\lib\Debug;C:\Python35\libs</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3dll.lib;zlib.lib;libpng16.lib;libOpenAL32.dll.a;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;libcurl_imp.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(SolutionDir)ext\glfw-3.0.1.bin.WIN32\lib-msvc110\*.dll" "$(OutDir)" /y
-xcopy "$(SolutionDir)ext\glew-1.10.0\bin\Release\Win32\*.dll" "$(OutDir)" /y
-xcopy "$(SolutionDir)ext\openal-soft-1.15.1-bin\lib\Win32\*.dll" "$(OutDir)" /y
-
-"$(SolutionDir)tools\pack\bin\pack.exe" "$(SolutionDir)resources\deploy\\" "$(OutDir)resources\armada.pack"
-
-echo $(PlatformTarget)</Command>
+      <Command>xcopy "$(SolutionDir)..\..\ext\glfw-3.0.1.bin.WIN64\lib-msvc110\*.dll" "$(OutDir)" /y
+xcopy "$(SolutionDir)..\..\ext\glew-1.10.0\bin\Release\x64\*.dll" "$(OutDir)" /y
+xcopy "$(SolutionDir)..\..\ext\openal-soft-1.15.1-bin\lib\Win64\*.dll" "$(OutDir)" /y
+xcopy "$(SolutionDir)..\..\ext\curl-7.47.1\lib\build-x64\lib\Debug\*.dll" "$(OutDir)" /y
+pushd "$(OutDir)\.."
+pip wheel .
+popd
+pushd "$(SolutionDir)..\..\env\Scripts"
+echo "$(SolutionDir)..\..\env\Scripts"
+call activate.bat
+pip install "$(OutDir)..\naga-0.0.1-py2-none-any.whl" --upgrade --force-reinstall
+call deactivate.bat
+popd</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

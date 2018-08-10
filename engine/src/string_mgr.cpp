@@ -35,7 +35,7 @@ namespace naga
                 auto& string = strings_itr->second;
 
                 string.key = std::move(archive_string.key);
-                string.stream_index = streams.size() - 1;
+				string.stream_index = static_cast<u32>(streams.size() - 1);
                 string.offset = archive_string.offset;
             }
         }
@@ -96,7 +96,7 @@ namespace naga
         std::getline(*stream, buffer, '\0');
 
         //string expansion
-        auto beg = 0;
+        size_t beg = 0;
         auto end = std::string::npos;
 
         for (;;)

@@ -117,6 +117,6 @@ namespace naga
 
 		boost::shared_ptr<VertexBufferType> vertex_buffer;
 		boost::shared_ptr<IndexBufferType> index_buffer;
-		u32 index_count;
+		size_t index_count;
 	};
 };

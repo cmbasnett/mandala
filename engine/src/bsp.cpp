@@ -742,7 +742,7 @@ namespace naga
             }
         };
 
-        auto render_brush_entity = [&](i32 entity_index)
+        auto render_brush_entity = [&](size_t entity_index)
         {
             return;
 
@@ -776,8 +776,18 @@ namespace naga
 
             if (origin_optional)
             {
+				boost::is_any_of(" ");
+
                 std::vector<std::string> tokens;
+
+#if defined(_MSC_VER) && _MSC_VER >= 1400 
+#pragma warning(push) 
+#pragma warning(disable:4996) 
+#endif 
                 boost::algorithm::split(tokens, origin_optional.get(), boost::is_any_of(" "), boost::algorithm::token_compress_on);
+#if defined(_MSC_VER) && _MSC_VER >= 1400 
+#pragma warning(pop) 
+#endif 
 
                 origin.x = boost::lexical_cast<f32>(tokens[0]);
                 origin.y = boost::lexical_cast<f32>(tokens[2]);

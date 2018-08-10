@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2047
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "naga", "..\..\engine\projects\msvc\engine.vcxproj", "{FEE27E9B-79E9-4666-A0A4-88E089142538}"
 EndProject
@@ -25,8 +25,8 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{FEE27E9B-79E9-4666-A0A4-88E089142538}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{FEE27E9B-79E9-4666-A0A4-88E089142538}.Debug|ARM.ActiveCfg = Debug|Win32
-		{FEE27E9B-79E9-4666-A0A4-88E089142538}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{FEE27E9B-79E9-4666-A0A4-88E089142538}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{FEE27E9B-79E9-4666-A0A4-88E089142538}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
+		{FEE27E9B-79E9-4666-A0A4-88E089142538}.Debug|Mixed Platforms.Build.0 = Debug|x64
 		{FEE27E9B-79E9-4666-A0A4-88E089142538}.Debug|Win32.ActiveCfg = Debug|Win32
 		{FEE27E9B-79E9-4666-A0A4-88E089142538}.Debug|Win32.Build.0 = Debug|Win32
 		{FEE27E9B-79E9-4666-A0A4-88E089142538}.Debug|Win64.ActiveCfg = Debug|x64
@@ -58,5 +58,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {24CA5103-467B-4206-A3C1-EED95BA46B84}
 	EndGlobalSection
 EndGlobal

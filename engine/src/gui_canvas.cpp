@@ -59,7 +59,7 @@ namespace naga
 
 	void GUICanvas::on_render_end(mat4& world_matrix, mat4& view_projection_matrix)
     {
-        static const size_t DIFFUSE_TEXTURE_INDEX = 0;
+        static const u32 DIFFUSE_TEXTURE_INDEX = 0;
 
         gpu.viewports.pop();
         gpu.frame_buffers.pop();
